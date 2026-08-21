@@ -208,6 +208,7 @@ window.MKB_LUGAT = {
  "Ishga kirish sanasi": "Дата приёма на работу",
  "Ishlab chiqarish": "Производство",
  "Ishlab chiqaruvchi": "Производитель",
+ "Ishlash vaqti": "Время работы",
  "Ishlayapti": "Работает",
  "Iste'mol krediti (garov bilan)": "Потребительский кредит (под залог)",
  "Jami": "Итого",
