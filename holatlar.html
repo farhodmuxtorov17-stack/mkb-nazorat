@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Xatolik va holatlar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Xatolik va ogohlantirish ekranlari (ekran 28) ---- */
+.h-markaz h1{font-size:28px;font-weight:750;letter-spacing:-.015em}
+.h-markaz p{font-size:14px;color:var(--matn-3);margin-top:4px}
+
+.holat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:8px}
+.holat-k{background:var(--karta);border-radius:18px;box-shadow:var(--soya);padding:16px;display:flex;flex-direction:column;text-align:center}
+.holat-teg{align-self:flex-start;font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:99px}
+.teg-asos{background:#E4EFF9;color:#0B4478}
+.teg-qizil{background:#FDEEEC;color:#C43C31}
+.teg-kok{background:#E7F0FE;color:#2F6BCF}
+.teg-sariq{background:#FFF6DE;color:#9A6E00}
+.holat-k img{width:78%;margin:10px auto 4px;border-radius:12px}
+.holat-k h3{font-size:15.5px;font-weight:750;margin-top:8px}
+.holat-k p{font-size:12px;color:var(--matn-3);line-height:1.5;margin:6px 0 12px;flex:1}
+.h-asos{width:100%;height:40px;border-radius:11px;background:#0F5392;color:#fff;font-size:13px;font-weight:750;display:flex;align-items:center;justify-content:center;transition:background var(--tez)}
+.h-asos:hover{background:#2E7BC4}
+.h-qizil{width:100%;height:40px;border-radius:11px;background:#F45E53;color:#fff;font-size:13px;font-weight:750;display:flex;align-items:center;justify-content:center;transition:background var(--tez)}
+.h-qizil:hover{background:#E14D42}
+.h-oq{width:100%;height:38px;margin-top:8px;border-radius:11px;border:1px solid var(--kirish-chiziq);font-size:12.5px;font-weight:650;color:#2C3A49;display:flex;align-items:center;justify-content:center;gap:7px;transition:background var(--tez)}
+.h-oq:hover{background:#F3F6FA}
+.h-oq .ic{width:14px;height:14px}
+.progress-iz{height:7px;border-radius:99px;background:#EDEFE9;overflow:hidden;margin:4px 0 6px}
+.progress-iz span{display:block;height:100%;width:56%;background:#0F5392;border-radius:99px}
+.progress-matn{font-size:12px;color:var(--matn-3);margin-bottom:6px}
+.texnik-quti{background:#EEF4FE;border-radius:11px;padding:10px 12px;text-align:left;display:flex;gap:9px;font-size:12px;color:#33507A}
+.texnik-quti .ic{width:15px;height:15px;color:#2E7BC4;flex:none;margin-top:1px}
+.texnik-quti b{display:block;font-weight:700}
+.h-oxiri{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:34px;font-size:14.5px;color:#2C3A49}
+.h-oxiri .ic{width:19px;height:19px;color:#515F6D}
+.h-oxiri a{color:#268030;font-weight:650}
+.h-oxiri a:hover{text-decoration:underline}
+@media (max-width:1500px){.holat-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:1100px){.holat-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:700px){.holat-grid{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body data-sahifa="sozlamalar" data-ruxsat="admin" data-topbar-sarlavha="Xatolik va ogohlantirish ekranlari" data-topbar-ikon="i-ogoh">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="h-markaz">
+      <p>Tizim turli holatlarda foydalanuvchiga ko'rsatadigan xabar va ogohlantirish ekranlari — qurilma va tarmoq nosozliklaridan tortib, kirish huquqi va hujjat holatigacha.</p>
+    </div>
+
+<div class="holat-grid">
+  <div class="holat-k">
+    <span class="holat-teg teg-asos">404</span>
+    <a href="xato.html"><img src="assets/st_404.png" alt="404 illyustratsiyasi"></a>
+    <h3>Sahifa topilmadi</h3>
+    <p>Kechirasiz, siz izlayotgan sahifa mavjud emas yoki ko'chirib tashlangan.</p>
+    <a class="h-asos" style="display:grid;place-items:center" href="xato.html">To'liq ekranni ko'rish</a>
+    <a class="h-oq" href="index.html">Bosh sahifaga qaytish</a>
+  </div>
+
+  <div class="holat-k">
+    <span class="holat-teg teg-qizil">Kamera oflayn</span>
+    <img src="assets/st_kamera.png" alt="Kamera oflayn illyustratsiyasi">
+    <h3>Kamera oflayn</h3>
+    <p>Tanlangan kamera hozirda oflayn. Iltimos, ulanishni tekshiring yoki bir ozdan so'ng qayta urinib ko'ring.</p>
+    <button class="h-oq" style="margin-top:0" data-toast="Kamera ulanishi qayta tekshirilmoqda…"><svg class="ic"><use href="#i-saralash"/></svg>Qayta tekshirish</button>
+  </div>
+
+  <div class="holat-k">
+    <span class="holat-teg teg-kok">Internet yo'q</span>
+    <img src="assets/st_internet.png" alt="Internet aloqasi yo'q illyustratsiyasi">
+    <h3>Internet aloqasi yo'q</h3>
+    <p>Internetga ulanish aniqlanmadi. Tarmoqni tekshiring va qayta urinib ko'ring.</p>
+    <button class="h-oq" style="margin-top:0" data-toast="Ulanish qayta tekshirilmoqda…"><svg class="ic"><use href="#i-saralash"/></svg>Qayta urinib ko'rish</button>
+  </div>
+
+  <div class="holat-k">
+    <span class="holat-teg teg-sariq">Sinxronizatsiya</span>
+    <img src="assets/st_sinx.png" alt="Sinxronizatsiya illyustratsiyasi">
+    <h3>Ma'lumotlar sinxronlanmoqda</h3>
+    <p>Tizim ma'lumotlarni sinxronlashtirmoqda. Iltimos, kuting.</p>
+    <div class="progress-iz"><span></span></div>
+    <div class="progress-matn">56% yakunlandi</div>
+  </div>
+
+  <div class="holat-k">
+    <span class="holat-teg teg-sariq">Yuz mos kelmadi</span>
+    <img src="assets/st_yuz.png" alt="Yuz mos kelmadi illyustratsiyasi">
+    <h3>Yuz mos kelmadi</h3>
+    <p>Yuz identifikatsiyasi muvaffaqiyatsiz bo'ldi. Iltimos, qo'lda tasdiqlang.</p>
+    <button class="h-asos" data-toast="Qo'lda tasdiqlash oynasi ochildi">Qo'lda tasdiqlash</button>
+    <button class="h-oq" data-toast="Yuz tanish qayta ishga tushirildi">Qayta urinib ko'rish</button>
+  </div>
+
+  <div class="holat-k">
+    <span class="holat-teg teg-qizil">Kirish taqiqlangan</span>
+    <img src="assets/st_kirish.png" alt="Kirish taqiqlangan illyustratsiyasi">
+    <h3>Kirish taqiqlangan</h3>
+    <p>Sizda ushbu tizimga kirish huquqi yo'q. Administrator bilan bog'laning.</p>
+    <a class="h-oq" style="margin-top:0" href="index.html">Bosh sahifaga qaytish</a>
+  </div>
+
+  <div class="holat-k">
+    <span class="holat-teg teg-sariq">Ruxsat rad etildi</span>
+    <img src="assets/st_ruxsat.png" alt="Ruxsat yetarli emas illyustratsiyasi">
+    <h3>Ruxsat yetarli emas</h3>
+    <p>Ushbu amalni bajarish uchun sizda kerakli ruxsatlar mavjud emas.</p>
+    <a class="h-oq" style="margin-top:0" href="index.html">Bosh sahifaga qaytish</a>
+  </div>
+
+  <div class="holat-k">
+    <span class="holat-teg teg-qizil">Yong'in signali – kritik</span>
+    <img src="assets/st_yongin.png" alt="Yong'in signali illyustratsiyasi">
+    <h3>Yong'in signali – kritik</h3>
+    <p>Yong'in signalizatsiyasi faollashdi! Zudlik bilan xavfsizlik choralarini ko'ring.</p>
+    <button class="h-qizil" data-toast="Xavfsizlik rejasi ochildi — evakuatsiya yo'nalishlari">Xavfsizlik rejasi</button>
+    <button class="h-oq" data-toast="Xavfsizlik xizmatiga qo'ng'iroq: 101"><svg class="ic"><use href="#i-tel"/></svg>Xavfsizlik xizmatiga qo'ng'iroq qilish</button>
+  </div>
+
+  <div class="holat-k">
+    <span class="holat-teg teg-kok">Hujjatlar yo'q</span>
+    <img src="assets/st_hujjat.png" alt="Hujjatlar topilmadi illyustratsiyasi">
+    <h3>Hujjatlar topilmadi</h3>
+    <p>Hozircha hujjatlar mavjud emas. Yangi hujjat yuklab yoki yarating.</p>
+    <a class="h-asos" style="display:grid;place-items:center" href="hujjatlar.html">Hujjat yuklash</a>
+    <a class="h-oq" href="hujjatlar.html">Yangi hujjat yaratish</a>
+  </div>
+
+  <div class="holat-k">
+    <span class="holat-teg teg-kok">Texnik xizmat rejimi</span>
+    <img src="assets/st_texnik.png" alt="Texnik xizmat illyustratsiyasi">
+    <h3>Tizim texnik xizmatda</h3>
+    <p>Tizim vaqtincha texnik xizmat ko'rsatish rejimida. Iltimos, keyinroq qayta kiring.</p>
+    <div class="texnik-quti">
+      <svg class="ic"><use href="#i-info"/></svg>
+      <span><b>Kutilayotgan yakunlanish vaqti</b>24-may, 16:00</span>
+    </div>
+  </div>
+</div>
+
+    <div class="h-oxiri">
+      <svg class="ic"><use href="#i-yordam"/></svg>
+      Yordam kerakmi? &nbsp;Biz bilan bog'laning:
+      <a href="#" data-toast="support@mkbank.uz manziliga xat oynasi">support@mkbank.uz</a>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+</body>
+</html>

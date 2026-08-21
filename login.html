@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Tizimga kirish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+body{background:#F8F8F8;min-height:100vh;overflow-x:hidden}
+/* Fon shakllari (referencedagi yumshoq to'lqinlar) */
+.fon-shakl{position:fixed;z-index:0;pointer-events:none;background:#EFEFF1;border-radius:48% 52% 46% 54%/58% 44% 56% 42%}
+.fon-shakl.chap{width:620px;height:620px;left:-260px;bottom:-280px;transform:rotate(18deg)}
+.fon-shakl.ong{width:760px;height:760px;right:-300px;top:180px;transform:rotate(-14deg);background:#F0F0F2}
+
+.orash{position:relative;z-index:1;max-width:660px;margin:0 auto;padding:64px 24px 60px;display:flex;flex-direction:column;align-items:center}
+.l-logo{display:flex;align-items:center;gap:13px}
+.l-logo b{font-size:26px;letter-spacing:-.015em;font-weight:800;letter-spacing:.01em;color:#141619}
+.l-sarlavha{font-size:46px;font-weight:750;letter-spacing:-.02em;color:#101B29;margin-top:46px;text-align:center}
+.l-izoh{font-size:16.5px;color:#6B7684;margin-top:12px;text-align:center}
+
+.l-karta{
+  width:100%;background:var(--karta);border-radius:20px;box-shadow:var(--soya);
+  padding:34px;margin-top:34px;
+}
+.l-karta .maydon-yorliq{font-size:15px}
+.l-guruh + .l-guruh{margin-top:22px}
+.l-qator{display:flex;align-items:center;margin-top:20px;gap:12px;flex-wrap:wrap}
+.unutdim{margin-left:auto;font-size:14.5px;font-weight:650;color:#0A3D6E;border-radius:6px}
+.unutdim:hover{text-decoration:underline}
+.koz-tugma{width:40px;height:40px;margin-right:-10px;border-radius:10px;display:grid;place-items:center;color:#56626E;transition:background var(--tez),color var(--tez)}
+.koz-tugma:hover{background:#EEF2F7;color:#3A4756}
+.kirish-tugma{
+  width:100%;height:58px;margin-top:24px;border-radius:14px;
+  background:var(--asos);color:#0C1D2C;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  font-size:17px;font-weight:700;
+  transition:background var(--tez),transform 80ms ease;
+}
+.kirish-tugma:hover{background:#2E7BC4}
+.kirish-tugma:active{transform:scale(.99)}
+.kirish-tugma .ic{width:21px;height:21px;stroke-width:2}
+.kirish-tugma[disabled]{opacity:.75;cursor:progress}
+
+.rol-blok{width:100%;margin-top:26px}
+.rol-yorliq{font-size:15px;font-weight:600;color:#2C3A49;margin:0 0 10px 2px}
+.rol-segment{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  background:var(--karta);border-radius:16px;box-shadow:var(--soya);
+  padding:6px;gap:0;position:relative;
+}
+.rol-tugma{
+  height:54px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;
+  font-size:14px;font-weight:600;color:#515F6D;position:relative;text-align:center;line-height:1.2;
+  transition:background var(--tez),color var(--tez);
+}
+.rol-tugma .ic{width:19px;height:19px;color:#56626E;transition:color var(--tez)}
+.rol-tugma:hover{color:#1C2836}
+.rol-tugma[aria-pressed="true"]{background:#E4EFF9;color:#0B4478}
+.rol-tugma[aria-pressed="true"] .ic{color:#0F5392}
+.rol-tugma + .rol-tugma::before{
+  content:"";position:absolute;left:0;top:14px;bottom:14px;width:1px;background:var(--chiziq);
+}
+.rol-tugma[aria-pressed="true"]::before,
+.rol-tugma[aria-pressed="true"] + .rol-tugma::before{opacity:0}
+
+.xato-yozuv{
+  display:none;align-items:center;gap:9px;margin-top:14px;
+  background:var(--qizil-fon);color:#C43C31;border-radius:12px;padding:12px 14px;
+  font-size:14px;font-weight:550;
+}
+.xato-yozuv.korinadi{display:flex}
+.xato-yozuv .ic{width:18px;height:18px}
+@media (max-width:640px){
+  .l-sarlavha{font-size:34px}
+  .l-karta{padding:24px}
+  .rol-tugma{font-size:13.5px;gap:7px}
+}
+</style>
+</head>
+<body>
+
+<div class="fon-shakl chap" aria-hidden="true"></div>
+<div class="fon-shakl ong" aria-hidden="true"></div>
+
+<main class="orash">
+  <div class="l-logo">
+    <svg width="46" height="46" viewBox="0 0 44 44" aria-hidden="true">
+      <g transform="translate(0,-6)">
+        <path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#0F5392"/>
+        <path d="M2 24.239 17.776 35.755 41.798 20.342V8L17.776 23.413 2 11.897v12.342Z" fill="#3AAA3E"/>
+        <path d="M29.518 35.935V48h12.28V28.056l-12.28 7.879Z" fill="#0F5392"/>
+      </g>
+    </svg>
+    <b>Mikrokreditbank</b>
+  </div>
+
+  <h1 class="l-sarlavha">Garov aktivlarini nazorat qilish tizimi</h1>
+  <p class="l-izoh">Korporativ hisobingiz bilan kiring — kirish huquqi lavozimingizga muvofiq beriladi</p>
+
+  <form class="l-karta" id="login-forma" novalidate>
+    <div class="l-guruh">
+      <label class="maydon-yorliq" for="foyd-nomi">Foydalanuvchi nomi yoki email</label>
+      <div class="kirish">
+        <svg class="ic"><use href="#i-foyd"/></svg>
+        <input id="foyd-nomi" type="text" placeholder="Foydalanuvchi nomi yoki email" autocomplete="username">
+      </div>
+    </div>
+    <div class="l-guruh">
+      <label class="maydon-yorliq" for="parol">Parol</label>
+      <div class="kirish">
+        <svg class="ic"><use href="#i-qulf"/></svg>
+        <input id="parol" type="password" placeholder="Parolni kiriting" autocomplete="current-password">
+        <button type="button" class="koz-tugma" id="koz" aria-label="Parolni ko'rsatish" aria-pressed="false">
+          <svg class="ic" id="koz-ikon"><use href="#i-koz-yopiq"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="xato-yozuv" id="xato" role="alert">
+      <svg class="ic"><use href="#i-ogoh"/></svg>
+      <span>Foydalanuvchi nomi va parolni kiriting</span>
+    </div>
+
+    <div class="l-qator">
+      <label class="katakcha">
+        <input type="checkbox" id="eslab" checked>
+        <span class="quti"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        Meni eslab qolish
+      </label>
+      <button type="button" class="unutdim" id="unutdim">Parolni unutdingizmi?</button>
+    </div>
+
+    <button class="kirish-tugma" id="kirish" type="submit">
+      Kirish
+      <svg class="ic"><use href="#i-strelka"/></svg>
+    </button>
+  </form>
+
+  <div class="rol-blok">
+    <div class="rol-yorliq">Ish maydoni</div>
+    <div class="rol-segment" role="group" aria-label="Rol tanlash">
+      <button type="button" class="rol-tugma" data-rol="Bank rahbariyati" aria-pressed="true">
+        <svg class="ic"><use href="#i-bank"/></svg>Bank rahbariyati
+      </button>
+      <button type="button" class="rol-tugma" data-rol="Undiruv mutaxassisi" aria-pressed="false">
+        <svg class="ic"><use href="#i-tarozi"/></svg>Undiruv mutaxassisi
+      </button>
+      <button type="button" class="rol-tugma" data-rol="Xavfsizlik operatori" aria-pressed="false">
+        <svg class="ic"><use href="#i-qalqon"/></svg>Xavfsizlik operatori
+      </button>
+      <button type="button" class="rol-tugma" data-rol="Texnik xodim" aria-pressed="false">
+        <svg class="ic"><use href="#i-servis"/></svg>Texnik xodim
+      </button>
+    </div>
+    <button type="button" class="unutdim" id="admin-kirish" style="display:block;margin:16px auto 0">
+      Administrator sifatida kirish →
+    </button>
+  </div>
+</main>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+  /* Meni eslab qolish — oldingi foydalanuvchi nomini tiklaydi */
+  const eslabKatak = document.getElementById("eslab");
+  const eslabNom = localStorage.getItem("mkb-eslab-nom");
+  if (eslabNom){ document.getElementById("foyd-nomi").value = eslabNom; }
+  else { eslabKatak.checked = false; }
+
+  /* Parol ko'rsatish/yashirish */
+  const koz = document.getElementById("koz");
+  const parol = document.getElementById("parol");
+  koz.addEventListener("click", ()=>{
+    const ochiq = parol.type === "text";
+    parol.type = ochiq ? "password" : "text";
+    koz.setAttribute("aria-pressed", String(!ochiq));
+    koz.setAttribute("aria-label", ochiq ? "Parolni ko'rsatish" : "Parolni yashirish");
+    document.getElementById("koz-ikon").innerHTML =
+      `<use href="#${ochiq ? "i-koz-yopiq" : "i-koz"}"/>`;
+  });
+
+  /* Rol tanlash */
+  document.querySelectorAll(".rol-tugma").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      document.querySelectorAll(".rol-tugma").forEach(x=>x.setAttribute("aria-pressed","false"));
+      b.setAttribute("aria-pressed","true");
+      localStorage.setItem("mkb-rol", b.dataset.rol);
+    });
+  });
+
+  /* Parolni unutdim — modal */
+  document.getElementById("unutdim").addEventListener("click", ()=>{
+    MKB.modal(
+      "Parolni tiklash",
+      "Email manzilingizga tiklash havolasi yuboriladi:<div class='kirish' style='margin-top:14px'><svg class='ic'><use href='#i-mail'/></svg><input id='tiklash-email' type='email' placeholder='email@mkbank.uz'></div>",
+      { okMatn:"Havola yuborish", ok(){ MKB.toast("Tiklash havolasi emailga yuborildi", "i-mail"); } }
+    );
+  });
+
+  /* Kirish */
+  document.getElementById("login-forma").addEventListener("submit", e=>{
+    e.preventDefault();
+    const nom = document.getElementById("foyd-nomi").value.trim();
+    const par = parol.value.trim();
+    const xato = document.getElementById("xato");
+    if (!nom || !par){ xato.classList.add("korinadi"); return; }
+    xato.classList.remove("korinadi");
+    if (eslabKatak.checked) localStorage.setItem("mkb-eslab-nom", nom);
+    else localStorage.removeItem("mkb-eslab-nom");
+    const tanlangan = document.querySelector('.rol-tugma[aria-pressed="true"]');
+    const rol = tanlangan ? tanlangan.dataset.rol : "Bank rahbariyati";
+    localStorage.setItem("mkb-rol", rol);
+    localStorage.setItem("mkb-asil-rol", rol);
+    const t = document.getElementById("kirish");
+    t.disabled = true;
+    t.innerHTML = "Kirilmoqda…";
+    setTimeout(()=>{ location.href = "index.html"; }, 600);
+  });
+
+  /* Administrator alohida kirishi (texnik talablar §3) */
+  document.getElementById("admin-kirish").addEventListener("click", ()=>{
+    MKB.modal("Administrator kirishi",
+      `<div style="display:grid;gap:14px;margin-top:6px">
+        <div><label class="maydon-yorliq">Administrator login</label><div class="kirish"><svg class="ic"><use href="#i-qalqon"/></svg><input placeholder="admin"></div></div>
+        <div><label class="maydon-yorliq">Parol</label><div class="kirish"><svg class="ic"><use href="#i-qulf"/></svg><input type="password" placeholder="••••••••"></div></div>
+      </div>`,
+      { okMatn:"Kirish", ok(){
+        localStorage.setItem("mkb-rol", "Administrator");
+        localStorage.setItem("mkb-asil-rol", "Administrator");
+        location.href = "index.html";
+      }});
+  });
+});
+</script>
+</body>
+</html>

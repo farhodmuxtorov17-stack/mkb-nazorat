@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Foydalanuvchilar va rollar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Foydalanuvchilar va rollar (ekran 18) ---- */
+.fr-grid{display:grid;grid-template-columns:400px minmax(0,1fr) 400px;gap:18px;align-items:start}
+.fr-grid h3{font-size:16.5px;font-weight:750}
+.f-son{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 8px;margin-left:9px;background:#E4EFF9;color:#0B4478;border-radius:99px;font-size:12.5px;font-weight:750;vertical-align:2px}
+.fr-qidiruv{display:flex;gap:10px;margin-top:14px}
+.fr-qidiruv .kirish{height:46px;flex:1}
+.fr-filtr{height:46px;padding:0 16px;border:1px solid var(--kirish-chiziq);border-radius:12px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:650}
+.fr-filtr:hover{background:#F3F6FA}
+.fr-filtr .ic{width:17px;height:17px}
+
+.foyd-band{
+  width:100%;text-align:left;display:flex;align-items:center;gap:12px;
+  border:1px solid var(--chiziq);border-radius:14px;padding:11px 13px;margin-top:10px;
+  transition:border-color var(--tez),box-shadow var(--tez);
+}
+.foyd-band:hover{box-shadow:var(--soya)}
+.foyd-band.faol{border-color:#CFE3F5;background:#F7FAFD;box-shadow:0 0 0 1px #CFE3F5}
+.foyd-band .avatar{width:42px;height:42px}
+.foyd-band b{display:block;font-size:14px;font-weight:650}
+.rol-teg{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;margin-top:4px}
+.rol-teg.admin{background:#E4EFF9;color:#0B4478}
+.rol-teg.operator{background:#E7F0FE;color:#2F6BCF}
+.rol-teg.auditor{background:#F3EBFE;color:#8A4BD8}
+.rol-teg.moliya{background:#FFF0DC;color:#C46A0A}
+.rol-teg.texnik{background:#EEF2F7;color:#515F6D}
+.foyd-band .bolim{margin-left:auto;font-size:13px;color:var(--matn-3);text-align:right;flex:none}
+.foyd-band .holat{display:flex;align-items:center;gap:7px;font-size:13px;color:#2C3A49;flex:none;width:64px;justify-content:flex-end}
+.foyd-band .holat .nuqta{width:7px;height:7px;border-radius:99px;background:#3AAA3E}
+.foyd-band .holat.nofaol .nuqta{background:#C7C7CD}
+
+/* Markaz */
+.profil-blok{text-align:center;padding-top:6px}
+.profil-blok .avatar{width:104px;height:104px;margin:0 auto;position:relative}
+.profil-blok .avatar .onlayn{position:absolute;right:5px;bottom:5px;width:15px;height:15px;border-radius:99px;background:#0F5392;border:3px solid #fff}
+.profil-blok h2{font-size:20px;font-weight:750;margin-top:12px}
+.malumot-jadval{margin-top:8px}
+.mj-qator{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #F1F4F8;font-size:13.5px}
+.mj-qator:last-child{border-bottom:none}
+.mj-qator .ic{width:17px;height:17px;color:#56626E}
+.mj-qator .yorliq{color:var(--matn-3)}
+.mj-qator b{margin-left:auto;font-weight:650;text-align:right}
+.mj-qator b .nuqta{display:inline-block;width:7px;height:7px;border-radius:99px;background:#3AAA3E;margin-right:6px;vertical-align:1px}
+.foyd-tana{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 22px;align-items:start}
+.ruxsat-rasm{display:grid;place-items:center}
+.ruxsat-rasm img{max-width:220px}
+.ruxsatlar{grid-column:1/-1;margin-top:10px}
+.ruxsatlar h4{font-size:15.5px;font-weight:750;margin-bottom:6px}
+.ruxsat-band{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 10px;border-bottom:1px solid #F1F4F8;border-radius:9px;transition:background var(--tez)}
+.ruxsat-band:hover{background:#F7F9FC}
+.ruxsat-band:last-child{border-bottom:none}
+.ruxsat-band .ic{width:19px;height:19px;color:#3A4756}
+.ruxsat-band b{font-size:14px;font-weight:650}
+.ruxsat-band span{font-size:12.5px;color:var(--matn-3)}
+.ruxsat-band .strelka{margin-left:auto;color:var(--matn-4)}
+.ruxsat-band .strelka .ic{width:15px;height:15px}
+
+/* O'ng ustun */
+.rol-band{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 8px;border-bottom:1px solid #F1F4F8;border-radius:10px;transition:background var(--tez)}
+.rol-band:hover{background:#F7F9FC}
+.rol-band:last-of-type{border-bottom:none}
+.rol-tile{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile-tor)}
+.rol-tile .ic{width:19px;height:19px}
+.rol-tile.yashil{background:#E4EFF9;color:#0B4478}
+.rol-tile.kok{background:#E7F0FE;color:#2F6BCF}
+.rol-tile.binafsha{background:#F3EBFE;color:#8A4BD8}
+.rol-tile.sariq{background:#FFF0DC;color:#C46A0A}
+.rol-tile.kul{background:#EEF2F7;color:#515F6D}
+.rol-band b{display:block;font-size:14.5px;font-weight:650}
+.rol-band span{display:block;font-size:12.5px;color:var(--matn-3)}
+.rol-band .son{margin-left:auto;font-size:14px;font-weight:750}
+
+.matritsa{margin-top:2px}
+.matritsa h3{margin-bottom:12px}
+.matritsa table{width:100%;border-collapse:collapse;font-size:13px}
+.matritsa th{font-size:12px;font-weight:650;color:var(--matn-3);text-align:center;padding:8px 4px;border-bottom:1px solid var(--chiziq)}
+.matritsa th:first-child{text-align:left}
+.matritsa td{padding:9px 4px;text-align:center;border-bottom:1px solid #F1F4F8;color:var(--matn-4)}
+.matritsa tr:last-child td{border-bottom:none}
+.matritsa td:first-child{text-align:left;font-weight:600;color:#2C3A49}
+.matritsa .ha{color:#3AAA3E}
+.matritsa .ha .ic{width:16px;height:16px;stroke-width:2.2;vertical-align:-3px}
+.matritsa .koz .ic{width:15px;height:15px;color:#56626E;vertical-align:-3px}
+@media (max-width:1700px){.fr-grid{grid-template-columns:360px minmax(0,1fr)}.fr-grid > aside{grid-column:1/-1}}
+@media (max-width:1100px){.fr-grid{grid-template-columns:minmax(0,1fr)}.foyd-tana{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body data-sahifa="sozlamalar" data-ruxsat="admin">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator"><h1>Foydalanuvchilar va rollar</h1></div>
+
+    <div class="fr-grid">
+
+      <!-- Chap: foydalanuvchilar -->
+      <div class="karta">
+        <h3>Foydalanuvchilar<span class="f-son">24</span></h3>
+        <div class="fr-qidiruv">
+          <div class="kirish"><input id="f-izlash" placeholder="Qidirish..." aria-label="Foydalanuvchi qidirish"></div>
+          <button class="fr-filtr" data-toast="Filtrlar: rol, bo'lim, holat"><svg class="ic"><use href="#i-slayder"/></svg>Filtrlar</button>
+        </div>
+        <div id="foyd-royxat"></div>
+        <div class="sahifalash" style="padding:14px 0 0">
+          <span class="oraliq">Jami: <b>24</b></span>
+          <button class="s-tugma" data-toast="Oldingi sahifa" aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
+          <button class="s-tugma aktiv">1</button>
+          <button class="s-tugma" data-toast="Keyingi sahifa" aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Markaz: ma'lumotlar -->
+      <div class="karta">
+        <h3>Foydalanuvchi ma'lumotlari</h3>
+        <div class="foyd-tana">
+          <div class="profil-blok">
+            <span class="avatar">
+              <svg viewBox="0 0 34 34" style="width:80px;height:80px;display:block;margin:12px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg>
+              <span class="onlayn"></span>
+            </span>
+            <h2 id="p-nom">Javlon Karimov</h2>
+            <span class="rol-teg admin" id="p-rol" style="margin-top:8px">Administrator</span>
+            <div class="ruxsat-rasm" style="margin-top:18px"><img src="assets/ruxsat_belgisi.png" alt="Ruxsatlar belgisi illyustratsiyasi"></div>
+          </div>
+
+          <div class="malumot-jadval">
+            <div class="mj-qator"><svg class="ic"><use href="#i-hujjat"/></svg><span class="yorliq">ID raqami</span><b id="p-id">U056789012</b></div>
+            <div class="mj-qator"><svg class="ic"><use href="#i-mail"/></svg><span class="yorliq">Email</span><b id="p-email">javlon.karimov@mkbank.uz</b></div>
+            <div class="mj-qator"><svg class="ic"><use href="#i-tel"/></svg><span class="yorliq">Telefon</span><b id="p-tel">+998 90 123 45 67</b></div>
+            <div class="mj-qator"><svg class="ic"><use href="#i-panel"/></svg><span class="yorliq">Bo'lim</span><b id="p-bolim">IT bo'limi</b></div>
+            <div class="mj-qator"><svg class="ic"><use href="#i-foyd"/></svg><span class="yorliq">Lavozim</span><b id="p-lavozim">Tizim administratori</b></div>
+            <div class="mj-qator"><svg class="ic"><use href="#i-kalendar"/></svg><span class="yorliq">Ishga kirish sanasi</span><b id="p-sana">15-yan, 2022</b></div>
+            <div class="mj-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Holat</span><b><span class="nuqta" id="p-holat-nuqta"></span><span id="p-holat">Faol</span></b></div>
+          </div>
+
+          <div class="ruxsatlar">
+            <h4>Ruxsatlar va huquqlar</h4>
+            <button class="ruxsat-band" data-toast="Tizim boshqaruvi ruxsatlari"><svg class="ic"><use href="#i-sozlama"/></svg><span><b>Tizim boshqaruvi</b><br><span>Foydalanuvchilar, rollar, sozlamalar va xavfsizlik</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
+            <button class="ruxsat-band" data-toast="Ma'lumotlar boshqaruvi ruxsatlari"><svg class="ic"><use href="#i-foyd"/></svg><span><b>Ma'lumotlar boshqaruvi</b><br><span>Barcha modul va ma'lumotlarga to'liq kirish</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
+            <button class="ruxsat-band" data-toast="Hisobotlar ruxsatlari"><svg class="ic"><use href="#i-shartnoma"/></svg><span><b>Hisobotlar</b><br><span>Hisobotlarni ko'rish, yaratish va eksport qilish</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
+            <button class="ruxsat-band" data-toast="Integratsiyalar ruxsatlari"><svg class="ic"><use href="#i-ekran"/></svg><span><b>Integratsiyalar</b><br><span>API, integratsiyalar va tizim ulanishlari</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
+            <button class="ruxsat-band" data-toast="Audit jurnali ruxsatlari"><svg class="ic"><use href="#i-qalqon"/></svg><span><b>Audit jurnali</b><br><span>Tizim faoliyati va o'zgarishlarni ko'rish</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- O'ng: rollar -->
+      <aside style="display:flex;flex-direction:column;gap:18px">
+        <div class="karta">
+          <div style="display:flex;align-items:center;margin-bottom:8px">
+            <h3>Rollar ro'yxati<span class="f-son">5</span></h3>
+            <button class="tugma tugma-asos tugma-kichik" style="margin-left:auto" id="yangi-rol"><svg class="ic"><use href="#i-qoshish"/></svg>Yangi rol</button>
+          </div>
+          <button class="rol-band" data-toast="Administrator roli tafsiloti"><span class="rol-tile yashil"><svg class="ic"><use href="#i-foyd"/></svg></span><span><b>Administrator</b><span>Tizimga to'liq kirish huquqi</span></span><span class="son">3</span></button>
+          <button class="rol-band" data-toast="Operator roli tafsiloti"><span class="rol-tile kok"><svg class="ic"><use href="#i-ekran"/></svg></span><span><b>Xavfsizlik operatori</b><span>Operatsion ma'lumotlar bilan ishlash</span></span><span class="son">8</span></button>
+          <button class="rol-band" data-toast="Auditor roli tafsiloti"><span class="rol-tile binafsha"><svg class="ic"><use href="#i-qalqon"/></svg></span><span><b>Auditor</b><span>Hisobot va audit ma'lumotlarini ko'rish</span></span><span class="son">4</span></button>
+        <button class="rol-band" data-toast="Moliya roli tafsiloti"><span class="rol-tile sariq"><svg class="ic"><use href="#i-daromad"/></svg></span><span><b>Moliya</b><span>Moliya va to'lov ma'lumotlari</span></span><span class="son">5</span></button>
+          <button class="rol-band" data-toast="Texnik xodim roli tafsiloti"><span class="rol-tile kul"><svg class="ic"><use href="#i-sozlama"/></svg></span><span><b>Texnik xodim</b><span>Texnik xizmat va obyektlar bo'yicha kirish</span></span><span class="son">4</span></button>
+        </div>
+
+        <div class="karta matritsa">
+          <h3>Rollar bo'yicha ruxsat matritsasi</h3>
+          <div class="jadval-orash">
+            <table>
+              <thead><tr><th>Modul / Rollar</th><th>Admin</th><th>Xavfsizlik operatori</th><th>Auditor</th><th>Moliya</th><th>Texnik</th></tr></thead>
+              <tbody id="matritsa-tanasi"></tbody>
+            </table>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+const AVATAR = `<span class="avatar"><svg viewBox="0 0 34 34" style="width:32px;height:32px;display:block;margin:5px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span>`;
+const FOYDLAR = [
+  {nom:"Javlon Karimov", rol:"Administrator", teg:"admin", bolim:"IT bo'limi", faol:true, id:"U056789012", email:"javlon.karimov@mkbank.uz", lavozim:"Tizim administratori", tel:"+998 90 123 45 67", sana:"15-yan, 2022"},
+  {nom:"Nilufar Ismoilova", rol:"Xavfsizlik operatori", teg:"operator", bolim:"Operatsion bo'lim", faol:true, id:"U056789013", email:"n.ismoilova@mkbank.uz", lavozim:"Katta operator", tel:"+998 91 234 56 78", sana:"03-mar, 2022"},
+  {nom:"Bekzod Yusupov", rol:"Auditor", teg:"auditor", bolim:"Audit bo'limi", faol:true, id:"U056789014", email:"b.yusupov@mkbank.uz", lavozim:"Bosh auditor", tel:"+998 93 345 67 89", sana:"20-avg, 2021"},
+  {nom:"Madina Tursunova", rol:"Moliya", teg:"moliya", bolim:"Moliya bo'limi", faol:true, id:"U056789015", email:"m.tursunova@mkbank.uz", lavozim:"Moliya mutaxassisi", tel:"+998 94 456 78 90", sana:"11-noy, 2022"},
+  {nom:"Shahzod Abdullaev", rol:"Texnik xodim", teg:"texnik", bolim:"Texnik xizmat", faol:true, id:"U056789016", email:"sh.abdullaev@mkbank.uz", lavozim:"Texnik muhandis", tel:"+998 97 567 89 01", sana:"05-fev, 2023"},
+  {nom:"Umid Safarov", rol:"Xavfsizlik operatori", teg:"operator", bolim:"Operatsion bo'lim", faol:false, id:"U056789017", email:"u.safarov@mkbank.uz", lavozim:"Xavfsizlik operatori", tel:"+998 88 678 90 12", sana:"14-iyul, 2023"},
+  {nom:"Saida Rahimova", rol:"Moliya", teg:"moliya", bolim:"Moliya bo'limi", faol:true, id:"U056789018", email:"s.rahimova@mkbank.uz", lavozim:"Buxgalter", tel:"+998 99 789 01 23", sana:"22-sen, 2021"},
+  {nom:"Jahongir Otajonov", rol:"Texnik xodim", teg:"texnik", bolim:"Texnik xizmat", faol:true, id:"U056789019", email:"j.otajonov@mkbank.uz", lavozim:"Elektrik", tel:"+998 95 890 12 34", sana:"09-dek, 2023"}
+];
+let faol = 0, izlash = "";
+
+function royxatChiz(){
+  const r = FOYDLAR.filter(f=>!izlash || f.nom.toLowerCase().includes(izlash));
+  document.getElementById("foyd-royxat").innerHTML = r.map(f=>{
+    const i = FOYDLAR.indexOf(f);
+    return `
+    <button class="foyd-band ${i===faol?"faol":""}" data-i="${i}">
+      ${AVATAR}
+      <span style="min-width:0"><b>${f.nom}</b><span class="rol-teg ${f.teg}">${f.rol}</span></span>
+      <span class="bolim">${f.bolim}</span>
+      <span class="holat ${f.faol?"":"nofaol"}"><span class="nuqta"></span>${f.faol?"Faol":"Nofaol"}</span>
+    </button>`;
+  }).join("");
+  document.querySelectorAll(".foyd-band").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      faol = +b.dataset.i; royxatChiz(); profilChiz();
+    });
+  });
+}
+function profilChiz(){
+  const f = FOYDLAR[faol];
+  document.getElementById("p-nom").textContent = f.nom;
+  const rt = document.getElementById("p-rol");
+  rt.textContent = f.rol; rt.className = "rol-teg "+f.teg;
+  document.getElementById("p-id").textContent = f.id;
+  document.getElementById("p-email").textContent = f.email;
+  document.getElementById("p-bolim").textContent = f.bolim;
+  document.getElementById("p-lavozim").textContent = f.lavozim;
+  document.getElementById("p-tel").textContent = f.tel;
+  document.getElementById("p-sana").textContent = f.sana;
+  document.getElementById("p-holat").textContent = f.faol ? "Faol" : "Nofaol";
+  document.getElementById("p-holat-nuqta").style.background = f.faol ? "#3AAA3E" : "#9AA1A9";
+}
+document.getElementById("f-izlash").addEventListener("input", e=>{ izlash = e.target.value.toLowerCase(); royxatChiz(); });
+royxatChiz(); profilChiz();
+
+/* Matritsa */
+const HA = `<span class="ha"><svg class="ic"><use href="#i-belgi-doira"/></svg></span>`;
+const KOZ = `<span class="koz"><svg class="ic"><use href="#i-koz"/></svg></span>`;
+const MODULLAR = [
+  ["Boshqaruv paneli", HA, HA, HA, HA, HA],
+  ["Garov obyektlari", HA, "–", "–", "–", "–"],
+  ["Shartnomalar", HA, "–", KOZ, "–", "–"],
+  ["Hisobotlar", HA, HA, "–", HA, "–"],
+  ["Sozlamalar", HA, "–", KOZ, "–", "–"]
+];
+document.getElementById("matritsa-tanasi").innerHTML = MODULLAR.map(m=>`
+  <tr><td>${m[0]}</td><td>${m[1]}</td><td>${m[2]}</td><td>${m[3]}</td><td>${m[4]}</td><td>${m[5]}</td></tr>`).join("");
+
+/* Yangi rol */
+document.getElementById("yangi-rol").addEventListener("click", ()=>{
+  MKB.modal("Yangi rol yaratish",
+    `<div style="display:grid;gap:14px;margin-top:6px">
+      <div><label class="maydon-yorliq">Rol nomi</label><div class="kirish"><input placeholder="Masalan: Nazoratchi"></div></div>
+      <div><label class="maydon-yorliq">Tavsif</label><div class="kirish"><input placeholder="Qisqa tavsif"></div></div>
+    </div>`,
+    { okMatn:"Yaratish", ok(){ MKB.toast("Yangi rol yaratildi"); } });
+});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Hujjatlar markazi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Hujjatlar markazi (ekran 12) ---- */
+.hj-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+.filtr-qator{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.f-izlash{
+  display:flex;align-items:center;gap:10px;flex:1;min-width:200px;max-width:380px;
+  background:var(--karta);border-radius:14px;height:48px;padding:0 18px;box-shadow:var(--soya);
+}
+.f-izlash input{flex:1;border:none;outline:none;background:none;font:inherit;font-size:14.5px;min-width:0}
+.f-izlash .ic{width:19px;height:19px;color:#56626E}
+.filtr-qator .tanlov{width:auto;min-width:165px;background:var(--karta);border:none;box-shadow:var(--soya)}
+.f-tugma{
+  margin-left:auto;display:flex;align-items:center;gap:9px;height:48px;padding:0 18px;
+  background:var(--karta);border-radius:14px;box-shadow:var(--soya);
+  font-size:14.5px;font-weight:650;color:#1C2836;
+}
+.f-tugma .ic{width:18px;height:18px;color:#3A4756}
+
+.tur-chiplar{display:flex;gap:10px;flex-wrap:wrap}
+.tur-chip{
+  display:flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:99px;
+  background:var(--karta);box-shadow:var(--soya);font-size:14px;font-weight:600;color:#2C3A49;
+  transition:all var(--tez);
+}
+.tur-chip .son{font-size:12px;font-weight:700;color:#56626E}
+.tur-chip:hover{box-shadow:0 1px 2px rgba(23,26,31,.05),0 8px 22px rgba(23,26,31,.08)}
+.tur-chip.aktiv{background:#22261F;color:#fff}
+.tur-chip.aktiv .son{color:#CFE3F5}
+
+.hj-jadval td .fayl-ikon{width:38px;height:38px;border-radius:10px;font-size:0;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile-tor)}
+.fayl-ikon.pdf{background:#FBE9E5;color:#E8563F}
+.fayl-ikon.dwg{background:#E5F5E5;color:#3E9B4F}
+.fayl-ikon.doc{background:#E7F0FE;color:#2E7BC4}
+.fayl-ikon.img{background:#FFF0DC;color:#EE8B23}
+.fayl-ikon.rep{background:#F3EBFE;color:#8A4BD8}
+.fayl-ikon .ic{width:18px;height:18px}
+.hujjat-katak{display:flex;align-items:center;gap:12px}
+.hujjat-katak b{font-size:14.5px;font-weight:650}
+.tur-teg{display:inline-block;font-size:12px;font-weight:650;padding:5px 11px;border-radius:8px}
+.tur-teg.pasport{background:#E4EFF9;color:#0B4478}
+.tur-teg.kadastr{background:#E5F5E5;color:#2E7D3A}
+.tur-teg.shartnoma{background:#E7F0FE;color:#2F6BCF}
+.tur-teg.rasm{background:#FFF0DC;color:#C46A0A}
+.tur-teg.hisobot{background:#F3EBFE;color:#8A4BD8}
+.holat-katak{display:flex;align-items:center;gap:8px;font-size:14px;color:#2C3A49}
+.holat-katak .nuqta{width:8px;height:8px;border-radius:99px}
+.jadval tbody tr.tanlangan{background:#EBF4FC;box-shadow:inset 0 1px 0 #C7DEF4, inset 0 -1px 0 #C7DEF4}
+
+/* O'ng panel */
+.hp-bosh{display:flex;align-items:flex-start;gap:10px}
+.hp-bosh h2{font-size:20px;font-weight:750;line-height:1.25}
+.hp-holat{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:650;color:#0B4478;margin-top:6px}
+.hp-holat .nuqta{width:7px;height:7px;border-radius:99px;background:#3AAA3E}
+.hp-id{font-size:12.5px;color:var(--matn-4);margin-top:4px}
+.hp-yop{margin-left:auto;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;color:#515F6D;flex:none}
+.hp-yop:hover{background:#EEF2F7}
+.hp-rasm{margin-top:14px;border-radius:14px;overflow:hidden;background:#FAFAF8}
+.hp-rasm img{width:100%;height:210px;object-fit:contain}
+.hp-qator{display:flex;align-items:center;gap:11px;padding:10.5px 0;border-bottom:1px solid #F1F4F8;font-size:13.5px}
+.hp-qator:last-child{border-bottom:none}
+.hp-qator .ic{width:17px;height:17px;color:#56626E}
+.hp-qator .yorliq{color:var(--matn-3)}
+.hp-qator b{margin-left:auto;font-weight:650;text-align:right;max-width:60%}
+.versiya-blok{margin-top:16px;padding-top:16px;border-top:1px solid var(--chiziq)}
+.versiya-blok h4{font-size:15px;font-weight:750;margin-bottom:10px}
+.versiya-qator{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:12.5px}
+.versiya-qator .v{font-weight:750;color:#101B29;width:34px}
+.versiya-qator .izoh{color:var(--matn-2);flex:1}
+.versiya-qator .sana{color:var(--matn-4)}
+.versiya-qator .kim{color:var(--matn-3);width:84px;text-align:right}
+.versiya-qator .kim.yashil{color:#0B4478;font-weight:650}
+.hp-harakat{display:flex;gap:10px;margin-top:18px}
+.hp-harakat .korish{flex:1;height:50px;border:1.5px solid #2B3036;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:9px;font-size:14.5px;font-weight:700}
+.hp-harakat .korish:hover{background:#F3F6FA}
+@media (max-width:1400px){.hj-grid{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body data-sahifa="hisobotlar">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <h1>Hujjatlar markazi</h1>
+      <div class="sahifa-harakat">
+        <button class="tugma tugma-oq" data-toast="Tanlangan hujjatlar arxiv sifatida yuklanmoqda"><svg class="ic"><use href="#i-yuklab"/></svg>Yuklab olish</button>
+        <button class="tugma tugma-asos" id="hujjat-qoshish"><svg class="ic"><use href="#i-qoshish"/></svg>Hujjat qo'shish</button>
+      </div>
+    </div>
+
+    <div class="filtr-qator">
+      <div class="f-izlash" onclick="this.querySelector('input').focus()">
+        <input type="search" id="izlash" placeholder="Qidirish..." aria-label="Hujjatlarni qidirish">
+        <svg class="ic"><use href="#i-izlash"/></svg>
+      </div>
+      <button class="tanlov" id="f-obyekt" data-variantlar='["Barcha obyektlar","Navruz Plaza","Chorvoq dala hovlisi","Chorsu Savdo Markazi","Humo Office","Nurafshon majmuasi"]'><span class="t-yorliq">Barcha obyektlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+      <button class="tanlov" id="f-tur-dd" data-variantlar='["Barcha turlar","Texnik pasport","Kadastr","Shartnoma","Rasm","Hisobot"]'><span class="t-yorliq">Barcha turlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+      <button class="tanlov" id="f-holat" data-variantlar='["Barcha holatlar","Tasdiqlangan","Yangi","Ko&#39;rib chiqilmoqda"]'><span class="t-yorliq">Barcha holatlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+      <button class="f-tugma" data-toast="Kengaytirilgan filtrlar"><svg class="ic"><use href="#i-slayder"/></svg>Filtrlar</button>
+    </div>
+
+    <div class="tur-chiplar" id="tur-chiplar">
+      <button class="tur-chip aktiv" data-tur="Barchasi">Barchasi<span class="son">128</span></button>
+      <button class="tur-chip" data-tur="Texnik pasport">Texnik pasport<span class="son">24</span></button>
+      <button class="tur-chip" data-tur="Kadastr">Kadastr<span class="son">18</span></button>
+      <button class="tur-chip" data-tur="Shartnoma">Shartnoma<span class="son">36</span></button>
+      <button class="tur-chip" data-tur="Rasm">Rasm<span class="son">22</span></button>
+      <button class="tur-chip" data-tur="Hisobot">Hisobot<span class="son">28</span></button>
+    </div>
+
+    <div class="hj-grid" id="hj-grid">
+      <div class="karta jadval-korpus hj-jadval">
+        <div class="jadval-orash">
+          <table class="jadval">
+            <thead><tr><th>Hujjat nomi</th><th>Obyekt</th><th>Turi</th><th>Sana</th><th>Holat</th><th></th></tr></thead>
+            <tbody id="hujjat-jadval"></tbody>
+          </table>
+        </div>
+        <div class="sahifalash">
+          <span class="oraliq">Jami: <b>128</b></span>
+          <button class="s-tugma" data-toast="Oldingi sahifa" aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
+          <button class="s-tugma aktiv">1</button>
+          <button class="s-tugma" data-toast="2-sahifa">2</button>
+          <button class="s-tugma" data-toast="3-sahifa">3</button>
+          <span style="color:var(--matn-4)">…</span>
+          <button class="s-tugma" data-toast="16-sahifa">16</button>
+          <button class="s-tugma" data-toast="Keyingi sahifa" aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
+        </div>
+      </div>
+
+      <aside class="karta" id="hujjat-panel"></aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+const HUJJATLAR = [
+  {nom:"Texnik pasport.pdf", ikon:"pdf", iturl:"i-hujjat", obyekt:"Navruz Plaza", kod:"GT-2024-001", tur:"Texnik pasport", teg:"pasport",
+   sana:"24-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-001", hajm:"12.4 MB", format:"PDF", rasm:"assets/bino_tower.png",
+   yuklagan:"Ismoilov Otabek", tavsif:"Bino bo'yicha texnik ma'lumotlar va umumiy tavsif."},
+  {nom:"Kadastr reja.dwg", ikon:"dwg", iturl:"i-xarita", obyekt:"Chorvoq dala hovlisi", kod:"CH-2023-045", tur:"Kadastr", teg:"kadastr",
+   sana:"21-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-014", hajm:"8.1 MB", format:"DWG", rasm:"assets/bino_dacha.png",
+   yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining kadastr chizmasi."},
+  {nom:"Ijara shartnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyekt:"Chorsu Savdo Markazi", kod:"MM-2022-013", tur:"Shartnoma", teg:"shartnoma",
+   sana:"18-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-022", hajm:"2.7 MB", format:"PDF", rasm:"assets/bino_mall.png",
+   yuklagan:"Karimova N.", tavsif:"«Turon Retail» MChJ bilan ijara shartnomasi."},
+  {nom:"Fasad ko'rinishi.jpg", ikon:"img", iturl:"i-kamera", obyekt:"Humo Office", kod:"HO-2023-021", tur:"Rasm", teg:"rasm",
+   sana:"16-may, 2024", holat:"Yangi", hrang:"#3AAA3E", id:"DOC-2024-031", hajm:"5.4 MB", format:"JPG", rasm:"assets/bino_humo.png",
+   yuklagan:"Soliev B.", tavsif:"Bino fasadining yangilangan surati."},
+  {nom:"Baholash hisobot.pdf", ikon:"rep", iturl:"i-hisobot", obyekt:"Nurafshon turar-joy majmuasi", kod:"NT-2023-067", tur:"Hisobot", teg:"hisobot",
+   sana:"14-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-036", hajm:"4.2 MB", format:"PDF", rasm:"assets/bino_turar.png",
+   yuklagan:"Yusupova M.", tavsif:"Mustaqil baholovchi hisoboti."},
+  {nom:"Yer uchastkasi rejasi.pdf", ikon:"pdf", iturl:"i-yer", obyekt:"Yashnobod yer maydoni", kod:"YM-2024-078", tur:"Kadastr", teg:"kadastr",
+   sana:"12-may, 2024", holat:"Ko'rib chiqilmoqda", hrang:"#4A90F2", id:"DOC-2024-040", hajm:"3.3 MB", format:"PDF", rasm:"assets/bino_yer.png",
+   yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining chegara rejasi."},
+  {nom:"Qabul-topshirish dalolatnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyekt:"Navruz Plaza", kod:"GT-2024-001", tur:"Shartnoma", teg:"shartnoma",
+   sana:"10-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-044", hajm:"1.6 MB", format:"PDF", rasm:"assets/bino_tower.png",
+   yuklagan:"Ismoilov Otabek", tavsif:"5-qavat ofis maydonini topshirish dalolatnomasi."},
+  {nom:"Energiya audit hisobot.pdf", ikon:"pdf", iturl:"i-energiya", obyekt:"Chorvoq dala hovlisi", kod:"CH-2023-045", tur:"Hisobot", teg:"hisobot",
+   sana:"07-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-051", hajm:"6.8 MB", format:"PDF", rasm:"assets/bino_dacha.png",
+   yuklagan:"Karimov I.", tavsif:"Yillik energiya samaradorligi auditi."}
+];
+let faolId = "DOC-2024-001";
+let turFiltri = "Barchasi";
+let qidiruv = "";
+let obyektFiltri = "Barcha obyektlar";
+let holatFiltri = "Barcha holatlar";
+
+const tbody = document.getElementById("hujjat-jadval");
+
+function jadvalChiz(){
+  const royxat = HUJJATLAR.filter(h=>
+    (turFiltri==="Barchasi" || h.tur===turFiltri) &&
+    (obyektFiltri==="Barcha obyektlar" || h.obyekt===obyektFiltri) &&
+    (holatFiltri==="Barcha holatlar" || h.holat===holatFiltri) &&
+    (!qidiruv || (h.nom+" "+h.obyekt).toLowerCase().includes(qidiruv))
+  );
+  tbody.innerHTML = royxat.map(h=>`
+    <tr data-id="${h.id}" class="${h.id===faolId?"tanlangan":""}" tabindex="0">
+      <td><span class="hujjat-katak"><span class="fayl-ikon ${h.ikon}"><svg class="ic"><use href="#${h.iturl}"/></svg></span><b>${h.nom}</b></span></td>
+      <td><b>${h.obyekt}</b><br><span style="font-size:12.5px;color:var(--matn-4)">${h.kod}</span></td>
+      <td><span class="tur-teg ${h.teg}">${h.tur}</span></td>
+      <td>${h.sana}</td>
+      <td><span class="holat-katak"><span class="nuqta" style="background:${h.hrang}"></span>${h.holat}</span></td>
+      <td><button class="amal-tugma" data-menyu="${h.id}" aria-label="Amallar"><svg class="ic"><use href="#i-nuqtalar"/></svg></button></td>
+    </tr>`).join("");
+
+  tbody.querySelectorAll("tr").forEach(tr=>{
+    tr.addEventListener("click", e=>{
+      if (e.target.closest(".amal-tugma")){ MKB.toast("Amallar: ko'rish / yuklab olish / o'chirish"); return; }
+      faolId = tr.dataset.id;
+      tbody.querySelectorAll("tr").forEach(r=>r.classList.toggle("tanlangan", r===tr));
+      panelChiz(HUJJATLAR.find(h=>h.id===faolId));
+    });
+    tr.addEventListener("keydown", e=>{ if(e.key==="Enter"){ tr.click(); } });
+  });
+}
+
+function panelChiz(h){
+  const panel = document.getElementById("hujjat-panel");
+  panel.style.display = "";
+  panel.innerHTML = `
+    <div class="hp-bosh">
+      <div>
+        <h2>${h.nom}</h2>
+        <div class="hp-holat"><span class="nuqta" style="background:${h.hrang}"></span>${h.holat}</div>
+        <div class="hp-id">ID: ${h.id}</div>
+      </div>
+      <button class="hp-yop" id="hp-yop" aria-label="Yopish"><svg class="ic" style="width:19px;height:19px"><use href="#i-yopish"/></svg></button>
+    </div>
+    <div class="hp-rasm"><img src="${h.rasm}" alt="${h.obyekt}"></div>
+    <div style="margin-top:12px">
+      <div class="hp-qator"><svg class="ic"><use href="#i-bino"/></svg><span class="yorliq">Obyekt</span><b>${h.obyekt} (${h.kod})</b></div>
+      <div class="hp-qator"><svg class="ic"><use href="#i-hujjat"/></svg><span class="yorliq">Turi</span><b>${h.tur}</b></div>
+      <div class="hp-qator"><svg class="ic"><use href="#i-kalendar"/></svg><span class="yorliq">Sana</span><b>${h.sana}</b></div>
+      <div class="hp-qator"><svg class="ic"><use href="#i-yuklash"/></svg><span class="yorliq">Hajmi</span><b>${h.hajm}</b></div>
+      <div class="hp-qator"><svg class="ic"><use href="#i-ekran"/></svg><span class="yorliq">Format</span><b>${h.format}</b></div>
+      <div class="hp-qator"><svg class="ic"><use href="#i-foyd"/></svg><span class="yorliq">Yuklagan</span><b>${h.yuklagan}</b></div>
+      <div class="hp-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Tavsif</span><b style="font-weight:550">${h.tavsif}</b></div>
+    </div>
+    <div class="versiya-blok">
+      <h4>Versiya tarixi</h4>
+      <div class="versiya-qator"><span class="v">v2.0</span><span class="izoh">Yakuniy versiya</span><span class="sana">${h.sana}</span><span class="kim yashil">${h.yuklagan} ●</span></div>
+      <div class="versiya-qator"><span class="v">v1.1</span><span class="izoh">Tuzatishlar kiritildi</span><span class="sana">Yakunidan oldin</span><span class="kim">Mavlonov B.</span></div>
+      <div class="versiya-qator"><span class="v">v1.0</span><span class="izoh">Boshlang'ich versiya</span><span class="sana">Birinchi yuklanganda</span><span class="kim">Ismoilov O.</span></div>
+    </div>
+    <div class="hp-harakat">
+      <button class="korish" data-toast="${h.nom} ko'rish oynasida ochildi"><svg class="ic" style="width:18px;height:18px"><use href="#i-koz"/></svg>Ko'rish</button>
+      <button class="nuqtalar-tugma" style="width:50px;height:50px;border:1px solid var(--kirish-chiziq);border-radius:13px;display:grid;place-items:center" data-toast="Qo'shimcha amallar"><svg class="ic" style="width:18px;height:18px"><use href="#i-nuqtalar"/></svg></button>
+    </div>`;
+}
+
+/* Tur chiplari */
+document.querySelectorAll(".tur-chip").forEach(c=>{
+  c.addEventListener("click", ()=>{
+    document.querySelectorAll(".tur-chip").forEach(x=>x.classList.remove("aktiv"));
+    c.classList.add("aktiv");
+    turFiltri = c.dataset.tur === "Barchasi" ? "Barchasi" : c.dataset.tur;
+    document.querySelector("#f-tur-dd .t-yorliq").textContent = c.dataset.tur === "Barchasi" ? "Barcha turlar" : c.dataset.tur;
+    jadvalChiz();
+  });
+});
+document.getElementById("izlash").addEventListener("input", e=>{ qidiruv = e.target.value.toLowerCase(); jadvalChiz(); });
+document.getElementById("f-obyekt").addEventListener("tanlov", e=>{ obyektFiltri = e.detail; jadvalChiz(); });
+document.getElementById("f-holat").addEventListener("tanlov", e=>{ holatFiltri = e.detail; jadvalChiz(); });
+document.getElementById("f-tur-dd").addEventListener("tanlov", e=>{
+  turFiltri = e.detail === "Barcha turlar" ? "Barchasi" : e.detail;
+  document.querySelectorAll(".tur-chip").forEach(x=>x.classList.toggle("aktiv", x.dataset.tur===turFiltri));
+  jadvalChiz();
+});
+document.getElementById("hj-grid").addEventListener("click", e=>{
+  if (e.target.closest("#hp-yop")){
+    document.getElementById("hujjat-panel").style.display = "none";
+    tbody.querySelectorAll("tr").forEach(r=>r.classList.remove("tanlangan"));
+    faolId = null;
+  }
+});
+
+/* Hujjat qo'shish */
+document.getElementById("hujjat-qoshish").addEventListener("click", ()=>{
+  MKB.modal("Hujjat qo'shish",
+    `<div style="display:grid;gap:14px;margin-top:6px">
+      <div><label class="maydon-yorliq">Hujjat nomi</label><div class="kirish"><svg class="ic"><use href="#i-hujjat"/></svg><input placeholder="Masalan: Sug'urta polisi.pdf"></div></div>
+      <div><label class="maydon-yorliq">Obyekt</label><div class="kirish"><svg class="ic"><use href="#i-bino"/></svg><input placeholder="Navruz Plaza"></div></div>
+      <div style="border:1.5px dashed #D3D7DC;border-radius:12px;padding:22px;text-align:center;color:var(--matn-3);font-size:13.5px">
+        Faylni shu yerga tashlang yoki <b style="color:#0B4478">tanlang</b><br><span style="font-size:12px">PDF, DOCX, XLSX, JPG · maks. 25 MB</span>
+      </div>
+    </div>`,
+    { okMatn:"Yuklash", ok(){ MKB.toast("Hujjat yuklandi va tasdiqlashga yuborildi", "i-yuklash"); } });
+});
+
+jadvalChiz();
+panelChiz(HUJJATLAR[0]);
+});
+</script>
+</body>
+</html>

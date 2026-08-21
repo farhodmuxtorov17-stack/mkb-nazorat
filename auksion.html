@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Auksion savdolari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Auksion savdolari (Musodara qilingan garov obyektlarini realizatsiya qilish) ---- */
+.st-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.st-kpi .karta{display:flex;align-items:center;gap:13px;padding:18px 20px}
+.st-kpi .tile{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile)}
+.st-kpi .tile .ic{width:21px;height:21px}
+.st-kpi .tile.yashil{background:#E4EFF9;color:#0F5392}
+.st-kpi .tile.kok{background:#E7F0FE;color:#2F6BCF}
+.st-kpi .tile.sariq{background:#FFF6DE;color:#9A6E00}
+.st-kpi .tile.binafsha{background:#F3EBFE;color:#8A4BD8}
+.st-kpi .yorliq{font-size:13.5px;color:var(--matn-3)}
+.st-kpi b{display:block;font-size:24px;font-weight:750;line-height:1.2}
+
+.st-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;align-items:start}
+.bosqich-ustunlar{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.b-ustun h4{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:750;padding:0 4px 10px}
+.b-ustun h4 .son{margin-left:auto;font-size:11.5px;font-weight:750;background:#EEF2F7;border-radius:99px;padding:2px 8px;color:#515F6D}
+.b-ustun h4 .nuqta{width:8px;height:8px;border-radius:99px}
+.s-karta{
+  width:100%;text-align:left;background:var(--karta);border:1px solid var(--chiziq);border-radius:14px;
+  padding:11px;margin-bottom:10px;transition:box-shadow var(--tez),border-color var(--tez);
+}
+.s-karta:hover{box-shadow:var(--soya)}
+.s-karta.faol{border-color:#CFE3F5;background:#F7FAFD;box-shadow:0 0 0 1px #CFE3F5}
+.s-karta img{width:100%;height:84px;object-fit:cover;border-radius:10px;outline:1px solid rgba(23,26,31,.06);outline-offset:-1px}
+.s-karta b{display:block;font-size:13px;font-weight:700;margin-top:8px}
+.s-karta .narx{display:block;font-size:12.5px;font-weight:750;color:#0B4478;margin-top:2px}
+.s-karta .meta{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--matn-4);margin-top:4px}
+.s-karta .meta .ic{width:13px;height:13px}
+
+/* Tanlangan obyekt paneli */
+.tanlangan-panel h3{font-size:17px;font-weight:750}
+.tp-obyekt{display:flex;gap:13px;margin-top:12px}
+.tp-obyekt img{width:104px;height:84px;object-fit:cover;border-radius:12px;outline:1px solid rgba(23,26,31,.06);outline-offset:-1px}
+.tp-obyekt b{display:block;font-size:15.5px;font-weight:750}
+.tp-obyekt .kod{display:block;font-size:12px;color:var(--matn-4)}
+.tp-obyekt .narx{display:block;font-size:14px;font-weight:750;color:#0B4478;margin-top:4px}
+.tp-obyekt .chip{margin-top:6px}
+.tp-blok{margin-top:14px;padding-top:12px;border-top:1px solid var(--chiziq)}
+.tp-blok h4{font-size:14.5px;font-weight:750;margin-bottom:6px;display:flex;align-items:center}
+.tp-blok h4 .son{margin-left:8px;font-size:11.5px;background:#E4EFF9;color:#0B4478;border-radius:99px;padding:2px 8px}
+.mijoz-band{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid #F1F4F8}
+.mijoz-band:last-of-type{border-bottom:none}
+.mijoz-band .avatar{width:36px;height:36px}
+.mijoz-band b{display:block;font-size:13.5px;font-weight:650}
+.mijoz-band span{display:block;font-size:12px;color:var(--matn-4)}
+.mijoz-band .teg{margin-left:auto;font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px}
+.teg-korik{background:#E7F0FE;color:#2F6BCF}
+.teg-muzokara{background:#FFF6DE;color:#9A6E00}
+.teg-tayyor{background:#E4EFF9;color:#0B4478}
+.tp-amal{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.tp-amal .a{
+  display:flex;align-items:center;gap:11px;height:48px;padding:0 15px;border-radius:12px;
+  border:1px solid var(--kirish-chiziq);font-size:13.5px;font-weight:650;color:#1C2836;
+  transition:background var(--tez);text-align:left;
+}
+.tp-amal .a:hover{background:#F3F6FA}
+.tp-amal .a .ic{width:17px;height:17px;color:#515F6D}
+.tp-amal .yakun{
+  height:54px;border-radius:13px;background:#CFE3F5;color:#0C3357;border:none;
+  font-size:15px;font-weight:750;display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.tp-amal .yakun:hover{background:#6FA8DC}
+.tp-amal .yakun .ic{width:19px;height:19px;color:#0C3357}
+@media (max-width:1500px){.st-kpi{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.bosqich-ustunlar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media (max-width:1200px){.st-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:800px){.bosqich-ustunlar{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body data-sahifa="realizatsiya">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1>Auksion savdolari</h1>
+        <div class="sahifa-izoh">Musodara qilingan garov obyektlarini realizatsiya qilish: ko'rikdan hujjatlargacha yagona jarayon</div>
+      </div>
+      <div class="sahifa-harakat">
+        <a class="tugma tugma-oq" href="musodara-qabul.html"><svg class="ic"><use href="#i-aktiv"/></svg>Musodara qabuliga o'tish</a>
+        <a class="tugma tugma-asos" href="masofaviy-korik.html"><svg class="ic"><use href="#i-kamera"/></svg>Masofaviy ko'rik boshlash</a>
+      </div>
+    </div>
+
+    <!-- KPI -->
+    <section class="st-kpi">
+      <button class="karta" data-toast="Auksiondagi obyektlar ro'yxati">
+        <span class="tile yashil"><svg class="ic"><use href="#i-daromad"/></svg></span>
+        <span><span class="yorliq">Auksionda</span><b>12</b></span>
+      </button>
+      <button class="karta" data-toast="Belgilangan ko'riklar jadvali">
+        <span class="tile kok"><svg class="ic"><use href="#i-kamera"/></svg></span>
+        <span><span class="yorliq">Ko'rik belgilangan</span><b>5</b></span>
+      </button>
+      <button class="karta" data-toast="Muzokaradagi obyektlar">
+        <span class="tile sariq"><svg class="ic"><use href="#i-tashrif"/></svg></span>
+        <span><span class="yorliq">Muzokarada</span><b>3</b></span>
+      </button>
+      <a class="karta" href="arxiv.html">
+        <span class="tile binafsha"><svg class="ic"><use href="#i-papka"/></svg></span>
+        <span><span class="yorliq">Shu oy realizatsiya qilingan</span><b>5</b></span>
+      </a>
+    </section>
+
+    <div class="st-grid">
+
+      <!-- Bosqichlar -->
+      <div class="karta">
+        <div class="bosqich-ustunlar" id="bosqichlar"></div>
+      </div>
+
+      <!-- Tanlangan obyekt -->
+      <aside class="karta tanlangan-panel" id="tanlangan-panel"></aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+const AVATAR = `<span class="avatar"><svg viewBox="0 0 34 34" style="width:28px;height:28px;display:block;margin:4px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span>`;
+
+/* Lotlar yagona manbadan: faol yozuvlar (musodara/auksion bosqichi) + yopilgan ishlar */
+const MIJOZ_QOSHIMCHA = {
+  "GR-2025/1187": {bosqich: "tayyorlanmoqda", korik: 1,
+    mijozlar: [["«Baraka Tekstil» MChJ", "B2B mijoz", "korik", "Ko'rik 26-may"]]},
+  "GR-2025/0934": {bosqich: "korik", korik: 2,
+    mijozlar: [["«Turon Retail» MChJ", "B2B mijoz", "muzokara", "Muzokarada"],
+               ["Qodirova Malika", "+998 93 555-66-77", "korik", "Ko'rik 27-may"]]},
+  "GR-2024/0286": {mijozlar: [["«Sifat Qurilish» MChJ", "B2B mijoz", "korik", "Ko'rik 25-may"],
+                              ["Aliyev Kamron", "+998 90 777-88-99", "korik", "Ko'rik 28-may"]]},
+  "GR-2024/0512": {mijozlar: [["«Turon Retail» MChJ", "B2B mijoz · G'olib taklif", "tayyor", "Hujjatlar tayyorlanmoqda"]]}
+};
+const OBYEKTLAR = MKB_DATA.YOZUVLAR
+  .filter(y => ["musodara", "auksion"].includes(y.ish.bosqich))
+  .map(y => {
+    const q = MIJOZ_QOSHIMCHA[y.id] || {};
+    return {id: y.id, nom: y.garov.nom, kod: y.id + " · " + y.ish.ijro,
+      narx: y.bahoMatn, rasm: y.garov.rasm,
+      bosqich: q.bosqich || "tayyorlanmoqda", korik: q.korik || 0, mijozlar: q.mijozlar || []};
+  })
+  .concat(MKB_DATA.SOTUV.map(l => {
+    const q = MIJOZ_QOSHIMCHA[l.id] || {};
+    return {id: l.id, nom: l.nom, kod: l.id + " · " + l.ijro,
+      narx: MKB_DATA.pul(l.baho), rasm: l.rasm,
+      bosqich: l.bosqich, korik: l.korik, mijozlar: q.mijozlar || []};
+  }));
+
+const BOSQICHLAR = [
+  ["tayyorlanmoqda","Sotuvga tayyorlanmoqda","#F2C230"],
+  ["elon","E'lon qilingan","#2E7BC4"],
+  ["korik","Ko'rik / Muzokara","#0F5392"],
+  ["rasmiylashtirish","Rasmiylashtirish","#8B5CF6"]
+];
+let faolId = 3;
+
+function bosqichChiz(){
+  document.getElementById("bosqichlar").innerHTML = BOSQICHLAR.map(b=>{
+    const royxat = OBYEKTLAR.filter(o=>o.bosqich===b[0]);
+    return `
+    <div class="b-ustun">
+      <h4><span class="nuqta" style="background:${b[2]}"></span>${b[1]}<span class="son">${royxat.length}</span></h4>
+      ${royxat.map(o=>`
+        <button class="s-karta ${o.id===faolId?"faol":""}" data-id="${o.id}">
+          <img src="${o.rasm}" alt="">
+          <b>${o.nom}</b>
+          <span class="narx">${o.narx}</span>
+          <span class="meta"><svg class="ic"><use href="#i-foyd"/></svg>${o.mijozlar.length} mijoz${o.korik?` · <svg class="ic"><use href="#i-kamera"/></svg>${o.korik} ko'rik`:""}</span>
+        </button>`).join("")}
+    </div>`;
+  }).join("");
+  document.querySelectorAll(".s-karta").forEach(k=>{
+    k.addEventListener("click", ()=>{ faolId = +k.dataset.id; bosqichChiz(); panelChiz(); });
+  });
+}
+
+function panelChiz(){
+  const o = OBYEKTLAR.find(x=>x.id===faolId);
+  const bosqichNomi = BOSQICHLAR.find(b=>b[0]===o.bosqich)[1];
+  document.getElementById("tanlangan-panel").innerHTML = `
+    <h3>Tanlangan obyekt</h3>
+    <div class="tp-obyekt">
+      <img src="${o.rasm}" alt="${o.nom}">
+      <span>
+        <b>${o.nom}</b>
+        <span class="kod">${o.kod}</span>
+        <span class="narx">${o.narx}</span>
+        <span class="chip chip-sariq" style="height:24px">${bosqichNomi}</span>
+      </span>
+    </div>
+
+    <div class="tp-blok">
+      <h4>Auksion ishtirokchilari<span class="son">${o.mijozlar.length}</span></h4>
+      ${o.mijozlar.map(m=>`
+        <div class="mijoz-band">
+          ${AVATAR}
+          <span><b>${m[0]}</b><span>${m[1]}</span></span>
+          <span class="teg teg-${m[2]}">${m[3]}</span>
+        </div>`).join("")}
+      <button class="tp-amal a" style="margin-top:9px;width:100%" data-toast="Yangi mijoz qo'shish oynasi">
+        <svg class="ic"><use href="#i-qoshish"/></svg>Mijoz qo'shish
+      </button>
+    </div>
+
+    <div class="tp-blok">
+      <h4>Amallar</h4>
+      <div class="tp-amal">
+        <a class="a" href="masofaviy-korik.html"><svg class="ic"><use href="#i-kamera"/></svg>Masofaviy ko'rik boshlash</a>
+        <a class="a" href="jonli-tashrif.html"><svg class="ic"><use href="#i-qulf"/></svg>Face ID orqali eshik ochish</a>
+        <a class="a" href="monitoring.html"><svg class="ic"><use href="#i-monitor"/></svg>Kameralardan kuzatish</a>
+        <a class="a" href="hujjatlar.html"><svg class="ic"><use href="#i-hujjat"/></svg>Obyekt hujjatlari</a>
+        <button class="yakun" id="sotuv-yakunlash"><svg class="ic"><use href="#i-belgi-doira"/></svg>Auksion natijasini rasmiylashtirish</button>
+      </div>
+    </div>`;
+
+  document.getElementById("sotuv-yakunlash").addEventListener("click", ()=>{
+    MKB.modal("Auksion natijasini rasmiylashtirish — "+o.nom,
+      `<div style="display:grid;gap:13px;margin-top:6px">
+        <div><label class="maydon-yorliq">Xaridor</label><div class="kirish"><svg class="ic"><use href="#i-foyd"/></svg><input value="${o.mijozlar[0][0]}"></div></div>
+        <div><label class="maydon-yorliq">Yakuniy narx</label><div class="kirish"><svg class="ic"><use href="#i-daromad"/></svg><input value="${o.narx}"></div></div>
+        <div><label class="maydon-yorliq">Shartnoma raqami</label><div class="kirish"><svg class="ic"><use href="#i-shartnoma"/></svg><input placeholder="SOT-2026-____"></div></div>
+        <label class="katakcha"><input type="checkbox" checked><span class="quti"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>Oldi-sotdi shartnomasi rasmiylashtirildi</label>
+        <label class="katakcha"><input type="checkbox" checked><span class="quti"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>To'lov tasdiqnomasi biriktirildi</label>
+        <label class="katakcha"><input type="checkbox"><span class="quti"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>Topshirish dalolatnomasi biriktirildi</label>
+        <div style="background:#FFF6DE;border-radius:11px;padding:11px 13px;font-size:12.5px;color:#8A6116">
+          Obyekt sotilgach <b>doimiy arxivga</b> o'tadi va faol reyestrdan chiqariladi. Arxiv yozuvi hech qachon o'chirilmaydi.
+        </div>
+      </div>`,
+      { okMatn:"Sotuvni tasdiqlash", ok(){
+        MKB.toast(o.nom+" sotildi — doimiy arxivga o'tkazildi", "i-belgi-doira");
+        setTimeout(()=>location.href="arxiv.html", 1100);
+      }});
+  });
+}
+bosqichChiz(); panelChiz();
+});
+</script>
+</body>
+</html>

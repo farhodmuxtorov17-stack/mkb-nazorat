@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Kirish nazorati</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Kirish nazorati (ekran 8) ---- */
+.sa-grid{display:grid;grid-template-columns:340px minmax(0,1fr) 350px;gap:18px;align-items:start}
+.sa-grid > div:nth-child(2){min-width:0}
+.sa-karta h3{font-size:16.5px;font-weight:750}
+.sa-karta .sub{font-size:12.5px;color:var(--matn-4);margin-top:2px}
+.sorov-band{display:flex;align-items:center;gap:12px;width:100%;padding:11px 4px;border-bottom:1px solid #F1F4F8;text-align:left;border-radius:10px;transition:background var(--tez)}
+.sorov-band:hover{background:#F7F9FC}
+.sorov-band:last-of-type{border-bottom:none}
+.sorov-band .avatar{width:40px;height:40px}
+.sorov-band .matn{flex:1;min-width:0}
+.sorov-band b{display:block;font-size:14px;font-weight:650;color:#182533}
+.sorov-band span{display:block;font-size:12.5px;color:var(--matn-4)}
+.sorov-band .vaqt{font-size:12.5px;color:var(--matn-3);flex:none}
+.ruxsat-tugma{
+  width:34px;height:34px;border-radius:10px;background:#0F5392;display:grid;place-items:center;color:#fff;flex:none;
+  box-shadow:var(--chuqur-tile-tor);
+  transition:background var(--tez),transform 80ms ease;
+}
+.ruxsat-tugma:hover{background:#2E7BC4}
+.ruxsat-tugma:active{transform:scale(.92)}
+.ruxsat-tugma .ic{width:16px;height:16px;stroke-width:2.4}
+.sessiya-nuqta{width:7px;height:7px;border-radius:99px;background:#3AAA3E;flex:none;margin-right:6px}
+
+/* Markaziy sahna */
+.sahna-tab{display:flex;gap:4px;background:var(--karta);border-radius:99px;box-shadow:var(--soya);padding:5px;width:max-content;max-width:100%;overflow-x:auto}
+.sahna-tab button{height:38px;padding:0 17px;border-radius:99px;font-size:13.5px;font-weight:600;color:#515F6D;white-space:nowrap;display:flex;align-items:center;gap:8px;transition:all var(--tez)}
+.sahna-tab button .nuqta{width:7px;height:7px;border-radius:99px;background:#0F5392;display:none}
+.sahna-tab button.aktiv{background:#22261F;color:#fff}
+.sahna-tab button.aktiv .nuqta{display:block}
+.kirish-sahna{position:relative;border-radius:18px;overflow:hidden;margin-top:14px;background:linear-gradient(180deg,#FCFCFB,#F2F3F0)}
+.kirish-sahna img{width:100%;height:430px;object-fit:cover}
+.sahna-yorliq{
+  position:absolute;left:16px;top:16px;display:flex;align-items:center;gap:8px;
+  background:rgba(23,26,31,.68);backdrop-filter:blur(6px);color:#fff;
+  padding:8px 14px;border-radius:11px;font-size:13px;font-weight:650;
+}
+.sahna-yorliq .n{width:7px;height:7px;border-radius:99px;background:#0F5392;flex:none}
+.qurilma-qator{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 64px;gap:12px;margin-top:14px}
+.qurilma-k{background:var(--karta);border-radius:14px;box-shadow:var(--soya);padding:14px 16px;display:flex;align-items:center;gap:12px;text-align:left;transition:transform var(--tez)}
+.qurilma-k:hover{transform:translateY(-2px)}
+.qurilma-k b{display:block;font-size:14.5px;font-weight:700;color:#182533}
+.qurilma-k span{display:block;font-size:12.5px;color:var(--matn-4);margin-top:1px}
+.qurilma-k .ic{margin-left:auto;width:22px;height:22px;color:#515F6D}
+.qurilma-k.uch-nuqta{justify-content:center}
+.mehmon-karta{margin-top:16px}
+.mehmon-royxat{display:grid;grid-template-columns:repeat(4,1fr) 64px;gap:12px}
+.mehmon-k{background:var(--karta);border:1px solid var(--chiziq);border-radius:13px;padding:12px;display:flex;align-items:center;gap:10px;text-align:left;transition:box-shadow var(--tez)}
+.mehmon-k:hover{box-shadow:var(--soya)}
+.mehmon-k .avatar{width:36px;height:36px}
+.mehmon-k b{display:block;font-size:13px;font-weight:650;line-height:1.25}
+.mehmon-k span{display:block;font-size:11.5px;color:var(--matn-4)}
+.mehmon-k .vaqt{margin-left:auto;font-size:11.5px;color:var(--matn-3);flex:none}
+.mehmon-plus{border:1px solid var(--chiziq);border-radius:13px;display:grid;place-items:center;font-size:14px;font-weight:750;color:#515F6D;transition:background var(--tez)}
+.mehmon-plus:hover{background:#F3F6FA}
+
+/* O'ng panel */
+.shaxs-panel{text-align:center;position:relative}
+.shaxs-yop{position:absolute;right:0;top:0;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;color:#515F6D}
+.shaxs-yop:hover{background:#EEF2F7}
+.shaxs-avatar{width:116px;height:116px;border-radius:99px;margin:18px auto 0;position:relative;background:linear-gradient(180deg,#E3E7ED,#CDD3DC);overflow:hidden;display:grid;place-items:end center}
+.shaxs-avatar svg{width:88px;height:88px}
+.shaxs-avatar .onlayn{position:absolute;right:7px;bottom:7px;width:16px;height:16px;border-radius:99px;background:#0F5392;border:3px solid #fff}
+.shaxs-panel h2{font-size:20px;font-weight:750;margin-top:14px}
+.shaxs-panel .rol{font-size:14px;color:var(--matn-3);margin-top:2px}
+.ruxsat-chip{
+  display:inline-flex;align-items:center;gap:8px;margin-top:12px;
+  background:#E4EFF9;color:#0B4478;font-size:13.5px;font-weight:700;
+  border-radius:99px;padding:8px 16px;
+}
+.ruxsat-chip .ic{width:16px;height:16px}
+.ruxsat-chip.kutish{background:var(--sariq-fon);color:#9A6E00}
+.ruxsat-chip.bekor{background:var(--qizil-fon);color:#C43C31}
+.shaxs-tablar{display:flex;margin-top:20px;border-bottom:1px solid var(--chiziq)}
+.shaxs-tab{flex:1;padding:10px 0 12px;font-size:14.5px;font-weight:650;color:#56626E;border-bottom:2px solid transparent;margin-bottom:-1px}
+.shaxs-tab.aktiv{color:#101B29;border-bottom-color:var(--asos)}
+.shaxs-malumot{text-align:left;margin-top:6px}
+.shaxs-qator{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #F1F4F8;font-size:13.5px}
+.shaxs-qator:last-child{border-bottom:none}
+.shaxs-qator .ic{width:17px;height:17px;color:#56626E}
+.shaxs-qator .yorliq{color:var(--matn-3)}
+.shaxs-qator b{margin-left:auto;font-weight:650;color:#101B29;text-align:right}
+.chiqish-tugma{
+  width:100%;height:52px;margin-top:16px;border-radius:14px;border:1.5px solid #2B3036;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-size:15px;font-weight:700;color:#182533;transition:background var(--tez);
+}
+.chiqish-tugma:hover{background:#F3F6FA}
+.bekor-tugma{
+  width:100%;height:46px;margin-top:10px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  font-size:14.5px;font-weight:650;color:#E0442B;transition:background var(--tez);
+}
+.bekor-tugma:hover{background:var(--qizil-fon)}
+.bekor-tugma .ic{width:17px;height:17px}
+@media (max-width:1560px){.sa-grid{grid-template-columns:300px minmax(0,1fr) 330px}}
+@media (max-width:1300px){
+  .sa-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .sa-grid > div:first-child{order:2}
+  .sa-grid > div:nth-child(2){order:1;grid-column:1/-1}
+  .sa-grid > aside{order:3;grid-column:1/-1}
+  .mehmon-royxat{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .mehmon-plus{grid-column:1/-1}
+}
+@media (max-width:900px){.sa-grid{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body data-sahifa="xavfsizlik">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <h1>Kirish nazorati</h1>
+      <div class="sahifa-harakat">
+        <a class="tugma tugma-oq" href="kirish-voqealari.html"><svg class="ic"><use href="#i-qulf"/></svg>Kirish voqealari markazi</a>
+        <a class="tugma tugma-asos" href="jonli-tashrif.html"><svg class="ic"><use href="#i-kamera"/></svg>Jonli tashrif nazorati</a>
+      </div>
+    </div>
+
+    <div class="sa-grid">
+
+      <!-- Chap ustun -->
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="karta sa-karta">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div><h3>Kirish so'rovlar</h3><div class="sub">5 ta kutmoqda</div></div>
+            <button class="tugma tugma-oq tugma-kichik" id="sorov-qoshish" style="margin-left:auto"><svg class="ic"><use href="#i-qoshish"/></svg>Yangi so'rov</button>
+          </div>
+          <div style="margin-top:8px" id="sorovlar"></div>
+        </div>
+
+        <div class="karta sa-karta">
+          <div style="display:flex;align-items:center">
+            <div><h3>Faol sessiyalar</h3><div class="sub">12 ta faol</div></div>
+            <a class="karta-havola" href="kirish-voqealari.html">Barchasini ko'rish</a>
+          </div>
+          <div style="margin-top:8px">
+            <div class="sorov-band">
+              <span class="avatar"><svg viewBox="0 0 34 34" style="width:30px;height:30px;display:block;margin:5px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span>
+              <span class="matn"><b>Bekzod To'xtayev</b><span>Xodim · Asosiy bino, 3-qavat</span></span>
+              <span class="sessiya-nuqta"></span><span class="vaqt">14:32</span>
+            </div>
+            <div class="sorov-band">
+              <span class="avatar"><svg viewBox="0 0 34 34" style="width:30px;height:30px;display:block;margin:5px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span>
+              <span class="matn"><b>Dilshod Raximov</b><span>Pudratchi · Texnik zona</span></span>
+              <span class="sessiya-nuqta"></span><span class="vaqt">14:31</span>
+            </div>
+            <div class="sorov-band">
+              <span class="avatar"><svg viewBox="0 0 34 34" style="width:30px;height:30px;display:block;margin:5px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span>
+              <span class="matn"><b>Malika Qodirova</b><span>Mehmon · Konferensiya zali</span></span>
+              <span class="sessiya-nuqta"></span><span class="vaqt">14:30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Markaz -->
+      <div>
+        <div class="sahna-tab" role="tablist">
+          <button class="aktiv"><span class="nuqta"></span>Asosiy kirish</button>
+          <button>Yon kirish</button>
+          <button>Ombor kirish</button>
+          <button>Parking kirish</button>
+        </div>
+        <div class="kirish-sahna">
+          <img src="assets/kirish_sahna.png" alt="Asosiy kirish — turniketlar 3D ko'rinishi">
+        </div>
+        <div class="qurilma-qator">
+          <button class="qurilma-k" id="turniket" data-toast="Turniketlar boshqaruvi: 2/2 faol">
+            <span><b>Turniketlar</b><span data-holat>2/2 faol</span></span>
+            <svg class="ic"><use href="#i-ekran"/></svg>
+          </button>
+          <button class="qurilma-k" id="shlagbaum">
+            <span><b>Shlagbaum</b><span data-holat>Yopiq</span></span>
+            <svg class="ic"><use href="#i-minus"/></svg>
+          </button>
+          <button class="qurilma-k" id="eshik">
+            <span><b>Eshik</b><span data-holat>Yopiq</span></span>
+            <svg class="ic"><use href="#i-qulf"/></svg>
+          </button>
+          <button class="qurilma-k uch-nuqta" data-toast="Qo'shimcha qurilmalar" aria-label="Boshqa qurilmalar">
+            <svg class="ic" style="margin:0"><use href="#i-nuqtalar"/></svg>
+          </button>
+        </div>
+
+        <div class="karta mehmon-karta">
+          <div style="display:flex;align-items:center;margin-bottom:14px">
+            <div><h3 style="font-size:16.5px;font-weight:750">Bugungi mehmonlar</h3><div class="sub" style="font-size:12.5px;color:var(--matn-4)">8 kishi</div></div>
+          </div>
+          <div class="mehmon-royxat">
+            <button class="mehmon-k" data-mehmon="Kamron Aliyev"><span class="avatar"><svg viewBox="0 0 34 34" style="width:28px;height:28px;display:block;margin:4px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span><span><b>Kamron Aliyev</b><span>Mehmon</span></span><span class="vaqt">14:20</span></button>
+            <button class="mehmon-k" data-mehmon="Nargiza Karimova"><span class="avatar"><svg viewBox="0 0 34 34" style="width:28px;height:28px;display:block;margin:4px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span><span><b>Nargiza Karimova</b><span>Mehmon</span></span><span class="vaqt">14:15</span></button>
+            <button class="mehmon-k" data-mehmon="Umid Soliyev"><span class="avatar"><svg viewBox="0 0 34 34" style="width:28px;height:28px;display:block;margin:4px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span><span><b>Umid Soliyev</b><span>Mehmon</span></span><span class="vaqt">14:10</span></button>
+            <button class="mehmon-k" data-mehmon="Saida Rahimova"><span class="avatar"><svg viewBox="0 0 34 34" style="width:28px;height:28px;display:block;margin:4px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span><span><b>Saida Rahimova</b><span>Mehmon</span></span><span class="vaqt">14:05</span></button>
+            <a class="mehmon-plus" href="kirish-voqealari.html" aria-label="Yana 4 mehmonni ko'rish">+4</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- O'ng panel -->
+      <aside class="karta shaxs-panel" id="shaxs-panel">
+        <button class="shaxs-yop" id="shaxs-yop" aria-label="Yopish"><svg class="ic" style="width:19px;height:19px"><use href="#i-yopish"/></svg></button>
+        <div class="shaxs-avatar">
+          <svg viewBox="0 0 34 34"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg>
+          <span class="onlayn"></span>
+        </div>
+        <h2 id="sh-nom">Sardor Aliyev</h2>
+        <div class="rol" id="sh-rol">Mehmon</div>
+        <div class="ruxsat-chip" id="ruxsat-chip"><svg class="ic"><use href="#i-belgi"/></svg><span id="ruxsat-matn">Ruxsat berildi</span><svg class="ic"><use href="#i-belgi-doira"/></svg></div>
+
+        <div class="shaxs-tablar" role="tablist">
+          <button class="shaxs-tab aktiv" data-t="malumot">Ma'lumot</button>
+          <button class="shaxs-tab" data-t="tarix">Tarix</button>
+        </div>
+
+        <div class="shaxs-malumot" data-p="malumot">
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-hujjat"/></svg><span class="yorliq">ID raqami</span><b id="sh-id">G56789012</b></div>
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-bino"/></svg><span class="yorliq">Tashkilot</span><b id="sh-tashkilot">SecurTech Servis MChJ</b></div>
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-daromad"/></svg><span class="yorliq">Maqsad</span><b id="sh-maqsad">Uchrashuv</b></div>
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-foyd"/></svg><span class="yorliq">Mezbon</span><b id="sh-mezbon">Ismoilov Otabek</b></div>
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">Kirish vaqti</span><b id="sh-kirish-vaqt">24-may, 14:31</b></div>
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">Chiqish vaqti</span><b id="sh-chiqish-vaqt">–</b></div>
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-pin"/></svg><span class="yorliq">Kirish nuqtasi</span><b id="sh-nuqta">Asosiy kirish</b></div>
+        </div>
+        <div class="shaxs-malumot" data-p="tarix" hidden id="sh-tarix">
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">24-may, 14:31</span><b>Kirish — Asosiy</b></div>
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">17-may, 12:44</span><b>Chiqish — Asosiy</b></div>
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">17-may, 10:02</span><b>Kirish — Asosiy</b></div>
+          <div class="shaxs-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">03-may, 09:18</span><b>Kirish — Yon</b></div>
+        </div>
+
+        <button class="chiqish-tugma" id="chiqish-ruxsat" data-toast="Chiqish ruxsati berildi — turniket ochildi">
+          <svg class="ic" style="width:18px;height:18px"><use href="#i-chiqish"/></svg>
+          Chiqishni ruxsat etish
+        </button>
+        <button class="bekor-tugma" id="bekor">
+          <svg class="ic"><use href="#i-savat"/></svg>
+          Ruxsatni bekor qilish
+        </button>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+const SOROVLAR = [
+  {nom:"Javlon Karimov", rol:"Mehmon", vaqt:"14:31", id:"G56781234", tashkilot:"BuildTech LLC", maqsad:"Yetkazib berish", mezbon:"Sattorov Jasur", nuqta:"Asosiy kirish",
+   tarix:[["22-may, 09:10","Kirish — Asosiy"]]},
+  {nom:"Shahnoza Mirzayeva", rol:"Pudratchi", vaqt:"14:30", id:"G56782345", tashkilot:"CleanPro Xizmat", maqsad:"Tozalash xizmati", mezbon:"Rahimov Bekzod", nuqta:"Yon kirish",
+   tarix:[["23-may, 08:00","Kirish — Yon"],["23-may, 17:15","Chiqish — Yon"]]},
+  {nom:"Bobur Yusupov", rol:"Haydovchi", vaqt:"14:29", id:"G56783456", tashkilot:"FastCargo", maqsad:"Yuk tushirish", mezbon:"Sattorov Jasur", nuqta:"Ombor kirish",
+   tarix:[["18-may, 11:20","Kirish — Ombor"],["18-may, 12:05","Chiqish — Ombor"]]},
+  {nom:"Azizbek Norov", rol:"Xodim", vaqt:"14:28", id:"U056789020", tashkilot:"MKB (ichki xodim)", maqsad:"Ish smenasi", mezbon:"—", nuqta:"Asosiy kirish",
+   tarix:[["24-may, 08:02","Kirish — Asosiy"],["23-may, 18:40","Chiqish — Asosiy"],["23-may, 08:05","Kirish — Asosiy"]]},
+  {nom:"Madina Tursunova", rol:"Mehmon", vaqt:"14:27", id:"G56784567", tashkilot:"Investment Group", maqsad:"Uchrashuv", mezbon:"Ismoilov Otabek", nuqta:"Asosiy kirish",
+   tarix:[["10-may, 15:30","Kirish — Asosiy"],["10-may, 16:45","Chiqish — Asosiy"]]}
+];
+const MEHMONLAR = [
+  {nom:"Kamron Aliyev", id:"G56785678", tashkilot:"SecurTech Servis MChJ", maqsad:"Uchrashuv", mezbon:"Ismoilov Otabek", nuqta:"Asosiy kirish", kirishVaqti:"24-may, 14:20",
+   tarix:[["24-may, 14:20","Kirish — Asosiy"]]},
+  {nom:"Nargiza Karimova", id:"G56786789", tashkilot:"Prime Consulting", maqsad:"Konsultatsiya", mezbon:"Sattorov Jasur", nuqta:"Asosiy kirish", kirishVaqti:"24-may, 14:15",
+   tarix:[["24-may, 14:15","Kirish — Asosiy"],["02-may, 10:00","Kirish — Asosiy"],["02-may, 11:20","Chiqish — Asosiy"]]},
+  {nom:"Umid Soliyev", id:"G56787890", tashkilot:"Legal Partners", maqsad:"Huquqiy maslahat", mezbon:"Rahimov Bekzod", nuqta:"Asosiy kirish", kirishVaqti:"24-may, 14:10",
+   tarix:[["24-may, 14:10","Kirish — Asosiy"]]},
+  {nom:"Saida Rahimova", id:"G56788901", tashkilot:"Media Group", maqsad:"Intervyu", mezbon:"Ismoilov Otabek", nuqta:"Asosiy kirish", kirishVaqti:"24-may, 14:05",
+   tarix:[["24-may, 14:05","Kirish — Asosiy"]]}
+];
+const AVATAR = `<span class="avatar"><svg viewBox="0 0 34 34" style="width:30px;height:30px;display:block;margin:5px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span>`;
+
+function sorovBandHTML(s){
+  return `<div class="sorov-band" data-nom="${s.nom}" role="button" tabindex="0">
+    ${AVATAR}
+    <span class="matn"><b>${s.nom}</b><span>${s.rol}</span></span>
+    <span class="vaqt">${s.vaqt}</span>
+    <button class="ruxsat-tugma" data-ruxsat="${s.nom}" aria-label="${s.nom} uchun ruxsat berish"><svg class="ic"><use href="#i-belgi"/></svg></button>
+  </div>`;
+}
+document.getElementById("sorovlar").innerHTML = SOROVLAR.map(sorovBandHTML).join("");
+
+function panelChiz(p, holat){
+  document.getElementById("shaxs-panel").hidden = false;
+  document.getElementById("sh-nom").textContent = p.nom;
+  document.getElementById("sh-rol").textContent = p.rol || "Mehmon";
+  document.getElementById("sh-id").textContent = p.id;
+  document.getElementById("sh-tashkilot").textContent = p.tashkilot;
+  document.getElementById("sh-maqsad").textContent = p.maqsad;
+  document.getElementById("sh-mezbon").textContent = p.mezbon;
+  document.getElementById("sh-kirish-vaqt").textContent = p.kirishVaqti || "–";
+  document.getElementById("sh-chiqish-vaqt").textContent = p.chiqishVaqti || "–";
+  document.getElementById("sh-nuqta").textContent = p.nuqta;
+  document.getElementById("sh-tarix").innerHTML = p.tarix.map(([vaqt,matn])=>
+    `<div class="shaxs-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">${vaqt}</span><b>${matn}</b></div>`).join("");
+  const chip = document.getElementById("ruxsat-chip"), matn = document.getElementById("ruxsat-matn");
+  chip.className = "ruxsat-chip" + (holat==="kutish" ? " kutish" : holat==="bekor" ? " bekor" : "");
+  matn.textContent = holat==="kutish" ? "Kutilmoqda" : holat==="bekor" ? "Ruxsat bekor qilindi" : "Ruxsat berildi";
+  const chiqishBtn = document.getElementById("chiqish-ruxsat"), bekorBtn = document.getElementById("bekor");
+  chiqishBtn.disabled = holat!=="berildi"; bekorBtn.disabled = holat!=="berildi";
+  chiqishBtn.style.opacity = bekorBtn.style.opacity = holat!=="berildi" ? ".45" : "";
+}
+
+/* So'rov qatori bosilganda — o'ng panelda ko'rsatish (kutilmoqda holatida) */
+function kutmoqdaYangila(){
+  const pendingCount = document.getElementById("sorovlar").querySelectorAll(".ruxsat-tugma:not(:disabled)").length;
+  document.querySelector(".sa-karta .sub").textContent = pendingCount+" ta kutmoqda";
+}
+/* Bitta so'rov qatori (band) uchun tinglovchilarni ulaydi — sahifa yuklanganda barcha qatorlarga,
+   yangi so'rov qo'shilganda esa faqat o'sha bitta yangi qatorga qo'llaniladi */
+function sorovBandUla(band){
+  band.addEventListener("click", e=>{
+    if (e.target.closest(".ruxsat-tugma")) return;
+    const p = SOROVLAR.find(s=>s.nom===band.dataset.nom);
+    panelChiz(p, "kutish");
+  });
+  band.querySelector(".ruxsat-tugma").addEventListener("click", e=>{
+    e.stopPropagation();
+    MKB.toast(e.currentTarget.dataset.ruxsat+" uchun kirish ruxsati berildi", "i-belgi-doira");
+    band.style.opacity = ".45";
+    e.currentTarget.disabled = true;
+    kutmoqdaYangila();
+  });
+}
+document.querySelectorAll(".sorov-band[data-nom]").forEach(sorovBandUla);
+
+/* Kirish nuqtasi tablari — qurilma holati shu nuqtaga mos yangilanadi */
+const NUQTA_QURILMA = {
+  "Asosiy kirish": {turniket:"2/2 faol", shlagbaum:"Yopiq", eshik:"Yopiq"},
+  "Yon kirish": {turniket:"1/1 faol", shlagbaum:"—", eshik:"Yopiq"},
+  "Ombor kirish": {turniket:"—", shlagbaum:"—", eshik:"Yopiq"},
+  "Parking kirish": {turniket:"—", shlagbaum:"Yopiq", eshik:"—"}
+};
+document.querySelectorAll(".sahna-tab button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll(".sahna-tab button").forEach(x=>x.classList.remove("aktiv"));
+    b.classList.add("aktiv");
+    const q = NUQTA_QURILMA[b.textContent.trim()];
+    if (q){
+      const turniket = document.getElementById("turniket");
+      turniket.querySelector("[data-holat]").textContent = q.turniket;
+      turniket.dataset.toast = "Turniketlar boshqaruvi: "+q.turniket;
+      document.getElementById("shlagbaum").querySelector("[data-holat]").textContent = q.shlagbaum;
+      document.getElementById("eshik").querySelector("[data-holat]").textContent = q.eshik;
+    }
+    MKB.toast(b.textContent.trim()+" tanlandi", "i-pin");
+  });
+});
+
+/* Shlagbaum / eshik holati */
+[["shlagbaum","Shlagbaum"],["eshik","Eshik"]].forEach(([id,nom])=>{
+  const el = document.getElementById(id);
+  el.addEventListener("click", ()=>{
+    const holat = el.querySelector("[data-holat]");
+    if (holat.textContent === "—") return;
+    const ochiq = holat.textContent === "Ochiq";
+    holat.textContent = ochiq ? "Yopiq" : "Ochiq";
+    holat.style.color = ochiq ? "" : "#0B4478";
+    MKB.toast(`${nom} ${ochiq ? "yopildi" : "ochildi"}`, "i-qulf");
+  });
+});
+
+/* Mehmonlar — ruxsat berilgan holatda */
+document.querySelectorAll("[data-mehmon]").forEach(m=>{
+  m.addEventListener("click", ()=>{
+    const p = MEHMONLAR.find(x=>x.nom===m.dataset.mehmon);
+    if (p) panelChiz(p, "berildi");
+  });
+});
+
+/* Panel tablari */
+document.querySelectorAll(".shaxs-tab").forEach(t=>{
+  t.addEventListener("click", ()=>{
+    document.querySelectorAll(".shaxs-tab").forEach(x=>x.classList.remove("aktiv"));
+    t.classList.add("aktiv");
+    document.querySelectorAll("[data-p]").forEach(p=>p.hidden = p.dataset.p !== t.dataset.t);
+  });
+});
+
+/* Panelni yopish */
+document.getElementById("shaxs-yop").addEventListener("click", ()=>{
+  document.getElementById("shaxs-panel").hidden = true;
+});
+
+/* Bekor qilish */
+document.getElementById("bekor").addEventListener("click", ()=>{
+  if (document.getElementById("bekor").disabled) return;
+  const nom = document.getElementById("sh-nom").textContent;
+  MKB.modal("Ruxsatni bekor qilish",
+    `${nom} uchun joriy kirish ruxsati bekor qilinadi va sessiya yakunlanadi. Davom etasizmi?`,
+    {xavf:true, okMatn:"Bekor qilish", ok(){
+      MKB.toast("Ruxsat bekor qilindi");
+      const chip = document.getElementById("ruxsat-chip"), matn = document.getElementById("ruxsat-matn");
+      chip.className = "ruxsat-chip bekor"; matn.textContent = "Ruxsat bekor qilindi";
+      document.getElementById("chiqish-ruxsat").disabled = true;
+      document.getElementById("bekor").disabled = true;
+      document.getElementById("chiqish-ruxsat").style.opacity = document.getElementById("bekor").style.opacity = ".45";
+    }});
+});
+
+/* Yangi kirish so'rovi yaratish */
+const OY_QISQA = ["yan","fev","mar","apr","may","iyun","iyul","avg","sen","okt","noy","dek"];
+function sanaChiz(qiymat){
+  if (!qiymat) return "";
+  const d = new Date(qiymat);
+  if (isNaN(d)) return "";
+  const kun = String(d.getDate()).padStart(2,"0");
+  const soat = String(d.getHours()).padStart(2,"0");
+  const daq = String(d.getMinutes()).padStart(2,"0");
+  return `${kun}-${OY_QISQA[d.getMonth()]}, ${soat}:${daq}`;
+}
+function ysMalumot(){
+  return {
+    nom: document.getElementById("ys-nom").value.trim(),
+    hujjat: document.getElementById("ys-hujjat").value.trim(),
+    tashkilot: document.getElementById("ys-tashkilot").value.trim(),
+    maqsad: document.getElementById("ys-maqsad").value.trim(),
+    mezbon: document.getElementById("ys-mezbon").value.trim(),
+    nuqta: document.getElementById("ys-nuqta").value,
+    boshlanish: document.getElementById("ys-boshlanish").value,
+    tugash: document.getElementById("ys-tugash").value
+  };
+}
+document.getElementById("sorov-qoshish").addEventListener("click", ()=>{
+  MKB.modal("Yangi kirish so'rovi",
+    `<div style="display:grid;gap:14px;margin-top:6px;text-align:left">
+      <div><label class="maydon-yorliq">Tashrifchi F.I.Sh.</label><div class="kirish"><input id="ys-nom" placeholder="Familiya Ism Sharif"></div></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px">
+        <div><label class="maydon-yorliq">Hujjat turi</label><div class="kirish"><select id="ys-turi">
+          <option>Pasport</option>
+          <option>ID karta</option>
+          <option>Haydovchilik guvohnomasi</option>
+        </select></div></div>
+        <div><label class="maydon-yorliq">Hujjat raqami</label><div class="kirish"><input id="ys-hujjat" placeholder="AB1234567"></div></div>
+      </div>
+      <div><label class="maydon-yorliq">Tashkilot</label><div class="kirish"><input id="ys-tashkilot" placeholder="Tashkilot nomi"></div></div>
+      <div><label class="maydon-yorliq">Tashrif maqsadi</label><div class="kirish"><input id="ys-maqsad" placeholder="Masalan, Uchrashuv"></div></div>
+      <div><label class="maydon-yorliq">Mezbon</label><div class="kirish"><input id="ys-mezbon" placeholder="Qabul qiluvchi xodim"></div></div>
+      <div><label class="maydon-yorliq">Ruxsat etilgan kirish nuqtasi</label><div class="kirish"><select id="ys-nuqta">
+        <option value="">Tanlang</option>
+        <option>Asosiy kirish</option>
+        <option>Yon kirish</option>
+        <option>Ombor kirish</option>
+        <option>Parking kirish</option>
+      </select></div></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px">
+        <div><label class="maydon-yorliq">Boshlanish sanasi/vaqti</label><div class="kirish"><input type="datetime-local" id="ys-boshlanish"></div></div>
+        <div><label class="maydon-yorliq">Tugash sanasi/vaqti</label><div class="kirish"><input type="datetime-local" id="ys-tugash"></div></div>
+      </div>
+    </div>`,
+    { okMatn:"Yaratish", ok(){
+      const m = ysMalumot();
+      const hozir = new Date();
+      const vaqt = String(hozir.getHours()).padStart(2,"0")+":"+String(hozir.getMinutes()).padStart(2,"0");
+      const yangiSorov = {
+        nom:m.nom, rol:"Mehmon", vaqt, id:m.hujjat,
+        tashkilot: m.tashkilot || "—", maqsad: m.maqsad || "—", mezbon: m.mezbon || "—", nuqta:m.nuqta,
+        kirishVaqti: sanaChiz(m.boshlanish), chiqishVaqti: sanaChiz(m.tugash),
+        tarix:[["Hozirgina","So'rov yaratildi"]]
+      };
+      SOROVLAR.unshift(yangiSorov);
+      const sorovlarEl = document.getElementById("sorovlar");
+      sorovlarEl.insertAdjacentHTML("afterbegin", sorovBandHTML(yangiSorov));
+      sorovBandUla(sorovlarEl.firstElementChild);
+      kutmoqdaYangila();
+      panelChiz(yangiSorov, "kutish");
+      MKB.toast("Yangi kirish so'rovi yaratildi");
+    } });
+  /* MKB.modal "Yaratish" bosilganda modalni har doim yopadi (yop() so'ng ok() chaqiradi) —
+     shuning uchun tekshiruv shu yerda, capture bosqichida, alohida bajariladi: agar maydonlar
+     to'liq bo'lmasa stopPropagation chaqirilib, hodisa tugmaning o'z (bubble) tinglovchisiga
+     yetib bormaydi va modal ochiq qoladi. */
+  const modallar = document.querySelectorAll(".modal-fon");
+  const fon = modallar[modallar.length-1];
+  fon.addEventListener("click", e=>{
+    if (!e.target.closest("[data-m-ok]")) return;
+    const m = ysMalumot();
+    const yoq = [];
+    if (!m.nom) yoq.push("F.I.Sh.");
+    if (!m.hujjat) yoq.push("hujjat raqami");
+    if (!m.nuqta) yoq.push("kirish nuqtasi");
+    if (!m.boshlanish || !m.tugash) yoq.push("vaqt oralig'i");
+    if (yoq.length){
+      e.stopPropagation();
+      MKB.toast("Quyidagi maydonlarni to'ldiring: "+yoq.join(", "));
+    }
+  }, true);
+});
+});
+</script>
+</body>
+</html>

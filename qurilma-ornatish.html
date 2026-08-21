@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Yangi qurilma o'rnatish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Qurilma provisioning wizard'i (DEV-01/02/03/10/11/12, DIA-01/02) ---- */
+.orqa-tugma{width:48px;height:48px;border-radius:14px;background:var(--karta);box-shadow:var(--soya);display:grid;place-items:center;color:#1C2836;flex:none}
+.orqa-tugma .ic{width:20px;height:20px}
+.w-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+
+.qadam-chiziq{display:flex;align-items:flex-start;margin-bottom:6px}
+.q-qadam{flex:1;text-align:center;position:relative}
+.q-qadam::before{content:"";position:absolute;top:17px;left:calc(-50% + 18px);right:calc(50% + 18px);height:2px;background:#E8EAE4}
+.q-qadam:first-child::before{display:none}
+.q-qadam.bajarildi::before,.q-qadam.joriy::before{background:#CFE3F5}
+.q-qadam .belgi{width:36px;height:36px;border-radius:99px;margin:0 auto;display:grid;place-items:center;font-size:14px;font-weight:750;position:relative;z-index:1;background:#EEF1F5;color:#6B7684;box-shadow:var(--chuqur-tile-tor)}
+.q-qadam.bajarildi .belgi{background:#0F5392;color:#fff}
+.q-qadam.joriy .belgi{background:#B2D4F3;color:#0B4478;box-shadow:var(--chuqur-tile-tor)}
+.q-qadam .belgi .ic{width:16px;height:16px;stroke-width:2.6}
+.q-qadam b{display:block;font-size:13px;font-weight:700;margin-top:9px}
+.q-qadam span{display:block;font-size:11.5px;color:var(--matn-4)}
+
+.w-panel h3{font-size:17px;font-weight:750;margin-bottom:4px}
+.w-panel .sub{font-size:13px;color:var(--matn-3);margin-bottom:16px}
+.forma-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.forma-grid .keng{grid-column:1/-1}
+.tur-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tur-karta{border:1.5px solid var(--kirish-chiziq);border-radius:14px;padding:16px 14px;text-align:left;transition:all var(--tez)}
+.tur-karta:hover{border-color:#7FB4E0;background:#F7FAFD}
+.tur-karta.tanlangan{border-color:#0F5392;background:#E3EFFA;box-shadow:0 0 0 1px #0F5392}
+.tur-karta .ic{width:22px;height:22px;color:#515F6D}
+.tur-karta.tanlangan .ic{color:#0B4478}
+.tur-karta b{display:block;font-size:13.5px;font-weight:700;margin-top:9px}
+.tur-karta span{display:block;font-size:11.5px;color:var(--matn-4);margin-top:2px}
+.tekshir-holat{display:flex;align-items:center;gap:8px;margin-top:7px;font-size:12px;font-weight:650;min-height:17px}
+.tekshir-holat.ok{color:#0B4478}
+.tekshir-holat.xato{color:#C43C31}
+.tekshir-holat .ic{width:14px;height:14px}
+.maxfiy-quti{
+  display:flex;gap:11px;background:#EEF2F7;border-radius:13px;padding:13px 15px;margin-top:4px;
+  font-size:12.5px;color:var(--matn-2);line-height:1.55;
+}
+.maxfiy-quti .ic{width:17px;height:17px;color:#515F6D;flex:none;margin-top:1px}
+.test-royxat{border:1px solid var(--chiziq);border-radius:14px;padding:6px 18px;margin-top:6px}
+.test-qator{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #F1F4F8}
+.test-qator:last-child{border-bottom:none}
+.test-belgi{width:30px;height:30px;border-radius:99px;display:grid;place-items:center;flex:none;background:#EEF1F5;color:#6B7684;transition:all var(--tez);box-shadow:var(--chuqur-tile-tor)}
+.test-belgi.ishlamoqda{background:#E7F0FE;color:#2F6BCF;animation:aylanish 1s linear infinite}
+.test-belgi.ok{background:#0F5392;color:#fff}
+.test-belgi.xato{background:var(--qizil-fon);color:#C43C31}
+.test-belgi .ic{width:15px;height:15px;stroke-width:2.6}
+@keyframes aylanish{to{transform:rotate(360deg)}}
+.test-matn b{display:block;font-size:13.5px;font-weight:700}
+.test-matn span{display:block;font-size:12px;color:var(--matn-4);margin-top:1px}
+.test-natija{margin-left:auto;font-size:12.5px;font-weight:650;color:var(--matn-3)}
+.xulosa-jadval{border:1px solid var(--chiziq);border-radius:14px;padding:6px 18px}
+.xj-qator{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F1F4F8;font-size:13.5px}
+.xj-qator:last-child{border-bottom:none}
+.xj-qator .yorliq{color:var(--matn-3)}
+.xj-qator b{margin-left:auto;font-weight:650;text-align:right}
+.w-harakat{display:flex;gap:10px;margin-top:20px}
+.w-harakat .oldinga{margin-left:auto}
+
+.jarayon-karta h3{font-size:16px;font-weight:750;margin-bottom:12px}
+.j-band{display:flex;gap:12px;padding-bottom:18px;position:relative}
+.j-band::before{content:"";position:absolute;left:15px;top:34px;bottom:0;width:2px;background:#E8EAE4}
+.j-band:last-child{padding-bottom:0}
+.j-band:last-child::before{display:none}
+.j-belgi{width:32px;height:32px;border-radius:99px;display:grid;place-items:center;flex:none;z-index:1;box-shadow:var(--chuqur-tile-tor)}
+.j-belgi .ic{width:15px;height:15px}
+.j-belgi.yashil{background:#E4EFF9;color:#0B4478}
+.j-belgi.kok{background:#E7F0FE;color:#2F6BCF}
+.j-belgi.sariq{background:#FFF6DE;color:#9A6E00}
+.j-belgi.binafsha{background:#F3EBFE;color:#8A4BD8}
+.j-band b{display:block;font-size:13.5px;font-weight:700;line-height:1.35}
+.j-band p{font-size:12px;color:var(--matn-3);line-height:1.5;margin-top:2px}
+@media (max-width:1240px){.w-grid{grid-template-columns:minmax(0,1fr)}.forma-grid,.tur-grid{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body data-sahifa="xavfsizlik">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <a class="orqa-tugma" href="qurilmalar.html" aria-label="Orqaga"><svg class="ic"><use href="#i-chap"/></svg></a>
+      <div>
+        <h1>Yangi qurilma o'rnatish</h1>
+        <div class="sahifa-izoh">Kamera, Face ID, domofon yoki eshik kontrollerini obyektga bog'lab, tizimga qo'shing</div>
+      </div>
+    </div>
+
+    <!-- Qadamlar -->
+    <div class="karta" style="padding:22px 26px 18px">
+      <div class="qadam-chiziq" id="qadamlar">
+        <div class="q-qadam joriy" data-q="1"><span class="belgi">1</span><b>Obyekt va joylashuv</b><span>Bino, qavat, zona</span></div>
+        <div class="q-qadam" data-q="2"><span class="belgi">2</span><b>Qurilma turi</b><span>Kamera, Face ID, domofon...</span></div>
+        <div class="q-qadam" data-q="3"><span class="belgi">3</span><b>Tarmoq ma'lumotlari</b><span>IP, MAC, seriya</span></div>
+        <div class="q-qadam" data-q="4"><span class="belgi">4</span><b>Ulanish testi</b><span>Ping va faollashtirish</span></div>
+      </div>
+    </div>
+
+    <div class="w-grid">
+      <div class="karta w-panel">
+
+        <!-- 1-qadam: Obyekt va joylashuv -->
+        <div data-panel="1">
+          <h3>Obyekt va joylashuv</h3>
+          <div class="sub">Qurilma qaysi bino, qavat va zonada o'rnatilishini belgilang (DEV-11: obyekt scope tekshiriladi).</div>
+          <div class="forma-grid">
+            <div class="keng"><label class="maydon-yorliq">Obyekt / bino</label>
+              <button type="button" class="tanlov" id="f-obyekt" data-variantlar='["Navruz Plaza","Chorsu Savdo Markazi","Chorvoq dala hovlisi","Humo Office","Nurafshon turar-joy majmuasi","Yashnobod yer maydoni"]'><span class="t-yorliq">Obyektni tanlang</span><svg class="ic"><use href="#i-past"/></svg></button>
+            </div>
+            <div><label class="maydon-yorliq">Qavat</label>
+              <button type="button" class="tanlov" data-variantlar='["1-qavat","2-qavat","3-qavat","4-qavat","5-qavat","-1-qavat (texnik)"]'><span class="t-yorliq">Qavatni tanlang</span><svg class="ic"><use href="#i-past"/></svg></button>
+            </div>
+            <div><label class="maydon-yorliq">Xona / zona</label>
+              <button type="button" class="tanlov" data-variantlar='["Asosiy kirish","Yon kirish","Lobby","Yo&#39;lak","Avtoturargoh","Texnik xona","Ombor"]'><span class="t-yorliq">Zonani tanlang</span><svg class="ic"><use href="#i-past"/></svg></button>
+            </div>
+            <div class="keng"><label class="maydon-yorliq">Joylashuv izohi</label><div class="kirish"><svg class="ic"><use href="#i-pin"/></svg><input placeholder="Masalan: asosiy eshik ustida, tashqi devor"></div></div>
+          </div>
+        </div>
+
+        <!-- 2-qadam: Qurilma turi -->
+        <div data-panel="2" hidden>
+          <h3>Qurilma turi va modeli</h3>
+          <div class="sub">Device registry qo'llab-quvvatlaydigan turlardan birini tanlang (DEV-10).</div>
+          <div class="tur-grid" id="tur-grid">
+            <button type="button" class="tur-karta tanlangan" data-tur="Kamera"><svg class="ic"><use href="#i-kamera"/></svg><b>IP Kamera</b><span>Video kuzatuv</span></button>
+            <button type="button" class="tur-karta" data-tur="Face ID"><svg class="ic"><use href="#i-belgi-doira"/></svg><b>Face ID terminal</b><span>Yuzni tanish qurilmasi</span></button>
+            <button type="button" class="tur-karta" data-tur="Domofon"><svg class="ic"><use href="#i-tel"/></svg><b>Domofon</b><span>Video-audio interkom</span></button>
+            <button type="button" class="tur-karta" data-tur="Eshik kontrolleri"><svg class="ic"><use href="#i-qulf"/></svg><b>Eshik kontrolleri</b><span>Masofadan ochish qurilmasi</span></button>
+            <button type="button" class="tur-karta" data-tur="Tutun detektori"><svg class="ic"><use href="#i-ogoh"/></svg><b>Tutun detektori</b><span>Yong'in sensori</span></button>
+            <button type="button" class="tur-karta" data-tur="Yong'in paneli"><svg class="ic"><use href="#i-energiya"/></svg><b>Yong'in paneli</b><span>Markaziy signalizatsiya</span></button>
+          </div>
+          <div class="forma-grid" style="margin-top:16px">
+            <div><label class="maydon-yorliq">Ishlab chiqaruvchi</label><div class="kirish"><input id="f-brend" placeholder="Masalan: Hikvision, Dahua, ZKTeco"></div></div>
+            <div><label class="maydon-yorliq">Model</label><div class="kirish"><input placeholder="Model raqami"></div></div>
+            <div class="keng"><label class="maydon-yorliq">Qurilma nomi (tizimda ko'rinadi)</label><div class="kirish"><input id="f-nom" placeholder="Masalan: Entry Door Main"></div></div>
+          </div>
+        </div>
+
+        <!-- 3-qadam: Tarmoq ma'lumotlari -->
+        <div data-panel="3" hidden>
+          <h3>Tarmoq va identifikatsiya</h3>
+          <div class="sub">IP, MAC va seriya raqami server darajasida unikallikka tekshiriladi (DEV-01, DEV-12).</div>
+          <div class="forma-grid">
+            <div>
+              <label class="maydon-yorliq">IP manzil</label>
+              <div class="kirish"><svg class="ic"><use href="#i-wifi"/></svg><input id="f-ip" placeholder="192.168.1.__" value="192.168.1.87"></div>
+              <div class="tekshir-holat" id="ip-holat"></div>
+            </div>
+            <div>
+              <label class="maydon-yorliq">MAC manzil</label>
+              <div class="kirish"><svg class="ic"><use href="#i-ekran"/></svg><input id="f-mac" placeholder="20:4E:7F:__:__:__" value="20:4E:7F:12:9A:F3"></div>
+              <div class="tekshir-holat" id="mac-holat"></div>
+            </div>
+            <div>
+              <label class="maydon-yorliq">Seriya raqami</label>
+              <div class="kirish"><svg class="ic"><use href="#i-hujjat"/></svg><input id="f-serial" placeholder="SN-2026-______" value="SN-2026-04471"></div>
+              <div class="tekshir-holat" id="serial-holat"></div>
+            </div>
+            <div><label class="maydon-yorliq">Inventar raqami</label><div class="kirish"><svg class="ic"><use href="#i-papka"/></svg><input placeholder="INV-2026-______"></div></div>
+            <div><label class="maydon-yorliq">Protokol</label>
+              <button type="button" class="tanlov" data-variantlar='["ONVIF / RTSP","HTTP / REST API","Wiegand","TCP/IP maxsus"]'><span class="t-yorliq">Protokolni tanlang</span><svg class="ic"><use href="#i-past"/></svg></button>
+            </div>
+            <div><label class="maydon-yorliq">Port</label><div class="kirish"><svg class="ic"><use href="#i-slayder"/></svg><input placeholder="554" value="554"></div></div>
+            <div class="keng"><label class="maydon-yorliq">Firmware versiyasi</label><div class="kirish"><input placeholder="v2.4.1"></div></div>
+          </div>
+          <div class="maxfiy-quti">
+            <svg class="ic"><use href="#i-qalqon"/></svg>
+            <span><b>Xavfsizlik qoidasi (DEV-02):</b> Qurilma paroli yoki kalit bu yerda kiritilmaydi va saqlanmaydi.
+            Tizim faqat xavfsiz <b>credential reference</b> (masalan: <span class="mono" style="font-family:monospace">vault://door-ctrl/green-tower-01</span>)
+            ni saqlaydi. Haqiqiy parol faqat sertifikatlangan vendor adapteri orqali, alohida xavfsiz xotirada turadi.</span>
+          </div>
+        </div>
+
+        <!-- 4-qadam: Ulanish testi -->
+        <div data-panel="4" hidden>
+          <h3>Ulanish testi va faollashtirish</h3>
+          <div class="sub">Test muvaffaqiyatli o'tgach monitoring intervali va mas'ul xodim belgilanadi (DIA-01).</div>
+          <div class="test-royxat" id="test-royxat">
+            <div class="test-qator"><span class="test-belgi" data-test="ping"><svg class="ic"><use href="#i-wifi"/></svg></span><span class="test-matn"><b>Ping testi</b><span>Qurilma tarmoqda javob berishini tekshirish</span></span><span class="test-natija" data-natija="ping">Kutilmoqda</span></div>
+            <div class="test-qator"><span class="test-belgi" data-test="api"><svg class="ic"><use href="#i-ekran"/></svg></span><span class="test-matn"><b>API / endpoint testi</b><span>Qurilma boshqaruv interfeysiga ulanish</span></span><span class="test-natija" data-natija="api">Kutilmoqda</span></div>
+            <div class="test-qator"><span class="test-belgi" data-test="stream"><svg class="ic"><use href="#i-kamera"/></svg></span><span class="test-matn"><b>Stream / signal testi</b><span>Video yoki holat oqimini tekshirish</span></span><span class="test-natija" data-natija="stream">Kutilmoqda</span></div>
+          </div>
+          <button class="tugma tugma-chiziqli" id="test-boshlash" style="margin-top:14px">
+            <svg class="ic"><use href="#i-saralash"/></svg>Testni boshlash
+          </button>
+
+          <div class="forma-grid" style="margin-top:20px" id="faollashtirish-forma" hidden>
+            <div><label class="maydon-yorliq">Monitoring intervali</label>
+              <button type="button" class="tanlov" data-variantlar='["30 soniya","1 daqiqa","5 daqiqa","15 daqiqa"]'><span class="t-yorliq">1 daqiqa</span><svg class="ic"><use href="#i-past"/></svg></button>
+            </div>
+            <div><label class="maydon-yorliq">Mas'ul texnik xodim</label>
+              <button type="button" class="tanlov" data-variantlar='["Ismoilov Otabek","Shahzod Abdullaev","Jahongir Otajonov","Rahimov Bekzod"]'><span class="t-yorliq">Xodimni tanlang</span><svg class="ic"><use href="#i-past"/></svg></button>
+            </div>
+          </div>
+
+          <div class="xulosa-jadval" style="margin-top:18px" id="xulosa" hidden>
+            <div class="xj-qator"><span class="yorliq">Qurilma</span><b id="x-nom">—</b></div>
+            <div class="xj-qator"><span class="yorliq">Turi</span><b id="x-tur">—</b></div>
+            <div class="xj-qator"><span class="yorliq">Obyekt</span><b id="x-obyekt">—</b></div>
+            <div class="xj-qator"><span class="yorliq">IP manzil</span><b id="x-ip">—</b></div>
+            <div class="xj-qator"><span class="yorliq">Holat</span><b><span class="chip chip-asos" style="height:24px">Onlayn — faollashtirishga tayyor</span></b></div>
+          </div>
+        </div>
+
+        <div class="w-harakat">
+          <button class="tugma tugma-chiziqli" id="orqaga" hidden><svg class="ic"><use href="#i-chap"/></svg>Orqaga</button>
+          <button class="tugma tugma-asos oldinga" id="oldinga">Davom etish<svg class="ic"><use href="#i-strelka"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Jarayon xaritasi -->
+      <aside class="karta jarayon-karta">
+        <h3>Qurilma hayot sikli</h3>
+        <div class="j-band"><span class="j-belgi kok"><svg class="ic"><use href="#i-pin"/></svg></span><span><b>1. Joylashuv belgilash</b><p>Texnik xodim obyekt, qavat va zonani tanlaydi.</p></span></div>
+        <div class="j-band"><span class="j-belgi sariq"><svg class="ic"><use href="#i-kamera"/></svg></span><span><b>2. Jismoniy o'rnatish</b><p>Kamera, Face ID yoki domofon joyida montaj qilinadi.</p></span></div>
+        <div class="j-band"><span class="j-belgi binafsha"><svg class="ic"><use href="#i-wifi"/></svg></span><span><b>3. Tarmoqqa ulash</b><p>IP/MAC/seriya kiritiladi, dublikatlar avtomatik bloklanadi.</p></span></div>
+        <div class="j-band"><span class="j-belgi yashil"><svg class="ic"><use href="#i-belgi-doira"/></svg></span><span><b>4. Test va faollashtirish</b><p>Ping/API/stream testi o'tgach qurilma monitoring ro'yxatiga qo'shiladi.</p></span></div>
+        <div class="j-band"><span class="j-belgi kok"><svg class="ic"><use href="#i-foyd"/></svg></span><span><b>5. Ko'rinuvchanlik</b><p>Admin, Rahbariyat va Operatorga darhol ko'rinadi — kamera qayerda, qaysi obyektda ekani bilan.</p></span></div>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+let qadam = 1;
+const YARQIROQ = ["ping","api","stream"];
+
+function korsat(){
+  document.querySelectorAll("[data-panel]").forEach(p=>p.hidden = p.dataset.panel != qadam);
+  document.querySelectorAll(".q-qadam").forEach(q=>{
+    const n = +q.dataset.q;
+    q.classList.toggle("bajarildi", n < qadam);
+    q.classList.toggle("joriy", n === qadam);
+    q.querySelector(".belgi").innerHTML = n < qadam ? '<svg class="ic"><use href="#i-belgi"/></svg>' : n;
+  });
+  document.getElementById("orqaga").hidden = qadam === 1;
+  const oldinga = document.getElementById("oldinga");
+  oldinga.hidden = qadam === 4;
+  if (qadam === 4){
+    document.getElementById("x-nom").textContent = document.getElementById("f-nom").value || "Nomsiz qurilma";
+    document.getElementById("x-tur").textContent = document.querySelector(".tur-karta.tanlangan b").textContent;
+    document.getElementById("x-obyekt").textContent = document.querySelector("#f-obyekt .t-yorliq").textContent;
+    document.getElementById("x-ip").textContent = document.getElementById("f-ip").value;
+  }
+}
+const FORMAT_TEKSHIR = {
+  ip: v => /^(\d{1,3}\.){3}\d{1,3}$/.test(v) && v.split(".").every(o => +o <= 255),
+  mac: v => /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(v),
+  serial: v => v.trim().length >= 6
+};
+document.getElementById("oldinga").addEventListener("click", ()=>{
+  if (qadam === 3){
+    let hammasiTogri = true;
+    ["ip","mac","serial"].forEach(f=>{
+      const qiymat = document.getElementById("f-"+f).value.trim();
+      const togri = FORMAT_TEKSHIR[f](qiymat);
+      if (!togri) hammasiTogri = false;
+      document.getElementById(f+"-holat").innerHTML = togri
+        ? '<svg class="ic"><use href="#i-belgi"/></svg>To\'g\'ri format — unikallik serverda tasdiqlanadi'
+        : '<svg class="ic"><use href="#i-ogoh"/></svg>Noto\'g\'ri format';
+      document.getElementById(f+"-holat").className = "tekshir-holat " + (togri ? "ok" : "xato");
+    });
+    if (!hammasiTogri) return;
+  }
+  if (qadam < 4){ qadam++; korsat(); }
+});
+document.getElementById("orqaga").addEventListener("click", ()=>{ if (qadam>1){ qadam--; korsat(); } });
+
+/* Yakuniy faollashtirish tugmasi — testlar qatoriga qo'shiladi, natija bilan bir vaqtda ochiladi */
+const yakunTugma = document.createElement("button");
+yakunTugma.className = "tugma tugma-asos oldinga";
+yakunTugma.id = "yakunlash";
+yakunTugma.innerHTML = '<svg class="ic"><use href="#i-belgi-doira"/></svg>Qurilmani faollashtirish';
+yakunTugma.hidden = true;
+document.querySelector(".w-harakat").appendChild(yakunTugma);
+yakunTugma.addEventListener("click", ()=>{
+  MKB.toast("Qurilma ro'yxatga qo'shildi — Admin, Rahbariyat va Operatorga ko'rinadi", "i-belgi-doira");
+  setTimeout(()=>location.href="qurilmalar.html", 1000);
+});
+
+/* Qurilma turi tanlash */
+document.querySelectorAll(".tur-karta").forEach(k=>{
+  k.addEventListener("click", ()=>{
+    document.querySelectorAll(".tur-karta").forEach(x=>x.classList.remove("tanlangan"));
+    k.classList.add("tanlangan");
+  });
+});
+
+/* Ulanish testi — ketma-ket animatsiya */
+document.getElementById("test-boshlash").addEventListener("click", function(){
+  this.disabled = true;
+  this.innerHTML = '<svg class="ic"><use href="#i-saralash"/></svg>Tekshirilmoqda…';
+  let i = 0;
+  const keyingisi = ()=>{
+    if (i >= YARQIROQ.length){
+      this.innerHTML = '<svg class="ic"><use href="#i-belgi"/></svg>Barcha testlar muvaffaqiyatli';
+      document.getElementById("faollashtirish-forma").hidden = false;
+      document.getElementById("xulosa").hidden = false;
+      document.getElementById("yakunlash").hidden = false;
+      MKB.toast("Qurilma tarmoqqa muvaffaqiyatli ulandi", "i-belgi-doira");
+      return;
+    }
+    const t = YARQIROQ[i];
+    const belgi = document.querySelector(`[data-test="${t}"]`);
+    const natija = document.querySelector(`[data-natija="${t}"]`);
+    belgi.className = "test-belgi ishlamoqda";
+    belgi.innerHTML = '<svg class="ic"><use href="#i-saralash"/></svg>';
+    natija.textContent = "Tekshirilmoqda…";
+    setTimeout(()=>{
+      belgi.className = "test-belgi ok";
+      belgi.innerHTML = '<svg class="ic"><use href="#i-belgi"/></svg>';
+      natija.textContent = t==="ping" ? "12 ms" : t==="api" ? "200 OK" : "Signal bor";
+      natija.style.color = "#0B4478";
+      i++;
+      setTimeout(keyingisi, 350);
+    }, 700);
+  };
+  keyingisi();
+});
+
+korsat();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Garov obyektlari reyestri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Garov obyektlari reyestri (ekran 3) ---- */
+.asosiy-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:start}
+.asosiy-grid.inspector-ochiq{grid-template-columns:minmax(0,1fr) 380px}
+
+.filtr-qator{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.f-izlash{
+  display:flex;align-items:center;gap:10px;flex:1;min-width:220px;max-width:400px;
+  background:var(--karta);border-radius:14px;height:48px;padding:0 18px;box-shadow:var(--soya);
+}
+.f-izlash input{flex:1;border:none;outline:none;background:none;font:inherit;font-size:14.5px;min-width:0}
+.f-izlash input::placeholder{color:#6B7684}
+.f-izlash .ic{width:19px;height:19px;color:#56626E}
+.filtr-qator .tanlov{width:auto;min-width:170px;background:var(--karta);border:none;box-shadow:var(--soya)}
+.f-tugma{
+  margin-left:auto;display:flex;align-items:center;gap:9px;height:48px;padding:0 18px;
+  background:var(--karta);border-radius:14px;box-shadow:var(--soya);
+  font-size:14.5px;font-weight:650;color:#1C2836;transition:box-shadow var(--tez);
+}
+.f-tugma:hover{box-shadow:0 1px 2px rgba(23,26,31,.05),0 10px 28px rgba(23,26,31,.09)}
+.f-tugma .ic{width:18px;height:18px;color:#3A4756}
+
+.jadval-korpus{padding:6px 4px 4px}
+.jadval th:first-child{padding-left:22px}
+.jadval td:first-child{padding-left:22px}
+.jadval th .info{display:inline-grid;place-items:center;width:16px;height:16px;vertical-align:-3px;margin-left:5px;color:var(--matn-4);cursor:help}
+.jadval tbody tr{cursor:pointer}
+.jadval tbody tr.tanlangan{background:#EBF4FC;box-shadow:inset 0 1px 0 #C7DEF4, inset 0 -1px 0 #C7DEF4}
+.jadval tbody tr.tanlangan:hover{background:#E4F0FB}
+.obyekt-katak img{width:64px;height:52px}
+.status-katak{display:flex;align-items:center;gap:8px;font-size:14.5px;color:#2C3A49}
+.status-katak .nuqta{width:8px;height:8px;border-radius:99px}
+.ball-halqa{position:relative;width:46px;height:46px;display:grid;place-items:center}
+.ball-halqa b{position:absolute;font-size:13px;font-weight:700;color:#101B29}
+
+/* Inspector */
+.inspektor{position:sticky;top:20px;display:none}
+.asosiy-grid.inspector-ochiq .inspektor{display:block}
+.insp-bosh{display:flex;align-items:flex-start;gap:10px}
+.insp-bosh h2{font-size:20px;font-weight:750;color:#101B29;line-height:1.2}
+.insp-bosh .kod{font-size:13.5px;color:var(--matn-4);margin-top:4px}
+.insp-yop{margin-left:auto;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;color:#515F6D;transition:background var(--tez)}
+.insp-yop:hover{background:#EEF2F7;color:#101B29}
+.insp-tablar{display:flex;gap:2px;margin-top:16px;border-bottom:1px solid var(--chiziq)}
+.insp-tab{
+  padding:9px 12px 11px;font-size:14px;font-weight:600;color:#56626E;
+  border-bottom:2px solid transparent;margin-bottom:-1px;transition:color var(--tez);
+}
+.insp-tab:hover{color:#2C3A49}
+.insp-tab.aktiv{color:#101B29;border-bottom-color:var(--asos)}
+.insp-rasm{position:relative;margin-top:16px;border-radius:16px;overflow:hidden;background:#FAFAF8}
+.insp-rasm img{width:100%;height:240px;object-fit:contain}
+.insp-3d{
+  position:absolute;left:12px;bottom:12px;height:34px;padding:0 13px;border-radius:10px;
+  background:var(--karta);box-shadow:var(--soya-pin);font-size:12.5px;font-weight:750;color:#2B3036;
+}
+.insp-kengay{
+  position:absolute;right:12px;bottom:12px;width:34px;height:34px;border-radius:10px;
+  background:var(--karta);box-shadow:var(--soya-pin);display:grid;place-items:center;color:#2B3036;
+}
+.insp-kengay .ic{width:16px;height:16px}
+.tafsilot{margin-top:14px}
+.tafsilot-qator{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #F1F4F8;font-size:14px}
+.tafsilot-qator:last-child{border-bottom:none}
+.tafsilot-qator .ic{width:18px;height:18px;color:#56626E}
+.tafsilot-qator .yorliq{color:var(--matn-3)}
+.tafsilot-qator .qiymat{margin-left:auto;font-weight:650;color:#101B29;text-align:right}
+.mini-ball{display:inline-flex;align-items:center;gap:7px}
+.mini-ball .halqacha{width:30px;height:30px;position:relative;display:grid;place-items:center}
+.mini-ball .halqacha b{position:absolute;font-size:9.5px;font-weight:750;color:#0B4478}
+.insp-tugma{
+  width:100%;height:50px;margin-top:16px;border-radius:13px;background:#EEF2F7;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;color:#1C2836;transition:background var(--tez);
+}
+.insp-tugma:hover{background:#E8EAEE}
+@media (max-width:1400px){
+  .asosiy-grid.inspector-ochiq{grid-template-columns:minmax(0,1fr)}
+  .inspektor{position:fixed;right:16px;top:16px;bottom:16px;width:380px;max-width:calc(100vw - 32px);z-index:60;overflow-y:auto;box-shadow:var(--soya-modal)}
+}
+</style>
+</head>
+<body data-sahifa="obyektlar">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+
+    <div class="sahifa-qator">
+      <h1>Garov obyektlari reyestri</h1>
+      <div class="sahifa-harakat" style="position:relative">
+        <a class="tugma tugma-oq" href="musodara-qabul.html"><svg class="ic"><use href="#i-aktiv"/></svg>MIB'dan qabul qilish</a>
+        <button class="tugma tugma-oq" id="eksport-tugma" aria-haspopup="menu" aria-expanded="false">
+          <svg class="ic"><use href="#i-yuklash"/></svg>
+          Eksport
+        </button>
+        <div class="menyu-popover" id="eksport-menyu" role="menu" style="top:calc(100% + 8px);right:170px">
+          <button type="button" data-f="PDF"><svg class="ic"><use href="#i-hujjat"/></svg>PDF ro'yxat</button>
+          <button type="button" data-f="XLSX"><svg class="ic"><use href="#i-hisobot"/></svg>Excel (XLSX)</button>
+        </div>
+        <button class="tugma tugma-asos" id="yangi-obyekt">
+          <svg class="ic"><use href="#i-qoshish"/></svg>
+          Yangi obyekt
+        </button>
+      </div>
+    </div>
+
+    <div class="filtr-qator">
+      <div class="f-izlash" onclick="this.querySelector('input').focus()">
+        <input type="search" id="izlash" placeholder="Qidirish..." aria-label="Obyektlarni qidirish">
+        <svg class="ic"><use href="#i-izlash"/></svg>
+      </div>
+      <button class="tanlov" id="f-hudud" data-variantlar='["Barcha hududlar","Toshkent sh.","Toshkent vil.","Bo&#39;stonliq tum.","Nurafshon sh.","Samarqand","Namangan"]'><span class="t-yorliq">Barcha hududlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+      <button class="tanlov" id="f-tur" data-variantlar='["Barcha turlar","Kvartira","Turar-joy majmuasi","Dala hovli","Savdo maydoni","Ofis binosi","Ishlab chiqarish","Yer uchastkasi"]'><span class="t-yorliq">Barcha turlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+      <button class="tanlov" id="f-status" data-variantlar='["Barcha holatlar","Garovda","Musodara jarayonida","Nazoratda","Ijaraga berilgan","Auksionda"]'><span class="t-yorliq">Barcha holatlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+      <button class="f-tugma" data-toast="Kengaytirilgan filtrlar paneli">
+        <svg class="ic"><use href="#i-slayder"/></svg>
+        Filtrlar
+      </button>
+    </div>
+
+    <div class="asosiy-grid inspector-ochiq" id="asosiy-grid">
+
+      <div class="karta jadval-korpus">
+        <div class="jadval-orash">
+          <table class="jadval" id="obyekt-jadval">
+            <thead>
+              <tr>
+                <th>Obyekt nomi</th>
+                <th>Hudud</th>
+                <th>Turi</th>
+                <th>Holati</th>
+                <th>Baholangan qiymati</th>
+                <th>Nazorat balli<span class="info" title="Obyektning xavfsizlik qamrovi va hujjatlar to'liqligi bo'yicha umumiy baho"><svg class="ic" style="width:15px;height:15px"><use href="#i-info"/></svg></span></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="sahifalash">
+          <span class="oraliq">Ko'rsatilmoqda: <b id="jami-son">8</b> ta · portfelda <b id="portfel-son">—</b> ta obyekt</span>
+          <button class="s-tugma" id="s-oldingi" aria-label="Oldingi sahifa" disabled><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
+          <button class="s-tugma aktiv">1</button>
+          <button class="s-tugma" id="s-keyingi" aria-label="Keyingi sahifa" disabled><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
+        </div>
+      </div>
+
+      <aside class="karta inspektor" id="inspektor" aria-label="Tanlangan obyekt ma'lumotlari"></aside>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+/* Reyestr yagona ma'lumot manbaidan quriladi (TZ, 3-bo'lim) */
+const OBYEKTLAR = MKB_DATA.YOZUVLAR.map(y => ({
+  id: y.id,
+  nom: y.garov.nom,
+  kod: y.id,
+  hudud: y.garov.hudud,
+  tur: y.garov.tur,
+  status: y.holat.nom,
+  srang: y.holat.rang,
+  qiymat: y.bahoMatn,
+  ball: y.garov.nazoratBall,
+  rasm: y.garov.rasm,
+  manzil: y.garov.manzil,
+  hududToliq: y.garov.hududToliq,
+  maydon: y.garov.maydon,
+  sana: y.garov.qabul || "\u2014",
+  moliya: {
+    qarzdor: y.mijoz.nom,
+    shartnoma: y.shartnoma.raqam,
+    qarz: y.qarzMatn,
+    sugurta: y.garov.sugurta
+  },
+  hujjatlar: y.ish.hujjatlar.map(h => [h[1] + "." + h[0].toLowerCase(), h[2]]),
+  tarix: y.ish.tarix.slice().reverse().map(t => [t[0], t[1], "i-belgi-doira"])
+}));
+
+
+const tbody = document.querySelector("#obyekt-jadval tbody");
+const grid = document.getElementById("asosiy-grid");
+let tanlanganId = "green-tower";
+
+function halqaSVG(ball, olcham, qalinlik){
+  const r = (olcham - qalinlik)/2, C = 2*Math.PI*r;
+  // style="overflow:visible" shart: halqa strokeining tashqi chekkasi svg quti chekkasiga
+  // aynan tegib turadi (nol-margin geometriya), shuning uchun overflow:hidden standart qiymatida
+  // filter="url(#depth-sm)" soyasi butunlay kesilib qolar edi (spec 4-qoida: soya ko'rinishi shart).
+  return `<svg width="${olcham}" height="${olcham}" viewBox="0 0 ${olcham} ${olcham}" style="overflow:visible">
+    <circle cx="${olcham/2}" cy="${olcham/2}" r="${r}" fill="none" stroke="#D3E4F4" stroke-width="${qalinlik}"/>
+    <circle cx="${olcham/2}" cy="${olcham/2}" r="${r}" fill="none" stroke="url(#grad-ring-3d)" stroke-width="${qalinlik}"
+      stroke-linecap="round" stroke-dasharray="${(ball/100*C).toFixed(1)} ${C.toFixed(1)}"
+      transform="rotate(-90 ${olcham/2} ${olcham/2})" filter="url(#depth-sm)"/>
+  </svg>`;
+}
+
+function jadvalChiz(royxat){
+  tbody.innerHTML = royxat.map(o=>`
+    <tr data-id="${o.id}" class="${o.id===tanlanganId?"tanlangan":""}" tabindex="0" aria-selected="${o.id===tanlanganId}">
+      <td>
+        <span class="obyekt-katak">
+          <img src="${o.rasm}" alt="">
+          <span><span class="nom">${o.nom}</span><br><span class="sub">${o.kod}</span></span>
+        </span>
+      </td>
+      <td>${o.hudud}</td>
+      <td>${o.tur}</td>
+      <td><span class="status-katak"><span class="nuqta" style="background:${o.srang}"></span>${o.status}</span></td>
+      <td><b>${o.qiymat}</b></td>
+      <td><span class="ball-halqa">${halqaSVG(o.ball,46,4)}<b>${o.ball}</b></span></td>
+    </tr>`).join("");
+  document.getElementById("jami-son").textContent = royxat.length;
+
+  tbody.querySelectorAll("tr").forEach(tr=>{
+    const tanla = ()=>{
+      tanlanganId = tr.dataset.id;
+      tbody.querySelectorAll("tr").forEach(r=>{r.classList.toggle("tanlangan", r===tr); r.setAttribute("aria-selected", String(r===tr));});
+      inspektorChiz(OBYEKTLAR.find(o=>o.id===tanlanganId));
+      grid.classList.add("inspector-ochiq");
+    };
+    tr.addEventListener("click", tanla);
+    tr.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();tanla();} });
+  });
+}
+
+function inspektorChiz(o){
+  document.getElementById("inspektor").innerHTML = `
+    <div class="insp-bosh">
+      <div><h2>${o.nom}</h2><div class="kod">${o.kod}</div></div>
+      <button class="insp-yop" id="insp-yop" aria-label="Yopish"><svg class="ic" style="width:19px;height:19px"><use href="#i-yopish"/></svg></button>
+    </div>
+    <div class="insp-tablar" role="tablist">
+      <button class="insp-tab aktiv" data-tab="umumiy">Umumiy</button>
+      <button class="insp-tab" data-tab="moliyaviy">Moliyaviy</button>
+      <button class="insp-tab" data-tab="hujjatlar">Hujjatlar</button>
+      <button class="insp-tab" data-tab="tarix">Tarix</button>
+    </div>
+
+    <div data-panel="umumiy">
+      <div class="insp-rasm">
+        <img src="${o.rasm}" alt="${o.nom} 3D ko'rinishi">
+        <button class="insp-3d" data-toast="3D aylantirish rejimi">3D</button>
+        <a class="insp-kengay" href="obyekt.html?id=${encodeURIComponent(o.id)}" aria-label="To'liq ochish"><svg class="ic"><use href="#i-kengay"/></svg></a>
+      </div>
+      <div class="tafsilot">
+        <div class="tafsilot-qator"><svg class="ic"><use href="#i-aktiv"/></svg><span class="yorliq">Turi</span><span class="qiymat">${o.tur}</span></div>
+        <div class="tafsilot-qator"><svg class="ic"><use href="#i-pin"/></svg><span class="yorliq">Hudud</span><span class="qiymat">${o.hududToliq || o.hudud}</span></div>
+        <div class="tafsilot-qator"><svg class="ic"><use href="#i-uy"/></svg><span class="yorliq">Manzil</span><span class="qiymat">${o.manzil}</span></div>
+        <div class="tafsilot-qator"><svg class="ic"><use href="#i-kengay"/></svg><span class="yorliq">Maydon</span><span class="qiymat">${o.maydon}</span></div>
+        <div class="tafsilot-qator"><svg class="ic"><use href="#i-kalendar"/></svg><span class="yorliq">Qurilgan sana</span><span class="qiymat">${o.sana}</span></div>
+        <div class="tafsilot-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Holat</span><span class="qiymat"><span class="status-katak"><span class="nuqta" style="background:${o.srang}"></span>${o.status}</span></span></div>
+        <div class="tafsilot-qator"><svg class="ic"><use href="#i-daromad"/></svg><span class="yorliq">Baholangan qiymati</span><span class="qiymat">${o.qiymat}</span></div>
+        <div class="tafsilot-qator"><svg class="ic"><use href="#i-belgi-doira"/></svg><span class="yorliq">Nazorat balli</span>
+          <span class="qiymat mini-ball"><span class="halqacha">${halqaSVG(o.ball,30,3)}<b>${o.ball}</b></span> / 100</span></div>
+      </div>
+    </div>
+
+    <div data-panel="moliyaviy" hidden>
+      <div class="tafsilot">
+        <div class="tafsilot-qator"><span class="yorliq">Qarzdor mijoz</span><span class="qiymat">${o.moliya.qarzdor}</span></div>
+        <div class="tafsilot-qator"><span class="yorliq">Kredit shartnomasi</span><span class="qiymat">${o.moliya.shartnoma}</span></div>
+        <div class="tafsilot-qator"><span class="yorliq">Qoldiq qarz summasi</span><span class="qiymat">${o.moliya.qarz}</span></div>
+        <div class="tafsilot-qator"><span class="yorliq">Baholangan qiymati</span><span class="qiymat">${o.qiymat}</span></div>
+        <div class="tafsilot-qator"><span class="yorliq">Sug'urta holati</span><span class="qiymat"><span class="chip ${o.moliya.sugurta==="Amalda"?"chip-asos":"chip-qizil"}"><span class="nuqta"></span>${o.moliya.sugurta}</span></span></div>
+      </div>
+    </div>
+
+    <div data-panel="hujjatlar" hidden>
+      <div class="tafsilot">
+        ${o.hujjatlar.map(([nom,hajm])=>
+          `<div class="tafsilot-qator"><svg class="ic"><use href="#i-hujjat"/></svg><span class="yorliq">${nom}</span>
+            <span class="qiymat"><button class="amal-tugma" data-toast="${nom} yuklab olinmoqda" aria-label="Yuklab olish"><svg class="ic"><use href="#i-yuklab"/></svg></button></span></div>`
+        ).join("")}
+      </div>
+    </div>
+
+    <div data-panel="tarix" hidden>
+      <div class="tafsilot">
+        ${o.tarix.map(([vaqt,matn,ikon])=>
+          `<div class="tafsilot-qator"><svg class="ic"><use href="#${ikon}"/></svg><span class="yorliq">${vaqt}</span><span class="qiymat">${matn}</span></div>`
+        ).join("")}
+      </div>
+    </div>
+
+    <a class="insp-tugma" href="obyekt.html?id=${encodeURIComponent(o.id)}">To'liq ma'lumot</a>`;
+
+  document.getElementById("insp-yop").addEventListener("click", ()=>{
+    grid.classList.remove("inspector-ochiq");
+    tbody.querySelectorAll("tr").forEach(r=>{r.classList.remove("tanlangan");r.setAttribute("aria-selected","false");});
+    tanlanganId = null;
+  });
+  document.querySelectorAll(".insp-tab").forEach(t=>{
+    t.addEventListener("click", ()=>{
+      document.querySelectorAll(".insp-tab").forEach(x=>x.classList.remove("aktiv"));
+      t.classList.add("aktiv");
+      document.querySelectorAll("#inspektor [data-panel]").forEach(p=>p.hidden = p.dataset.panel !== t.dataset.tab);
+    });
+  });
+}
+
+/* Filtrlash */
+const holatFiltri = {qidiruv:"", hudud:"Barcha hududlar", tur:"Barcha turlar", status:"Barcha holatlar"};
+function qollash(){
+  const q = holatFiltri.qidiruv.toLowerCase();
+  const royxat = OBYEKTLAR.filter(o=>
+    (!q || (o.nom+" "+o.kod).toLowerCase().includes(q)) &&
+    (holatFiltri.hudud==="Barcha hududlar" || o.hudud===holatFiltri.hudud) &&
+    (holatFiltri.tur==="Barcha turlar" || o.tur===holatFiltri.tur) &&
+    (holatFiltri.status==="Barcha holatlar" || o.status===holatFiltri.status)
+  );
+  jadvalChiz(royxat);
+}
+document.getElementById("izlash").addEventListener("input", e=>{ holatFiltri.qidiruv = e.target.value; qollash(); });
+document.getElementById("f-hudud").addEventListener("tanlov", e=>{ holatFiltri.hudud = e.detail; qollash(); });
+document.getElementById("f-tur").addEventListener("tanlov", e=>{ holatFiltri.tur = e.detail; qollash(); });
+document.getElementById("f-status").addEventListener("tanlov", e=>{ holatFiltri.status = e.detail; qollash(); });
+
+/* URL parametrlari (dashboarddan kelgan havolalar) */
+const p = new URLSearchParams(location.search);
+if (p.get("qidiruv")){ holatFiltri.qidiruv = p.get("qidiruv"); document.getElementById("izlash").value = holatFiltri.qidiruv; }
+if (p.get("tur")){
+  const t = p.get("tur");
+  const mos = {"Biznes markazi":"Biznes markazi","Savdo markazi":"Savdo markazi","Dacha":"Dacha","Bo'sh yer":"Yer uchastkasi","Turar-joy":"Turar-joy","Davlat muassasasi":"Barcha turlar","Ofis":"Ofis"};
+  holatFiltri.tur = mos[t] || "Barcha turlar";
+  document.querySelector("#f-tur .t-yorliq").textContent = holatFiltri.tur;
+}
+if (p.get("holat")){
+  const h = p.get("holat");
+  holatFiltri.status = ["Garovda","Musodara jarayonida","Nazoratda","Ijaraga berilgan","Auksionda"].includes(h) ? h : "Barcha holatlar";
+  document.querySelector("#f-status .t-yorliq").textContent = holatFiltri.status;
+}
+
+/* Eksport dropdown */
+const et = document.getElementById("eksport-tugma"), em = document.getElementById("eksport-menyu");
+et.addEventListener("click", e=>{
+  e.stopPropagation();
+  const ochiq = em.classList.contains("ochiq");
+  document.querySelectorAll(".menyu-popover.ochiq").forEach(x=>x.classList.remove("ochiq"));
+  em.classList.toggle("ochiq", !ochiq);
+});
+em.querySelectorAll("button").forEach(b=>b.addEventListener("click", e=>{
+  e.stopPropagation(); em.classList.remove("ochiq");
+  MKB.toast(b.dataset.f+" eksport shakllantirildi", "i-yuklab");
+}));
+
+/* Yangi obyekt */
+document.getElementById("yangi-obyekt").addEventListener("click", ()=>{
+  MKB.modal("Yangi obyekt qo'shish",
+    `<div style="display:grid;gap:14px;margin-top:6px">
+      <div><label class="maydon-yorliq">Obyekt nomi</label><div class="kirish"><svg class="ic"><use href="#i-bino"/></svg><input placeholder="Masalan: Chilonzor Plaza"></div></div>
+      <div><label class="maydon-yorliq">Turi</label><div class="kirish"><svg class="ic"><use href="#i-aktiv"/></svg><input placeholder="Biznes markazi"></div></div>
+      <div><label class="maydon-yorliq">Manzil</label><div class="kirish"><svg class="ic"><use href="#i-pin"/></svg><input placeholder="Toshkent sh., ..."></div></div>
+    </div>`,
+    { okMatn:"Qo'shish", ok(){ MKB.toast("Yangi obyekt qoralama sifatida saqlandi", "i-belgi-doira"); } });
+});
+
+/* Boshlash */
+qollash();
+inspektorChiz(OBYEKTLAR[0]);
+});
+document.getElementById("portfel-son").textContent = MKB_DATA.fmt(MKB_DATA.PORTFEL.jami);
+</script>
+</body>
+</html>

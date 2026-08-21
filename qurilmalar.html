@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Qurilma diagnostikasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Qurilma diagnostikasi (ekran 26, Texnik xodim) ---- */
+.orqa-tugma{width:48px;height:48px;border-radius:14px;background:var(--karta);box-shadow:var(--soya);display:grid;place-items:center;color:#1C2836;flex:none}
+.orqa-tugma .ic{width:20px;height:20px}
+.iz-yol{font-size:12.5px;color:var(--matn-4);margin-top:3px}
+.iz-yol b{color:#515F6D;font-weight:600}
+
+.qd-grid{display:grid;grid-template-columns:345px minmax(0,1fr) 350px;gap:18px;align-items:start}
+.q-izlash{display:flex;gap:10px}
+.q-izlash .kirish{height:44px;flex:1}
+.q-izlash .filtr{width:44px;height:44px;border:1px solid var(--kirish-chiziq);border-radius:12px;display:grid;place-items:center;color:#3A4756}
+.q-izlash .filtr:hover{background:#F3F6FA}
+.q-izlash .ic{width:17px;height:17px}
+.q-tablar{display:flex;gap:16px;border-bottom:1px solid var(--chiziq);margin-top:12px}
+.q-tab{padding:8px 2px 11px;font-size:13.5px;font-weight:650;color:#56626E;border-bottom:2px solid transparent;margin-bottom:-1px}
+.q-tab .son{font-size:11.5px;color:var(--matn-4);margin-left:4px}
+.q-tab.aktiv{color:#101B29;border-bottom-color:var(--asos)}
+.q-band{
+  width:100%;text-align:left;display:flex;align-items:center;gap:12px;
+  border:1px solid var(--chiziq);border-radius:13px;padding:11px 12px;margin-top:9px;
+  transition:border-color var(--tez),box-shadow var(--tez);
+}
+.q-band:hover{box-shadow:var(--soya)}
+.q-band.faol{border-color:#CFE3F5;background:#F7FAFD;box-shadow:0 0 0 1px #CFE3F5}
+.q-band .tile{width:40px;height:40px;border-radius:11px;background:#EEF2F7;display:grid;place-items:center;color:#3A4756;flex:none;position:relative;box-shadow:var(--chuqur-tile-tor)}
+.q-band .tile .ic{width:18px;height:18px}
+.q-band .tile.qizil{background:#FDEEEC;color:#C43C31}
+.q-band .tile .n{position:absolute;left:-3px;top:-3px;width:9px;height:9px;border-radius:99px;background:#3AAA3E;border:2px solid #fff}
+.q-band .tile .n.of{background:#C7C7CD}
+.q-band b{display:block;font-size:13.5px;font-weight:650}
+.q-band span{display:block;font-size:11.5px;color:var(--matn-4)}
+.signal{margin-left:auto;display:flex;align-items:flex-end;gap:2px;flex:none}
+.signal i{width:3.5px;border-radius:2px;background:#0F5392;display:block}
+.signal i:nth-child(1){height:6px}.signal i:nth-child(2){height:9px}.signal i:nth-child(3){height:12px}.signal i:nth-child(4){height:15px}
+
+/* Markaz */
+.qm-bosh{display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.qm-bosh .tile{width:48px;height:48px;border-radius:13px;background:#EEF2F7;display:grid;place-items:center;color:#3A4756;box-shadow:var(--chuqur-tile)}
+.qm-bosh .tile .ic{width:22px;height:22px}
+.qm-bosh h2{font-size:20px;font-weight:750;display:flex;align-items:center;gap:10px}
+.qm-bosh .sub{font-size:13px;color:var(--matn-3);margin-top:2px}
+.onlayn-chip{background:#E4EFF9;color:#0B4478;font-size:12px;font-weight:750;border-radius:99px;padding:4px 12px}
+.onlayn-chip.off{background:var(--qizil-fon);color:#C43C31}
+.qm-bosh .tile.qizil{background:#FDEEEC;color:#C43C31}
+.qm-statlar{margin-left:auto;display:flex;align-items:center;gap:20px;flex:none}
+.qm-stat .yorliq{font-size:11.5px;color:var(--matn-4)}
+.qm-stat b{display:block;font-size:15px;font-weight:750;margin-top:1px}
+.soglik{position:relative;width:52px;height:52px;display:grid;place-items:center}
+.soglik b{position:absolute;font-size:13px;font-weight:750;color:#101B29}
+.qm-tablar{display:flex;gap:22px;border-bottom:1px solid var(--chiziq);margin-top:16px}
+.qm-tab{padding:9px 2px 12px;font-size:14px;font-weight:650;color:#56626E;border-bottom:2px solid transparent;margin-bottom:-1px}
+.qm-tab.aktiv{color:#101B29;border-bottom-color:var(--asos)}
+.qm-korinish{margin-top:16px}
+.qm-korinish h4{font-size:15.5px;font-weight:750;margin-bottom:12px}
+.qm-korinish img{width:100%;border-radius:15px;outline:1px solid rgba(23,26,31,.07);outline-offset:-1px}
+.info-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:14px;border:1px solid var(--chiziq);border-radius:14px;padding:14px 16px}
+.info-strip .band{display:flex;gap:10px;align-items:center}
+.info-strip .ic{width:17px;height:17px;color:#56626E;flex:none}
+.info-strip .yorliq{font-size:11.5px;color:var(--matn-4)}
+.info-strip b{display:block;font-size:13px;font-weight:700;margin-top:1px}
+.asosiy-k{margin-top:16px}
+.asosiy-k h4{font-size:15.5px;font-weight:750;margin-bottom:12px}
+.ak-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.ak-katak{border:1px solid var(--chiziq);border-radius:13px;padding:12px 14px;text-align:left;transition:background var(--tez)}
+.ak-katak:hover{background:#F7F9FC}
+.ak-katak .yorliq{font-size:11.5px;color:var(--matn-3);line-height:1.3}
+.ak-katak b{display:block;font-size:18px;font-weight:750;margin-top:5px}
+.ak-katak svg.chizma{width:100%;height:22px;margin-top:8px}
+.ak-katak .qulf{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:15px;font-weight:750;color:#9A6E00}
+.ak-katak .qulf .ic{width:16px;height:16px}
+
+.komponent-royxat{border:1px solid var(--chiziq);border-radius:14px;overflow:hidden}
+.komponent-band{display:flex;align-items:center;gap:13px;padding:13px 16px;border-bottom:1px solid #F1F4F8}
+.komponent-band:last-child{border-bottom:none}
+.komponent-ikon{width:38px;height:38px;border-radius:11px;background:#EEF2F7;color:#3A4756;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile-tor)}
+.komponent-ikon .ic{width:18px;height:18px}
+.komponent-matn{flex:1;min-width:0}
+.komponent-matn b{display:block;font-size:14px;font-weight:650}
+.komponent-matn span{display:block;font-size:12.5px;color:var(--matn-4);margin-top:1px}
+.favqulodda-rejim-band{display:flex;gap:12px;background:var(--sariq-fon);border-radius:13px;padding:14px 16px;margin-top:14px}
+.favqulodda-rejim-band .ic{width:19px;height:19px;color:#9A6E00;flex:none;margin-top:1px}
+.favqulodda-rejim-band b{display:block;font-size:14px;font-weight:700;color:#7A5900}
+.favqulodda-rejim-band span{display:block;font-size:12.5px;color:#8A6B1F;margin-top:3px;line-height:1.55}
+
+/* O'ng ustun */
+.qh-karta h3{font-size:16px;font-weight:750;margin-bottom:6px}
+.qh-qator{display:flex;align-items:center;gap:10px;padding:8.5px 0;border-bottom:1px solid #F1F4F8;font-size:13px}
+.qh-qator:last-child{border-bottom:none}
+.qh-qator .yorliq{color:var(--matn-3)}
+.qh-qator b{margin-left:auto;font-weight:650;text-align:right}
+.qh-qator b .nuqta{display:inline-block;width:7px;height:7px;border-radius:99px;background:#3AAA3E;margin-right:6px;vertical-align:1px}
+.qh-qator b .nuqta.qizil{background:#C43C31}
+.xa-tugma{
+  display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  border:1px solid var(--kirish-chiziq);border-radius:12px;height:48px;padding:0 15px;margin-top:9px;
+  font-size:13.5px;font-weight:650;color:#1C2836;transition:background var(--tez);
+}
+.xa-tugma:hover{background:#F3F6FA}
+.xa-tugma .ic{width:17px;height:17px;color:#515F6D}
+.log-band{display:flex;gap:10px;padding:8px 0;font-size:12.5px;border-bottom:1px solid #F1F4F8}
+.log-band:last-of-type{border-bottom:none}
+.log-band .n{width:8px;height:8px;border-radius:99px;background:#0F5392;margin-top:4px;flex:none}
+.log-band .vaqt{color:var(--matn-4);width:96px;flex:none}
+.log-band .matn{color:#2C3A49;font-weight:550}
+.log-tugma{width:100%;height:46px;margin-top:12px;border-radius:12px;border:1px solid var(--kirish-chiziq);display:flex;align-items:center;justify-content:center;gap:8px;font-size:13.5px;font-weight:700;transition:background var(--tez)}
+.log-tugma:hover{background:#F3F6FA}
+.log-tugma .ic{width:15px;height:15px}
+.qd-grid > aside{display:flex;flex-direction:column;gap:18px}
+@media (max-width:1700px){.qd-grid{grid-template-columns:320px minmax(0,1fr)}.qd-grid > aside{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}}
+@media (max-width:1200px){.qd-grid{grid-template-columns:minmax(0,1fr)}.qd-grid > aside{grid-template-columns:minmax(0,1fr)}.ak-grid{grid-template-columns:repeat(2,1fr)}.info-strip{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+</style>
+</head>
+<body data-sahifa="xavfsizlik">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <a class="orqa-tugma" href="monitoring.html" aria-label="Orqaga"><svg class="ic"><use href="#i-chap"/></svg></a>
+      <div>
+        <h1>Qurilma diagnostikasi</h1>
+        <div class="iz-yol">Qurilmalar &nbsp;›&nbsp; <b id="qm-iz-tur">Eshik kirish tizimi</b> &nbsp;›&nbsp; <b id="qm-iz-nom">Entry Door Main</b></div>
+      </div>
+      <div class="sahifa-harakat" style="position:relative">
+        <button class="tugma tugma-oq" id="qurilma-qoshish"><svg class="ic"><use href="#i-qoshish"/></svg>Qurilma qo'shish</button>
+        <button class="tugma tugma-oq tugma-ikonli" style="width:48px;height:48px" data-toast="Diagnostika ma'lumotlari nusxalandi" aria-label="Nusxalash"><svg class="ic"><use href="#i-hujjat"/></svg></button>
+        <button class="tugma tugma-asos" id="xizmat-tugma">
+          Xizmat hisobotini yaratish
+          <svg class="ic" style="width:16px;height:16px"><use href="#i-past"/></svg>
+        </button>
+        <div class="menyu-popover" id="xizmat-menyu" style="top:calc(100% + 8px);right:0">
+          <button type="button" data-f="Diagnostika hisoboti (PDF)"><svg class="ic"><use href="#i-hujjat"/></svg>Diagnostika hisoboti (PDF)</button>
+          <button type="button" data-f="Loglar eksporti (CSV)"><svg class="ic"><use href="#i-hisobot"/></svg>Loglar eksporti (CSV)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="qd-grid">
+
+      <!-- Qurilmalar ro'yxati -->
+      <div class="karta">
+        <div class="q-izlash">
+          <div class="kirish"><input placeholder="Qurilma yoki joylashuv..." aria-label="Qurilma qidirish" id="q-izlash-input"></div>
+          <button class="filtr" data-toast="Qurilma filtrlari" aria-label="Filtr"><svg class="ic"><use href="#i-slayder"/></svg></button>
+        </div>
+        <div class="q-tablar">
+          <button class="q-tab" data-t="Barcha">Barcha<span class="son">32</span></button>
+          <button class="q-tab aktiv" data-t="Onlayn">Onlayn<span class="son">28</span></button>
+          <button class="q-tab" data-t="Offline">Offline<span class="son">4</span></button>
+        </div>
+        <div id="q-royxat"></div>
+        <div class="sahifalash" style="padding:14px 0 0">
+          <span class="oraliq">Jami: <b>32</b></span>
+          <button class="s-tugma" data-toast="Oldingi sahifa" aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
+          <button class="s-tugma aktiv">1</button>
+          <button class="s-tugma" data-toast="2-sahifa">2</button>
+          <button class="s-tugma" data-toast="3-sahifa">3</button>
+          <button class="s-tugma" data-toast="Keyingi sahifa" aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Markaz -->
+      <div class="karta">
+        <div class="qm-bosh">
+          <span class="tile" id="qm-tile"><svg class="ic" id="qm-tile-ic"><use href="#i-qulf"/></svg></span>
+          <div>
+            <h2><span id="qm-nom">Entry Door Main</span><span class="onlayn-chip" id="qm-chip">Onlayn</span></h2>
+            <div class="sub" id="qm-sub">Eshik kirish tizimi &nbsp;·&nbsp; Navruz Plaza, 1-qavat</div>
+          </div>
+          <div class="qm-statlar">
+            <div class="qm-stat"><span class="yorliq">Signal kuchi</span><b id="qm-signal">-62 dBm</b></div>
+            <div class="qm-stat"><span class="yorliq">Sog'liq darajasi</span><b id="qm-soglik-l" style="color:#268030">A'lo</b></div>
+            <span class="soglik">
+              <svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="21" fill="none" stroke="#D3E4F4" stroke-width="5"/><circle id="qm-ring" cx="26" cy="26" r="21" fill="none" stroke="url(#grad-ring-3d)" stroke-width="5" stroke-linecap="round" stroke-dasharray="121.4 131.9" transform="rotate(-90 26 26)" filter="url(#depth-sm)"/></svg>
+              <b id="qm-soglik-f">92</b>
+            </span>
+          </div>
+        </div>
+
+        <div class="qm-tablar" role="tablist">
+          <button class="qm-tab aktiv" data-t="umumiy">Umumiy ma'lumot</button>
+          <button class="qm-tab" data-t="diagnostika">Diagnostika</button>
+          <button class="qm-tab" data-t="komponentlar">Komponentlar</button>
+          <button class="qm-tab" data-t="sozlamalar">Sozlamalar</button>
+          <button class="qm-tab" data-t="hujjatlar">Hujjatlar</button>
+        </div>
+
+        <div data-panel="umumiy">
+          <div class="qm-korinish" id="qm-korinish">
+            <h4>Qurilma ko'rinishi</h4>
+            <img id="qm-rasm" src="assets/qurilma_eshik.png" alt="">
+          </div>
+
+          <div class="info-strip">
+            <div class="band"><svg class="ic"><use href="#i-sozlama"/></svg><span><span class="yorliq">Firmware</span><b id="qm-fw">v2.4.1</b></span></div>
+            <div class="band"><svg class="ic"><use href="#i-wifi"/></svg><span><span class="yorliq">IP manzil</span><b id="qm-ip">192.168.1.45</b></span></div>
+            <div class="band"><svg class="ic"><use href="#i-ekran"/></svg><span><span class="yorliq">MAC manzil</span><b id="qm-mac">20:4E:7F:12:9A:BC</b></span></div>
+            <div class="band"><svg class="ic"><use href="#i-soat"/></svg><span><span class="yorliq">Uptime</span><b id="qm-uptime">12 kun 4 soat</b></span></div>
+            <div class="band"><svg class="ic"><use href="#i-saralash"/></svg><span><span class="yorliq">Oxirgi sinx.</span><b id="qm-sinx">24-may, 14:28</b></span></div>
+          </div>
+
+          <div class="asosiy-k">
+            <h4>Asosiy ko'rsatkichlar</h4>
+            <div class="ak-grid">
+              <button class="ak-katak" data-toast="CPU tarixi grafigi"><span class="yorliq">CPU yuklanishi</span><b id="qm-cpu">18%</b><svg class="chizma" viewBox="0 0 100 22" preserveAspectRatio="none"><polyline points="0,14 12,12 24,15 36,10 48,13 60,9 72,12 84,8 100,11" fill="none" stroke="#0F5392" stroke-width="1.6" vector-effect="non-scaling-stroke" filter="url(#depth-sm)"/></svg></button>
+              <button class="ak-katak" data-toast="Xotira tarixi"><span class="yorliq">Xotira</span><b id="qm-xotira">42%</b><svg class="chizma" viewBox="0 0 100 22" preserveAspectRatio="none"><polyline points="0,16 14,13 28,14 42,11 56,13 70,10 84,12 100,9" fill="none" stroke="#0F5392" stroke-width="1.6" vector-effect="non-scaling-stroke" filter="url(#depth-sm)"/></svg></button>
+              <button class="ak-katak" data-toast="Tarmoq kechikishi tarixi"><span class="yorliq">Tarmoq kechikishi</span><b id="qm-kechikish">12 ms</b><svg class="chizma" viewBox="0 0 100 22" preserveAspectRatio="none"><polyline points="0,11 14,13 28,10 42,14 56,11 70,13 84,10 100,12" fill="none" stroke="#0F5392" stroke-width="1.6" vector-effect="non-scaling-stroke" filter="url(#depth-sm)"/></svg></button>
+              <button class="ak-katak" id="qm-t4"><span class="yorliq" id="qm-t4-y">Eshik holati</span><span class="qulf"><svg class="ic" id="qm-t4-ic"><use href="#i-qulf"/></svg><span id="qm-t4-q">Yopiq</span></span></button>
+              <button class="ak-katak" data-toast="Batafsil statistika"><span class="yorliq" id="qm-t5-y">O'tishlar soni (bugun)</span><b id="qm-t5-q">128</b><svg class="chizma" viewBox="0 0 100 22"><rect x="4" y="12" width="5" height="10" rx="3" fill="url(#grad-bar-3d-passiv)" filter="url(#depth-sm)"/><rect x="14" y="8" width="5" height="14" rx="3" fill="url(#grad-bar-3d-passiv)" filter="url(#depth-sm)"/><rect x="24" y="14" width="5" height="8" rx="3" fill="url(#grad-bar-3d-passiv)" filter="url(#depth-sm)"/><rect x="34" y="6" width="5" height="16" rx="3" fill="url(#grad-bar-3d-passiv)" filter="url(#depth-sm)"/><rect x="44" y="10" width="5" height="12" rx="3" fill="url(#grad-bar-3d-passiv)" filter="url(#depth-sm)"/><rect x="54" y="4" width="5" height="18" rx="3" fill="url(#grad-bar-3d-passiv)" filter="url(#depth-sm)"/><rect x="64" y="9" width="5" height="13" rx="3" fill="url(#grad-bar-3d-passiv)" filter="url(#depth-sm)"/><rect x="74" y="12" width="5" height="10" rx="3" fill="url(#grad-bar-3d-passiv)" filter="url(#depth-sm)"/><rect x="84" y="7" width="5" height="15" rx="3" fill="url(#grad-bar-3d)" filter="url(#depth-sm)"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <div data-panel="diagnostika" hidden>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:12px;flex-wrap:wrap">
+            <h4 style="font-size:15.5px;font-weight:750">Diagnostika testlari</h4>
+            <button class="tugma tugma-oq" id="qm-diag-run" style="height:38px;padding:0 16px;font-size:13px"><svg class="ic" style="width:15px;height:15px"><use href="#i-saralash"/></svg>Testni ishga tushirish</button>
+          </div>
+          <div class="komponent-royxat" id="qm-diag-royxat"></div>
+          <div class="iz-yol" id="qm-diag-vaqt" style="margin-top:10px"></div>
+        </div>
+
+        <div data-panel="komponentlar" hidden>
+          <h4 style="font-size:15.5px;font-weight:750;margin-bottom:12px">Tizim komponentlari</h4>
+          <div class="komponent-royxat" id="qm-komp-royxat"></div>
+          <div class="favqulodda-rejim-band" id="qm-fav-band">
+            <svg class="ic"><use href="#i-ogoh"/></svg>
+            <span><b>Favqulodda rejim</b><span id="qm-fav-matn"></span></span>
+          </div>
+        </div>
+
+        <div data-panel="sozlamalar" hidden>
+          <h4 style="font-size:15.5px;font-weight:750;margin-bottom:12px">Qurilma sozlamalari</h4>
+          <div class="komponent-royxat">
+            <div class="komponent-band">
+              <span class="komponent-matn"><b>Hodisalar haqida bildirishnoma</b><span>Qurilma holati o'zgarganda operatorlarga bildirishnoma yuborish</span></span>
+              <label class="ulagich"><input type="checkbox" checked><span class="yoq"></span></label>
+            </div>
+            <div class="komponent-band">
+              <span class="komponent-matn"><b>Xatoda avtomatik qayta ishga tushirish</b><span>Qurilma javob bermay qolsa, tizim avtomatik qayta yuklaydi</span></span>
+              <label class="ulagich"><input type="checkbox" checked><span class="yoq"></span></label>
+            </div>
+            <div class="komponent-band">
+              <span class="komponent-matn"><b>Kengaytirilgan jurnal (debug)</b><span>Diagnostika uchun batafsil texnik loglarni yozib borish</span></span>
+              <label class="ulagich"><input type="checkbox"><span class="yoq"></span></label>
+            </div>
+          </div>
+          <button class="xa-tugma" style="margin-top:14px" data-toast="Firmware yangilanishi tekshirilmoqda…"><svg class="ic"><use href="#i-yuklab"/></svg>Firmware yangilanishini tekshirish</button>
+        </div>
+
+        <div data-panel="hujjatlar" hidden>
+          <h4 style="font-size:15.5px;font-weight:750;margin-bottom:12px">Qurilma hujjatlari</h4>
+          <div class="komponent-royxat" id="qm-hujjat-royxat"></div>
+        </div>
+      </div>
+
+      <!-- O'ng ustun -->
+      <aside>
+        <div class="karta qh-karta">
+          <h3>Qurilma holati</h3>
+          <div class="qh-qator"><span class="yorliq">Holat</span><b><span class="nuqta" id="qm-holat-nuqta"></span><span id="qm-holat-matn">Onlayn</span></b></div>
+          <div class="qh-qator"><span class="yorliq">Ishlash harorati</span><b id="qm-harorat">34°C</b></div>
+          <div class="qh-qator"><span class="yorliq">Tarmoq</span><b id="qm-tarmoq">Yaxshi</b></div>
+          <div class="qh-qator"><span class="yorliq">Quvvat manbai</span><b id="qm-quvvat">Normal</b></div>
+          <div class="qh-qator"><span class="yorliq">So'nggi sinxronizatsiya</span><b id="qm-sinx2">24-may, 14:28:12</b></div>
+          <div class="qh-qator"><span class="yorliq">Uptime</span><b id="qm-uptime2">12 kun 4 soat 18 daqiqa</b></div>
+          <div class="qh-qator"><span class="yorliq">Joylashuv</span><b id="qm-joy">Navruz Plaza, 1-qavat</b></div>
+          <div class="qh-qator"><span class="yorliq">Qurilma turi</span><b id="qm-tur">Eshik kirish tizimi</b></div>
+          <div class="qh-qator"><span class="yorliq">Seriya raqami</span><b id="qm-seriya">EDM-2024-00145</b></div>
+        </div>
+
+        <div class="karta qh-karta">
+          <h3>Xizmat amallari</h3>
+          <button class="xa-tugma" id="restart"><svg class="ic"><use href="#i-saralash"/></svg>Qurilmani qayta ishga tushirish</button>
+          <button class="xa-tugma" data-toast="Kalibrovka jarayoni boshlandi — 2 daqiqa davom etadi"><svg class="ic"><use href="#i-sozlama"/></svg>Kalibrovka qilish</button>
+          <button class="xa-tugma" data-toast="Sinov surati olindi — loglarga qo'shildi"><svg class="ic"><use href="#i-kamera"/></svg>Sinov surat olish</button>
+          <a class="xa-tugma" href="servis.html"><svg class="ic"><use href="#i-qalam"/></svg>Xizmat so'rovini yaratish</a>
+        </div>
+
+        <div class="karta qh-karta">
+          <div style="display:flex;align-items:center;margin-bottom:6px">
+            <h3 style="margin-bottom:0">Qurilma loglari</h3>
+            <button class="karta-havola" data-toast="Log filtrlari">Barchasi</button>
+          </div>
+          <div id="qm-log-royxat"></div>
+          <button class="log-tugma" data-toast="To'liq loglar jurnali">Barcha loglarni ko'rish<svg class="ic"><use href="#i-strelka"/></svg></button>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+const QURILMALAR = [
+  {nom:"Entry Door Main", joy:"Navruz Plaza, 1-qavat", tur:"Eshik kirish tizimi", ikon:"i-qulf", onlayn:true,
+    ip:"192.168.1.45", mac:"20:4E:7F:12:9A:BC", fw:"v2.4.1", uptime:"12 kun 4 soat", sinx:"24-may, 14:28",
+    signal:"-62 dBm", soglikL:"A'lo", soglikR:"#268030", soglikF:92, cpu:"18%", xotira:"42%", kechikish:"12 ms",
+    t4:{y:"Eshik holati", q:"Yopiq", alt:"Ochiq"}, t5:{y:"O'tishlar soni (bugun)", q:"128"},
+    harorat:"34°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"EDM-2024-00145", rasm:"assets/qurilma_eshik.png",
+    komp:[
+      {ik:"i-qulf", n:"Elektr qulf boshqaruvchisi", t:"SecurLine SmartLock X2 · masofadan boshqariladigan magnit qulf", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-kamera", n:"FaceID skaner", t:"Biometrik yuz-tanish moduli · SecurLine FaceMatch v2.1", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-kamera", n:"IP kamera", t:"Kirish nuqtasi videokuzatuvi, doimiy yozuv", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-energiya", n:"Zaxira quvvat (UPS)", t:"Asosiy quvvat uzilganda 500ms ichida avtomatik almashadi", c:"To'liq — 4 soat zaxira", r:"yashil"},
+      {ik:"i-wifi", n:"Tarmoq moduli", t:"Ethernet + Wi-Fi zaxira kanali", c:"Ulangan", r:"yashil"}
+    ],
+    fav:"Quvvat yoki tarmoq butunlay uzilsa, eshik xavfsizlik qoidalariga muvofiq avtomatik qulfdan chiqadi — mijoz hech qachon ichkarida qulflanib qolmaydi. Zaxira mexanik kalit texnik xonada saqlanadi.",
+    hujjat:[{n:"O'rnatish akti", h:"PDF · 1.2 MB"},{n:"SmartLock X2 sertifikati", h:"PDF · 640 KB"},{n:"Foydalanuvchi qo'llanmasi", h:"PDF · 3.4 MB"}],
+    logs:[{v:"14:28:12", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:27:58", m:"Face ID tasdiqlandi"},{v:"14:27:45", m:"Eshik ochildi"},{v:"14:27:12", m:"Interkom qo'ng'irog'i qabul qilindi"},{v:"14:26:55", m:"Kamera aloqasi tiklandi"}]},
+
+  {nom:"Entry Door Back", joy:"Navruz Plaza, 1-qavat", tur:"Eshik kirish tizimi", ikon:"i-qulf", onlayn:true,
+    ip:"192.168.1.46", mac:"20:4E:7F:12:9A:BD", fw:"v2.4.1", uptime:"9 kun 11 soat", sinx:"24-may, 14:27",
+    signal:"-58 dBm", soglikL:"A'lo", soglikR:"#268030", soglikF:89, cpu:"15%", xotira:"38%", kechikish:"10 ms",
+    t4:{y:"Eshik holati", q:"Yopiq", alt:"Ochiq"}, t5:{y:"O'tishlar soni (bugun)", q:"86"},
+    harorat:"33°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"EDB-2024-00146", rasm:"assets/qurilma_eshik.png",
+    komp:[
+      {ik:"i-qulf", n:"Elektr qulf boshqaruvchisi", t:"SecurLine SmartLock X2 · masofadan boshqariladigan magnit qulf", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-qalqon", n:"RFID karta o'quvchi", t:"SecurLine CardMatch R1 · xodim kartalarini tekshirish moduli", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-kamera", n:"IP kamera", t:"Kirish nuqtasi videokuzatuvi, doimiy yozuv", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-energiya", n:"Zaxira quvvat (UPS)", t:"Asosiy quvvat uzilganda 500ms ichida avtomatik almashadi", c:"To'liq — 3 soat zaxira", r:"yashil"},
+      {ik:"i-wifi", n:"Tarmoq moduli", t:"Ethernet + Wi-Fi zaxira kanali", c:"Ulangan", r:"yashil"}
+    ],
+    fav:"Quvvat yoki tarmoq butunlay uzilsa, eshik xavfsizlik qoidalariga muvofiq avtomatik qulfdan chiqadi. Zaxira mexanik kalit texnik xonada saqlanadi.",
+    hujjat:[{n:"O'rnatish akti", h:"PDF · 1.1 MB"},{n:"CardMatch R1 sertifikati", h:"PDF · 512 KB"}],
+    logs:[{v:"14:27:40", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:19:22", m:"RFID karta o'qildi — ruxsat berildi"},{v:"14:19:05", m:"Eshik ochildi"},{v:"13:52:11", m:"Eshik yopildi (avtomatik)"},{v:"13:40:03", m:"Kamera aloqasi tiklandi"}]},
+
+  {nom:"Parking Barrier 1", joy:"Navruz Plaza, Yer osti", tur:"Shlagbaum", ikon:"i-minus", onlayn:true,
+    ip:"192.168.1.52", mac:"20:4E:7F:12:9B:11", fw:"v1.8.3", uptime:"27 kun 2 soat", sinx:"24-may, 14:25",
+    signal:"-71 dBm", soglikL:"Yaxshi", soglikR:"#0A3D6E", soglikF:78, cpu:"11%", xotira:"29%", kechikish:"19 ms",
+    t4:{y:"Shlagbaum holati", q:"Yopiq", alt:"Ochiq"}, t5:{y:"O'tgan avtomobillar (bugun)", q:"47"},
+    harorat:"31°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"PB1-2024-00201", rasm:null,
+    komp:[
+      {ik:"i-minus", n:"Shlagbaum motori", t:"SecurLine BarrierDrive B1 · elektromexanik ko'targich", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-kamera", n:"Avtomobil raqami tanish kamerasi", t:"ANPR moduli · raqamni avtomatik o'qiydi", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-qalqon", n:"Induktiv sensor", t:"Yo'lakdagi avtomobilni aniqlash konturi", c:"Aniqlanmoqda", r:"yashil"},
+      {ik:"i-wifi", n:"Tarmoq moduli", t:"Ethernet ulanish", c:"Ulangan", r:"yashil"}
+    ],
+    fav:"Quvvat uzilganda shlagbaum qo'lda ko'tarish tutqichi bilan ochiladi — avtomobillar band bo'lib qolmaydi.",
+    hujjat:[{n:"O'rnatish akti", h:"PDF · 980 KB"},{n:"BarrierDrive B1 texnik pasporti", h:"PDF · 2.1 MB"}],
+    logs:[{v:"14:25:30", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:21:50", m:"Shlagbaum ochildi — 01A777BB aniqlandi"},{v:"14:22:40", m:"Shlagbaum yopildi (avtomatik)"},{v:"13:58:12", m:"Induktiv sensor tekshiruvi — OK"},{v:"13:30:05", m:"ANPR kamera aloqasi tekshirildi"}]},
+
+  {nom:"Lobby Camera 1", joy:"Navruz Plaza, Lobby", tur:"IP Kamera", ikon:"i-kamera", onlayn:true,
+    ip:"192.168.1.60", mac:"20:4E:7F:12:9C:02", fw:"v3.1.0", uptime:"41 kun 16 soat", sinx:"24-may, 14:29",
+    signal:"-55 dBm", soglikL:"A'lo", soglikR:"#268030", soglikF:95, cpu:"22%", xotira:"51%", kechikish:"8 ms",
+    t4:{y:"Yozuv holati", q:"Yozilmoqda", alt:"To'xtatilgan"}, t5:{y:"Aniqlangan harakatlar (bugun)", q:"19"},
+    harorat:"29°C", tarmoq:"Yaxshi", quvvat:"Normal (PoE)", seriya:"LC1-2024-00312", rasm:null,
+    komp:[
+      {ik:"i-kamera", n:"Video sensori", t:"4K, 30 fps · keng burchakli obyektiv", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-monitor", n:"IR tungi ko'rish moduli", t:"Yorug'lik yetarli bo'lmaganda avtomatik yoqiladi", c:"Avtomatik", r:"yashil"},
+      {ik:"i-servis", n:"Mikrofon", t:"Kirish nuqtasi audio yozuvi", c:"Yoqilgan", r:"yashil"},
+      {ik:"i-wifi", n:"Tarmoq moduli", t:"PoE — quvvat va ma'lumot bitta kabelda", c:"Ulangan", r:"yashil"}
+    ],
+    fav:null,
+    hujjat:[{n:"O'rnatish akti", h:"PDF · 890 KB"},{n:"Kamera sertifikati", h:"PDF · 430 KB"}],
+    logs:[{v:"14:29:05", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:24:18", m:"Harakat aniqlandi — lobby zonasi"},{v:"14:10:02", m:"Video bufer diskka yozildi"},{v:"13:47:36", m:"IR rejim avtomatik yoqildi"},{v:"13:20:00", m:"Aloqa tekshiruvi — OK"}]},
+
+  {nom:"Elevator Panel 1", joy:"Navruz Plaza, Lift bank 1", tur:"Lift paneli", ikon:"i-ekran", onlayn:true,
+    ip:"192.168.1.71", mac:"20:4E:7F:12:9D:19", fw:"v2.0.6", uptime:"18 kun 7 soat", sinx:"24-may, 14:26",
+    signal:"-66 dBm", soglikL:"Yaxshi", soglikR:"#0A3D6E", soglikF:81, cpu:"14%", xotira:"33%", kechikish:"15 ms",
+    t4:{y:"Lift holati", q:"Ishlamoqda", alt:"To'xtatilgan"}, t5:{y:"Bugungi chaqiriqlar", q:"64"},
+    harorat:"32°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"EP1-2024-00408", rasm:null,
+    komp:[
+      {ik:"i-ekran", n:"Boshqaruv platasi", t:"Qavat chaqiruv va harakat nazorati", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-topshiriq", n:"Qavat tugmalari paneli", t:"Kabina ichi va tashqi chaqiruv tugmalari", c:"Javob bermoqda", r:"yashil"},
+      {ik:"i-servis", n:"Interkom moduli", t:"Favqulodda aloqa kanali", c:"Ulangan", r:"yashil"},
+      {ik:"i-qalqon", n:"Yuk sensori", t:"Ortiqcha yuklanishni aniqlaydi", c:"Normal", r:"yashil"}
+    ],
+    fav:"Favqulodda to'xtash tugmasi bosilsa, lift eng yaqin qavatga tushib eshigini ochadi va texnik xizmatga signal yuboradi.",
+    hujjat:[{n:"O'rnatish akti", h:"PDF · 1.4 MB"},{n:"Xavfsizlik nazorati sertifikati", h:"PDF · 760 KB"}],
+    logs:[{v:"14:26:50", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:22:11", m:"Chaqiriq qabul qilindi — 4-qavat"},{v:"14:15:34", m:"Interkom orqali qo'ng'iroq"},{v:"13:59:02", m:"Yuk sensori tekshiruvi — normal"},{v:"13:30:47", m:"Eshik sensori avtomatik testi — OK"}]},
+
+  {nom:"Fire Detector 3F", joy:"Navruz Plaza, 3-qavat", tur:"Yong'in detektori", ikon:"i-ogoh", onlayn:true, qizil:true,
+    ip:"192.168.1.83", mac:"20:4E:7F:12:9E:27", fw:"v1.5.2", uptime:"63 kun 20 soat", sinx:"24-may, 13:58",
+    signal:"-74 dBm", soglikL:"Ogohlantirish", soglikR:"#9A6E00", soglikF:54, cpu:"9%", xotira:"24%", kechikish:"22 ms",
+    t4:{y:"Sensor holati", q:"Tekshiruv talab etadi"}, t5:{y:"Oxirgi kalibrovka", q:"46 kun oldin"},
+    harorat:"38°C", tarmoq:"Beqaror", quvvat:"Normal", seriya:"FD3F-2024-00519", rasm:null,
+    komp:[
+      {ik:"i-ogoh", n:"Tutum sensori (optik)", t:"Sezuvchanlik darajasi normadan pastroq — tekshiruv talab etadi", c:"Ogohlantirish", r:"sariq"},
+      {ik:"i-qalqon", n:"Harorat sensori", t:"Kritik haroratni doimiy nazorat qiladi", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-servis", n:"Signal beruvchi", t:"Sirena + strob chiroq", c:"Tayyor", r:"yashil"},
+      {ik:"i-wifi", n:"Markaziy nazorat ulanishi", t:"Yong'in nazorat paneliga to'g'ridan-to'g'ri ulanish", c:"Ulangan", r:"yashil"}
+    ],
+    fav:"Signal aniqlansa, barcha eshiklar avtomatik qulfdan chiqadi (fail-safe evakuatsiya rejimi) va Hodisalar bo'limida kritik hodisa avtomatik yaratiladi.",
+    hujjat:[{n:"Yong'in xavfsizligi sertifikati", h:"PDF · 1.0 MB"},{n:"Kalibrovka jurnali", h:"PDF · 320 KB"}],
+    logs:[{v:"13:58:20", m:"Sinxronizatsiya — kechikish bilan (beqaror tarmoq)"},{v:"12:40:11", m:"O'z-o'zini tekshirish — sezuvchanlik pasaygan"},{v:"09:15:00", m:"Kunlik test signali — o'tdi"},{v:"kecha 22:03", m:"Harorat sensori tekshiruvi — normal"},{v:"kecha 08:00", m:"Rejalashtirilgan kalibrovka eslatmasi yuborildi"}]},
+
+  {nom:"Power Supply 1", joy:"Navruz Plaza, Texnik xona", tur:"Quvvat manbai", ikon:"i-energiya", onlayn:true,
+    ip:"192.168.1.90", mac:"20:4E:7F:12:9F:33", fw:"v1.2.0", uptime:"84 kun 3 soat", sinx:"24-may, 14:24",
+    signal:"Kabelli · barqaror", soglikL:"A'lo", soglikR:"#268030", soglikF:97, cpu:"6%", xotira:"18%", kechikish:"5 ms",
+    t4:{y:"Quvvat holati", q:"Ishlayapti"}, t5:{y:"Batareya zaxirasi", q:"100%"},
+    harorat:"36°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"PS1-2024-00602", rasm:null,
+    komp:[
+      {ik:"i-energiya", n:"AC/DC o'zgartirgich", t:"Asosiy quvvat manbaini o'zgartiradi", c:"Ishlayapti", r:"yashil"},
+      {ik:"i-energiya", n:"Batareya bloki (UPS)", t:"Zaxira quvvat manbai, ~4 soat avtonom ishlash", c:"To'liq quvvatlangan", r:"yashil"},
+      {ik:"i-qalqon", n:"Kuchlanish stabilizatori", t:"Tarmoqdagi kuchlanish tebranishlaridan himoyalaydi", c:"Normal", r:"yashil"},
+      {ik:"i-wifi", n:"Nazorat moduli", t:"Masofadan monitoring va boshqaruv kanali", c:"Ulangan", r:"yashil"}
+    ],
+    fav:"Asosiy quvvat uzilganda batareya zaxirasi avtomatik ishga tushadi va texnik xonadagi barcha qurilmalarni ~4 soat quvvatlaydi.",
+    hujjat:[{n:"O'rnatish akti", h:"PDF · 750 KB"},{n:"UPS texnik pasporti", h:"PDF · 1.8 MB"}],
+    logs:[{v:"14:24:09", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"11:12:40", m:"Batareya sikli tekshiruvi — 100% sig'im"},{v:"09:00:00", m:"Kunlik quvvat tekshiruvi — normal"},{v:"kecha 19:44", m:"Qisqa kuchlanish tebranishi — avtomatik barqarorlashtirildi"},{v:"kecha 08:00", m:"Rejalashtirilgan texnik ko'rik eslatmasi"}]},
+
+  {nom:"Network Switch 1", joy:"Navruz Plaza, Texnik xona", tur:"Tarmoq uskunasi", ikon:"i-wifi", onlayn:false,
+    ip:"192.168.1.2", mac:"20:4E:7F:12:A0:05", fw:"v4.0.1", uptime:"—", sinx:"23-may, 22:14",
+    signal:"Aloqa yo'q", soglikL:"Kritik", soglikR:"#C43C31", soglikF:8, cpu:"—", xotira:"—", kechikish:"—",
+    t4:{y:"Tarmoq holati", q:"Offline"}, t5:{y:"Faol portlar", q:"0/24"},
+    harorat:"—", tarmoq:"Aloqa yo'q", quvvat:"Noma'lum", seriya:"NS1-2024-00711", rasm:null,
+    komp:[
+      {ik:"i-wifi", n:"24-portli kommutator moduli", t:"Barcha portlar orqali ma'lumot uzatadi", c:"Ishlamayapti", r:"qizil"},
+      {ik:"i-energiya", n:"PoE quvvat moduli", t:"Kameralar va kontrollerlarni quvvatlaydi", c:"Aloqa yo'q", r:"qizil"},
+      {ik:"i-ekran", n:"Boshqaruv protsessori", t:"Qurilmaning markaziy boshqaruv bloki", c:"Javob bermayapti", r:"qizil"},
+      {ik:"i-qalqon", n:"Zaxira quvvat kirishi", t:"Ikkilamchi quvvat manbai", c:"Tekshirilmoqda", r:"sariq"}
+    ],
+    fav:"Qurilma tarmoqqa ulanmagan — unga bog'liq qurilmalar (kameralar, eshik kontrollerlari) zaxira kanaliga o'tkazilgan holda ishlamoqda.",
+    hujjat:[{n:"O'rnatish akti", h:"PDF · 640 KB"}],
+    logs:[{v:"23-may 22:14", m:"Aloqa uzildi (timeout)"},{v:"23-may 22:13", m:"1–24-portlar: signal yo'qotildi"},{v:"23-may 21:58", m:"Yuqori harorat ogohlantirishi"},{v:"23-may 18:30", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"23-may 09:00", m:"Kunlik trafik hisoboti yaratildi"}]}
+];
+let faol = 0, izlash = "", tab = "Onlayn";
+
+function royxatChiz(){
+  const r = QURILMALAR.filter(q=>
+    (!izlash || (q.nom+" "+q.joy).toLowerCase().includes(izlash)) &&
+    (tab==="Barcha" || (tab==="Onlayn" ? q.onlayn : !q.onlayn))
+  );
+  document.getElementById("q-royxat").innerHTML = r.map(q=>{
+    const i = QURILMALAR.indexOf(q);
+    return `
+    <button class="q-band ${i===faol?"faol":""}" data-i="${i}">
+      <span class="tile ${q.qizil?"qizil":""}"><span class="n ${q.onlayn?"":"of"}"></span><svg class="ic"><use href="#${q.ikon}"/></svg></span>
+      <span style="min-width:0;flex:1"><b>${q.nom}</b><span>${q.joy}</span><span>${q.tur}</span></span>
+      <span class="signal" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>`;
+  }).join("");
+  document.querySelectorAll(".q-band").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      faol = +b.dataset.i; royxatChiz(); panelChiz(QURILMALAR[faol]);
+      MKB.toast(QURILMALAR[faol].nom+" diagnostikasi yuklandi");
+    });
+  });
+}
+
+function panelChiz(q){
+  document.getElementById("qm-nom").textContent = q.nom;
+  document.getElementById("qm-tile-ic").innerHTML = `<use href="#${q.ikon}"/>`;
+  document.getElementById("qm-tile").classList.toggle("qizil", !!q.qizil);
+  const chip = document.getElementById("qm-chip");
+  chip.textContent = q.onlayn ? "Onlayn" : "Offline";
+  chip.classList.toggle("off", !q.onlayn);
+  document.getElementById("qm-sub").textContent = q.tur+"  ·  "+q.joy;
+  document.getElementById("qm-iz-tur").textContent = q.tur;
+  document.getElementById("qm-iz-nom").textContent = q.nom;
+
+  document.getElementById("qm-signal").textContent = q.signal;
+  const sl = document.getElementById("qm-soglik-l");
+  sl.textContent = q.soglikL; sl.style.color = q.soglikR;
+  document.getElementById("qm-soglik-f").textContent = q.soglikF;
+  const ring = document.getElementById("qm-ring"), C = 131.9;
+  ring.setAttribute("stroke-dasharray", (C*q.soglikF/100).toFixed(1)+" "+C);
+  ring.setAttribute("stroke", q.soglikF < 40 ? "url(#grad-ring-3d-qizil)" : "url(#grad-ring-3d)");
+
+  document.getElementById("qm-fw").textContent = q.fw;
+  document.getElementById("qm-ip").textContent = q.ip;
+  document.getElementById("qm-mac").textContent = q.mac;
+  document.getElementById("qm-uptime").textContent = q.uptime;
+  document.getElementById("qm-sinx").textContent = q.sinx;
+
+  document.getElementById("qm-cpu").textContent = q.cpu;
+  document.getElementById("qm-xotira").textContent = q.xotira;
+  document.getElementById("qm-kechikish").textContent = q.kechikish;
+
+  document.getElementById("qm-t4-y").textContent = q.t4.y;
+  document.getElementById("qm-t4-ic").innerHTML = `<use href="#${q.ikon}"/>`;
+  if (q.t4cur === undefined) q.t4cur = q.t4.q;
+  document.getElementById("qm-t4-q").textContent = q.t4cur;
+  document.getElementById("qm-t5-y").textContent = q.t5.y;
+  document.getElementById("qm-t5-q").textContent = q.t5.q;
+
+  const korinish = document.getElementById("qm-korinish");
+  korinish.hidden = !q.rasm;
+  if (q.rasm){
+    document.getElementById("qm-rasm").src = q.rasm;
+    document.getElementById("qm-rasm").alt = q.nom+" — qurilma joylashuvi";
+  }
+
+  const net = q.onlayn ? ["yashil","OK — barqaror ulanish"] : ["qizil","Xato — aloqa yo'q"];
+  const quv = q.quvvat==="Noma'lum" ? ["qizil","Xato — ma'lumot yo'q"] : q.quvvat.indexOf("Normal")===0 ? ["yashil","OK — barqaror"] : ["sariq","Ogohlantirish"];
+  const fw2 = q.onlayn ? ["yashil","OK — "+q.fw] : ["sariq","Tekshirib bo'lmadi"];
+  const mod = q.qizil ? ["sariq","Ogohlantirish — tekshiruv talab etadi"] : q.onlayn ? ["yashil","OK — javob bermoqda"] : ["qizil","Xato — javob yo'q"];
+  const diagRows = [["i-wifi","Tarmoq ulanishi",net], ["i-energiya","Quvvat manbai",quv], ["i-sozlama","Firmware yaxlitligi",fw2], [q.ikon,"Sensor/Modul javobi",mod]];
+  document.getElementById("qm-diag-royxat").innerHTML = diagRows.map(x=>{
+    const ik=x[0], n=x[1], r=x[2][0], t=x[2][1];
+    return `<div class="komponent-band">
+      <span class="komponent-ikon"><svg class="ic"><use href="#${ik}"/></svg></span>
+      <span class="komponent-matn"><b>${n}</b></span>
+      <span class="chip chip-${r}"><span class="nuqta"></span>${t}</span>
+    </div>`;
+  }).join("");
+  document.getElementById("qm-diag-vaqt").innerHTML = "Oxirgi test: <b>hozir</b>";
+
+  document.getElementById("qm-komp-royxat").innerHTML = q.komp.map(k=>`
+    <div class="komponent-band">
+      <span class="komponent-ikon"><svg class="ic"><use href="#${k.ik}"/></svg></span>
+      <span class="komponent-matn"><b>${k.n}</b><span>${k.t}</span></span>
+      <span class="chip chip-${k.r}"><span class="nuqta"></span>${k.c}</span>
+    </div>`).join("");
+  const favBand = document.getElementById("qm-fav-band");
+  favBand.hidden = !q.fav;
+  if (q.fav) document.getElementById("qm-fav-matn").textContent = q.fav;
+
+  document.getElementById("qm-hujjat-royxat").innerHTML = q.hujjat.map(h=>`
+    <div class="komponent-band">
+      <span class="komponent-ikon"><svg class="ic"><use href="#i-hujjat"/></svg></span>
+      <span class="komponent-matn"><b>${h.n}</b><span>${h.h}</span></span>
+      <button class="karta-havola" data-toast="${h.n} ochilmoqda…">Ko'rish</button>
+    </div>`).join("");
+
+  document.getElementById("qm-holat-matn").textContent = q.onlayn ? "Onlayn" : "Offline";
+  document.getElementById("qm-holat-nuqta").classList.toggle("qizil", !q.onlayn);
+  document.getElementById("qm-harorat").textContent = q.harorat;
+  document.getElementById("qm-tarmoq").textContent = q.tarmoq;
+  document.getElementById("qm-quvvat").textContent = q.quvvat;
+  document.getElementById("qm-sinx2").textContent = q.sinx+(q.onlayn?":00":"");
+  document.getElementById("qm-uptime2").textContent = q.uptime;
+  document.getElementById("qm-joy").textContent = q.joy;
+  document.getElementById("qm-tur").textContent = q.tur;
+  document.getElementById("qm-seriya").textContent = q.seriya;
+
+  document.getElementById("qm-log-royxat").innerHTML = q.logs.map(l=>
+    `<div class="log-band"><span class="n"></span><span class="vaqt">${l.v}</span><span class="matn">${l.m}</span></div>`).join("");
+}
+document.getElementById("q-izlash-input").addEventListener("input", e=>{ izlash = e.target.value.toLowerCase(); royxatChiz(); });
+document.querySelectorAll(".q-tab").forEach(t=>{
+  t.addEventListener("click", ()=>{
+    document.querySelectorAll(".q-tab").forEach(x=>x.classList.remove("aktiv"));
+    t.classList.add("aktiv"); tab = t.dataset.t; royxatChiz();
+  });
+});
+royxatChiz();
+panelChiz(QURILMALAR[faol]);
+
+/* Markaz tablari */
+document.querySelectorAll(".qm-tab").forEach(t=>{
+  t.addEventListener("click", ()=>{
+    document.querySelectorAll(".qm-tab").forEach(x=>x.classList.remove("aktiv"));
+    t.classList.add("aktiv");
+    if (t.dataset.t) document.querySelectorAll("[data-panel]").forEach(p=>p.hidden = p.dataset.panel !== t.dataset.t);
+  });
+});
+
+/* 4-katak: eshik/shlagbaum/yozuv... holatini almashtirish (faqat alt qiymati borlarda) */
+document.getElementById("qm-t4").addEventListener("click", function(){
+  const q = QURILMALAR[faol];
+  if (!q.t4.alt){ MKB.toast(q.t4.y+": "+q.t4cur); return; }
+  q.t4cur = (q.t4cur === q.t4.q) ? q.t4.alt : q.t4.q;
+  document.getElementById("qm-t4-q").textContent = q.t4cur;
+  MKB.toast(q.nom+" — "+q.t4.y.toLowerCase()+" “"+q.t4cur+"” holatiga o'tkazildi", "i-qulf");
+});
+
+/* Restart tasdiq */
+document.getElementById("restart").addEventListener("click", ()=>{
+  const q = QURILMALAR[faol];
+  MKB.modal("Qurilmani qayta ishga tushirish",
+    q.nom+" qayta ishga tushiriladi. Jarayon davomida (~40 soniya) qurilma vaqtincha javob bermaydi.",
+    {okMatn:"Qayta ishga tushirish", ok(){ MKB.toast(q.nom+" qayta ishga tushirilmoqda…", "i-saralash"); }});
+});
+
+/* Diagnostika testini qayta ishga tushirish */
+document.getElementById("qm-diag-run").addEventListener("click", ()=>{
+  panelChiz(QURILMALAR[faol]);
+  MKB.toast("Diagnostika testi yakunlandi", "i-saralash");
+});
+
+/* Qurilma qo'shish (provisioning) — to'liq 4-qadamli wizard: obyekt/joylashuv, qurilma turi, IP/MAC/seriya, ulanish testi */
+document.getElementById("qurilma-qoshish").addEventListener("click", ()=>{
+  location.href = "qurilma-ornatish.html";
+});
+
+/* Xizmat hisoboti dropdown */
+const xt = document.getElementById("xizmat-tugma"), xm = document.getElementById("xizmat-menyu");
+xt.addEventListener("click", e=>{
+  e.stopPropagation();
+  const o = xm.classList.contains("ochiq");
+  document.querySelectorAll(".menyu-popover.ochiq").forEach(p=>p.classList.remove("ochiq"));
+  xm.classList.toggle("ochiq", !o);
+});
+xm.querySelectorAll("button").forEach(b=>b.addEventListener("click", e=>{
+  e.stopPropagation(); xm.classList.remove("ochiq");
+  MKB.toast(b.dataset.f+" shakllantirildi", "i-yuklab");
+}));
+});
+</script>
+</body>
+</html>

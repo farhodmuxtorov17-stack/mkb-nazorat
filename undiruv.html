@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Undiruv va sud ishlari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Undiruv jarayoni: bosqichlar zanjiri ---- */
+.bosqich-zanjir{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:10px;
+}
+@media (max-width:1500px){.bosqich-zanjir{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:820px){.bosqich-zanjir{grid-template-columns:repeat(2,1fr)}}
+.bz-band{
+  position:relative;background:var(--karta);border-radius:var(--r-karta);
+  box-shadow:var(--soya);padding:15px 16px 14px;text-align:left;width:100%;
+  border:1.5px solid transparent;transition:border-color var(--tez),transform var(--tez);
+}
+.bz-band:hover{transform:translateY(-2px)}
+.bz-band.aktiv{border-color:var(--asos)}
+.bz-tepa{display:flex;align-items:center;gap:9px}
+.bz-nuqta{width:9px;height:9px;border-radius:99px;flex:none}
+.bz-nom{font-size:12.5px;font-weight:650;color:var(--matn-2);line-height:1.25}
+.bz-son{font-size:26px;font-weight:750;letter-spacing:-.02em;margin-top:9px;color:var(--matn)}
+.bz-summa{font-size:12.5px;color:var(--matn-3);margin-top:2px}
+.bz-progress{height:4px;border-radius:99px;background:var(--chiziq);margin-top:11px;overflow:hidden}
+.bz-progress span{display:block;height:100%;border-radius:99px}
+
+.u-grid{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:18px;align-items:start}
+@media (max-width:1400px){.u-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Ish kartochkalari ro'yxati */
+.ish-royxat{display:flex;flex-direction:column;gap:11px}
+.ish-karta{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 16px;align-items:center;
+  background:var(--karta);border-radius:var(--r-karta);box-shadow:var(--soya);
+  padding:15px 18px;width:100%;text-align:left;
+  border:1.5px solid transparent;transition:border-color var(--tez);
+}
+.ish-karta:hover{border-color:var(--kirish-chiziq)}
+.ish-karta.tanlangan{border-color:var(--asos);background:var(--asos-fon)}
+.ish-raqam{font-size:12px;font-weight:700;letter-spacing:.045em;color:var(--asos-toq)}
+.ish-nom{font-size:15px;font-weight:750;color:var(--matn);margin-top:3px;line-height:1.3}
+.ish-meta{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:7px;font-size:12.5px;color:var(--matn-3)}
+.ish-meta span{display:inline-flex;align-items:center;gap:6px}
+.ish-meta .ic{width:15px;height:15px;color:var(--matn-4)}
+.ish-ong{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+.ish-summa{font-size:16px;font-weight:750;white-space:nowrap}
+.muddat-teg{
+  display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+  border-radius:99px;padding:4px 10px;white-space:nowrap;
+}
+.muddat-shoshilinch{background:#FDEDEA;color:#B3271A}
+.muddat-yaqin{background:#FFF3D6;color:#97460A}
+.muddat-normal{background:var(--asos-fon);color:var(--asos-toq)}
+
+/* Tanlangan ish tafsiloti */
+.u-panel{position:sticky;top:18px;display:flex;flex-direction:column;gap:16px}
+.u-sarlavha{font-size:17px;font-weight:750;line-height:1.3}
+.u-tag{font-size:12.5px;color:var(--matn-3);margin-top:4px}
+.u-qator{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--chiziq);font-size:13.5px}
+.u-qator:last-child{border-bottom:none}
+.u-qator .yorliq{color:var(--matn-3)}
+.u-qator b{font-weight:700;text-align:right}
+.panel-sarlavha{font-size:15px;font-weight:750;color:var(--matn);margin-bottom:12px}
+
+/* Jarayon tarixi (vertikal vaqt chizig'i) */
+.tarix{position:relative;padding-left:26px}
+.tarix::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--chiziq)}
+.tarix-band{position:relative;padding-bottom:16px}
+.tarix-band:last-child{padding-bottom:0}
+.tarix-band::before{
+  content:"";position:absolute;left:-24px;top:4px;width:16px;height:16px;border-radius:99px;
+  background:var(--karta);border:3px solid var(--chiziq);
+}
+.tarix-band.tugallangan::before{border-color:var(--brend-yashil);background:var(--brend-yashil)}
+.tarix-band.joriy::before{border-color:var(--asos);background:var(--karta);box-shadow:0 0 0 4px var(--asos-fon)}
+.tarix-sana{font-size:11.5px;font-weight:650;color:var(--matn-4);letter-spacing:.02em}
+.tarix-nom{font-size:14px;font-weight:700;color:var(--matn);margin-top:2px}
+.tarix-izoh{font-size:13px;color:var(--matn-3);margin-top:3px;line-height:1.5}
+
+.hujjat-band{
+  display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--kirish-chiziq);
+  border-radius:var(--r-el);margin-bottom:8px;width:100%;text-align:left;
+  transition:background var(--tez);
+}
+.hujjat-band:last-child{margin-bottom:0}
+.hujjat-band:hover{background:var(--asos-fon)}
+.hujjat-band .fayl-ikon{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none;
+  background:var(--asos-fon);color:var(--asos-toq);font-size:10px;font-weight:750;
+}
+.hujjat-band .nomi{flex:1;min-width:0;font-size:13.5px;font-weight:650;color:var(--matn)}
+.hujjat-band .olcham{font-size:12px;color:var(--matn-4)}
+.u-amallar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}
+.u-amallar .tugma{width:100%;justify-content:center}
+.u-amallar .keng{grid-column:1 / -1}
+</style>
+</head>
+<body data-sahifa="undiruv" data-topbar-sarlavha="Undiruv va sud ishlari" data-topbar-ikon="i-tarozi">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1>Undiruv va sud ishlari</h1>
+        <div class="sahifa-izoh">Muddati o'tgan kreditlar bo'yicha da'vo, sud va majburiy ijro jarayonlarini kuzatish</div>
+      </div>
+      <div class="sahifa-harakat">
+        <button class="tugma tugma-oq" id="eksport-tugma"><svg class="ic"><use href="#i-yuklash"/></svg>Reyestr eksporti</button>
+        <button class="tugma tugma-asos" id="yangi-ish"><svg class="ic"><use href="#i-qoshish"/></svg>Yangi undiruv ishi</button>
+      </div>
+    </div>
+
+    <section class="bosqich-zanjir" aria-label="Undiruv jarayoni bosqichlari" id="zanjir"></section>
+
+    <div class="u-grid">
+      <div>
+        <div class="karta-bosh" style="margin-bottom:12px">
+          <h2 id="royxat-sarlavha">Barcha undiruv ishlari</h2>
+          <span style="font-size:13px;color:var(--matn-3)"><b id="royxat-son">8</b> ta ish</span>
+        </div>
+        <div class="ish-royxat" id="ish-royxat"></div>
+      </div>
+
+      <aside class="karta u-panel" aria-label="Tanlangan ish tafsiloti">
+        <div>
+          <div class="ish-raqam" id="d-raqam">—</div>
+          <div class="u-sarlavha" id="d-nom">—</div>
+          <div class="u-tag" id="d-tag">—</div>
+        </div>
+
+        <div>
+          <div class="u-qator"><span class="yorliq">Joriy bosqich</span><b id="d-bosqich">—</b></div>
+          <div class="u-qator"><span class="yorliq">Undirilayotgan summa</span><b id="d-summa">—</b></div>
+          <div class="u-qator"><span class="yorliq">Sud organi</span><b id="d-sud">—</b></div>
+          <div class="u-qator"><span class="yorliq">Ijro varaqasi</span><b id="d-ijro">—</b></div>
+          <div class="u-qator"><span class="yorliq">Garov obyekti</span><b id="d-obyekt">—</b></div>
+          <div class="u-qator"><span class="yorliq">Keyingi muddat</span><b id="d-muddat">—</b></div>
+          <div class="u-qator"><span class="yorliq">Mas'ul yurist</span><b id="d-yurist">—</b></div>
+        </div>
+
+        <div>
+          <div class="panel-sarlavha">Jarayon tarixi</div>
+          <div class="tarix" id="d-tarix"></div>
+        </div>
+
+        <div>
+          <div class="panel-sarlavha">Ish hujjatlari</div>
+          <div id="d-hujjatlar"></div>
+        </div>
+
+        <div class="u-amallar">
+          <a class="tugma tugma-oq tugma-kichik" href="qarzdorlar.html"><svg class="ic"><use href="#i-qarz"/></svg>Qarzdor</a>
+          <a class="tugma tugma-oq tugma-kichik" id="d-obyekt-havola" href="obyektlar.html"><svg class="ic"><use href="#i-bino"/></svg>Obyekt</a>
+          <button class="tugma tugma-asos tugma-kichik keng" id="bosqich-tugma"><svg class="ic"><use href="#i-strelka"/></svg>Keyingi bosqichga o'tkazish</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+/* ---- Undiruv jarayoni bosqichlari ---- */
+/* Bosqich statistikasi va ishlar yagona manbadan hisoblanadi */
+const BOSQICHLAR = MKB_DATA.bosqichStatistikasi()
+  .filter(b => b.kalit !== "auksion")
+  .map(b => ({nom: b.nom, rang: b.rang, son: b.son, summa: MKB_DATA.pul(b.summa).replace(" so'm", "")}));
+
+const MUDDAT_SINF = {yuqori: "muddat-shoshilinch", orta: "muddat-yaqin", normal: "muddat-normal"};
+
+const ISHLAR = MKB_DATA.YOZUVLAR.map(y => ({
+  id: y.id,
+  raqam: y.ish.raqam,
+  qarzdor: y.mijoz.nom,
+  tur: y.shartnoma.tur + " \u00b7 " + y.shartnoma.raqam,
+  bosqich: y.bosqichNomi,
+  summa: y.qarzMatn,
+  sud: y.ish.sud,
+  ijro: y.ish.ijro,
+  obyekt: y.garov.nom,
+  muddat: y.ish.muddat,
+  muddatHolat: MUDDAT_SINF[y.ish.shoshilinch] || "muddat-normal",
+  kun: y.ish.kun,
+  yurist: y.ish.masul,
+  tarix: y.ish.tarix.map((t, i, arr) => ({
+    s: t[0], n: t[1], i: t[2], h: i === arr.length - 1 ? "joriy" : "tugallangan"
+  })),
+  hujjatlar: y.ish.hujjatlar
+}));
+
+
+const yId = id => document.getElementById(id);
+let joriyFiltr = null;
+
+function zanjirChiz(){
+  const maks = Math.max(...BOSQICHLAR.map(b => b.son));
+  yId("zanjir").innerHTML = BOSQICHLAR.map(b => `
+    <button type="button" class="bz-band${joriyFiltr === b.nom ? " aktiv" : ""}" data-bosqich="${b.nom}">
+      <span class="bz-tepa"><span class="bz-nuqta" style="background:${b.rang}"></span><span class="bz-nom">${b.nom}</span></span>
+      <div class="bz-son">${b.son}</div>
+      <div class="bz-summa">${b.summa} so'm</div>
+      <div class="bz-progress"><span style="width:${Math.round(b.son / maks * 100)}%;background:${b.rang}"></span></div>
+    </button>`).join("");
+  yId("zanjir").querySelectorAll("[data-bosqich]").forEach(b =>
+    b.addEventListener("click", () => {
+      joriyFiltr = joriyFiltr === b.dataset.bosqich ? null : b.dataset.bosqich;
+      zanjirChiz();
+      royxatChiz();
+    }));
+}
+
+function royxatChiz(){
+  const royxat = joriyFiltr ? ISHLAR.filter(i => i.bosqich === joriyFiltr) : ISHLAR;
+  yId("royxat-sarlavha").textContent = joriyFiltr ? joriyFiltr + " bosqichidagi ishlar" : "Barcha undiruv ishlari";
+  yId("royxat-son").textContent = royxat.length;
+  yId("ish-royxat").innerHTML = royxat.length ? royxat.map(i => `
+    <button type="button" class="ish-karta" data-id="${i.id}">
+      <span>
+        <span class="ish-raqam">${i.raqam}</span>
+        <span class="ish-nom">${i.qarzdor}</span>
+        <span class="ish-meta">
+          <span><svg class="ic"><use href="#i-shartnoma"/></svg>${i.tur}</span>
+          <span><svg class="ic"><use href="#i-bino"/></svg>${i.obyekt}</span>
+        </span>
+      </span>
+      <span class="ish-ong">
+        <span class="ish-summa">${i.summa}</span>
+        <span class="muddat-teg ${i.muddatHolat}"><svg class="ic" style="width:13px;height:13px"><use href="#i-soat"/></svg>${i.kun}</span>
+      </span>
+    </button>`).join("")
+    : `<div class="karta" style="text-align:center;padding:36px 20px;color:var(--matn-3)">Ushbu bosqichda ochiq ish yo'q.</div>`;
+  yId("ish-royxat").querySelectorAll("[data-id]").forEach(b =>
+    b.addEventListener("click", () => tanla(b.dataset.id)));
+  if (royxat.length) tanla(royxat[0].id);
+}
+
+function tanla(id){
+  const i = ISHLAR.find(x => x.id === id);
+  if (!i) return;
+  document.querySelectorAll("#ish-royxat .ish-karta").forEach(b =>
+    b.classList.toggle("tanlangan", b.dataset.id === id));
+  yId("d-raqam").textContent = i.raqam;
+  yId("d-nom").textContent = i.qarzdor;
+  yId("d-tag").textContent = i.tur;
+  yId("d-bosqich").textContent = i.bosqich;
+  yId("d-summa").textContent = i.summa;
+  yId("d-sud").textContent = i.sud;
+  yId("d-ijro").textContent = i.ijro;
+  yId("d-obyekt").textContent = i.obyekt;
+  yId("d-muddat").textContent = i.muddat;
+  yId("d-yurist").textContent = i.yurist;
+  yId("d-tarix").innerHTML = i.tarix.map(t => `
+    <div class="tarix-band ${t.h}">
+      <div class="tarix-sana">${t.s}</div>
+      <div class="tarix-nom">${t.n}</div>
+      <div class="tarix-izoh">${t.i}</div>
+    </div>`).join("");
+  yId("d-hujjatlar").innerHTML = i.hujjatlar.map(h => `
+    <button type="button" class="hujjat-band" data-toast="${h[1]} yuklab olinmoqda">
+      <span class="fayl-ikon">${h[0]}</span>
+      <span class="nomi">${h[1]}</span>
+      <span class="olcham">${h[2]}</span>
+      <svg class="ic" style="width:17px;height:17px;color:var(--matn-4)"><use href="#i-yuklab"/></svg>
+    </button>`).join("");
+  yId("d-obyekt-havola").href = "obyektlar.html?qidiruv=" + encodeURIComponent(i.obyekt.split(",")[0]);
+  yId("bosqich-tugma").dataset.ish = i.id;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  zanjirChiz();
+  royxatChiz();
+  yId("eksport-tugma").addEventListener("click", () =>
+    MKB.toast("Undiruv ishlari reyestri XLSX shaklida tayyorlanmoqda", "i-yuklash"));
+  yId("yangi-ish").addEventListener("click", () =>
+    MKB.modal("Yangi undiruv ishi",
+      `<p style="font-size:14px;color:var(--matn-2);line-height:1.6">Qarzdorlar reyestridan mijoz tanlanadi va uning shartnomasi bo'yicha undiruv ishi ochiladi. Ish avtomatik ravishda <b>Ogohlantirish</b> bosqichida boshlanadi va mas'ul yuristga biriktiriladi.</p>`,
+      {okMatn:"Qarzdorni tanlash", ok(){ location.href = "qarzdorlar.html"; }}));
+  yId("bosqich-tugma").addEventListener("click", () => {
+    const i = ISHLAR.find(x => x.id === yId("bosqich-tugma").dataset.ish);
+    if (!i) return;
+    const keyingi = BOSQICHLAR[BOSQICHLAR.findIndex(b => b.nom === i.bosqich) + 1];
+    if (!keyingi){
+      MKB.toast("Ish yakuniy bosqichda — obyekt realizatsiyaga tayyor", "i-belgi-doira");
+      return;
+    }
+    MKB.modal("Bosqichni o'zgartirish",
+      `<p style="font-size:14px;color:var(--matn-2);line-height:1.6"><b>${i.raqam}</b> ishi <b>${i.bosqich}</b> bosqichidan <b>${keyingi.nom}</b> bosqichiga o'tkaziladi. O'zgarish audit jurnaliga yoziladi va mas'ul yuristga bildirishnoma yuboriladi.</p>`,
+      {okMatn:"O'tkazish", ok(){
+        i.bosqich = keyingi.nom;
+        MKB.toast(i.raqam + " — " + keyingi.nom + " bosqichiga o'tkazildi", "i-belgi-doira");
+        royxatChiz();
+      }});
+  });
+});
+</script>
+</body>
+</html>

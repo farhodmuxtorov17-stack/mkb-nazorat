@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Realizatsiya arxivi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Sotilganlar doimiy arxivi ---- */
+.arxiv-eslatma{
+  display:flex;gap:12px;background:#FFF6DE;border:1px solid #F2E2B4;border-radius:15px;padding:14px 18px;
+  font-size:13.5px;color:#7A5C10;line-height:1.55;
+}
+.arxiv-eslatma .ic{width:19px;height:19px;color:#9A6E00;flex:none;margin-top:2px}
+.filtr-qator{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.f-izlash{display:flex;align-items:center;gap:10px;flex:1;min-width:200px;max-width:380px;background:var(--karta);border-radius:14px;height:48px;padding:0 18px;box-shadow:var(--soya)}
+.f-izlash input{flex:1;border:none;outline:none;background:none;font:inherit;font-size:14.5px;min-width:0}
+.f-izlash .ic{width:19px;height:19px;color:#56626E}
+.filtr-qator .tanlov{width:auto;min-width:140px;background:var(--karta);border:none;box-shadow:var(--soya)}
+.arxiv-chip{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:650;color:#515F6D}
+.arxiv-chip .ic{width:17px;height:17px}
+.hujjat-mini{display:flex;gap:6px}
+.hujjat-mini button{
+  width:32px;height:32px;border:1px solid var(--kirish-chiziq);border-radius:9px;
+  display:grid;place-items:center;color:#515F6D;transition:background var(--tez);
+}
+.hujjat-mini button:hover{background:#EEF2F7;color:#101B29}
+.hujjat-mini .ic{width:14px;height:14px}
+.arxiv-teg{display:inline-flex;align-items:center;gap:7px;background:#EEF2F7;color:#515F6D;font-size:12px;font-weight:700;border-radius:99px;padding:5px 12px}
+.arxiv-teg .ic{width:13px;height:13px}
+</style>
+</head>
+<body data-sahifa="realizatsiya">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1>Realizatsiya arxivi</h1>
+        <div class="sahifa-izoh">Realizatsiya qilingan garov obyektlarining doimiy arxivi</div>
+      </div>
+      <div class="sahifa-harakat">
+        <button class="tugma tugma-oq" data-toast="Arxiv ro'yxati XLSX eksport qilinmoqda"><svg class="ic"><use href="#i-yuklash"/></svg>Eksport</button>
+        <a class="tugma tugma-asos" href="auksion.html"><svg class="ic"><use href="#i-daromad"/></svg>Auksion savdolari</a>
+      </div>
+    </div>
+
+    <div class="arxiv-eslatma">
+      <svg class="ic"><use href="#i-qalqon"/></svg>
+      <span><b>Doimiy saqlash rejimi.</b> Arxiv yozuvlari faqat o'qish uchun — realizatsiya yakunlangach obyekt faol garov reyestridan chiqariladi, ammo barcha hujjatlari bilan bu yerda <b>hech qachon o'chirilmasdan</b> saqlanadi. Har bir yozuv audit jurnali bilan bog'langan.</span>
+    </div>
+
+    <div class="filtr-qator">
+      <div class="f-izlash" onclick="this.querySelector('input').focus()">
+        <input type="search" id="izlash" placeholder="Obyekt, xaridor yoki undiruv ishi raqami..." aria-label="Arxivdan qidirish">
+        <svg class="ic"><use href="#i-izlash"/></svg>
+      </div>
+      <button class="tanlov" id="f-yil" data-variantlar='["Barcha yillar","2026","2025","2024"]'><span class="t-yorliq">Barcha yillar</span><svg class="ic"><use href="#i-past"/></svg></button>
+      <button class="tanlov" id="f-tur" data-variantlar='["Barcha turlar","Kvartira","Dala hovli","Ofis binosi","Ishlab chiqarish","Savdo maydoni","Yer uchastkasi","Avtotransport"]'><span class="t-yorliq">Barcha turlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+      <span class="arxiv-chip"><svg class="ic"><use href="#i-qulf"/></svg>Faqat o'qish rejimi</span>
+    </div>
+
+    <div class="karta jadval-korpus">
+      <div class="jadval-orash">
+        <table class="jadval">
+          <thead>
+            <tr><th>Obyekt</th><th>Turi</th><th>Realizatsiya sanasi</th><th>Xaridor</th><th>Sotuv narxi</th><th>Undiruv ishi</th><th>Hujjatlar</th><th>Holat</th></tr>
+          </thead>
+          <tbody id="arxiv-jadval"></tbody>
+        </table>
+      </div>
+      <div class="sahifalash">
+        <span class="oraliq">Jami: <b id="jami">6</b> ta arxiv yozuvi</span>
+        <button class="s-tugma" disabled aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
+        <button class="s-tugma aktiv">1</button>
+        <button class="s-tugma" disabled aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+/* Arxiv yozuvlari yagona manbadan */
+const ARXIV = MKB_DATA.ARXIV.map(x => ({
+  nom: x.nom, kod: x.kod, tur: x.tur, sana: x.sotilgan, xaridor: x.xaridor,
+  summa: MKB_DATA.pul(x.summa), mib: x.ish, yil: x.yil, rasm: x.rasm,
+  qabul: x.qabul, nazorat: x.nazorat
+}));
+
+let qidiruv = "", yil = "Barcha yillar", tur = "Barcha turlar";
+
+function chiz(){
+  const r = ARXIV.filter(a=>
+    (!qidiruv || (a.nom+" "+a.xaridor+" "+a.mib).toLowerCase().includes(qidiruv)) &&
+    (yil==="Barcha yillar" || a.yil===yil) &&
+    (tur==="Barcha turlar" || a.tur===tur)
+  );
+  document.getElementById("jami").textContent = r.length;
+  document.getElementById("arxiv-jadval").innerHTML = r.length ? r.map((a,i)=>`
+    <tr data-i="${ARXIV.indexOf(a)}">
+      <td><span class="obyekt-katak"><img src="${a.rasm}" alt=""><span><span class="nom">${a.nom}</span><br><span class="sub">${a.kod}</span></span></span></td>
+      <td>${a.tur}</td>
+      <td><b>${a.sana}</b></td>
+      <td>${a.xaridor}</td>
+      <td><b>${a.summa}</b></td>
+      <td>${a.mib}</td>
+      <td><span class="hujjat-mini">
+        <button data-h="Oldi-sotdi shartnomasi" aria-label="Shartnoma"><svg class="ic"><use href="#i-shartnoma"/></svg></button>
+        <button data-h="To'lov tasdiqnomasi" aria-label="To'lov"><svg class="ic"><use href="#i-daromad"/></svg></button>
+        <button data-h="Topshirish dalolatnomasi" aria-label="Dalolatnoma"><svg class="ic"><use href="#i-hujjat"/></svg></button>
+      </span></td>
+      <td><span class="arxiv-teg"><svg class="ic"><use href="#i-qulf"/></svg>Arxivda</span></td>
+    </tr>`).join("") :
+    `<tr><td colspan="8"><div class="bosh-holat"><span class="doira"><svg class="ic"><use href="#i-papka"/></svg></span><h3>Yozuv topilmadi</h3><p>Qidiruv yoki filtrga mos arxiv yozuvi yo'q.</p></div></td></tr>`;
+
+  document.querySelectorAll("#arxiv-jadval tr[data-i]").forEach(tr=>{
+    tr.addEventListener("click", e=>{
+      const hb = e.target.closest(".hujjat-mini button");
+      const a = ARXIV[+tr.dataset.i];
+      if (hb){ MKB.toast(hb.dataset.h+" yuklab olinmoqda — "+a.nom+"", "i-yuklab"); return; }
+      MKB.modal("Arxiv yozuvi — "+a.nom,
+        `<div style="display:grid;gap:0;margin-top:4px;font-size:13.5px">
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">MIB'dan qabul qilingan</span><b style="margin-left:auto">${a.qabul}</b></div>
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">Nazorat davri</span><b style="margin-left:auto">${a.nazorat}</b></div>
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">Sotilgan sana</span><b style="margin-left:auto">${a.sana}</b></div>
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">Xaridor</span><b style="margin-left:auto">${a.xaridor}</b></div>
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">Sotuv summasi</span><b style="margin-left:auto">${a.summa}</b></div>
+          <div style="display:flex;padding:9px 0"><span style="color:var(--matn-3)">MIB ijro ishi</span><b style="margin-left:auto">${a.mib}</b></div>
+          <div style="background:#EEF2F7;border-radius:11px;padding:10px 13px;font-size:12.5px;color:#515F6D;margin-top:8px">
+            Yozuv faqat o'qish uchun. O'zgartirish va o'chirish audit siyosatiga ko'ra taqiqlangan.
+          </div>
+        </div>`,
+        { okMatn:"Yopish", ok(){} });
+    });
+  });
+}
+document.getElementById("izlash").addEventListener("input", e=>{ qidiruv = e.target.value.toLowerCase(); chiz(); });
+document.getElementById("f-yil").addEventListener("tanlov", e=>{ yil = e.detail; chiz(); });
+document.getElementById("f-tur").addEventListener("tanlov", e=>{ tur = e.detail; chiz(); });
+chiz();
+});
+</script>
+</body>
+</html>

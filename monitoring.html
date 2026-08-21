@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Nazorat markazi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Nazorat markazi: operatsion post ---- */
+.holat-lenta{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;
+  background:var(--chiziq);border:1px solid var(--chiziq);border-radius:var(--r-karta);overflow:hidden;
+}
+.hl-band{background:var(--karta);padding:14px 18px}
+.hl-yorliq{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--matn-4)}
+.hl-qiymat{display:flex;align-items:baseline;gap:9px;margin-top:6px}
+.hl-qiymat b{font-size:25px;font-weight:750;letter-spacing:-.025em;font-variant-numeric:tabular-nums}
+.hl-qiymat .teg{font-size:12.5px;font-weight:700}
+.hl-izoh{font-size:12.5px;color:var(--matn-3);margin-top:3px}
+.teg-ok{color:var(--delta)}.teg-xavf{color:#B3271A}.teg-ogoh{color:#97460A}
+
+/* Operatsion maydon — to'q fon (post ekrani) */
+.post{
+  display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:0;
+  background:var(--nav-fon-2);border-radius:var(--r-karta);overflow:hidden;
+  border:1px solid #0A2038;
+}
+@media (max-width:1380px){.post{grid-template-columns:minmax(0,1fr)}}
+.post-chap{padding:16px 16px 18px;min-width:0}
+.post-bosh{display:flex;align-items:center;gap:12px;margin-bottom:13px}
+.post-bosh h2{font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#DCE7F2}
+.post-bosh .ajrat{flex:1}
+.jonli-teg{
+  display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.09em;
+  color:#FF6B5A;background:rgba(255,107,90,.13);border-radius:5px;padding:4px 9px;
+}
+.jonli-teg i{width:7px;height:7px;border-radius:99px;background:#FF6B5A;animation:puls 1.6s infinite}
+@keyframes puls{0%,100%{opacity:1}50%{opacity:.25}}
+.post-tanlov{
+  display:inline-flex;gap:2px;background:rgba(255,255,255,.07);border-radius:7px;padding:2px;
+}
+.post-tanlov button{
+  height:28px;padding:0 11px;border-radius:5px;font-size:12px;font-weight:650;color:#9DB4CB;
+  transition:background var(--tez),color var(--tez);
+}
+.post-tanlov button.aktiv{background:rgba(255,255,255,.14);color:#fff}
+
+/* Videostena */
+.stena{display:grid;gap:10px}
+.stena.x4{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stena.x9{grid-template-columns:repeat(3,minmax(0,1fr))}
+.kam{
+  position:relative;border-radius:9px;overflow:hidden;background:#071726;
+  aspect-ratio:16/9;display:block;width:100%;text-align:left;
+  border:1.5px solid rgba(255,255,255,.08);transition:border-color var(--tez);
+}
+.kam:hover{border-color:rgba(255,255,255,.3)}
+.kam.trevoga{border-color:#FF6B5A}
+.kam img{width:100%;height:100%;object-fit:cover;opacity:.88}
+.kam .ustki{
+  position:absolute;left:0;right:0;top:0;display:flex;align-items:center;gap:7px;
+  padding:8px 10px;background:linear-gradient(180deg,rgba(4,14,24,.82),transparent);
+}
+.kam .nuqta{width:7px;height:7px;border-radius:99px;background:#3AAA3E;flex:none}
+.kam .nuqta.xavf{background:#FF6B5A}
+.kam .nom{font-size:11.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kam .pastki{
+  position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;
+  padding:7px 10px;background:linear-gradient(0deg,rgba(4,14,24,.82),transparent);
+  font-size:10.5px;color:#B9CADA;font-variant-numeric:tabular-nums;
+}
+.kam .oflayn{
+  position:absolute;inset:0;display:grid;place-items:center;background:rgba(7,23,38,.86);
+  font-size:12px;font-weight:700;color:#8CA3B8;letter-spacing:.04em;
+}
+
+/* Trevoga navbati */
+.post-ong{
+  border-left:1px solid rgba(255,255,255,.09);padding:16px 16px 18px;
+  display:flex;flex-direction:column;gap:10px;min-width:0;
+}
+@media (max-width:1380px){.post-ong{border-left:none;border-top:1px solid rgba(255,255,255,.09)}}
+.tr-band{
+  display:block;width:100%;text-align:left;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--_tr,#8CA3B8);
+  border-radius:8px;padding:11px 13px;transition:background var(--tez);
+}
+.tr-band:hover{background:rgba(255,255,255,.09)}
+.tr-band.kritik{--_tr:#FF6B5A}
+.tr-band.ogoh{--_tr:#E8A552}
+.tr-band.past{--_tr:#5FC8E0}
+.tr-tepa{display:flex;align-items:center;gap:8px}
+.tr-daraja{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--_tr)}
+.tr-vaqt{margin-left:auto;font-size:11px;color:#8CA3B8;font-variant-numeric:tabular-nums}
+.tr-nom{font-size:13.5px;font-weight:700;color:#EAF1F8;margin-top:5px;line-height:1.3}
+.tr-obyekt{font-size:12px;color:#9DB4CB;margin-top:3px}
+.tr-past{display:flex;align-items:center;gap:8px;margin-top:9px}
+.sla{
+  font-size:10.5px;font-weight:750;border-radius:5px;padding:3px 7px;
+  background:rgba(255,255,255,.08);color:#B9CADA;font-variant-numeric:tabular-nums;
+}
+.sla.buzilgan{background:rgba(255,107,90,.18);color:#FF8B7C}
+.tr-amal{
+  margin-left:auto;font-size:11.5px;font-weight:700;color:#8FC5F5;
+  border:1px solid rgba(143,197,245,.35);border-radius:6px;padding:4px 10px;
+  transition:background var(--tez);
+}
+.tr-amal:hover{background:rgba(143,197,245,.14)}
+.navbat-bosh{display:flex;align-items:center;gap:9px;margin-bottom:2px}
+.navbat-bosh h2{font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#DCE7F2}
+.navbat-son{
+  font-size:11px;font-weight:800;background:#FF6B5A;color:#0A1420;border-radius:99px;
+  min-width:20px;height:20px;display:grid;place-items:center;padding:0 6px;
+}
+.navbat-royxat{display:flex;flex-direction:column;gap:9px;overflow-y:auto;max-height:520px;padding-right:3px}
+.navbat-royxat::-webkit-scrollbar{width:5px}
+.navbat-royxat::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:99px}
+.navbat-bosh-holat{font-size:12.5px;color:#9DB4CB;text-align:center;padding:22px 10px}
+
+/* Kanal va qurilma salomatligi */
+.kanal-jadval td .ic{width:16px;height:16px}
+.kanal-holat{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:650;white-space:nowrap}
+.kanal-holat .nuqta{width:8px;height:8px;border-radius:99px}
+.zaxira{font-size:12.5px;color:var(--matn-3)}
+.progress-chiziq{height:5px;border-radius:99px;background:var(--chiziq);overflow:hidden;min-width:80px}
+.progress-chiziq span{display:block;height:100%;border-radius:99px;background:var(--asos)}
+</style>
+</head>
+<body data-sahifa="xavfsizlik" data-topbar-sarlavha="Nazorat markazi" data-topbar-ikon="i-qalqon">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1>Nazorat markazi</h1>
+        <div class="sahifa-izoh">Bank nazoratidagi garov obyektlarini kechayu kunduz kuzatish va trevogalarga javob berish</div>
+      </div>
+      <div class="sahifa-harakat">
+        <button class="tugma tugma-oq" id="obhod-tugma"><svg class="ic"><use href="#i-belgi-doira"/></svg>Obhod jurnali</button>
+        <button class="tugma tugma-asos" id="hodisa-tugma"><svg class="ic"><use href="#i-ogoh"/></svg>Hodisa ochish</button>
+      </div>
+    </div>
+
+    <section class="holat-lenta" aria-label="Nazorat holati">
+      <div class="hl-band">
+        <div class="hl-yorliq">Qo'riqlanadigan obyekt</div>
+        <div class="hl-qiymat"><b id="hl-obyekt">—</b><span class="teg teg-ok">100%</span></div>
+        <div class="hl-izoh">Barchasi tizimga ulangan</div>
+      </div>
+      <div class="hl-band">
+        <div class="hl-yorliq">Kamera onlayn</div>
+        <div class="hl-qiymat"><b id="kam-onlayn">412</b><span class="teg teg-ogoh" id="kam-oflayn">3 oflayn</span></div>
+        <div class="hl-izoh" id="kam-jami">—</div>
+      </div>
+      <div class="hl-band">
+        <div class="hl-yorliq">Ochiq trevoga</div>
+        <div class="hl-qiymat"><b id="tr-soni">0</b><span class="teg teg-xavf" id="tr-kritik">0 kritik</span></div>
+        <div class="hl-izoh">Javob kutayotgan signallar</div>
+      </div>
+      <div class="hl-band">
+        <div class="hl-yorliq">O'rtacha javob vaqti</div>
+        <div class="hl-qiymat"><b>2:14</b><span class="teg teg-ok">↓ 18 s</span></div>
+        <div class="hl-izoh">Norma 3:00 · bugungi smena</div>
+      </div>
+    </section>
+
+    <section class="post" aria-label="Operatsion post">
+      <div class="post-chap">
+        <div class="post-bosh">
+          <h2>Videostena</h2>
+          <span class="jonli-teg"><i></i>Jonli</span>
+          <span class="ajrat"></span>
+          <span class="post-tanlov" role="group" aria-label="Videostena ko'rinishi">
+            <button type="button" data-stena="x4" class="aktiv">4 ekran</button>
+            <button type="button" data-stena="x9">9 ekran</button>
+          </span>
+        </div>
+        <div class="stena x4" id="stena"></div>
+      </div>
+
+      <aside class="post-ong" aria-label="Trevoga navbati">
+        <div class="navbat-bosh">
+          <h2>Trevoga navbati</h2>
+          <span class="navbat-son" id="navbat-son">0</span>
+        </div>
+        <div class="navbat-royxat" id="navbat"></div>
+      </aside>
+    </section>
+
+    <div class="karta">
+      <div class="karta-bosh">
+        <h2>Aloqa kanallari va qurilmalar</h2>
+        <a class="karta-havola" href="qurilmalar.html">Barcha qurilmalar<svg class="ic"><use href="#i-ong"/></svg></a>
+      </div>
+      <div class="jadval-orash">
+        <table class="jadval kanal-jadval">
+          <thead>
+            <tr><th>Obyekt</th><th>Aloqa kanali</th><th>Qurilma</th><th>Zaxira quvvat</th><th>Signal sifati</th><th>Holat</th></tr>
+          </thead>
+          <tbody id="kanal-jadval"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+/* ---- Videostena ---- */
+const KAMERALAR = [
+  {nom:"Navruz Plaza · Bosh kirish",        rasm:"assets/kam_kirish.png", holat:"ok",     vaqt:"14:32:07", kod:"CAM-014"},
+  {nom:"Zarafshon Tekstil · Sex hududi",    rasm:"assets/kam_lobi.png",   holat:"trevoga", vaqt:"14:32:05", kod:"CAM-027"},
+  {nom:"Chorvoq dala hovlisi · Perimetr",   rasm:"assets/kam_avto.png",   holat:"ok",     vaqt:"14:32:06", kod:"CAM-041"},
+  {nom:"Yunusobod 45-uy · Kirish yo'lagi",  rasm:"assets/kam_konf.png",   holat:"ok",     vaqt:"14:32:07", kod:"CAM-052"},
+  {nom:"Humo Office · Ofis bloki",          rasm:"assets/jonli_kamera.png", holat:"ok",   vaqt:"14:32:04", kod:"CAM-063"},
+  {nom:"Qibray yer uchastkasi · Chegara",   rasm:"assets/kv_kamera.png",  holat:"oflayn", vaqt:"14:18:52", kod:"CAM-078"},
+  {nom:"Navruz Plaza · Avtoturargoh",       rasm:"assets/kam_avto.png",   holat:"ok",     vaqt:"14:32:06", kod:"CAM-019"},
+  {nom:"Nurafshon 18-uy · Hovli",           rasm:"assets/kirish_sahna.png", holat:"ok",   vaqt:"14:32:07", kod:"CAM-085"},
+  {nom:"Chilonzor 12-uy · Podyezd",         rasm:"assets/sx_kamera.png",  holat:"ok",     vaqt:"14:32:05", kod:"CAM-091"}
+];
+
+/* ---- Trevoga navbati ---- */
+const TREVOGALAR = [
+  {id:"a1", daraja:"kritik", nom:"Perimetr buzilishi aniqlandi", obyekt:"Zarafshon Tekstil ishlab chiqarish sexi · Sex hududi",
+   vaqt:"14:31", sla:"0:48", buzilgan:false, kam:1},
+  {id:"a2", daraja:"kritik", nom:"Kamera aloqasi uzildi", obyekt:"Qibray tumani, 2,4 ga yer uchastkasi · Chegara",
+   vaqt:"14:18", sla:"13:22", buzilgan:true, kam:5},
+  {id:"a3", daraja:"ogoh", nom:"Eshik ruxsatsiz ochilishga urinish", obyekt:"Navruz Plaza · 3-qavat savdo maydoni",
+   vaqt:"14:06", sla:"2:11", buzilgan:false, kam:0},
+  {id:"a4", daraja:"ogoh", nom:"Harorat me'yordan yuqori", obyekt:"Zarafshon Tekstil · Server xonasi",
+   vaqt:"13:52", sla:"1:04", buzilgan:false, kam:1},
+  {id:"a5", daraja:"past", nom:"Zaxira quvvatga o'tildi", obyekt:"Chorvoq dala hovlisi · Asosiy shchit",
+   vaqt:"13:40", sla:"0:26", buzilgan:false, kam:2},
+  {id:"a6", daraja:"past", nom:"Rejalashtirilmagan tashrif qayd etildi", obyekt:"Humo Office · 2-qavat ofis bloki",
+   vaqt:"13:21", sla:"0:12", buzilgan:false, kam:4}
+];
+
+/* ---- Aloqa kanallari ---- */
+const KANALLAR = [
+  {obyekt:"Navruz Plaza", kanal:"Optik tolali · 200 Mbit", qurilma:"12 ta", zaxira:"UPS · 4 soat", sifat:96, holat:"Barqaror", rang:"#3AAA3E"},
+  {obyekt:"Zarafshon Tekstil sexi", kanal:"Optik tolali · 100 Mbit", qurilma:"18 ta", zaxira:"Generator · 12 soat", sifat:88, holat:"Barqaror", rang:"#3AAA3E"},
+  {obyekt:"Chorvoq dala hovlisi", kanal:"4G LTE · zaxira kanal", qurilma:"6 ta", zaxira:"UPS · 2 soat", sifat:64, holat:"Diqqat", rang:"#D98324"},
+  {obyekt:"Qibray yer uchastkasi", kanal:"4G LTE", qurilma:"4 ta", zaxira:"Quyosh paneli", sifat:22, holat:"Uzilgan", rang:"#D8432F"},
+  {obyekt:"Yunusobod 45-uy", kanal:"Optik tolali · 100 Mbit", qurilma:"5 ta", zaxira:"UPS · 3 soat", sifat:93, holat:"Barqaror", rang:"#3AAA3E"},
+  {obyekt:"Humo Office bloki", kanal:"Optik tolali · 200 Mbit", qurilma:"9 ta", zaxira:"UPS · 6 soat", sifat:97, holat:"Barqaror", rang:"#3AAA3E"}
+];
+
+const yId = id => document.getElementById(id);
+
+function stenaChiz(rejim){
+  const st = yId("stena");
+  st.className = "stena " + rejim;
+  const soni = rejim === "x9" ? 9 : 4;
+  st.innerHTML = KAMERALAR.slice(0, soni).map((k, i) => `
+    <button type="button" class="kam${k.holat === "trevoga" ? " trevoga" : ""}" data-kam="${i}">
+      <img src="${k.rasm}" alt="${k.nom} kamerasidan tasvir">
+      <span class="ustki">
+        <span class="nuqta${k.holat === "ok" ? "" : " xavf"}"></span>
+        <span class="nom">${k.nom}</span>
+      </span>
+      <span class="pastki"><span>${k.kod}</span><span>${k.vaqt}</span></span>
+      ${k.holat === "oflayn" ? '<span class="oflayn">Aloqa yo\'q</span>' : ""}
+    </button>`).join("");
+  st.querySelectorAll("[data-kam]").forEach(b =>
+    b.addEventListener("click", () => {
+      const k = KAMERALAR[+b.dataset.kam];
+      MKB.toast(k.nom + " — to'liq ekranda ochilmoqda", "i-kamera");
+    }));
+}
+
+function navbatChiz(){
+  const n = yId("navbat");
+  if (!TREVOGALAR.length){
+    n.innerHTML = '<div class="navbat-bosh-holat">Ochiq trevoga yo\'q. Barcha signallar yopilgan.</div>';
+  } else {
+    n.innerHTML = TREVOGALAR.map(t => `
+      <div class="tr-band ${t.daraja}" data-tr="${t.id}">
+        <div class="tr-tepa">
+          <span class="tr-daraja">${t.daraja === "kritik" ? "Kritik" : t.daraja === "ogoh" ? "Ogohlantirish" : "Past"}</span>
+          <span class="tr-vaqt">${t.vaqt}</span>
+        </div>
+        <div class="tr-nom">${t.nom}</div>
+        <div class="tr-obyekt">${t.obyekt}</div>
+        <div class="tr-past">
+          <span class="sla${t.buzilgan ? " buzilgan" : ""}">${t.buzilgan ? "Norma buzildi" : "Javobgacha"} ${t.sla}</span>
+          <button type="button" class="tr-amal" data-qabul="${t.id}">Qabul qilish</button>
+        </div>
+      </div>`).join("");
+    n.querySelectorAll("[data-qabul]").forEach(b =>
+      b.addEventListener("click", e => {
+        e.stopPropagation();
+        const t = TREVOGALAR.find(x => x.id === b.dataset.qabul);
+        MKB.modal("Trevogaни qabul qilish",
+          `<p style="font-size:14px;color:var(--matn-2);line-height:1.6"><b>${t.nom}</b><br>${t.obyekt}<br><br>
+           Signal sizning nomingizga biriktiriladi, javob vaqti hisoblanadi va hodisalar markazida ish ochiladi.</p>`,
+          {okMatn:"Qabul qilish va ishga o'tish", ok(){
+            const i = TREVOGALAR.findIndex(x => x.id === t.id);
+            if (i > -1) TREVOGALAR.splice(i, 1);
+            navbatChiz();
+            MKB.toast(t.nom + " — qabul qilindi, hodisa ochildi", "i-belgi-doira");
+          }});
+      }));
+    n.querySelectorAll("[data-tr]").forEach(el =>
+      el.addEventListener("click", () => {
+        const t = TREVOGALAR.find(x => x.id === el.dataset.tr);
+        if (t) MKB.toast(t.obyekt + " — kamera videostenada ajratildi", "i-kamera");
+      }));
+  }
+  yId("navbat-son").textContent = TREVOGALAR.length;
+  yId("tr-soni").textContent = TREVOGALAR.length;
+  yId("tr-kritik").textContent = TREVOGALAR.filter(t => t.daraja === "kritik").length + " kritik";
+}
+
+function kanalChiz(){
+  yId("kanal-jadval").innerHTML = KANALLAR.map(k => `
+    <tr>
+      <td><b>${k.obyekt}</b></td>
+      <td>${k.kanal}</td>
+      <td>${k.qurilma}</td>
+      <td><span class="zaxira">${k.zaxira}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="progress-chiziq"><span style="width:${k.sifat}%;background:${k.rang}"></span></span>
+          <span style="font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums">${k.sifat}%</span>
+        </div>
+      </td>
+      <td><span class="kanal-holat" style="color:${k.rang}"><span class="nuqta" style="background:${k.rang}"></span>${k.holat}</span></td>
+    </tr>`).join("");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const P = MKB_DATA.PORTFEL, fmt = MKB_DATA.fmt;
+  document.getElementById("hl-obyekt").textContent = fmt(P.balansda);
+  document.getElementById("kam-onlayn").textContent = fmt(P.kameralar.onlayn);
+  document.getElementById("kam-oflayn").textContent = (P.kameralar.jami - P.kameralar.onlayn) + " oflayn";
+  document.getElementById("kam-jami").textContent = "Jami " + fmt(P.kameralar.jami) + " ta videokuzatuv nuqtasi";
+  stenaChiz("x4");
+  navbatChiz();
+  kanalChiz();
+  document.querySelectorAll("[data-stena]").forEach(b =>
+    b.addEventListener("click", () => {
+      document.querySelectorAll("[data-stena]").forEach(x => x.classList.toggle("aktiv", x === b));
+      stenaChiz(b.dataset.stena);
+    }));
+  yId("obhod-tugma").addEventListener("click", () =>
+    MKB.toast("Bugungi obhod jurnali: 128 obyektdan 116 tasi tekshirildi", "i-belgi-doira"));
+  yId("hodisa-tugma").addEventListener("click", () =>
+    MKB.modal("Yangi hodisa ochish",
+      `<p style="font-size:14px;color:var(--matn-2);line-height:1.6">Hodisa qo'lda ochiladi va hodisalar markaziga tushadi. Obyekt, tur va tavsif hodisa kartochkasida to'ldiriladi.</p>`,
+      {okMatn:"Hodisalar markaziga o'tish", ok(){ location.href = "hodisalar.html"; }}));
+});
+</script>
+</body>
+</html>

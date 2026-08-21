@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Tasdiqlar va topshiriqlar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css">
+<style>
+/* ---- Tasdiqlar va topshiriqlar (ekran 22, Rahbar ko'rinishi) ---- */
+.tt-grid{display:grid;grid-template-columns:350px minmax(0,1fr) 360px;gap:18px;align-items:start}
+.tt-grid h3{font-size:16.5px;font-weight:750}
+.t-son{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 8px;margin-left:8px;background:#E4EFF9;color:#0B4478;border-radius:99px;font-size:12.5px;font-weight:750;vertical-align:2px}
+.kt-band{
+  width:100%;text-align:left;display:flex;gap:12px;
+  border:1px solid var(--chiziq);border-radius:14px;padding:14px;margin-top:12px;
+  transition:border-color var(--tez),box-shadow var(--tez);
+}
+.kt-band:hover{box-shadow:var(--soya)}
+.kt-band.faol{border-color:#CFE3F5;background:#F7FAFD;box-shadow:0 0 0 1px #CFE3F5}
+.kt-tile{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile)}
+.kt-tile .ic{width:20px;height:20px}
+.kt-tile.yashil{background:#E4EFF9;color:#0B4478}
+.kt-tile.sariq{background:#FFF6DE;color:#9A6E00}
+.kt-tile.binafsha{background:#F3EBFE;color:#8A4BD8}
+.kt-tile.qizil{background:#FDEEEC;color:#C43C31}
+.kt-band b{display:block;font-size:14.5px;font-weight:650;line-height:1.35}
+.kt-band .org{display:block;font-size:12.5px;color:var(--matn-3);margin-top:2px}
+.kt-band .meta{display:flex;align-items:center;margin-top:8px}
+.kt-band .vaqt{font-size:12px;color:var(--matn-4)}
+.jiddiylik{margin-left:auto;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:99px}
+.jiddiylik.yuqori{background:#FDEEEC;color:#C43C31}
+.jiddiylik.orta{background:#FFF6DE;color:#9A6E00}
+.jiddiylik.past{background:#E7F0FE;color:#2F6BCF}
+.barcha-band{display:flex;align-items:center;gap:8px;width:100%;margin-top:14px;padding:12px 6px 2px;font-size:14px;font-weight:650;color:#2C3A49;border-radius:8px}
+.barcha-band .ic{margin-left:auto;width:16px;height:16px}
+
+/* Markaz */
+.td-bosh{display:flex;align-items:flex-start;gap:14px}
+.td-bosh .kt-tile{width:52px;height:52px}
+.td-bosh .kt-tile .ic{width:24px;height:24px}
+.td-bosh h2{font-size:20px;font-weight:750;line-height:1.3}
+.td-bosh .sub{font-size:13.5px;color:var(--matn-3);margin-top:4px}
+.td-bosh .jiddiylik{margin-left:auto;flex:none;font-size:12.5px;padding:6px 14px}
+.td-korpus{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;margin-top:18px}
+.td-tavsif h4{font-size:14.5px;font-weight:750;margin-bottom:6px}
+.td-tavsif p{font-size:14px;color:var(--matn-2);line-height:1.6}
+.td-qator{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #F1F4F8;font-size:13.5px}
+.td-qator:last-child{border-bottom:none}
+.td-qator .ic{width:17px;height:17px;color:#56626E}
+.td-qator .yorliq{color:var(--matn-3)}
+.td-qator b{margin-left:auto;font-weight:650;text-align:right}
+.td-rasm{display:grid;place-items:center}
+.td-rasm img{max-width:100%;max-height:360px}
+.hujjat-blok{margin-top:14px}
+.hujjat-blok h4{font-size:14.5px;font-weight:750;margin-bottom:8px}
+.hujjat-band{display:flex;align-items:center;gap:12px;border:1px solid var(--chiziq);border-radius:13px;padding:12px 14px;width:100%;text-align:left;transition:background var(--tez)}
+.hujjat-band:hover{background:#F7F9FC}
+.hujjat-band .tile{width:38px;height:38px;border-radius:10px;background:#EEF2F7;display:grid;place-items:center;color:#515F6D;box-shadow:var(--chuqur-tile-tor)}
+.hujjat-band .tile .ic{width:17px;height:17px}
+.hujjat-band b{font-size:13.5px;font-weight:650}
+.hujjat-band span{display:block;font-size:12px;color:var(--matn-4)}
+.hujjat-band .yuk{margin-left:auto;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#3A4756}
+.hujjat-band .yuk:hover{background:#E8EAEE}
+.td-harakat{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+
+/* O'ng ustun */
+.blok-karta h3{display:flex;align-items:center;gap:9px;font-size:15.5px}
+.blok-karta h3 .ic{width:19px;height:19px;color:#3A4756}
+.m-band2{padding:11px 0;border-bottom:1px solid #F1F4F8}
+.m-band2:last-of-type{border-bottom:none}
+.m-band2 .yorliq{font-size:12.5px;color:var(--matn-4)}
+.m-band2 b{display:block;font-size:14.5px;font-weight:700;margin-top:3px}
+.qolgan{font-size:20px;font-weight:750;color:#268030}
+.shaxs-band{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #F1F4F8}
+.shaxs-band:last-of-type{border-bottom:none}
+.shaxs-band .avatar{width:40px;height:40px}
+.shaxs-band .harf{width:40px;height:40px;border-radius:99px;background:#EEF0F3;display:grid;place-items:center;font-size:12.5px;font-weight:750;color:#515F6D;flex:none;box-shadow:var(--chuqur-tile-tor)}
+.shaxs-band .rol{display:block;font-size:12px;color:var(--matn-4)}
+.shaxs-band b{display:block;font-size:14px;font-weight:650}
+.shaxs-band .aloqa{margin-left:auto;display:flex;gap:8px}
+.shaxs-band .aloqa button{width:34px;height:34px;border:1px solid var(--kirish-chiziq);border-radius:10px;display:grid;place-items:center;color:#2C3A49}
+.shaxs-band .aloqa button:hover{background:#F3F6FA}
+.shaxs-band .aloqa .ic{width:15px;height:15px}
+.ft-band{display:flex;gap:10px;padding:9px 0;font-size:13px}
+.ft-band .nuqta{width:8px;height:8px;border-radius:99px;background:#0F5392;margin-top:5px;flex:none}
+.ft-band b{font-weight:650}
+.ft-band span{display:block;color:var(--matn-4);font-size:12px;margin-top:2px}
+.tt-grid > aside{display:flex;flex-direction:column;gap:18px}
+@media (max-width:1600px){.tt-grid{grid-template-columns:320px minmax(0,1fr)}.tt-grid > aside{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}}
+@media (max-width:1200px){.tt-grid{grid-template-columns:minmax(0,1fr)}.tt-grid > aside{grid-template-columns:minmax(0,1fr)}.td-korpus{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body data-sahifa="hisobotlar">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <h1>Tasdiqlar va topshiriqlar</h1>
+      <div class="sahifa-harakat">
+        <a class="tugma tugma-oq" href="vazifalar.html"><svg class="ic"><use href="#i-vazifa"/></svg>Jarayonlar ko'rinishi</a>
+      </div>
+    </div>
+
+    <div class="tt-grid">
+
+      <!-- Kutilayotgan tasdiqlar -->
+      <div class="karta">
+        <h3>Kutilayotgan tasdiqlar<span class="t-son" id="t-son">4</span></h3>
+        <div id="kt-royxat"></div>
+        <button class="barcha-band" data-toast="Barcha tasdiqlar ro'yxati">Barchasini ko'rish<svg class="ic"><use href="#i-strelka"/></svg></button>
+      </div>
+
+      <!-- Markaz -->
+      <div class="karta">
+        <div class="td-bosh">
+          <span class="kt-tile yashil" id="d-tile"><svg class="ic"><use href="#i-kamera"/></svg></span>
+          <div>
+            <h2 id="d-sarlavha">Masofaviy ko'rik sessiyasini tasdiqlash</h2>
+            <div class="sub" id="d-sub">Navruz Plaza &nbsp;·&nbsp; GT-2024-001</div>
+          </div>
+          <span class="jiddiylik yuqori" id="d-jiddiylik">Yuqori</span>
+        </div>
+
+        <div class="td-korpus">
+          <div>
+            <div class="td-tavsif">
+              <h4>Tavsif</h4>
+              <p id="d-tavsif">Investor bilan masofaviy ko'rik sessiyasini o'tkazish uchun ruxsat so'ralmoqda.</p>
+            </div>
+            <div style="margin-top:12px">
+              <div class="td-qator"><svg class="ic"><use href="#i-foyd"/></svg><span class="yorliq">So'rovchi</span><b id="d-sorovchi">Javlon Karimov</b></div>
+              <div class="td-qator"><svg class="ic"><use href="#i-vazifa"/></svg><span class="yorliq">Lavozimi</span><b id="d-lavozim">Garov obyektlari direktori</b></div>
+              <div class="td-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">Vaqt</span><b id="d-muddat-vaqt">26-may, 2025 &nbsp;·&nbsp; 15:00</b></div>
+              <div class="td-qator"><svg class="ic"><use href="#i-pin"/></svg><span class="yorliq">Joy</span><b id="d-joy">Navruz Plaza, 1201-xona</b></div>
+              <div class="td-qator"><svg class="ic"><use href="#i-tashrif"/></svg><span class="yorliq">Ishtirokchilar</span><b id="d-ishtirokchilar">3 nafar</b></div>
+              <div class="td-qator"><svg class="ic"><use href="#i-kamera"/></svg><span class="yorliq">Sessiya turi</span><b id="d-sessiya-turi">Video konferensiya</b></div>
+              <div class="td-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Qo'shimcha</span><b id="d-qoshimcha">Investor: Global Invest Ltd.</b></div>
+            </div>
+          </div>
+          <div class="td-rasm"><img src="assets/tasdiq_hujjat_3d.png" alt="Tasdiqlash hujjatlari illyustratsiyasi"></div>
+        </div>
+
+        <div class="hujjat-blok">
+          <h4>Hujjatlar</h4>
+          <button class="hujjat-band" id="d-hujjat-band" style="width:100%;text-align:left;cursor:pointer">
+            <span class="tile"><svg class="ic"><use href="#i-hujjat"/></svg></span>
+            <span><b id="d-hujjat-nom">Session_Request_GreenTower.pdf</b><span id="d-hujjat-hajm">1.2 MB</span></span>
+            <span class="yuk" aria-label="Yuklab olish"><svg class="ic"><use href="#i-yuklab"/></svg></span>
+          </button>
+        </div>
+
+        <div class="td-harakat">
+          <button class="tugma tugma-asos" id="tasdiqla"><svg class="ic"><use href="#i-belgi-doira"/></svg>Tasdiqlash</button>
+          <button class="tugma tugma-chiziqli" id="rad-et"><svg class="ic"><use href="#i-yopish"/></svg>Rad etish</button>
+          <button class="tugma tugma-chiziqli" data-toast="So'rov qayta ko'rib chiqishga yuborildi"><svg class="ic"><use href="#i-soat"/></svg>Qayta ko'rib chiqish</button>
+        </div>
+      </div>
+
+      <!-- O'ng ustun -->
+      <aside>
+        <div class="karta blok-karta">
+          <h3><svg class="ic"><use href="#i-kalendar"/></svg>Muddatlar</h3>
+          <div class="m-band2"><span class="yorliq">So'rov sanasi</span><b id="d-sorov-sana">24-may, 2025 &nbsp;·&nbsp; 14:20</b></div>
+          <div class="m-band2"><span class="yorliq">Javob muddati</span><b id="d-javob-muddati">26-may, 2025 &nbsp;·&nbsp; 15:00</b></div>
+          <div class="m-band2"><span class="yorliq">Qolgan vaqt</span><b class="qolgan" id="d-qolgan">0 soat 28 daqiqa</b></div>
+        </div>
+
+        <div class="karta blok-karta">
+          <h3><svg class="ic"><use href="#i-vazifa"/></svg>Topshiriqlar</h3>
+          <div class="shaxs-band">
+            <span class="avatar"><svg viewBox="0 0 34 34" style="width:30px;height:30px;display:block;margin:5px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span>
+            <span><span class="rol">Mas'ul shaxs</span><b id="d-masul-nom">Javlon Karimov</b><span class="rol" id="d-masul-lavozim">Garov obyektlari direktori</span></span>
+            <span class="aloqa">
+              <button id="d-masul-tel" data-toast="Qo'ng'iroq: +998 90 123-45-67" aria-label="Qo'ng'iroq"><svg class="ic"><use href="#i-tel"/></svg></button>
+              <button data-toast="Email yuborish oynasi" aria-label="Email"><svg class="ic"><use href="#i-mail"/></svg></button>
+            </span>
+          </div>
+          <div class="shaxs-band">
+            <span class="harf" id="d-korib-harf">SK</span>
+            <span><span class="rol">Ko'rib chiqish uchun</span><b id="d-korib-nom">Saida Karimova</b><span class="rol" id="d-korib-lavozim">Yuridik maslahatchi</span></span>
+          </div>
+          <div class="shaxs-band">
+            <span class="harf" id="d-nusxa-harf">TM</span>
+            <span><span class="rol">Nusxa</span><b id="d-nusxa-nom">Temur Mirzayev</b><span class="rol" id="d-nusxa-lavozim">CFO</span></span>
+          </div>
+        </div>
+
+        <div class="karta blok-karta">
+          <h3><svg class="ic"><use href="#i-soat"/></svg>Faoliyat tarixi</h3>
+          <div class="ft-band"><span class="nuqta"></span><span><b>So'rov yaratildi</b><span id="d-faoliyat">Javlon Karimov &nbsp;·&nbsp; 24-may, 14:20</span></span></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js"></script>
+<script src="tarjima.js"></script>
+<script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+const TASDIQLAR = [
+  {ikon:"i-kamera", tile:"yashil", sarlavha:"Masofaviy ko'rik sessiyasini tasdiqlash", org:"Navruz Plaza", sub:"Navruz Plaza &nbsp;·&nbsp; GT-2024-001",
+   vaqt:"Bugun, 14:20", j:"yuqori", jm:"Yuqori", tavsif:"Investor bilan masofaviy ko'rik sessiyasini o'tkazish uchun ruxsat so'ralmoqda.",
+   sorovchi:"Javlon Karimov", lavozim:"Garov obyektlari direktori", joy:"Navruz Plaza, 1201-xona", ishtirokchilar:"3 nafar", sessiyaTuri:"Video konferensiya",
+   qoshimcha:"Investor: Global Invest Ltd.", hujjatNomi:"Session_Request_GreenTower.pdf", hujjatHajmi:"1.2 MB",
+   sorovSana:"24-may, 2025 &nbsp;·&nbsp; 14:20", javobMuddati:"26-may, 2025 &nbsp;·&nbsp; 15:00", qolgan:"0 soat 28 daqiqa",
+   masulNom:"Javlon Karimov", masulLavozim:"Garov obyektlari direktori", masulTel:"+998 90 123-45-67",
+   koribNom:"Saida Karimova", koribLavozim:"Yuridik maslahatchi", nusxaNom:"Temur Mirzayev", nusxaLavozim:"CFO"},
+  {ikon:"i-kalendar", tile:"sariq", sarlavha:"Budjetni tasdiqlash", org:"Marketing bo'limi", sub:"Marketing bo'limi &nbsp;·&nbsp; BD-2025-114",
+   vaqt:"Bugun, 13:45", j:"orta", jm:"O'rta", tavsif:"Marketing bo'limining III chorak byudjeti tasdiqlash uchun yuborildi.",
+   sorovchi:"Zarina Yoqubova", lavozim:"Marketing menejeri", joy:"Bosh ofis, Moliya bo'limi", ishtirokchilar:"Byudjet qo'mitasi", sessiyaTuri:"Moliyaviy so'rov",
+   qoshimcha:"Umumiy summa: 312 000 000 so'm", hujjatNomi:"Marketing_Byudjet_Q3_2025.xlsx", hujjatHajmi:"890 KB",
+   sorovSana:"24-may, 2025 &nbsp;·&nbsp; 13:45", javobMuddati:"27-may, 2025 &nbsp;·&nbsp; 18:00", qolgan:"1 kun 4 soat",
+   masulNom:"Zarina Yoqubova", masulLavozim:"Marketing menejeri", masulTel:"+998 90 234-56-78",
+   koribNom:"Temur Mirzayev", koribLavozim:"CFO", nusxaNom:"Ismoilov Otabek", nusxaLavozim:"Administrator"},
+  {ikon:"i-shartnoma", tile:"binafsha", sarlavha:"Shartnomani tasdiqlash", org:"SecurTech Servis MChJ", sub:"SecurTech Servis MChJ &nbsp;·&nbsp; CT-2025-0912",
+   vaqt:"Bugun, 12:10", j:"past", jm:"Past", tavsif:"Yangi ijara shartnomasi loyihasi yuridik ko'rikdan o'tdi, yakuniy tasdiq talab etiladi.",
+   sorovchi:"Bekzod Yusupov", lavozim:"Bosh auditor", joy:"Navruz Plaza, Yuridik bo'lim", ishtirokchilar:"2 nafar", sessiyaTuri:"Hujjat ko'rigi",
+   qoshimcha:"Ijara muddati: 3 yil", hujjatNomi:"Ijara_shartnomasi_TechSolutions.pdf", hujjatHajmi:"2.4 MB",
+   sorovSana:"22-may, 2025 &nbsp;·&nbsp; 12:10", javobMuddati:"29-may, 2025 &nbsp;·&nbsp; 17:00", qolgan:"4 kun 5 soat",
+   masulNom:"Bekzod Yusupov", masulLavozim:"Bosh auditor", masulTel:"+998 90 345-67-89",
+   koribNom:"Saida Karimova", koribLavozim:"Yuridik maslahatchi", nusxaNom:"Javlon Karimov", nusxaLavozim:"Garov obyektlari direktori"},
+  {ikon:"i-ogoh", tile:"qizil", sarlavha:"Texnik xarajatni tasdiqlash", org:"Server uskunalari", sub:"IT bo'limi &nbsp;·&nbsp; EX-2025-0334",
+   vaqt:"Bugun, 11:05", j:"yuqori", jm:"Yuqori", tavsif:"Server uskunalarini favqulodda almashtirish uchun xarajat tasdiqlanishi kerak.",
+   sorovchi:"Shahzod Abdullaev", lavozim:"Texnik muhandis", joy:"Navruz Plaza, Texnik xona", ishtirokchilar:"1 nafar", sessiyaTuri:"Favqulodda so'rov",
+   qoshimcha:"Summa: 48 500 000 so'm", hujjatNomi:"Server_almashtirish_smeta.pdf", hujjatHajmi:"640 KB",
+   sorovSana:"24-may, 2025 &nbsp;·&nbsp; 11:05", javobMuddati:"25-may, 2025 &nbsp;·&nbsp; 09:00", qolgan:"0 soat 55 daqiqa",
+   masulNom:"Shahzod Abdullaev", masulLavozim:"Texnik muhandis", masulTel:"+998 90 456-78-90",
+   koribNom:"Temur Mirzayev", koribLavozim:"CFO", nusxaNom:"Ismoilov Otabek", nusxaLavozim:"Administrator"}
+];
+function bosHarflar(ism){ return ism.split(" ").map(s=>s[0]).join("").toUpperCase().slice(0,2); }
+let faol = 0;
+
+function royxatChiz(){
+  document.getElementById("t-son").textContent = TASDIQLAR.length;
+  document.getElementById("kt-royxat").innerHTML = TASDIQLAR.map((t,i)=>`
+    <button class="kt-band ${i===faol?"faol":""}" data-i="${i}">
+      <span class="kt-tile ${t.tile}"><svg class="ic"><use href="#${t.ikon}"/></svg></span>
+      <span style="flex:1;min-width:0">
+        <b>${t.sarlavha}</b>
+        <span class="org">${t.org}</span>
+        <span class="meta"><span class="vaqt">${t.vaqt}</span><span class="jiddiylik ${t.j}">${t.jm}</span></span>
+      </span>
+    </button>`).join("");
+  document.querySelectorAll(".kt-band").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      faol = +b.dataset.i; royxatChiz(); detalChiz();
+    });
+  });
+}
+function detalChiz(){
+  const t = TASDIQLAR[faol];
+  document.getElementById("d-sarlavha").textContent = t.sarlavha;
+  document.getElementById("d-sub").innerHTML = t.sub;
+  document.getElementById("d-tavsif").textContent = t.tavsif;
+  const j = document.getElementById("d-jiddiylik");
+  j.textContent = t.jm; j.className = "jiddiylik "+t.j;
+  const tile = document.getElementById("d-tile");
+  tile.className = "kt-tile "+t.tile;
+  tile.innerHTML = `<svg class="ic"><use href="#${t.ikon}"/></svg>`;
+  document.getElementById("d-sorovchi").textContent = t.sorovchi;
+  document.getElementById("d-lavozim").textContent = t.lavozim;
+  document.getElementById("d-muddat-vaqt").innerHTML = t.javobMuddati;
+  document.getElementById("d-joy").textContent = t.joy;
+  document.getElementById("d-ishtirokchilar").textContent = t.ishtirokchilar;
+  document.getElementById("d-sessiya-turi").textContent = t.sessiyaTuri;
+  document.getElementById("d-qoshimcha").textContent = t.qoshimcha;
+  document.getElementById("d-hujjat-nom").textContent = t.hujjatNomi;
+  document.getElementById("d-hujjat-hajm").textContent = t.hujjatHajmi;
+  document.getElementById("d-sorov-sana").innerHTML = t.sorovSana;
+  document.getElementById("d-javob-muddati").innerHTML = t.javobMuddati;
+  document.getElementById("d-qolgan").textContent = t.qolgan;
+  document.getElementById("d-masul-nom").textContent = t.masulNom;
+  document.getElementById("d-masul-lavozim").textContent = t.masulLavozim;
+  document.getElementById("d-masul-tel").dataset.toast = "Qo'ng'iroq: "+t.masulTel;
+  document.getElementById("d-korib-nom").textContent = t.koribNom;
+  document.getElementById("d-korib-lavozim").textContent = t.koribLavozim;
+  document.getElementById("d-korib-harf").textContent = bosHarflar(t.koribNom);
+  document.getElementById("d-nusxa-nom").textContent = t.nusxaNom;
+  document.getElementById("d-nusxa-lavozim").textContent = t.nusxaLavozim;
+  document.getElementById("d-nusxa-harf").textContent = bosHarflar(t.nusxaNom);
+  document.getElementById("d-faoliyat").innerHTML = t.sorovchi+" &nbsp;·&nbsp; "+t.sorovSana.replace(" &nbsp;·&nbsp; ", ", ");
+}
+royxatChiz(); detalChiz();
+
+document.getElementById("d-hujjat-band").addEventListener("click", ()=>{
+  MKB.toast(TASDIQLAR[faol].hujjatNomi+" yuklab olinmoqda", "i-yuklab");
+});
+
+function navbatdanOlish(){
+  TASDIQLAR.splice(faol, 1);
+  if (faol >= TASDIQLAR.length) faol = Math.max(0, TASDIQLAR.length - 1);
+  royxatChiz();
+  if (TASDIQLAR.length) detalChiz();
+  else document.querySelector(".td-korpus").closest(".karta").innerHTML =
+    `<div style="padding:48px 24px;text-align:center;color:var(--matn-4)">
+      <svg class="ic" style="width:32px;height:32px;margin:0 auto 12px"><use href="#i-belgi-doira"/></svg>
+      <div style="font-size:14.5px;font-weight:650">Barcha so'rovlar ko'rib chiqildi</div>
+      <div style="font-size:13px;margin-top:4px">Kutilayotgan tasdiqlar navbati bo'sh</div>
+    </div>`;
+}
+
+document.getElementById("tasdiqla").addEventListener("click", ()=>{
+  const t = TASDIQLAR[faol];
+  MKB.toast(t.sarlavha+" — tasdiqlandi", "i-belgi-doira");
+  navbatdanOlish();
+});
+document.getElementById("rad-et").addEventListener("click", ()=>{
+  MKB.modal("So'rovni rad etish",
+    `<div style="margin-top:6px"><label class="maydon-yorliq">Rad etish sababi</label>
+     <div class="kirish kirish-katta"><textarea placeholder="Sababni kiriting..."></textarea></div></div>`,
+    {xavf:true, okMatn:"Rad etish", ok(){
+      MKB.toast("So'rov rad etildi");
+      navbatdanOlish();
+    }});
+});
+});
+</script>
+</body>
+</html>
