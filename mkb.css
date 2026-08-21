@@ -126,20 +126,12 @@ img{display:block;max-width:100%}
 }
 .menyu > .m-guruh:first-child{margin-top:4px}
 
-/* Joriy ish maydoni (rol) — sidebar tepasida, har sahifada ko'rinadi */
-.ish-maydoni{
   display:flex;align-items:center;gap:9px;align-self:stretch;flex:none;
   margin-top:14px;padding:8px 11px;border-radius:8px;
   font-size:12px;font-weight:650;letter-spacing:.02em;
   background:rgba(255,255,255,.07);color:var(--nav-matn-och);
   border:1px solid var(--nav-chiziq);border-left:3px solid var(--_im-rang,#8FB3D6);
 }
-.ish-maydoni .im-nuqta{width:7px;height:7px;border-radius:99px;background:currentColor;flex:none}
-.ish-maydoni.rol-admin{--_im-rang:#8FB3D6}
-.ish-maydoni.rol-rahbar{--_im-rang:#B692F0}
-.ish-maydoni.rol-undiruv{--_im-rang:#E8A552}
-.ish-maydoni.rol-operator{--_im-rang:#5FC8E0}
-.ish-maydoni.rol-texnik{--_im-rang:#A8D06A}
 
 
 /* Filial tanlagich — topbar chap tomonidagi bank tuzilmasi elementi */
@@ -168,7 +160,7 @@ img{display:block;max-width:100%}
 }
 .til-almash button:hover{background:var(--asos-fon);color:var(--asos-toq)}
 .til-almash button.aktiv{background:var(--asos);color:#fff}
-.menyu{margin-top:16px;display:flex;flex-direction:column;gap:2px;flex:1;min-height:0;overflow-y:auto;padding-right:4px;margin-right:-4px}
+.menyu{margin-top:20px;display:flex;flex-direction:column;gap:2px;flex:1;min-height:0;overflow-y:auto;padding-right:4px;margin-right:-4px}
 .m-band{
   position:relative;display:flex;align-items:center;gap:11px;
   height:38px;padding:0 11px;border-radius:8px;width:100%;text-align:left;
@@ -578,25 +570,7 @@ table.jadval{width:100%;border-collapse:collapse}
 .leaflet-tooltip.mkb-chip::before{display:none}
 
 /* Xarita belgilari — premium 3D pin (mkb.js sprite'idagi umumiy chuqurlik tokenlari bilan) */
-.mkb-pin{background:none;border:none}
-.mkb-pin .nuqtacha{
-  position:relative;display:block;width:100%;height:100%;border-radius:99px;
-  background-image:radial-gradient(circle at 32% 26%, rgba(255,255,255,.55), rgba(255,255,255,0) 58%);
-  box-shadow:
-    0 0 0 3.5px #fff,
-    0 0 0 4.5px rgba(16,30,48,.10),
-    inset 0 -3px 6px rgba(0,0,0,.28),
-    inset 0 1px 1px rgba(255,255,255,.45),
-    0 3px 6px rgba(16,30,48,.28),
-    0 10px 20px -6px rgba(16,30,48,.40);
-  transition:transform var(--tez),box-shadow var(--tez);
 }
-.mkb-pin:hover .nuqtacha{transform:scale(1.16) translateY(-1px)}
-.mkb-pin.xavf .nuqtacha::after{
-  content:"";position:absolute;inset:-9px;border-radius:99px;
-  border:2px solid currentColor;opacity:.55;animation:pin-puls 1.8s ease-out infinite;
-}
-@keyframes pin-puls{0%{transform:scale(.7);opacity:.6}100%{transform:scale(1.35);opacity:0}}
 
 /* ============ Moslashuvchanlik ============ */
 @media (max-width:1500px){
@@ -626,8 +600,7 @@ table.jadval{width:100%;border-collapse:collapse}
 @media (max-width:1080px){
   .app{grid-template-columns:64px minmax(0,1fr)}
   .sidebar{padding:18px 8px 14px;align-items:center}
-  .logo-matn,.m-band .yozuv,.yordam .yozuv,.yordam .strelka,.ish-maydoni,.m-guruh{display:none}
-  .m-band{justify-content:center;padding:0;gap:0}
+  .logo-matn,.m-band .yozuv,.yordam .yozuv,.yordam .strelka,  .m-band{justify-content:center;padding:0;gap:0}
   .m-band.aktiv::after{left:-8px}
   .yordam{justify-content:center;padding:0}
 }
@@ -690,3 +663,25 @@ table.jadval{width:100%;border-collapse:collapse}
 /* Kichik matnli havolalar uchun bosish maydoni (32px norma) */
 .matn-havola,.orqaga-havola{display:inline-flex;align-items:center;min-height:32px;padding:0 6px;margin:0 -6px;border-radius:6px;transition:background var(--tez)}
 .matn-havola:hover,.orqaga-havola:hover{background:var(--asos-fon)}
+
+/* ============ Xarita: professional pin va klaster ============ */
+.pin-pro{background:none;border:none}
+.pin-pro svg{
+  display:block;overflow:visible;
+  filter:drop-shadow(0 1px 1px rgba(10,22,38,.30)) drop-shadow(0 6px 10px rgba(10,22,38,.35));
+  transition:transform var(--tez);transform-origin:50% 100%;
+}
+.pin-pro:hover svg{transform:scale(1.12) translateY(-2px)}
+.pin-pro.muhim svg{filter:drop-shadow(0 1px 1px rgba(10,22,38,.30)) drop-shadow(0 6px 12px rgba(10,22,38,.45)) drop-shadow(0 0 7px rgba(15,83,146,.45))}
+
+.klaster{background:none;border:none}
+.klaster > span{
+  display:grid;place-items:center;width:100%;height:100%;border-radius:99px;
+  background:linear-gradient(180deg,#1A4C7E 0%,#0C2A48 100%);
+  color:#fff;font-weight:750;font-size:13px;font-variant-numeric:tabular-nums;
+  box-shadow:0 0 0 3px rgba(255,255,255,.92), 0 0 0 4px rgba(16,30,48,.12),
+    inset 0 1px 0 rgba(255,255,255,.22), 0 4px 10px rgba(10,22,38,.35), 0 12px 26px -8px rgba(10,22,38,.45);
+  transition:transform var(--tez);
+}
+.klaster:hover > span{transform:scale(1.08)}
+.klaster small{font-size:8.5px;font-weight:700;letter-spacing:.04em;opacity:.75;line-height:1;margin-top:1px}

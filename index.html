@@ -711,17 +711,36 @@ document.addEventListener("DOMContentLoaded", ()=>{
   });
 
   /* Xarita — Leaflet + OpenStreetMap (haqiqiy geo-koordinatalar) */
-  const AKTIV_NUQTALAR = [
-    {tur:"Kvartira — Yunusobod",        rangVar:"--t-kvartira",  href:"obyektlar.html?tur=Kvartira",           lat:41.3611, lng:69.2897},
-    {tur:"Kvartira — Chilonzor",        rangVar:"--t-kvartira",  href:"obyektlar.html?tur=Kvartira",           lat:41.2775, lng:69.2054},
-    {tur:"Dala hovli — Chorvoq",        rangVar:"--t-uy",        href:"obyektlar.html?tur=Turar-joy+majmuasi", lat:41.6230, lng:69.7810},
-    {tur:"Tijorat obyekti — Navruz Plaza", rangVar:"--t-tijorat", href:"obyektlar.html?tur=Savdo+maydoni",     lat:41.3111, lng:69.2797},
-    {tur:"Yer uchastkasi — Qibray",     rangVar:"--t-yer",       href:"obyektlar.html?tur=Yer+uchastkasi",     lat:41.3900, lng:69.5300},
-    {tur:"Turar-joy — Nurafshon",       rangVar:"--t-uy",        href:"obyektlar.html?tur=Turar-joy+majmuasi", lat:41.0378, lng:69.3567}
-  ];
+  /* Nuqtalar yagona manbadan; klaster <-> pin ko'rinishi masshtabga bog'liq */
+  const TUR_RANG = {
+    "Kvartira": "--t-kvartira", "Turar-joy": "--t-uy", "Tijorat": "--t-tijorat",
+    "Ishlab chiqarish": "--t-ishlab", "Yer uchastkasi": "--t-yer", "Avtotransport": "--t-transport"
+  };
+  const HOLAT_RANG = {"Garovda":"#7BAEFC","Nazoratda":"#3AAA3E","Musodara jarayonida":"#E8763C","Ijaraga berilgan":"#3E7BD6","Auksionda":"#8B5CF6"};
+  const NUQTALAR = MKB_DATA.XARITA_NUQTALARI.map(n => {
+    if (n.kod){
+      const y = MKB_DATA.topish(n.kod);
+      return Object.assign({}, n, {holat: y ? y.holat.nom : "Nazoratda", muhim: true});
+    }
+    return n;
+  });
+
+  function pinIkon(n){
+    const rang = ranglar.getPropertyValue(TUR_RANG[n.tur] || "--asos").trim() || "#0F5392";
+    const hrang = HOLAT_RANG[n.holat] || "#3AAA3E";
+    return L.divIcon({
+      className: "pin-pro" + (n.muhim ? " muhim" : ""),
+      html: `<svg width="28" height="38" viewBox="0 0 28 38">
+        <path d="M14 1C6.8 1 1 6.8 1 14c0 9.6 13 23 13 23s13-13.4 13-23C27 6.8 21.2 1 14 1z" fill="${rang}" stroke="#fff" stroke-width="2"/>
+        <circle cx="14" cy="14" r="6.2" fill="#fff"/>
+        <circle cx="14" cy="14" r="3.6" fill="${hrang}"/>
+      </svg>`,
+      iconSize: [28, 38], iconAnchor: [14, 36], tooltipAnchor: [0, -34]
+    });
+  }
 
   const xMap = L.map("leaflet-xarita", {zoomControl:false, attributionControl:true, scrollWheelZoom:true})
-    .setView([41.32, 69.45], 9);
+    .setView([41.32, 69.35], 10);
 
   const qatlamXarita = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom:18, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
@@ -730,19 +749,50 @@ document.addEventListener("DOMContentLoaded", ()=>{
     maxZoom:18, attribution:"Tiles &copy; Esri"
   });
 
+  /* Pin qatlami */
+  const pinQatlam = L.layerGroup();
   const nuqtaBelgilar = [];
-  AKTIV_NUQTALAR.forEach(n=>{
-    const rang = ranglar.getPropertyValue(n.rangVar).trim();
-    const belgi = L.marker([n.lat, n.lng], {
-      icon: L.divIcon({className:"mkb-pin", html:`<span class="nuqtacha" style="background-color:${rang};color:${rang}"></span>`, iconSize:[26,26], iconAnchor:[13,13]})
-    }).addTo(xMap);
+  NUQTALAR.forEach(n => {
+    const belgi = L.marker([n.lat, n.lng], {icon: pinIkon(n)});
     belgi.bindTooltip(
-      `<span class="pin-chip"><span class="pin-nuqta" style="background:${rang}"></span>${n.tur}</span>`,
-      {direction:"top", offset:[0,-6], className:"mkb-chip"}
-    );
-    belgi.on("click", ()=> location.href = n.href);
+      `<span class="pin-chip"><span class="pin-nuqta" style="background:${HOLAT_RANG[n.holat] || "#3AAA3E"}"></span>${n.nom} · ${n.holat}</span>`,
+      {direction:"top", className:"mkb-chip"});
+    belgi.on("click", () => {
+      location.href = n.kod ? "obyekt.html?id=" + encodeURIComponent(n.kod)
+                            : "obyektlar.html?tur=" + encodeURIComponent(n.tur);
+    });
+    belgi.addTo(pinQatlam);
     nuqtaBelgilar.push(belgi);
   });
+
+  /* Klaster qatlami: guruh bo'yicha yig'ilgan sonlar */
+  const guruhlar = {};
+  NUQTALAR.forEach(n => {
+    (guruhlar[n.guruh] = guruhlar[n.guruh] || {nom: n.guruh, lat: 0, lng: 0, soni: 0});
+    guruhlar[n.guruh].lat += n.lat; guruhlar[n.guruh].lng += n.lng; guruhlar[n.guruh].soni++;
+  });
+  const klasterQatlam = L.layerGroup();
+  Object.values(guruhlar).forEach(g => {
+    const lat = g.lat / g.soni, lng = g.lng / g.soni;
+    const d = g.soni >= 5 ? 46 : g.soni >= 3 ? 40 : 34;
+    const belgi = L.marker([lat, lng], {
+      icon: L.divIcon({className: "klaster",
+        html: `<span>${g.soni}<small>${g.nom}</small></span>`,
+        iconSize: [d, d], iconAnchor: [d/2, d/2]})
+    });
+    belgi.on("click", () => xMap.flyTo([lat, lng], 13, {duration: .6}));
+    belgi.addTo(klasterQatlam);
+  });
+
+  const KLASTER_CHEGARA = 12;
+  function qatlamYangila(){
+    const yaqin = xMap.getZoom() >= KLASTER_CHEGARA;
+    if (yaqin){ xMap.removeLayer(klasterQatlam); pinQatlam.addTo(xMap); }
+    else { xMap.removeLayer(pinQatlam); klasterQatlam.addTo(xMap); }
+  }
+  xMap.on("zoomend", qatlamYangila);
+  qatlamYangila();
+
   const boshlangichChegara = L.featureGroup(nuqtaBelgilar).getBounds();
 
   document.getElementById("x-katta").addEventListener("click", ()=> xMap.zoomIn());

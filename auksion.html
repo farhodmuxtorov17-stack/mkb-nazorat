@@ -171,7 +171,7 @@ const BOSQICHLAR = [
   ["korik","Ko'rik / Muzokara","#0F5392"],
   ["rasmiylashtirish","Rasmiylashtirish","#8B5CF6"]
 ];
-let faolId = 3;
+let faolId = null;
 
 function bosqichChiz(){
   document.getElementById("bosqichlar").innerHTML = BOSQICHLAR.map(b=>{
@@ -189,11 +189,12 @@ function bosqichChiz(){
     </div>`;
   }).join("");
   document.querySelectorAll(".s-karta").forEach(k=>{
-    k.addEventListener("click", ()=>{ faolId = +k.dataset.id; bosqichChiz(); panelChiz(); });
+    k.addEventListener("click", ()=>{ faolId = k.dataset.id; bosqichChiz(); panelChiz(); });
   });
 }
 
 function panelChiz(){
+  if (faolId === null || !OBYEKTLAR.some(x=>x.id===faolId)) faolId = OBYEKTLAR[0].id;
   const o = OBYEKTLAR.find(x=>x.id===faolId);
   const bosqichNomi = BOSQICHLAR.find(b=>b[0]===o.bosqich)[1];
   document.getElementById("tanlangan-panel").innerHTML = `

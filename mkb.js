@@ -376,7 +376,6 @@ function sidebarHTML(aktiv){
       </span>
     </a>
   </div>
-  <div class="ish-maydoni rol-${rolKalit}"><span class="im-nuqta"></span>${joriyRol()}</div>
   <nav class="menyu" aria-label="Asosiy navigatsiya">${bandlar}</nav>
   <div class="sidebar-past">
     <button class="yordam" data-toast="Texnik qo'llab-quvvatlash markazi: +998 71 200-00-00 · qollab@mkbank.uz">

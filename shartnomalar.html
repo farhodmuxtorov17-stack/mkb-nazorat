@@ -319,8 +319,17 @@ const SHARTNOMALAR = MKB_DATA.YOZUVLAR.map(y => {
     turi: y.shartnoma.tur,
     shart: "Har oyda",
     yangilanish: "Bugun",
-    menejer: y.ish.masul,
-    uzaytirish: "—",
+    menejer: {
+      ism: y.ish.masul,
+      tel: "+998 71 200-00-00",
+      email: (y.ish.masul.split(" ")[0][0] + "." + y.ish.masul.split(" ").slice(-1)[0]).toLowerCase().replace(/'/g,"") + "@mkbank.uz"
+    },
+    uzaytirish: [
+      ["bajarildi", "Shartnoma imzolandi", y.shartnoma.sana],
+      ["bajarildi", "Kechikish aniqlandi", y.qarz.kunlar + " kun oldin"],
+      ["joriy", y.bosqichNomi, y.ish.muddat.split(" — ")[0]],
+      ["kutish", "Realizatsiya / yopish", "—"]
+    ],
     tolovlar: tolovJadvali(y)
   };
 });

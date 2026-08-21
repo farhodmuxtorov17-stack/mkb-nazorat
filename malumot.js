@@ -352,6 +352,70 @@ const ARXIV = [
    summa: 760.0, ish: "UI-2023/0119", qabul: "09-sen, 2024", nazorat: "10 oy", rasm: "assets/bino_yer.png"}
 ];
 
+
+/* ---------- Xarita nuqtalari: portfelning geo-namoyishi ----------
+   8 ta batafsil yozuv haqiqiy koordinatalari bilan (kod!=null — kartochkaga
+   bog'lanadi), qolganlari tuman/shahar guruhlari bo'yicha joylashtirilgan.
+   Klaster ko'rinishi guruh maydoniga qarab hisoblanadi. */
+const XARITA_NUQTALARI = [
+  {kod:null, nom:"Yunusobod, garov avtotransporti", tur:"Avtotransport", holat:"Garovda", lat:41.356, lng:69.2838, guruh:"Yunusobod"},
+  {kod:null, nom:"Yunusobod, ko'p qavatli uy xonadoni", tur:"Kvartira", holat:"Garovda", lat:41.3719, lng:69.2823, guruh:"Yunusobod"},
+  {kod:null, nom:"Yunusobod, 2-xonali xonadon", tur:"Kvartira", holat:"Garovda", lat:41.3818, lng:69.2826, guruh:"Yunusobod"},
+  {kod:null, nom:"Yunusobod, dala hovli", tur:"Turar-joy", holat:"Musodara jarayonida", lat:41.3673, lng:69.2704, guruh:"Yunusobod"},
+  {kod:null, nom:"Yunusobod, savdo do'koni", tur:"Tijorat", holat:"Musodara jarayonida", lat:41.3599, lng:69.295, guruh:"Yunusobod"},
+  {kod:null, nom:"Chilonzor, 2-xonali xonadon", tur:"Kvartira", holat:"Garovda", lat:41.2868, lng:69.1842, guruh:"Chilonzor"},
+  {kod:null, nom:"Chilonzor, savdo do'koni", tur:"Tijorat", holat:"Garovda", lat:41.2679, lng:69.2076, guruh:"Chilonzor"},
+  {kod:null, nom:"Chilonzor, 3-xonali xonadon", tur:"Kvartira", holat:"Garovda", lat:41.2719, lng:69.2111, guruh:"Chilonzor"},
+  {kod:null, nom:"Chilonzor, yer uchastkasi", tur:"Yer uchastkasi", holat:"Musodara jarayonida", lat:41.271, lng:69.2004, guruh:"Chilonzor"},
+  {kod:null, nom:"Chilonzor, 3-xonali xonadon", tur:"Kvartira", holat:"Garovda", lat:41.2811, lng:69.2059, guruh:"Chilonzor"},
+  {kod:null, nom:"Mirobod, ishlab chiqarish sexi", tur:"Ishlab chiqarish", holat:"Musodara jarayonida", lat:41.2964, lng:69.257, guruh:"Mirobod"},
+  {kod:null, nom:"Mirobod, savdo do'koni", tur:"Tijorat", holat:"Nazoratda", lat:41.2714, lng:69.2824, guruh:"Mirobod"},
+  {kod:null, nom:"Mirobod, yer uchastkasi", tur:"Yer uchastkasi", holat:"Nazoratda", lat:41.2852, lng:69.2731, guruh:"Mirobod"},
+  {kod:null, nom:"Mirobod, yer uchastkasi", tur:"Yer uchastkasi", holat:"Nazoratda", lat:41.2727, lng:69.2738, guruh:"Mirobod"},
+  {kod:null, nom:"Yakkasaroy, yer uchastkasi", tur:"Yer uchastkasi", holat:"Garovda", lat:41.3053, lng:69.2386, guruh:"Yakkasaroy"},
+  {kod:null, nom:"Yakkasaroy, garov avtotransporti", tur:"Avtotransport", holat:"Garovda", lat:41.2916, lng:69.2402, guruh:"Yakkasaroy"},
+  {kod:null, nom:"Yakkasaroy, ko'p qavatli uy xonadoni", tur:"Kvartira", holat:"Garovda", lat:41.2816, lng:69.2644, guruh:"Yakkasaroy"},
+  {kod:null, nom:"Yakkasaroy, 2-xonali xonadon", tur:"Kvartira", holat:"Nazoratda", lat:41.2887, lng:69.2305, guruh:"Yakkasaroy"},
+  {kod:null, nom:"Shayxontohur, xususiy turar-joy", tur:"Turar-joy", holat:"Garovda", lat:41.3083, lng:69.2121, guruh:"Shayxontohur"},
+  {kod:null, nom:"Shayxontohur, 3-xonali xonadon", tur:"Kvartira", holat:"Garovda", lat:41.3374, lng:69.2466, guruh:"Shayxontohur"},
+  {kod:null, nom:"Shayxontohur, garov avtotransporti", tur:"Avtotransport", holat:"Garovda", lat:41.3219, lng:69.226, guruh:"Shayxontohur"},
+  {kod:null, nom:"Shayxontohur, ishlab chiqarish sexi", tur:"Ishlab chiqarish", holat:"Garovda", lat:41.3374, lng:69.2274, guruh:"Shayxontohur"},
+  {kod:null, nom:"Sergeli, umumiy ovqatlanish obyekti", tur:"Tijorat", holat:"Garovda", lat:41.2324, lng:69.2175, guruh:"Sergeli"},
+  {kod:null, nom:"Sergeli, yer uchastkasi", tur:"Yer uchastkasi", holat:"Garovda", lat:41.2359, lng:69.2352, guruh:"Sergeli"},
+  {kod:null, nom:"Sergeli, 2-xonali xonadon", tur:"Kvartira", holat:"Garovda", lat:41.2181, lng:69.2198, guruh:"Sergeli"},
+  {kod:null, nom:"Sergeli, ko'p qavatli uy xonadoni", tur:"Kvartira", holat:"Garovda", lat:41.2162, lng:69.2264, guruh:"Sergeli"},
+  {kod:null, nom:"Yashnobod, xususiy turar-joy", tur:"Turar-joy", holat:"Nazoratda", lat:41.278, lng:69.3511, guruh:"Yashnobod"},
+  {kod:null, nom:"Yashnobod, xususiy turar-joy", tur:"Turar-joy", holat:"Garovda", lat:41.3101, lng:69.3356, guruh:"Yashnobod"},
+  {kod:null, nom:"Yashnobod, umumiy ovqatlanish obyekti", tur:"Tijorat", holat:"Garovda", lat:41.2981, lng:69.3195, guruh:"Yashnobod"},
+  {kod:null, nom:"Olmazor, garov avtotransporti", tur:"Avtotransport", holat:"Musodara jarayonida", lat:41.36, lng:69.1832, guruh:"Olmazor"},
+  {kod:null, nom:"Olmazor, garov avtotransporti", tur:"Avtotransport", holat:"Garovda", lat:41.3383, lng:69.1866, guruh:"Olmazor"},
+  {kod:null, nom:"Olmazor, yer uchastkasi", tur:"Yer uchastkasi", holat:"Garovda", lat:41.3349, lng:69.2238, guruh:"Olmazor"},
+  {kod:null, nom:"Chirchiq, yer uchastkasi", tur:"Yer uchastkasi", holat:"Garovda", lat:41.4717, lng:69.5922, guruh:"Chirchiq"},
+  {kod:null, nom:"Chirchiq, ishlab chiqarish sexi", tur:"Ishlab chiqarish", holat:"Garovda", lat:41.4553, lng:69.5731, guruh:"Chirchiq"},
+  {kod:null, nom:"Chirchiq, 3-xonali xonadon", tur:"Kvartira", holat:"Musodara jarayonida", lat:41.4701, lng:69.5956, guruh:"Chirchiq"},
+  {kod:null, nom:"Angren, ko'p qavatli uy xonadoni", tur:"Kvartira", holat:"Nazoratda", lat:41.0273, lng:70.1509, guruh:"Angren"},
+  {kod:null, nom:"Angren, umumiy ovqatlanish obyekti", tur:"Tijorat", holat:"Nazoratda", lat:41.027, lng:70.1216, guruh:"Angren"},
+  {kod:null, nom:"Olmaliq, dala hovli", tur:"Turar-joy", holat:"Garovda", lat:40.8614, lng:69.6108, guruh:"Olmaliq"},
+  {kod:null, nom:"Olmaliq, yer uchastkasi", tur:"Yer uchastkasi", holat:"Garovda", lat:40.836, lng:69.5798, guruh:"Olmaliq"},
+  {kod:null, nom:"Bekobod, 3-xonali xonadon", tur:"Kvartira", holat:"Nazoratda", lat:40.2169, lng:69.2711, guruh:"Bekobod"},
+  {kod:null, nom:"Bekobod, garov avtotransporti", tur:"Avtotransport", holat:"Garovda", lat:40.2152, lng:69.2893, guruh:"Bekobod"},
+  {kod:null, nom:"Parkent, ko'p qavatli uy xonadoni", tur:"Kvartira", holat:"Garovda", lat:41.306, lng:69.6793, guruh:"Parkent"},
+  {kod:null, nom:"Parkent, yer uchastkasi", tur:"Yer uchastkasi", holat:"Garovda", lat:41.3099, lng:69.6598, guruh:"Parkent"},
+  {kod:null, nom:"Nurafshon, ko'p qavatli uy xonadoni", tur:"Kvartira", holat:"Nazoratda", lat:41.0237, lng:69.3796, guruh:"Nurafshon"},
+  {kod:null, nom:"Nurafshon, savdo do'koni", tur:"Tijorat", holat:"Garovda", lat:41.0268, lng:69.3467, guruh:"Nurafshon"},
+  {kod:null, nom:"Samarqand, omborxona", tur:"Ishlab chiqarish", holat:"Garovda", lat:39.6524, lng:66.9531, guruh:"Samarqand"},
+  {kod:null, nom:"Samarqand, savdo do'koni", tur:"Tijorat", holat:"Nazoratda", lat:39.6658, lng:66.9532, guruh:"Samarqand"},
+  {kod:null, nom:"Namangan, yer uchastkasi", tur:"Yer uchastkasi", holat:"Garovda", lat:40.9989, lng:71.6649, guruh:"Namangan"},
+  {kod:"GR-2026/4471", nom:"Yunusobod 12-kvartal, 45-uy xonadoni", tur:"Kvartira", holat:null, lat:41.3611, lng:69.2897, guruh:"Yunusobod"},
+  {kod:"GR-2025/1187", nom:"Zarafshon Tekstil ishlab chiqarish sexi", tur:"Ishlab chiqarish", holat:null, lat:39.6547, lng:66.9758, guruh:"Samarqand"},
+  {kod:"GR-2026/2210", nom:"Chilonzor 9-kvartal xonadoni", tur:"Kvartira", holat:null, lat:41.2795, lng:69.2054, guruh:"Chilonzor"},
+  {kod:"GR-2025/0934", nom:"Navruz Plaza savdo maydoni", tur:"Tijorat", holat:null, lat:41.3111, lng:69.2797, guruh:"Mirobod"},
+  {kod:"GR-2026/5512", nom:"Avtotransport saqlash maydonchasi", tur:"Avtotransport", holat:null, lat:41.2946, lng:69.2828, guruh:"Mirobod"},
+  {kod:"GR-2026/3308", nom:"Nurafshon turar-joy majmuasi", tur:"Turar-joy", holat:null, lat:41.0378, lng:69.3567, guruh:"Nurafshon"},
+  {kod:"GR-2025/0755", nom:"Qibray yer uchastkasi", tur:"Yer uchastkasi", holat:null, lat:41.39, lng:69.53, guruh:"Chirchiq"},
+  {kod:"GR-2026/0141", nom:"Chorvoq dala hovlisi", tur:"Turar-joy", holat:null, lat:41.623, lng:69.781, guruh:"Chirchiq"}
+];
+
 /* ---------- Mosligni o'z-o'zini tekshirish (TZ 3.4, П-9) ---------- */
 function moslikTekshiruvi(){
   const xato = [];
@@ -383,7 +447,7 @@ function moslikTekshiruvi(){
 }
 
 window.MKB_DATA = {
-  BOSQICHLAR, YOZUVLAR, PORTFEL, SOTUV, ARXIV,
+  BOSQICHLAR, YOZUVLAR, PORTFEL, SOTUV, ARXIV, XARITA_NUQTALARI,
   pul, son, fmt,
   bosqichStatistikasi, holatStatistikasi,
   jamiQarz, jamiBaho, moslikTekshiruvi,
