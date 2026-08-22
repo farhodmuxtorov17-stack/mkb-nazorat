@@ -9,17 +9,59 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="mkb.css">
 <style>
-body{background:#F8F8F8;min-height:100vh;overflow-x:hidden}
-/* Fon shakllari (referencedagi yumshoq to'lqinlar) */
-.fon-shakl{position:fixed;z-index:0;pointer-events:none;background:#EFEFF1;border-radius:48% 52% 46% 54%/58% 44% 56% 42%}
-.fon-shakl.chap{width:620px;height:620px;left:-260px;bottom:-280px;transform:rotate(18deg)}
-.fon-shakl.ong{width:760px;height:760px;right:-300px;top:180px;transform:rotate(-14deg);background:#F0F0F2}
+body{background:var(--kanvas);min-height:100vh;overflow-x:hidden}
 
-.orash{position:relative;z-index:1;max-width:660px;margin:0 auto;padding:64px 24px 60px;display:flex;flex-direction:column;align-items:center}
+/* Ikki ustunli sahna: chapda brend paneli, o'ngda kirish formasi */
+.sahna{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);min-height:100vh}
+.brend{
+  position:relative;overflow:hidden;color:#EAF1F8;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:52px 56px 44px;
+  background:
+    radial-gradient(760px 400px at 82% -8%, rgba(58,170,62,.15), transparent 60%),
+    radial-gradient(640px 360px at 8% 110%, rgba(47,123,196,.20), transparent 60%),
+    linear-gradient(165deg,#0F3456 0%,#0C2A48 48%,#081D33 100%);
+}
+.brend::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(640px 460px at 40% 30%, #000 25%, transparent 78%);
+  -webkit-mask-image:radial-gradient(640px 460px at 40% 30%, #000 25%, transparent 78%);
+}
+.brend > *{position:relative;z-index:1}
+.b-logo{display:flex;align-items:center;gap:13px}
+.b-logo .matn b{display:block;font-size:20px;font-weight:800;letter-spacing:-.015em;color:#fff;line-height:1.15}
+.b-logo .matn span{display:block;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#7C99B5;margin-top:2px}
+.b-markaz{margin:44px 0}
+.b-markaz h2{font-size:clamp(26px,2.6vw,36px);font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#fff;max-width:420px}
+.b-markaz > p{font-size:15px;color:#B9CBDD;line-height:1.65;margin-top:14px;max-width:400px}
+.b-royxat{margin-top:30px;display:flex;flex-direction:column;gap:14px}
+.b-band{display:flex;align-items:center;gap:13px}
+.b-band .tile{
+  width:38px;height:38px;border-radius:11px;flex:none;display:grid;place-items:center;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);color:#8FC5F5;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+}
+.b-band .tile .ic{width:18px;height:18px}
+.b-band span{font-size:14px;font-weight:600;color:#D5E2EF}
+.b-statlar{display:flex;gap:34px;flex-wrap:wrap}
+.b-stat b{display:block;font-size:26px;font-weight:800;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums}
+.b-stat span{display:block;font-size:12px;font-weight:600;color:#7C99B5;margin-top:3px}
+
+.forma-tomon{display:flex;align-items:center;justify-content:center;padding:44px 28px}
+.orash{position:relative;z-index:1;width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+.m-logo{display:none}
+@media (max-width:980px){
+  .sahna{grid-template-columns:minmax(0,1fr)}
+  .brend{display:none}
+  .m-logo{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  .m-logo b{font-size:22px;font-weight:800;color:#0F2C4C}
+}
 .l-logo{display:flex;align-items:center;gap:13px}
 .l-logo b{font-size:26px;letter-spacing:-.015em;font-weight:800;letter-spacing:.01em;color:#141619}
-.l-sarlavha{font-size:46px;font-weight:750;letter-spacing:-.02em;color:#101B29;margin-top:46px;text-align:center}
-.l-izoh{font-size:16.5px;color:#6B7684;margin-top:12px;text-align:center}
+.l-sarlavha{font-size:30px;font-weight:800;letter-spacing:-.025em;color:#101B29;margin-top:18px;text-align:center}
+.l-izoh{font-size:15px;color:#6B7684;margin-top:10px;text-align:center;max-width:420px}
 
 .l-karta{
   width:100%;background:var(--karta);border-radius:20px;box-shadow:var(--soya);
@@ -28,18 +70,19 @@ body{background:#F8F8F8;min-height:100vh;overflow-x:hidden}
 .l-karta .maydon-yorliq{font-size:15px}
 .l-guruh + .l-guruh{margin-top:22px}
 .l-qator{display:flex;align-items:center;margin-top:20px;gap:12px;flex-wrap:wrap}
-.unutdim{margin-left:auto;font-size:14.5px;font-weight:650;color:#0A3D6E;border-radius:6px}
+.unutdim{margin-left:auto;font-size:14.5px;font-weight:650;color:#0A3D6E;border-radius:8px;min-height:36px;display:inline-flex;align-items:center;padding:0 8px;margin-right:-8px}
 .unutdim:hover{text-decoration:underline}
 .koz-tugma{width:40px;height:40px;margin-right:-10px;border-radius:10px;display:grid;place-items:center;color:#56626E;transition:background var(--tez),color var(--tez)}
 .koz-tugma:hover{background:#EEF2F7;color:#3A4756}
 .kirish-tugma{
   width:100%;height:58px;margin-top:24px;border-radius:14px;
-  background:var(--asos);color:#0C1D2C;
+  background:linear-gradient(180deg,#2A72B8 0%,var(--asos) 55%,#0B4177 100%);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 2px 4px rgba(11,55,100,.25), 0 10px 22px -6px rgba(11,55,100,.45);
   display:flex;align-items:center;justify-content:center;gap:12px;
   font-size:17px;font-weight:700;
   transition:background var(--tez),transform 80ms ease;
 }
-.kirish-tugma:hover{background:#2E7BC4}
+.kirish-tugma:hover{background:linear-gradient(180deg,#3480C9 0%,#1160A4 55%,#0A3A6B 100%)}
 .kirish-tugma:active{transform:scale(.99)}
 .kirish-tugma .ic{width:21px;height:21px;stroke-width:2}
 .kirish-tugma[disabled]{opacity:.75;cursor:progress}
@@ -82,11 +125,48 @@ body{background:#F8F8F8;min-height:100vh;overflow-x:hidden}
 </head>
 <body>
 
-<div class="fon-shakl chap" aria-hidden="true"></div>
-<div class="fon-shakl ong" aria-hidden="true"></div>
+<div class="sahna">
+<aside class="brend" aria-label="Tizim haqida">
+  <div class="b-logo">
+    <svg width="42" height="42" viewBox="0 0 44 44" aria-hidden="true">
+      <g transform="translate(0,-6)">
+        <path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#3E8ACC"/>
+        <path d="M2 24.239 17.776 35.755 41.798 20.342V8L17.776 23.413 2 11.897v12.342Z" fill="#3AAA3E"/>
+        <path d="M29.518 35.935V48h12.28V28.056l-12.28 7.879Z" fill="#3E8ACC"/>
+      </g>
+    </svg>
+    <span class="matn"><b>Mikrokreditbank</b><span>Garov aktivlari nazorati</span></span>
+  </div>
+  <div class="b-markaz">
+    <h2>Garov aktivlarini raqamli nazorat qilish tizimi</h2>
+    <p>Qabuldan auksionda realizatsiya qilishgacha — yagona reyestr, videokuzatuv va undiruv jarayoni bitta tizimda.</p>
+    <div class="b-royxat">
+      <div class="b-band"><span class="tile"><svg class="ic"><use href="#i-bino"/></svg></span><span>Yagona garov reyestri va obyekt kartochkalari</span></div>
+      <div class="b-band"><span class="tile"><svg class="ic"><use href="#i-kamera"/></svg></span><span>Videokuzatuv posti va trevoga navbati</span></div>
+      <div class="b-band"><span class="tile"><svg class="ic"><use href="#i-tarozi"/></svg></span><span>Undiruv jarayoni: da'vodan MIB ijrosigacha</span></div>
+      <div class="b-band"><span class="tile"><svg class="ic"><use href="#i-bolg"/></svg></span><span>Auksion savdolari va doimiy arxiv</span></div>
+    </div>
+  </div>
+  <div class="b-statlar">
+    <div class="b-stat"><b id="b-jami">—</b><span>Garov obyekti</span></div>
+    <div class="b-stat"><b id="b-balans">—</b><span>Bank balansida</span></div>
+    <div class="b-stat"><b id="b-kamera">—</b><span>Videokuzatuv nuqtasi</span></div>
+  </div>
+</aside>
 
+<div class="forma-tomon">
 <main class="orash">
-  <div class="l-logo">
+  <div class="m-logo">
+    <svg width="34" height="34" viewBox="0 0 44 44" aria-hidden="true">
+      <g transform="translate(0,-6)">
+        <path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#0F5392"/>
+        <path d="M2 24.239 17.776 35.755 41.798 20.342V8L17.776 23.413 2 11.897v12.342Z" fill="#3AAA3E"/>
+        <path d="M29.518 35.935V48h12.28V28.056l-12.28 7.879Z" fill="#0F5392"/>
+      </g>
+    </svg>
+    <b>Mikrokreditbank</b>
+  </div>
+  <div class="l-logo" hidden>
     <svg width="46" height="46" viewBox="0 0 44 44" aria-hidden="true">
       <g transform="translate(0,-6)">
         <path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#0F5392"/>
@@ -97,7 +177,7 @@ body{background:#F8F8F8;min-height:100vh;overflow-x:hidden}
     <b>Mikrokreditbank</b>
   </div>
 
-  <h1 class="l-sarlavha">Garov aktivlarini nazorat qilish tizimi</h1>
+  <h1 class="l-sarlavha">Tizimga kirish</h1>
   <p class="l-izoh">Korporativ hisobingiz bilan kiring — kirish huquqi lavozimingizga muvofiq beriladi</p>
 
   <form class="l-karta" id="login-forma" novalidate>
@@ -160,10 +240,20 @@ body{background:#F8F8F8;min-height:100vh;overflow-x:hidden}
     </button>
   </div>
 </main>
+</div>
+</div>
 
 <script src="malumot.js"></script>
 <script src="tarjima.js"></script>
 <script src="mkb.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if (!window.MKB_DATA) return;
+  const P = MKB_DATA.PORTFEL, fmt = MKB_DATA.fmt;
+  const q = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  q("b-jami", fmt(P.jami)); q("b-balans", fmt(P.balansda)); q("b-kamera", fmt(P.kameralar.jami));
+});
+</script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
   /* Meni eslab qolish — oldingi foydalanuvchi nomini tiklaydi */

@@ -426,6 +426,16 @@ document.getElementById("h-infra-gaz").textContent = o.infra.gaz;
 document.getElementById("h-infra-elektr").textContent = o.infra.elektr;
 document.getElementById("h-infra-kanal").textContent = o.infra.kanal;
 
+/* Xonalar bo'limi faqat bino tipidagi obyektlar uchun ma'noli —
+   kvartira, transport, yer va hovli kartochkalarida yashiriladi */
+const XONALI_TURLAR = ["Savdo maydoni", "Ishlab chiqarish", "Ofis binosi", "Ombor"];
+if (!XONALI_TURLAR.includes(o.tur)){
+  const xTab = document.querySelector('[data-tab="xonalar"]');
+  const xPanel = document.querySelector('[data-panel="xonalar"]');
+  if (xTab) xTab.remove();
+  if (xPanel) xPanel.remove();
+}
+
 /* Xatcho'p */
 const x = document.getElementById("xatcho");
 x.addEventListener("click", ()=>{
