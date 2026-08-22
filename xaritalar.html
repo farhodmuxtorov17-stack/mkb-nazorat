@@ -204,10 +204,10 @@ HUDUDLAR.forEach(h=>{
   const geo = HUDUD_GEO[h[0]];
   if (!geo) return;
   const son = parseInt(h[1].replace(/\s/g,""),10);
-  const d = Math.round(18 + 42*Math.sqrt(son/maxSon));
+  const d = Math.round(38 + 22*Math.sqrt(son/maxSon));
   const rang = DARAJA_RANG[geo.daraja];
   const belgi = L.marker([geo.lat, geo.lng], {
-    icon: L.divIcon({className:"mkb-pin", html:`<span class="nuqtacha" style="background-color:${rang};color:${rang}"></span>`, iconSize:[d,d], iconAnchor:[d/2,d/2]})
+    icon: L.divIcon({className:"klaster", html:`<span style="box-shadow:0 0 0 3px rgba(255,255,255,.92), 0 0 0 5px ${rang}, inset 0 1px 0 rgba(255,255,255,.22), 0 4px 10px rgba(10,22,38,.35)">${h[1]}<small>${h[0].replace(" viloyati","").replace(" shahri"," sh.")}</small></span>`, iconSize:[d,d], iconAnchor:[d/2,d/2]})
   }).addTo(uzMap);
   belgi.bindTooltip(
     `<span class="pin-chip"><span class="pin-nuqta" style="background:${rang}"></span>${h[0]} — <b>${h[1]}</b></span>`,
