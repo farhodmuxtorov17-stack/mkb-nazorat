@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Ko'rik tayinlash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082404">
+<style>
+/* ---- Ko'rik tayinlash: uch qadamli shakl ---- */
+.tay-ustun{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
+.tay-ustun > *{min-width:0}
+
+/* Qadam ko'rsatkichi */
+.qadamlar{display:flex;gap:0;margin-bottom:18px}
+.qadam{flex:1;display:flex;align-items:center;gap:9px;padding:11px 14px;font-size:13px;font-weight:650;color:var(--matn-4);border-bottom:2.5px solid var(--chiziq)}
+.qadam .n{width:24px;height:24px;border-radius:99px;background:var(--kanvas);display:grid;place-items:center;font-size:12px;font-weight:750;flex:none}
+.qadam.faol{color:var(--asos-toq);border-bottom-color:var(--asos)}
+.qadam.faol .n{background:var(--asos);color:#fff}
+.qadam.otdi{color:#1F7A3D;border-bottom-color:#2E9E52}
+.qadam.otdi .n{background:#E6F5EA;color:#1F7A3D}
+
+.shakl-guruh{margin-bottom:16px}
+.shakl-guruh .maydon-yorliq{display:block;margin-bottom:7px}
+.tur-tanlash{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tur-katak{border:1.5px solid var(--kirish-chiziq);border-radius:13px;padding:13px 15px;text-align:left;transition:border-color var(--tez),background var(--tez)}
+.tur-katak:hover{background:var(--kanvas)}
+.tur-katak.tanlandi{border-color:var(--asos);background:var(--asos-fon)}
+.tur-katak b{font-size:13.5px;font-weight:750;display:block}
+.tur-katak span{font-size:12px;color:var(--matn-3);line-height:1.45;display:block;margin-top:3px}
+
+/* Xulosa paneli */
+.xu-qator{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--chiziq);font-size:13.5px}
+.xu-qator:last-of-type{border-bottom:none}
+.xu-qator span{color:var(--matn-3)}
+.xu-qator b{font-weight:700;text-align:right}
+.xu-bosh{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.xu-bosh img{width:52px;height:52px;border-radius:11px;object-fit:cover;flex:none}
+.xu-bosh b{font-size:14.5px;font-weight:750}
+.xu-bosh span{font-size:12px;color:var(--matn-3);display:block;margin-top:2px}
+
+@media (max-width:1320px){ .tay-ustun{grid-template-columns:1fr} }
+</style>
+</head>
+<body data-sahifa="garov" data-topbar-sarlavha="Ko'rik tayinlash" data-topbar-ikon="i-qoshish">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1>Ko'rik tayinlash</h1>
+        <div class="sahifa-izoh">Garov obyektiga chiqishni rejalashtirish: obyekt, tur va ijrochi</div>
+      </div>
+      <div class="sahifa-harakat">
+        <a class="tugma tugma-oq" href="korik-rejasi.html"><svg class="ic"><use href="#i-chap"/></svg>Rejaga qaytish</a>
+      </div>
+    </div>
+
+    <div class="tay-ustun">
+      <div class="karta">
+        <div class="qadamlar" id="qadamlar">
+          <div class="qadam faol" data-q="1"><span class="n">1</span>Obyekt</div>
+          <div class="qadam" data-q="2"><span class="n">2</span>Tur va sana</div>
+          <div class="qadam" data-q="3"><span class="n">3</span>Ijrochi</div>
+        </div>
+
+        <!-- 1-qadam: obyekt -->
+        <section data-qadam="1">
+          <div class="shakl-guruh">
+            <label class="maydon-yorliq">Garov obyekti</label>
+            <button class="tanlov" style="width:100%" id="t-obyekt" data-royxat="obyekt-hammasi"><span class="t-yorliq">Obyektni tanlang</span><svg class="ic"><use href="#i-past"/></svg></button>
+          </div>
+          <div class="shakl-guruh">
+            <label class="maydon-yorliq">Asos</label>
+            <div class="tur-tanlash" id="t-asos">
+              <button class="tur-katak tanlandi" data-v="Reglament davriyligi"><b>Reglament davriyligi</b><span>Ko'rik muddati yaqinlashgan yoki to'lgan</span></button>
+              <button class="tur-katak" data-v="Garov hodisasi"><b>Garov hodisasi</b><span>Shikast, kamomad yoki huquqiy cheklov aniqlangan</span></button>
+              <button class="tur-katak" data-v="Bosqich talabi"><b>Bosqich talabi</b><span>Musodara qabuli yoki auksion oldidan holat qayd etish</span></button>
+              <button class="tur-katak" data-v="Rahbariyat topshirig'i"><b>Rahbariyat topshirig'i</b><span>Alohida nazorat qarori bo'yicha</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2-qadam: tur va sana -->
+        <section data-qadam="2" hidden>
+          <div class="shakl-guruh">
+            <label class="maydon-yorliq">Ko'rik turi</label>
+            <div class="tur-tanlash" id="t-tur">
+              <button class="tur-katak tanlandi" data-v="Rejali"><b>Rejali</b><span>Davriylik reglamenti bo'yicha navbatdagi chiqish</span></button>
+              <button class="tur-katak" data-v="Navbatdan tashqari"><b>Navbatdan tashqari</b><span>Hodisa yoki topshiriq asosida 3 ish kuni ichida</span></button>
+            </div>
+          </div>
+          <div class="shakl-guruh">
+            <label class="maydon-yorliq">Rejalashtirilgan sana</label>
+            <div class="kirish"><svg class="ic"><use href="#i-kalendar"/></svg><input id="t-sana" placeholder="kun-oy, yil — masalan: 30-avg, 2026"></div>
+          </div>
+          <div class="shakl-guruh">
+            <label class="maydon-yorliq">Izoh (ixtiyoriy)</label>
+            <div class="kirish"><svg class="ic"><use href="#i-hujjat"/></svg><input id="t-izoh" placeholder="Ko'rikda nimaga e'tibor qaratiladi"></div>
+          </div>
+        </section>
+
+        <!-- 3-qadam: ijrochi -->
+        <section data-qadam="3" hidden>
+          <div class="shakl-guruh">
+            <label class="maydon-yorliq">Inspektor</label>
+            <button class="tanlov" style="width:100%" id="t-inspektor" data-variantlar='["Sattorov Jasur — Garov ta&#39;minoti bo&#39;limi","Karimova Feruza — Garov ta&#39;minoti bo&#39;limi"]'><span class="t-yorliq">Inspektorni tanlang</span><svg class="ic"><use href="#i-past"/></svg></button>
+          </div>
+          <div class="shakl-guruh">
+            <label class="maydon-yorliq">Qarzdorni xabardor qilish</label>
+            <div class="tur-tanlash" id="t-xabar">
+              <button class="tur-katak tanlandi" data-v="Yozma xabarnoma"><b>Yozma xabarnoma</b><span>Ko'rikdan 3 kun oldin rasmiy xat yuboriladi</span></button>
+              <button class="tur-katak" data-v="Xabardor qilinmaydi"><b>Xabardor qilinmaydi</b><span>Kamomad tekshiruvida oldindan ogohlantirish talab etilmaydi</span></button>
+            </div>
+          </div>
+        </section>
+
+        <div style="display:flex;justify-content:space-between;margin-top:20px">
+          <button class="tugma tugma-oq" id="t-orqaga" disabled><svg class="ic"><use href="#i-chap"/></svg>Orqaga</button>
+          <button class="tugma tugma-asos" id="t-oldinga">Davom etish<svg class="ic"><use href="#i-ong"/></svg></button>
+        </div>
+      </div>
+
+      <aside class="karta" aria-label="Tayinlov xulosasi">
+        <div class="karta-bosh"><h3>Tayinlov xulosasi</h3></div>
+        <div id="xu-panel"></div>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js?v=26082404"></script>
+<script src="tarjima.js?v=26082404"></script>
+<script src="mkb.js?v=26082404"></script>
+<script>
+const D = MKB_DATA;
+const holat = {obyekt: null, asos: "Reglament davriyligi", tur: "Rejali",
+               sana: "", izoh: "", inspektor: null, xabar: "Yozma xabarnoma"};
+let qadam = 1;
+
+/* Katak guruhlarida bitta tanlov */
+function katakUla(id, kalit){
+  document.querySelectorAll("#" + id + " .tur-katak").forEach(k => {
+    k.addEventListener("click", () => {
+      document.querySelectorAll("#" + id + " .tur-katak").forEach(x => x.classList.remove("tanlandi"));
+      k.classList.add("tanlandi");
+      holat[kalit] = k.dataset.v;
+      xulosa();
+    });
+  });
+}
+katakUla("t-asos", "asos");
+katakUla("t-tur", "tur");
+katakUla("t-xabar", "xabar");
+
+document.getElementById("t-obyekt").addEventListener("tanlov", e => { holat.obyekt = e.detail; xulosa(); });
+document.getElementById("t-inspektor").addEventListener("tanlov", e => { holat.inspektor = e.detail.split(" — ")[0]; xulosa(); });
+document.getElementById("t-sana").addEventListener("input", e => { holat.sana = e.target.value; xulosa(); });
+document.getElementById("t-izoh").addEventListener("input", e => { holat.izoh = e.target.value; xulosa(); });
+
+/* Qadamlar */
+function qadamChiz(){
+  document.querySelectorAll("[data-qadam]").forEach(s => s.hidden = +s.dataset.qadam !== qadam);
+  document.querySelectorAll(".qadam").forEach(q => {
+    const n = +q.dataset.q;
+    q.classList.toggle("faol", n === qadam);
+    q.classList.toggle("otdi", n < qadam);
+  });
+  document.getElementById("t-orqaga").disabled = qadam === 1;
+  document.getElementById("t-oldinga").innerHTML = qadam === 3
+    ? 'Tayinlash<svg class="ic"><use href="#i-belgi"/></svg>'
+    : 'Davom etish<svg class="ic"><use href="#i-ong"/></svg>';
+}
+document.getElementById("t-orqaga").addEventListener("click", () => { if (qadam > 1){ qadam--; qadamChiz(); } });
+document.getElementById("t-oldinga").addEventListener("click", () => {
+  if (qadam === 1 && !holat.obyekt){ MKB.toast("Avval obyektni tanlang"); return; }
+  if (qadam === 2 && !holat.sana){ MKB.toast("Rejalashtirilgan sanani kiriting"); return; }
+  if (qadam < 3){ qadam++; qadamChiz(); return; }
+  if (!holat.inspektor){ MKB.toast("Inspektorni tanlang"); return; }
+  MKB.modal("Ko'rik tayinlandi",
+    `<p style="font-size:14px;line-height:1.6"><b>${holat.obyekt}</b> bo'yicha ${holat.tur.toLowerCase()}
+     ko'rik <b>${holat.sana}</b> sanasiga tayinlandi. Ijrochi: <b>${holat.inspektor}</b>.
+     ${holat.xabar === "Yozma xabarnoma" ? "Qarzdorga xabarnoma tayyorlanadi." : ""}</p>`,
+    {tasdiq: "Rejaga o'tish", bekor: "Yopish", onTasdiq: () => location.href = "korik-rejasi.html"});
+});
+
+/* Xulosa paneli */
+function xulosa(){
+  const o = holat.obyekt ? Object.values(D.OBYEKT_INDEKS).find(x => x.qisqa === holat.obyekt) : null;
+  document.getElementById("xu-panel").innerHTML = `
+    ${o ? `<div class="xu-bosh"><img src="${o.rasm}" alt=""><div><b>${o.qisqa}</b><span>${o.id} · ${o.hududToliq}</span></div></div>` : ""}
+    <div class="xu-qator"><span>Obyekt</span><b>${holat.obyekt || "—"}</b></div>
+    <div class="xu-qator"><span>Asos</span><b>${holat.asos}</b></div>
+    <div class="xu-qator"><span>Turi</span><b>${holat.tur}</b></div>
+    <div class="xu-qator"><span>Sana</span><b>${holat.sana || "—"}</b></div>
+    <div class="xu-qator"><span>Inspektor</span><b>${holat.inspektor || "—"}</b></div>
+    <div class="xu-qator"><span>Xabardor qilish</span><b>${holat.xabar}</b></div>
+    ${holat.izoh ? `<div class="xu-qator"><span>Izoh</span><b>${holat.izoh}</b></div>` : ""}`;
+}
+qadamChiz();
+xulosa();
+</script>
+</body>
+</html>

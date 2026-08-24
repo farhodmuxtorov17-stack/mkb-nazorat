@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Ko'riklar tarixi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082404">
+<style>
+/* ---- Ko'riklar tarixi: xronologik jurnal ---- */
+.kt-filtr{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+
+.kt-jadval .son{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kt-holat{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.kt-otdi{background:#E6F5EA;color:#1F7A3D}
+.kt-reja{background:#E7F0FE;color:#2F6BCF}
+.kt-otgan{background:#FDEEEC;color:#C43C31}
+.kt-ball{font-weight:780;font-variant-numeric:tabular-nums}
+
+/* Yig'ma statistika paneli */
+.st-band{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--chiziq);font-size:13.5px}
+.st-band:last-child{border-bottom:none}
+.st-band span{color:var(--matn-3)}
+.st-band b{font-weight:750;font-variant-numeric:tabular-nums}
+.st-taqsimot{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--chiziq);margin:12px 0 8px}
+.st-taqsimot i{display:block;height:100%}
+.st-legend{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--matn-3)}
+.st-legend span{display:flex;align-items:center;gap:7px}
+.st-legend i{width:9px;height:9px;border-radius:3px;flex:none}
+
+.kt-ustun{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+.kt-ustun > *{min-width:0}
+@media (max-width:1320px){ .kt-ustun{grid-template-columns:1fr} }
+</style>
+</head>
+<body data-sahifa="garov" data-topbar-sarlavha="Ko'riklar tarixi" data-topbar-ikon="i-soat">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1>Ko'riklar tarixi</h1>
+        <div class="sahifa-izoh">Barcha o'tkazilgan va rejalashtirilgan ko'riklar jurnali</div>
+      </div>
+      <div class="sahifa-harakat">
+        <button class="tugma tugma-oq" data-toast="Jurnal XLSX ga yuklanmoqda"><svg class="ic"><use href="#i-yuklab"/></svg>Yuklab olish</button>
+        <a class="tugma tugma-asos" href="korik-tayinlash.html"><svg class="ic"><use href="#i-qoshish"/></svg>Ko'rik tayinlash</a>
+      </div>
+    </div>
+
+    <div class="kt-ustun">
+      <div class="karta">
+        <div class="kt-filtr">
+          <button class="tanlov" data-royxat="obyekt" data-royxat-bosh="Barcha obyektlar" id="f-obyekt"><span class="t-yorliq">Barcha obyektlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+          <button class="tanlov" data-variantlar='["Barcha holatlar","O&#39;tkazildi","Rejada","Muddati o&#39;tgan"]' id="f-holat"><span class="t-yorliq">Barcha holatlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+        </div>
+        <div class="jadval-orash">
+          <table class="jadval kt-jadval">
+            <thead>
+              <tr><th>Ko'rik</th><th>Obyekt</th><th>Turi</th><th>Sana</th><th>Inspektor</th><th class="son">Ball</th><th>Holat</th><th></th></tr>
+            </thead>
+            <tbody id="kt-jadval"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <aside class="karta" aria-label="Yig'ma statistika">
+        <div class="karta-bosh"><h3>Yig'ma ko'rsatkichlar</h3></div>
+        <div class="st-taqsimot" id="st-taqsimot"></div>
+        <div class="st-legend" id="st-legend"></div>
+        <div style="margin-top:14px" id="st-bandlar"></div>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js?v=26082404"></script>
+<script src="tarjima.js?v=26082404"></script>
+<script src="mkb.js?v=26082404"></script>
+<script>
+const D = MKB_DATA;
+
+const HOLAT = {
+  otkazildi:     ["kt-otdi",  "O'tkazildi"],
+  rejada:        ["kt-reja",  "Rejada"],
+  muddati_otgan: ["kt-otgan", "Muddati o'tgan"]
+};
+const HOLAT_TANLOV = {"O'tkazildi": "otkazildi", "Rejada": "rejada", "Muddati o'tgan": "muddati_otgan"};
+
+let fObyekt = null, fHolat = null;
+
+function ballRang(b){ return b >= 80 ? "#2E9E52" : b >= 60 ? "#D98324" : "#C0392B"; }
+
+function chiz(){
+  const royxat = D.KORIKLAR.filter(k =>
+    (!fObyekt || k.obyekt === fObyekt) && (!fHolat || k.holat === fHolat));
+  document.getElementById("kt-jadval").innerHTML = royxat.map(k => {
+    const [cls, nom] = HOLAT[k.holat];
+    return `
+    <tr>
+      <td><b>${k.id}</b></td>
+      <td>${k.obyekt}<div style="font-size:12px;color:var(--matn-3)">${k.hudud}</div></td>
+      <td>${k.tur}</td>
+      <td style="white-space:nowrap">${k.sana}</td>
+      <td>${k.inspektor}</td>
+      <td class="son">${k.ball ? `<span class="kt-ball" style="color:${ballRang(k.ball)}">${k.ball}</span>` : "—"}</td>
+      <td><span class="kt-holat ${cls}">${nom}</span></td>
+      <td style="text-align:right">${k.holat === "otkazildi"
+        ? `<a class="tugma tugma-kichik tugma-oq" href="korik-akti.html?id=${encodeURIComponent(k.id)}">Dalolatnoma</a>` : ""}</td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="8" style="text-align:center;color:var(--matn-3);padding:28px 0">Tanlangan filtr bo'yicha yozuv yo'q</td></tr>`;
+}
+chiz();
+
+document.getElementById("f-obyekt").addEventListener("tanlov", e => {
+  fObyekt = e.detail === "Barcha obyektlar" ? null : e.detail; chiz();
+});
+document.getElementById("f-holat").addEventListener("tanlov", e => {
+  fHolat = HOLAT_TANLOV[e.detail] || null; chiz();
+});
+
+/* ---- Yig'ma statistika (Д-7 — jurnal massivdan hisoblanadi) ---- */
+const RANG = {otkazildi: "#2E9E52", rejada: "#3E7BD6", muddati_otgan: "#C0392B"};
+const guruh = Object.keys(HOLAT).map(h => ({
+  h, nom: HOLAT[h][1], son: D.KORIKLAR.filter(k => k.holat === h).length
+}));
+const jami = D.KORIKLAR.length;
+
+document.getElementById("st-taqsimot").innerHTML = guruh.map(g =>
+  `<i style="width:${g.son / jami * 100}%;background:${RANG[g.h]}" title="${g.nom}: ${g.son}"></i>`).join("");
+document.getElementById("st-legend").innerHTML = guruh.map(g =>
+  `<span><i style="background:${RANG[g.h]}"></i>${g.nom} — ${g.son} ta</span>`).join("");
+
+const otdi = D.KORIKLAR.filter(k => k.holat === "otkazildi");
+const rejali = D.KORIKLAR.filter(k => k.tur === "Rejali").length;
+document.getElementById("st-bandlar").innerHTML = [
+  ["Jami yozuvlar", jami],
+  ["O'rtacha holat balli", Math.round(otdi.reduce((s, k) => s + k.ball, 0) / otdi.length) + " / 100"],
+  ["Rejali ko'riklar", rejali + " ta"],
+  ["Navbatdan tashqari", (jami - rejali) + " ta"],
+  ["Qamrab olingan obyektlar", new Set(D.KORIKLAR.map(k => k.obyektId)).size + " ta"]
+].map(([nom, qiymat]) => `<div class="st-band"><span>${nom}</span><b>${qiymat}</b></div>`).join("");
+</script>
+</body>
+</html>

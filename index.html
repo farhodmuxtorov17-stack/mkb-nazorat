@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082403">
+<link rel="stylesheet" href="mkb.css?v=26082404">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 /* ---- Faqat shu sahifa: xarita, filtrlar, pastki qator ---- */
@@ -26,7 +26,7 @@
 }
 .x-tugma:active{transform:scale(.95)}
 .x-tugma .ic{width:19px;height:19px}
-.x-tugma.faol{background:#EAF2FB;color:#0B4478}
+.x-tugma.faol{background:#E7F3F0;color:#0A5348}
 .filtr-karta{
   background:var(--karta);border-radius:var(--r-katta);box-shadow:var(--soya);
   padding:22px;display:flex;flex-direction:column;
@@ -40,7 +40,7 @@
 .turlar-karta{border:1px solid var(--chiziq);border-radius:16px;padding:18px;margin-top:8px}
 .turlar-karta h3{font-size:15.5px;font-weight:750;color:#101B29;margin-bottom:12px}
 .tur-qator{display:flex;align-items:center;gap:11px;height:36px;font-size:14.5px;width:100%;border-radius:9px;padding:0 6px;margin:0 -6px;transition:background var(--tez)}
-.tur-qator:hover{background:#F3F6FA}
+.tur-qator:hover{background:#F1F5F3}
 .tur-qator .nuqta{width:9px;height:9px;border-radius:99px;flex:none}
 .tur-qator .nomi{color:#3F454C;font-weight:500}
 .tur-qator b{margin-left:auto;font-weight:700;color:#101B29;font-variant-numeric:tabular-nums}
@@ -71,7 +71,7 @@
   border:1px solid var(--kirish-chiziq);border-radius:14px;height:52px;padding:0 18px;
   font-size:15px;font-weight:700;color:#182533;transition:background var(--tez);
 }
-.eslatma-tugma:hover{background:#F3F6FA}
+.eslatma-tugma:hover{background:#F1F5F3}
 .eslatma-tugma .ic{margin-left:auto;width:17px;height:17px;color:#3A4756}
 @media (max-width:1500px){
   .past-qator{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -88,13 +88,13 @@
 }
 
 /* ---- Rolga qarab bosh sahifa (Operator / Texnik) ---- */
-#dash-operator,#dash-texnik,#dash-undiruv{display:none}
-html.erta-rol-operator #dash-admin{display:none}
-html.erta-rol-operator #dash-operator{display:block}
-html.erta-rol-texnik #dash-admin{display:none}
-html.erta-rol-texnik #dash-texnik{display:block}
-html.erta-rol-undiruv #dash-admin{display:none}
-html.erta-rol-undiruv #dash-undiruv{display:block}
+#dash-garov,#dash-tavakkal,#dash-yurist{display:none}
+html.erta-rol-garov #dash-admin{display:none}
+html.erta-rol-garov #dash-garov{display:block}
+html.erta-rol-tavakkal #dash-admin{display:none}
+html.erta-rol-tavakkal #dash-tavakkal{display:block}
+html.erta-rol-yurist #dash-admin{display:none}
+html.erta-rol-yurist #dash-yurist{display:block}
 
 .salom{font-size:14px;color:var(--matn-3);margin-top:3px}
 .rol-qator{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px}
@@ -115,10 +115,12 @@ html.erta-rol-undiruv #dash-undiruv{display:block}
 <script>
 /* Erta rol aniqlash — flash oldini olish uchun mkb.js yuklanishidan oldin ishlaydi */
 (function(){
-  var ROL_KALIT = {"Bank rahbariyati":"rahbar","Undiruv mutaxassisi":"undiruv","Xavfsizlik operatori":"operator","Texnik xodim":"texnik","Administrator":"admin"};
+  var ROL_KALIT = {"Filial rahbari":"filial","Kredit menejeri":"kredit","Garov xizmati mutaxassisi":"garov","Yurist":"yurist","Tavakkalchilik menejeri":"tavakkal","Administrator":"admin"};
   var r = localStorage.getItem("mkb-rol");
   var kalit = Object.prototype.hasOwnProperty.call(ROL_KALIT, r) ? ROL_KALIT[r] : null;
-  if (kalit === "operator" || kalit === "texnik" || kalit === "undiruv") document.documentElement.classList.add("erta-rol-"+kalit);
+  /* Garov, tavakkalchilik va yurist o'z ish o'rnini ko'radi;
+     filial rahbari, kredit menejeri va administrator — umumiy panelni */
+  if (kalit === "garov" || kalit === "tavakkal" || kalit === "yurist") document.documentElement.classList.add("erta-rol-"+kalit);
 })();
 </script>
 
@@ -257,356 +259,177 @@ html.erta-rol-undiruv #dash-undiruv{display:block}
     <!-- ============================================================
          OPERATOR — jonli kirish, hodisalar, tashriflar
          ============================================================ -->
-    <div id="dash-operator">
+    <!-- =====================================================
+         GAROV XIZMATI MUTAXASSISI — ko'rik, sug'urta, baholash
+         ===================================================== -->
+    <div id="dash-garov">
       <div class="sahifa-qator">
         <div>
-          <h1>Operator ish joyi</h1>
-          <div class="salom" id="salom-operator"></div>
+          <h1>Garov xizmati ish o'rni</h1>
+          <div class="salom" id="salom-garov"></div>
         </div>
         <div class="sahifa-harakat">
-          <a class="tugma tugma-asos" href="jonli-tashrif.html"><svg class="ic"><use href="#i-kamera"/></svg>Jonli tashrif nazorati</a>
+          <a class="tugma tugma-oq" href="korik-tarixi.html"><svg class="ic"><use href="#i-soat"/></svg>Ko'riklar tarixi</a>
+          <a class="tugma tugma-asos" href="korik-tayinlash.html"><svg class="ic"><use href="#i-qoshish"/></svg>Ko'rik tayinlash</a>
         </div>
       </div>
 
-      <section class="kpi-band" aria-label="Operator ko'rsatkichlari">
-        <a class="kpi" href="kirish-nazorati.html">
-          <span class="kpi-tile lime"><svg class="ic"><use href="#i-tashrif"/></svg></span>
+      <section class="kpi-band" aria-label="Garov xizmati ko'rsatkichlari">
+        <a class="kpi" href="korik-rejasi.html">
+          <span class="kpi-tile dark"><svg class="ic"><use href="#i-tashrif"/></svg></span>
           <div class="kpi-matn">
-            <div class="kpi-yorliq">Bugungi tashriflar</div>
-            <div class="kpi-qiymat"><b>24</b><span class="delta">↑ 3</span></div>
-            <div class="kpi-izoh">8 ta mehmon hozir obyektda</div>
+            <div class="kpi-yorliq">Navbatdagi ko'riklar</div>
+            <div class="kpi-qiymat"><b id="dg-reja">&#8212;</b></div>
+            <div class="kpi-izoh"><span id="dg-otgan">&#8212;</span> ta muddati o'tgan</div>
           </div>
         </a>
-        <a class="kpi" href="masofaviy-korik.html">
-          <span class="kpi-tile dark"><svg class="ic"><use href="#i-kamera"/></svg></span>
+        <a class="kpi" href="sugurta.html">
+          <span class="kpi-tile lime"><svg class="ic"><use href="#i-qalqon"/></svg></span>
           <div class="kpi-matn">
-            <div class="kpi-yorliq">Faol sessiyalar</div>
-            <div class="kpi-qiymat"><b>12</b></div>
-            <div class="kpi-izoh">Jonli kuzatuv va ko'riklar</div>
+            <div class="kpi-yorliq">Sug'urta nazorati</div>
+            <div class="kpi-qiymat"><b id="dg-sugurta">&#8212;</b></div>
+            <div class="kpi-izoh">Qamrovsiz yoki tugayotgan polislar</div>
           </div>
         </a>
-        <a class="kpi" href="hodisalar.html">
-          <span class="kpi-tile lime"><svg class="ic"><use href="#i-ogoh"/></svg></span>
+        <a class="kpi" href="baholash.html">
+          <span class="kpi-tile lime"><svg class="ic"><use href="#i-grafik"/></svg></span>
+          <div class="kpi-matn">
+            <div class="kpi-yorliq">Baholash muddati</div>
+            <div class="kpi-qiymat"><b id="dg-baho">&#8212;</b></div>
+            <div class="kpi-izoh">Eskirgan yoki tugayotgan baholashlar</div>
+          </div>
+        </a>
+        <a class="kpi" href="garov-hodisalari.html">
+          <span class="kpi-tile dark"><svg class="ic"><use href="#i-ogoh"/></svg></span>
           <div class="kpi-matn">
             <div class="kpi-yorliq">Ochiq hodisalar</div>
-            <div class="kpi-qiymat"><b>6</b><span class="delta salbiy">3 kritik</span></div>
-            <div class="kpi-izoh">Diqqat talab qiladi</div>
-          </div>
-        </a>
-        <a class="kpi" href="kirish-nazorati.html">
-          <span class="kpi-tile dark"><svg class="ic"><use href="#i-qulf"/></svg></span>
-          <div class="kpi-matn">
-            <div class="kpi-yorliq">Kirish so'rovlari</div>
-            <div class="kpi-qiymat"><b>5</b></div>
-            <div class="kpi-izoh">Tasdiq kutmoqda</div>
+            <div class="kpi-qiymat"><b id="dg-hodisa">&#8212;</b></div>
+            <div class="kpi-izoh">Shikast, kamomad, huquqiy cheklov</div>
           </div>
         </a>
       </section>
 
-      <section class="rol-qator">
-        <div class="karta">
-          <div class="karta-bosh">
-            <h2>So'nggi hodisalar</h2>
-            <a class="karta-havola" href="hodisalar.html">Hodisalar markazi<svg class="ic"><use href="#i-ong"/></svg></a>
-          </div>
-          <div class="jadval-orash">
-            <table class="jadval royxat-jadval">
-              <tbody>
-                <tr onclick="location.href='hodisalar.html'">
-                  <td style="width:34px"><span class="mini-holat"><span class="nuqta" style="background:var(--qizil)"></span></span></td>
-                  <td><b>Yong'in signalizatsiyasi — Zarafshon Tekstil sexi</b></td>
-                  <td class="raqam">Bugun, 14:12</td>
-                </tr>
-                <tr onclick="location.href='hodisalar.html'">
-                  <td><span class="mini-holat"><span class="nuqta" style="background:#F2994A"></span></span></td>
-                  <td><b>Navruz Plaza — lift ishlamayapti</b></td>
-                  <td class="raqam">Bugun, 13:48</td>
-                </tr>
-                <tr onclick="location.href='hodisalar.html'">
-                  <td><span class="mini-holat"><span class="nuqta" style="background:#F2C230"></span></span></td>
-                  <td><b>Chorsu Savdo Markazi, B blok — sovutish tizimida nosozlik</b></td>
-                  <td class="raqam">Bugun, 13:17</td>
-                </tr>
-                <tr onclick="location.href='kirish-nazorati.html'">
-                  <td><span class="mini-holat"><span class="nuqta" style="background:#2E7BC4"></span></span></td>
-                  <td><b>Nurafshon turar-joy majmuasi — yangi kirish so'rovi</b></td>
-                  <td class="raqam">Bugun, 12:52</td>
-                </tr>
-                <tr onclick="location.href='hodisalar.html'">
-                  <td><span class="mini-holat"><span class="nuqta" style="background:#3AAA3E"></span></span></td>
-                  <td><b>Elektr ta'minoti uzilishi bartaraf etildi</b></td>
-                  <td class="raqam">Kecha, 18:03</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="karta" style="margin-top:4px">
+        <div class="karta-bosh"><h3>Bugungi ishlar</h3><a class="matn-havola" href="korik-rejasi.html">Ko'rik rejasi &#8594;</a></div>
+        <div id="dg-ishlar"></div>
+      </div>
+    </div><!-- /dash-garov -->
 
-        <div class="karta">
-          <div class="karta-bosh"><h2>Bugungi mehmonlar</h2></div>
-          <div class="jadval-orash">
-            <table class="jadval">
-              <tbody>
-                <tr><td><b>Kamron Aliyev</b></td><td class="raqam">14:20</td></tr>
-                <tr><td><b>Nargiza Karimova</b></td><td class="raqam">14:15</td></tr>
-                <tr><td><b>Umid Soliyev</b></td><td class="raqam">14:10</td></tr>
-                <tr><td><b>Saida Rahimova</b></td><td class="raqam">14:05</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <a class="karta-havola" href="kirish-nazorati.html" style="margin-top:10px">Kirish nazorati panali<svg class="ic"><use href="#i-ong"/></svg></a>
-        </div>
-      </section>
-
-      <section class="havola-qator">
-        <a class="havola-karta" href="kirish-nazorati.html">
-          <span class="tile" style="background:var(--rol-operator-fon);color:var(--rol-operator-matn)"><svg class="ic"><use href="#i-qulf"/></svg></span>
-          <span><b>Kirish nazorati</b><span>Kirish so'rovlari va sessiyalar</span></span>
-          <svg class="ic strelka"><use href="#i-ong"/></svg>
-        </a>
-        <a class="havola-karta" href="jonli-tashrif.html">
-          <span class="tile" style="background:var(--rol-operator-fon);color:var(--rol-operator-matn)"><svg class="ic"><use href="#i-kamera"/></svg></span>
-          <span><b>Jonli tashrif nazorati</b><span>Face ID va eshik boshqaruvi</span></span>
-          <svg class="ic strelka"><use href="#i-ong"/></svg>
-        </a>
-        <a class="havola-karta" href="masofaviy-korik.html">
-          <span class="tile" style="background:var(--rol-operator-fon);color:var(--rol-operator-matn)"><svg class="ic"><use href="#i-monitor"/></svg></span>
-          <span><b>Masofaviy ko'rik</b><span>Mijozlar uchun sessiya</span></span>
-          <svg class="ic strelka"><use href="#i-ong"/></svg>
-        </a>
-        <a class="havola-karta" href="kirish-voqealari.html">
-          <span class="tile" style="background:var(--rol-operator-fon);color:var(--rol-operator-matn)"><svg class="ic"><use href="#i-hujjat"/></svg></span>
-          <span><b>Kirish voqealari</b><span>Jurnal va Face ID natijalari</span></span>
-          <svg class="ic strelka"><use href="#i-ong"/></svg>
-        </a>
-      </section>
-    </div><!-- /dash-operator -->
-
-    <!-- ============================================================
-         TEXNIK XODIM — qurilmalar, servis, xonalar
-         ============================================================ -->
-    <div id="dash-texnik">
+    <!-- =====================================================
+         TAVAKKALCHILIK MENEJERI — tasnif, zaxira, qoplash
+         ===================================================== -->
+    <div id="dash-tavakkal">
       <div class="sahifa-qator">
         <div>
-          <h1>Texnik xizmat ish joyi</h1>
-          <div class="salom" id="salom-texnik"></div>
+          <h1>Tavakkalchilik ish o'rni</h1>
+          <div class="salom" id="salom-tavakkal"></div>
         </div>
         <div class="sahifa-harakat">
-          <a class="tugma tugma-asos" href="servis.html"><svg class="ic"><use href="#i-servis"/></svg>Servis topshirig'i</a>
+          <a class="tugma tugma-asos" href="tasniflash.html"><svg class="ic"><use href="#i-aktiv"/></svg>Tasnif va zaxira</a>
         </div>
       </div>
 
-      <section class="kpi-band" aria-label="Texnik ko'rsatkichlar">
-        <a class="kpi" href="qurilmalar.html">
-          <span class="kpi-tile lime"><svg class="ic"><use href="#i-ekran"/></svg></span>
-          <div class="kpi-matn">
-            <div class="kpi-yorliq">Onlayn qurilmalar</div>
-            <div class="kpi-qiymat"><b>2 934 <small>/ 3 120</small></b></div>
-            <div class="kpi-izoh">94% onlayn</div>
-          </div>
-        </a>
-        <a class="kpi" href="servis.html">
-          <span class="kpi-tile dark"><svg class="ic"><use href="#i-servis"/></svg></span>
-          <div class="kpi-matn">
-            <div class="kpi-yorliq">Ochiq servis topshiriqlari</div>
-            <div class="kpi-qiymat"><b>8</b></div>
-            <div class="kpi-izoh">Menga biriktirilgan: 3</div>
-          </div>
-        </a>
-        <a class="kpi" href="xonalar.html">
-          <span class="kpi-tile lime"><svg class="ic"><use href="#i-belgi-doira"/></svg></span>
-          <div class="kpi-matn">
-            <div class="kpi-yorliq">Bugungi tekshiruvlar</div>
-            <div class="kpi-qiymat"><b>3</b></div>
-            <div class="kpi-izoh">Rejalashtirilgan</div>
-          </div>
-        </a>
-        <a class="kpi" href="monitoring.html">
-          <span class="kpi-tile dark"><svg class="ic"><use href="#i-qongiroq"/></svg></span>
-          <div class="kpi-matn">
-            <div class="kpi-yorliq">Ogohlantirishlar</div>
-            <div class="kpi-qiymat"><b>4</b><span class="delta salbiy">↑ 2</span></div>
-            <div class="kpi-izoh">So'nggi 24 soat</div>
-          </div>
-        </a>
-      </section>
-
-      <section class="rol-qator">
-        <div class="karta">
-          <div class="karta-bosh">
-            <h2>Mening servis topshiriqlarim</h2>
-            <a class="karta-havola" href="servis.html">Barchasini ko'rish<svg class="ic"><use href="#i-ong"/></svg></a>
-          </div>
-          <div class="jadval-orash">
-            <table class="jadval royxat-jadval">
-              <thead><tr><th>Topshiriq</th><th>Obyekt</th><th>Muddat</th><th>Holat</th></tr></thead>
-              <tbody>
-                <tr onclick="location.href='servis.html'">
-                  <td><b>WO-2024-05124</b></td><td>Navruz Plaza</td><td class="raqam">Bugun, 12:00</td>
-                  <td><span class="chip chip-sariq">Jarayonda</span></td>
-                </tr>
-                <tr onclick="location.href='servis.html'">
-                  <td><b>WO-2024-05119</b></td><td>Chorsu Savdo Markazi</td><td class="raqam">Ertaga, 10:00</td>
-                  <td><span class="chip chip-kok">Rejalashtirilgan</span></td>
-                </tr>
-                <tr onclick="location.href='servis.html'">
-                  <td><b>WO-2024-05112</b></td><td>Chorvoq dala hovlisi</td><td class="raqam">26-may</td>
-                  <td><span class="chip chip-kok">Rejalashtirilgan</span></td>
-                </tr>
-                <tr onclick="location.href='servis.html'">
-                  <td><b>WO-2026-05098</b></td><td>Sergeli logistika ombori</td><td class="raqam">Kecha</td>
-                  <td><span class="chip chip-asos">Yakunlandi</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="karta">
-          <div class="karta-bosh"><h2>Qurilmalar holati</h2></div>
-          <div class="segment-mini" role="img" aria-label="Qurilmalar holati: onlayn 1248, degraded 226, oflayn 64, ta'mirda 22">
-            <i style="flex:2934;background:var(--h-nazorat)"></i>
-            <i style="flex:118;background:#F2C230"></i>
-            <i style="flex:46;background:var(--qizil)"></i>
-            <i style="flex:22;background:var(--rol-operator)"></i>
-          </div>
-          <div class="segment-legend">
-            <span><span class="nuqta" style="background:var(--h-nazorat)"></span>Onlayn <b>2 934</b></span>
-            <span><span class="nuqta" style="background:#F2C230"></span>Beqaror <b>118</b></span>
-            <span><span class="nuqta" style="background:var(--qizil)"></span>Oflayn <b>46</b></span>
-            <span><span class="nuqta" style="background:var(--rol-operator)"></span>Ta'mirda <b>22</b></span>
-          </div>
-          <a class="karta-havola" href="qurilmalar.html" style="margin-top:14px">Qurilmalar ro'yxati<svg class="ic"><use href="#i-ong"/></svg></a>
-        </div>
-      </section>
-
-      <section class="havola-qator">
-        <a class="havola-karta" href="qurilmalar.html">
-          <span class="tile" style="background:var(--rol-texnik-fon);color:var(--rol-texnik-matn)"><svg class="ic"><use href="#i-monitor"/></svg></span>
-          <span><b>Qurilmalar</b><span>Diagnostika va IP/MAC boshqaruvi</span></span>
-          <svg class="ic strelka"><use href="#i-ong"/></svg>
-        </a>
-        <a class="havola-karta" href="xonalar.html">
-          <span class="tile" style="background:var(--rol-texnik-fon);color:var(--rol-texnik-matn)"><svg class="ic"><use href="#i-qavat"/></svg></span>
-          <span><b>Xonalar va qavatlar</b><span>Bino tuzilmasi</span></span>
-          <svg class="ic strelka"><use href="#i-ong"/></svg>
-        </a>
-        <a class="havola-karta" href="servis.html">
-          <span class="tile" style="background:var(--rol-texnik-fon);color:var(--rol-texnik-matn)"><svg class="ic"><use href="#i-servis"/></svg></span>
-          <span><b>Servis topshirig'i</b><span>Tekshiruv va checklist</span></span>
-          <svg class="ic strelka"><use href="#i-ong"/></svg>
-        </a>
-        <a class="havola-karta" href="hodisalar.html">
-          <span class="tile" style="background:var(--rol-texnik-fon);color:var(--rol-texnik-matn)"><svg class="ic"><use href="#i-ogoh"/></svg></span>
-          <span><b>Yong'in xavfsizligi</b><span>Hodisalar va testlar</span></span>
-          <svg class="ic strelka"><use href="#i-ong"/></svg>
-        </a>
-      </section>
-    </div><!-- /dash-texnik -->
-
-    <!-- ============================================================
-         UNDIRUV MUTAXASSISI — qarzdorlik, sud ishlari, realizatsiya
-         ============================================================ -->
-    <div id="dash-undiruv">
-      <div class="sahifa-qator">
-        <div>
-          <h1>Undiruv mutaxassisi ish joyi</h1>
-          <div class="salom" id="salom-undiruv"></div>
-        </div>
-        <div class="sahifa-harakat">
-          <a class="tugma tugma-oq" href="qarzdorlar.html"><svg class="ic"><use href="#i-qarz"/></svg>Qarzdorlar reyestri</a>
-          <a class="tugma tugma-asos" href="undiruv.html"><svg class="ic"><use href="#i-tarozi"/></svg>Undiruv ishlari</a>
-        </div>
-      </div>
-
-      <section class="kpi-band" aria-label="Undiruv ko'rsatkichlari">
-        <a class="kpi" href="qarzdorlar.html">
+      <section class="kpi-band" aria-label="Tavakkalchilik ko'rsatkichlari">
+        <a class="kpi" href="tasniflash.html">
           <span class="kpi-tile dark"><svg class="ic"><use href="#i-qarz"/></svg></span>
           <div class="kpi-matn">
-            <div class="kpi-yorliq">Mening qarzdorlarim</div>
-            <div class="kpi-qiymat"><b>68</b><span class="delta salbiy">↑ 4</span></div>
-            <div class="kpi-izoh">Biriktirilgan shartnomalar</div>
+            <div class="kpi-yorliq">Muammoli qoldiq</div>
+            <div class="kpi-qiymat"><b id="dt-qarz">&#8212;</b></div>
+            <div class="kpi-izoh"><span id="dt-son">&#8212;</span> ta batafsil yozuv</div>
           </div>
         </a>
-        <a class="kpi" href="undiruv.html">
-          <span class="kpi-tile lime"><svg class="ic"><use href="#i-tarozi"/></svg></span>
+        <a class="kpi" href="tasniflash.html">
+          <span class="kpi-tile lime"><svg class="ic"><use href="#i-aktiv"/></svg></span>
           <div class="kpi-matn">
-            <div class="kpi-yorliq">Sud jarayonida</div>
-            <div class="kpi-qiymat"><b>21</b></div>
-            <div class="kpi-izoh">Da'vo va sud bosqichidagi ishlar</div>
+            <div class="kpi-yorliq">Shakllantirilgan zaxira</div>
+            <div class="kpi-qiymat"><b id="dt-zaxira">&#8212;</b></div>
+            <div class="kpi-izoh">Qarzning <span id="dt-zaxira-foiz">&#8212;</span> qismi</div>
+          </div>
+        </a>
+        <a class="kpi" href="tasniflash.html">
+          <span class="kpi-tile lime"><svg class="ic"><use href="#i-bino"/></svg></span>
+          <div class="kpi-matn">
+            <div class="kpi-yorliq">Garov bilan qoplash</div>
+            <div class="kpi-qiymat"><b id="dt-qoplash">&#8212;</b></div>
+            <div class="kpi-izoh">Baholangan qiymat / qoldiq qarz</div>
+          </div>
+        </a>
+        <a class="kpi" href="baholash.html">
+          <span class="kpi-tile dark"><svg class="ic"><use href="#i-grafik"/></svg></span>
+          <div class="kpi-matn">
+            <div class="kpi-yorliq">Qiymati pasayganlar</div>
+            <div class="kpi-qiymat"><b id="dt-pasaygan">&#8212;</b></div>
+            <div class="kpi-izoh">So'nggi qayta baholash bo'yicha</div>
+          </div>
+        </a>
+      </section>
+
+      <div class="karta" style="margin-top:4px">
+        <div class="karta-bosh"><h3>Toifalar kesimi</h3><a class="matn-havola" href="tasniflash.html">To'liq jadval &#8594;</a></div>
+        <div class="jadval-orash">
+          <table class="jadval">
+            <thead><tr><th>Toifa</th><th style="text-align:right">Yozuv</th><th style="text-align:right">Qoldiq qarz</th><th style="text-align:right">Zaxira</th></tr></thead>
+            <tbody id="dt-toifa"></tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /dash-tavakkal -->
+
+    <!-- =====================================================
+         YURIST — da'vo, sud, ijro muddatlari
+         ===================================================== -->
+    <div id="dash-yurist">
+      <div class="sahifa-qator">
+        <div>
+          <h1>Yuridik ish o'rni</h1>
+          <div class="salom" id="salom-yurist"></div>
+        </div>
+        <div class="sahifa-harakat">
+          <a class="tugma tugma-oq" href="qarzdorlar.html"><svg class="ic"><use href="#i-qarz"/></svg>Qarzdorlar</a>
+          <a class="tugma tugma-asos" href="undiruv.html"><svg class="ic"><use href="#i-tarozi"/></svg>Sud ishlari</a>
+        </div>
+      </div>
+
+      <section class="kpi-band" aria-label="Yuridik ko'rsatkichlar">
+        <a class="kpi" href="undiruv.html">
+          <span class="kpi-tile dark"><svg class="ic"><use href="#i-tarozi"/></svg></span>
+          <div class="kpi-matn">
+            <div class="kpi-yorliq">Sud bosqichida</div>
+            <div class="kpi-qiymat"><b id="dy-sud">&#8212;</b></div>
+            <div class="kpi-izoh">Da'vo va sud jarayonidagi ishlar</div>
           </div>
         </a>
         <a class="kpi" href="undiruv.html">
           <span class="kpi-tile dark"><svg class="ic"><use href="#i-soat"/></svg></span>
           <div class="kpi-matn">
-            <div class="kpi-yorliq">Shoshilinch muddatlar</div>
-            <div class="kpi-qiymat"><b>4</b><span class="delta salbiy">7 kun ichida</span></div>
-            <div class="kpi-izoh">Ijro hujjati muddatlari</div>
+            <div class="kpi-yorliq">Ijro bosqichida</div>
+            <div class="kpi-qiymat"><b id="dy-ijro">&#8212;</b></div>
+            <div class="kpi-izoh">MIB ijrosidagi ishlar</div>
           </div>
         </a>
-        <a class="kpi" href="auksion.html">
-          <span class="kpi-tile lime"><svg class="ic"><use href="#i-pul"/></svg></span>
+        <a class="kpi" href="garov-hodisalari.html">
+          <span class="kpi-tile lime"><svg class="ic"><use href="#i-ogoh"/></svg></span>
           <div class="kpi-matn">
-            <div class="kpi-yorliq">Oylik undiruv</div>
-            <div class="kpi-qiymat"><b>12,4 <small>mlrd so'm</small></b><span class="delta">↑ 9,2%</span></div>
-            <div class="kpi-izoh">Rejaning 78 foizi bajarildi</div>
+            <div class="kpi-yorliq">Huquqiy hodisalar</div>
+            <div class="kpi-qiymat"><b id="dy-hodisa">&#8212;</b></div>
+            <div class="kpi-izoh">Ruxsatsiz foydalanish va cheklovlar</div>
+          </div>
+        </a>
+        <a class="kpi" href="hujjatlar.html">
+          <span class="kpi-tile lime"><svg class="ic"><use href="#i-hujjat"/></svg></span>
+          <div class="kpi-matn">
+            <div class="kpi-yorliq">Hujjatlar</div>
+            <div class="kpi-qiymat"><b id="dy-hujjat">&#8212;</b></div>
+            <div class="kpi-izoh">Sud qarorlari va ijro varaqalar</div>
           </div>
         </a>
       </section>
 
-      <section class="rol-qator">
-        <div class="karta">
-          <div class="karta-bosh">
-            <h2>Shoshilinch undiruv ishlari</h2>
-            <a class="karta-havola" href="undiruv.html">Barchasini ko'rish<svg class="ic"><use href="#i-ong"/></svg></a>
-          </div>
-          <div class="jadval-orash">
-            <table class="jadval royxat-jadval">
-              <tbody>
-                <tr onclick="location.href='undiruv.html'">
-                  <td style="width:34px"><span class="mini-holat"><span class="nuqta" style="background:var(--qizil)"></span></span></td>
-                  <td><b>UI-2026/0412 — Karimov Javlon Anvarovich</b><br><span style="font-size:12.5px;color:var(--matn-3)">Ijro hujjati muddati 28-mayda tugaydi · 486,2 mln so'm</span></td>
-                  <td class="raqam">4 kun qoldi</td>
-                </tr>
-                <tr onclick="location.href='undiruv.html'">
-                  <td><span class="mini-holat"><span class="nuqta" style="background:var(--qizil)"></span></span></td>
-                  <td><b>UI-2026/3308 — Yusupova Nodira Alisherovna</b><br><span style="font-size:12.5px;color:var(--matn-3)">Ijro varaqasini olish muddati 30-may · 312,4 mln so'm</span></td>
-                  <td class="raqam">6 kun qoldi</td>
-                </tr>
-                <tr onclick="location.href='undiruv.html'">
-                  <td><span class="mini-holat"><span class="nuqta" style="background:#D98324"></span></span></td>
-                  <td><b>UI-2026/2210 — Ergasheva Dilnoza Baxtiyorovna</b><br><span style="font-size:12.5px;color:var(--matn-3)">Sud majlisi 3-iyun kuni tayinlangan · 92,5 mln so'm</span></td>
-                  <td class="raqam">10 kun qoldi</td>
-                </tr>
-                <tr onclick="location.href='auksion.html'">
-                  <td><span class="mini-holat"><span class="nuqta" style="background:#8B5CF6"></span></span></td>
-                  <td><b>UI-2025/0934 — «Navruz Savdo» MChJ</b><br><span style="font-size:12.5px;color:var(--matn-3)">Auksion savdosi 5-iyun · boshlang'ich narx 1 480,0 mln so'm</span></td>
-                  <td class="raqam">12 kun qoldi</td>
-                </tr>
-                <tr onclick="location.href='musodara-qabul.html'">
-                  <td><span class="mini-holat"><span class="nuqta" style="background:#3AAA3E"></span></span></td>
-                  <td><b>UI-2025/0755 — «Bo'ston Agro» fermer xo'jaligi</b><br><span style="font-size:12.5px;color:var(--matn-3)">Yer uchastkasini qabul qilish 14-iyun · 890,0 mln so'm</span></td>
-                  <td class="raqam">21 kun qoldi</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="karta">
-          <div class="karta-bosh"><h2>Undiruv bosqichlari</h2></div>
-          <div class="legend" style="margin-top:6px">
-            <a class="legend-qator" href="undiruv.html"><span class="nuqta" style="background:#8A94A0"></span><span class="nomi">Ogohlantirish</span><b>143</b></a>
-            <a class="legend-qator" href="undiruv.html"><span class="nuqta" style="background:#3E7BD6"></span><span class="nomi">Da'vo arizasi</span><b>104</b></a>
-            <a class="legend-qator" href="undiruv.html"><span class="nuqta" style="background:#8B5CF6"></span><span class="nomi">Sud jarayonida</span><b>96</b></a>
-            <a class="legend-qator" href="undiruv.html"><span class="nuqta" style="background:#0F5392"></span><span class="nomi">Sud qarori</span><b>58</b></a>
-            <a class="legend-qator" href="undiruv.html"><span class="nuqta" style="background:#D98324"></span><span class="nomi">MIB ijrosi</span><b>44</b></a>
-            <a class="legend-qator" href="undiruv.html"><span class="nuqta" style="background:#3AAA3E"></span><span class="nomi">Musodara qilingan</span><b>128</b></a>
-          </div>
-          <div class="jami-yakun"><span>Jami ochiq ishlar:</span><b>573</b></div>
-        </div>
-      </section>
-    </div><!-- /dash-undiruv -->
+      <div class="karta" style="margin-top:4px">
+        <div class="karta-bosh"><h3>Yaqinlashayotgan muddatlar</h3><a class="matn-havola" href="undiruv.html">Barcha ishlar &#8594;</a></div>
+        <div id="dy-muddat"></div>
+      </div>
+    </div><!-- /dash-yurist -->
 
 
   </main>
@@ -614,9 +437,9 @@ html.erta-rol-undiruv #dash-undiruv{display:block}
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="malumot.js?v=26082403"></script>
-<script src="tarjima.js?v=26082403"></script>
-<script src="mkb.js?v=26082403"></script>
+<script src="malumot.js?v=26082404"></script>
+<script src="tarjima.js?v=26082404"></script>
+<script src="mkb.js?v=26082404"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
   /* Salomlashish — rol asosida shaxsiylashtirilgan */
@@ -624,10 +447,62 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const vaqtSalomi = soat < 6 ? "Xayrli tun" : soat < 12 ? "Xayrli tong" : soat < 18 ? "Xayrli kun" : "Xayrli kech";
   const ism = (MKB.foydIsmi() || "").split(" ")[0] || "";
   const matn = `${vaqtSalomi}, ${ism}. Bugungi holat bilan tanishing.`;
-  ["salom-admin","salom-operator","salom-texnik","salom-undiruv"].forEach(id=>{
+  ["salom-admin","salom-garov","salom-tavakkal","salom-yurist"].forEach(id=>{
     const el = document.getElementById(id);
     if (el) el.textContent = matn;
   });
+
+  /* ---- Rol ish o'rinlari: sonlar ma'lumot modulidan hisoblanadi (Д-7) ---- */
+  (function(){
+    const D = MKB_DATA;
+    const q = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+
+    /* Garov xizmati */
+    const reja = D.KORIKLAR.filter(k => k.holat === "rejada").length;
+    const otgan = D.KORIKLAR.filter(k => k.holat === "muddati_otgan").length;
+    q("dg-reja", reja + otgan);
+    q("dg-otgan", otgan);
+    q("dg-sugurta", D.SUGURTALAR.filter(g => g.holat !== "amalda").length);
+    q("dg-baho", D.BAHOLASHLAR.filter(b => b.holat !== "dolzarb").length);
+    q("dg-hodisa", D.HODISALAR.filter(h => h.holat !== "Yopildi").length);
+    const ishlar = document.getElementById("dg-ishlar");
+    if (ishlar) ishlar.innerHTML = D.KORIKLAR
+      .filter(k => k.holat !== "otkazildi")
+      .map(k => `<div style="display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--chiziq);font-size:13.5px">
+        <span><b style="font-weight:750">${k.obyekt}</b>
+        <span style="color:var(--matn-3)"> — ${k.tur.toLowerCase()} ko'rik, ${k.sana}</span></span>
+        <a class="matn-havola" href="korik-akti.html?id=${encodeURIComponent(k.id)}">${k.holat === "muddati_otgan" ? "Qayta tayinlash" : "Varaqa"}</a>
+      </div>`).join("");
+
+    /* Tavakkalchilik */
+    q("dt-qarz", D.pul(D.jamiQarz()));
+    q("dt-son", D.YOZUVLAR.length);
+    q("dt-zaxira", D.pul(D.jamiZaxira()));
+    q("dt-zaxira-foiz", Math.round(D.jamiZaxira() / D.jamiQarz() * 100) + "%");
+    q("dt-qoplash", Math.round(D.jamiBaho() / D.jamiQarz() * 100) + "%");
+    q("dt-pasaygan", D.BAHOLASHLAR.filter(b => b.qiymat < b.avvalgi).length);
+    const toifa = document.getElementById("dt-toifa");
+    if (toifa) toifa.innerHTML = D.tasnifStatistikasi().filter(t => t.son).map(t => `
+      <tr><td><span class="chip ${t.chip}">${t.nom}</span></td>
+      <td style="text-align:right">${t.son}</td>
+      <td style="text-align:right">${D.pul(t.qarz)}</td>
+      <td style="text-align:right"><b>${D.pul(t.zaxira)}</b></td></tr>`).join("");
+
+    /* Yurist */
+    q("dy-sud", D.YOZUVLAR.filter(y => ["davo","sud","qaror"].includes(y.ish.bosqich)).length);
+    q("dy-ijro", D.YOZUVLAR.filter(y => y.ish.bosqich === "mib").length);
+    q("dy-hodisa", D.HODISALAR.filter(h => h.bolim.indexOf("Yuridik") === 0 && h.holat !== "Yopildi").length);
+    q("dy-hujjat", D.HUJJATLAR.length);
+    const muddat = document.getElementById("dy-muddat");
+    if (muddat) muddat.innerHTML = D.YOZUVLAR
+      .filter(y => y.ish.muddat)
+      .slice(0, 5)
+      .map(y => `<div style="display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--chiziq);font-size:13.5px">
+        <span><b style="font-weight:750">${y.garov.qisqa}</b>
+        <span style="color:var(--matn-3)"> — ${y.ish.muddat}</span></span>
+        <span style="color:${y.ish.shoshilinch === "yuqori" ? "#C43C31" : "var(--matn-3)"};font-weight:700;white-space:nowrap">${y.ish.kun}</span>
+      </div>`).join("");
+  })();
 
   /* Donut */
   const svg = document.getElementById("donut");
@@ -716,7 +591,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     "Kvartira": "--t-kvartira", "Turar-joy": "--t-uy", "Tijorat": "--t-tijorat",
     "Ishlab chiqarish": "--t-ishlab", "Yer uchastkasi": "--t-yer", "Avtotransport": "--t-transport"
   };
-  const HOLAT_RANG = {"Garovda":"#7BAEFC","Nazoratda":"#3AAA3E","Musodara jarayonida":"#E8763C","Ijaraga berilgan":"#3E7BD6","Auksionda":"#8B5CF6"};
+  const HOLAT_RANG = {"Garovda":"#7BAEFC","Nazoratda":"#2E9E52","Musodara jarayonida":"#E8763C","Ijaraga berilgan":"#3E7BD6","Auksionda":"#8B5CF6"};
   const NUQTALAR = MKB_DATA.XARITA_NUQTALARI.map(n => {
     if (n.kod){
       const y = MKB_DATA.topish(n.kod);
@@ -726,8 +601,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
   });
 
   function pinIkon(n){
-    const rang = ranglar.getPropertyValue(TUR_RANG[n.tur] || "--asos").trim() || "#0F5392";
-    const hrang = HOLAT_RANG[n.holat] || "#3AAA3E";
+    const rang = ranglar.getPropertyValue(TUR_RANG[n.tur] || "--asos").trim() || "#0E6B5C";
+    const hrang = HOLAT_RANG[n.holat] || "#2E9E52";
     return L.divIcon({
       className: "pin-pro" + (n.muhim ? " muhim" : ""),
       html: `<svg width="28" height="38" viewBox="0 0 28 38">
@@ -755,7 +630,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   NUQTALAR.forEach(n => {
     const belgi = L.marker([n.lat, n.lng], {icon: pinIkon(n)});
     belgi.bindTooltip(
-      `<span class="pin-chip"><span class="pin-nuqta" style="background:${HOLAT_RANG[n.holat] || "#3AAA3E"}"></span>${n.nom} · ${n.holat}</span>`,
+      `<span class="pin-chip"><span class="pin-nuqta" style="background:${HOLAT_RANG[n.holat] || "#2E9E52"}"></span>${n.nom} · ${n.holat}</span>`,
       {direction:"top", className:"mkb-chip"});
     belgi.on("click", () => {
       location.href = n.kod ? "obyekt.html?id=" + encodeURIComponent(n.kod)

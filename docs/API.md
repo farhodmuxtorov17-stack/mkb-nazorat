@@ -1,7 +1,7 @@
 # Контракт серверного API
 ## Система цифрового контроля залоговых активов «Микрокредитбанк»
 
-Версия 0.1 · Редакция от 24.08.2026 · Основание: ТЗ v1.0, раздел 8
+Версия 0.2 · Редакция от 24.08.2026 · Основание: ТЗ v2.0, раздел 8
 
 ---
 
@@ -68,7 +68,7 @@
   "xato": {
     "kod": "RUXSAT_YOQ",
     "xabar": "Bo'limga kirish huquqi yo'q",
-    "tafsilot": { "bolim": "undiruv", "rol": "operator" }
+    "tafsilot": { "bolim": "yuridik", "rol": "kredit" }
   }
 }
 ```
@@ -104,7 +104,7 @@ POST /api/v1/sessiya/yangilash                                -> продлен�
   `localStorage` не допускается: интерфейс полон пользовательского контента,
   и XSS не должен давать угон сессии.
 - **А-2.** Срок жизни — 30 минут бездействия, максимум 12 часов.
-- **А-3.** Второй фактор обязателен для ролей `admin` и `rahbar`.
+- **А-3.** Второй фактор обязателен для ролей `admin` и `filial`.
 - **А-4.** Пять неудачных попыток — блокировка учётной записи на 15 минут,
   событие в журнал аудита.
 - **А-5.** `GET /men` возвращает роль и **вычисленный сервером** список
@@ -115,8 +115,8 @@ POST /api/v1/sessiya/yangilash                                -> продлен�
 {
   "id": "USR-0041", "ism": "Ismoilov Otabek",
   "rol": "admin", "bolim": "Axborot texnologiyalari departamenti",
-  "ruxsat": ["panel","obyektlar","xavfsizlik","hodisalar",
-             "undiruv","realizatsiya","hisobotlar","sozlamalar"],
+  "ruxsat": ["panel","portfel","garov","yuridik",
+             "realizatsiya","zaxira","hisobotlar","sozlamalar"],
   "korishRejimi": null
 }
 ```
@@ -134,10 +134,11 @@ POST /api/v1/sessiya/yangilash                                -> продлен�
 | Роль | Разделы |
 |---|---|
 | `admin` | все |
-| `rahbar` | panel, obyektlar, xavfsizlik, hodisalar, undiruv, realizatsiya, hisobotlar, sozlamalar |
-| `undiruv` | panel, obyektlar, undiruv, realizatsiya, hisobotlar, sozlamalar |
-| `operator` | panel, obyektlar, xavfsizlik, hodisalar, sozlamalar |
-| `texnik` | panel, obyektlar, xavfsizlik, sozlamalar |
+| `filial` | panel, portfel, garov, yuridik, realizatsiya, hisobotlar, sozlamalar |
+| `kredit` | panel, portfel, garov, hisobotlar, sozlamalar |
+| `garov` | panel, portfel, garov, realizatsiya, hisobotlar, sozlamalar |
+| `yurist` | panel, portfel, yuridik, realizatsiya, hisobotlar, sozlamalar |
+| `tavakkal` | panel, portfel, zaxira, hisobotlar, sozlamalar |
 
 - **Р-7.** Проверка выполняется до чтения из хранилища, а не при сериализации
   ответа.
@@ -157,9 +158,9 @@ POST /api/v1/sessiya/yangilash                                -> продлен�
 | GET | `/obyektlar` | все | реестр; фильтры `hudud`, `filial`, `bosqich`, `tur` |
 | GET | `/obyektlar/{id}` | все | карточка объекта |
 | GET | `/obyektlar/{id}/tarix` | все | история изменений |
-| PATCH | `/obyektlar/{id}` | admin, undiruv | правка атрибутов залога |
-| GET | `/ishlar` | все, кроме texnik | дела о взыскании |
-| POST | `/ishlar/{id}/bosqich` | admin, undiruv | перевод на следующий этап |
+| PATCH | `/obyektlar/{id}` | admin, garov | правка атрибутов залога |
+| GET | `/ishlar` | admin, filial, kredit, yurist, garov | дела о взыскании |
+| POST | `/ishlar/{id}/bosqich` | admin, yurist | перевод на следующий этап |
 
 Переход этапа — отдельный метод, а не `PATCH` поля: он несёт побочные
 эффекты (запись в историю, уведомления, проверка инвариантов) и должен быть
@@ -172,41 +173,57 @@ POST /api/v1/ishlar/UI-2026-0412/bosqich
 
 Порядок этапов задан жёстко (раздел 5 ТЗ). Попытка перескочить — `409`.
 
-### 5.2 Охрана и наблюдение
+### 5.2 Контроль залога
 
 | Метод | Путь | Роли |
 |---|---|---|
-| GET | `/qurilmalar` · `/qurilmalar/{id}` | admin, operator, texnik, rahbar |
-| POST | `/qurilmalar/{id}/sinov` | admin, texnik |
-| GET | `/kameralar` · `/kameralar/{kod}/oqim` | admin, operator, rahbar |
-| GET | `/trevogalar` | admin, operator, rahbar |
-| POST | `/trevogalar/{id}/qabul` | admin, operator |
-| GET | `/kanallar` | admin, texnik, operator |
-| GET/POST | `/hodisalar` | admin, operator, rahbar |
-| POST | `/hodisalar/{kod}/hal` | admin, operator |
+| GET | `/koriklar` · `/koriklar/{id}` | admin, garov, filial, kredit |
+| POST | `/koriklar` | admin, garov |
+| POST | `/koriklar/{id}/natija` | admin, garov |
+| GET | `/sugurtalar` | admin, garov, filial, kredit |
+| POST | `/sugurtalar/{id}/uzaytirish-talabi` | admin, garov, kredit |
+| GET | `/baholashlar` | admin, garov, filial, tavakkal |
+| POST | `/baholashlar/buyurtma` | admin, garov (утверждение — filial) |
+| GET/POST | `/hodisalar` | admin, garov, yurist, filial |
+| POST | `/hodisalar/{kod}/hal` | admin, garov, yurist |
 
-`POST /hodisalar/{kod}/hal` требует непустых `texnikXulosa` и `dalil` —
-это уже реализовано в интерфейсе и должно дублироваться сервером.
+`POST /koriklar/{id}/natija` принимает акт осмотра: пункты проверки, балл
+состояния, фотографии (через предподписанные URL), координаты и отметку времени
+съёмки. Расхождение координат с адресом объекта более 500 м помечается в записи.
 
-`/kameralar/{kod}/oqim` возвращает не видео, а краткоживущий (60 с) токен
-для видеоплатформы. Медиа-трафик через прикладной сервер не проходит.
+`POST /hodisalar/{kod}/hal` требует непустых `xulosa` и `asos` — заключения и
+основания закрытия; это уже реализовано в интерфейсе и дублируется сервером.
 
-### 5.3 Доступ на объекты
+### 5.2а Классификация и резерв
 
 | Метод | Путь | Роли |
 |---|---|---|
-| GET | `/kirish/voqealar` | admin, operator |
-| GET/POST | `/kirish/sorovlar` | admin, operator |
-| POST | `/kirish/sorovlar/{id}/qaror` | admin, operator |
-| GET | `/kirish/mehmonlar` | admin, operator |
+| GET | `/tasnif` | admin, tavakkal, filial |
+| GET | `/tasnif/normativlar` | admin, tavakkal |
+| PATCH | `/tasnif/normativlar` | admin (журналируется с прежними значениями) |
+
+Категория и резерв **вычисляются сервером** из дней просрочки и таблицы
+нормативов; клиент их не присылает. Изменение нормативов — версионируемое:
+прежние значения сохраняются с датой действия, пересчёт по портфелю выполняется
+фоновым заданием с итоговым отчётом.
+
+### 5.3 Маршруты инспекторов
+
+| Метод | Путь | Роли |
+|---|---|---|
+| GET | `/marshrutlar/bugungi` | admin, garov |
+| POST | `/marshrutlar` | admin, garov |
+
+Формирование дневного маршрута инспектора из назначенных осмотров; мобильное
+рабочее место (раздел 10) читает тот же ресурс.
 
 ### 5.4 Реализация и архив
 
 | Метод | Путь | Роли |
 |---|---|---|
-| GET | `/auksion/lotlar` | admin, undiruv, rahbar |
-| POST | `/auksion/lotlar/{id}/bosqich` | admin, undiruv |
-| GET | `/arxiv` | admin, undiruv, rahbar |
+| GET | `/auksion/lotlar` | admin, garov, yurist, filial |
+| POST | `/auksion/lotlar/{id}/bosqich` | admin, garov |
+| GET | `/arxiv` | admin, garov, yurist, filial |
 
 Записи архива доступны только на чтение — см. раздел 7.
 
@@ -215,7 +232,7 @@ POST /api/v1/ishlar/UI-2026-0412/bosqich
 | Метод | Путь | Роли |
 |---|---|---|
 | GET | `/hujjatlar` | по разделу объекта |
-| POST | `/hujjatlar` | admin, undiruv |
+| POST | `/hujjatlar` | admin, yurist, garov |
 | GET | `/hujjatlar/{id}/yuklab` | по разделу объекта |
 
 Загрузка: `POST` возвращает предподписанный URL объектного хранилища; файл
@@ -252,9 +269,12 @@ docx, xlsx`, обязательная антивирусная проверка 
 5. `garov.baho > 0`, `qarz.kunlar > 0`;
 6. сумма по разрезу состояний равна `portfel.jami`;
 7. сумма по разрезу регионов равна `portfel.jami`;
-8. `qurilmalar.onlayn + beqaror + oflayn + tamirda = qurilmalar.jami`;
+8. разрезы контроля (осмотры, страховка, оценка) в сумме дают `portfel.jami`;
 9. каждая ссылка `obyektId` разрешается в существующий объект;
-10. статус земельного участка совпадает с этапом связанного дела.
+10. статус земельного участка совпадает с этапом связанного дела;
+11. категория качества соответствует дням просрочки, резерв — категории;
+12. страховое покрытие не ниже оценочной стоимости для страхуемых типов —
+    нарушение не блокирует запись, но обязано породить событие по залогу.
 
 Нарушение — `422 MOSLIK_BUZILDI` с перечнем несоблюдённых пунктов. Частичная
 запись не допускается: транзакция откатывается целиком.
@@ -287,8 +307,8 @@ docx, xlsx`, обязательная антивирусная проверка 
 | АБС | входящее | договоры, остатки, просрочка, реквизиты должника | инкремент каждые 15 мин + полная сверка ночью |
 | Кадастр | входящее | сведения по земельным участкам и недвижимости | по запросу, кеш 24 ч |
 | МИБ | двустороннее | исполнительные производства, статусы | опрос 1 ч; приём вебхуков при их наличии |
-| Видеоплатформа | входящее | потоки, архив, события детекции | токен на поток, 60 с |
-| СКУД | входящее | проходы, заявки на доступ, состояние точек | поток событий |
+| Страховые компании | двустороннее | статусы полисов, уведомления о продлении | по запросу + вебхуки при наличии |
+| Оценочные организации | двустороннее | заказы оценки, готовые отчёты | по запросу, файлы через хранилище |
 
 Требования:
 
@@ -308,15 +328,15 @@ docx, xlsx`, обязательная антивирусная проверка 
 
 | Событие | Канал | Получатель |
 |---|---|---|
-| Тревога высокого уровня | внутр. + СМС | оператор смены |
+| Событие по залогу высокой критичности | внутр. + СМС | залоговая служба, руководитель филиала |
 | Истекает срок исполнительного листа (за 5 дней) | внутр. + почта | ответственный по делу |
 | Объект переведён на новый этап | внутр. | ответственный, руководство |
-| Устройство офлайн более 30 мин | внутр. | технический специалист |
-| Заявка на доступ создана | внутр. | принимающая сторона |
+| Страховка истекает (за 30 дней) | внутр. + почта | залоговая служба, кредитный менеджер |
+| Оценка устаревает (за 90 дней) | внутр. | залоговая служба |
 
 - **У-1.** Доставка — не более одного повторения в час по одному поводу.
 - **У-2.** Отправка СМС протоколируется без текста сообщения.
-- **У-3.** Пользователь управляет каналами, кроме тревог высокого уровня —
+- **У-3.** Пользователь управляет каналами, кроме событий высокой критичности —
   их отключение недоступно.
 
 ---

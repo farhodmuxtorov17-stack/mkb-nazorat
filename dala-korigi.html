@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Dala ko'rigi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082404">
+<style>
+/* ---- Dala ko'rigi: inspektorning kunlik marshruti ---- */
+.dk-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+.dk-ustun > *{min-width:0}
+
+/* Marshrut bandlari */
+.mr-band{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid var(--chiziq)}
+.mr-band:last-child{border-bottom:none}
+.mr-nuqta{width:34px;flex:none;display:flex;flex-direction:column;align-items:center;gap:4px}
+.mr-nuqta .n{width:30px;height:30px;border-radius:99px;display:grid;place-items:center;font-size:13px;font-weight:750;background:var(--kanvas);color:var(--matn-3)}
+.mr-band.otdi .n{background:#E6F5EA;color:#1F7A3D}
+.mr-band.faol .n{background:var(--asos);color:#fff}
+.mr-nuqta .iz{flex:1;width:2px;background:var(--chiziq);border-radius:2px;min-height:14px}
+.mr-band:last-child .iz{display:none}
+.mr-mazmun{flex:1;min-width:0}
+.mr-mazmun b{font-size:14px;font-weight:750}
+.mr-mazmun .manzil{font-size:12.5px;color:var(--matn-3);margin-top:2px}
+.mr-meta{display:flex;gap:14px;margin-top:6px;font-size:11.5px;color:var(--matn-4);flex-wrap:wrap}
+.mr-meta span{display:flex;align-items:center;gap:5px}
+.mr-meta .ic{width:12px;height:12px}
+.mr-rasm{width:76px;height:58px;border-radius:10px;object-fit:cover;flex:none}
+.mr-holat{flex:none;align-self:center}
+
+/* Bugungi tekshiruv varag'i */
+.ch-band{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--chiziq);font-size:13px}
+.ch-band:last-child{border-bottom:none}
+.ch-belgi{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;flex:none}
+.ch-belgi .ic{width:12px;height:12px}
+.ch-ha{background:#E6F5EA;color:#1F7A3D}
+.ch-kut{background:var(--kanvas);color:var(--matn-4)}
+.ch-band p{flex:1;color:var(--matn-2)}
+.ch-band.kut p{color:var(--matn-4)}
+
+/* Sinxronizatsiya holati */
+.sinx{display:flex;gap:11px;background:var(--kanvas);border-radius:12px;padding:12px 13px;margin-top:14px;font-size:12.5px;color:var(--matn-3);line-height:1.55}
+.sinx .ic{width:16px;height:16px;color:var(--asos);flex:none;margin-top:2px}
+.sinx b{color:var(--matn-2)}
+
+@media (max-width:1320px){ .dk-ustun{grid-template-columns:1fr} }
+</style>
+</head>
+<body data-sahifa="garov" data-topbar-sarlavha="Dala ko'rigi" data-topbar-ikon="i-navigatsiya">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1>Dala ko'rigi</h1>
+        <div class="sahifa-izoh">Inspektorning kunlik marshruti — mobil ish o'rnining veb-ko'rinishi</div>
+      </div>
+      <div class="sahifa-harakat">
+        <button class="tanlov" data-variantlar='["Sattorov Jasur","Karimova Feruza"]' id="f-inspektor"><span class="t-yorliq">Sattorov Jasur</span><svg class="ic"><use href="#i-past"/></svg></button>
+        <button class="tugma tugma-oq" data-toast="Marshrut varaqasi chop etilmoqda"><svg class="ic"><use href="#i-printer"/></svg>Marshrut varaqasi</button>
+      </div>
+    </div>
+
+    <section class="kpi-band" aria-label="Kunlik ko'rsatkichlar">
+      <button class="kpi" data-toast="Tayinlangan chiqishlar — ko'rik rejasidan">
+        <span class="kpi-tile dark"><svg class="ic"><use href="#i-navigatsiya"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Marshrutda</div>
+          <div class="kpi-qiymat"><b id="k-marshrut">—</b></div>
+          <div class="kpi-izoh">Tayinlangan chiqishlar</div>
+        </div>
+      </button>
+      <button class="kpi" data-toast="Dalolatnoma imzolangan chiqishlar">
+        <span class="kpi-tile lime"><svg class="ic"><use href="#i-belgi-doira"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Yakunlangan</div>
+          <div class="kpi-qiymat"><b id="k-yakun">—</b></div>
+          <div class="kpi-izoh">Dalolatnoma rasmiylashtirilgan</div>
+        </div>
+      </button>
+      <button class="kpi" data-toast="Har bir chiqishda majburiy qadamlar soni">
+        <span class="kpi-tile lime"><svg class="ic"><use href="#i-vazifa"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Tekshiruv bandlari</div>
+          <div class="kpi-qiymat"><b>5</b></div>
+          <div class="kpi-izoh">Identifikatsiya, holat, egallik, sug'urta, ro'yxat</div>
+        </div>
+      </button>
+      <button class="kpi" data-toast="Aloqa tiklanguncha natijalar navbatda saqlanadi">
+        <span class="kpi-tile dark"><svg class="ic"><use href="#i-wifi"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Sinxronizatsiya</div>
+          <div class="kpi-qiymat"><b id="k-sinx">—</b></div>
+          <div class="kpi-izoh">Yuborilmagan natijalar navbati</div>
+        </div>
+      </button>
+    </section>
+
+    <div class="dk-ustun">
+      <div class="karta">
+        <div class="karta-bosh"><h3>Bugungi marshrut</h3><span style="font-size:12.5px;color:var(--matn-3)" id="mr-sana"></span></div>
+        <div id="mr-royxat"></div>
+      </div>
+
+      <aside>
+        <div class="karta" aria-label="Joriy chiqish varag'i">
+          <div class="karta-bosh"><h3>Joriy chiqish varag'i</h3></div>
+          <div id="ch-royxat"></div>
+          <button class="tugma tugma-asos" style="width:100%;justify-content:center;margin-top:14px"
+                  data-toast="Dalolatnoma shakli ochilmoqda — imzolash uchun barcha bandlar yakunlanishi kerak">
+            <svg class="ic"><use href="#i-hujjat"/></svg>Dalolatnomani rasmiylashtirish
+          </button>
+          <div class="sinx">
+            <svg class="ic"><use href="#i-info"/></svg>
+            <span><b>Oflayn rejim.</b> Aloqa bo'lmaganda natijalar qurilmada saqlanadi
+            va tarmoq tiklanganda avtomatik yuboriladi. Fotosurat faqat joylashuv
+            va vaqt belgisi bilan qabul qilinadi.</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js?v=26082404"></script>
+<script src="tarjima.js?v=26082404"></script>
+<script src="mkb.js?v=26082404"></script>
+<script>
+const D = MKB_DATA;
+let inspektor = "Sattorov Jasur";
+
+document.getElementById("mr-sana").textContent = "26-avgust, 2026 · dushanba";
+
+function chiz(){
+  /* Marshrut: shu inspektorga tayinlangan reja + yaqinda o'tkazilganlari */
+  const meniki = D.KORIKLAR.filter(k => k.inspektor === inspektor);
+  const reja   = meniki.filter(k => k.holat !== "otkazildi");
+  const otdi   = meniki.filter(k => k.holat === "otkazildi").slice(0, 2);
+  const marshrut = otdi.map(k => ({...k, _t: "otdi"}))
+    .concat(reja.map((k, i) => ({...k, _t: i === 0 ? "faol" : "kut"})));
+
+  document.getElementById("k-marshrut").textContent = reja.length;
+  document.getElementById("k-yakun").textContent = otdi.length;
+  document.getElementById("k-sinx").textContent = reja.length ? "1 ta" : "0";
+
+  document.getElementById("mr-royxat").innerHTML = marshrut.map((k, i) => {
+    const o = D.obyekt(k.obyektId);
+    return `
+    <div class="mr-band ${k._t === "otdi" ? "otdi" : k._t === "faol" ? "faol" : ""}">
+      <div class="mr-nuqta">
+        <span class="n">${k._t === "otdi" ? "✓" : i + 1}</span>
+        <span class="iz"></span>
+      </div>
+      <img class="mr-rasm" src="${o.rasm}" alt="">
+      <div class="mr-mazmun">
+        <b>${o.qisqa}</b>
+        <div class="manzil">${o.hududToliq} · ${o.tur}</div>
+        <div class="mr-meta">
+          <span><svg class="ic"><use href="#i-hujjat"/></svg>${k.id}</span>
+          <span><svg class="ic"><use href="#i-kalendar"/></svg>${k.sana}</span>
+          <span><svg class="ic"><use href="#i-vazifa"/></svg>${k.tur}</span>
+        </div>
+      </div>
+      <div class="mr-holat">
+        ${k._t === "otdi"
+          ? `<a class="tugma tugma-kichik tugma-oq" href="korik-akti.html?id=${encodeURIComponent(k.id)}">Dalolatnoma</a>`
+          : k._t === "faol"
+            ? `<span class="chip chip-asos">Joriy chiqish</span>`
+            : `<span class="chip chip-kul">Navbatda</span>`}
+      </div>
+    </div>`;
+  }).join("") || `<div style="text-align:center;color:var(--matn-3);padding:28px 0">Bu inspektorga bugun chiqish tayinlanmagan</div>`;
+
+  /* Joriy chiqish varag'i */
+  const faol = marshrut.find(k => k._t === "faol");
+  const BANDLAR = [
+    ["Obyekt identifikatsiya qilindi", true],
+    ["Tashqi holat fotoga olindi", true],
+    ["Egallik holati tekshirildi", false],
+    ["Sug'urta polisi solishtirildi", false],
+    ["Garov ro'yxati bo'yicha yurildi", false]
+  ];
+  document.getElementById("ch-royxat").innerHTML = faol
+    ? `<div style="font-size:13px;color:var(--matn-3);margin-bottom:8px">${faol.obyekt} — ${faol.id}</div>` +
+      BANDLAR.map(([nom, ok]) => `
+      <div class="ch-band ${ok ? "" : "kut"}">
+        <span class="ch-belgi ${ok ? "ch-ha" : "ch-kut"}"><svg class="ic"><use href="#${ok ? "i-belgi" : "i-soat"}"/></svg></span>
+        <p>${nom}</p>
+      </div>`).join("")
+    : `<div style="text-align:center;color:var(--matn-3);padding:18px 0">Faol chiqish yo'q</div>`;
+}
+chiz();
+
+document.getElementById("f-inspektor").addEventListener("tanlov", e => { inspektor = e.detail; chiz(); });
+</script>
+</body>
+</html>

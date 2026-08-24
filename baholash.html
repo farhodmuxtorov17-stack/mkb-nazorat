@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Qayta baholash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082404">
+<style>
+/* ---- Qayta baholash: garov qiymati dolzarbligi ---- */
+.bh-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+.bh-ustun > *{min-width:0}
+
+.bh-jadval .son{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bh-holat{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.bh-dolzarb{background:#E6F5EA;color:#1F7A3D}
+.bh-tugaydi{background:#FFF6DE;color:#9A6E00}
+.bh-eskirgan{background:#FDEEEC;color:#C43C31}
+
+.dinamika{display:inline-flex;align-items:center;gap:4px;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}
+.d-osdi{color:#1F7A3D}
+.d-tushdi{color:#C43C31}
+
+.bh-qator{cursor:pointer}
+.bh-qator:hover{background:var(--kanvas)}
+.bh-qator.tanlangan{background:var(--asos-fon)}
+
+/* Panel: tanlangan baholash tafsiloti */
+.bp-qator{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--chiziq);font-size:13.5px}
+.bp-qator:last-of-type{border-bottom:none}
+.bp-qator span{color:var(--matn-3)}
+.bp-qator b{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.bp-grafik{display:flex;align-items:flex-end;gap:10px;height:96px;margin:14px 0 6px;padding:0 4px}
+.bp-grafik .u{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bp-grafik .b{width:100%;border-radius:8px 8px 4px 4px;background:var(--tile-och);min-height:12px}
+.bp-grafik .b.joriy{background:var(--asos)}
+.bp-grafik span{font-size:11px;color:var(--matn-3);font-variant-numeric:tabular-nums;text-align:center}
+.bp-eslatma{background:var(--kanvas);border-radius:12px;padding:11px 13px;font-size:12.5px;color:var(--matn-3);line-height:1.55;margin-top:12px}
+.bp-eslatma b{color:var(--matn-2)}
+
+@media (max-width:1320px){ .bh-ustun{grid-template-columns:1fr} }
+</style>
+</head>
+<body data-sahifa="garov" data-topbar-sarlavha="Qayta baholash" data-topbar-ikon="i-grafik">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1>Qayta baholash</h1>
+        <div class="sahifa-izoh">Garov qiymatining dolzarbligi: baholash muddatlari va qiymat dinamikasi</div>
+      </div>
+      <div class="sahifa-harakat">
+        <button class="tanlov" data-variantlar='["Barcha holatlar","Dolzarb","Tez orada eskiradi","Eskirgan"]'><span class="t-yorliq">Barcha holatlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+        <button class="tugma tugma-asos" data-toast="Baholovchi tashkilotga buyurtma oynasi"><svg class="ic"><use href="#i-qoshish"/></svg>Baholash buyurtmasi</button>
+      </div>
+    </div>
+
+    <section class="kpi-band" aria-label="Baholash ko'rsatkichlari">
+      <button class="kpi" data-toast="Butun portfel bo'yicha dolzarblik kesimi">
+        <span class="kpi-tile lime"><svg class="ic"><use href="#i-belgi-doira"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Dolzarb baholash (portfel)</div>
+          <div class="kpi-qiymat"><b id="k-dolzarb">—</b></div>
+          <div class="kpi-izoh">Jami <span id="k-jami">—</span> obyektdan</div>
+        </div>
+      </button>
+      <button class="kpi" data-toast="90 kun ichida yillik muddati to'ladi">
+        <span class="kpi-tile dark"><svg class="ic"><use href="#i-soat"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">90 kunda eskiradi</div>
+          <div class="kpi-qiymat"><b id="k-tugaydi">—</b></div>
+          <div class="kpi-izoh">Buyurtmalar rejalashtirilmoqda</div>
+        </div>
+      </button>
+      <button class="kpi" data-toast="Yillik muddati o'tgan baholashlar">
+        <span class="kpi-tile dark"><svg class="ic"><use href="#i-ogoh"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Eskirgan</div>
+          <div class="kpi-qiymat"><b id="k-eskirgan">—</b></div>
+          <div class="kpi-izoh">Zaxira hisobi shartli qiymatda</div>
+        </div>
+      </button>
+      <button class="kpi" data-toast="So'nggi baholashda qiymati pasaygan obyektlar">
+        <span class="kpi-tile dark"><svg class="ic"><use href="#i-grafik"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Qiymati pasaygan</div>
+          <div class="kpi-qiymat"><b id="k-pasaygan">—</b></div>
+          <div class="kpi-izoh">Batafsil nazoratdagi obyektlar</div>
+        </div>
+      </button>
+    </section>
+
+    <div class="bh-ustun">
+      <div class="karta">
+        <div class="karta-bosh"><h3>Baholashlar reyestri</h3></div>
+        <div class="jadval-orash">
+          <table class="jadval bh-jadval">
+            <thead>
+              <tr><th>Obyekt</th><th>So'nggi baholash</th><th>Baholovchi</th><th class="son">Qiymat</th><th class="son">Dinamika</th><th>Keyingi muddat</th><th>Holat</th></tr>
+            </thead>
+            <tbody id="bh-jadval"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <aside class="karta" id="bh-panel" aria-label="Tanlangan baholash tafsiloti"></aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js?v=26082404"></script>
+<script src="tarjima.js?v=26082404"></script>
+<script src="mkb.js?v=26082404"></script>
+<script>
+const D = MKB_DATA;
+const pul = D.pul, f = D.fmt;
+
+/* ---- KPI (Д-7) ---- */
+const pb = D.PORTFEL.baholash;
+document.getElementById("k-dolzarb").textContent  = f(pb.dolzarb);
+document.getElementById("k-jami").textContent     = f(pb.jami);
+document.getElementById("k-tugaydi").textContent  = f(pb.tugaydi90);
+document.getElementById("k-eskirgan").textContent = f(pb.eskirgan);
+document.getElementById("k-pasaygan").textContent =
+  D.BAHOLASHLAR.filter(b => b.qiymat < b.avvalgi).length;
+
+/* ---- Reyestr ---- */
+const HOLAT = {
+  dolzarb:  ["bh-dolzarb",  "Dolzarb"],
+  tugaydi:  ["bh-tugaydi",  "Tez orada eskiradi"],
+  eskirgan: ["bh-eskirgan", "Eskirgan"]
+};
+const dinamika = b => {
+  const d = +(b.qiymat - b.avvalgi).toFixed(1);
+  const foiz = Math.abs(Math.round(d / b.avvalgi * 100));
+  return d >= 0
+    ? `<span class="dinamika d-osdi">↑ ${foiz}%</span>`
+    : `<span class="dinamika d-tushdi">↓ ${foiz}%</span>`;
+};
+
+document.getElementById("bh-jadval").innerHTML = D.BAHOLASHLAR.map((b, i) => {
+  const [cls, nom] = HOLAT[b.holat];
+  return `
+  <tr class="bh-qator" data-i="${i}" tabindex="0">
+    <td><b>${b.obyekt}</b><div style="font-size:12px;color:var(--matn-3)">${b.obyektId}</div></td>
+    <td style="white-space:nowrap">${b.sana}</td>
+    <td>${b.baholovchi}</td>
+    <td class="son">${pul(b.qiymat)}</td>
+    <td class="son">${dinamika(b)}</td>
+    <td style="white-space:nowrap">${b.keyingi}</td>
+    <td><span class="bh-holat ${cls}">${nom}</span></td>
+  </tr>`;
+}).join("");
+
+/* ---- Panel ---- */
+function panelChiz(i){
+  const b = D.BAHOLASHLAR[i];
+  const y = D.YOZUVLAR.find(z => z.id === b.obyektId);
+  const maxQ = Math.max(b.avvalgi, b.qiymat);
+  const d = +(b.qiymat - b.avvalgi).toFixed(1);
+  document.getElementById("bh-panel").innerHTML = `
+    <div class="karta-bosh"><h3>${b.obyekt}</h3></div>
+
+    <div class="bp-grafik" role="img" aria-label="Qiymat dinamikasi">
+      <div class="u"><div class="b" style="height:${b.avvalgi / maxQ * 72}px"></div><span>avvalgi<br>${pul(b.avvalgi)}</span></div>
+      <div class="u"><div class="b joriy" style="height:${b.qiymat / maxQ * 72}px"></div><span>joriy<br>${pul(b.qiymat)}</span></div>
+    </div>
+
+    <div class="bp-qator"><span>O'zgarish</span><b>${dinamika(b)} &nbsp;(${d >= 0 ? "+" : ""}${pul(Math.abs(d))})</b></div>
+    <div class="bp-qator"><span>Baholash usuli</span><b>${b.usul}</b></div>
+    <div class="bp-qator"><span>Baholovchi tashkilot</span><b>${b.baholovchi}</b></div>
+    <div class="bp-qator"><span>Baholash sanasi</span><b>${b.sana}</b></div>
+    <div class="bp-qator"><span>Keyingi muddat</span><b>${b.keyingi}</b></div>
+    ${y ? `
+    <div class="bp-qator"><span>Qoldiq qarz</span><b>${y.qarzMatn}</b></div>
+    <div class="bp-qator"><span>Qoplash darajasi</span><b>${y.qoplash}%</b></div>
+    <div class="bp-qator"><span>Tasnif toifasi</span><b><span class="chip ${y.tasnif.chip}">${y.tasnif.nom}</span></b></div>` : ""}
+
+    ${b.qiymat < b.avvalgi ? `
+    <div class="bp-eslatma"><b>Qiymat pasaygan.</b> Auksion boshlang'ich narxi va zaxira
+      hisobi yangi qiymatdan yuritiladi (Д-4). Pasayish 10% dan ortiq bo'lsa,
+      tavakkalchilik bo'limiga bildirishnoma yuboriladi.</div>` : ""}
+
+    ${y ? `
+    <a class="tugma tugma-oq" style="margin-top:14px;width:100%;justify-content:center"
+       href="obyekt.html?id=${encodeURIComponent(y.id)}">
+      <svg class="ic"><use href="#i-bino"/></svg>Obyekt kartochkasi
+    </a>` : ""}`;
+}
+
+const qatorlar = [...document.querySelectorAll(".bh-qator")];
+function tanla(tr){
+  qatorlar.forEach(x => x.classList.toggle("tanlangan", x === tr));
+  panelChiz(+tr.dataset.i);
+}
+qatorlar.forEach(tr => {
+  tr.addEventListener("click", () => tanla(tr));
+  tr.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); tanla(tr); } });
+});
+tanla(qatorlar[0]);
+</script>
+</body>
+</html>

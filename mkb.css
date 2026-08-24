@@ -2,10 +2,10 @@
    MIKROKREDITBANK — Garov obyektlarini raqamli nazorat tizimi
    Yagona dizayn tizimi: tokenlar va umumiy komponentlar.
    Firma ranglari bank identifikatsiyasidan olingan:
-   asosiy ko'k #0F5392, ikkilamchi yashil #3AAA3E.
+   asosiy zumrad #0E6B5C, aksent bronza #B98A2F, ijobiy holat yashili #2E9E52.
    ============================================================ */
 :root{
-  --kanvas:#F4F7FA;
+  --kanvas:#F4F7F5;
   --karta:#FFFFFF;
   --matn:#152131;
   --matn-2:#3D4B5C;
@@ -15,16 +15,17 @@
   --kirish-chiziq:#E1E7EF;
 
   /* Firma ranglari */
-  --asos:#0F5392;        /* asosiy harakat, havolalar — oq fonda 7.86:1 */
-  --asos-toq:#0A3D6E;
-  --asos-fon:#EAF2FB;
-  --brend-yashil:#3AAA3E; /* ikkilamchi aksent: aktiv band chizig'i, ijobiy holat */
+  --asos:#0E6B5C;        /* asosiy harakat, havolalar — oq fonda 7.86:1 */
+  --asos-toq:#084C41;
+  --asos-fon:#E7F3F0;
+  --brend-aksent:#B98A2F; /* ikkilamchi aksent: aktiv band chizig'i, gradiyentlar */
+  --ijobiy:#2E9E52;       /* semantik yashil: muvaffaqiyatli holatlar */
   --delta:#268030;        /* ijobiy o'zgarish matni — oq fonda 4.99:1 */
 
-  --tile-dark:#0E2337;
-  --tile-dark-ikon:#8CC5F0;
-  --tile-och:#CFE3F5;
-  --tile-och-ikon:#0B4478;
+  --tile-dark:#0C2B25;
+  --tile-dark-ikon:#8FD4C2;
+  --tile-och:#CDE8E0;
+  --tile-och-ikon:#0A5348;
 
   /* Garov obyekti turlari */
   --t-kvartira:#3E7BD6;
@@ -37,7 +38,7 @@
   /* Obyekt hayot sikli holatlari */
   --h-garov:#7BAEFC;      /* garovda — hali qarzdor tasarrufida */
   --h-musodara:#E8763C;   /* musodara qilingan — qabul jarayonida */
-  --h-nazorat:#3AAA3E;    /* bank nazoratida — qo'riqlanadi */
+  --h-nazorat:#2E9E52;    /* bank nazoratida — holat ijobiy */
   --h-ijara:#3E7BD6;      /* ijaraga berilgan */
   --h-tamir:#D98324;      /* ta'mir/tiklash ishlari */
   --h-auksion:#8B5CF6;    /* auksionga chiqarilgan */
@@ -60,11 +61,11 @@
   --soya-modal:0 10px 40px rgba(16,30,48,.20);
 
   /* To'q navigatsiya paneli — bank identifikatsiyasining asosiy vizual belgisi */
-  --nav-fon:#0C2A48;
-  --nav-fon-2:#0A2038;
-  --nav-matn:#C3D3E3;
+  --nav-fon:#0B2E28;
+  --nav-fon-2:#08231E;
+  --nav-matn:#C2D8D1;
   --nav-matn-och:#FFFFFF;
-  --nav-xira:#7C99B5;
+  --nav-xira:#7FA399;
   --nav-chiziq:rgba(255,255,255,.09);
   --nav-aktiv:rgba(255,255,255,.10);
 
@@ -74,8 +75,8 @@
      pastki qirrada ichki soya (qavariqlik hissi), va tashqi ko'tarma soya. */
   --chuqur-tile:inset 0 1px 0 rgba(255,255,255,.45), inset 0 -4px 7px rgba(0,0,0,.12), 0 2px 5px rgba(16,30,48,.09), 0 10px 18px -8px rgba(16,30,48,.17);
   --chuqur-tile-tor:inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 4px rgba(0,0,0,.10), 0 1px 3px rgba(16,30,48,.08), 0 5px 10px -5px rgba(16,30,48,.15);
-  --tile-dark-3d:linear-gradient(155deg,#1C3550 0%,var(--tile-dark) 55%,#071726 100%);
-  --tile-och-3d:linear-gradient(155deg,#EDF5FC 0%,var(--tile-och) 55%,#A9CBE8 100%);
+  --tile-dark-3d:linear-gradient(155deg,#144039 0%,var(--tile-dark) 55%,#062019 100%);
+  --tile-och-3d:linear-gradient(155deg,#ECF7F3 0%,var(--tile-och) 55%,#A5D4C6 100%);
 
   --r-katta:18px; --r-karta:16px; --r-ich:12px; --r-el:10px;
   --tez:150ms cubic-bezier(.23,1,.32,1);
@@ -167,10 +168,10 @@ img{display:block;max-width:100%}
 .m-band.aktiv .ic{color:var(--nav-matn-och)}
 .m-band.aktiv::after{
   content:"";position:absolute;left:-14px;top:7px;bottom:7px;width:3px;
-  background:var(--brend-yashil);border-radius:0 3px 3px 0;
+  background:var(--brend-aksent);border-radius:0 3px 3px 0;
 }
 /* Rol identifikatori — aktiv band chizig'i har bir rolda o'z rangida (har sahifada ko'rinadi) */
-.sidebar.rol-admin .m-band.aktiv::after{background:#8FB3D6}
+.sidebar.rol-admin .m-band.aktiv::after{background:#8FC6B8}
 .sidebar.rol-rahbar .m-band.aktiv::after{background:var(--rol-rahbar)}
 .sidebar.rol-operator .m-band.aktiv::after{background:var(--rol-operator)}
 .sidebar.rol-undiruv .m-band.aktiv::after{background:var(--rol-undiruv)}
@@ -184,7 +185,7 @@ img{display:block;max-width:100%}
   font-size:15px;font-weight:600;color:#2C3A49;
   transition:background var(--tez);
 }
-.yordam:hover{background:#F3F6FA}
+.yordam:hover{background:#F1F5F3}
 .yordam .ic{width:21px;height:21px;color:#555B62}
 .yordam .strelka{margin-left:auto;width:16px;height:16px;color:#6B7684}
 
@@ -223,7 +224,7 @@ img{display:block;max-width:100%}
 .quyosh{width:26px;height:26px;color:#FFC531;stroke-width:1.9}
 .ajratgich{width:1px;height:34px;background:var(--chiziq)}
 .profil{display:flex;align-items:center;gap:10px;padding:4px 10px 4px 4px;border-radius:8px;transition:background var(--tez);position:relative}
-.profil:hover{background:#F3F6FA}
+.profil:hover{background:#F1F5F3}
 .avatar{
   width:36px;height:36px;border-radius:8px;flex:none;overflow:hidden;
   background:linear-gradient(180deg,#DFE3E9,#C9CFD8);
@@ -272,12 +273,12 @@ img{display:block;max-width:100%}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 1px 2px rgba(11,55,100,.28), 0 8px 18px -6px rgba(11,55,100,.45);
 }
 .tugma-asos:hover{background:linear-gradient(180deg,#3480C9 0%,#1160A4 55%,#0A3A6B 100%)}
-.tugma-asos:hover{background:#2E7BC4}
+.tugma-asos:hover{background:#14836F}
 .tugma-asos:active{background:var(--asos-toq)}
 .tugma-oq{background:var(--karta);color:#1C2836;box-shadow:var(--soya)}
 .tugma-oq:hover{box-shadow:0 1px 2px rgba(23,26,31,.05),0 10px 28px rgba(23,26,31,.09)}
 .tugma-chiziqli{background:var(--karta);color:#1C2836;border:1px solid var(--kirish-chiziq)}
-.tugma-chiziqli:hover{background:#F3F6FA}
+.tugma-chiziqli:hover{background:#F1F5F3}
 .tugma-xavf{background:var(--qizil);color:#fff}
 .tugma-xavf:hover{background:#E14D42}
 .tugma-kichik{height:40px;padding:0 16px;font-size:14px;border-radius:12px}
@@ -356,12 +357,14 @@ img{display:block;max-width:100%}
   border-radius:99px;font-size:12.5px;font-weight:650;white-space:nowrap;
 box-shadow:var(--chuqur-tile-tor);background-image:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,0));}
 .chip .nuqta{width:6px;height:6px;border-radius:99px;background:currentColor}
-.chip-asos{background:#E4EFF9;color:#0B4478}
+.chip-asos{background:#E3F1ED;color:#0A5348}
 .chip-kok{background:var(--kok-fon);color:#2F6BCF}
 .chip-sariq{background:var(--sariq-fon);color:#9A6E00}
 .chip-qizil{background:var(--qizil-fon);color:#C43C31}
 .chip-kul{background:#EEF2F7;color:#515F6D}
 .chip-binafsha{background:#F3EBFE;color:#8A4BD8}
+.chip-yashil{background:#E6F5EA;color:#1F7A3D}
+.chip-tarvuz{background:#FDEEE4;color:#B85A22}
 
 /* ============ Jadval ============ */
 .jadval-karta{padding:8px 0 0}
@@ -410,7 +413,7 @@ table.jadval{width:100%;border-collapse:collapse}
   display:inline-grid;place-items:center;font-size:14px;font-weight:600;color:#2C3A49;
   transition:background var(--tez),border-color var(--tez);
 }
-.s-tugma:hover{background:#F3F6FA}
+.s-tugma:hover{background:#F1F5F3}
 .s-tugma.aktiv{background:var(--asos);border-color:var(--asos);color:#0B1B29}
 .s-tugma:disabled{opacity:.4;cursor:default}
 
@@ -423,7 +426,7 @@ table.jadval{width:100%;border-collapse:collapse}
 .tab:hover{color:#1C2836}
 .tab.aktiv{background:var(--karta);color:#101B29;box-shadow:0 1px 4px rgba(23,26,31,.08)}
 .tab .son{margin-left:8px;font-size:12px;font-weight:700;background:#E3E5E9;border-radius:99px;padding:2px 8px;color:#515F6D}
-.tab.aktiv .son{background:var(--asos-fon);color:#0B4478}
+.tab.aktiv .son{background:var(--asos-fon);color:#0A5348}
 
 /* ============ Dropdown (popover) ============ */
 .menyu-popover{
@@ -464,7 +467,7 @@ table.jadval{width:100%;border-collapse:collapse}
 }
 .modal::before{
   content:"";position:absolute;left:0;right:0;top:0;height:3px;
-  background:linear-gradient(90deg,var(--asos),var(--brend-yashil));
+  background:linear-gradient(90deg,var(--asos),var(--brend-aksent));
 }
 .modal-fon.ochiq .modal{transform:none}
 .modal h3{font-size:18px;font-weight:750;color:#101B29}
@@ -630,7 +633,7 @@ table.jadval{width:100%;border-collapse:collapse}
 .q-panel,.u-panel{position:relative;overflow:hidden}
 .q-panel::before,.u-panel::before{
   content:"";position:absolute;left:0;right:0;top:0;height:3px;
-  background:linear-gradient(90deg,var(--asos),var(--brend-yashil));
+  background:linear-gradient(90deg,var(--asos),var(--brend-aksent));
 }
 
 /* Sahifa sarlavhasi ostidagi yumshoq ajratgich */
@@ -669,7 +672,7 @@ table.jadval{width:100%;border-collapse:collapse}
 .klaster{background:none;border:none}
 .klaster > span{
   display:grid;place-items:center;width:100%;height:100%;border-radius:99px;
-  background:linear-gradient(180deg,#1A4C7E 0%,#0C2A48 100%);
+  background:linear-gradient(180deg,#1A4C7E 0%,#0B2E28 100%);
   color:#fff;font-weight:750;font-size:13px;font-variant-numeric:tabular-nums;
   box-shadow:0 0 0 3px rgba(255,255,255,.92), 0 0 0 4px rgba(16,30,48,.12),
     inset 0 1px 0 rgba(255,255,255,.22), 0 4px 10px rgba(10,22,38,.35), 0 12px 26px -8px rgba(10,22,38,.45);

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082403">
+<link rel="stylesheet" href="mkb.css?v=26082404">
 <style>
 /* ---- Hodisalar markazi (ekran 7) ---- */
 .hodisa-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;align-items:start}
@@ -37,7 +37,7 @@
 .jiddiylik{margin-left:auto;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:99px}
 .jiddiylik.yuqori{background:#FDEEEC;color:#C43C31}
 .jiddiylik.orta{background:#FFF6DE;color:#9A6E00}
-.jiddiylik.past{background:#E4EFF9;color:#0B4478}
+.jiddiylik.past{background:#E3F1ED;color:#0A5348}
 .royxat-hamma{display:flex;align-items:center;gap:8px;width:100%;padding:11px 6px;font-size:13.5px;font-weight:650;color:#2C3A49;border-radius:10px}
 .royxat-hamma:hover{background:#EEF2F7}
 .royxat-hamma .ic{margin-left:auto;width:16px;height:16px}
@@ -92,10 +92,10 @@
 .ilova b{font-size:13.5px;font-weight:600}
 .ilova span{display:block;font-size:12px;color:var(--matn-4)}
 .detal-harakat{display:flex;gap:10px;margin-top:20px}
-.detal-harakat .tugma-asos{flex:1;background:#CFE3F5;color:#0C3357}
+.detal-harakat .tugma-asos{flex:1;background:#CDE8E0;color:#0C3357}
 .detal-harakat .tugma-asos:hover{background:#6FA8DC}
 .nuqtalar-tugma{width:48px;height:48px;border-radius:13px;border:1px solid var(--kirish-chiziq);display:grid;place-items:center;color:#3A4756;position:relative}
-.nuqtalar-tugma:hover{background:#F3F6FA}
+.nuqtalar-tugma:hover{background:#F1F5F3}
 
 /* Pastki qator */
 .hodisa-past{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:18px}
@@ -139,7 +139,7 @@
 }
 </style>
 </head>
-<body data-sahifa="hodisalar">
+<body data-sahifa="yuridik">
 
 <div class="app">
 <aside class="sidebar" data-shell-sidebar></aside>
@@ -218,9 +218,9 @@
               <button class="tanlov" id="dinamika-davr" data-variantlar='["7 kun","30 kun","Chorak"]'><span class="t-yorliq">7 kun</span><svg class="ic"><use href="#i-past"/></svg></button>
             </div>
             <div class="din-legend">
-              <span><span class="nuqta" style="background:#2E7BC4"></span>Yangi</span>
+              <span><span class="nuqta" style="background:#14836F"></span>Yangi</span>
               <span><span class="nuqta" style="background:#F2994A"></span>Bartaraf etilmoqda</span>
-              <span><span class="nuqta" style="background:#0F5392"></span>Yopildi</span>
+              <span><span class="nuqta" style="background:#0E6B5C"></span>Yopildi</span>
             </div>
             <svg id="din-grafik" width="100%" height="190" role="img"
                  aria-label="Hodisalar dinamikasi, 18-maydan 24-maygacha, uch seriya: yangi, bartaraf etilmoqda va yopildi"></svg>
@@ -254,13 +254,13 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082403"></script>
-<script src="tarjima.js?v=26082403"></script>
-<script src="mkb.js?v=26082403"></script>
+<script src="malumot.js?v=26082404"></script>
+<script src="tarjima.js?v=26082404"></script>
+<script src="mkb.js?v=26082404"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
-const RANG = {yuqori:"#E0442B", orta:"#F2994A", past:"#0F5392", kok:"#2E7BC4", binafsha:"#8B5CF6", sariq:"#F2C230", yashil:"#3AAA3E"};
+const RANG = {yuqori:"#E0442B", orta:"#F2994A", past:"#0E6B5C", kok:"#14836F", binafsha:"#8B5CF6", sariq:"#F2C230", yashil:"#2E9E52"};
 /* Hodisalar yagona manbadan (Д-1): obyekt nomi, hududi va sarlavha
    malumot.js dagi reyestrdan hosil bo'ladi — bu yerda matn saqlanmaydi. */
 const HODISALAR = MKB_DATA.HODISALAR;
@@ -480,7 +480,7 @@ function ulash(){
           if (!sarlavha){ MKB.toast("Sarlavha kiritilishi shart"); return; }
           const raqam = 129 + HODISALAR.length;
           const yangi = {
-            kod:`#INC-2026-00${raqam}`, rang:"#2E7BC4", sarlavha: obyekt ? `${obyekt} — ${sarlavha}` : sarlavha,
+            kod:`#INC-2026-00${raqam}`, rang:"#14836F", sarlavha: obyekt ? `${obyekt} — ${sarlavha}` : sarlavha,
             vaqt:"Hozirgina", jiddiylik:"orta", ustun,
             holat:USTUN_HOLAT[ustun],
             joy:"—", bino: obyekt || "—", tavsif:"Yangi qo'lda kiritilgan hodisa, tafsilotlar hali to'ldirilmagan.",
@@ -501,11 +501,11 @@ const NS = "http://www.w3.org/2000/svg";
 function el(t,a){const n=document.createElementNS(NS,t);for(const k in a)n.setAttribute(k,a[k]);svg.appendChild(n);return n;}
 const DAVR_MALUMOT = {
   "7 kun": {yorliqlar:["18-may","19-may","20-may","21-may","22-may","23-may","24-may"],
-    seriya:[{rang:"#2E7BC4", q:[30,38,62,45,85,92,25]}, {rang:"#F2994A", q:[42,60,38,35,32,52,32]}, {rang:"#0F5392", q:[12,35,32,58,35,30,65]}]},
+    seriya:[{rang:"#14836F", q:[30,38,62,45,85,92,25]}, {rang:"#F2994A", q:[42,60,38,35,32,52,32]}, {rang:"#0E6B5C", q:[12,35,32,58,35,30,65]}]},
   "30 kun": {yorliqlar:["1-hafta","2-hafta","3-hafta","4-hafta"],
-    seriya:[{rang:"#2E7BC4", q:[55,68,48,72]}, {rang:"#F2994A", q:[40,45,38,50]}, {rang:"#0F5392", q:[35,52,60,78]}]},
+    seriya:[{rang:"#14836F", q:[55,68,48,72]}, {rang:"#F2994A", q:[40,45,38,50]}, {rang:"#0E6B5C", q:[35,52,60,78]}]},
   "Chorak": {yorliqlar:["Mart","Aprel","May"],
-    seriya:[{rang:"#2E7BC4", q:[62,70,58]}, {rang:"#F2994A", q:[45,48,42]}, {rang:"#0F5392", q:[50,65,82]}]}
+    seriya:[{rang:"#14836F", q:[62,70,58]}, {rang:"#F2994A", q:[45,48,42]}, {rang:"#0E6B5C", q:[50,65,82]}]}
 };
 let KUNLAR = DAVR_MALUMOT["7 kun"].yorliqlar, SERIYALAR = DAVR_MALUMOT["7 kun"].seriya;
 function dinChiz(){

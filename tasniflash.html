@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Aktivlar tasnifi va zaxira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082404">
+<style>
+/* ---- Aktivlar tasnifi va imkoniyatli yo'qotishlar zaxirasi ---- */
+.ts-ustun{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
+/* Grid bolalari qisqara olishi shart, aks holda jadval ustunni kengaytiradi
+   va sahifada gorizontal aylantirish paydo bo'ladi (П-5) */
+.ts-ustun > *{min-width:0}
+
+.ts-lenta{display:flex;height:14px;border-radius:99px;overflow:hidden;margin:14px 0 10px;background:var(--chiziq)}
+.ts-lenta span{display:block;transition:filter var(--tez)}
+.ts-lenta span:hover{filter:brightness(1.12)}
+
+.ts-legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--matn-3)}
+.ts-legend span{display:flex;align-items:center;gap:7px}
+.ts-legend i{width:9px;height:9px;border-radius:3px;flex:none}
+
+.ts-jadval td b{font-weight:750}
+.ts-jadval .son{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ts-jadval tfoot td{font-weight:750;border-top:1.5px solid var(--chiziq);background:var(--kanvas)}
+.ts-stavka{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--kanvas);color:var(--matn-3)}
+
+.ts-qator{cursor:pointer}
+.ts-qator.tanlangan{background:var(--asos-fon)}
+.ts-qator:hover{background:var(--kanvas)}
+
+/* Qoplash ko'rsatkichi: garov qarzni qanchalik yopadi */
+.qop-iz{position:relative;height:6px;border-radius:99px;background:var(--chiziq);min-width:64px;overflow:hidden}
+.qop-iz i{display:block;height:100%;border-radius:99px}
+.qop-matn{font-size:11.5px;color:var(--matn-3);font-variant-numeric:tabular-nums}
+
+/* O'ng panel — tanlangan yozuv bo'yicha hisob-kitob */
+.ts-panel h3{font-size:15.5px;font-weight:750}
+.ts-panel .kichik{font-size:12.5px;color:var(--matn-3);margin-top:3px}
+.hisob-qator{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--chiziq);font-size:13.5px}
+.hisob-qator:last-of-type{border-bottom:none}
+.hisob-qator span{color:var(--matn-3)}
+.hisob-qator b{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hisob-jami{background:var(--asos-fon);border-radius:12px;padding:11px 13px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+.hisob-jami b{font-size:17px;font-weight:780;color:var(--asos-toq)}
+
+.migratsiya{margin-top:14px;background:var(--kanvas);border-radius:12px;padding:12px 13px}
+.migratsiya .yorliq{font-size:11.5px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;color:var(--matn-4)}
+.migratsiya p{font-size:12.5px;color:var(--matn-3);line-height:1.55;margin-top:6px}
+.migratsiya b{color:var(--matn-2)}
+
+.mezon{background:#FFF8E7;border:1px solid #F0DFB4;border-radius:12px;padding:12px 14px;display:flex;gap:10px;margin-top:16px}
+.mezon .ic{width:16px;height:16px;color:#9A6E00;flex:none;margin-top:2px}
+.mezon div{font-size:12.5px;color:#6B5210;line-height:1.6}
+.mezon b{display:block;font-weight:750;margin-bottom:2px;color:#5A4409}
+
+@media (max-width:1320px){ .ts-ustun{grid-template-columns:1fr} }
+</style>
+</head>
+<body data-sahifa="zaxira" data-topbar-sarlavha="Aktivlar tasnifi" data-topbar-ikon="i-aktiv">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1>Aktivlar tasnifi va zaxira</h1>
+        <div class="sahifa-izoh">Muddati o'tgan kunlar bo'yicha toifa, toifa bo'yicha imkoniyatli yo'qotishlar zaxirasi</div>
+      </div>
+      <div class="sahifa-harakat">
+        <button class="tanlov" data-royxat="filial" data-royxat-bosh="Barcha filiallar"><span class="t-yorliq">Barcha filiallar</span><svg class="ic"><use href="#i-past"/></svg></button>
+        <button class="tugma tugma-oq" data-toast="Tasnif jadvali XLSX ga yuklanmoqda"><svg class="ic"><use href="#i-yuklab"/></svg>Yuklab olish</button>
+      </div>
+    </div>
+
+    <section class="kpi-band" aria-label="Zaxira ko'rsatkichlari">
+      <button class="kpi" data-toast="Qoldiq qarz — faol muammoli yozuvlar bo'yicha">
+        <span class="kpi-tile dark"><svg class="ic"><use href="#i-qarz"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Qoldiq qarz</div>
+          <div class="kpi-qiymat"><b id="k-qarz">—</b></div>
+          <div class="kpi-izoh"><span id="k-son">—</span> ta muammoli yozuv</div>
+        </div>
+      </button>
+      <button class="kpi" data-toast="Zaxira toifa stavkasi bo'yicha hisoblanadi">
+        <span class="kpi-tile lime"><svg class="ic"><use href="#i-aktiv"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Shakllantirilgan zaxira</div>
+          <div class="kpi-qiymat"><b id="k-zaxira">—</b></div>
+          <div class="kpi-izoh">Qarzning <span id="k-zaxira-foiz">—</span> qismi</div>
+        </div>
+      </button>
+      <button class="kpi" data-toast="Garovning baholangan qiymati qarzga nisbatan">
+        <span class="kpi-tile lime"><svg class="ic"><use href="#i-bino"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Garov bilan qoplash</div>
+          <div class="kpi-qiymat"><b id="k-qoplash">—</b></div>
+          <div class="kpi-izoh">Baholangan qiymat / qoldiq qarz</div>
+        </div>
+      </button>
+      <button class="kpi" data-toast="Garov qiymati yetmaydigan qism">
+        <span class="kpi-tile dark"><svg class="ic"><use href="#i-ogoh"/></svg></span>
+        <div class="kpi-matn">
+          <div class="kpi-yorliq">Ta'minlanmagan qoldiq</div>
+          <div class="kpi-qiymat"><b id="k-ochiq">—</b></div>
+          <div class="kpi-izoh"><span id="k-ochiq-son">—</span> ta yozuvda</div>
+        </div>
+      </button>
+    </section>
+
+    <div class="ts-ustun">
+      <div>
+        <div class="karta">
+          <div class="karta-bosh"><h3>Toifalar kesimi</h3></div>
+          <div class="ts-lenta" id="ts-lenta" role="img" aria-label="Toifalar bo'yicha qarz taqsimoti"></div>
+          <div class="ts-legend" id="ts-legend"></div>
+
+          <div class="jadval-orash" style="margin-top:16px">
+            <table class="jadval ts-jadval">
+              <thead>
+                <tr>
+                  <th>Toifa</th><th>Kechikish</th><th class="son">Yozuv</th>
+                  <th class="son">Qoldiq qarz</th><th>Stavka</th><th class="son">Zaxira</th>
+                </tr>
+              </thead>
+              <tbody id="ts-toifa"></tbody>
+              <tfoot id="ts-jami"></tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="karta" style="margin-top:18px">
+          <div class="karta-bosh"><h3>Yozuvlar bo'yicha</h3></div>
+          <div class="jadval-orash">
+            <table class="jadval ts-jadval">
+              <thead>
+                <tr>
+                  <th>Shartnoma</th><th>Qarzdor</th><th class="son">Kechikish</th>
+                  <th>Toifa</th><th class="son">Qoldiq qarz</th><th>Qoplash</th><th class="son">Zaxira</th>
+                </tr>
+              </thead>
+              <tbody id="ts-yozuv"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <aside class="karta ts-panel" id="ts-panel" aria-label="Tanlangan yozuv bo'yicha hisob-kitob"></aside>
+    </div>
+
+    <div class="mezon">
+      <svg class="ic"><use href="#i-info"/></svg>
+      <div>
+        <b>Me'yoriy qiymatlar tasdiqlanishi kerak</b>
+        Kechikish kunlarining chegaralari va toifalar bo'yicha zaxira stavkalari
+        <code>malumot.js</code> dagi <code>TASNIF</code> jadvalida — yagona joyda — saqlanadi.
+        Ular Markaziy bankning aktivlar sifatini tasniflash tartibining amaldagi tahririga
+        va bank ichki siyosatiga muvofiq buyurtmachi tomonidan tasdiqlanadi.
+        Garovni hisobga olib zaxirani kamaytirish tartibi ham shu bosqichda aniqlanadi.
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js?v=26082404"></script>
+<script src="tarjima.js?v=26082404"></script>
+<script src="mkb.js?v=26082404"></script>
+<script>
+const D = MKB_DATA;
+const pul = D.pul;
+
+/* ---- Umumiy ko'rsatkichlar: barchasi massivdan hisoblanadi (Д-7) ---- */
+const jamiQarz   = D.jamiQarz();
+const jamiZaxira = D.jamiZaxira();
+const jamiBaho   = D.jamiBaho();
+const ochiqlar   = D.YOZUVLAR.filter(y => y.ochiqQoldiq > 0);
+const jamiOchiq  = +ochiqlar.reduce((s, y) => s + y.ochiqQoldiq, 0).toFixed(1);
+
+document.getElementById("k-qarz").textContent        = pul(jamiQarz);
+document.getElementById("k-son").textContent         = D.YOZUVLAR.length;
+document.getElementById("k-zaxira").textContent      = pul(jamiZaxira);
+document.getElementById("k-zaxira-foiz").textContent = Math.round(jamiZaxira / jamiQarz * 100) + "%";
+document.getElementById("k-qoplash").textContent     = Math.round(jamiBaho / jamiQarz * 100) + "%";
+document.getElementById("k-ochiq").textContent       = pul(jamiOchiq);
+document.getElementById("k-ochiq-son").textContent   = ochiqlar.length;
+
+/* ---- Toifalar kesimi ---- */
+const kesim = D.tasnifStatistikasi();
+const bor   = kesim.filter(t => t.son > 0);
+
+document.getElementById("ts-lenta").innerHTML = bor.map(t =>
+  `<span style="width:${(t.qarz / jamiQarz * 100).toFixed(2)}%;background:${t.rang}" title="${t.nom}: ${pul(t.qarz)}"></span>`
+).join("");
+
+document.getElementById("ts-legend").innerHTML = bor.map(t =>
+  `<span><i style="background:${t.rang}"></i>${t.nom} — ${Math.round(t.qarz / jamiQarz * 100)}%</span>`
+).join("");
+
+/* Kechikish oralig'i toifalar jadvalidan hosil qilinadi — qo'lda yozilmaydi */
+function oraliq(i){
+  const t = D.TASNIF[i], keyingi = D.TASNIF[i + 1];
+  if (i === 0) return "kechikishsiz";
+  return keyingi ? t.kundan + "–" + (keyingi.kundan - 1) + " kun" : t.kundan + " kundan ortiq";
+}
+
+document.getElementById("ts-toifa").innerHTML = kesim.map((t, i) => `
+  <tr${t.son ? "" : ' style="opacity:.45"'}>
+    <td><span class="chip ${t.chip}">${t.nom}</span></td>
+    <td style="color:var(--matn-3);font-size:13px">${oraliq(i)}</td>
+    <td class="son">${t.son}</td>
+    <td class="son">${t.son ? pul(t.qarz) : "—"}</td>
+    <td><span class="ts-stavka">${t.foizStavka}%</span></td>
+    <td class="son"><b>${t.son ? pul(t.zaxira) : "—"}</b></td>
+  </tr>`).join("");
+
+document.getElementById("ts-jami").innerHTML = `
+  <tr><td colspan="2">Jami</td><td class="son">${D.YOZUVLAR.length}</td>
+  <td class="son">${pul(jamiQarz)}</td><td></td><td class="son">${pul(jamiZaxira)}</td></tr>`;
+
+/* ---- Yozuvlar jadvali ---- */
+function qoplashRang(foiz){
+  return foiz >= 100 ? "#2E9E52" : foiz >= 70 ? "#D98324" : "#C0392B";
+}
+
+document.getElementById("ts-yozuv").innerHTML = D.YOZUVLAR.map(y => `
+  <tr class="ts-qator" data-id="${y.id}" tabindex="0">
+    <td><b>${y.shartnoma.raqam}</b><div style="font-size:12px;color:var(--matn-3)">${y.id}</div></td>
+    <td>${y.mijoz.nom}<div style="font-size:12px;color:var(--matn-3)">${y.filial}</div></td>
+    <td class="son">${y.qarz.kunlar} kun</td>
+    <td><span class="chip ${y.tasnif.chip}">${y.tasnif.nom}</span></td>
+    <td class="son">${pul(y.qarz.jami)}</td>
+    <td>
+      <div class="qop-iz"><i style="width:${Math.min(y.qoplash, 100)}%;background:${qoplashRang(y.qoplash)}"></i></div>
+      <div class="qop-matn">${y.qoplash}%</div>
+    </td>
+    <td class="son"><b>${pul(y.zaxira)}</b></td>
+  </tr>`).join("");
+
+/* ---- O'ng panel: tanlangan yozuv bo'yicha hisob-kitob ---- */
+function panelChiz(id){
+  const y = D.topish(id);
+  const i = D.TASNIF.findIndex(t => t.kalit === y.tasnif.kalit);
+  const keyingi = D.TASNIF[i + 1];
+
+  let migratsiya;
+  if (keyingi){
+    const kun   = keyingi.kundan - y.qarz.kunlar;
+    const yangi = +(y.qarz.jami * keyingi.zaxira / 100).toFixed(1);
+    migratsiya = `<p>Yana <b>${kun} kun</b> kechikishda yozuv
+      <b>${keyingi.nom}</b> toifasiga o'tadi va zaxira
+      <b>${pul(y.zaxira)}</b> dan <b>${pul(yangi)}</b> gacha ko'tariladi
+      (+${pul(+(yangi - y.zaxira).toFixed(1))}).</p>`;
+  } else {
+    migratsiya = `<p>Yozuv eng yuqori toifada: zaxira qarzning
+      <b>${y.tasnif.zaxira}%</b> hajmida to'liq shakllantirilgan.
+      Keyingi qadam — balansdan hisobdan chiqarish tartibi.</p>`;
+  }
+
+  document.getElementById("ts-panel").innerHTML = `
+    <h3>${y.shartnoma.raqam}</h3>
+    <div class="kichik">${y.mijoz.nom} · ${y.filial}</div>
+
+    <div style="margin-top:14px">
+      <div class="hisob-qator"><span>Qoldiq qarz</span><b>${pul(y.qarz.jami)}</b></div>
+      <div class="hisob-qator"><span>· asosiy qarz</span><b>${pul(y.qarz.asosiy)}</b></div>
+      <div class="hisob-qator"><span>· foiz va penya</span><b>${pul(y.qarz.foiz)}</b></div>
+      <div class="hisob-qator"><span>Kechikish</span><b>${y.qarz.kunlar} kun</b></div>
+      <div class="hisob-qator"><span>Toifa</span><b><span class="chip ${y.tasnif.chip}">${y.tasnif.nom}</span></b></div>
+      <div class="hisob-qator"><span>Zaxira stavkasi</span><b>${y.tasnif.zaxira}%</b></div>
+      <div class="hisob-qator"><span>Garov baholangan qiymati</span><b>${pul(y.garov.baho)}</b></div>
+      <div class="hisob-qator"><span>Qoplash darajasi</span><b style="color:${qoplashRang(y.qoplash)}">${y.qoplash}%</b></div>
+      <div class="hisob-qator"><span>Ta'minlanmagan qoldiq</span><b>${y.ochiqQoldiq > 0 ? pul(y.ochiqQoldiq) : "yo'q"}</b></div>
+    </div>
+
+    <div class="hisob-jami"><span>Zaxiraga ajratma</span><b>${pul(y.zaxira)}</b></div>
+
+    <div class="migratsiya">
+      <div class="yorliq">Toifa migratsiyasi</div>
+      ${migratsiya}
+    </div>
+
+    <a class="tugma tugma-oq" style="margin-top:14px;width:100%;justify-content:center"
+       href="obyekt.html?id=${encodeURIComponent(y.id)}">
+      <svg class="ic"><use href="#i-bino"/></svg>Garov obyekti kartochkasi
+    </a>`;
+}
+
+const qatorlar = [...document.querySelectorAll(".ts-qator")];
+function tanla(tr){
+  qatorlar.forEach(x => x.classList.toggle("tanlangan", x === tr));
+  panelChiz(tr.dataset.id);
+}
+qatorlar.forEach(tr => {
+  tr.addEventListener("click", () => tanla(tr));
+  tr.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); tanla(tr); } });
+});
+tanla(qatorlar[0]);
+</script>
+</body>
+</html>

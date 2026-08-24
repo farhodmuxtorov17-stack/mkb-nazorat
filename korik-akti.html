@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKB — Ko'rik dalolatnomasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082404">
+<style>
+/* ---- Ko'rik dalolatnomasi: bitta chiqish natijasi ---- */
+.ka-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+.ka-ustun > *{min-width:0}
+
+.ka-obyekt{display:flex;gap:14px;align-items:center}
+.ka-obyekt img{width:72px;height:72px;border-radius:14px;object-fit:cover;flex:none}
+.ka-obyekt h2{font-size:18px;font-weight:780;letter-spacing:-.01em}
+.ka-obyekt .sub{font-size:13px;color:var(--matn-3);margin-top:3px}
+
+.ka-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.ka-meta .band{background:var(--kanvas);border-radius:12px;padding:10px 13px}
+.ka-meta .yorliq{font-size:11px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;color:var(--matn-4)}
+.ka-meta .qiymat{font-size:14px;font-weight:750;margin-top:3px}
+
+/* Tekshiruv bandlari */
+.tb-band{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--chiziq);align-items:flex-start}
+.tb-band:last-child{border-bottom:none}
+.tb-holat{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:none;margin-top:1px}
+.tb-holat .ic{width:14px;height:14px}
+.tb-ha{background:#E6F5EA;color:#1F7A3D}
+.tb-yoq{background:#FDEEEC;color:#C43C31}
+.tb-band b{font-size:13.5px;font-weight:750;display:block}
+.tb-band p{font-size:12.5px;color:var(--matn-3);line-height:1.5;margin-top:2px}
+
+/* Fotojamlanma */
+.foto-set{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.foto-set figure{border-radius:12px;overflow:hidden;background:var(--kanvas)}
+.foto-set img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.foto-set figcaption{font-size:11.5px;color:var(--matn-3);padding:7px 10px}
+
+/* Xulosa paneli */
+.xul-ball{display:flex;align-items:center;gap:14px;background:var(--asos-fon);border-radius:14px;padding:14px 16px}
+.xul-ball b{font-size:30px;font-weight:800;color:var(--asos-toq);line-height:1}
+.xul-ball span{font-size:12.5px;color:var(--matn-2);line-height:1.5}
+.imzo-band{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--chiziq);font-size:13px}
+.imzo-band:last-child{border-bottom:none}
+.imzo-band span{color:var(--matn-3)}
+.imzo-band b{font-weight:700}
+
+@media (max-width:1320px){ .ka-ustun{grid-template-columns:1fr} }
+</style>
+</head>
+<body data-sahifa="garov" data-topbar-sarlavha="Ko'rik dalolatnomasi" data-topbar-ikon="i-hujjat">
+
+<div class="app">
+<aside class="sidebar" data-shell-sidebar></aside>
+
+<div class="asosiy">
+  <header class="topbar" data-shell-topbar></header>
+
+  <main class="kontent">
+    <div class="sahifa-qator">
+      <div>
+        <h1 id="ka-sarlavha">Ko'rik dalolatnomasi</h1>
+        <div class="sahifa-izoh" id="ka-izoh">Joyida o'tkazilgan ko'rik natijalari</div>
+      </div>
+      <div class="sahifa-harakat">
+        <a class="tugma tugma-oq" href="korik-rejasi.html"><svg class="ic"><use href="#i-chap"/></svg>Rejaga qaytish</a>
+        <button class="tugma tugma-oq" data-toast="Dalolatnoma PDF shaklida yuklanmoqda"><svg class="ic"><use href="#i-printer"/></svg>PDF</button>
+      </div>
+    </div>
+
+    <div class="ka-ustun">
+      <div>
+        <div class="karta">
+          <div class="ka-obyekt">
+            <img id="ka-rasm" src="" alt="Obyekt surati">
+            <div>
+              <h2 id="ka-obyekt">—</h2>
+              <div class="sub" id="ka-sub">—</div>
+            </div>
+          </div>
+          <div class="ka-meta" id="ka-meta"></div>
+        </div>
+
+        <div class="karta" style="margin-top:18px">
+          <div class="karta-bosh"><h3>Tekshiruv bandlari</h3></div>
+          <div id="ka-bandlar"></div>
+        </div>
+
+        <div class="karta" style="margin-top:18px">
+          <div class="karta-bosh"><h3>Fotojamlanma</h3></div>
+          <div class="foto-set" id="ka-foto"></div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="karta">
+          <div class="karta-bosh"><h3>Xulosa</h3></div>
+          <div class="xul-ball">
+            <b id="ka-ball">—</b>
+            <span id="ka-xulosa">—</span>
+          </div>
+          <div style="margin-top:14px">
+            <div class="imzo-band"><span>Inspektor</span><b id="ka-inspektor">—</b></div>
+            <div class="imzo-band"><span>Qarzdor ishtiroki</span><b id="ka-qarzdor">—</b></div>
+            <div class="imzo-band"><span>Dalolatnoma holati</span><b id="ka-holat">—</b></div>
+          </div>
+        </div>
+
+        <div class="karta" style="margin-top:18px">
+          <div class="karta-bosh"><h3>Bog'liq ish</h3></div>
+          <div id="ka-ish"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</div>
+
+<script src="malumot.js?v=26082404"></script>
+<script src="tarjima.js?v=26082404"></script>
+<script src="mkb.js?v=26082404"></script>
+<script>
+const D = MKB_DATA;
+
+/* URL dan ko'rik tanlanadi; ko'rsatilmasa — so'nggi o'tkazilgani */
+const soralgan = new URLSearchParams(location.search).get("id");
+const korik = D.KORIKLAR.find(k => k.id === soralgan)
+           || D.KORIKLAR.find(k => k.holat === "otkazildi");
+const y = D.YOZUVLAR.find(z => z.id === korik.obyektId);
+
+document.getElementById("ka-sarlavha").textContent = "Dalolatnoma " + korik.id;
+document.getElementById("ka-izoh").textContent =
+  korik.tur + " ko'rik · " + korik.sana + (korik.holat === "otkazildi" ? "" : " · hali o'tkazilmagan");
+
+document.getElementById("ka-rasm").src = y.garov.rasm;
+document.getElementById("ka-obyekt").textContent = y.garov.nom;
+document.getElementById("ka-sub").textContent = y.id + " · " + y.garov.hududToliq + " · " + y.garov.tur;
+
+document.getElementById("ka-meta").innerHTML = [
+  ["Ko'rik turi", korik.tur],
+  ["Sana", korik.sana],
+  ["Inspektor", korik.inspektor],
+  ["Ish bosqichi", y.bosqichNomi]
+].map(([yorliq, qiymat]) => `
+  <div class="band"><div class="yorliq">${yorliq}</div><div class="qiymat">${qiymat}</div></div>`).join("");
+
+/* ---- Tekshiruv bandlari obyekt turiga qarab tuziladi ---- */
+const UMUMIY = [
+  ["Obyekt joyida va identifikatsiya qilindi", true, "Manzil, kadastr yoki VIN bo'yicha moslik tekshirildi."],
+  ["Ko'zga ko'rinadigan shikastlar yo'q", korik.ball >= 80, korik.ball >= 80 ? "Konstruktiv holat qoniqarli." : "Aniqlangan kamchiliklar dalolatnomaga kiritildi."],
+  ["Uchinchi shaxslar egallamagan", korik.obyektId !== "GR-2026/3308", korik.obyektId === "GR-2026/3308" ? "Ijarachi aniqlandi — yuridik bo'limga yo'naltirildi." : "Ruxsatsiz foydalanish belgilari yo'q."],
+  ["Sug'urta polisi amalda", (D.SUGURTALAR.find(g => g.obyektId === korik.obyektId) || {}).holat === "amalda",
+    "Polis holati sug'urta nazorati bo'limidan tekshirildi."],
+  ["Garov ro'yxati to'liq", korik.obyektId !== "GR-2025/1187", korik.obyektId === "GR-2025/1187" ? "Kamomad aniqlandi — hodisa ochildi." : "Ro'yxatdagi barcha pozitsiyalar joyida."]
+];
+document.getElementById("ka-bandlar").innerHTML = UMUMIY.map(([nom, ok, izoh]) => `
+  <div class="tb-band">
+    <span class="tb-holat ${ok ? "tb-ha" : "tb-yoq"}"><svg class="ic"><use href="#${ok ? "i-belgi" : "i-yopish"}"/></svg></span>
+    <div><b>${nom}</b><p>${izoh}</p></div>
+  </div>`).join("");
+
+/* ---- Fotojamlanma: obyekt suratlari asosida ---- */
+const FOTO = [
+  [y.garov.rasm, "Umumiy ko'rinish"],
+  ["assets/kirish_eshigi.webp", "Kirish qismi"],
+  ["assets/uchastka_aero.webp", "Hudud chegarasi"],
+  ["assets/kirish_sahna.webp", "Atrof holati"]
+];
+document.getElementById("ka-foto").innerHTML = FOTO.map(([src, izoh]) => `
+  <figure><img src="${src}" alt="${izoh}"><figcaption>${izoh} · ${korik.sana}</figcaption></figure>`).join("");
+
+/* ---- Xulosa ---- */
+const otdi = korik.holat === "otkazildi";
+document.getElementById("ka-ball").textContent = otdi ? korik.ball : "—";
+document.getElementById("ka-xulosa").textContent = otdi
+  ? korik.xulosa
+  : "Ko'rik hali o'tkazilmagan. Dalolatnoma chiqishdan keyin to'ldiriladi.";
+document.getElementById("ka-inspektor").textContent = korik.inspektor;
+document.getElementById("ka-qarzdor").textContent =
+  korik.obyektId === "GR-2026/2210" ? "Ishtirok etdi, imzoladi" : "Xabardor qilindi";
+document.getElementById("ka-holat").textContent = otdi ? "Imzolangan" : "Kutilmoqda";
+
+/* ---- Bog'liq ish ---- */
+document.getElementById("ka-ish").innerHTML = `
+  <div class="imzo-band"><span>Ish raqami</span><b>${y.ish.raqam}</b></div>
+  <div class="imzo-band"><span>Bosqich</span><b>${y.bosqichNomi}</b></div>
+  <div class="imzo-band"><span>Mas'ul</span><b>${y.ish.masul}</b></div>
+  <div class="imzo-band"><span>Qoldiq qarz</span><b>${y.qarzMatn}</b></div>
+  <a class="tugma tugma-oq" style="margin-top:12px;width:100%;justify-content:center"
+     href="obyekt.html?id=${encodeURIComponent(y.id)}">
+    <svg class="ic"><use href="#i-bino"/></svg>Obyekt kartochkasi
+  </a>`;
+</script>
+</body>
+</html>

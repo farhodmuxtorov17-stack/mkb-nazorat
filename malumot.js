@@ -13,9 +13,9 @@ const BOSQICHLAR = [
   {kalit: "ogohlantirish", nom: "Ogohlantirish",     rang: "#8A94A0", chip: "chip-kul"},
   {kalit: "davo",          nom: "Da'vo arizasi",     rang: "#3E7BD6", chip: "chip-kok"},
   {kalit: "sud",           nom: "Sud jarayonida",    rang: "#8B5CF6", chip: "chip-binafsha"},
-  {kalit: "qaror",         nom: "Sud qarori",        rang: "#0F5392", chip: "chip-asos"},
+  {kalit: "qaror",         nom: "Sud qarori",        rang: "#0E6B5C", chip: "chip-asos"},
   {kalit: "mib",           nom: "MIB ijrosi",        rang: "#D98324", chip: "chip-sariq"},
-  {kalit: "musodara",      nom: "Musodara qilingan", rang: "#3AAA3E", chip: "chip-asos"},
+  {kalit: "musodara",      nom: "Musodara qilingan", rang: "#2E9E52", chip: "chip-asos"},
   {kalit: "auksion",       nom: "Auksionda",         rang: "#8B5CF6", chip: "chip-binafsha"}
 ];
 
@@ -26,7 +26,7 @@ const BOSQICH_HOLAT = {
   sud:           {nom: "Garovda",              rang: "#7BAEFC"},
   qaror:         {nom: "Musodara jarayonida",  rang: "#E8763C"},
   mib:           {nom: "Musodara jarayonida",  rang: "#E8763C"},
-  musodara:      {nom: "Nazoratda",            rang: "#3AAA3E"},
+  musodara:      {nom: "Nazoratda",            rang: "#2E9E52"},
   auksion:       {nom: "Auksionda",            rang: "#8B5CF6"}
 };
 
@@ -248,6 +248,41 @@ function son(mln){
 }
 const bosqichnoma = k => BOSQICHLAR.find(b => b.kalit === k) || BOSQICHLAR[0];
 
+
+/* ---------- Aktivlar tasnifi va imkoniyatli yo'qotishlar zaxirasi ----------
+   Markaziy bank aktivlar sifatini tasniflash tartibiga muvofiq besh toifa.
+   Toifa kechikish kunlaridan kelib chiqadi, zaxira esa toifadan — ikkalasi
+   ham qo'lda kiritilmaydi (Д-2, Д-7).
+
+   E'TIBOR: kun chegaralari va zaxira foizlari amaldagi tahrir bo'yicha
+   BUYURTMACHI TOMONIDAN TASDIQLANISHI SHART. Ular shu yerda — yagona
+   joyda — saqlanadi, shuning uchun me'yor o'zgarsa bitta jadval tuzatiladi.  */
+const TASNIF = [
+  {kalit: "yaxshi",      nom: "Yaxshi",      kundan: 0,   zaxira: 0,   chip: "chip-yashil",    rang: "#2E9E52"},
+  {kalit: "standart",    nom: "Standart",    kundan: 1,   zaxira: 10,  chip: "chip-kok",       rang: "#3E7BD6"},
+  {kalit: "substandart", nom: "Substandart", kundan: 31,  zaxira: 25,  chip: "chip-sariq",     rang: "#D98324"},
+  {kalit: "shubhali",    nom: "Shubhali",    kundan: 91,  zaxira: 50,  chip: "chip-tarvuz",    rang: "#E8763C"},
+  {kalit: "umidsiz",     nom: "Umidsiz",     kundan: 181, zaxira: 100, chip: "chip-qizil",     rang: "#C0392B"}
+];
+
+/* Kechikish kunidan toifani aniqlash. Chegara — "shu kundan boshlab". */
+function tasnifla(kunlar){
+  let topilgan = TASNIF[0];
+  TASNIF.forEach(t => { if (kunlar >= t.kundan) topilgan = t; });
+  return topilgan;
+}
+
+/* Ta'minlanmagan qism: qarz garov qiymatidan qancha oshadi.
+   Zaxira faqat shu qismga emas, butun qarzga hisoblanadi — soddalashtirilgan
+   model; garovni hisobga olish tartibi buyurtmachi bilan aniqlanadi. */
+function zaxiraHisobi(qarzJami, garovBaho, foiz){
+  const zaxira    = +(qarzJami * foiz / 100).toFixed(1);
+  const taminot   = Math.min(garovBaho, qarzJami);
+  const ochiq     = +(qarzJami - taminot).toFixed(1);   // ta'minlanmagan qoldiq
+  const qoplash   = qarzJami > 0 ? Math.round(garovBaho / qarzJami * 100) : 0;
+  return {zaxira, ochiq, qoplash};
+}
+
 YOZUVLAR.forEach(y => {
   y.qarz.jami = +(y.qarz.asosiy + y.qarz.foiz).toFixed(1);   // Д-1: yagona qiymat
   y.bosqichNomi = bosqichnoma(y.ish.bosqich).nom;
@@ -258,7 +293,29 @@ YOZUVLAR.forEach(y => {
   y.foizMatn = pul(y.qarz.foiz);
   y.bahoMatn = pul(y.garov.baho);
   y.qarzSon = son(y.qarz.jami);
+
+  /* Tasnif kechikish kunidan, zaxira tasnifdan — ikkalasi ham hosila (Д-2) */
+  y.tasnif = tasnifla(y.qarz.kunlar);
+  const h = zaxiraHisobi(y.qarz.jami, y.garov.baho, y.tasnif.zaxira);
+  y.zaxira      = h.zaxira;        // zaxiraga ajratma, mln so'm
+  y.ochiqQoldiq = h.ochiq;         // garov bilan qoplanmagan qism
+  y.qoplash     = h.qoplash;       // garovning qarzga nisbati, %
+  y.zaxiraMatn  = pul(y.zaxira);
 });
+
+/* ---------- Tasnif kesimi: portfel bo'yicha zaxira yuki (Д-7) ---------- */
+function tasnifStatistikasi(){
+  return TASNIF.map(t => {
+    const guruh = YOZUVLAR.filter(y => y.tasnif.kalit === t.kalit);
+    return {
+      kalit: t.kalit, nom: t.nom, rang: t.rang, chip: t.chip, foizStavka: t.zaxira,
+      son: guruh.length,
+      qarz:   +guruh.reduce((s, y) => s + y.qarz.jami, 0).toFixed(1),
+      zaxira: +guruh.reduce((s, y) => s + y.zaxira, 0).toFixed(1)
+    };
+  });
+}
+const jamiZaxira = () => +YOZUVLAR.reduce((s, y) => s + y.zaxira, 0).toFixed(1);
 
 /* ---------- Umumlashmalar: raqamlar massivdan hisoblanadi (Д-7) ---------- */
 function bosqichStatistikasi(){
@@ -297,13 +354,16 @@ const PORTFEL = {
   oylikUndiruvMlrd: "58,4",
   holatlar: [
     {nom: "Garovda",              rang: "#7BAEFC", son: 704},
-    {nom: "Nazoratda",            rang: "#3AAA3E", son: 306},
+    {nom: "Nazoratda",            rang: "#2E9E52", son: 306},
     {nom: "Musodara jarayonida",  rang: "#E8763C", son: 118},
     {nom: "Ijaraga berilgan",     rang: "#3E7BD6", son: 86},
     {nom: "Auksionda",            rang: "#8B5CF6", son: 34}
   ],
-  qurilmalar: {jami: 3120, onlayn: 2934, beqaror: 118, oflayn: 46, tamirda: 22},
-  kameralar: {jami: 1480, onlayn: 1462}
+  /* Nazorat tadbirlari — butun portfel bo'yicha (Д-7 talabiga ko'ra
+     kesim yig'indilari jami bilan moslikTekshiruvi() da solishtiriladi) */
+  koriklar:  {jami: 1248, otkazilgan: 1094, rejada: 118, muddatiOtgan: 36},
+  sugurtali: {jami: 1248, amalda: 1176, tugaydi30: 52, muddatiOtgan: 20},
+  baholash:  {jami: 1248, dolzarb: 1063, tugaydi90: 141, eskirgan: 44}
 };
 /* Foizlar eng katta qoldiq usulida butunlashtiriladi — yig'indi doim 100 (Д-3) */
 (function(){
@@ -405,47 +465,48 @@ function joyNomi(id, ichki, ajratgich){
    sarlavha, bino nomi va hudud reyestrdan hosil qilinadi, shuning uchun
    obyekt nomi o'zgarsa hamma sahifada bir vaqtda o'zgaradi. */
 const HODISALAR = [
-  {kod:"#INC-2026-00128", obyektId:"GR-2025/1187", rang:"#E0442B",
-   hodisa:"yong'in signalizatsiyasi", vaqt:"Bugun, 14:12", jiddiylik:"yuqori", ustun:"yangi", holat:"Yangi",
-   tavsif:"3-qavatda yong'in signalizatsiyasi ishga tushdi. Xodimlar evakuatsiya qilindi. Holat tekshirilmoqda.",
-   masul:"Rustam Q.", bolim:"Texnik xizmat bo'limi", fayl:"signalizatsiya_log.pdf", hajm:"1.2 MB"},
-  {kod:"#INC-2026-00125", obyektId:"GR-2026/3308", rang:"#2E7BC4",
-   hodisa:"elektr ta'minotida uzilish", vaqt:"Bugun, 12:52", jiddiylik:"past", ustun:"yangi", holat:"Yangi",
-   tavsif:"B blokda qisqa muddatli elektr uzilishi kuzatildi. Zaxira generator avtomatik ishga tushdi.",
-   masul:"Bekzod T.", bolim:"Energetika bo'limi", fayl:"elektr_jurnal.pdf", hajm:"640 KB"},
-  {kod:"#INC-2026-00127", obyektId:"GR-2025/0934", rang:"#F2994A",
-   hodisa:"lift ishlamayapti", vaqt:"Bugun, 13:48", jiddiylik:"orta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
-   tavsif:"2-lift 8-qavatda to'xtab qoldi. Texnik guruh joyga yetib bordi, diagnostika o'tkazilmoqda.",
-   masul:"Karimov I.", bolim:"Texnik xizmat bo'limi", fayl:"lift_diagnostika.pdf", hajm:"920 KB"},
-  {kod:"#INC-2026-00124", obyektId:"GR-2026/0141", rang:"#8B5CF6",
-   hodisa:"suv bosishi", vaqt:"Bugun, 12:33", jiddiylik:"past", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
-   tavsif:"Yerto'lada suv sathi ko'tarilgani aniqlandi. Nasos tizimi ishga tushirildi.",
-   masul:"Oybek R.", bolim:"Ekspluatatsiya bo'limi", fayl:"suv_hisobot.pdf", hajm:"480 KB"},
-  {kod:"#INC-2026-00120", obyektId:"GR-2024/0512", rang:"#F2C230",
-   hodisa:"yoritish tizimi ishlamayapti", vaqt:"Bugun, 11:05", jiddiylik:"orta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
-   tavsif:"2-qavat g'arbiy qanotida yoritish paneli ishdan chiqqan. Elektrik chaqirildi.",
-   masul:"Sardor M.", bolim:"Energetika bo'limi", fayl:"yoritish_akt.pdf", hajm:"350 KB"},
-  {kod:"#INC-2026-00126", obyektId:"GR-2024/0512", rang:"#F2C230",
-   hodisa:"sovutish tizimida nosozlik", vaqt:"Bugun, 13:17", jiddiylik:"orta", ustun:"bartaraf", holat:"Bartaraf etilmoqda",
-   tavsif:"Markaziy konditsioner bloki past bosim bilan ishlayapti. Freon qo'shilmoqda.",
-   masul:"Rustam Q.", bolim:"HVAC guruhi", fayl:"hvac_hisobot.pdf", hajm:"1.1 MB"},
-  {kod:"#INC-2026-00118", obyektId:"GR-2026/0141", rang:"#2E7BC4",
-   hodisa:"eshik qulfi shikastlangan", vaqt:"Bugun, 10:11", jiddiylik:"past", ustun:"bartaraf", holat:"Bartaraf etilmoqda",
-   tavsif:"Asosiy kirish eshigining elektron qulfi almashtirilmoqda.",
-   masul:"Jasur A.", bolim:"Xavfsizlik bo'limi", fayl:"qulf_akt.pdf", hajm:"210 KB"},
-  {kod:"#INC-2026-00117", obyektId:"GR-2026/3308", rang:"#3AAA3E",
-   hodisa:"xlorlash tizimi", vaqt:"Kecha, 18:23", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
-   tavsif:"Suv tozalash tizimida rejali xlorlash yakunlandi. Ko'rsatkichlar normada.",
-   masul:"Dilshod N.", bolim:"Ekspluatatsiya bo'limi", fayl:"suv_tahlil.pdf", hajm:"380 KB"},
-  {kod:"#INC-2026-00116", obyektId:"GR-2025/0934", rang:"#3AAA3E",
-   hodisa:"HVAC filtri almashtirildi", vaqt:"Kecha, 17:42", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
-   tavsif:"Rejali texnik xizmat: barcha HVAC filtrlari yangilandi.",
-   masul:"Karimov I.", bolim:"HVAC guruhi", fayl:"filtr_akt.pdf", hajm:"290 KB"},
-  {kod:"#INC-2026-00115", obyektId:"GR-2024/0286", rang:"#3AAA3E",
-   hodisa:"kirish nazorati tiklandi", vaqt:"Kecha, 16:08", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
-   tavsif:"Turniket kontrollerining dasturiy ta'minoti yangilandi, tizim to'liq tiklandi.",
-   masul:"Jasur A.", bolim:"Xavfsizlik bo'limi", fayl:"kirish_log.pdf", hajm:"175 KB"}
+  {kod:"#GH-2026-00214", obyektId:"GR-2026/0141", rang:"#E0442B",
+   hodisa:"yerto'lani suv bosishi — shikast", vaqt:"Bugun, 14:12", jiddiylik:"yuqori", ustun:"yangi", holat:"Yangi",
+   tavsif:"Nazorat ko'rigida yerto'lada suv sathi ko'tarilgani aniqlandi. Poydevorga ta'sir baholanmoqda; sug'urta kompaniyasiga xabarnoma tayyorlanmoqda.",
+   masul:"Karimova F.", bolim:"Garov ta'minoti bo'limi", fayl:"korik_dalolatnoma.pdf", hajm:"1.2 MB"},
+  {kod:"#GH-2026-00213", obyektId:"GR-2025/1187", rang:"#14836F",
+   hodisa:"uskunalar ro'yxatida kamomad", vaqt:"Bugun, 12:52", jiddiylik:"yuqori", ustun:"yangi", holat:"Yangi",
+   tavsif:"Choraklik ko'rikda garov ro'yxatidagi 2 ta to'quv dastgohi joyida yo'qligi aniqlandi. Qarzdordan yozma tushuntirish talab qilindi.",
+   masul:"Sattorov J.", bolim:"Garov ta'minoti bo'limi", fayl:"royxat_solishtirma.pdf", hajm:"640 KB"},
+  {kod:"#GH-2026-00211", obyektId:"GR-2025/0934", rang:"#F2994A",
+   hodisa:"sug'urta polisi muddati o'tdi", vaqt:"Bugun, 13:48", jiddiylik:"orta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
+   tavsif:"PL-2025/08127 polisi 11-avgustda tugagan, uzaytirish rasmiylashtirilmagan. Auksion bosqichidagi obyekt sug'urtasiz qolgan.",
+   masul:"Qodirova N.", bolim:"Muammoli kreditlar boshqarmasi", fayl:"polis_nusxa.pdf", hajm:"920 KB"},
+  {kod:"#GH-2026-00209", obyektId:"GR-2026/5512", rang:"#8B5CF6",
+   hodisa:"qiymatning jadal pasayishi", vaqt:"Bugun, 12:33", jiddiylik:"orta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
+   tavsif:"Qayta baholashda qiymat 13% ga pasaygan (214 dan 186 mln gacha). Bozor tahlili so'raldi; zaxira stavkasiga ta'siri hisoblanmoqda.",
+   masul:"Xolmatova Z.", bolim:"Tavakkalchiliklarni boshqarish departamenti", fayl:"baholash_hisobot.pdf", hajm:"480 KB"},
+  {kod:"#GH-2026-00206", obyektId:"GR-2026/3308", rang:"#F2C230",
+   hodisa:"ruxsatsiz ijaraga berish holati", vaqt:"Bugun, 11:05", jiddiylik:"orta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
+   tavsif:"Ko'rikda xonadonda ijarachi yashayotgani aniqlandi. Garov shartnomasi bank roziligisiz ijaraga berishni taqiqlaydi. Yuristga yo'naltirildi.",
+   masul:"Rahimov B.", bolim:"Yuridik departament", fayl:"korik_bayonnoma.pdf", hajm:"350 KB"},
+  {kod:"#GH-2026-00204", obyektId:"GR-2026/4471", rang:"#F2C230",
+   hodisa:"kommunal qarzdorlik aniqlandi", vaqt:"Bugun, 13:17", jiddiylik:"past", ustun:"bartaraf", holat:"Bartaraf etilmoqda",
+   tavsif:"Xonadon bo'yicha 4,2 mln so'm kommunal qarz to'plangan. Realizatsiyada xaridorga o'tmasligi uchun hujjatlar tartibga keltirilmoqda.",
+   masul:"Qodirova N.", bolim:"Muammoli kreditlar boshqarmasi", fayl:"kommunal_malumotnoma.pdf", hajm:"1.1 MB"},
+  {kod:"#GH-2026-00201", obyektId:"GR-2025/0755", rang:"#14836F",
+   hodisa:"chegara belgisi buzilgan", vaqt:"Bugun, 10:11", jiddiylik:"past", ustun:"bartaraf", holat:"Bartaraf etilmoqda",
+   tavsif:"G'arbiy chegaradagi 2 ta belgi surilgan. Kadastr muhandisi chaqirildi, qo'shni uchastka egasi bilan dalolatnoma tuzilmoqda.",
+   masul:"Sattorov J.", bolim:"Garov ta'minoti bo'limi", fayl:"kadastr_akt.pdf", hajm:"210 KB"},
+  {kod:"#GH-2026-00198", obyektId:"GR-2026/3308", rang:"#2E9E52",
+   hodisa:"sug'urta polisi uzaytirildi", vaqt:"Kecha, 18:23", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
+   tavsif:"PL-2026/10578 polisi bo'yicha uzaytirish rasmiylashtirildi, yangi muddat 08.10.2027 gacha. Nusxa ishga biriktirildi.",
+   masul:"Qodirova N.", bolim:"Muammoli kreditlar boshqarmasi", fayl:"polis_yangi.pdf", hajm:"380 KB"},
+  {kod:"#GH-2026-00196", obyektId:"GR-2025/0934", rang:"#2E9E52",
+   hodisa:"auksion oldi ko'rigi yakunlandi", vaqt:"Kecha, 17:42", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
+   tavsif:"Holat qayd etildi, fotojamlanma va dalolatnoma savdo hujjatlariga kiritildi. E'lon matni uchun ma'lumotlar tayyor.",
+   masul:"Karimova F.", bolim:"Garov ta'minoti bo'limi", fayl:"fotojamlanma.zip", hajm:"290 KB"},
+  {kod:"#GH-2026-00195", obyektId:"GR-2026/2210", rang:"#2E9E52",
+   hodisa:"qarzdor bilan ko'rik o'tkazildi", vaqt:"Kecha, 16:08", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
+   tavsif:"Rejali ko'rik qarzdor ishtirokida o'tdi, dalolatnoma ikki tomonlama imzolandi. Holat qoniqarli, keyingi ko'rik 3 oydan keyin.",
+   masul:"Sattorov J.", bolim:"Garov ta'minoti bo'limi", fayl:"dalolatnoma.pdf", hajm:"175 KB"}
 ];
+
 HODISALAR.forEach(h => {
   h.bino     = obyektNomi(h.obyektId, true);
   h.joy      = obyektHududi(h.obyektId, true);
@@ -456,160 +517,33 @@ HODISALAR.forEach(h => {
 /* ---------- Qurilmalar (Garov 1:N Qurilma, ТЗ 3.2) ----------
    joyIchi — obyekt ICHIDAGI joy ("1-qavat", "Lobby"). Obyekt nomi bu yerda
    saqlanmaydi: ko'rinadigan `joy` reyestrdagi qisqa nom bilan birlashtiriladi. */
-const QURILMALAR = [
-  {nom:"Entry Door Main", obyektId:"GR-2025/0934", joyIchi:"1-qavat", tur:"Eshik kirish tizimi", ikon:"i-qulf", onlayn:true,
-    ip:"192.168.1.45", mac:"20:4E:7F:12:9A:BC", fw:"v2.4.1", uptime:"12 kun 4 soat", sinx:"24-may, 14:28",
-    signal:"-62 dBm", soglikL:"A'lo", soglikR:"#268030", soglikF:92, cpu:"18%", xotira:"42%", kechikish:"12 ms",
-    t4:{y:"Eshik holati", q:"Yopiq", alt:"Ochiq"}, t5:{y:"O'tishlar soni (bugun)", q:"128"},
-    harorat:"34°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"EDM-2024-00145", rasm:"assets/qurilma_eshik.webp",
-    komp:[
-      {ik:"i-qulf", n:"Elektr qulf boshqaruvchisi", t:"SecurLine SmartLock X2 · masofadan boshqariladigan magnit qulf", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-kamera", n:"FaceID skaner", t:"Biometrik yuz-tanish moduli · SecurLine FaceMatch v2.1", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-kamera", n:"IP kamera", t:"Kirish nuqtasi videokuzatuvi, doimiy yozuv", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-energiya", n:"Zaxira quvvat (UPS)", t:"Asosiy quvvat uzilganda 500ms ichida avtomatik almashadi", c:"To'liq — 4 soat zaxira", r:"yashil"},
-      {ik:"i-wifi", n:"Tarmoq moduli", t:"Ethernet + Wi-Fi zaxira kanali", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Quvvat yoki tarmoq butunlay uzilsa, eshik xavfsizlik qoidalariga muvofiq avtomatik qulfdan chiqadi — mijoz hech qachon ichkarida qulflanib qolmaydi. Zaxira mexanik kalit texnik xonada saqlanadi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 1.2 MB"},{n:"SmartLock X2 sertifikati", h:"PDF · 640 KB"},{n:"Foydalanuvchi qo'llanmasi", h:"PDF · 3.4 MB"}],
-    logs:[{v:"14:28:12", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:27:58", m:"Face ID tasdiqlandi"},{v:"14:27:45", m:"Eshik ochildi"},{v:"14:27:12", m:"Interkom qo'ng'irog'i qabul qilindi"},{v:"14:26:55", m:"Kamera aloqasi tiklandi"}]},
-
-  {nom:"Entry Door Back", obyektId:"GR-2025/0934", joyIchi:"1-qavat", tur:"Eshik kirish tizimi", ikon:"i-qulf", onlayn:true,
-    ip:"192.168.1.46", mac:"20:4E:7F:12:9A:BD", fw:"v2.4.1", uptime:"9 kun 11 soat", sinx:"24-may, 14:27",
-    signal:"-58 dBm", soglikL:"A'lo", soglikR:"#268030", soglikF:89, cpu:"15%", xotira:"38%", kechikish:"10 ms",
-    t4:{y:"Eshik holati", q:"Yopiq", alt:"Ochiq"}, t5:{y:"O'tishlar soni (bugun)", q:"86"},
-    harorat:"33°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"EDB-2024-00146", rasm:"assets/qurilma_eshik.webp",
-    komp:[
-      {ik:"i-qulf", n:"Elektr qulf boshqaruvchisi", t:"SecurLine SmartLock X2 · masofadan boshqariladigan magnit qulf", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-qalqon", n:"RFID karta o'quvchi", t:"SecurLine CardMatch R1 · xodim kartalarini tekshirish moduli", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-kamera", n:"IP kamera", t:"Kirish nuqtasi videokuzatuvi, doimiy yozuv", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-energiya", n:"Zaxira quvvat (UPS)", t:"Asosiy quvvat uzilganda 500ms ichida avtomatik almashadi", c:"To'liq — 3 soat zaxira", r:"yashil"},
-      {ik:"i-wifi", n:"Tarmoq moduli", t:"Ethernet + Wi-Fi zaxira kanali", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Quvvat yoki tarmoq butunlay uzilsa, eshik xavfsizlik qoidalariga muvofiq avtomatik qulfdan chiqadi. Zaxira mexanik kalit texnik xonada saqlanadi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 1.1 MB"},{n:"CardMatch R1 sertifikati", h:"PDF · 512 KB"}],
-    logs:[{v:"14:27:40", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:19:22", m:"RFID karta o'qildi — ruxsat berildi"},{v:"14:19:05", m:"Eshik ochildi"},{v:"13:52:11", m:"Eshik yopildi (avtomatik)"},{v:"13:40:03", m:"Kamera aloqasi tiklandi"}]},
-
-  {nom:"Parking Barrier 1", obyektId:"GR-2025/0934", joyIchi:"Yer osti", tur:"Shlagbaum", ikon:"i-minus", onlayn:true,
-    ip:"192.168.1.52", mac:"20:4E:7F:12:9B:11", fw:"v1.8.3", uptime:"27 kun 2 soat", sinx:"24-may, 14:25",
-    signal:"-71 dBm", soglikL:"Yaxshi", soglikR:"#0A3D6E", soglikF:78, cpu:"11%", xotira:"29%", kechikish:"19 ms",
-    t4:{y:"Shlagbaum holati", q:"Yopiq", alt:"Ochiq"}, t5:{y:"O'tgan avtomobillar (bugun)", q:"47"},
-    harorat:"31°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"PB1-2024-00201", rasm:null,
-    komp:[
-      {ik:"i-minus", n:"Shlagbaum motori", t:"SecurLine BarrierDrive B1 · elektromexanik ko'targich", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-kamera", n:"Avtomobil raqami tanish kamerasi", t:"ANPR moduli · raqamni avtomatik o'qiydi", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-qalqon", n:"Induktiv sensor", t:"Yo'lakdagi avtomobilni aniqlash konturi", c:"Aniqlanmoqda", r:"yashil"},
-      {ik:"i-wifi", n:"Tarmoq moduli", t:"Ethernet ulanish", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Quvvat uzilganda shlagbaum qo'lda ko'tarish tutqichi bilan ochiladi — avtomobillar band bo'lib qolmaydi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 980 KB"},{n:"BarrierDrive B1 texnik pasporti", h:"PDF · 2.1 MB"}],
-    logs:[{v:"14:25:30", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:21:50", m:"Shlagbaum ochildi — 01A777BB aniqlandi"},{v:"14:22:40", m:"Shlagbaum yopildi (avtomatik)"},{v:"13:58:12", m:"Induktiv sensor tekshiruvi — OK"},{v:"13:30:05", m:"ANPR kamera aloqasi tekshirildi"}]},
-
-  {nom:"Lobby Camera 1", obyektId:"GR-2025/0934", joyIchi:"Lobby", tur:"IP Kamera", ikon:"i-kamera", onlayn:true,
-    ip:"192.168.1.60", mac:"20:4E:7F:12:9C:02", fw:"v3.1.0", uptime:"41 kun 16 soat", sinx:"24-may, 14:29",
-    signal:"-55 dBm", soglikL:"A'lo", soglikR:"#268030", soglikF:95, cpu:"22%", xotira:"51%", kechikish:"8 ms",
-    t4:{y:"Yozuv holati", q:"Yozilmoqda", alt:"To'xtatilgan"}, t5:{y:"Aniqlangan harakatlar (bugun)", q:"19"},
-    harorat:"29°C", tarmoq:"Yaxshi", quvvat:"Normal (PoE)", seriya:"LC1-2024-00312", rasm:null,
-    komp:[
-      {ik:"i-kamera", n:"Video sensori", t:"4K, 30 fps · keng burchakli obyektiv", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-monitor", n:"IR tungi ko'rish moduli", t:"Yorug'lik yetarli bo'lmaganda avtomatik yoqiladi", c:"Avtomatik", r:"yashil"},
-      {ik:"i-servis", n:"Mikrofon", t:"Kirish nuqtasi audio yozuvi", c:"Yoqilgan", r:"yashil"},
-      {ik:"i-wifi", n:"Tarmoq moduli", t:"PoE — quvvat va ma'lumot bitta kabelda", c:"Ulangan", r:"yashil"}
-    ],
-    fav:null,
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 890 KB"},{n:"Kamera sertifikati", h:"PDF · 430 KB"}],
-    logs:[{v:"14:29:05", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:24:18", m:"Harakat aniqlandi — lobby zonasi"},{v:"14:10:02", m:"Video bufer diskka yozildi"},{v:"13:47:36", m:"IR rejim avtomatik yoqildi"},{v:"13:20:00", m:"Aloqa tekshiruvi — OK"}]},
-
-  {nom:"Elevator Panel 1", obyektId:"GR-2025/0934", joyIchi:"Lift bank 1", tur:"Lift paneli", ikon:"i-ekran", onlayn:true,
-    ip:"192.168.1.71", mac:"20:4E:7F:12:9D:19", fw:"v2.0.6", uptime:"18 kun 7 soat", sinx:"24-may, 14:26",
-    signal:"-66 dBm", soglikL:"Yaxshi", soglikR:"#0A3D6E", soglikF:81, cpu:"14%", xotira:"33%", kechikish:"15 ms",
-    t4:{y:"Lift holati", q:"Ishlamoqda", alt:"To'xtatilgan"}, t5:{y:"Bugungi chaqiriqlar", q:"64"},
-    harorat:"32°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"EP1-2024-00408", rasm:null,
-    komp:[
-      {ik:"i-ekran", n:"Boshqaruv platasi", t:"Qavat chaqiruv va harakat nazorati", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-topshiriq", n:"Qavat tugmalari paneli", t:"Kabina ichi va tashqi chaqiruv tugmalari", c:"Javob bermoqda", r:"yashil"},
-      {ik:"i-servis", n:"Interkom moduli", t:"Favqulodda aloqa kanali", c:"Ulangan", r:"yashil"},
-      {ik:"i-qalqon", n:"Yuk sensori", t:"Ortiqcha yuklanishni aniqlaydi", c:"Normal", r:"yashil"}
-    ],
-    fav:"Favqulodda to'xtash tugmasi bosilsa, lift eng yaqin qavatga tushib eshigini ochadi va texnik xizmatga signal yuboradi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 1.4 MB"},{n:"Xavfsizlik nazorati sertifikati", h:"PDF · 760 KB"}],
-    logs:[{v:"14:26:50", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:22:11", m:"Chaqiriq qabul qilindi — 4-qavat"},{v:"14:15:34", m:"Interkom orqali qo'ng'iroq"},{v:"13:59:02", m:"Yuk sensori tekshiruvi — normal"},{v:"13:30:47", m:"Eshik sensori avtomatik testi — OK"}]},
-
-  {nom:"Fire Detector 3F", obyektId:"GR-2025/0934", joyIchi:"3-qavat", tur:"Yong'in detektori", ikon:"i-ogoh", onlayn:true, qizil:true,
-    ip:"192.168.1.83", mac:"20:4E:7F:12:9E:27", fw:"v1.5.2", uptime:"63 kun 20 soat", sinx:"24-may, 13:58",
-    signal:"-74 dBm", soglikL:"Ogohlantirish", soglikR:"#9A6E00", soglikF:54, cpu:"9%", xotira:"24%", kechikish:"22 ms",
-    t4:{y:"Sensor holati", q:"Tekshiruv talab etadi"}, t5:{y:"Oxirgi kalibrovka", q:"46 kun oldin"},
-    harorat:"38°C", tarmoq:"Beqaror", quvvat:"Normal", seriya:"FD3F-2024-00519", rasm:null,
-    komp:[
-      {ik:"i-ogoh", n:"Tutum sensori (optik)", t:"Sezuvchanlik darajasi normadan pastroq — tekshiruv talab etadi", c:"Ogohlantirish", r:"sariq"},
-      {ik:"i-qalqon", n:"Harorat sensori", t:"Kritik haroratni doimiy nazorat qiladi", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-servis", n:"Signal beruvchi", t:"Sirena + strob chiroq", c:"Tayyor", r:"yashil"},
-      {ik:"i-wifi", n:"Markaziy nazorat ulanishi", t:"Yong'in nazorat paneliga to'g'ridan-to'g'ri ulanish", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Signal aniqlansa, barcha eshiklar avtomatik qulfdan chiqadi (fail-safe evakuatsiya rejimi) va Hodisalar bo'limida kritik hodisa avtomatik yaratiladi.",
-    hujjat:[{n:"Yong'in xavfsizligi sertifikati", h:"PDF · 1.0 MB"},{n:"Kalibrovka jurnali", h:"PDF · 320 KB"}],
-    logs:[{v:"13:58:20", m:"Sinxronizatsiya — kechikish bilan (beqaror tarmoq)"},{v:"12:40:11", m:"O'z-o'zini tekshirish — sezuvchanlik pasaygan"},{v:"09:15:00", m:"Kunlik test signali — o'tdi"},{v:"kecha 22:03", m:"Harorat sensori tekshiruvi — normal"},{v:"kecha 08:00", m:"Rejalashtirilgan kalibrovka eslatmasi yuborildi"}]},
-
-  {nom:"Power Supply 1", obyektId:"GR-2025/0934", joyIchi:"Texnik xona", tur:"Quvvat manbai", ikon:"i-energiya", onlayn:true,
-    ip:"192.168.1.90", mac:"20:4E:7F:12:9F:33", fw:"v1.2.0", uptime:"84 kun 3 soat", sinx:"24-may, 14:24",
-    signal:"Kabelli · barqaror", soglikL:"A'lo", soglikR:"#268030", soglikF:97, cpu:"6%", xotira:"18%", kechikish:"5 ms",
-    t4:{y:"Quvvat holati", q:"Ishlayapti"}, t5:{y:"Batareya zaxirasi", q:"100%"},
-    harorat:"36°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"PS1-2024-00602", rasm:null,
-    komp:[
-      {ik:"i-energiya", n:"AC/DC o'zgartirgich", t:"Asosiy quvvat manbaini o'zgartiradi", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-energiya", n:"Batareya bloki (UPS)", t:"Zaxira quvvat manbai, ~4 soat avtonom ishlash", c:"To'liq quvvatlangan", r:"yashil"},
-      {ik:"i-qalqon", n:"Kuchlanish stabilizatori", t:"Tarmoqdagi kuchlanish tebranishlaridan himoyalaydi", c:"Normal", r:"yashil"},
-      {ik:"i-wifi", n:"Nazorat moduli", t:"Masofadan monitoring va boshqaruv kanali", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Asosiy quvvat uzilganda batareya zaxirasi avtomatik ishga tushadi va texnik xonadagi barcha qurilmalarni ~4 soat quvvatlaydi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 750 KB"},{n:"UPS texnik pasporti", h:"PDF · 1.8 MB"}],
-    logs:[{v:"14:24:09", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"11:12:40", m:"Batareya sikli tekshiruvi — 100% sig'im"},{v:"09:00:00", m:"Kunlik quvvat tekshiruvi — normal"},{v:"kecha 19:44", m:"Qisqa kuchlanish tebranishi — avtomatik barqarorlashtirildi"},{v:"kecha 08:00", m:"Rejalashtirilgan texnik ko'rik eslatmasi"}]},
-
-  {nom:"Network Switch 1", obyektId:"GR-2025/0934", joyIchi:"Texnik xona", tur:"Tarmoq uskunasi", ikon:"i-wifi", onlayn:false,
-    ip:"192.168.1.2", mac:"20:4E:7F:12:A0:05", fw:"v4.0.1", uptime:"—", sinx:"23-may, 22:14",
-    signal:"Aloqa yo'q", soglikL:"Kritik", soglikR:"#C43C31", soglikF:8, cpu:"—", xotira:"—", kechikish:"—",
-    t4:{y:"Tarmoq holati", q:"Offline"}, t5:{y:"Faol portlar", q:"0/24"},
-    harorat:"—", tarmoq:"Aloqa yo'q", quvvat:"Noma'lum", seriya:"NS1-2024-00711", rasm:null,
-    komp:[
-      {ik:"i-wifi", n:"24-portli kommutator moduli", t:"Barcha portlar orqali ma'lumot uzatadi", c:"Ishlamayapti", r:"qizil"},
-      {ik:"i-energiya", n:"PoE quvvat moduli", t:"Kameralar va kontrollerlarni quvvatlaydi", c:"Aloqa yo'q", r:"qizil"},
-      {ik:"i-ekran", n:"Boshqaruv protsessori", t:"Qurilmaning markaziy boshqaruv bloki", c:"Javob bermayapti", r:"qizil"},
-      {ik:"i-qalqon", n:"Zaxira quvvat kirishi", t:"Ikkilamchi quvvat manbai", c:"Tekshirilmoqda", r:"sariq"}
-    ],
-    fav:"Qurilma tarmoqqa ulanmagan — unga bog'liq qurilmalar (kameralar, eshik kontrollerlari) zaxira kanaliga o'tkazilgan holda ishlamoqda.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 640 KB"}],
-    logs:[{v:"23-may 22:14", m:"Aloqa uzildi (timeout)"},{v:"23-may 22:13", m:"1–24-portlar: signal yo'qotildi"},{v:"23-may 21:58", m:"Yuqori harorat ogohlantirishi"},{v:"23-may 18:30", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"23-may 09:00", m:"Kunlik trafik hisoboti yaratildi"}]}
-];
-QURILMALAR.forEach(q => {
-  q.joy  = joyNomi(q.obyektId, q.joyIchi);
-  q.bino = obyektNomi(q.obyektId, true);
-});
 
 
 /* ---------- Hujjatlar (Garov 1:N Hujjat, ТЗ 3.2) ---------- */
 const HUJJATLAR = [
   {nom:"Texnik pasport.pdf", ikon:"pdf", iturl:"i-hujjat", obyektId:"GR-2025/0934", tur:"Texnik pasport", teg:"pasport",
-   sana:"24-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-001", hajm:"12.4 MB", format:"PDF", rasm:"assets/bino_tower.webp",
+   sana:"24-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-001", hajm:"12.4 MB", format:"PDF", rasm:"assets/bino_tower.webp",
    yuklagan:"Ismoilov Otabek", tavsif:"Bino bo'yicha texnik ma'lumotlar va umumiy tavsif."},
   {nom:"Kadastr reja.dwg", ikon:"dwg", iturl:"i-xarita", obyektId:"GR-2026/0141", tur:"Kadastr", teg:"kadastr",
-   sana:"21-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-014", hajm:"8.1 MB", format:"DWG", rasm:"assets/bino_dacha.webp",
+   sana:"21-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-014", hajm:"8.1 MB", format:"DWG", rasm:"assets/bino_dacha.webp",
    yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining kadastr chizmasi."},
   {nom:"Ijara shartnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyektId:"GR-2024/0512", tur:"Shartnoma", teg:"shartnoma",
-   sana:"18-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-022", hajm:"2.7 MB", format:"PDF", rasm:"assets/bino_mall.webp",
+   sana:"18-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-022", hajm:"2.7 MB", format:"PDF", rasm:"assets/bino_mall.webp",
    yuklagan:"Karimova N.", tavsif:"«Turon Retail» MChJ bilan ijara shartnomasi."},
   {nom:"Fasad ko'rinishi.jpg", ikon:"img", iturl:"i-kamera", obyektId:"GR-2025/1187", tur:"Rasm", teg:"rasm",
-   sana:"16-may, 2024", holat:"Yangi", hrang:"#3AAA3E", id:"DOC-2024-031", hajm:"5.4 MB", format:"JPG", rasm:"assets/bino_humo.webp",
+   sana:"16-may, 2024", holat:"Yangi", hrang:"#2E9E52", id:"DOC-2024-031", hajm:"5.4 MB", format:"JPG", rasm:"assets/bino_humo.webp",
    yuklagan:"Soliev B.", tavsif:"Bino fasadining yangilangan surati."},
   {nom:"Baholash hisobot.pdf", ikon:"rep", iturl:"i-hisobot", obyektId:"GR-2026/3308", tur:"Hisobot", teg:"hisobot",
-   sana:"14-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-036", hajm:"4.2 MB", format:"PDF", rasm:"assets/bino_turar.webp",
+   sana:"14-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-036", hajm:"4.2 MB", format:"PDF", rasm:"assets/bino_turar.webp",
    yuklagan:"Yusupova M.", tavsif:"Mustaqil baholovchi hisoboti."},
   {nom:"Yer uchastkasi rejasi.pdf", ikon:"pdf", iturl:"i-yer", obyektId:"GR-2025/0755", tur:"Kadastr", teg:"kadastr",
    sana:"12-may, 2024", holat:"Ko'rib chiqilmoqda", hrang:"#4A90F2", id:"DOC-2024-040", hajm:"3.3 MB", format:"PDF", rasm:"assets/bino_yer.webp",
    yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining chegara rejasi."},
   {nom:"Qabul-topshirish dalolatnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyektId:"GR-2025/0934", tur:"Shartnoma", teg:"shartnoma",
-   sana:"10-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-044", hajm:"1.6 MB", format:"PDF", rasm:"assets/bino_tower.webp",
+   sana:"10-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-044", hajm:"1.6 MB", format:"PDF", rasm:"assets/bino_tower.webp",
    yuklagan:"Ismoilov Otabek", tavsif:"5-qavat ofis maydonini topshirish dalolatnomasi."},
   {nom:"Energiya audit hisobot.pdf", ikon:"pdf", iturl:"i-energiya", obyektId:"GR-2026/0141", tur:"Hisobot", teg:"hisobot",
-   sana:"07-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-051", hajm:"6.8 MB", format:"PDF", rasm:"assets/bino_dacha.webp",
+   sana:"07-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-051", hajm:"6.8 MB", format:"PDF", rasm:"assets/bino_dacha.webp",
    yuklagan:"Karimov I.", tavsif:"Yillik energiya samaradorligi auditi."}
 ];
 HUJJATLAR.forEach(h => {
@@ -621,68 +555,134 @@ HUJJATLAR.forEach(h => {
    Xona obyekt EMAS — u obyekt ichidagi joy, shuning uchun obyektId bilan
    bog'lanadi va bino nomi reyestrdan olinadi. */
 const XONALAR = [
-  {nom:"Ofis 301", obyektId:"GR-2025/0934", qavat:"3", maydon:"120 m²", rasm:"assets/xona_ofis.webp", tur:"Ofis", sigim:"12 kishi", holat:"Band",
-   egasi:"SecurTech Servis MChJ", shartnoma:"NPR-2024-0566", muddat:"26-may, 2025",
-   jihozlar:[["Stol","12 ta"],["Kreslo","12 ta"],["Kompyuter","12 ta"],["Printer","2 ta"],["Konditsioner","2 ta"]]},
-  {nom:"Konferensiya zali", obyektId:"GR-2025/0934", qavat:"4", maydon:"60 m²", rasm:"assets/xona_konf.webp", tur:"Konferensiya", sigim:"24 kishi", holat:"Bron qilinadi",
-   egasi:"Umumiy foydalanish", shartnoma:"—", muddat:"—",
-   jihozlar:[["Stol","1 ta"],["Kreslo","24 ta"],["Proyektor","1 ta"],["Video panel","1 ta"],["Konditsioner","2 ta"]]},
-  {nom:"Arxiv xonasi", obyektId:"GR-2025/0934", qavat:"-1", maydon:"25 m²", rasm:"assets/xona_arxiv.webp", tur:"Arxiv", sigim:"—", holat:"Faol",
-   egasi:"MKB ma'muriyati", shartnoma:"—", muddat:"—",
-   jihozlar:[["Javon","16 ta"],["Seyf","2 ta"],["Namlik sensori","2 ta"]]},
-  {nom:"Server xonasi", obyektId:"GR-2025/0934", qavat:"-1", maydon:"18 m²", rasm:"assets/xona_server.webp", tur:"Texnik", sigim:"—", holat:"Faol",
-   egasi:"IT bo'limi", shartnoma:"—", muddat:"—",
-   jihozlar:[["Server shkafi","6 ta"],["UPS","4 ta"],["Sovutish bloki","2 ta"]]},
-  {nom:"Savdo maydoni", obyektId:"GR-2025/0934", qavat:"2", maydon:"240 m²", rasm:"assets/xona_savdo.webp", tur:"Savdo", sigim:"120 kishi", holat:"Band",
-   egasi:"«Turon Retail» MChJ", shartnoma:"NPR-2024-0312", muddat:"14-iyun, 2025",
-   jihozlar:[["Peshtaxta","8 ta"],["Javon","32 ta"],["Kassa","4 ta"],["Konditsioner","4 ta"]]}
+  {nom:"Savdo maydoni", obyektId:"GR-2025/0934", qavat:"3", maydon:"412 m²", rasm:"assets/xona_savdo.webp",
+   tur:"Asosiy garov predmeti", ulush:62, holat:"Garov predmeti",
+   kadastr:"10:02:11:04:0934/003", huquq:"Mulk huquqi, cheklov: bank garovi",
+   jihozlar:"Savdo pavilonlari demontaj qilinmagan, muhandislik tarmoqlari ishga yaroqli"},
+  {nom:"Ofis qismi 301", obyektId:"GR-2025/0934", qavat:"3", maydon:"86 m²", rasm:"assets/xona_ofis.webp",
+   tur:"Yordamchi maydon", ulush:14, holat:"Garov predmeti",
+   kadastr:"10:02:11:04:0934/004", huquq:"Mulk huquqi, cheklov: bank garovi",
+   jihozlar:"Ish stollari va ofis jihozlari garov ro'yxatiga kirmaydi"},
+  {nom:"Konferensiya zali", obyektId:"GR-2025/0934", qavat:"3", maydon:"64 m²", rasm:"assets/xona_konf.webp",
+   tur:"Yordamchi maydon", ulush:11, holat:"Garov predmeti",
+   kadastr:"10:02:11:04:0934/005", huquq:"Mulk huquqi, cheklov: bank garovi",
+   jihozlar:"Multimedia jihozlari qarzdorda qoladi, dalolatnomada qayd etilgan"},
+  {nom:"Arxiv xonasi", obyektId:"GR-2025/0934", qavat:"-1", maydon:"28 m²", rasm:"assets/xona_arxiv.webp",
+   tur:"Texnik maydon", ulush:5, holat:"Garov predmeti",
+   kadastr:"10:02:11:04:0934/006", huquq:"Mulk huquqi, cheklov: bank garovi",
+   jihozlar:"Namlik nazorati talab qilinadi — so'nggi ko'rikda qayd etilgan"},
+  {nom:"Texnik xona", obyektId:"GR-2025/0934", qavat:"-1", maydon:"46 m²", rasm:"assets/xona_server.webp",
+   tur:"Texnik maydon", ulush:8, holat:"Garov predmeti",
+   kadastr:"10:02:11:04:0934/007", huquq:"Mulk huquqi, cheklov: bank garovi",
+   jihozlar:"Isitish qozoni va ventilyatsiya — binoning ajralmas qismi sifatida garovda"}
 ];
+
 XONALAR.forEach(x => { x.bino = obyektNomi(x.obyektId, true); });
 
 
-/* ---------- Videokuzatuv va aloqa kanallari ----------
-   Ilgari bu ro'yxatlarda obyekt nomi matn bilan yozilardi va bitta obyekt
-   uch xil yozilishi mumkin edi ("Zarafshon Tekstil", "...sexi",
-   "...ishlab chiqarish sexi"). Endi faqat obyektId saqlanadi. */
-const KAMERALAR = [
-  {obyektId:"GR-2025/0934", joyIchi:"Bosh kirish",        rasm:"assets/kam_kirish.webp", holat:"ok",     vaqt:"14:32:07", kod:"CAM-014"},
-  {obyektId:"GR-2025/1187", joyIchi:"Sex hududi",    rasm:"assets/kam_lobi.webp",   holat:"trevoga", vaqt:"14:32:05", kod:"CAM-027"},
-  {obyektId:"GR-2026/0141", joyIchi:"Perimetr",   rasm:"assets/kam_avto.webp",   holat:"ok",     vaqt:"14:32:06", kod:"CAM-041"},
-  {obyektId:"GR-2026/4471", joyIchi:"Kirish yo'lagi",  rasm:"assets/kam_konf.webp",   holat:"ok",     vaqt:"14:32:07", kod:"CAM-052"},
-  {obyektId:"GR-2024/0286", joyIchi:"Kirish darvozasi",  rasm:"assets/jonli_kamera.webp", holat:"ok",   vaqt:"14:32:04", kod:"CAM-063"},
-  {obyektId:"GR-2025/0755", joyIchi:"Chegara",   rasm:"assets/kv_kamera.webp",  holat:"oflayn", vaqt:"14:18:52", kod:"CAM-078"},
-  {obyektId:"GR-2025/0934", joyIchi:"Avtoturargoh",       rasm:"assets/kam_avto.webp",   holat:"ok",     vaqt:"14:32:06", kod:"CAM-019"},
-  {obyektId:"GR-2026/3308", joyIchi:"Hovli",           rasm:"assets/kirish_sahna.webp", holat:"ok",   vaqt:"14:32:07", kod:"CAM-085"},
-  {obyektId:"GR-2026/2210", joyIchi:"Podyezd",         rasm:"assets/sx_kamera.webp",  holat:"ok",     vaqt:"14:32:05", kod:"CAM-091"}
-];
-KAMERALAR.forEach(k => { k.nom = joyNomi(k.obyektId, k.joyIchi, " · "); });
+/* ---------- Garov nazorati tadbirlari ----------
+   Bank garovni QO'RIQLAMAYDI — mavjudligi va holatini NAZORAT qiladi:
+   davriy ko'rik, sug'urta amal qilishi, baholash dolzarbligi. Uchala
+   ro'yxat obyektga identifikator bilan bog'lanadi (Д-8). */
 
-const TREVOGALAR = [
-  {id:"a1", daraja:"kritik", nom:"Perimetr buzilishi aniqlandi", obyektId:"GR-2025/1187", joyIchi:"Sex hududi",
-   vaqt:"14:31", sla:"0:48", buzilgan:false, kam:1},
-  {id:"a2", daraja:"kritik", nom:"Kamera aloqasi uzildi", obyektId:"GR-2025/0755", joyIchi:"Chegara",
-   vaqt:"14:18", sla:"13:22", buzilgan:true, kam:5},
-  {id:"a3", daraja:"ogoh", nom:"Eshik ruxsatsiz ochilishga urinish", obyektId:"GR-2025/0934", joyIchi:"3-qavat savdo maydoni",
-   vaqt:"14:06", sla:"2:11", buzilgan:false, kam:0},
-  {id:"a4", daraja:"ogoh", nom:"Harorat me'yordan yuqori", obyektId:"GR-2025/1187", joyIchi:"Server xonasi",
-   vaqt:"13:52", sla:"1:04", buzilgan:false, kam:1},
-  {id:"a5", daraja:"past", nom:"Zaxira quvvatga o'tildi", obyektId:"GR-2026/0141", joyIchi:"Asosiy shchit",
-   vaqt:"13:40", sla:"0:26", buzilgan:false, kam:2},
-  {id:"a6", daraja:"past", nom:"Rejalashtirilmagan tashrif qayd etildi", obyektId:"GR-2024/0286", joyIchi:"Kirish zonasi",
-   vaqt:"13:21", sla:"0:12", buzilgan:false, kam:4}
+/* Ko'riklar: rejali va navbatdan tashqari chiqishlar */
+const KORIKLAR = [
+  {id: "KO-2026/0412", obyektId: "GR-2025/1187", tur: "Rejali",
+   sana: "26-avg, 2026", holat: "rejada", inspektor: "Sattorov Jasur",
+   izoh: "Choraklik ko'rik. Sex uskunalari ro'yxati bilan solishtiriladi."},
+  {id: "KO-2026/0405", obyektId: "GR-2026/4471", tur: "Rejali",
+   sana: "28-avg, 2026", holat: "rejada", inspektor: "Sattorov Jasur",
+   izoh: "MIB ijrosi oldidan holatni qayd etish."},
+  {id: "KO-2026/0398", obyektId: "GR-2026/0141", tur: "Navbatdan tashqari",
+   sana: "22-avg, 2026", holat: "muddati_otgan", inspektor: "Karimova Feruza",
+   izoh: "Suv bosishi hodisasidan keyingi nazorat ko'rigi. Chiqish amalga oshmadi."},
+  {id: "KO-2026/0391", obyektId: "GR-2025/0934", tur: "Rejali",
+   sana: "18-avg, 2026", holat: "otkazildi", inspektor: "Karimova Feruza",
+   ball: 84, xulosa: "Qoniqarli. Savdo maydoni ishlamayapti, kommunikatsiyalar saqlangan.",
+   izoh: "Auksion oldidan holat qayd etildi, fotojamlanma biriktirildi."},
+  {id: "KO-2026/0383", obyektId: "GR-2025/0755", tur: "Rejali",
+   sana: "12-avg, 2026", holat: "otkazildi", inspektor: "Sattorov Jasur",
+   ball: 91, xulosa: "Chegara belgilari joyida, ekin maydoni ishlov berilmagan.",
+   izoh: "Kadastr chegaralari GPS bo'yicha tekshirildi."},
+  {id: "KO-2026/0377", obyektId: "GR-2026/5512", tur: "Rejali",
+   sana: "08-avg, 2026", holat: "otkazildi", inspektor: "Karimova Feruza",
+   ball: 88, xulosa: "Saqlash maydonchasida, texnik holati o'zgarmagan.",
+   izoh: "Yurgizib ko'rildi, kilometraj qayd etildi: 42 180 km."},
+  {id: "KO-2026/0369", obyektId: "GR-2026/3308", tur: "Rejali",
+   sana: "04-avg, 2026", holat: "otkazildi", inspektor: "Sattorov Jasur",
+   ball: 76, xulosa: "B blok fasadida namlik izlari. Sug'urta hodisasi emas.",
+   izoh: "Keyingi ko'rikda qayta tekshirish belgilandi."},
+  {id: "KO-2026/0362", obyektId: "GR-2026/2210", tur: "Rejali",
+   sana: "29-iyl, 2026", holat: "otkazildi", inspektor: "Karimova Feruza",
+   ball: 93, xulosa: "Xonadon yashash holatida, ta'mir talab qilinmaydi.",
+   izoh: "Qarzdor bilan birga ko'rildi, dalolatnoma imzolatildi."},
+  {id: "KO-2026/0341", obyektId: "GR-2025/1187", tur: "Rejali",
+   sana: "15-iyl, 2026", holat: "otkazildi", inspektor: "Sattorov Jasur",
+   ball: 79, xulosa: "Uskunalar ro'yxati mos, sex tomida mahalliy ta'mir talabi.",
+   izoh: "Tom qoplamasi bo'yicha kuzatuv keyingi ko'rikka qoldirildi."},
+  {id: "KO-2026/0322", obyektId: "GR-2026/4471", tur: "Rejali",
+   sana: "02-iyl, 2026", holat: "otkazildi", inspektor: "Karimova Feruza",
+   ball: 85, xulosa: "Xonadon holati qoniqarli, kommunal to'lovlarda qarz belgisi.",
+   izoh: "Kommunal ma'lumotnoma so'raldi — keyinchalik hodisa ochildi."},
+  {id: "KO-2026/0304", obyektId: "GR-2026/0141", tur: "Rejali",
+   sana: "18-iyn, 2026", holat: "otkazildi", inspektor: "Sattorov Jasur",
+   ball: 82, xulosa: "Hovli qarovli, drenaj tizimi tozalash talab qiladi.",
+   izoh: "Drenaj bo'yicha ogohlantirish keyinroq tasdiqlandi — suv bosishi."},
+  {id: "KO-2026/0287", obyektId: "GR-2025/0934", tur: "Navbatdan tashqari",
+   sana: "05-iyn, 2026", holat: "otkazildi", inspektor: "Karimova Feruza",
+   ball: 87, xulosa: "Musodara qabulidan keyingi birinchi ko'rik, plombalar joyida.",
+   izoh: "Balansga qabul dalolatnomasiga foto ilova qilindi."},
+  {id: "KO-2026/0263", obyektId: "GR-2026/5512", tur: "Rejali",
+   sana: "12-may, 2026", holat: "otkazildi", inspektor: "Sattorov Jasur",
+   ball: 90, xulosa: "Texnik holat yaxshi, akkumulyator zaryadi nazoratda.",
+   izoh: "Oylik yurgizish reglament bo'yicha bajarildi."}
 ];
-TREVOGALAR.forEach(t => { t.obyekt = joyNomi(t.obyektId, t.joyIchi, " · "); });
+KORIKLAR.forEach(k => {
+  k.obyekt = obyektNomi(k.obyektId, true);
+  k.hudud  = obyektHududi(k.obyektId, false);
+});
 
-const KANALLAR = [
-  {obyektId:"GR-2025/0934", kanal:"Optik tolali · 200 Mbit", qurilma:"12 ta", zaxira:"UPS · 4 soat", sifat:96, holat:"Barqaror", rang:"#3AAA3E"},
-  {obyektId:"GR-2025/1187", kanal:"Optik tolali · 100 Mbit", qurilma:"18 ta", zaxira:"Generator · 12 soat", sifat:88, holat:"Barqaror", rang:"#3AAA3E"},
-  {obyektId:"GR-2026/0141", kanal:"4G LTE · zaxira kanal", qurilma:"6 ta", zaxira:"UPS · 2 soat", sifat:64, holat:"Diqqat", rang:"#D98324"},
-  {obyektId:"GR-2025/0755", kanal:"4G LTE", qurilma:"4 ta", zaxira:"Quyosh paneli", sifat:22, holat:"Uzilgan", rang:"#D8432F"},
-  {obyektId:"GR-2026/4471", kanal:"Optik tolali · 100 Mbit", qurilma:"5 ta", zaxira:"UPS · 3 soat", sifat:93, holat:"Barqaror", rang:"#3AAA3E"},
-  {obyektId:"GR-2024/0286", kanal:"Optik tolali · 200 Mbit", qurilma:"9 ta", zaxira:"UPS · 6 soat", sifat:97, holat:"Barqaror", rang:"#3AAA3E"}
+/* Sug'urta polislari: amal qilish nazorati */
+const SUGURTALAR = [
+  {obyektId: "GR-2026/4471", polis: "PL-2026/11842", kompaniya: "O'zbekinvest",
+   summa: 520.0,  tugash: "14-yan, 2027", holat: "amalda"},
+  {obyektId: "GR-2025/1187", polis: "PL-2025/09315", kompaniya: "Gross Insurance",
+   summa: 4100.0, tugash: "19-sen, 2026", holat: "tugaydi"},
+  {obyektId: "GR-2026/2210", polis: "PL-2026/12073", kompaniya: "O'zbekinvest",
+   summa: 340.0,  tugash: "03-mar, 2027", holat: "amalda"},
+  {obyektId: "GR-2025/0934", polis: "PL-2025/08127", kompaniya: "Alfa Invest",
+   summa: 1480.0, tugash: "11-avg, 2026", holat: "muddati_otgan"},
+  {obyektId: "GR-2026/5512", polis: "PL-2026/13964", kompaniya: "Kafolat",
+   summa: 186.0,  tugash: "27-may, 2027", holat: "amalda"},
+  {obyektId: "GR-2026/3308", polis: "PL-2026/10578", kompaniya: "Gross Insurance",
+   summa: 395.0,  tugash: "08-okt, 2026", holat: "tugaydi"},
+  {obyektId: "GR-2025/0755", polis: "—", kompaniya: "—",
+   summa: 0, tugash: "—", holat: "yoq"},
+  {obyektId: "GR-2026/0141", polis: "PL-2026/09842", kompaniya: "O'zbekinvest",
+   summa: 62.0, tugash: "16-dek, 2026", holat: "amalda"}
 ];
-KANALLAR.forEach(k => { k.obyekt = joyNomi(k.obyektId, k.joyIchi, " · "); });
+SUGURTALAR.forEach(g => { g.obyekt = obyektNomi(g.obyektId, true); });
 
+/* Baholash tarixi: qiymat dolzarbligi nazorati */
+const BAHOLASHLAR = [
+  {obyektId: "GR-2025/1187", sana: "02.06.2026", qiymat: 4150.0, avvalgi: 4390.0,
+   baholovchi: "«Baholash Servis» MChJ", usul: "Daromad yondashuvi", keyingi: "02.06.2027", holat: "dolzarb"},
+  {obyektId: "GR-2026/4471", sana: "18.02.2026", qiymat: 520.0, avvalgi: 505.0,
+   baholovchi: "«Expert Baho» MChJ", usul: "Qiyosiy yondashuv", keyingi: "18.02.2027", holat: "dolzarb"},
+  {obyektId: "GR-2025/0934", sana: "25.03.2026", qiymat: 1480.0, avvalgi: 1520.0,
+   baholovchi: "«Baholash Servis» MChJ", usul: "Qiyosiy yondashuv", keyingi: "25.09.2026", holat: "tugaydi"},
+  {obyektId: "GR-2026/2210", sana: "09.01.2026", qiymat: 340.0, avvalgi: 328.0,
+   baholovchi: "«Andoza Baho» MChJ", usul: "Qiyosiy yondashuv", keyingi: "09.01.2027", holat: "dolzarb"},
+  {obyektId: "GR-2026/5512", sana: "14.11.2025", qiymat: 186.0, avvalgi: 214.0,
+   baholovchi: "«Expert Baho» MChJ", usul: "Qiyosiy yondashuv", keyingi: "14.05.2026", holat: "eskirgan"},
+  {obyektId: "GR-2026/3308", sana: "21.04.2026", qiymat: 395.0, avvalgi: 380.0,
+   baholovchi: "«Baholash Servis» MChJ", usul: "Xarajat yondashuvi", keyingi: "21.04.2027", holat: "dolzarb"},
+  {obyektId: "GR-2025/0755", sana: "30.10.2025", qiymat: 890.0, avvalgi: 915.0,
+   baholovchi: "«Andoza Baho» MChJ", usul: "Qiyosiy yondashuv", keyingi: "30.04.2026", holat: "eskirgan"},
+  {obyektId: "GR-2026/0141", sana: "12.05.2026", qiymat: 155.0, avvalgi: 148.0,
+   baholovchi: "«Expert Baho» MChJ", usul: "Qiyosiy yondashuv", keyingi: "12.05.2027", holat: "dolzarb"}
+];
+BAHOLASHLAR.forEach(b => { b.obyekt = obyektNomi(b.obyektId, true); });
 
 /* ---------- Tasdiqlar: kelishuv so'rovlari ----------
    joyIchi bo'lsa — obyekt ichidagi joy, aks holda bank ofisi (reyestrda yo'q). */
@@ -723,7 +723,7 @@ TASDIQLAR.forEach(t => { if (t.obyektId) t.joy = joyNomi(t.obyektId, t.joyIchi);
 const UCHASTKALAR = [
   {kod:"GR-2025/0755", tuman:"Qibray tumani", viloyat:"Toshkent viloyati", maydon:"2.40 gektar", status:"Musodara jarayonida", srang:"#E8763C", narx:"42,5 ming so'm/m²",
    kadastr:"11:09:03:02:0012", yerturi:"Qishloq xo'jaligi yerlari", jami:"1 020 000 000 so'm"},
-  {kod:"GR-2024/0331", tuman:"Zangiota tumani", viloyat:"Toshkent viloyati", maydon:"8.75 gektar", status:"Nazoratda", srang:"#3AAA3E", narx:"180 ming so'm/m²",
+  {kod:"GR-2024/0331", tuman:"Zangiota tumani", viloyat:"Toshkent viloyati", maydon:"8.75 gektar", status:"Nazoratda", srang:"#2E9E52", narx:"180 ming so'm/m²",
    kadastr:"11:07:12:01:0044", yerturi:"Zaxira yerlar", jami:"15 750 000 000 so'm"},
   {kod:"GR-2024/0197", tuman:"Yuqorichirchiq tumani", viloyat:"Toshkent viloyati", maydon:"15.20 gektar", status:"Auksionda", srang:"#8B5CF6", narx:"260 ming so'm/m²",
    kadastr:"11:12:05:03:0090", yerturi:"Qurilish yerlari", jami:"39 520 000 000 so'm"},
@@ -731,7 +731,7 @@ const UCHASTKALAR = [
    kadastr:"11:04:08:02:0110", yerturi:"Qishloq xo'jaligi yerlari", jami:"36 960 000 000 so'm"},
   {kod:"GR-2025/0288", tuman:"Parkent tumani", viloyat:"Toshkent viloyati", maydon:"5.60 gektar", status:"Garovda", srang:"#7BAEFC", narx:"150 ming so'm/m²",
    kadastr:"11:09:01:07:0021", yerturi:"Zaxira yerlar", jami:"8 400 000 000 so'm"},
-  {kod:"GR-2024/0072", tuman:"Bekobod tumani", viloyat:"Toshkent viloyati", maydon:"10.00 gektar", status:"Nazoratda", srang:"#3AAA3E", narx:"290 ming so'm/m²",
+  {kod:"GR-2024/0072", tuman:"Bekobod tumani", viloyat:"Toshkent viloyati", maydon:"10.00 gektar", status:"Nazoratda", srang:"#2E9E52", narx:"290 ming so'm/m²",
    kadastr:"11:02:11:04:0067", yerturi:"Sanoat yerlari", jami:"29 000 000 000 so'm"}
 ];
 UCHASTKALAR.forEach(u => {
@@ -824,113 +824,42 @@ const BILDIRISHLAR = [
   {ikon:"i-foyd", t:"Kirish nazorati", sarlavha:"Yangi foydalanuvchi qo'shildi",
    matn:"Javlon Karimov Kirish nazorati tizimiga qo'shildi.", vaqt:"11:30", yangi:false, havola:"foydalanuvchilar.html"},
   {ikon:"i-ogoh", t:"Hodisalar", sarlavha:"Qurilma ogohlantirishi",
-   matn:"Turniket №2 offline holatida.", vaqt:"10:05", yangi:false, havola:"monitoring.html"}
+   matn:"Turniket №2 offline holatida.", vaqt:"10:05", yangi:false, havola:"garov-monitoringi.html"}
 ];
 
 /* ---------- Audit jurnali: o'zgarmas yozuv, matn qayta hisoblanmaydi (ТЗ 8) ---------- */
 const AUDIT_JURNAL = [
-  {vaqt:"24-may, 14:47", ism:"Ismoilov Otabek", rol:"Administrator", amal:"Tizimga kirdi", obyekt:"Sessiya #SS-88214 · IP 192.168.10.14"},
-  {vaqt:"24-may, 14:20", ism:"Sattorov Jasur", rol:"Xavfsizlik operatori", amal:`Hodisani "Bartaraf etilmoqda" ustuniga ko'chirdi`, obyekt:"#INC-2026-00126 — Chorsu Savdo Markazi (sovutish tizimida nosozlik)"},
-  {vaqt:"24-may, 13:55", ism:"Rahimov Bekzod", rol:"Texnik xodim", amal:"Qurilmani qayta ishga tushirdi", obyekt:"Network Switch 1 — Navruz Plaza, Texnik xona"},
-  {vaqt:"24-may, 12:10", ism:"Yo'ldoshev Alisher", rol:"Bank rahbariyati", amal:"Shartnomani tasdiqladi", obyekt:"CT-2025-0912 — SecurTech Servis MChJ"},
-  {vaqt:"24-may, 11:32", ism:"Ismoilov Otabek", rol:"Administrator", amal:`Foydalanuvchi rolini o'zgartirdi: "Texnik xodim" → "Xavfsizlik operatori"`, obyekt:"Nilufar Ismoilova · U056789013"},
-  {vaqt:"24-may, 11:05", ism:"Ismoilov Otabek", rol:"Administrator", amal:"Sozlamani o'chirdi", obyekt:"Ikki bosqichli autentifikatsiya — Tizim parametrlari"},
-  {vaqt:"24-may, 10:40", ism:"Nilufar Ismoilova", rol:"Xavfsizlik operatori", amal:"Hujjat yukladi", obyekt:"Baholash hisobot.pdf — Nurafshon turar-joy majmuasi"},
-  {vaqt:"24-may, 10:15", ism:"Yo'ldoshev Alisher", rol:"Bank rahbariyati", amal:"Kirish so'rovini tasdiqladi", obyekt:"Sardor Aliyev, mehmon — Navruz Plaza"},
-  {vaqt:"24-may, 09:12", ism:"Sattorov Jasur", rol:"Xavfsizlik operatori", amal:"Yangi hodisa qayd etdi", obyekt:"#INC-2026-00128 — Zarafshon Tekstil sexi (yong'in signalizatsiyasi)"},
-  {vaqt:"24-may, 04:15", ism:"Tizim", rol:"Avtomatik", amal:"Zaxira nusxa yaratdi", obyekt:"To'liq zaxira — 213 GB"},
-  {vaqt:"23-may, 22:48", ism:"Jahongir Otajonov", rol:"Texnik xodim", amal:"Xato parol bilan kirishga urindi (3 marta)", obyekt:"IP 91.204.239.18"},
-  {vaqt:"23-may, 16:05", ism:"Sattorov Jasur", rol:"Xavfsizlik operatori", amal:"Hisobotni eksport qildi", obyekt:"Moliyaviy hisobot — PDF"},
-  {vaqt:"22-may, 15:20", ism:"Ismoilov Otabek", rol:"Administrator", amal:"Foydalanuvchi hisobini nofaollashtirdi", obyekt:"Umid Safarov · U056789017"},
-  {vaqt:"22-may, 09:47", ism:"Ismoilov Otabek", rol:"Administrator", amal:"Foydalanuvchi parolini tiklashga majburladi", obyekt:"Jahongir Otajonov · U056789019"}
+  {vaqt:"24-avg, 14:20", ism:"Sattorov Jasur", rol:"Garov xizmati mutaxassisi", amal:`Hodisani "Bartaraf etilmoqda" ustuniga ko'chirdi`, obyekt:"#GH-2026-00204 \u2014 Yunusobod 12-kvartal, 45-uy (kommunal qarzdorlik)"},
+  {vaqt:"24-avg, 13:55", ism:"Karimova Feruza", rol:"Garov xizmati mutaxassisi", amal:"Ko'rik dalolatnomasini rasmiylashtirdi", obyekt:"KO-2026/0391 \u2014 Navruz Plaza"},
+  {vaqt:"24-avg, 12:10", ism:"Yo'ldoshev Alisher", rol:"Filial rahbari", amal:"Baholash buyurtmasini tasdiqladi", obyekt:"GR-2026/5512 \u2014 Chevrolet Malibu 2"},
+  {vaqt:"24-avg, 11:32", ism:"Ismoilov Otabek", rol:"Administrator", amal:`Foydalanuvchi rolini o'zgartirdi: "Kredit menejeri" \u2192 "Garov xizmati mutaxassisi"`, obyekt:"Nilufar Ismoilova \u00b7 U056789013"},
+  {vaqt:"24-avg, 11:04", ism:"Xolmatova Zulfiya", rol:"Tavakkalchilik menejeri", amal:"Tasnif toifasini qayta ko'rib chiqdi", obyekt:"GR-2026/5512 \u2014 Substandart toifasi tasdiqlandi"},
+  {vaqt:"24-avg, 10:40", ism:"Nilufar Ismoilova", rol:"Garov xizmati mutaxassisi", amal:"Hujjat yukladi", obyekt:"Baholash hisobot.pdf \u2014 Nurafshon turar-joy majmuasi"},
+  {vaqt:"24-avg, 10:15", ism:"Yo'ldoshev Alisher", rol:"Filial rahbari", amal:"Ko'rik rejasini tasdiqladi", obyekt:"2026-yil sentabr oyi rejasi \u2014 12 chiqish"},
+  {vaqt:"24-avg, 09:12", ism:"Sattorov Jasur", rol:"Garov xizmati mutaxassisi", amal:"Yangi hodisa qayd etdi", obyekt:"#GH-2026-00213 \u2014 Zarafshon Tekstil sexi (uskunalar kamomadi)"},
+  {vaqt:"24-avg, 08:47", ism:"Rahimov Bekzod", rol:"Yurist", amal:"Da'vo arizasi loyihasini biriktirdi", obyekt:"UI-2026/0503 \u2014 GR-2026/0141"},
+  {vaqt:"23-avg, 22:48", ism:"Jahongir Otajonov", rol:"Kredit menejeri", amal:"Xato parol bilan kirishga urindi (3 marta)", obyekt:"IP 91.204.239.18"},
+  {vaqt:"23-avg, 16:05", ism:"Sattorov Jasur", rol:"Garov xizmati mutaxassisi", amal:"Hisobotni eksport qildi", obyekt:"Monitoring hisoboti \u2014 PDF"},
+  {vaqt:"23-avg, 15:30", ism:"Qodirova Nilufar", rol:"Kredit menejeri", amal:"Qarzdor bilan muzokara natijasini kiritdi", obyekt:"GR-2026/2210 \u2014 to'lov jadvali taklifi"},
+  {vaqt:"23-avg, 14:12", ism:"Xolmatova Zulfiya", rol:"Tavakkalchilik menejeri", amal:"Zaxira hisobotini shakllantirdi", obyekt:"2026-yil avgust \u2014 tasnif kesimi"},
+  {vaqt:"23-avg, 11:26", ism:"Ismoilov Otabek", rol:"Administrator", amal:"Ikki bosqichli autentifikatsiyani majburiy qildi", obyekt:"Ikki bosqichli autentifikatsiya \u2014 Tizim parametrlari"}
 ];
 
-/* ---------- Servis: reglament ro'yxati va ehtiyot qismlar ---------- */
-const SERVIS_VAZIFALAR = [
-  {nom:"1. Kamera tekshiruvi", izoh:"Barcha kameralar tasvir sifati va yozuvini tekshirish", holat:"bajarildi"},
-  {nom:"2. Face ID test", izoh:"Face ID qurilmalari aniqlik va javob vaqtini tekshirish", holat:"jarayonda"},
-  {nom:"3. Interkom audio testi", izoh:"Interkom qurilmalarining ovoz sifati va ulanishini tekshirish", holat:"kutish"},
-  {nom:"4. Eshik qulfi tekshiruvi", izoh:"Eshik qulflari va ochilish mexanizmlarini tekshirish", holat:"kutish"},
-  {nom:"5. Yong'in detektori tekshiruvi", izoh:"Yong'in detektorlari ishlash holatini tekshirish", holat:"kutish"},
-  {nom:"6. Yong'in signalizatsiyasi liniyasi", izoh:"Signalizatsiya liniyasi va markaziy panelni tekshirish", holat:"kutish"}
-];
-const EHTIYOT_QISMLAR = [
-  {nom:"Magnit qulf moduli", kod:"EQ-1001", omborda:6, birlik:"dona"},
-  {nom:"Face ID sensori", kod:"EQ-1002", omborda:3, birlik:"dona"},
-  {nom:"IP kamera obyektivi", kod:"EQ-1003", omborda:5, birlik:"dona"},
-  {nom:"UPS batareya bloki", kod:"EQ-1004", omborda:2, birlik:"dona"},
-  {nom:"Tarmoq kabeli", kod:"EQ-1005", omborda:45, birlik:"m"}
-];
 
-/* ---------- Kirish nazorati: voqealar, so'rovlar, mehmonlar ----------
-   SILUET — shaxs fotosurati yo'q bo'lganda ko'rsatiladigan o'rinbosar. */
-const SILUET = "data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 132 150'><rect width='132' height='150' rx='16' fill='#EEF1F5'/><circle cx='66' cy='56' r='27' fill='#AFB6BE'/><path d='M15 150c4.5-36 25-55 51-55s46.5 19 51 55z' fill='#AFB6BE'/></svg>`);
-const VOQEALAR = [
-  {nom:"Akmal Rustamov", eshik:"Bosh kirish eshigi", sana:"Bugun", vaqt:"14:32:18", pill:"mos", pillM:"Yuz mos keldi", chiziq:"#0F5392", toifa:"jonli",
-   id:"EMP-0247", bolim:"IT bo'limi", lavozim:"Dasturchi", karta:"CARD-8891", foiz:"98%", rasm:"assets/kv_shaxs.webp",
-   turi:"Yuz orqali kirish", usul:"Face ID", davomiylik:"1.2 soniya"},
-  {nom:"Sevara Mirzayeva", eshik:"Ofis qavati eshigi", sana:"Bugun", vaqt:"14:31:47", pill:"qolda", pillM:"Qo'lda tekshirish", chiziq:"#F2994A", toifa:"jonli",
-   id:"EMP-0311", bolim:"Moliya bo'limi", lavozim:"Buxgalter", karta:"CARD-8674", foiz:"71%", rasm:SILUET,
-   turi:"Qo'lda tekshirish", usul:"Xodim tomonidan vizual tekshiruv", davomiylik:"4.6 soniya"},
-  {nom:"Javlon Karimov", eshik:"Texnik xona eshigi", sana:"Bugun", vaqt:"14:31:12", pill:"ruxsat", pillM:"Ruxsat berildi", chiziq:"#0F5392", toifa:"jonli",
-   id:"EMP-0102", bolim:"Boshqaruv", lavozim:"Garov obyektlari direktori", karta:"CARD-8001", foiz:"97%", rasm:"assets/kv_shaxs.webp",
-   turi:"Yuz orqali kirish", usul:"Face ID", davomiylik:"1.1 soniya"},
-  {nom:"Nodirbek Yusupov", eshik:"Orqa kirish eshigi", sana:"Bugun", vaqt:"14:30:45", pill:"rad", pillM:"Rad etildi", chiziq:"#F45E53", toifa:"jonli",
-   id:"—", bolim:"—", lavozim:"Noma'lum shaxs", karta:"—", foiz:"38%", rasm:SILUET,
-   turi:"Kirish urinishi (aniqlanmadi)", usul:"Face ID (mos kelmadi)", davomiylik:"2.4 soniya"},
-  {nom:"Madina Tukhtayeva", eshik:"Ofis qavati eshigi", sana:"Bugun", vaqt:"14:30:21", pill:"mos", pillM:"Yuz mos keldi", chiziq:"#0F5392", toifa:"jonli",
-   id:"EMP-0450", bolim:"HR bo'limi", lavozim:"Menejer", karta:"CARD-8712", foiz:"96%", rasm:SILUET,
-   turi:"Yuz orqali kirish", usul:"Face ID", davomiylik:"1.0 soniya"},
-  {nom:"Sanjar Abdullaev", eshik:"Bosh kirish eshigi", sana:"Bugun", vaqt:"14:29:58", pill:"qolda", pillM:"Qo'lda tekshirish", chiziq:"#F2994A", toifa:"jonli",
-   id:"EMP-0523", bolim:"Xavfsizlik", lavozim:"Qorovul", karta:"CARD-8330", foiz:"69%", rasm:"assets/kv_shaxs.webp",
-   turi:"Qo'lda tekshirish", usul:"Xodim tomonidan vizual tekshiruv", davomiylik:"5.1 soniya"},
-  {nom:"Dilnoza Yoqubova", eshik:"Bosh kirish eshigi", sana:"Kecha", vaqt:"18:44:02", pill:"mos", pillM:"Yuz mos keldi", chiziq:"#0F5392", toifa:"arxiv",
-   id:"EMP-0198", bolim:"Yuridik bo'lim", lavozim:"Yurist", karta:"CARD-8532", foiz:"95%", rasm:SILUET,
-   turi:"Yuz orqali kirish", usul:"Face ID", davomiylik:"1.3 soniya"},
-  {nom:"Otabek Rashidov", eshik:"Ombor kirish eshigi", sana:"Kecha", vaqt:"09:12:30", pill:"ruxsat", pillM:"Ruxsat berildi", chiziq:"#0F5392", toifa:"arxiv",
-   id:"EMP-0276", bolim:"Logistika bo'limi", lavozim:"Omborchi", karta:"CARD-8455", foiz:"93%", rasm:"assets/kv_shaxs.webp",
-   turi:"Yuz orqali kirish", usul:"Face ID", davomiylik:"1.4 soniya"},
-  {nom:"Kamola Sultonova", eshik:"Ofis qavati eshigi", sana:"22-may", vaqt:"11:05:47", pill:"rad", pillM:"Rad etildi", chiziq:"#F45E53", toifa:"arxiv",
-   id:"—", bolim:"—", lavozim:"Noma'lum shaxs", karta:"—", foiz:"41%", rasm:SILUET,
-   turi:"Kirish urinishi (aniqlanmadi)", usul:"Face ID (mos kelmadi)", davomiylik:"2.1 soniya"},
-  {nom:"Feruz Nazarov", eshik:"Texnik xona eshigi", sana:"20-may", vaqt:"16:38:15", pill:"qolda", pillM:"Qo'lda tekshirish", chiziq:"#F2994A", toifa:"arxiv",
-   id:"EMP-0389", bolim:"Texnik xizmat", lavozim:"Muhandis", karta:"CARD-8290", foiz:"73%", rasm:"assets/kv_shaxs.webp",
-   turi:"Qo'lda tekshirish", usul:"Xodim tomonidan vizual tekshiruv", davomiylik:"3.8 soniya"}
-];
-const SOROVLAR = [
-  {nom:"Javlon Karimov", rol:"Mehmon", vaqt:"14:31", id:"G56781234", tashkilot:"BuildTech LLC", maqsad:"Yetkazib berish", mezbon:"Sattorov Jasur", nuqta:"Asosiy kirish",
-   tarix:[["22-may, 09:10","Kirish — Asosiy"]]},
-  {nom:"Shahnoza Mirzayeva", rol:"Pudratchi", vaqt:"14:30", id:"G56782345", tashkilot:"CleanPro Xizmat", maqsad:"Tozalash xizmati", mezbon:"Rahimov Bekzod", nuqta:"Yon kirish",
-   tarix:[["23-may, 08:00","Kirish — Yon"],["23-may, 17:15","Chiqish — Yon"]]},
-  {nom:"Bobur Yusupov", rol:"Haydovchi", vaqt:"14:29", id:"G56783456", tashkilot:"FastCargo", maqsad:"Yuk tushirish", mezbon:"Sattorov Jasur", nuqta:"Ombor kirish",
-   tarix:[["18-may, 11:20","Kirish — Ombor"],["18-may, 12:05","Chiqish — Ombor"]]},
-  {nom:"Azizbek Norov", rol:"Xodim", vaqt:"14:28", id:"U056789020", tashkilot:"MKB (ichki xodim)", maqsad:"Ish smenasi", mezbon:"—", nuqta:"Asosiy kirish",
-   tarix:[["24-may, 08:02","Kirish — Asosiy"],["23-may, 18:40","Chiqish — Asosiy"],["23-may, 08:05","Kirish — Asosiy"]]},
-  {nom:"Madina Tursunova", rol:"Mehmon", vaqt:"14:27", id:"G56784567", tashkilot:"Investment Group", maqsad:"Uchrashuv", mezbon:"Ismoilov Otabek", nuqta:"Asosiy kirish",
-   tarix:[["10-may, 15:30","Kirish — Asosiy"],["10-may, 16:45","Chiqish — Asosiy"]]}
-];
-const MEHMONLAR = [
-  {nom:"Kamron Aliyev", id:"G56785678", tashkilot:"SecurTech Servis MChJ", maqsad:"Uchrashuv", mezbon:"Ismoilov Otabek", nuqta:"Asosiy kirish", kirishVaqti:"24-may, 14:20",
-   tarix:[["24-may, 14:20","Kirish — Asosiy"]]},
-  {nom:"Nargiza Karimova", id:"G56786789", tashkilot:"Prime Consulting", maqsad:"Konsultatsiya", mezbon:"Sattorov Jasur", nuqta:"Asosiy kirish", kirishVaqti:"24-may, 14:15",
-   tarix:[["24-may, 14:15","Kirish — Asosiy"],["02-may, 10:00","Kirish — Asosiy"],["02-may, 11:20","Chiqish — Asosiy"]]},
-  {nom:"Umid Soliyev", id:"G56787890", tashkilot:"Legal Partners", maqsad:"Huquqiy maslahat", mezbon:"Rahimov Bekzod", nuqta:"Asosiy kirish", kirishVaqti:"24-may, 14:10",
-   tarix:[["24-may, 14:10","Kirish — Asosiy"]]},
-  {nom:"Saida Rahimova", id:"G56788901", tashkilot:"Media Group", maqsad:"Intervyu", mezbon:"Ismoilov Otabek", nuqta:"Asosiy kirish", kirishVaqti:"24-may, 14:05",
-   tarix:[["24-may, 14:05","Kirish — Asosiy"]]}
-];
+
 
 /* ---------- Foydalanuvchilar, hisobotlar, hududlar, auksion bosqichlari ---------- */
 const FOYDLAR = [
-  {nom:"Javlon Karimov", rol:"Administrator", teg:"admin", bolim:"IT bo'limi", faol:true, id:"U056789012", email:"javlon.karimov@mkbank.uz", lavozim:"Tizim administratori", tel:"+998 90 123 45 67", sana:"15-yan, 2022"},
-  {nom:"Nilufar Ismoilova", rol:"Xavfsizlik operatori", teg:"operator", bolim:"Operatsion bo'lim", faol:true, id:"U056789013", email:"n.ismoilova@mkbank.uz", lavozim:"Katta operator", tel:"+998 91 234 56 78", sana:"03-mar, 2022"},
-  {nom:"Bekzod Yusupov", rol:"Auditor", teg:"auditor", bolim:"Audit bo'limi", faol:true, id:"U056789014", email:"b.yusupov@mkbank.uz", lavozim:"Bosh auditor", tel:"+998 93 345 67 89", sana:"20-avg, 2021"},
-  {nom:"Madina Tursunova", rol:"Moliya", teg:"moliya", bolim:"Moliya bo'limi", faol:true, id:"U056789015", email:"m.tursunova@mkbank.uz", lavozim:"Moliya mutaxassisi", tel:"+998 94 456 78 90", sana:"11-noy, 2022"},
-  {nom:"Shahzod Abdullaev", rol:"Texnik xodim", teg:"texnik", bolim:"Texnik xizmat", faol:true, id:"U056789016", email:"sh.abdullaev@mkbank.uz", lavozim:"Texnik muhandis", tel:"+998 97 567 89 01", sana:"05-fev, 2023"},
-  {nom:"Umid Safarov", rol:"Xavfsizlik operatori", teg:"operator", bolim:"Operatsion bo'lim", faol:false, id:"U056789017", email:"u.safarov@mkbank.uz", lavozim:"Xavfsizlik operatori", tel:"+998 88 678 90 12", sana:"14-iyul, 2023"},
-  {nom:"Saida Rahimova", rol:"Moliya", teg:"moliya", bolim:"Moliya bo'limi", faol:true, id:"U056789018", email:"s.rahimova@mkbank.uz", lavozim:"Buxgalter", tel:"+998 99 789 01 23", sana:"22-sen, 2021"},
-  {nom:"Jahongir Otajonov", rol:"Texnik xodim", teg:"texnik", bolim:"Texnik xizmat", faol:true, id:"U056789019", email:"j.otajonov@mkbank.uz", lavozim:"Elektrik", tel:"+998 95 890 12 34", sana:"09-dek, 2023"}
+  {nom:"Ismoilov Otabek", rol:"Administrator", teg:"admin", bolim:"Axborot texnologiyalari departamenti", faol:true, id:"U056789011", email:"o.ismoilov@mkbank.uz", lavozim:"Tizim ma'muri", tel:"+998 90 123 45 67", sana:"12-yan, 2021"},
+  {nom:"Yo'ldoshev Alisher", rol:"Filial rahbari", teg:"filial", bolim:"Yunusobod filiali", faol:true, id:"U056789012", email:"a.yoldoshev@mkbank.uz", lavozim:"Filial boshqaruvchisi", tel:"+998 93 345 67 89", sana:"20-avg, 2021"},
+  {nom:"Nilufar Ismoilova", rol:"Garov xizmati mutaxassisi", teg:"garov", bolim:"Garov ta'minoti bo'limi", faol:true, id:"U056789013", email:"n.ismoilova@mkbank.uz", lavozim:"Katta mutaxassis", tel:"+998 91 234 56 78", sana:"03-mar, 2022"},
+  {nom:"Qodirova Nilufar", rol:"Kredit menejeri", teg:"kredit", bolim:"Muammoli kreditlar boshqarmasi", faol:true, id:"U056789014", email:"n.qodirova@mkbank.uz", lavozim:"Yetakchi menejer", tel:"+998 99 456 78 90", sana:"17-okt, 2022"},
+  {nom:"Sattorov Jasur", rol:"Garov xizmati mutaxassisi", teg:"garov", bolim:"Garov ta'minoti bo'limi", faol:true, id:"U056789015", email:"j.sattorov@mkbank.uz", lavozim:"Inspektor", tel:"+998 94 890 11 22", sana:"11-noy, 2022"},
+  {nom:"Rahimov Bekzod", rol:"Yurist", teg:"yurist", bolim:"Yuridik departament", faol:true, id:"U056789016", email:"b.rahimov@mkbank.uz", lavozim:"Da'vo-ariza sektori yuristi", tel:"+998 97 567 89 01", sana:"05-fev, 2023"},
+  {nom:"Xolmatova Zulfiya", rol:"Tavakkalchilik menejeri", teg:"tavakkal", bolim:"Tavakkalchiliklarni boshqarish departamenti", faol:true, id:"U056789017", email:"z.xolmatova@mkbank.uz", lavozim:"Bosh mutaxassis", tel:"+998 88 678 90 12", sana:"14-iyl, 2023"},
+  {nom:"Jahongir Otajonov", rol:"Kredit menejeri", teg:"kredit", bolim:"Muammoli kreditlar boshqarmasi", faol:false, id:"U056789019", email:"j.otajonov@mkbank.uz", lavozim:"Menejer", tel:"+998 95 890 12 34", sana:"09-dek, 2023"}
 ];
+
 const HISOBOTLAR = [
   {nom:"Oylik faoliyat hisoboti", sub:"Faoliyat tahlili va ko'rsatkichlar", format:"pdf", sana:"31-may, 2024", soat:"14:30", tur:"Faoliyat tahlili", hajm:"2.4 MB",
    daromad:"12 450 000 000 so'm", daromadD:"+12,4%", xarajat:"4 250 000 000 so'm", xarajatD:"-5,3%", foyda:"8 200 000 000 so'm", foydaD:"+18,7%", indeks:"92 / 100", indeksD:"+6", grafik:[6.1,7.2,6.8,9.4,12.45]},
@@ -956,8 +885,8 @@ const HUDUDLAR = [
 ];
 const AUKSION_BOSQICH = [
   ["tayyorlanmoqda","Sotuvga tayyorlanmoqda","#F2C230"],
-  ["elon","E'lon qilingan","#2E7BC4"],
-  ["korik","Ko'rik / Muzokara","#0F5392"],
+  ["elon","E'lon qilingan","#14836F"],
+  ["korik","Ko'rik / Muzokara","#0E6B5C"],
   ["rasmiylashtirish","Rasmiylashtirish","#8B5CF6"]
 ];
 
@@ -1055,9 +984,12 @@ function moslikTekshiruvi(){
   });
   const pJami = PORTFEL.holatlar.reduce((s, h) => s + h.son, 0);
   if (pJami !== PORTFEL.jami) xato.push("portfel yig'indisi " + pJami + " != " + PORTFEL.jami);
-  const q = PORTFEL.qurilmalar;
-  if (q.onlayn + q.beqaror + q.oflayn + q.tamirda !== q.jami) xato.push("qurilmalar yig'indisi mos emas");
-  if (PORTFEL.kameralar.onlayn > PORTFEL.kameralar.jami) xato.push("kameralar soni mos emas");
+  const k = PORTFEL.koriklar;
+  if (k.otkazilgan + k.rejada + k.muddatiOtgan !== k.jami) xato.push("ko'riklar yig'indisi mos emas");
+  const sg = PORTFEL.sugurtali;
+  if (sg.amalda + sg.tugaydi30 + sg.muddatiOtgan !== sg.jami) xato.push("sug'urta kesimi mos emas");
+  const bh = PORTFEL.baholash;
+  if (bh.dolzarb + bh.tugaydi90 + bh.eskirgan !== bh.jami) xato.push("baholash kesimi mos emas");
   ARXIV.forEach(a => {
     if (!a.xaridor || !a.ish) xato.push(a.kod + ": arxiv yozuvida xaridor yoki ish raqami yo'q");
     if (!(a.summa > 0)) xato.push(a.kod + ": sotuv summasi noto'g'ri");
@@ -1070,10 +1002,10 @@ function moslikTekshiruvi(){
          Uzilgan havola sahifada "?GR-..." bo'lib ko'rinadi, shuning uchun uni
          shu yerda oldindan ushlaymiz (Д-1). --- */
   const bogliq = [
-    ["HODISALAR", HODISALAR, "kod"], ["QURILMALAR", QURILMALAR, "nom"],
+    ["HODISALAR", HODISALAR, "kod"],
     ["HUJJATLAR", HUJJATLAR, "nom"], ["XONALAR", XONALAR, "nom"],
-    ["KAMERALAR", KAMERALAR, "kod"], ["TREVOGALAR", TREVOGALAR, "id"],
-    ["KANALLAR", KANALLAR, "kanal"], ["TASDIQLAR", TASDIQLAR, "sarlavha"]
+    ["KORIKLAR", KORIKLAR, "id"], ["SUGURTALAR", SUGURTALAR, "polis"],
+    ["BAHOLASHLAR", BAHOLASHLAR, "sana"], ["TASDIQLAR", TASDIQLAR, "sarlavha"]
   ];
   bogliq.forEach(([nom, royxat, belgi]) => royxat.forEach(r => {
     if (r.obyektId && !OBYEKT_INDEKS[r.obyektId])
@@ -1098,10 +1030,10 @@ function moslikTekshiruvi(){
 window.MKB_DATA = {
   BOSQICHLAR, YOZUVLAR, PORTFEL, SOTUV, ARXIV, XARITA_NUQTALARI,
   OBYEKT_INDEKS, obyekt, obyektNomi, obyektHududi, joyNomi,
-  HODISALAR, QURILMALAR, HUJJATLAR, XONALAR,
-  KAMERALAR, TREVOGALAR, KANALLAR, TASDIQLAR, UCHASTKALAR,
+  TASNIF, tasnifla, tasnifStatistikasi, jamiZaxira,
+  HODISALAR, HUJJATLAR, XONALAR,
+  KORIKLAR, SUGURTALAR, BAHOLASHLAR, TASDIQLAR, UCHASTKALAR,
   NAVBAT, MENING_VAZIFALARIM, BILDIRISHLAR, AUDIT_JURNAL,
-  SERVIS_VAZIFALAR, EHTIYOT_QISMLAR, SILUET, VOQEALAR, SOROVLAR, MEHMONLAR,
   FOYDLAR, HISOBOTLAR, HUDUDLAR, AUKSION_BOSQICH, AVTO, KPI_BAZA,
   pul, son, fmt,
   bosqichStatistikasi, holatStatistikasi,

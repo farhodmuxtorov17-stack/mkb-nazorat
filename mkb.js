@@ -89,8 +89,8 @@ const IKONLAR = `
          Barcha sahifalar shu bir manbadan foydalanadi (bar/donut/halqa/chiziq grafiklar). -->
     <linearGradient id="grad-bar-3d" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#3F86C8"/>
-      <stop offset=".55" stop-color="#0F5392"/>
-      <stop offset="1" stop-color="#0A3D6E"/>
+      <stop offset=".55" stop-color="#0E6B5C"/>
+      <stop offset="1" stop-color="#084C41"/>
     </linearGradient>
     <linearGradient id="grad-bar-3d-passiv" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#E3EDF7"/>
@@ -98,12 +98,12 @@ const IKONLAR = `
       <stop offset="1" stop-color="#AFC8DE"/>
     </linearGradient>
     <linearGradient id="grad-area-3d" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0F5392" stop-opacity=".38"/>
-      <stop offset="1" stop-color="#0F5392" stop-opacity="0"/>
+      <stop offset="0" stop-color="#0E6B5C" stop-opacity=".38"/>
+      <stop offset="1" stop-color="#0E6B5C" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="grad-ring-3d" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#4A93D4"/>
-      <stop offset="1" stop-color="#0A3D6E"/>
+      <stop offset="1" stop-color="#084C41"/>
     </linearGradient>
     <linearGradient id="grad-ring-3d-qizil" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#F0897A"/>
@@ -133,19 +133,26 @@ const IKONLAR = `
 </svg>`;
 
 /* ---------- Rollar (RBAC) — texnik talablar §3 matritsasi asosida ---------- */
+/* ---------- Rol modeli: muammoli aktivlar bilan ishlash amaliyoti ----------
+   Rollar bank bo'linmalariga mos keladi, jismoniy qo'riqlash xizmatiga emas.
+   Qo'riqlash — bankning vazifasi emas; bank garovning MAVJUDLIGI va
+   HOLATINI nazorat qiladi (ko'rik, baholash, sug'urta), uni qo'riqlamaydi. */
 const ROL_KALIT = {
-  "Bank rahbariyati":"rahbar",
-  "Undiruv mutaxassisi":"undiruv",
-  "Xavfsizlik operatori":"operator",
-  "Texnik xodim":"texnik",
-  "Administrator":"admin"
+  "Kredit menejeri":              "kredit",
+  "Garov xizmati mutaxassisi":    "garov",
+  "Yurist":                       "yurist",
+  "Tavakkalchilik menejeri":      "tavakkal",
+  "Filial rahbari":               "filial",
+  "Administrator":                "admin"
 };
+/* Bo'limlar: bank kredit jarayoni bo'ylab, TZ 4-bo'lim */
 const ROL_RUXSAT = {
-  admin: null, // barcha bo'limlar
-  rahbar:   ["panel","obyektlar","xavfsizlik","hodisalar","undiruv","realizatsiya","hisobotlar","sozlamalar"],
-  undiruv:  ["panel","obyektlar","undiruv","realizatsiya","hisobotlar","sozlamalar"],
-  operator: ["panel","obyektlar","xavfsizlik","hodisalar","sozlamalar"],
-  texnik:   ["panel","obyektlar","xavfsizlik","sozlamalar"]
+  admin:    null,                                   // barcha bo'limlar
+  filial:   ["panel","portfel","garov","yuridik","realizatsiya","hisobotlar","sozlamalar"],
+  kredit:   ["panel","portfel","garov","hisobotlar","sozlamalar"],
+  garov:    ["panel","portfel","garov","realizatsiya","hisobotlar","sozlamalar"],
+  yurist:   ["panel","portfel","yuridik","realizatsiya","hisobotlar","sozlamalar"],
+  tavakkal: ["panel","portfel","zaxira","hisobotlar","sozlamalar"]
 };
 function rolYaroqlimi(r){
   // Object.hasOwn — prototype-chain bypass'ga qarshi ("toString", "__proto__" va h.k.)
@@ -155,7 +162,7 @@ function joriyRol(){
   const r = localStorage.getItem("mkb-rol");
   // Yaroqsiz qiymatda eng KAM huquqli rol qaytariladi (fail-closed);
   // shell sahifalarda bundan oldinroq login'ga yo'naltirish ishlaydi.
-  return rolYaroqlimi(r) ? r : "Texnik xodim";
+  return rolYaroqlimi(r) ? r : "Kredit menejeri";   // eng kam huquqli rol
 }
 function asilRol(){
   // Haqiqiy autentifikatsiya qilingan rol — "ko'rish" rejimida ham o'zgarmaydi.
@@ -167,18 +174,20 @@ function ruxsatlimi(sahifa){
   return !royxat || royxat.includes(sahifa);
 }
 const FOYD_ISM = {
-  admin:"Ismoilov Otabek",
-  rahbar:"Yo'ldoshev Alisher",
-  undiruv:"Qodirova Nilufar",
-  operator:"Sattorov Jasur",
-  texnik:"Rahimov Bekzod"
+  admin:    "Ismoilov Otabek",
+  filial:   "Yo'ldoshev Alisher",
+  kredit:   "Qodirova Nilufar",
+  garov:    "Sattorov Jasur",
+  yurist:   "Rahimov Bekzod",
+  tavakkal: "Xolmatova Zulfiya"
 };
 const FOYD_BOLIM = {
-  admin:"Axborot texnologiyalari departamenti",
-  rahbar:"Boshqaruv raisi o'rinbosari",
-  undiruv:"Muammoli obyektlar departamenti",
-  operator:"Xavfsizlik xizmati · Nazorat markazi",
-  texnik:"Texnik ta'minot bo'limi"
+  admin:    "Axborot texnologiyalari departamenti",
+  filial:   "Yunusobod filiali · boshqaruvchi",
+  kredit:   "Muammoli kreditlar boshqarmasi",
+  garov:    "Garov ta'minoti bo'limi",
+  yurist:   "Yuridik departament · da'vo-ariza sektori",
+  tavakkal: "Tavakkalchiliklarni boshqarish departamenti"
 };
 
 /* ---------- Ikki tilli interfeys: o'zbekcha / ruscha ----------
@@ -285,47 +294,51 @@ function tilKuzatuvi(){
 }
 
 /* ---------- Sidebar / Topbar shablonlari ---------- */
+/* ---------- Bo'limlar: kredit jarayoni ketma-ketligi bo'yicha ----------
+   Muammoli qarz -> garov ta'minoti -> yuridik ish -> realizatsiya,
+   yon tomonda tasnif va zaxira (MB talablari) hamda hisobot. */
 const MENYU = [
-  ["panel","index.html","i-panel","Boshqaruv paneli"],
-  ["obyektlar","obyektlar.html","i-bino","Garov obyektlari"],
-  ["xavfsizlik","monitoring.html","i-qalqon","Xavfsizlik nazorati"],
-  ["hodisalar","hodisalar.html","i-ogoh","Hodisalar"],
-  ["undiruv","undiruv.html","i-tarozi","Undiruv"],
-  ["realizatsiya","auksion.html","i-bolg","Realizatsiya"],
-  ["hisobotlar","hisobotlar.html","i-hisobot","Hisobotlar"],
-  ["sozlamalar","sozlamalar.html","i-sozlama","Sozlamalar"]
+  ["panel",        "index.html",           "i-panel",    "Boshqaruv paneli"],
+  ["portfel",      "qarzdorlar.html",      "i-qarz",     "Muammoli portfel"],
+  ["garov",        "obyektlar.html",       "i-bino",     "Garov ta'minoti"],
+  ["yuridik",      "undiruv.html",         "i-tarozi",   "Yuridik ish"],
+  ["realizatsiya", "musodara-qabul.html",  "i-bolg",     "Realizatsiya"],
+  ["zaxira",       "tasniflash.html",      "i-aktiv",    "Tasnif va zaxira"],
+  ["hisobotlar",   "hisobotlar.html",      "i-hisobot",  "Hisobotlar"],
+  ["sozlamalar",   "sozlamalar.html",      "i-sozlama",  "Sozlamalar"]
 ];
-
-/* Bo'lim ichidagi sahifalar — sidebar'da emas, sahifa tepasidagi tab'larda */
 const BOLIM_TAB = {
-  obyektlar: [
-    ["obyektlar.html","Reyestr"],
-    ["xaritalar.html","Xarita"],
-    ["xonalar.html","Xonalar va qavatlar"],
-    ["yer-maydonlari.html","Yer uchastkalari"]
-  ],
-  xavfsizlik: [
-    ["monitoring.html","Nazorat markazi"],
-    ["kirish-nazorati.html","Kirish nazorati"],
-    ["qurilmalar.html","Qurilmalar"],
-    ["masofaviy-korik.html","Masofaviy ko'rik"],
-    ["servis.html","Servis"]
-  ],
-  undiruv: [
-    ["undiruv.html","Undiruv ishlari"],
+  portfel: [
     ["qarzdorlar.html","Qarzdorlar"],
-    ["shartnomalar.html","Shartnomalar"]
+    ["shartnomalar.html","Shartnomalar"],
+    ["vazifalar.html","Ish navbati"]
+  ],
+  garov: [
+    ["obyektlar.html","Garov reyestri"],
+    ["xaritalar.html","Xarita"],
+    ["korik-rejasi.html","Ko'rik rejasi"],
+    ["baholash.html","Qayta baholash"],
+    ["sugurta.html","Sug'urta nazorati"],
+    ["garov-monitoringi.html","Monitoring"]
+  ],
+  yuridik: [
+    ["undiruv.html","Da'vo va sud ishlari"],
+    ["garov-hodisalari.html","Garov hodisalari"],
+    ["hujjatlar.html","Hujjatlar"]
   ],
   realizatsiya: [
-    ["musodara-qabul.html","Musodara qabuli"],
-    ["auksion.html","Auksion"],
+    ["musodara-qabul.html","Balansga qabul"],
+    ["auksion.html","Savdo"],
     ["arxiv.html","Arxiv"]
+  ],
+  zaxira: [
+    ["tasniflash.html","Aktivlar tasnifi"],
+    ["yer-maydonlari.html","Yer uchastkalari"]
   ],
   hisobotlar: [
     ["hisobotlar.html","Moliyaviy hisobotlar"],
     ["hisobotlar-markazi.html","Hisobot markazi"],
-    ["hujjatlar.html","Hujjatlar"],
-    ["vazifalar.html","Vazifalar"]
+    ["tasdiqlar.html","Tasdiqlar"]
   ],
   sozlamalar: [
     ["sozlamalar.html","Umumiy"],
@@ -333,8 +346,6 @@ const BOLIM_TAB = {
     ["bildirishnomalar.html","Bildirishnomalar"]
   ]
 };
-
-/* Faqat ayrim rollarga ochiq sahifalar (sahifadagi data-ruxsat bilan mos) */
 const TAB_RUXSAT = {"foydalanuvchilar.html":["admin"], "holatlar.html":["admin"]};
 
 function bolimTabHTML(bolim){
@@ -354,9 +365,9 @@ function bolimTabHTML(bolim){
 const LOGO_SVG = `
 <svg width="38" height="38" viewBox="0 0 44 44" aria-hidden="true">
   <g transform="translate(0,-6)">
-    <path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#0F5392"/>
-    <path d="M2 24.239 17.776 35.755 41.798 20.342V8L17.776 23.413 2 11.897v12.342Z" fill="#3AAA3E"/>
-    <path d="M29.518 35.935V48h12.28V28.056l-12.28 7.879Z" fill="#0F5392"/>
+    <path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#0E6B5C"/>
+    <path d="M2 24.239 17.776 35.755 41.798 20.342V8L17.776 23.413 2 11.897v12.342Z" fill="#2E9E52"/>
+    <path d="M29.518 35.935V48h12.28V28.056l-12.28 7.879Z" fill="#0E6B5C"/>
   </g>
 </svg>`;
 
