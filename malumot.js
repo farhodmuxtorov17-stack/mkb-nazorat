@@ -522,28 +522,28 @@ HODISALAR.forEach(h => {
 /* ---------- Hujjatlar (Garov 1:N Hujjat, ТЗ 3.2) ---------- */
 const HUJJATLAR = [
   {nom:"Texnik pasport.pdf", ikon:"pdf", iturl:"i-hujjat", obyektId:"GR-2025/0934", tur:"Texnik pasport", teg:"pasport",
-   sana:"24-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-001", hajm:"12.4 MB", format:"PDF", rasm:"assets/bino_tower.webp",
+   sana:"24-avg, 2026", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-001", hajm:"12.4 MB", format:"PDF", rasm:"assets/bino_tower.webp",
    yuklagan:"Ismoilov Otabek", tavsif:"Bino bo'yicha texnik ma'lumotlar va umumiy tavsif."},
   {nom:"Kadastr reja.dwg", ikon:"dwg", iturl:"i-xarita", obyektId:"GR-2026/0141", tur:"Kadastr", teg:"kadastr",
-   sana:"21-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-014", hajm:"8.1 MB", format:"DWG", rasm:"assets/bino_dacha.webp",
+   sana:"21-avg, 2026", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-014", hajm:"8.1 MB", format:"DWG", rasm:"assets/bino_dacha.webp",
    yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining kadastr chizmasi."},
   {nom:"Ijara shartnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyektId:"GR-2024/0512", tur:"Shartnoma", teg:"shartnoma",
-   sana:"18-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-022", hajm:"2.7 MB", format:"PDF", rasm:"assets/bino_mall.webp",
+   sana:"18-avg, 2026", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-022", hajm:"2.7 MB", format:"PDF", rasm:"assets/bino_mall.webp",
    yuklagan:"Karimova N.", tavsif:"«Turon Retail» MChJ bilan ijara shartnomasi."},
   {nom:"Fasad ko'rinishi.jpg", ikon:"img", iturl:"i-kamera", obyektId:"GR-2025/1187", tur:"Rasm", teg:"rasm",
-   sana:"16-may, 2024", holat:"Yangi", hrang:"#2E9E52", id:"DOC-2024-031", hajm:"5.4 MB", format:"JPG", rasm:"assets/bino_humo.webp",
+   sana:"16-avg, 2026", holat:"Yangi", hrang:"#2E9E52", id:"DOC-2024-031", hajm:"5.4 MB", format:"JPG", rasm:"assets/bino_humo.webp",
    yuklagan:"Soliev B.", tavsif:"Bino fasadining yangilangan surati."},
   {nom:"Baholash hisobot.pdf", ikon:"rep", iturl:"i-hisobot", obyektId:"GR-2026/3308", tur:"Hisobot", teg:"hisobot",
-   sana:"14-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-036", hajm:"4.2 MB", format:"PDF", rasm:"assets/bino_turar.webp",
+   sana:"14-avg, 2026", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-036", hajm:"4.2 MB", format:"PDF", rasm:"assets/bino_turar.webp",
    yuklagan:"Yusupova M.", tavsif:"Mustaqil baholovchi hisoboti."},
   {nom:"Yer uchastkasi rejasi.pdf", ikon:"pdf", iturl:"i-yer", obyektId:"GR-2025/0755", tur:"Kadastr", teg:"kadastr",
-   sana:"12-may, 2024", holat:"Ko'rib chiqilmoqda", hrang:"#4A90F2", id:"DOC-2024-040", hajm:"3.3 MB", format:"PDF", rasm:"assets/bino_yer.webp",
+   sana:"12-avg, 2026", holat:"Ko'rib chiqilmoqda", hrang:"#4A90F2", id:"DOC-2024-040", hajm:"3.3 MB", format:"PDF", rasm:"assets/bino_yer.webp",
    yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining chegara rejasi."},
   {nom:"Qabul-topshirish dalolatnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyektId:"GR-2025/0934", tur:"Shartnoma", teg:"shartnoma",
-   sana:"10-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-044", hajm:"1.6 MB", format:"PDF", rasm:"assets/bino_tower.webp",
+   sana:"10-avg, 2026", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-044", hajm:"1.6 MB", format:"PDF", rasm:"assets/bino_tower.webp",
    yuklagan:"Ismoilov Otabek", tavsif:"5-qavat ofis maydonini topshirish dalolatnomasi."},
   {nom:"Energiya audit hisobot.pdf", ikon:"pdf", iturl:"i-energiya", obyektId:"GR-2026/0141", tur:"Hisobot", teg:"hisobot",
-   sana:"07-may, 2024", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-051", hajm:"6.8 MB", format:"PDF", rasm:"assets/bino_dacha.webp",
+   sana:"07-avg, 2026", holat:"Tasdiqlangan", hrang:"#2E9E52", id:"DOC-2024-051", hajm:"6.8 MB", format:"PDF", rasm:"assets/bino_dacha.webp",
    yuklagan:"Karimov I.", tavsif:"Yillik energiya samaradorligi auditi."}
 ];
 HUJJATLAR.forEach(h => {
@@ -687,36 +687,45 @@ BAHOLASHLAR.forEach(b => { b.obyekt = obyektNomi(b.obyektId, true); });
 /* ---------- Tasdiqlar: kelishuv so'rovlari ----------
    joyIchi bo'lsa — obyekt ichidagi joy, aks holda bank ofisi (reyestrda yo'q). */
 const TASDIQLAR = [
-  {ikon:"i-kamera", tile:"yashil", sarlavha:"Masofaviy ko'rik sessiyasini tasdiqlash", org:"Navruz Plaza", sub:"Navruz Plaza &nbsp;·&nbsp; GR-2025/0934",
-   vaqt:"Bugun, 14:20", j:"yuqori", jm:"Yuqori", tavsif:"Investor bilan masofaviy ko'rik sessiyasini o'tkazish uchun ruxsat so'ralmoqda.",
-   sorovchi:"Javlon Karimov", lavozim:"Garov obyektlari direktori", obyektId:"GR-2025/0934", joyIchi:"1201-xona", ishtirokchilar:"3 nafar", sessiyaTuri:"Video konferensiya",
-   qoshimcha:"Investor: Global Invest Ltd.", hujjatNomi:"Session_Request_GreenTower.pdf", hujjatHajmi:"1.2 MB",
-   sorovSana:"24-may, 2025 &nbsp;·&nbsp; 14:20", javobMuddati:"26-may, 2025 &nbsp;·&nbsp; 15:00", qolgan:"0 soat 28 daqiqa",
-   masulNom:"Javlon Karimov", masulLavozim:"Garov obyektlari direktori", masulTel:"+998 90 123-45-67",
-   koribNom:"Saida Karimova", koribLavozim:"Yuridik maslahatchi", nusxaNom:"Temur Mirzayev", nusxaLavozim:"CFO"},
-  {ikon:"i-kalendar", tile:"sariq", sarlavha:"Budjetni tasdiqlash", org:"Marketing bo'limi", sub:"Marketing bo'limi &nbsp;·&nbsp; BD-2025-114",
-   vaqt:"Bugun, 13:45", j:"orta", jm:"O'rta", tavsif:"Marketing bo'limining III chorak byudjeti tasdiqlash uchun yuborildi.",
-   sorovchi:"Zarina Yoqubova", lavozim:"Marketing menejeri", joy:"Bosh ofis, Moliya bo'limi", ishtirokchilar:"Byudjet qo'mitasi", sessiyaTuri:"Moliyaviy so'rov",
-   qoshimcha:"Umumiy summa: 312 000 000 so'm", hujjatNomi:"Marketing_Byudjet_Q3_2025.xlsx", hujjatHajmi:"890 KB",
-   sorovSana:"24-may, 2025 &nbsp;·&nbsp; 13:45", javobMuddati:"27-may, 2025 &nbsp;·&nbsp; 18:00", qolgan:"1 kun 4 soat",
-   masulNom:"Zarina Yoqubova", masulLavozim:"Marketing menejeri", masulTel:"+998 90 234-56-78",
-   koribNom:"Temur Mirzayev", koribLavozim:"CFO", nusxaNom:"Ismoilov Otabek", nusxaLavozim:"Administrator"},
-  {ikon:"i-shartnoma", tile:"binafsha", sarlavha:"Shartnomani tasdiqlash", org:"SecurTech Servis MChJ", sub:"SecurTech Servis MChJ &nbsp;·&nbsp; CT-2025-0912",
-   vaqt:"Bugun, 12:10", j:"past", jm:"Past", tavsif:"Yangi ijara shartnomasi loyihasi yuridik ko'rikdan o'tdi, yakuniy tasdiq talab etiladi.",
-   sorovchi:"Bekzod Yusupov", lavozim:"Bosh auditor", obyektId:"GR-2025/0934", joyIchi:"Yuridik bo'lim", ishtirokchilar:"2 nafar", sessiyaTuri:"Hujjat ko'rigi",
-   qoshimcha:"Ijara muddati: 3 yil", hujjatNomi:"Ijara_shartnomasi_TechSolutions.pdf", hujjatHajmi:"2.4 MB",
-   sorovSana:"22-may, 2025 &nbsp;·&nbsp; 12:10", javobMuddati:"29-may, 2025 &nbsp;·&nbsp; 17:00", qolgan:"4 kun 5 soat",
-   masulNom:"Bekzod Yusupov", masulLavozim:"Bosh auditor", masulTel:"+998 90 345-67-89",
-   koribNom:"Saida Karimova", koribLavozim:"Yuridik maslahatchi", nusxaNom:"Javlon Karimov", nusxaLavozim:"Garov obyektlari direktori"},
-  {ikon:"i-ogoh", tile:"qizil", sarlavha:"Texnik xarajatni tasdiqlash", org:"Server uskunalari", sub:"IT bo'limi &nbsp;·&nbsp; EX-2025-0334",
-   vaqt:"Bugun, 11:05", j:"yuqori", jm:"Yuqori", tavsif:"Server uskunalarini favqulodda almashtirish uchun xarajat tasdiqlanishi kerak.",
-   sorovchi:"Shahzod Abdullaev", lavozim:"Texnik muhandis", obyektId:"GR-2025/0934", joyIchi:"Texnik xona", ishtirokchilar:"1 nafar", sessiyaTuri:"Favqulodda so'rov",
-   qoshimcha:"Summa: 48 500 000 so'm", hujjatNomi:"Server_almashtirish_smeta.pdf", hujjatHajmi:"640 KB",
-   sorovSana:"24-may, 2025 &nbsp;·&nbsp; 11:05", javobMuddati:"25-may, 2025 &nbsp;·&nbsp; 09:00", qolgan:"0 soat 55 daqiqa",
-   masulNom:"Shahzod Abdullaev", masulLavozim:"Texnik muhandis", masulTel:"+998 90 456-78-90",
-   koribNom:"Temur Mirzayev", koribLavozim:"CFO", nusxaNom:"Ismoilov Otabek", nusxaLavozim:"Administrator"}
+  {ikon:"i-grafik", tile:"yashil", sarlavha:"Baholash buyurtmasini tasdiqlash", org:"\u00abExpert Baho\u00bb MChJ", sub:"Navbatdan tashqari qayta baholash",
+   vaqt:"Bugun, 14:30", j:"yuqori", jm:"Shoshilinch", tavsif:"Chevrolet Malibu 2 (GR-2026/5512) qiymati 13% pasaygan. Zaxira stavkasiga ta'sirini aniqlash uchun navbatdan tashqari baholash talab qilinadi.",
+   sorovchi:"Sattorov Jasur", lavozim:"Garov xizmati inspektori", obyektId:"GR-2026/5512",
+   ishtirokchilar:"Xolmatova Z., Yo'ldoshev A.", sessiyaTuri:"Hujjat kelishuvi",
+   qoshimcha:"Baholash 5 ish kunida yakunlanadi", hujjatNomi:"baholash_buyurtma_BB-2026-0114.pdf", hujjatHajmi:"420 KB",
+   sorovSana:"24-avg, 2026", javobMuddati:"25-avg, 2026", qolgan:"1 kun",
+   masulNom:"Xolmatova Zulfiya", masulLavozim:"Tavakkalchilik menejeri", masulTel:"+998 88 678 90 12",
+   koribNom:"Yo'ldoshev Alisher", koribLavozim:"Filial rahbari",
+   nusxaNom:"Qodirova Nilufar", nusxaLavozim:"Kredit menejeri"},
+  {ikon:"i-tarozi", tile:"kok", sarlavha:"Bosqich o'tkazishni tasdiqlash", org:"Yuridik departament", sub:"Ogohlantirish \u2192 Da'vo arizasi",
+   vaqt:"Bugun, 16:00", j:"yuqori", jm:"Shoshilinch", tavsif:"Chorvoq dala hovlisi (GR-2026/0141) bo'yicha 90 kunlik talabnoma muddati o'tdi. Da'vo arizasi bosqichiga o'tkazish tasdiqlanishi kerak.",
+   sorovchi:"Qodirova Nilufar", lavozim:"Kredit menejeri", obyektId:"GR-2026/0141",
+   ishtirokchilar:"Rahimov B., Yo'ldoshev A.", sessiyaTuri:"Bosqich tasdig'i",
+   qoshimcha:"Da'vo summasi 38,6 mln so'm", hujjatNomi:"davo_loyiha_GR-2026-0141.docx", hujjatHajmi:"180 KB",
+   sorovSana:"23-avg, 2026", javobMuddati:"26-avg, 2026", qolgan:"2 kun",
+   masulNom:"Rahimov Bekzod", masulLavozim:"Yurist", masulTel:"+998 97 567 89 01",
+   koribNom:"Yo'ldoshev Alisher", koribLavozim:"Filial rahbari",
+   nusxaNom:"Sattorov Jasur", nusxaLavozim:"Garov xizmati inspektori"},
+  {ikon:"i-bolg", tile:"binafsha", sarlavha:"Auksion boshlang'ich narxini tasdiqlash", org:"Realizatsiya guruhi", sub:"Lot NP-2026/0934",
+   vaqt:"27-avg, 10:00", j:"orta", jm:"Rejali", tavsif:"Navruz Plaza savdo maydoni uchun boshlang'ich narx 1,48 mlrd so'm \u2014 25.03.2026 baholangan qiymatga teng (Д-4).",
+   sorovchi:"Karimova Feruza", lavozim:"Garov xizmati inspektori", obyektId:"GR-2025/0934",
+   ishtirokchilar:"Rahimov B., Yo'ldoshev A.", sessiyaTuri:"Lot rasmiylashtirish",
+   qoshimcha:"E'lon 28-avgustda chiqadi", hujjatNomi:"lot_hujjatlari_NP-2026-0934.pdf", hujjatHajmi:"2,8 MB",
+   sorovSana:"22-avg, 2026", javobMuddati:"27-avg, 2026", qolgan:"3 kun",
+   masulNom:"Rahimov Bekzod", masulLavozim:"Yurist", masulTel:"+998 97 567 89 01",
+   koribNom:"Yo'ldoshev Alisher", koribLavozim:"Filial rahbari",
+   nusxaNom:"Xolmatova Zulfiya", nusxaLavozim:"Tavakkalchilik menejeri"},
+  {ikon:"i-aktiv", tile:"sariq", sarlavha:"Hisobdan chiqarishni ko'rib chiqish", org:"Tavakkalchilik departamenti", sub:"Qoplanmagan qoldiq",
+   vaqt:"29-avg, 15:00", j:"orta", jm:"Rejali", tavsif:"Zarafshon Tekstil sexi (GR-2025/1187) bo'yicha realizatsiyadan keyin qoplanmay qolishi kutilayotgan 286 mln so'm qoldiqni zaxira hisobidan chiqarish taklifi.",
+   sorovchi:"Xolmatova Zulfiya", lavozim:"Tavakkalchilik menejeri", obyektId:"GR-2025/1187",
+   ishtirokchilar:"Rahimov B., Yo'ldoshev A., boshqaruv qo'mitasi", sessiyaTuri:"Qo'mita muhokamasi",
+   qoshimcha:"Boshqaruv qo'mitasi yig'ilishida ko'riladi", hujjatNomi:"hisobdan_chiqarish_HC-2026-0034.pdf", hujjatHajmi:"1,4 MB",
+   sorovSana:"21-avg, 2026", javobMuddati:"29-avg, 2026", qolgan:"5 kun",
+   masulNom:"Rahimov Bekzod", masulLavozim:"Yurist", masulTel:"+998 97 567 89 01",
+   koribNom:"Yo'ldoshev Alisher", koribLavozim:"Filial rahbari",
+   nusxaNom:"Qodirova Nilufar", nusxaLavozim:"Kredit menejeri"}
 ];
-TASDIQLAR.forEach(t => { if (t.obyektId) t.joy = joyNomi(t.obyektId, t.joyIchi); });
+
+TASDIQLAR.forEach(t => { if (t.obyektId) t.joy = obyektNomi(t.obyektId, true); });
 
 /* ---------- Yer uchastkalari ----------
    kod reyestrdagi obyektga to'g'ri kelsa — status ish bosqichidan olinadi (Д-2). */
@@ -741,91 +750,84 @@ UCHASTKALAR.forEach(u => {
 
 /* ---------- Vazifalar navbati va shaxsiy vazifalar ---------- */
 const NAVBAT = [
-  {nom:"Xarid so'rovnomasi", kod:"№ PR-2024-0568", summa:"125 000 000 so'm", firma:'"Navruz Plaza" MCHJ', muddat:"Bugun", soat:"14:30", shosh:true, faol:true,
-   izoh:"Moliyaviy limit doirasida. Tasdiqlash uchun yuborildi.",
+  {nom:"Baholash buyurtmasi", kod:"\u2116 BB-2026-0114", summa:"12 000 000 so'm", firma:"\u00abExpert Baho\u00bb MChJ",
+   muddat:"Bugun", soat:"14:30", shosh:true, faol:true,
+   izoh:"GR-2026/5512 bo'yicha navbatdan tashqari qayta baholash \u2014 qiymat 13% pasaygan.",
    qadamlar:[
-     ["bajarildi","Boshlang'ich so'rov","Shohruh Umurzakov","24-may, 09:15","Tasdiqlandi"],
-     ["joriy","Moliyaviy nazorat","Malika Saidova","","Kutilmoqda"],
-     ["kutish","Yuridik ko'rib chiqish","Javlonbek Karimov","","Kutilmoqda"],
-     ["kutish","Yakuniy tasdiq","Ismoilov Otabek","","Kutilmoqda"]],
+    ["bajarildi","Buyurtma shakllantirildi","Sattorov Jasur","24-avg, 09:15","Yuborildi"],
+    ["joriy","Tavakkalchilik xulosasi","Xolmatova Zulfiya","","Kutilmoqda"],
+    ["kutish","Filial rahbari tasdig'i","Yo'ldoshev Alisher","","Kutilmoqda"]
+   ],
    tarix:[
-     ["24-may, 09:15","Shohruh Umurzakov","Boshlang'ich so'rov yopildi va tasdiqlash jarayoniga yuborildi."],
-     ["24-may, 10:02","Tizim","Keyingi bosqich: Moliyaviy nazorat (Malika Saidova)"]],
-   malumot:{turi:"Xarid so'rovnomasi", byudjet:"Kapital xarajatlar", obyekt:'"Navruz Plaza" MCHJ', yetkazib:"Climate Pro MCHJ", muddatIsh:"10 ish kuni"}},
-
-  {nom:"Shartnoma tasdig'i", kod:"№ CT-2024-1187", summa:"85 400 000 so'm", firma:'"Chorsu Savdo Markazi" MCHJ', muddat:"Bugun", soat:"16:00", shosh:true,
-   izoh:"Ijara shartnomasi loyihasi. Yuridik bo'lim tekshiruvi kutilmoqda.",
+    ["24-avg, 09:15","Sattorov Jasur","Buyurtma loyihasi tayyorlandi va kelishuvga yuborildi."],
+    ["24-avg, 10:02","Tizim","Keyingi bosqich: Tavakkalchilik xulosasi (Xolmatova Zulfiya)"]
+   ],
+   malumot:{turi:"Baholash buyurtmasi", asos:"Qiymatning jadal pasayishi (#GH-2026-00209)",
+            obyekt:"Chevrolet Malibu 2 \u00b7 GR-2026/5512", ijrochi:"\u00abExpert Baho\u00bb MChJ", muddatIsh:"5 ish kuni"}},
+  {nom:"Bosqich o'tkazish tasdig'i", kod:"\u2116 BO-2026-0451", summa:"38 600 000 so'm", firma:"Chorvoq dala hovlisi",
+   muddat:"Bugun", soat:"16:00", shosh:true, faol:false,
+   izoh:"GR-2026/0141 \u2014 ogohlantirishdan da'vo bosqichiga o'tkazish. Yozma talabnoma muddati o'tdi.",
    qadamlar:[
-     ["bajarildi","Loyiha tayyorlandi","Nilufar Ismoilova","24-may, 08:40","Tasdiqlandi"],
-     ["joriy","Yuridik ko'rib chiqish","Javlonbek Karimov","","Kutilmoqda"],
-     ["kutish","Moliyaviy nazorat","Malika Saidova","","Kutilmoqda"],
-     ["kutish","Yakuniy imzo","Ismoilov Otabek","","Kutilmoqda"]],
-   tarix:[
-     ["24-may, 08:40","Nilufar Ismoilova","Shartnoma loyihasi tayyorlandi va yuborildi."],
-     ["24-may, 09:50","Tizim","Keyingi bosqich: Yuridik ko'rib chiqish (Javlonbek Karimov)"]],
-   malumot:{turi:"Shartnoma tasdig'i", byudjet:"Operatsion xarajatlar", obyekt:'"Chorsu Savdo Markazi" MCHJ', yetkazib:"«Turon Retail» MChJ", muddatIsh:"5 ish kuni"}},
-
-  {nom:"To'lov topshirig'i", kod:"№ PAY-2024-3345", summa:"46 750 000 so'm", firma:'"Nurafshon turar-joy majmuasi" MCHJ', muddat:"25-may", soat:"10:00",
-   izoh:"Oylik kommunal xizmatlar to'lovi. Standart jarayon.",
+    ["bajarildi","Kredit menejeri taklifi","Qodirova Nilufar","23-avg, 17:40","Yuborildi"],
+    ["joriy","Yuridik xulosa","Rahimov Bekzod","","Kutilmoqda"],
+    ["kutish","Filial rahbari tasdig'i","Yo'ldoshev Alisher","","Kutilmoqda"]
+   ],
+   tarix:[["23-avg, 17:40","Qodirova Nilufar","90 kunlik muddat tugadi, da'vo bosqichi taklif qilindi."]],
+   malumot:{turi:"Bosqich o'tkazish", asos:"To'lov jadvalining buzilishi \u2014 34 kun kechikish",
+            obyekt:"Chorvoq dala hovlisi \u00b7 GR-2026/0141", ijrochi:"Yuridik departament", muddatIsh:"3 ish kuni"}},
+  {nom:"Sug'urta uzaytirish talabi", kod:"\u2116 SU-2026-0223", summa:"1 480 000 000 so'm", firma:"Alfa Invest sug'urta",
+   muddat:"Ertaga", soat:"11:00", shosh:false, faol:false,
+   izoh:"GR-2025/0934 polisi muddati o'tgan \u2014 auksion bosqichidagi obyekt qamrovsiz qolgan.",
    qadamlar:[
-     ["bajarildi","So'rov yaratildi","Saida Rahimova","23-may, 15:20","Tasdiqlandi"],
-     ["bajarildi","Moliyaviy nazorat","Malika Saidova","24-may, 11:05","Tasdiqlandi"],
-     ["joriy","Yakuniy tasdiq","Ismoilov Otabek","","Kutilmoqda"],
-     ["kutish","To'lov amalga oshirish","Xazina bo'limi","","Kutilmoqda"]],
-   tarix:[
-     ["23-may, 15:20","Saida Rahimova","To'lov topshirig'i yaratildi."],
-     ["24-may, 11:05","Malika Saidova","Moliyaviy nazorat o'tdi, yakuniy tasdiqqa yuborildi."]],
-   malumot:{turi:"To'lov topshirig'i", byudjet:"Kommunal xarajatlar", obyekt:'"Nurafshon turar-joy majmuasi" MCHJ', yetkazib:"Hududiy elektr tarmoqlari", muddatIsh:"3 ish kuni"}},
-
-  {nom:"Sotuv shartnomasi tasdig'i", kod:"№ SOT-2024-0099", summa:"312 000 000 so'm", firma:'"Industrial Park" MCHJ', muddat:"26-may", soat:"09:30",
-   izoh:"Yirik summadagi sotuv bitimi — kengaytirilgan yuridik tekshiruv talab etiladi.",
+    ["bajarildi","Hodisa qayd etildi","Qodirova Nilufar","24-avg, 13:48","Ochildi"],
+    ["joriy","Qarzdorga talabnoma","Qodirova Nilufar","","Tayyorlanmoqda"],
+    ["kutish","Nazorat yopilishi","Sattorov Jasur","","Kutilmoqda"]
+   ],
+   tarix:[["24-avg, 13:48","Tizim","Polis muddati o'tganligi aniqlandi (#GH-2026-00211)."]],
+   malumot:{turi:"Sug'urta nazorati", asos:"Polis PL-2025/08127 muddati 11-avgustda tugagan",
+            obyekt:"Navruz Plaza \u00b7 GR-2025/0934", ijrochi:"Muammoli kreditlar boshqarmasi", muddatIsh:"7 kun"}},
+  {nom:"Auksion boshlang'ich narxi", kod:"\u2116 AN-2026-0087", summa:"1 480 000 000 so'm", firma:"Navruz Plaza",
+   muddat:"27-avg", soat:"10:00", shosh:false, faol:false,
+   izoh:"Boshlang'ich narx joriy baholangan qiymatga tenglashtiriladi (Д-4).",
    qadamlar:[
-     ["bajarildi","Boshlang'ich so'rov","Bekzod Yusupov","22-may, 14:00","Tasdiqlandi"],
-     ["joriy","Yuridik ko'rib chiqish","Javlonbek Karimov","","Kutilmoqda"],
-     ["kutish","Moliyaviy nazorat","Malika Saidova","","Kutilmoqda"],
-     ["kutish","Yakuniy tasdiq","Ismoilov Otabek","","Kutilmoqda"]],
-   tarix:[
-     ["22-may, 14:00","Bekzod Yusupov","Sotuv shartnomasi loyihasi kiritildi."],
-     ["23-may, 09:15","Tizim","Keyingi bosqich: Yuridik ko'rib chiqish (Javlonbek Karimov)"]],
-   malumot:{turi:"Sotuv shartnomasi tasdig'i", byudjet:"Obyektlarni realizatsiya qilish", obyekt:'"Industrial Park" MCHJ', yetkazib:"Industrial Partners LLC", muddatIsh:"15 ish kuni"}},
-
-  {nom:"Obyektni qabul qilish", kod:"№ AC-2024-2211", summa:"32 500 000 so'm", firma:'"Savdo markazi" MCHJ', muddat:"27-may", soat:"11:00",
-   izoh:"Yangi uskuna qabul qilinishi kutilmoqda. Texnik ko'rikdan keyin davom etadi.",
+    ["bajarildi","Baholash hisoboti biriktirildi","Karimova Feruza","22-avg, 15:20","Tasdiqlandi"],
+    ["joriy","Yurist kelishuvi","Rahimov Bekzod","","Kutilmoqda"],
+    ["kutish","Filial rahbari tasdig'i","Yo'ldoshev Alisher","","Kutilmoqda"]
+   ],
+   tarix:[["22-avg, 15:20","Karimova Feruza","25.03.2026 baholash hisoboti lot hujjatlariga kiritildi."]],
+   malumot:{turi:"Lot rasmiylashtirish", asos:"Sud qarori 2-0876/2026, ijro varaqasi IV-2026/0934",
+            obyekt:"Navruz Plaza \u00b7 GR-2025/0934", ijrochi:"Realizatsiya guruhi", muddatIsh:"5 ish kuni"}},
+  {nom:"Hisobdan chiqarish taklifi", kod:"\u2116 HC-2026-0034", summa:"286 000 000 so'm", firma:"Zarafshon Tekstil sexi",
+   muddat:"29-avg", soat:"15:00", shosh:false, faol:false,
+   izoh:"Realizatsiyadan keyin qoplanmay qolgan qoldiqni zaxira hisobidan chiqarish.",
    qadamlar:[
-     ["joriy","Boshlang'ich so'rov","Jahongir Otajonov","","Kutilmoqda"],
-     ["kutish","Texnik ko'rik","Shahzod Abdullaev","","Kutilmoqda"],
-     ["kutish","Moliyaviy nazorat","Malika Saidova","","Kutilmoqda"],
-     ["kutish","Yakuniy tasdiq","Ismoilov Otabek","","Kutilmoqda"]],
-   tarix:[
-     ["25-may, 16:40","Jahongir Otajonov","Obyektni qabul qilish so'rovi yaratildi."]],
-   malumot:{turi:"Obyektni qabul qilish", byudjet:"Garov obyektlari hisobga olish", obyekt:'"Savdo markazi" MCHJ', yetkazib:"Tex Import MCHJ", muddatIsh:"7 ish kuni"}}
+    ["bajarildi","Tavakkalchilik hisob-kitobi","Xolmatova Zulfiya","21-avg, 12:10","Tayyor"],
+    ["joriy","Yuridik xulosa","Rahimov Bekzod","","Kutilmoqda"],
+    ["kutish","Boshqaruv qo'mitasi","Yo'ldoshev Alisher","","Kutilmoqda"]
+   ],
+   tarix:[["21-avg, 12:10","Xolmatova Zulfiya","Qoplanmagan qoldiq bo'yicha hujjatlar to'plami shakllantirildi."]],
+   malumot:{turi:"Hisobdan chiqarish", asos:"Zaxira 100% shakllantirilgan, undiruv imkoniyatlari tugagan",
+            obyekt:"Zarafshon Tekstil sexi \u00b7 GR-2025/1187", ijrochi:"Tavakkalchilik departamenti", muddatIsh:"10 ish kuni"}}
 ];
+
 const MENING_VAZIFALARIM = [
-  {nom:"Moliyaviy nazorat", tur:"Xarid so'rovnomasi", kod:"№ PR-2024-0568", sana:"Bugun", vaqt:"14:30", bugunmi:true,
-   ikon:"i-daromad", muhimlik:"kritik", ijrochi:"Malika Saidova"},
-  {nom:"Shartnoma loyihasi", tur:"Ko'rib chiqish", kod:"№ CT-2024-1187", sana:"Bugun", vaqt:"16:00", bugunmi:true,
-   ikon:"i-shartnoma", muhimlik:"yuqori", ijrochi:"Javlonbek Karimov"},
-  {nom:"To'lov jadvali yangilash", tur:"Hisobot tayyorlash", kod:"№ REP-2024-0091", sana:"25-may", vaqt:"09:00", bugunmi:false,
-   ikon:"i-daromad", muhimlik:"orta", ijrochi:"Saida Rahimova"},
-  {nom:"Aktiv ma'lumotlarini tekshirish", tur:"Ma'lumotlarni yangilash", kod:"№ AC-2024-2211", sana:"26-may", vaqt:"11:30", bugunmi:false,
-   ikon:"i-aktiv", muhimlik:"past", ijrochi:"Jahongir Otajonov"}
+  {nom:"Ko'rik dalolatnomasini imzolatish", tur:"Garov nazorati", kod:"KO-2026/0391", sana:"2026-08-24", vaqt:"15:00", bugunmi:true, ikon:"i-hujjat", muhimlik:"yuqori", ijrochi:"Sattorov J."},
+  {nom:"Qarzdor bilan muzokara", tur:"Portfel", kod:"GR-2026/2210", sana:"2026-08-24", vaqt:"17:30", bugunmi:true, ikon:"i-foyd", muhimlik:"orta", ijrochi:"Qodirova N."},
+  {nom:"Sug'urta talabnomasini yuborish", tur:"Nazorat", kod:"GR-2025/0934", sana:"2026-08-25", vaqt:"", bugunmi:false, ikon:"i-qalqon", muhimlik:"yuqori", ijrochi:"Qodirova N."},
+  {nom:"Kadastr ma'lumotini yangilash", tur:"Hujjatlar", kod:"GR-2025/0755", sana:"2026-08-26", vaqt:"", bugunmi:false, ikon:"i-yer", muhimlik:"past", ijrochi:"Karimova F."}
 ];
+
 
 /* ---------- Bildirishnomalar ---------- */
 const BILDIRISHLAR = [
-  {ikon:"i-shartnoma", t:"Tasdiqlar", sarlavha:"Yangi xarid so'rovnomasi yaratildi",
-   matn:"Navruz Plaza loyihasi uchun yangi xarid so'rovnomasi (№ PR-2024-0568) yaratildi.", vaqt:"14:30", yangi:true, havola:"vazifalar.html"},
-  {ikon:"i-vazifa", t:"Tasdiqlar", sarlavha:"Tasdiqlash kutilmoqda",
-   matn:'"Chorsu Savdo Markazi" shartnomasi tasdiqlashingizni kutmoqda.', vaqt:"14:10", yangi:true, havola:"vazifalar.html"},
-  {ikon:"i-kalendar", t:"Tizim", sarlavha:"Uchrashuv eslatmasi",
-   matn:"Texnik ko'rik uchrashuvi rejalashtirilgan.", vaqt:"13:45", yangi:false, havola:"vazifalar.html"},
-  {ikon:"i-daromad", t:"Moliya", sarlavha:"To'lov yaqinlashmoqda",
-   matn:'"Nurafshon turar-joy majmuasi" uchun to\'lov 25-may sanasida yakunlanadi.', vaqt:"12:20", yangi:false, havola:"shartnomalar.html"},
-  {ikon:"i-foyd", t:"Kirish nazorati", sarlavha:"Yangi foydalanuvchi qo'shildi",
-   matn:"Javlon Karimov Kirish nazorati tizimiga qo'shildi.", vaqt:"11:30", yangi:false, havola:"foydalanuvchilar.html"},
-  {ikon:"i-ogoh", t:"Hodisalar", sarlavha:"Qurilma ogohlantirishi",
-   matn:"Turniket №2 offline holatida.", vaqt:"10:05", yangi:false, havola:"garov-monitoringi.html"}
+  {ikon:"i-grafik", t:"Tasdiqlar", sarlavha:"Baholash buyurtmasi kelishuvda", matn:"GR-2026/5512 bo'yicha buyurtma (\u2116 BB-2026-0114) tavakkalchilik xulosasini kutmoqda.", vaqt:"14:30", yangi:true, havola:"vazifalar.html"},
+  {ikon:"i-ogoh", t:"Garov hodisasi", sarlavha:"Sug'urta polisi muddati o'tdi", matn:"Navruz Plaza (GR-2025/0934) auksion bosqichida qamrovsiz qoldi \u2014 talabnoma tayyorlanmoqda.", vaqt:"13:48", yangi:true, havola:"garov-hodisalari.html"},
+  {ikon:"i-tashrif", t:"Ko'rik rejasi", sarlavha:"Ko'rik muddati o'tdi", matn:"Chorvoq dala hovlisi bo'yicha navbatdan tashqari ko'rik (KO-2026/0398) o'tkazilmadi \u2014 qayta tayinlang.", vaqt:"12:05", yangi:true, havola:"korik-rejasi.html"},
+  {ikon:"i-tarozi", t:"Yuridik ish", sarlavha:"Ijro varaqasi muddati yaqinlashmoqda", matn:"GR-2026/4471 bo'yicha ijro hujjati muddatiga 4 kun qoldi.", vaqt:"11:20", yangi:false, havola:"undiruv.html"},
+  {ikon:"i-aktiv", t:"Tasnif", sarlavha:"Toifa migratsiyasi kutilmoqda", matn:"GR-2026/0141 haftaning oxirigacha Shubhali toifaga o'tadi \u2014 zaxira 9,7 dan 19,3 mln gacha ko'tariladi.", vaqt:"10:40", yangi:false, havola:"tasniflash.html"},
+  {ikon:"i-bolg", t:"Realizatsiya", sarlavha:"Savdo sanasi belgilandi", matn:"Sergeli logistika ombori \u2014 e'lon joylandi, savdo 09-sentabrga belgilandi.", vaqt:"09:15", yangi:false, havola:"auksion.html"}
 ];
+
 
 /* ---------- Audit jurnali: o'zgarmas yozuv, matn qayta hisoblanmaydi (ТЗ 8) ---------- */
 const AUDIT_JURNAL = [
@@ -861,19 +863,20 @@ const FOYDLAR = [
 ];
 
 const HISOBOTLAR = [
-  {nom:"Oylik faoliyat hisoboti", sub:"Faoliyat tahlili va ko'rsatkichlar", format:"pdf", sana:"31-may, 2024", soat:"14:30", tur:"Faoliyat tahlili", hajm:"2.4 MB",
-   daromad:"12 450 000 000 so'm", daromadD:"+12,4%", xarajat:"4 250 000 000 so'm", xarajatD:"-5,3%", foyda:"8 200 000 000 so'm", foydaD:"+18,7%", indeks:"92 / 100", indeksD:"+6", grafik:[6.1,7.2,6.8,9.4,12.45]},
-  {nom:"Obyektlar holati hisoboti", sub:"Garov obyektlari ro'yxati va holati", format:"xlsx", sana:"31-may, 2024", soat:"14:15", tur:"Garov obyektlari tahlili", hajm:"1.8 MB",
-   daromad:"9 800 000 000 so'm", daromadD:"+4,1%", xarajat:"3 100 000 000 so'm", xarajatD:"-2,8%", foyda:"6 700 000 000 so'm", foydaD:"+7,9%", indeks:"88 / 100", indeksD:"+3", grafik:[5.4,6.0,6.6,8.1,9.8]},
-  {nom:"Ijara va to'lovlar hisoboti", sub:"Ijara tushumlari va to'lov jadvallari", format:"pdf", sana:"31-may, 2024", soat:"13:40", tur:"Moliyaviy", hajm:"2.1 MB",
-   daromad:"15 200 000 000 so'm", daromadD:"+9,6%", xarajat:"2 400 000 000 so'm", xarajatD:"-1,2%", foyda:"12 800 000 000 so'm", foydaD:"+11,4%", indeks:"95 / 100", indeksD:"+4", grafik:[9.7,10.5,11.9,13.6,15.2]},
-  {nom:"Moliyaviy tahlil hisoboti", sub:"Daromad va xarajatlar tahlili", format:"xlsx", sana:"30-may, 2024", soat:"18:20", tur:"Moliyaviy", hajm:"1.5 MB",
-   daromad:"18 900 000 000 so'm", daromadD:"+15,8%", xarajat:"6 750 000 000 so'm", xarajatD:"-8,9%", foyda:"12 150 000 000 so'm", foydaD:"+21,3%", indeks:"90 / 100", indeksD:"+8", grafik:[11.2,13.0,14.8,16.5,18.9]},
-  {nom:"Boshqaruv taqdimoti", sub:"Asosiy KPI va tahlillar", format:"pptx", sana:"30-may, 2024", soat:"17:05", tur:"Taqdimot", hajm:"6.2 MB",
-   daromad:"14 600 000 000 so'm", daromadD:"+10,2%", xarajat:"4 900 000 000 so'm", xarajatD:"-4,5%", foyda:"9 700 000 000 so'm", foydaD:"+16,1%", indeks:"91 / 100", indeksD:"+5", grafik:[8.3,9.6,10.8,12.9,14.6]},
-  {nom:"Xavfsizlik va kirish hisoboti", sub:"Kirish nazorati faoliyati tahlili", format:"pdf", sana:"30-may, 2024", soat:"16:45", tur:"Xavfsizlik", hajm:"1.1 MB",
-   daromad:"7 300 000 000 so'm", daromadD:"+3,4%", xarajat:"1 900 000 000 so'm", xarajatD:"-6,1%", foyda:"5 400 000 000 so'm", foydaD:"+9,8%", indeks:"97 / 100", indeksD:"+2", grafik:[4.8,5.5,6.1,6.8,7.3]}
+  {nom:"Oylik portfel hisoboti", sub:"Muammoli aktivlar dinamikasi, bosqichlar kesimi", format:"PDF", sana:"31-iyl, 2026", soat:"09:00", tur:"portfel", hajm:"2,4 MB",
+   daromad:"58,4", daromadD:8.2, xarajat:"6,2", xarajatD:-3.1, foyda:"52,2", foydaD:9.6, indeks:"87", indeksD:2.1, grafik:[42,48,45,52,58,54,61,58]},
+  {nom:"Undiruv samaradorligi", sub:"Bosqichlar bo'yicha o'tish muddatlari va tushum", format:"XLSX", sana:"31-iyl, 2026", soat:"09:00", tur:"undiruv", hajm:"1,1 MB",
+   daromad:"31,7", daromadD:5.4, xarajat:"2,8", xarajatD:1.2, foyda:"28,9", foydaD:6.1, indeks:"91", indeksD:1.4, grafik:[35,38,36,41,44,47,45,49]},
+  {nom:"Garov nazorati hisoboti", sub:"Ko'riklar, sug'urta qamrovi, baholash dolzarbligi", format:"PDF", sana:"31-iyl, 2026", soat:"09:30", tur:"nazorat", hajm:"3,2 MB",
+   daromad:"87,7", daromadD:1.8, xarajat:"94,2", xarajatD:0.6, foyda:"85,2", foydaD:2.2, indeks:"88", indeksD:0.9, grafik:[82,84,83,86,85,87,88,88]},
+  {nom:"Tasnif va zaxira hisoboti", sub:"Toifalar kesimi, zaxira yuki, migratsiya", format:"XLSX", sana:"31-iyl, 2026", soat:"10:00", tur:"zaxira", hajm:"0,9 MB",
+   daromad:"6,71", daromadD:4.2, xarajat:"0,29", xarajatD:-1.8, foyda:"95,9", foydaD:0.4, indeks:"96", indeksD:0.3, grafik:[88,90,89,92,94,93,95,96]},
+  {nom:"Realizatsiya hisoboti", sub:"Lotlar, savdo natijalari, tushum", format:"PDF", sana:"30-iyl, 2026", soat:"11:00", tur:"realizatsiya", hajm:"1,8 MB",
+   daromad:"12,5", daromadD:11.3, xarajat:"0,7", xarajatD:2.4, foyda:"11,8", foydaD:12.0, indeks:"84", indeksD:3.2, grafik:[28,32,30,38,42,40,47,52]},
+  {nom:"Boshqaruv taqdimoti", sub:"Rahbariyat uchun oylik yig'ma taqdimot", format:"PPTX", sana:"30-iyl, 2026", soat:"14:00", tur:"portfel", hajm:"5,6 MB",
+   daromad:"58,4", daromadD:8.2, xarajat:"6,2", xarajatD:-3.1, foyda:"52,2", foydaD:9.6, indeks:"87", indeksD:2.1, grafik:[42,48,45,52,58,54,61,58]}
 ];
+
 const HUDUDLAR = [
   ["Toshkent shahri","302","↑ 8,2%",1],["Toshkent viloyati","244","↑ 6,4%",1],
   ["Samarqand viloyati","128","↑ 7,1%",1],["Farg'ona viloyati","96","↓ 2,3%",0],
@@ -892,10 +895,11 @@ const AUKSION_BOSQICH = [
 
 /* ---------- Rejalashtirilgan hisobotlar va KPI asosi ---------- */
 const AVTO = [
-  ["Oylik boshqaruv hisoboti","Har oy","01-iyun, 2024","09:00","+3"],
-  ["Haftalik obyektlar hisoboti","Har hafta","02-iyun, 2024","09:00","+2"],
-  ["Kvartalik moliyaviy tahlil","Har kvartal","30-iyun, 2024","10:00","+4"]
+  ["Oylik portfel hisoboti","Har oy","01-sen, 2026","09:00","+3"],
+  ["Haftalik nazorat hisoboti","Har hafta","31-avg, 2026","09:00","+2"],
+  ["Kvartalik tasnif va zaxira","Har kvartal","30-sen, 2026","10:00","+4"]
 ];
+
 const KPI_BAZA = [
   {qiymat:12.48, birlik:"mlrd so'm", delta:8.2, manfiy:false},
   {qiymat:2.16,  birlik:"mlrd so'm", delta:5.6, manfiy:false},

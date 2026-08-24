@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082404">
+<link rel="stylesheet" href="mkb.css?v=26082405">
 <style>
 /* ---- Garov obyekti kartasi (ekran 4) ---- */
 .orqa-tugma{
@@ -100,6 +100,7 @@
 .f-doira.yashil{background:#DAE9F8;color:#268030}
 .f-doira.kok{background:#E7F0FE;color:#2F6BCF}
 .f-doira.sariq{background:#FFF6DE;color:#9A6E00}
+.f-doira.qizil{background:#FDEEEC;color:#C43C31}
 .f-doira.binafsha{background:#F3EBFE;color:#8A4BD8}
 .f-matn{flex:1;min-width:0}
 .f-matn b{display:block;font-size:14.5px;font-weight:650;color:#182533;line-height:1.35}
@@ -224,9 +225,9 @@
     <!-- Tablar -->
     <div class="tab-chiziq" role="tablist">
       <button class="tab-band aktiv" data-tab="umumiy">Umumiy ma'lumot</button>
-      <button class="tab-band" data-tab="xonalar">Xonalar</button>
+      <button class="tab-band" data-tab="xonalar">Tarkib</button>
       <button class="tab-band" data-tab="hujjatlar">Hujjatlar</button>
-      <button class="tab-band" data-tab="monitoring">Monitoring</button>
+      <button class="tab-band" data-tab="monitoring">Nazorat</button>
       <button class="tab-band" data-tab="infratuzilma">Infratuzilma</button>
       <button class="tab-band" data-tab="tarix">Tarix</button>
     </div>
@@ -259,14 +260,8 @@
         <div class="karta jadval-korpus" data-panel="xonalar" hidden>
           <div class="jadval-orash">
             <table class="jadval">
-              <thead><tr><th>Xona</th><th>Qavat</th><th>Maydon</th><th>Ijarachi</th><th>Holat</th></tr></thead>
-              <tbody>
-                <tr data-toast="Xona 501 kartasi"><td><b>Ofis 501</b></td><td>5</td><td>1 200 m²</td><td>«Turon Retail» MChJ</td><td><span class="chip chip-asos"><span class="nuqta"></span>Band</span></td></tr>
-                <tr data-toast="Xona 302 kartasi"><td><b>Ofis 302</b></td><td>3</td><td>800 m²</td><td>«Turon Retail» MChJ</td><td><span class="chip chip-asos"><span class="nuqta"></span>Band</span></td></tr>
-                <tr data-toast="Xona 204 kartasi"><td><b>Ofis 204</b></td><td>2</td><td>450 m²</td><td>—</td><td><span class="chip chip-kul"><span class="nuqta"></span>Bo'sh</span></td></tr>
-                <tr data-toast="Konferensiya zali kartasi"><td><b>Konferensiya zali</b></td><td>1</td><td>150 m²</td><td>Umumiy</td><td><span class="chip chip-kok"><span class="nuqta"></span>Bron qilinadi</span></td></tr>
-                <tr data-toast="Avtoturargoh kartasi"><td><b>Yerosti avtoturargoh</b></td><td>-1</td><td>2 400 m²</td><td>Umumiy</td><td><span class="chip chip-asos"><span class="nuqta"></span>Faol</span></td></tr>
-              </tbody>
+              <thead><tr><th>Tarkibiy qism</th><th>Qavat</th><th>Maydon</th><th>Kadastr birligi</th><th>Holat</th></tr></thead>
+              <tbody id="h-tarkib"></tbody>
             </table>
           </div>
         </div>
@@ -290,11 +285,12 @@
 
         <!-- MONITORING -->
         <div class="karta" data-panel="monitoring" hidden>
+          <!-- Nazorat o'qlari: qiymatlar sahifa skriptida ma'lumotdan to'ldiriladi (Д-7) -->
           <div class="mon-grid">
-            <div class="mon-karta"><span class="f-doira yashil"><svg class="ic"><use href="#i-energiya"/></svg></span><span><span class="kpi-yorliq">Energiya samaradorligi</span><br><b style="font-size:19px">A+ sinf</b></span></div>
-            <div class="mon-karta"><span class="f-doira yashil"><svg class="ic"><use href="#i-foyd"/></svg></span><span><span class="kpi-yorliq">Bandlik darajasi</span><br><b style="font-size:19px">92%</b></span></div>
-            <div class="mon-karta"><span class="f-doira yashil"><svg class="ic"><use href="#i-qalqon"/></svg></span><span><span class="kpi-yorliq">Xavfsizlik tizimi</span><br><b style="font-size:19px">Faol</b></span></div>
-            <div class="mon-karta"><span class="f-doira yashil"><svg class="ic"><use href="#i-belgi-doira"/></svg></span><span><span class="kpi-yorliq">Texnik holat</span><br><b style="font-size:19px">Yaxshi</b></span></div>
+            <div class="mon-karta"><span class="f-doira yashil" id="h-mk-korik-d"><svg class="ic"><use href="#i-tashrif"/></svg></span><span><span class="kpi-yorliq">So'nggi ko'rik</span><br><b style="font-size:17px" id="h-mk-korik">—</b></span></div>
+            <div class="mon-karta"><span class="f-doira yashil" id="h-mk-sugurta-d"><svg class="ic"><use href="#i-qalqon"/></svg></span><span><span class="kpi-yorliq">Sug'urta</span><br><b style="font-size:17px" id="h-mk-sugurta">—</b></span></div>
+            <div class="mon-karta"><span class="f-doira yashil" id="h-mk-baho-d"><svg class="ic"><use href="#i-grafik"/></svg></span><span><span class="kpi-yorliq">Baholash</span><br><b style="font-size:17px" id="h-mk-baho">—</b></span></div>
+            <div class="mon-karta"><span class="f-doira yashil" id="h-mk-tasnif-d"><svg class="ic"><use href="#i-aktiv"/></svg></span><span><span class="kpi-yorliq">Tasnif toifasi</span><br><b style="font-size:17px" id="h-mk-tasnif">—</b></span></div>
           </div>
         </div>
 
@@ -325,7 +321,7 @@
               <span class="infra-matn"><b>Kanalizatsiya</b><span id="h-infra-kanal">—</span></span>
             </div>
           </div>
-          <div class="infra-eslatma"><svg class="ic"><use href="#i-info"/></svg>Asosiy kran/kalitlarni faqat texnik xodim yoki mas'ul operator boshqaradi. Favqulodda uzish tartibi uchun qurilmalar bo'limiga qarang.</div>
+          <div class="infra-eslatma"><svg class="ic"><use href="#i-info"/></svg>Kommunikatsiya nuqtalarining holati ko'rik dalolatnomasida qayd etiladi; kirish kalitlari bank mas'ul xodimida saqlanadi.</div>
         </div>
 
         <!-- TARIX -->
@@ -358,9 +354,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082404"></script>
-<script src="tarjima.js?v=26082404"></script>
-<script src="mkb.js?v=26082404"></script>
+<script src="malumot.js?v=26082405"></script>
+<script src="tarjima.js?v=26082405"></script>
+<script src="mkb.js?v=26082405"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -397,7 +393,7 @@ const MALUMOT = {};
 MKB_DATA.YOZUVLAR.forEach(y => {
   const q = QOSHIMCHA[y.id] || {};
   MALUMOT[y.id] = {
-    nom: y.garov.nom, tur: y.garov.tur, holat: y.holat.nom,
+    id: y.id, nom: y.garov.nom, tur: y.garov.tur, holat: y.holat.nom,
     rasm: y.garov.rasm,
     manzil: y.garov.hududToliq + ",<br>" + y.garov.manzil,
     maydon: y.garov.maydon, yer: q.yer || "—", qavat: q.qavat || "—", yil: q.yil || "—",
@@ -435,6 +431,50 @@ if (!XONALI_TURLAR.includes(o.tur)){
   if (xTab) xTab.remove();
   if (xPanel) xPanel.remove();
 }
+
+/* ---- Nazorat paneli va tarkib jadvali: yagona manbadan (Д-1, Д-7) ---- */
+(function(){
+  const D = MKB_DATA;
+  const q = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  const doira = (id, tur) => { const e = document.getElementById(id);
+    if (e) e.className = "f-doira " + (tur === "ha" ? "yashil" : tur === "ogoh" ? "sariq" : "qizil"); };
+
+  const yoz = D.YOZUVLAR.find(z => z.id === o.id);
+
+  const korik = D.KORIKLAR.filter(k => k.obyektId === o.id && k.holat === "otkazildi")[0];
+  const kech  = D.KORIKLAR.find(k => k.obyektId === o.id && k.holat === "muddati_otgan");
+  q("h-mk-korik", kech ? "O'tkazilmadi" : korik ? korik.sana + " \u00b7 " + korik.ball + " ball" : "Rejalashtirilgan");
+  doira("h-mk-korik-d", kech ? "yoq" : korik ? "ha" : "ogoh");
+
+  const g = D.SUGURTALAR.find(x => x.obyektId === o.id);
+  const yer = o.tur === "Yer uchastkasi";
+  q("h-mk-sugurta", yer ? "Talab etilmaydi" : !g || g.holat === "yoq" ? "Polis yo'q"
+    : g.holat === "muddati_otgan" ? "Muddati o'tgan" : g.tugash + " gacha");
+  doira("h-mk-sugurta-d", yer ? "ha" : !g || g.holat === "yoq" || g.holat === "muddati_otgan" ? "yoq"
+    : g.holat === "tugaydi" ? "ogoh" : "ha");
+
+  const b = D.BAHOLASHLAR.find(x => x.obyektId === o.id);
+  q("h-mk-baho", b ? (b.holat === "eskirgan" ? "Eskirgan (" + b.sana + ")" : b.keyingi + " gacha") : "Baholanmagan");
+  doira("h-mk-baho-d", !b || b.holat === "eskirgan" ? "yoq" : b.holat === "tugaydi" ? "ogoh" : "ha");
+
+  if (yoz){
+    q("h-mk-tasnif", yoz.tasnif.nom + " \u00b7 zaxira " + yoz.tasnif.zaxira + "%");
+    doira("h-mk-tasnif-d", yoz.tasnif.zaxira >= 50 ? "yoq" : yoz.tasnif.zaxira >= 25 ? "ogoh" : "ha");
+  }
+
+  /* Tarkib jadvali — XONALAR dan (hozircha Navruz Plaza uchun to'ldirilgan) */
+  const tarkib = document.getElementById("h-tarkib");
+  if (tarkib){
+    const royxat = D.XONALAR.filter(x => x.obyektId === o.id);
+    tarkib.innerHTML = royxat.length ? royxat.map(x => `
+      <tr data-toast="${x.nom} \u2014 kadastr hujjatlari">
+        <td><b>${x.nom}</b></td><td>${x.qavat}</td><td>${x.maydon}</td>
+        <td style="font-variant-numeric:tabular-nums">${x.kadastr}</td>
+        <td><span class="chip chip-asos"><span class="nuqta"></span>${x.holat}</span></td>
+      </tr>`).join("")
+    : `<tr><td colspan="5" style="text-align:center;color:var(--matn-3);padding:22px 0">Bu obyekt bo'yicha tarkib ro'yxati kiritilmagan \u2014 yagona kadastr birligi</td></tr>`;
+  }
+})();
 
 /* Xatcho'p */
 const x = document.getElementById("xatcho");
