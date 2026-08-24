@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Servis topshirig'i va tekshiruv (ekran 27, Texnik xodim) ---- */
 .orqa-tugma{width:48px;height:48px;border-radius:14px;background:var(--karta);box-shadow:var(--soya);display:grid;place-items:center;color:#1C2836;flex:none}
@@ -169,7 +169,7 @@
         <div class="sv-band"><span class="yorliq">Topshiriq raqami</span><b>WO-2024-05124</b></div>
         <div class="sv-band"><span class="yorliq">Obyekt</span>
           <a class="sv-obyekt" href="obyekt.html?id=green-tower">
-            <img src="assets/bino_tower.png" alt="">
+            <img src="assets/bino_tower.webp" alt="">
             <span><b style="font-size:14px;font-weight:700">Navruz Plaza</b><span>GR-2025/0934</span></span>
           </a>
         </div>
@@ -203,7 +203,7 @@
           </div>
         </div>
         <div class="sv-xarita">
-          <img src="assets/servis_xarita.png" alt="3-qavat xaritasi — qurilmalar joylashuvi bilan">
+          <img src="assets/servis_xarita.webp" alt="3-qavat xaritasi — qurilmalar joylashuvi bilan">
           <div class="zoom">
             <button data-toast="Yaqinlashtirish">+</button>
             <button data-toast="Uzoqlashtirish">−</button>
@@ -220,9 +220,9 @@
         <div class="oldin-keyin">
           <h4>Tekshiruvdan oldin va keyin</h4>
           <div class="ok-grid">
-            <button class="ok-juft" data-toast="Kameralar: oldin/keyin taqqoslash"><img src="assets/sx_kamera.png" alt="Kameralar oldin va keyin"><span class="teglar"><span>Oldin</span><span>Keyin</span></span></button>
-            <button class="ok-juft" data-toast="Panellar: oldin/keyin taqqoslash"><img src="assets/sx_panel.png" alt="Panel oldin va keyin"><span class="teglar"><span>Oldin</span><span>Keyin</span></span></button>
-            <button class="ok-juft" data-toast="Detektorlar: oldin/keyin taqqoslash"><img src="assets/sx_detektor.png" alt="Detektorlar oldin va keyin"><span class="teglar"><span>Oldin</span><span>Keyin</span></span></button>
+            <button class="ok-juft" data-toast="Kameralar: oldin/keyin taqqoslash"><img src="assets/sx_kamera.webp" alt="Kameralar oldin va keyin"><span class="teglar"><span>Oldin</span><span>Keyin</span></span></button>
+            <button class="ok-juft" data-toast="Panellar: oldin/keyin taqqoslash"><img src="assets/sx_panel.webp" alt="Panel oldin va keyin"><span class="teglar"><span>Oldin</span><span>Keyin</span></span></button>
+            <button class="ok-juft" data-toast="Detektorlar: oldin/keyin taqqoslash"><img src="assets/sx_detektor.webp" alt="Detektorlar oldin va keyin"><span class="teglar"><span>Oldin</span><span>Keyin</span></span></button>
             <button class="ok-yuklash" data-toast="Fayl yuklash oynasi"><svg class="ic"><use href="#i-qoshish"/></svg>Rasm yoki fayl yuklash</button>
           </div>
         </div>
@@ -264,21 +264,14 @@ Face ID qurilmalari yangilanishi tavsiya etiladi.</textarea>
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
 /* Tekshiruv vazifalari — interaktiv checklist */
-const VAZIFALAR = [
-  {nom:"1. Kamera tekshiruvi", izoh:"Barcha kameralar tasvir sifati va yozuvini tekshirish", holat:"bajarildi"},
-  {nom:"2. Face ID test", izoh:"Face ID qurilmalari aniqlik va javob vaqtini tekshirish", holat:"jarayonda"},
-  {nom:"3. Interkom audio testi", izoh:"Interkom qurilmalarining ovoz sifati va ulanishini tekshirish", holat:"kutish"},
-  {nom:"4. Eshik qulfi tekshiruvi", izoh:"Eshik qulflari va ochilish mexanizmlarini tekshirish", holat:"kutish"},
-  {nom:"5. Yong'in detektori tekshiruvi", izoh:"Yong'in detektorlari ishlash holatini tekshirish", holat:"kutish"},
-  {nom:"6. Yong'in signalizatsiyasi liniyasi", izoh:"Signalizatsiya liniyasi va markaziy panelni tekshirish", holat:"kutish"}
-];
+const VAZIFALAR = MKB_DATA.SERVIS_VAZIFALAR;   /* yagona manba (Д-1) */
 const HOLAT_MATN = {bajarildi:"Bajarildi", jarayonda:"Jarayonda", kutish:"Kutilmoqda"};
 
 function tvChiz(){
@@ -300,13 +293,7 @@ function tvChiz(){
 tvChiz();
 
 /* Ehtiyot qismlar — ombor va biriktirish */
-const EHTIYOT_QISMLAR = [
-  {nom:"Magnit qulf moduli", kod:"EQ-1001", omborda:6, birlik:"dona"},
-  {nom:"Face ID sensori", kod:"EQ-1002", omborda:3, birlik:"dona"},
-  {nom:"IP kamera obyektivi", kod:"EQ-1003", omborda:5, birlik:"dona"},
-  {nom:"UPS batareya bloki", kod:"EQ-1004", omborda:2, birlik:"dona"},
-  {nom:"Tarmoq kabeli", kod:"EQ-1005", omborda:45, birlik:"m"}
-];
+const EHTIYOT_QISMLAR = MKB_DATA.EHTIYOT_QISMLAR;   /* yagona manba (Д-1) */
 const BIRIKTIRILGAN = [];
 
 function eqChiz(){

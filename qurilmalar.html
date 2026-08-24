@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Qurilma diagnostikasi (ekran 26, Texnik xodim) ---- */
 .orqa-tugma{width:48px;height:48px;border-radius:14px;background:var(--karta);box-shadow:var(--soya);display:grid;place-items:center;color:#1C2836;flex:none}
@@ -202,7 +202,7 @@
         <div data-panel="umumiy">
           <div class="qm-korinish" id="qm-korinish">
             <h4>Qurilma ko'rinishi</h4>
-            <img id="qm-rasm" src="assets/qurilma_eshik.png" alt="">
+            <img id="qm-rasm" src="assets/qurilma_eshik.webp" alt="">
           </div>
 
           <div class="info-strip">
@@ -305,135 +305,14 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
-const QURILMALAR = [
-  {nom:"Entry Door Main", joy:"Navruz Plaza, 1-qavat", tur:"Eshik kirish tizimi", ikon:"i-qulf", onlayn:true,
-    ip:"192.168.1.45", mac:"20:4E:7F:12:9A:BC", fw:"v2.4.1", uptime:"12 kun 4 soat", sinx:"24-may, 14:28",
-    signal:"-62 dBm", soglikL:"A'lo", soglikR:"#268030", soglikF:92, cpu:"18%", xotira:"42%", kechikish:"12 ms",
-    t4:{y:"Eshik holati", q:"Yopiq", alt:"Ochiq"}, t5:{y:"O'tishlar soni (bugun)", q:"128"},
-    harorat:"34°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"EDM-2024-00145", rasm:"assets/qurilma_eshik.png",
-    komp:[
-      {ik:"i-qulf", n:"Elektr qulf boshqaruvchisi", t:"SecurLine SmartLock X2 · masofadan boshqariladigan magnit qulf", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-kamera", n:"FaceID skaner", t:"Biometrik yuz-tanish moduli · SecurLine FaceMatch v2.1", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-kamera", n:"IP kamera", t:"Kirish nuqtasi videokuzatuvi, doimiy yozuv", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-energiya", n:"Zaxira quvvat (UPS)", t:"Asosiy quvvat uzilganda 500ms ichida avtomatik almashadi", c:"To'liq — 4 soat zaxira", r:"yashil"},
-      {ik:"i-wifi", n:"Tarmoq moduli", t:"Ethernet + Wi-Fi zaxira kanali", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Quvvat yoki tarmoq butunlay uzilsa, eshik xavfsizlik qoidalariga muvofiq avtomatik qulfdan chiqadi — mijoz hech qachon ichkarida qulflanib qolmaydi. Zaxira mexanik kalit texnik xonada saqlanadi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 1.2 MB"},{n:"SmartLock X2 sertifikati", h:"PDF · 640 KB"},{n:"Foydalanuvchi qo'llanmasi", h:"PDF · 3.4 MB"}],
-    logs:[{v:"14:28:12", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:27:58", m:"Face ID tasdiqlandi"},{v:"14:27:45", m:"Eshik ochildi"},{v:"14:27:12", m:"Interkom qo'ng'irog'i qabul qilindi"},{v:"14:26:55", m:"Kamera aloqasi tiklandi"}]},
-
-  {nom:"Entry Door Back", joy:"Navruz Plaza, 1-qavat", tur:"Eshik kirish tizimi", ikon:"i-qulf", onlayn:true,
-    ip:"192.168.1.46", mac:"20:4E:7F:12:9A:BD", fw:"v2.4.1", uptime:"9 kun 11 soat", sinx:"24-may, 14:27",
-    signal:"-58 dBm", soglikL:"A'lo", soglikR:"#268030", soglikF:89, cpu:"15%", xotira:"38%", kechikish:"10 ms",
-    t4:{y:"Eshik holati", q:"Yopiq", alt:"Ochiq"}, t5:{y:"O'tishlar soni (bugun)", q:"86"},
-    harorat:"33°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"EDB-2024-00146", rasm:"assets/qurilma_eshik.png",
-    komp:[
-      {ik:"i-qulf", n:"Elektr qulf boshqaruvchisi", t:"SecurLine SmartLock X2 · masofadan boshqariladigan magnit qulf", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-qalqon", n:"RFID karta o'quvchi", t:"SecurLine CardMatch R1 · xodim kartalarini tekshirish moduli", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-kamera", n:"IP kamera", t:"Kirish nuqtasi videokuzatuvi, doimiy yozuv", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-energiya", n:"Zaxira quvvat (UPS)", t:"Asosiy quvvat uzilganda 500ms ichida avtomatik almashadi", c:"To'liq — 3 soat zaxira", r:"yashil"},
-      {ik:"i-wifi", n:"Tarmoq moduli", t:"Ethernet + Wi-Fi zaxira kanali", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Quvvat yoki tarmoq butunlay uzilsa, eshik xavfsizlik qoidalariga muvofiq avtomatik qulfdan chiqadi. Zaxira mexanik kalit texnik xonada saqlanadi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 1.1 MB"},{n:"CardMatch R1 sertifikati", h:"PDF · 512 KB"}],
-    logs:[{v:"14:27:40", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:19:22", m:"RFID karta o'qildi — ruxsat berildi"},{v:"14:19:05", m:"Eshik ochildi"},{v:"13:52:11", m:"Eshik yopildi (avtomatik)"},{v:"13:40:03", m:"Kamera aloqasi tiklandi"}]},
-
-  {nom:"Parking Barrier 1", joy:"Navruz Plaza, Yer osti", tur:"Shlagbaum", ikon:"i-minus", onlayn:true,
-    ip:"192.168.1.52", mac:"20:4E:7F:12:9B:11", fw:"v1.8.3", uptime:"27 kun 2 soat", sinx:"24-may, 14:25",
-    signal:"-71 dBm", soglikL:"Yaxshi", soglikR:"#0A3D6E", soglikF:78, cpu:"11%", xotira:"29%", kechikish:"19 ms",
-    t4:{y:"Shlagbaum holati", q:"Yopiq", alt:"Ochiq"}, t5:{y:"O'tgan avtomobillar (bugun)", q:"47"},
-    harorat:"31°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"PB1-2024-00201", rasm:null,
-    komp:[
-      {ik:"i-minus", n:"Shlagbaum motori", t:"SecurLine BarrierDrive B1 · elektromexanik ko'targich", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-kamera", n:"Avtomobil raqami tanish kamerasi", t:"ANPR moduli · raqamni avtomatik o'qiydi", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-qalqon", n:"Induktiv sensor", t:"Yo'lakdagi avtomobilni aniqlash konturi", c:"Aniqlanmoqda", r:"yashil"},
-      {ik:"i-wifi", n:"Tarmoq moduli", t:"Ethernet ulanish", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Quvvat uzilganda shlagbaum qo'lda ko'tarish tutqichi bilan ochiladi — avtomobillar band bo'lib qolmaydi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 980 KB"},{n:"BarrierDrive B1 texnik pasporti", h:"PDF · 2.1 MB"}],
-    logs:[{v:"14:25:30", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:21:50", m:"Shlagbaum ochildi — 01A777BB aniqlandi"},{v:"14:22:40", m:"Shlagbaum yopildi (avtomatik)"},{v:"13:58:12", m:"Induktiv sensor tekshiruvi — OK"},{v:"13:30:05", m:"ANPR kamera aloqasi tekshirildi"}]},
-
-  {nom:"Lobby Camera 1", joy:"Navruz Plaza, Lobby", tur:"IP Kamera", ikon:"i-kamera", onlayn:true,
-    ip:"192.168.1.60", mac:"20:4E:7F:12:9C:02", fw:"v3.1.0", uptime:"41 kun 16 soat", sinx:"24-may, 14:29",
-    signal:"-55 dBm", soglikL:"A'lo", soglikR:"#268030", soglikF:95, cpu:"22%", xotira:"51%", kechikish:"8 ms",
-    t4:{y:"Yozuv holati", q:"Yozilmoqda", alt:"To'xtatilgan"}, t5:{y:"Aniqlangan harakatlar (bugun)", q:"19"},
-    harorat:"29°C", tarmoq:"Yaxshi", quvvat:"Normal (PoE)", seriya:"LC1-2024-00312", rasm:null,
-    komp:[
-      {ik:"i-kamera", n:"Video sensori", t:"4K, 30 fps · keng burchakli obyektiv", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-monitor", n:"IR tungi ko'rish moduli", t:"Yorug'lik yetarli bo'lmaganda avtomatik yoqiladi", c:"Avtomatik", r:"yashil"},
-      {ik:"i-servis", n:"Mikrofon", t:"Kirish nuqtasi audio yozuvi", c:"Yoqilgan", r:"yashil"},
-      {ik:"i-wifi", n:"Tarmoq moduli", t:"PoE — quvvat va ma'lumot bitta kabelda", c:"Ulangan", r:"yashil"}
-    ],
-    fav:null,
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 890 KB"},{n:"Kamera sertifikati", h:"PDF · 430 KB"}],
-    logs:[{v:"14:29:05", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:24:18", m:"Harakat aniqlandi — lobby zonasi"},{v:"14:10:02", m:"Video bufer diskka yozildi"},{v:"13:47:36", m:"IR rejim avtomatik yoqildi"},{v:"13:20:00", m:"Aloqa tekshiruvi — OK"}]},
-
-  {nom:"Elevator Panel 1", joy:"Navruz Plaza, Lift bank 1", tur:"Lift paneli", ikon:"i-ekran", onlayn:true,
-    ip:"192.168.1.71", mac:"20:4E:7F:12:9D:19", fw:"v2.0.6", uptime:"18 kun 7 soat", sinx:"24-may, 14:26",
-    signal:"-66 dBm", soglikL:"Yaxshi", soglikR:"#0A3D6E", soglikF:81, cpu:"14%", xotira:"33%", kechikish:"15 ms",
-    t4:{y:"Lift holati", q:"Ishlamoqda", alt:"To'xtatilgan"}, t5:{y:"Bugungi chaqiriqlar", q:"64"},
-    harorat:"32°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"EP1-2024-00408", rasm:null,
-    komp:[
-      {ik:"i-ekran", n:"Boshqaruv platasi", t:"Qavat chaqiruv va harakat nazorati", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-topshiriq", n:"Qavat tugmalari paneli", t:"Kabina ichi va tashqi chaqiruv tugmalari", c:"Javob bermoqda", r:"yashil"},
-      {ik:"i-servis", n:"Interkom moduli", t:"Favqulodda aloqa kanali", c:"Ulangan", r:"yashil"},
-      {ik:"i-qalqon", n:"Yuk sensori", t:"Ortiqcha yuklanishni aniqlaydi", c:"Normal", r:"yashil"}
-    ],
-    fav:"Favqulodda to'xtash tugmasi bosilsa, lift eng yaqin qavatga tushib eshigini ochadi va texnik xizmatga signal yuboradi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 1.4 MB"},{n:"Xavfsizlik nazorati sertifikati", h:"PDF · 760 KB"}],
-    logs:[{v:"14:26:50", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"14:22:11", m:"Chaqiriq qabul qilindi — 4-qavat"},{v:"14:15:34", m:"Interkom orqali qo'ng'iroq"},{v:"13:59:02", m:"Yuk sensori tekshiruvi — normal"},{v:"13:30:47", m:"Eshik sensori avtomatik testi — OK"}]},
-
-  {nom:"Fire Detector 3F", joy:"Navruz Plaza, 3-qavat", tur:"Yong'in detektori", ikon:"i-ogoh", onlayn:true, qizil:true,
-    ip:"192.168.1.83", mac:"20:4E:7F:12:9E:27", fw:"v1.5.2", uptime:"63 kun 20 soat", sinx:"24-may, 13:58",
-    signal:"-74 dBm", soglikL:"Ogohlantirish", soglikR:"#9A6E00", soglikF:54, cpu:"9%", xotira:"24%", kechikish:"22 ms",
-    t4:{y:"Sensor holati", q:"Tekshiruv talab etadi"}, t5:{y:"Oxirgi kalibrovka", q:"46 kun oldin"},
-    harorat:"38°C", tarmoq:"Beqaror", quvvat:"Normal", seriya:"FD3F-2024-00519", rasm:null,
-    komp:[
-      {ik:"i-ogoh", n:"Tutum sensori (optik)", t:"Sezuvchanlik darajasi normadan pastroq — tekshiruv talab etadi", c:"Ogohlantirish", r:"sariq"},
-      {ik:"i-qalqon", n:"Harorat sensori", t:"Kritik haroratni doimiy nazorat qiladi", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-servis", n:"Signal beruvchi", t:"Sirena + strob chiroq", c:"Tayyor", r:"yashil"},
-      {ik:"i-wifi", n:"Markaziy nazorat ulanishi", t:"Yong'in nazorat paneliga to'g'ridan-to'g'ri ulanish", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Signal aniqlansa, barcha eshiklar avtomatik qulfdan chiqadi (fail-safe evakuatsiya rejimi) va Hodisalar bo'limida kritik hodisa avtomatik yaratiladi.",
-    hujjat:[{n:"Yong'in xavfsizligi sertifikati", h:"PDF · 1.0 MB"},{n:"Kalibrovka jurnali", h:"PDF · 320 KB"}],
-    logs:[{v:"13:58:20", m:"Sinxronizatsiya — kechikish bilan (beqaror tarmoq)"},{v:"12:40:11", m:"O'z-o'zini tekshirish — sezuvchanlik pasaygan"},{v:"09:15:00", m:"Kunlik test signali — o'tdi"},{v:"kecha 22:03", m:"Harorat sensori tekshiruvi — normal"},{v:"kecha 08:00", m:"Rejalashtirilgan kalibrovka eslatmasi yuborildi"}]},
-
-  {nom:"Power Supply 1", joy:"Navruz Plaza, Texnik xona", tur:"Quvvat manbai", ikon:"i-energiya", onlayn:true,
-    ip:"192.168.1.90", mac:"20:4E:7F:12:9F:33", fw:"v1.2.0", uptime:"84 kun 3 soat", sinx:"24-may, 14:24",
-    signal:"Kabelli · barqaror", soglikL:"A'lo", soglikR:"#268030", soglikF:97, cpu:"6%", xotira:"18%", kechikish:"5 ms",
-    t4:{y:"Quvvat holati", q:"Ishlayapti"}, t5:{y:"Batareya zaxirasi", q:"100%"},
-    harorat:"36°C", tarmoq:"Yaxshi", quvvat:"Normal", seriya:"PS1-2024-00602", rasm:null,
-    komp:[
-      {ik:"i-energiya", n:"AC/DC o'zgartirgich", t:"Asosiy quvvat manbaini o'zgartiradi", c:"Ishlayapti", r:"yashil"},
-      {ik:"i-energiya", n:"Batareya bloki (UPS)", t:"Zaxira quvvat manbai, ~4 soat avtonom ishlash", c:"To'liq quvvatlangan", r:"yashil"},
-      {ik:"i-qalqon", n:"Kuchlanish stabilizatori", t:"Tarmoqdagi kuchlanish tebranishlaridan himoyalaydi", c:"Normal", r:"yashil"},
-      {ik:"i-wifi", n:"Nazorat moduli", t:"Masofadan monitoring va boshqaruv kanali", c:"Ulangan", r:"yashil"}
-    ],
-    fav:"Asosiy quvvat uzilganda batareya zaxirasi avtomatik ishga tushadi va texnik xonadagi barcha qurilmalarni ~4 soat quvvatlaydi.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 750 KB"},{n:"UPS texnik pasporti", h:"PDF · 1.8 MB"}],
-    logs:[{v:"14:24:09", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"11:12:40", m:"Batareya sikli tekshiruvi — 100% sig'im"},{v:"09:00:00", m:"Kunlik quvvat tekshiruvi — normal"},{v:"kecha 19:44", m:"Qisqa kuchlanish tebranishi — avtomatik barqarorlashtirildi"},{v:"kecha 08:00", m:"Rejalashtirilgan texnik ko'rik eslatmasi"}]},
-
-  {nom:"Network Switch 1", joy:"Navruz Plaza, Texnik xona", tur:"Tarmoq uskunasi", ikon:"i-wifi", onlayn:false,
-    ip:"192.168.1.2", mac:"20:4E:7F:12:A0:05", fw:"v4.0.1", uptime:"—", sinx:"23-may, 22:14",
-    signal:"Aloqa yo'q", soglikL:"Kritik", soglikR:"#C43C31", soglikF:8, cpu:"—", xotira:"—", kechikish:"—",
-    t4:{y:"Tarmoq holati", q:"Offline"}, t5:{y:"Faol portlar", q:"0/24"},
-    harorat:"—", tarmoq:"Aloqa yo'q", quvvat:"Noma'lum", seriya:"NS1-2024-00711", rasm:null,
-    komp:[
-      {ik:"i-wifi", n:"24-portli kommutator moduli", t:"Barcha portlar orqali ma'lumot uzatadi", c:"Ishlamayapti", r:"qizil"},
-      {ik:"i-energiya", n:"PoE quvvat moduli", t:"Kameralar va kontrollerlarni quvvatlaydi", c:"Aloqa yo'q", r:"qizil"},
-      {ik:"i-ekran", n:"Boshqaruv protsessori", t:"Qurilmaning markaziy boshqaruv bloki", c:"Javob bermayapti", r:"qizil"},
-      {ik:"i-qalqon", n:"Zaxira quvvat kirishi", t:"Ikkilamchi quvvat manbai", c:"Tekshirilmoqda", r:"sariq"}
-    ],
-    fav:"Qurilma tarmoqqa ulanmagan — unga bog'liq qurilmalar (kameralar, eshik kontrollerlari) zaxira kanaliga o'tkazilgan holda ishlamoqda.",
-    hujjat:[{n:"O'rnatish akti", h:"PDF · 640 KB"}],
-    logs:[{v:"23-may 22:14", m:"Aloqa uzildi (timeout)"},{v:"23-may 22:13", m:"1–24-portlar: signal yo'qotildi"},{v:"23-may 21:58", m:"Yuqori harorat ogohlantirishi"},{v:"23-may 18:30", m:"Sinxronizatsiya muvaffaqiyatli"},{v:"23-may 09:00", m:"Kunlik trafik hisoboti yaratildi"}]}
-];
+/* Qurilmalar yagona manbadan (Д-1): joylashuv nomi malumot.js reyestridan. */
+const QURILMALAR = MKB_DATA.QURILMALAR;
 let faol = 0, izlash = "", tab = "Onlayn";
 
 function royxatChiz(){

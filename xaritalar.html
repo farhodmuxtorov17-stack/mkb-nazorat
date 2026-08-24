@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 /* ---- Hududiy xarita (ekran 5) ---- */
@@ -117,21 +117,13 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
-const HUDUDLAR = [
-  ["Toshkent shahri","302","↑ 8,2%",1],["Toshkent viloyati","244","↑ 6,4%",1],
-  ["Samarqand viloyati","128","↑ 7,1%",1],["Farg'ona viloyati","96","↓ 2,3%",0],
-  ["Buxoro viloyati","78","↑ 4,8%",1],["Qashqadaryo viloyati","66","↑ 3,2%",1],
-  ["Navoiy viloyati","54","↑ 6,0%",1],["Andijon viloyati","62","↑ 1,7%",1],
-  ["Namangan viloyati","58","↑ 2,4%",1],["Xorazm viloyati","44","↑ 5,6%",1],
-  ["Jizzax viloyati","40","↑ 3,9%",1],["Surxondaryo viloyati","38","↑ 4,1%",1],
-  ["Qoraqalpog'iston R.","38","↑ 2,8%",1]
-];
+const HUDUDLAR = MKB_DATA.HUDUDLAR;   /* yagona manba (Д-1) */
 document.getElementById("hudud-royxat").innerHTML = HUDUDLAR.map(h=>`
   <button class="hudud-band" data-toast="${h[0]} bo'yicha batafsil">
     <svg class="ic"><use href="#i-bino"/></svg>
@@ -140,12 +132,15 @@ document.getElementById("hudud-royxat").innerHTML = HUDUDLAR.map(h=>`
     <span class="delta ${h[3]?"":"salbiy"}">${h[2]}</span>
   </button>`).join("");
 
-const KARTALAR = [
-  ["Toshkent shahri","302","↑ 8,2%","i-bino"],
-  ["Samarqand viloyati","128","↑ 7,1%","i-hisobot"],
-  ["Buxoro viloyati","78","↑ 4,8%","i-aktiv"],
-  ["Qashqadaryo viloyati","66","↑ 3,2%","i-uy"]
-];
+/* Hudud kartochkalari — HUDUDLAR ro'yxatidan hosil qilinadi (Д-1).
+   Ilgari bu yerda o'sha raqamlar ikkinchi marta qo'lda yozilgan edi. */
+const KARTA_IKON = {
+  "Toshkent shahri": "i-bino", "Samarqand viloyati": "i-hisobot",
+  "Buxoro viloyati": "i-aktiv", "Qashqadaryo viloyati": "i-uy"
+};
+const KARTALAR = HUDUDLAR
+  .filter(h => KARTA_IKON[h[0]])
+  .map(h => [h[0], h[1], h[2], KARTA_IKON[h[0]]]);
 function chizma(){
   const n = 24, p = [];
   let y = 22;

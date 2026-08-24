@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Xonalar va qavatlar (ekran 16) ---- */
 .orqa-tugma{width:48px;height:48px;border-radius:14px;background:var(--karta);box-shadow:var(--soya);display:grid;place-items:center;color:#1C2836;flex:none}
@@ -185,7 +185,7 @@
       <!-- Chap ustun -->
       <div style="display:flex;flex-direction:column;gap:18px">
         <a class="karta obyekt-karta" href="obyekt.html?id=green-tower">
-          <img src="assets/bino_tower.png" alt="Navruz Plaza">
+          <img src="assets/bino_tower.webp" alt="Navruz Plaza">
           <span><b>Navruz Plaza</b><span>GR-2025/0934</span></span>
         </a>
 
@@ -228,7 +228,7 @@
           <div class="bino3d" id="bino3d" aria-label="Binoning interaktiv 3D ko'rinishi">
             <div class="b3-stack" id="b3-stack"><div class="b3-zamin"></div></div>
           </div>
-          <img id="qavat-rasm" src="assets/bino_qavatlar.png" alt="Bino qavatlari kesim ko'rinishi" style="display:none" aria-hidden="true">
+          <img id="qavat-rasm" src="assets/bino_qavatlar.webp" alt="Bino qavatlari kesim ko'rinishi" style="display:none" aria-hidden="true">
           <button class="qavat-yorliq" style="top:6%" data-q="5"><b>5-qavat</b><span>Penthouse</span></button>
           <button class="qavat-yorliq" style="top:23%" data-q="4"><b>4-qavat</b><span>Ofis qavati</span></button>
           <button class="qavat-yorliq faol" style="top:41%" data-q="3"><b>3-qavat</b><span>Ofis qavati</span></button>
@@ -253,9 +253,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -319,23 +319,8 @@ function b3Chiz(){
   });
 }
 
-const XONALAR = [
-  {nom:"Ofis 301", qavat:"3", maydon:"120 m²", rasm:"assets/xona_ofis.png", tur:"Ofis", sigim:"12 kishi", holat:"Band",
-   egasi:"SecurTech Servis MChJ", shartnoma:"NPR-2024-0566", muddat:"26-may, 2025",
-   jihozlar:[["Stol","12 ta"],["Kreslo","12 ta"],["Kompyuter","12 ta"],["Printer","2 ta"],["Konditsioner","2 ta"]]},
-  {nom:"Konferensiya zali", qavat:"4", maydon:"60 m²", rasm:"assets/xona_konf.png", tur:"Konferensiya", sigim:"24 kishi", holat:"Bron qilinadi",
-   egasi:"Umumiy foydalanish", shartnoma:"—", muddat:"—",
-   jihozlar:[["Stol","1 ta"],["Kreslo","24 ta"],["Proyektor","1 ta"],["Video panel","1 ta"],["Konditsioner","2 ta"]]},
-  {nom:"Arxiv xonasi", qavat:"-1", maydon:"25 m²", rasm:"assets/xona_arxiv.png", tur:"Arxiv", sigim:"—", holat:"Faol",
-   egasi:"MKB ma'muriyati", shartnoma:"—", muddat:"—",
-   jihozlar:[["Javon","16 ta"],["Seyf","2 ta"],["Namlik sensori","2 ta"]]},
-  {nom:"Server xonasi", qavat:"-1", maydon:"18 m²", rasm:"assets/xona_server.png", tur:"Texnik", sigim:"—", holat:"Faol",
-   egasi:"IT bo'limi", shartnoma:"—", muddat:"—",
-   jihozlar:[["Server shkafi","6 ta"],["UPS","4 ta"],["Sovutish bloki","2 ta"]]},
-  {nom:"Savdo maydoni", qavat:"2", maydon:"240 m²", rasm:"assets/xona_savdo.png", tur:"Savdo", sigim:"120 kishi", holat:"Band",
-   egasi:"«Turon Retail» MChJ", shartnoma:"NPR-2024-0312", muddat:"14-iyun, 2025",
-   jihozlar:[["Peshtaxta","8 ta"],["Javon","32 ta"],["Kassa","4 ta"],["Konditsioner","4 ta"]]}
-];
+/* XONALAR yagona manbadan (Д-1): obyekt nomi malumot.js reyestridan. */
+const XONALAR = MKB_DATA.XONALAR;
 let faolXona = 0;
 
 function joriyXonalar(){ return XONALAR.filter(x=>x.qavat===faolQavat); }

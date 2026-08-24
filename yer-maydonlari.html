@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Yer uchastkalari (ekran 17) ---- */
 .ym-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr) 380px;gap:18px;align-items:start}
@@ -147,7 +147,7 @@
         <h3>Uchastka joylashuvi</h3>
         <div class="kod" id="j-kod">GR-2025/0755</div>
         <div class="aero">
-          <img id="aero-rasm" src="assets/uchastka_aero.png" alt="Uchastka aerofoto ko'rinishi — chegara polygon bilan">
+          <img id="aero-rasm" src="assets/uchastka_aero.webp" alt="Uchastka aerofoto ko'rinishi — chegara polygon bilan">
           <div class="nazorat">
             <button data-toast="Yaqinlashtirish">+</button>
             <button data-toast="Uzoqlashtirish">−</button>
@@ -228,26 +228,13 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
-const UCHASTKALAR = [
-  {kod:"GR-2025/0755", tuman:"Qibray tumani", viloyat:"Toshkent viloyati", maydon:"2.40 gektar", status:"Musodara jarayonida", srang:"#E8763C", narx:"42,5 ming so'm/m²",
-   kadastr:"11:09:03:02:0012", yerturi:"Qishloq xo'jaligi yerlari", jami:"1 020 000 000 so'm"},
-  {kod:"GR-2024/0331", tuman:"Zangiota tumani", viloyat:"Toshkent viloyati", maydon:"8.75 gektar", status:"Nazoratda", srang:"#3AAA3E", narx:"180 ming so'm/m²",
-   kadastr:"11:07:12:01:0044", yerturi:"Zaxira yerlar", jami:"15 750 000 000 so'm"},
-  {kod:"GR-2024/0197", tuman:"Yuqorichirchiq tumani", viloyat:"Toshkent viloyati", maydon:"15.20 gektar", status:"Auksionda", srang:"#8B5CF6", narx:"260 ming so'm/m²",
-   kadastr:"11:12:05:03:0090", yerturi:"Qurilish yerlari", jami:"39 520 000 000 so'm"},
-  {kod:"GR-2024/0640", tuman:"Ohangaron tumani", viloyat:"Toshkent viloyati", maydon:"23.10 gektar", status:"Garovda", srang:"#7BAEFC", narx:"160 ming so'm/m²",
-   kadastr:"11:04:08:02:0110", yerturi:"Qishloq xo'jaligi yerlari", jami:"36 960 000 000 so'm"},
-  {kod:"GR-2025/0288", tuman:"Parkent tumani", viloyat:"Toshkent viloyati", maydon:"5.60 gektar", status:"Garovda", srang:"#7BAEFC", narx:"150 ming so'm/m²",
-   kadastr:"11:09:01:07:0021", yerturi:"Zaxira yerlar", jami:"8 400 000 000 so'm"},
-  {kod:"GR-2024/0072", tuman:"Bekobod tumani", viloyat:"Toshkent viloyati", maydon:"10.00 gektar", status:"Nazoratda", srang:"#3AAA3E", narx:"290 ming so'm/m²",
-   kadastr:"11:02:11:04:0067", yerturi:"Sanoat yerlari", jami:"29 000 000 000 so'm"}
-];
+const UCHASTKALAR = MKB_DATA.UCHASTKALAR;   /* yagona manba (Д-1) */
 let faol = 0, turF = "Barchasi";
 
 function royxatChiz(){
@@ -256,7 +243,7 @@ function royxatChiz(){
     const i = UCHASTKALAR.indexOf(u);
     return `
     <button class="uch-band ${i===faol?"faol":""}" data-i="${i}">
-      <span class="uch-obyekt"><img src="assets/bino_yer.png" alt=""><span><b>${u.kod}</b><span>${u.tuman}</span><span>${u.viloyat}</span></span></span>
+      <span class="uch-obyekt"><img src="assets/bino_yer.webp" alt=""><span><b>${u.kod}</b><span>${u.tuman}</span><span>${u.viloyat}</span></span></span>
       <span class="uch-maydon">${u.maydon}</span>
       <span class="uch-status"><span class="s"><span class="nuqta" style="background:${u.srang}"></span>${u.status}</span><span class="narx">${u.narx}</span></span>
       <span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span>

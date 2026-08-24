@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Tasdiqlar va topshiriqlar (ekran 22, Rahbar ko'rinishi) ---- */
 .tt-grid{display:grid;grid-template-columns:350px minmax(0,1fr) 360px;gap:18px;align-items:start}
@@ -145,7 +145,7 @@
               <div class="td-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Qo'shimcha</span><b id="d-qoshimcha">Investor: Global Invest Ltd.</b></div>
             </div>
           </div>
-          <div class="td-rasm"><img src="assets/tasdiq_hujjat_3d.png" alt="Tasdiqlash hujjatlari illyustratsiyasi"></div>
+          <div class="td-rasm"><img src="assets/tasdiq_hujjat_3d.webp" alt="Tasdiqlash hujjatlari illyustratsiyasi"></div>
         </div>
 
         <div class="hujjat-blok">
@@ -203,42 +203,13 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
-const TASDIQLAR = [
-  {ikon:"i-kamera", tile:"yashil", sarlavha:"Masofaviy ko'rik sessiyasini tasdiqlash", org:"Navruz Plaza", sub:"Navruz Plaza &nbsp;·&nbsp; GR-2025/0934",
-   vaqt:"Bugun, 14:20", j:"yuqori", jm:"Yuqori", tavsif:"Investor bilan masofaviy ko'rik sessiyasini o'tkazish uchun ruxsat so'ralmoqda.",
-   sorovchi:"Javlon Karimov", lavozim:"Garov obyektlari direktori", joy:"Navruz Plaza, 1201-xona", ishtirokchilar:"3 nafar", sessiyaTuri:"Video konferensiya",
-   qoshimcha:"Investor: Global Invest Ltd.", hujjatNomi:"Session_Request_GreenTower.pdf", hujjatHajmi:"1.2 MB",
-   sorovSana:"24-may, 2025 &nbsp;·&nbsp; 14:20", javobMuddati:"26-may, 2025 &nbsp;·&nbsp; 15:00", qolgan:"0 soat 28 daqiqa",
-   masulNom:"Javlon Karimov", masulLavozim:"Garov obyektlari direktori", masulTel:"+998 90 123-45-67",
-   koribNom:"Saida Karimova", koribLavozim:"Yuridik maslahatchi", nusxaNom:"Temur Mirzayev", nusxaLavozim:"CFO"},
-  {ikon:"i-kalendar", tile:"sariq", sarlavha:"Budjetni tasdiqlash", org:"Marketing bo'limi", sub:"Marketing bo'limi &nbsp;·&nbsp; BD-2025-114",
-   vaqt:"Bugun, 13:45", j:"orta", jm:"O'rta", tavsif:"Marketing bo'limining III chorak byudjeti tasdiqlash uchun yuborildi.",
-   sorovchi:"Zarina Yoqubova", lavozim:"Marketing menejeri", joy:"Bosh ofis, Moliya bo'limi", ishtirokchilar:"Byudjet qo'mitasi", sessiyaTuri:"Moliyaviy so'rov",
-   qoshimcha:"Umumiy summa: 312 000 000 so'm", hujjatNomi:"Marketing_Byudjet_Q3_2025.xlsx", hujjatHajmi:"890 KB",
-   sorovSana:"24-may, 2025 &nbsp;·&nbsp; 13:45", javobMuddati:"27-may, 2025 &nbsp;·&nbsp; 18:00", qolgan:"1 kun 4 soat",
-   masulNom:"Zarina Yoqubova", masulLavozim:"Marketing menejeri", masulTel:"+998 90 234-56-78",
-   koribNom:"Temur Mirzayev", koribLavozim:"CFO", nusxaNom:"Ismoilov Otabek", nusxaLavozim:"Administrator"},
-  {ikon:"i-shartnoma", tile:"binafsha", sarlavha:"Shartnomani tasdiqlash", org:"SecurTech Servis MChJ", sub:"SecurTech Servis MChJ &nbsp;·&nbsp; CT-2025-0912",
-   vaqt:"Bugun, 12:10", j:"past", jm:"Past", tavsif:"Yangi ijara shartnomasi loyihasi yuridik ko'rikdan o'tdi, yakuniy tasdiq talab etiladi.",
-   sorovchi:"Bekzod Yusupov", lavozim:"Bosh auditor", joy:"Navruz Plaza, Yuridik bo'lim", ishtirokchilar:"2 nafar", sessiyaTuri:"Hujjat ko'rigi",
-   qoshimcha:"Ijara muddati: 3 yil", hujjatNomi:"Ijara_shartnomasi_TechSolutions.pdf", hujjatHajmi:"2.4 MB",
-   sorovSana:"22-may, 2025 &nbsp;·&nbsp; 12:10", javobMuddati:"29-may, 2025 &nbsp;·&nbsp; 17:00", qolgan:"4 kun 5 soat",
-   masulNom:"Bekzod Yusupov", masulLavozim:"Bosh auditor", masulTel:"+998 90 345-67-89",
-   koribNom:"Saida Karimova", koribLavozim:"Yuridik maslahatchi", nusxaNom:"Javlon Karimov", nusxaLavozim:"Garov obyektlari direktori"},
-  {ikon:"i-ogoh", tile:"qizil", sarlavha:"Texnik xarajatni tasdiqlash", org:"Server uskunalari", sub:"IT bo'limi &nbsp;·&nbsp; EX-2025-0334",
-   vaqt:"Bugun, 11:05", j:"yuqori", jm:"Yuqori", tavsif:"Server uskunalarini favqulodda almashtirish uchun xarajat tasdiqlanishi kerak.",
-   sorovchi:"Shahzod Abdullaev", lavozim:"Texnik muhandis", joy:"Navruz Plaza, Texnik xona", ishtirokchilar:"1 nafar", sessiyaTuri:"Favqulodda so'rov",
-   qoshimcha:"Summa: 48 500 000 so'm", hujjatNomi:"Server_almashtirish_smeta.pdf", hujjatHajmi:"640 KB",
-   sorovSana:"24-may, 2025 &nbsp;·&nbsp; 11:05", javobMuddati:"25-may, 2025 &nbsp;·&nbsp; 09:00", qolgan:"0 soat 55 daqiqa",
-   masulNom:"Shahzod Abdullaev", masulLavozim:"Texnik muhandis", masulTel:"+998 90 456-78-90",
-   koribNom:"Temur Mirzayev", koribLavozim:"CFO", nusxaNom:"Ismoilov Otabek", nusxaLavozim:"Administrator"}
-];
+const TASDIQLAR = MKB_DATA.TASDIQLAR;   /* yagona manba (Д-1) */
 function bosHarflar(ism){ return ism.split(" ").map(s=>s[0]).join("").toUpperCase().slice(0,2); }
 let faol = 0;
 

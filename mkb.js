@@ -531,6 +531,37 @@ function tanlovUla(root){
     });
   });
 }
+/* ---------- Tanlov ro'yxatlarini ma'lumot manbaidan to'ldirish (Д-1) ----------
+   Ilgari obyekt, hudud va filial ro'yxatlari har bir sahifada qo'lda yozilardi.
+   Shu sababli bitta obyekt turli sahifalarda turlicha atalardi ("Yunusobod
+   45-uy", "Yunusobod xonadoni") va ro'yxatda umuman obyekti yo'q hudud
+   ("Namangan") ham uchrardi. Endi ro'yxat reyestrdan quriladi.
+
+   data-royxat="obyekt"  — faol garov obyektlari
+   data-royxat="obyekt-hammasi" — faol va realizatsiyadagilar
+   data-royxat="hudud" / "filial"
+   data-royxat-bosh="Barcha obyektlar" — ro'yxat boshiga qo'shiladigan band */
+function royxatlarniToldir(root){
+  const D = window.MKB_DATA;
+  if (!D) return;
+  const yagona = a => [...new Set(a)];
+  (root||document).querySelectorAll("[data-royxat]").forEach(el => {
+    const tur = el.dataset.royxat;
+    let bandlar;
+    if (tur === "obyekt" || tur === "obyekt-hammasi"){
+      bandlar = Object.values(D.OBYEKT_INDEKS)
+        .filter(o => tur === "obyekt-hammasi" ? o.manba !== "arxiv" : o.manba === "faol")
+        .map(o => o.qisqa);
+    } else if (tur === "hudud"){
+      bandlar = yagona(D.YOZUVLAR.map(y => y.garov.hudud));
+    } else if (tur === "filial"){
+      bandlar = yagona(D.YOZUVLAR.map(y => y.filial));
+    } else return;
+    const bosh = el.dataset.royxatBosh;
+    el.dataset.variantlar = JSON.stringify(bosh ? [bosh].concat(bandlar) : bandlar);
+  });
+}
+MKB.royxatlarniToldir = royxatlarniToldir;
 MKB.tanlovUla = tanlovUla;
 
 /* ---------- Ishga tushirish ---------- */
@@ -615,7 +646,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       taqiq.outerHTML = `
         <div style="display:grid;place-items:center;min-height:calc(100vh - 200px)">
           <div style="text-align:center;max-width:460px">
-            <img src="assets/st_ruxsat.png" alt="" style="width:230px;margin:0 auto 6px">
+            <img src="assets/st_ruxsat.webp" alt="" style="width:230px;margin:0 auto 6px">
             <span style="display:inline-block;background:#FFF3D6;color:#B07C08;font-size:12px;font-weight:700;border-radius:99px;padding:5px 14px">Ruxsat rad etildi · 403</span>
             <h2 style="font-size:26px;font-weight:750;margin-top:14px">Ruxsat yetarli emas</h2>
             <p style="font-size:14.5px;color:#5F6A5C;line-height:1.6;margin-top:10px">
@@ -676,6 +707,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     });
   }
 
+  royxatlarniToldir();
   tanlovUla();
 
   // Interfeys tili — shell va sahifa kontenti chizilgandan keyin qo'llanadi,
@@ -690,6 +722,12 @@ MKB.tilQoll = tilQoll;
 MKB.joriyRol = joriyRol;
 MKB.asilRol = asilRol;
 MKB.rolKaliti = () => ROL_KALIT[joriyRol()];
+/* Rol modeli — foydalanuvchilar sahifasidagi ruxsat matritsasi shu yerdan
+   quriladi, alohida qo'lda yozilgan jadvaldan emas (Д-1). */
+MKB.MENYU = MENYU;
+MKB.ROL_RUXSAT = ROL_RUXSAT;
+MKB.ROL_KALIT = ROL_KALIT;
+MKB.ruxsatlimi = ruxsatlimi;
 MKB.foydIsmi = () => FOYD_ISM[ROL_KALIT[joriyRol()]];
 window.MKB = MKB;
 })();

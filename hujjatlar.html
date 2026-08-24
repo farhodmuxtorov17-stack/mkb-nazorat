@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Hujjatlar markazi (ekran 12) ---- */
 .hj-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
@@ -107,7 +107,7 @@
         <input type="search" id="izlash" placeholder="Qidirish..." aria-label="Hujjatlarni qidirish">
         <svg class="ic"><use href="#i-izlash"/></svg>
       </div>
-      <button class="tanlov" id="f-obyekt" data-variantlar='["Barcha obyektlar","Navruz Plaza","Zarafshon Tekstil sexi","Yunusobod xonadoni","Chorvoq dala hovlisi","Qibray yer uchastkasi","Nurafshon majmuasi"]'><span class="t-yorliq">Barcha obyektlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+      <button class="tanlov" id="f-obyekt" data-royxat="obyekt" data-royxat-bosh="Barcha obyektlar"><span class="t-yorliq">Barcha obyektlar</span><svg class="ic"><use href="#i-past"/></svg></button>
       <button class="tanlov" id="f-tur-dd" data-variantlar='["Barcha turlar","Texnik pasport","Kadastr","Shartnoma","Rasm","Hisobot"]'><span class="t-yorliq">Barcha turlar</span><svg class="ic"><use href="#i-past"/></svg></button>
       <button class="tanlov" id="f-holat" data-variantlar='["Barcha holatlar","Tasdiqlangan","Yangi","Ko&#39;rib chiqilmoqda"]'><span class="t-yorliq">Barcha holatlar</span><svg class="ic"><use href="#i-past"/></svg></button>
       <button class="f-tugma" data-toast="Kengaytirilgan filtrlar"><svg class="ic"><use href="#i-slayder"/></svg>Filtrlar</button>
@@ -148,38 +148,14 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
-const HUJJATLAR = [
-  {nom:"Texnik pasport.pdf", ikon:"pdf", iturl:"i-hujjat", obyekt:"Navruz Plaza", kod:"GR-2025/0934", tur:"Texnik pasport", teg:"pasport",
-   sana:"24-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-001", hajm:"12.4 MB", format:"PDF", rasm:"assets/bino_tower.png",
-   yuklagan:"Ismoilov Otabek", tavsif:"Bino bo'yicha texnik ma'lumotlar va umumiy tavsif."},
-  {nom:"Kadastr reja.dwg", ikon:"dwg", iturl:"i-xarita", obyekt:"Chorvoq dala hovlisi", kod:"GR-2026/0141", tur:"Kadastr", teg:"kadastr",
-   sana:"21-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-014", hajm:"8.1 MB", format:"DWG", rasm:"assets/bino_dacha.png",
-   yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining kadastr chizmasi."},
-  {nom:"Ijara shartnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyekt:"Chorsu Savdo Markazi", kod:"GR-2024/0512", tur:"Shartnoma", teg:"shartnoma",
-   sana:"18-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-022", hajm:"2.7 MB", format:"PDF", rasm:"assets/bino_mall.png",
-   yuklagan:"Karimova N.", tavsif:"«Turon Retail» MChJ bilan ijara shartnomasi."},
-  {nom:"Fasad ko'rinishi.jpg", ikon:"img", iturl:"i-kamera", obyekt:"Zarafshon Tekstil sexi", kod:"GR-2025/1187", tur:"Rasm", teg:"rasm",
-   sana:"16-may, 2024", holat:"Yangi", hrang:"#3AAA3E", id:"DOC-2024-031", hajm:"5.4 MB", format:"JPG", rasm:"assets/bino_humo.png",
-   yuklagan:"Soliev B.", tavsif:"Bino fasadining yangilangan surati."},
-  {nom:"Baholash hisobot.pdf", ikon:"rep", iturl:"i-hisobot", obyekt:"Nurafshon turar-joy majmuasi", kod:"GR-2026/3308", tur:"Hisobot", teg:"hisobot",
-   sana:"14-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-036", hajm:"4.2 MB", format:"PDF", rasm:"assets/bino_turar.png",
-   yuklagan:"Yusupova M.", tavsif:"Mustaqil baholovchi hisoboti."},
-  {nom:"Yer uchastkasi rejasi.pdf", ikon:"pdf", iturl:"i-yer", obyekt:"Qibray yer uchastkasi", kod:"GR-2025/0755", tur:"Kadastr", teg:"kadastr",
-   sana:"12-may, 2024", holat:"Ko'rib chiqilmoqda", hrang:"#4A90F2", id:"DOC-2024-040", hajm:"3.3 MB", format:"PDF", rasm:"assets/bino_yer.png",
-   yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining chegara rejasi."},
-  {nom:"Qabul-topshirish dalolatnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyekt:"Navruz Plaza", kod:"GR-2025/0934", tur:"Shartnoma", teg:"shartnoma",
-   sana:"10-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-044", hajm:"1.6 MB", format:"PDF", rasm:"assets/bino_tower.png",
-   yuklagan:"Ismoilov Otabek", tavsif:"5-qavat ofis maydonini topshirish dalolatnomasi."},
-  {nom:"Energiya audit hisobot.pdf", ikon:"pdf", iturl:"i-energiya", obyekt:"Chorvoq dala hovlisi", kod:"GR-2026/0141", tur:"Hisobot", teg:"hisobot",
-   sana:"07-may, 2024", holat:"Tasdiqlangan", hrang:"#3AAA3E", id:"DOC-2024-051", hajm:"6.8 MB", format:"PDF", rasm:"assets/bino_dacha.png",
-   yuklagan:"Karimov I.", tavsif:"Yillik energiya samaradorligi auditi."}
-];
+/* HUJJATLAR yagona manbadan (Д-1): obyekt nomi malumot.js reyestridan. */
+const HUJJATLAR = MKB_DATA.HUJJATLAR;
 let faolId = "DOC-2024-001";
 let turFiltri = "Barchasi";
 let qidiruv = "";

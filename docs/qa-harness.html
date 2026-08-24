@@ -1,0 +1,62 @@
+<!doctype html><meta charset="utf-8"><title>MKB — QA tekshiruvi</title>
+<body style="font:13px monospace;padding:12px">
+<div id="out">запуск…</div>
+<script>
+const PAGES = ["../arxiv.html", "../auksion.html", "../bildirishnomalar.html", "../foydalanuvchilar.html", "../hisobotlar-markazi.html", "../hisobotlar.html", "../hodisalar.html", "../holatlar.html", "../hujjatlar.html", "../index.html", "../jonli-tashrif.html", "../kirish-nazorati.html", "../kirish-voqealari.html", "../login.html", "../masofaviy-korik.html", "../monitoring.html", "../musodara-qabul.html", "../obyekt.html", "../obyektlar.html", "../qarzdorlar.html", "../qurilma-ornatish.html", "../qurilmalar.html", "../servis.html", "../shartnomalar.html", "../sozlamalar.html", "../tasdiqlar.html", "../undiruv.html", "../vazifalar.html", "../xaritalar.html", "../xato.html", "../xonalar.html", "../yer-maydonlari.html"];
+const R = [];
+let i = 0;
+const out = document.getElementById('out');
+
+function step(){
+  if (i >= PAGES.length){
+    window.__QA__ = R;
+    out.textContent = 'ГОТОВО ' + R.length;
+    console.log('QA_DONE', JSON.stringify(R));
+    return;
+  }
+  const p = PAGES[i++];
+  out.textContent = 'проверка ' + i + '/' + PAGES.length + ': ' + p;
+  const f = document.createElement('iframe');
+  f.width = 1600; f.height = 900;
+  f.style.cssText = 'position:absolute;left:-9999px;top:0;border:0';
+  f.src = p;
+  let done = false;
+  const finish = () => {
+    if (done) return; done = true;
+    let rec = {page:p};
+    try {
+      const d = f.contentDocument, w = f.contentWindow;
+      rec.title = d.title;
+      rec.badImg = [...d.querySelectorAll('img')]
+        .filter(im => im.complete && im.naturalWidth === 0)
+        .map(im => im.getAttribute('src'));
+      rec.hasNav = !!d.querySelector('aside, nav, .yon, .sidebar, [class*=yon]');
+      rec.hasTop = !!d.querySelector('header, .ustki, .topbar, [class*=ustki]');
+      rec.hScroll = d.documentElement.scrollWidth - d.documentElement.clientWidth;
+      rec.textLen = (d.body.innerText || '').length;
+      const bad = [];
+      try {
+        for (const e of w.performance.getEntriesByType('resource')){
+          const st = e.responseStatus;
+          if (st !== undefined && st !== 0 && st >= 400) bad.push(e.name.split('8777')[1] + ' ' + st);
+        }
+      } catch(_){}
+      rec.http = bad;
+      const small = [...d.querySelectorAll('button, a[href], input, select, [role=button]')]
+        .filter(el => { const r = el.getBoundingClientRect();
+          return r.width > 0 && r.height > 0 && (r.height < 32 || r.width < 32); })
+        .map(el => (el.tagName + '.' + (el.className||'').toString().split(' ')[0]));
+      rec.small = [...new Set(small)].slice(0, 8);
+      rec.smallN = small.length;
+    } catch(err){ rec.err = String(err); }
+    R.push(rec);
+    f.remove();
+    setTimeout(step, 30);
+  };
+  f.onload = () => setTimeout(finish, 700);
+  f.onerror = finish;
+  setTimeout(finish, 9000);
+  document.body.appendChild(f);
+}
+step();
+</script>

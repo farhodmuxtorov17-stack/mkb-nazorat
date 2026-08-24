@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Foydalanuvchilar va rollar (ekran 18) ---- */
 .fr-grid{display:grid;grid-template-columns:400px minmax(0,1fr) 400px;gap:18px;align-items:start}
@@ -135,7 +135,7 @@
             </span>
             <h2 id="p-nom">Javlon Karimov</h2>
             <span class="rol-teg admin" id="p-rol" style="margin-top:8px">Administrator</span>
-            <div class="ruxsat-rasm" style="margin-top:18px"><img src="assets/ruxsat_belgisi.png" alt="Ruxsatlar belgisi illyustratsiyasi"></div>
+            <div class="ruxsat-rasm" style="margin-top:18px"><img src="assets/ruxsat_belgisi.webp" alt="Ruxsatlar belgisi illyustratsiyasi"></div>
           </div>
 
           <div class="malumot-jadval">
@@ -177,7 +177,7 @@
           <h3>Rollar bo'yicha ruxsat matritsasi</h3>
           <div class="jadval-orash">
             <table>
-              <thead><tr><th>Modul / Rollar</th><th>Admin</th><th>Xavfsizlik operatori</th><th>Auditor</th><th>Moliya</th><th>Texnik</th></tr></thead>
+              <thead><tr id="matritsa-sarlavha"></tr></thead>
               <tbody id="matritsa-tanasi"></tbody>
             </table>
           </div>
@@ -188,23 +188,14 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
 const AVATAR = `<span class="avatar"><svg viewBox="0 0 34 34" style="width:32px;height:32px;display:block;margin:5px auto 0"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg></span>`;
-const FOYDLAR = [
-  {nom:"Javlon Karimov", rol:"Administrator", teg:"admin", bolim:"IT bo'limi", faol:true, id:"U056789012", email:"javlon.karimov@mkbank.uz", lavozim:"Tizim administratori", tel:"+998 90 123 45 67", sana:"15-yan, 2022"},
-  {nom:"Nilufar Ismoilova", rol:"Xavfsizlik operatori", teg:"operator", bolim:"Operatsion bo'lim", faol:true, id:"U056789013", email:"n.ismoilova@mkbank.uz", lavozim:"Katta operator", tel:"+998 91 234 56 78", sana:"03-mar, 2022"},
-  {nom:"Bekzod Yusupov", rol:"Auditor", teg:"auditor", bolim:"Audit bo'limi", faol:true, id:"U056789014", email:"b.yusupov@mkbank.uz", lavozim:"Bosh auditor", tel:"+998 93 345 67 89", sana:"20-avg, 2021"},
-  {nom:"Madina Tursunova", rol:"Moliya", teg:"moliya", bolim:"Moliya bo'limi", faol:true, id:"U056789015", email:"m.tursunova@mkbank.uz", lavozim:"Moliya mutaxassisi", tel:"+998 94 456 78 90", sana:"11-noy, 2022"},
-  {nom:"Shahzod Abdullaev", rol:"Texnik xodim", teg:"texnik", bolim:"Texnik xizmat", faol:true, id:"U056789016", email:"sh.abdullaev@mkbank.uz", lavozim:"Texnik muhandis", tel:"+998 97 567 89 01", sana:"05-fev, 2023"},
-  {nom:"Umid Safarov", rol:"Xavfsizlik operatori", teg:"operator", bolim:"Operatsion bo'lim", faol:false, id:"U056789017", email:"u.safarov@mkbank.uz", lavozim:"Xavfsizlik operatori", tel:"+998 88 678 90 12", sana:"14-iyul, 2023"},
-  {nom:"Saida Rahimova", rol:"Moliya", teg:"moliya", bolim:"Moliya bo'limi", faol:true, id:"U056789018", email:"s.rahimova@mkbank.uz", lavozim:"Buxgalter", tel:"+998 99 789 01 23", sana:"22-sen, 2021"},
-  {nom:"Jahongir Otajonov", rol:"Texnik xodim", teg:"texnik", bolim:"Texnik xizmat", faol:true, id:"U056789019", email:"j.otajonov@mkbank.uz", lavozim:"Elektrik", tel:"+998 95 890 12 34", sana:"09-dek, 2023"}
-];
+const FOYDLAR = MKB_DATA.FOYDLAR;   /* yagona manba (Д-1) */
 let faol = 0, izlash = "";
 
 function royxatChiz(){
@@ -242,18 +233,24 @@ function profilChiz(){
 document.getElementById("f-izlash").addEventListener("input", e=>{ izlash = e.target.value.toLowerCase(); royxatChiz(); });
 royxatChiz(); profilChiz();
 
-/* Matritsa */
-const HA = `<span class="ha"><svg class="ic"><use href="#i-belgi-doira"/></svg></span>`;
-const KOZ = `<span class="koz"><svg class="ic"><use href="#i-koz"/></svg></span>`;
-const MODULLAR = [
-  ["Boshqaruv paneli", HA, HA, HA, HA, HA],
-  ["Garov obyektlari", HA, "–", "–", "–", "–"],
-  ["Shartnomalar", HA, "–", KOZ, "–", "–"],
-  ["Hisobotlar", HA, HA, "–", HA, "–"],
-  ["Sozlamalar", HA, "–", KOZ, "–", "–"]
-];
-document.getElementById("matritsa-tanasi").innerHTML = MODULLAR.map(m=>`
-  <tr><td>${m[0]}</td><td>${m[1]}</td><td>${m[2]}</td><td>${m[3]}</td><td>${m[4]}</td><td>${m[5]}</td></tr>`).join("");
+/* Ruxsat matritsasi — mkb.js dagi ROL_RUXSAT dan hosil qilinadi.
+   Ilgari bu yerda qo'lda yozilgan jadval turardi va u haqiqiy rol modeliga
+   mos emas edi: "Auditor" va "Moliya" ustunlari tizimda yo'q rollar edi,
+   "Bank rahbariyati" va "Undiruv mutaxassisi" esa umuman ko'rsatilmagan. */
+const HA  = `<span class="ha"><svg class="ic"><use href="#i-belgi-doira"/></svg></span>`;
+const YOQ = "–";
+const ROLLAR = Object.entries(MKB.ROL_KALIT);          // [ko'rinadigan nom, kalit]
+
+document.getElementById("matritsa-sarlavha").innerHTML =
+  `<th>Modul / Rollar</th>` + ROLLAR.map(([nom]) => `<th>${nom}</th>`).join("");
+
+document.getElementById("matritsa-tanasi").innerHTML = MKB.MENYU.map(([bolim, , , nom]) => {
+  const kataklar = ROLLAR.map(([, kalit]) => {
+    const royxat = MKB.ROL_RUXSAT[kalit];
+    return `<td>${!royxat || royxat.includes(bolim) ? HA : YOQ}</td>`;
+  }).join("");
+  return `<tr><td>${nom}</td>${kataklar}</tr>`;
+}).join("");
 
 /* Yangi rol */
 document.getElementById("yangi-rol").addEventListener("click", ()=>{

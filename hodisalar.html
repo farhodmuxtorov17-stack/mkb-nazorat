@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Hodisalar markazi (ekran 7) ---- */
 .hodisa-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;align-items:start}
@@ -205,7 +205,7 @@
           <div class="karta">
             <h3>Hodisalar xaritasi (O'zbekiston)</h3>
             <div class="xarita-blok">
-              <img src="assets/hodisa_xarita.png" alt="Hodisalar issiqlik xaritasi">
+              <img src="assets/hodisa_xarita.webp" alt="Hodisalar issiqlik xaritasi">
               <div class="nazorat">
                 <button data-toast="Yaqinlashtirish">+</button>
                 <button data-toast="Uzoqlashtirish">−</button>
@@ -254,55 +254,16 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
 const RANG = {yuqori:"#E0442B", orta:"#F2994A", past:"#0F5392", kok:"#2E7BC4", binafsha:"#8B5CF6", sariq:"#F2C230", yashil:"#3AAA3E"};
-const HODISALAR = [
-  {kod:"#INC-2026-00128", rang:"#E0442B", sarlavha:"Zarafshon Tekstil sexi — yong'in signalizatsiyasi", vaqt:"Bugun, 14:12", jiddiylik:"yuqori", ustun:"yangi",
-   holat:"Yangi", joy:"Toshkent sh., Shayxontohur tumani", bino:"Zarafshon Tekstil sexi",
-   tavsif:"3-qavatda yong'in signalizatsiyasi ishga tushdi. Xodimlar evakuatsiya qilindi. Holat tekshirilmoqda.",
-   masul:"Rustam Q.", bolim:"Texnik xizmat bo'limi", fayl:"signalizatsiya_log.pdf", hajm:"1.2 MB"},
-  {kod:"#INC-2026-00125", rang:"#2E7BC4", sarlavha:"Nurafshon turar-joy majmuasi — elektr ta'minotida uzilish", vaqt:"Bugun, 12:52", jiddiylik:"past", ustun:"yangi",
-   holat:"Yangi", joy:"Nurafshon sh.", bino:"Nurafshon turar-joy majmuasi",
-   tavsif:"B blokda qisqa muddatli elektr uzilishi kuzatildi. Zaxira generator avtomatik ishga tushdi.",
-   masul:"Bekzod T.", bolim:"Energetika bo'limi", fayl:"elektr_jurnal.pdf", hajm:"640 KB"},
-  {kod:"#INC-2026-00127", rang:"#F2994A", sarlavha:"Navruz Plaza — lift ishlamayapti", vaqt:"Bugun, 13:48", jiddiylik:"orta", ustun:"tekshirilmoqda",
-   holat:"Tekshirilmoqda", joy:"Toshkent sh., Shayxontohur tumani", bino:"Navruz Plaza",
-   tavsif:"2-lift 8-qavatda to'xtab qoldi. Texnik guruh joyga yetib bordi, diagnostika o'tkazilmoqda.",
-   masul:"Karimov I.", bolim:"Texnik xizmat bo'limi", fayl:"lift_diagnostika.pdf", hajm:"920 KB"},
-  {kod:"#INC-2026-00124", rang:"#8B5CF6", sarlavha:"Chorvoq dala hovlisi — suv bosishi", vaqt:"Bugun, 12:33", jiddiylik:"past", ustun:"tekshirilmoqda",
-   holat:"Tekshirilmoqda", joy:"Toshkent vil., Chirchiq", bino:"Chorvoq dala hovlisi",
-   tavsif:"Yerto'lada suv sathi ko'tarilgani aniqlandi. Nasos tizimi ishga tushirildi.",
-   masul:"Oybek R.", bolim:"Ekspluatatsiya bo'limi", fayl:"suv_hisobot.pdf", hajm:"480 KB"},
-  {kod:"#INC-2026-00120", rang:"#F2C230", sarlavha:"Chorsu Savdo Markazi, B blok — yoritish tizimi ishlamayapti", vaqt:"Bugun, 11:05", jiddiylik:"orta", ustun:"tekshirilmoqda",
-   holat:"Tekshirilmoqda", joy:"Toshkent sh., Chilonzor", bino:"Chorsu Savdo Markazi",
-   tavsif:"2-qavat g'arbiy qanotida yoritish paneli ishdan chiqqan. Elektrik chaqirildi.",
-   masul:"Sardor M.", bolim:"Energetika bo'limi", fayl:"yoritish_akt.pdf", hajm:"350 KB"},
-  {kod:"#INC-2026-00126", rang:"#F2C230", sarlavha:"Chorsu Savdo Markazi, B blok — sovutish tizimida nosozlik", vaqt:"Bugun, 13:17", jiddiylik:"orta", ustun:"bartaraf",
-   holat:"Bartaraf etilmoqda", joy:"Toshkent sh., Chilonzor", bino:"Chorsu Savdo Markazi",
-   tavsif:"Markaziy konditsioner bloki past bosim bilan ishlayapti. Freon qo'shilmoqda.",
-   masul:"Rustam Q.", bolim:"HVAC guruhi", fayl:"hvac_hisobot.pdf", hajm:"1.1 MB"},
-  {kod:"#INC-2026-00118", rang:"#2E7BC4", sarlavha:"Daacha — eshik qulfi shikastlangan", vaqt:"Bugun, 10:11", jiddiylik:"past", ustun:"bartaraf",
-   holat:"Bartaraf etilmoqda", joy:"Toshkent vil., Bo'stonliq", bino:"Chorvoq dala hovlisi",
-   tavsif:"Asosiy kirish eshigining elektron qulfi almashtirilmoqda.",
-   masul:"Jasur A.", bolim:"Xavfsizlik bo'limi", fayl:"qulf_akt.pdf", hajm:"210 KB"},
-  {kod:"#INC-2026-00117", rang:"#3AAA3E", sarlavha:"Turar-joy majmuasi — xlorlash tizimi", vaqt:"Kecha, 18:23", jiddiylik:"past", ustun:"yopildi",
-   holat:"Yopildi", joy:"Nurafshon sh.", bino:"Nurafshon turar-joy majmuasi",
-   tavsif:"Suv tozalash tizimida rejali xlorlash yakunlandi. Ko'rsatkichlar normada.",
-   masul:"Dilshod N.", bolim:"Ekspluatatsiya bo'limi", fayl:"suv_tahlil.pdf", hajm:"380 KB"},
-  {kod:"#INC-2026-00116", rang:"#3AAA3E", sarlavha:"Biznes markazi — HVAC filtri almashtirildi", vaqt:"Kecha, 17:42", jiddiylik:"past", ustun:"yopildi",
-   holat:"Yopildi", joy:"Toshkent sh., Shayxontohur", bino:"Navruz Plaza",
-   tavsif:"Rejali texnik xizmat: barcha HVAC filtrlari yangilandi.",
-   masul:"Karimov I.", bolim:"HVAC guruhi", fayl:"filtr_akt.pdf", hajm:"290 KB"},
-  {kod:"#INC-2026-00115", rang:"#3AAA3E", sarlavha:"Ofis binosi — kirish nazorati tiklandi", vaqt:"Kecha, 16:08", jiddiylik:"past", ustun:"yopildi",
-   holat:"Yopildi", joy:"Toshkent sh., Sergeli", bino:"Sergeli logistika ombori",
-   tavsif:"Turniket kontrollerining dasturiy ta'minoti yangilandi, tizim to'liq tiklandi.",
-   masul:"Jasur A.", bolim:"Xavfsizlik bo'limi", fayl:"kirish_log.pdf", hajm:"175 KB"}
-];
+/* Hodisalar yagona manbadan (Д-1): obyekt nomi, hududi va sarlavha
+   malumot.js dagi reyestrdan hosil bo'ladi — bu yerda matn saqlanmaydi. */
+const HODISALAR = MKB_DATA.HODISALAR;
 let faolKod = "#INC-2026-00128";
 let faolJiddiylik = "Barcha hodisalar";
 const JIDDIYLIK_KALIT = {"Yuqori":"yuqori", "O'rta":"orta", "Past":"past"};

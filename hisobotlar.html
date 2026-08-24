@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Moliyaviy hisobotlar (ekran 10) ---- */
 .davr-chip{
@@ -162,11 +162,11 @@
 
       <div class="karta">
         <h3 style="margin-bottom:8px">Top obyektlar (balans qiymati)</h3>
-        <a class="top-band" href="obyekt.html?id=green-tower"><img src="assets/thumb_tower.png" alt=""><span class="matn"><b>Navruz Plaza</b><span>Toshkent</span></span><span class="qiymat"><b>4,32 mlrd so'm</b><span>28,4%</span></span></a>
-        <a class="top-band" href="obyekt.html?id=mega-mall"><img src="assets/thumb_mall.png" alt=""><span class="matn"><b>Chorsu Savdo Markazi</b><span>Toshkent</span></span><span class="qiymat"><b>3,15 mlrd so'm</b><span>20,7%</span></span></a>
-        <a class="top-band" href="obyekt.html?id=yakkasaroy-dm"><img src="assets/thumb_dm.png" alt=""><span class="matn"><b>Zarafshon Tekstil</b><span>Toshkent</span></span><span class="qiymat"><b>2,48 mlrd so'm</b><span>16,3%</span></span></a>
-        <a class="top-band" href="obyekt.html?id=nurafshon-turar"><img src="assets/thumb_ofis.png" alt=""><span class="matn"><b>Nurafshon turar-joy majmuasi</b><span>Nurafshon</span></span><span class="qiymat"><b>1,91 mlrd so'm</b><span>12,6%</span></span></a>
-        <a class="top-band" href="obyekt.html?id=chorvoq-dacha"><img src="assets/thumb_dacha.png" alt=""><span class="matn"><b>Chorvoq dala hovlisi</b><span>Bo'stonliq</span></span><span class="qiymat"><b>1,36 mlrd so'm</b><span>8,9%</span></span></a>
+        <a class="top-band" href="obyekt.html?id=green-tower"><img src="assets/thumb_tower.webp" alt=""><span class="matn"><b>Navruz Plaza</b><span>Toshkent</span></span><span class="qiymat"><b>4,32 mlrd so'm</b><span>28,4%</span></span></a>
+        <a class="top-band" href="obyekt.html?id=mega-mall"><img src="assets/thumb_mall.webp" alt=""><span class="matn"><b>Chorsu Savdo Markazi</b><span>Toshkent</span></span><span class="qiymat"><b>3,15 mlrd so'm</b><span>20,7%</span></span></a>
+        <a class="top-band" href="obyekt.html?id=yakkasaroy-dm"><img src="assets/thumb_dm.webp" alt=""><span class="matn"><b>Zarafshon Tekstil</b><span>Toshkent</span></span><span class="qiymat"><b>2,48 mlrd so'm</b><span>16,3%</span></span></a>
+        <a class="top-band" href="obyekt.html?id=nurafshon-turar"><img src="assets/thumb_ofis.webp" alt=""><span class="matn"><b>Nurafshon turar-joy majmuasi</b><span>Nurafshon</span></span><span class="qiymat"><b>1,91 mlrd so'm</b><span>12,6%</span></span></a>
+        <a class="top-band" href="obyekt.html?id=chorvoq-dacha"><img src="assets/thumb_dacha.webp" alt=""><span class="matn"><b>Chorvoq dala hovlisi</b><span>Bo'stonliq</span></span><span class="qiymat"><b>1,36 mlrd so'm</b><span>8,9%</span></span></a>
         <a class="barcha-tugma" href="obyektlar.html">Barcha obyektlar<svg class="ic"><use href="#i-ong"/></svg></a>
       </div>
     </section>
@@ -176,7 +176,7 @@
       <div class="karta">
         <h3 style="font-size:16.5px;font-weight:750;margin-bottom:14px">Moliyaviy ko'rsatkichlar sharhi</h3>
         <div class="sharh-korpus">
-          <img src="assets/moliya_illyustratsiya.png" alt="Moliyaviy ko'rsatkichlar 3D illyustratsiyasi">
+          <img src="assets/moliya_illyustratsiya.webp" alt="Moliyaviy ko'rsatkichlar 3D illyustratsiyasi">
           <div class="metrika-grid">
             <div class="metrika">
               <div class="yorliq">Joriy likvidlik koeffitsienti</div>
@@ -234,9 +234,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -312,12 +312,7 @@ const DAVR_KOEF = {
   "So'nggi oy":      {k:0.16, label:"25.04.2024 – 24.05.2024"},
   "O'tgan yil":      {k:2.31, label:"01.01.2023 – 31.12.2023"}
 };
-const KPI_BAZA = [
-  {qiymat:12.48, birlik:"mlrd so'm", delta:8.2, manfiy:false},
-  {qiymat:2.16,  birlik:"mlrd so'm", delta:5.6, manfiy:false},
-  {qiymat:8.93,  birlik:"mlrd so'm", delta:-3.1, manfiy:true},
-  {qiymat:3.55,  birlik:"mlrd so'm", delta:12.4, manfiy:false}
-];
+const KPI_BAZA = MKB_DATA.KPI_BAZA;   /* yagona manba (Д-1) */
 document.querySelectorAll(".kpi-band .kpi").forEach((k,i)=>{
   k.querySelector(".kpi-qiymat b").id = "kpi-qiymat-"+i;
   k.querySelector(".kpi-qiymat .delta").id = "kpi-delta-"+i;

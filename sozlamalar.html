@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082202">
+<link rel="stylesheet" href="mkb.css?v=26082403">
 <style>
 /* ---- Sozlamalar (ekran 21) ---- */
 .sz-grid{display:grid;grid-template-columns:300px minmax(0,1fr) 400px;gap:18px;align-items:start}
@@ -157,7 +157,7 @@
           <h3>Tizim holati</h3>
           <span class="chip chip-asos"><span class="nuqta"></span>Barqaror</span>
         </div>
-        <div class="server-rasm"><img src="assets/server_3d.png" alt="Server holati illyustratsiyasi"></div>
+        <div class="server-rasm"><img src="assets/server_3d.webp" alt="Server holati illyustratsiyasi"></div>
         <div class="th-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Tizim versiyasi</span><b>v2.4.1</b></div>
         <div class="th-qator"><svg class="ic"><use href="#i-vazifa"/></svg><span class="yorliq">Oxirgi zaxira nusxa</span><b>24-may, 04:15</b></div>
         <div class="th-qator"><svg class="ic"><use href="#i-aktiv"/></svg><span class="yorliq">Ma'lumotlar bazasi</span><b>PostgreSQL 15.4</b></div>
@@ -185,9 +185,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082202"></script>
-<script src="tarjima.js?v=26082202"></script>
-<script src="mkb.js?v=26082202"></script>
+<script src="malumot.js?v=26082403"></script>
+<script src="tarjima.js?v=26082403"></script>
+<script src="mkb.js?v=26082403"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -219,22 +219,7 @@ document.getElementById("diagnostika").addEventListener("click", ()=>{
 
 /* Audit jurnali — faqat o'qish uchun; yozuvlarni o'chirish yoki tahrirlash imkoniyati yo'q */
 const AUDIT_ROL_QISQA = {"Administrator":"admin","Bank rahbariyati":"rahbar","Xavfsizlik operatori":"operator","Texnik xodim":"texnik"};
-const AUDIT_JURNAL = [
-  {vaqt:"24-may, 14:47", ism:"Ismoilov Otabek", rol:"Administrator", amal:"Tizimga kirdi", obyekt:"Sessiya #SS-88214 · IP 192.168.10.14"},
-  {vaqt:"24-may, 14:20", ism:"Sattorov Jasur", rol:"Xavfsizlik operatori", amal:`Hodisani "Bartaraf etilmoqda" ustuniga ko'chirdi`, obyekt:"#INC-2026-00126 — Chorsu Savdo Markazi (sovutish tizimida nosozlik)"},
-  {vaqt:"24-may, 13:55", ism:"Rahimov Bekzod", rol:"Texnik xodim", amal:"Qurilmani qayta ishga tushirdi", obyekt:"Network Switch 1 — Navruz Plaza, Texnik xona"},
-  {vaqt:"24-may, 12:10", ism:"Yo'ldoshev Alisher", rol:"Bank rahbariyati", amal:"Shartnomani tasdiqladi", obyekt:"CT-2025-0912 — SecurTech Servis MChJ"},
-  {vaqt:"24-may, 11:32", ism:"Ismoilov Otabek", rol:"Administrator", amal:`Foydalanuvchi rolini o'zgartirdi: "Texnik xodim" → "Xavfsizlik operatori"`, obyekt:"Nilufar Ismoilova · U056789013"},
-  {vaqt:"24-may, 11:05", ism:"Ismoilov Otabek", rol:"Administrator", amal:"Sozlamani o'chirdi", obyekt:"Ikki bosqichli autentifikatsiya — Tizim parametrlari"},
-  {vaqt:"24-may, 10:40", ism:"Nilufar Ismoilova", rol:"Xavfsizlik operatori", amal:"Hujjat yukladi", obyekt:"Baholash hisobot.pdf — Nurafshon turar-joy majmuasi"},
-  {vaqt:"24-may, 10:15", ism:"Yo'ldoshev Alisher", rol:"Bank rahbariyati", amal:"Kirish so'rovini tasdiqladi", obyekt:"Sardor Aliyev, mehmon — Navruz Plaza"},
-  {vaqt:"24-may, 09:12", ism:"Sattorov Jasur", rol:"Xavfsizlik operatori", amal:"Yangi hodisa qayd etdi", obyekt:"#INC-2026-00128 — Zarafshon Tekstil sexi (yong'in signalizatsiyasi)"},
-  {vaqt:"24-may, 04:15", ism:"Tizim", rol:"Avtomatik", amal:"Zaxira nusxa yaratdi", obyekt:"To'liq zaxira — 213 GB"},
-  {vaqt:"23-may, 22:48", ism:"Jahongir Otajonov", rol:"Texnik xodim", amal:"Xato parol bilan kirishga urindi (3 marta)", obyekt:"IP 91.204.239.18"},
-  {vaqt:"23-may, 16:05", ism:"Sattorov Jasur", rol:"Xavfsizlik operatori", amal:"Hisobotni eksport qildi", obyekt:"Moliyaviy hisobot — PDF"},
-  {vaqt:"22-may, 15:20", ism:"Ismoilov Otabek", rol:"Administrator", amal:"Foydalanuvchi hisobini nofaollashtirdi", obyekt:"Umid Safarov · U056789017"},
-  {vaqt:"22-may, 09:47", ism:"Ismoilov Otabek", rol:"Administrator", amal:"Foydalanuvchi parolini tiklashga majburladi", obyekt:"Jahongir Otajonov · U056789019"}
-];
+const AUDIT_JURNAL = MKB_DATA.AUDIT_JURNAL;   /* yagona manba (Д-1) */
 function auditRoyxatChiz(qidiruv){
   const q = (qidiruv||"").toLowerCase().trim();
   const royxat = AUDIT_JURNAL.filter(a=>!q || (a.vaqt+" "+a.ism+" "+a.rol+" "+a.amal+" "+a.obyekt).toLowerCase().includes(q));
