@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082405">
+<link rel="stylesheet" href="mkb.css?v=26082406">
 <style>
 /* ---- Hisobotlar markazi (ekran 20) ---- */
 .hm-filtrlar{display:flex;gap:14px;flex-wrap:wrap}
@@ -221,9 +221,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082405"></script>
-<script src="tarjima.js?v=26082405"></script>
-<script src="mkb.js?v=26082405"></script>
+<script src="malumot.js?v=26082406"></script>
+<script src="tarjima.js?v=26082406"></script>
+<script src="mkb.js?v=26082406"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -253,7 +253,9 @@ function kutubxonaChiz(){
 function detalYangila(){
   const h = HISOBOTLAR[faol];
   document.getElementById("d-nom").textContent = h.nom;
-  document.getElementById("d-tur").textContent = h.tur;
+  const TUR_NOMI = {portfel:"Portfel tahlili", undiruv:"Undiruv samaradorligi",
+    nazorat:"Garov nazorati", zaxira:"Tasnif va zaxira", realizatsiya:"Realizatsiya"};
+  document.getElementById("d-tur").textContent = TUR_NOMI[h.tur] || h.tur;
   document.getElementById("d-format").textContent = h.format.toUpperCase();
   document.getElementById("d-hajm").textContent = h.hajm;
   document.getElementById("d-yaratilgan").innerHTML = `${h.sana}&nbsp; ${h.soat}`;
