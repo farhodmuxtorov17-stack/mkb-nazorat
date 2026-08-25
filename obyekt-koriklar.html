@@ -63,11 +63,11 @@ document.addEventListener("mkb:tayyor", async () => {
   const r = MKB_DATA.KORIKLAR.filter(k => k.obyektId === x.id);
   document.getElementById("k-soni").textContent = r.length + " ta yozuv";
   document.getElementById("k-royxat").innerHTML = r.length ? r.map(k =>
-    '<a href="korik-akti.html?id=' + encodeURIComponent(k.id) + '" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--chiziq-2)">' +
+    '<a href="korik-akti.html?id=' + encodeURIComponent(k.id) + '" class="qator">' +
       '<span style="width:38px;height:38px;border-radius:14px;background:' +
         (k.holat === "rejada" ? "var(--brend-fon)" : "var(--yashil-fon)") + ';display:grid;place-items:center;color:' +
         (k.holat === "rejada" ? "var(--brend-quyuq)" : "var(--yashil)") + '">' + ik("korik") + '</span>' +
-      '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px">' + k.id + ' · ' + (k.tur || "Rejali") + '</b>' +
+      '<span class="matn"><b>' + k.id + ' · ' + (k.tur || "Rejali") + '</b>' +
       '<span style="font-size:12.5px;color:var(--matn-3)">' + k.inspektor + (k.izoh ? " · " + k.izoh.slice(0, 60) + "…" : "") + '</span></span>' +
       '<span class="chip ' + (k.holat === "rejada" ? "chip-brend" : "chip-yashil") + '">' + k.sana + '</span></a>').join("")
     : '<div class="bosh-holat">' + ik("korik") + '<b>Ko\'riklar hali yo\'q</b><span>Birinchi ko\'rikni tayinlang</span></div>';

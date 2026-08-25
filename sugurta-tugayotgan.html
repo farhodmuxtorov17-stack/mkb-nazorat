@@ -37,12 +37,12 @@ document.addEventListener("mkb:tayyor", async () => {
     ["sen", "okt", "noy"].some(oy => (s.tugash || "").includes(oy)));
   document.getElementById("st-soni").textContent = tugayotgan.length + " ta";
   document.getElementById("st-royxat").innerHTML = tugayotgan.length ? tugayotgan.map(s =>
-    '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--chiziq-2)">' +
-      '<span style="width:38px;height:38px;border-radius:14px;background:var(--sariq-fon);color:var(--sariq);display:grid;place-items:center">' + ik("soat") + '</span>' +
-      '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px">' + s.obyekt + '</b>' +
-      '<span style="font-size:12.5px;color:var(--matn-3)">' + s.polis + ' · ' + s.kompaniya + '</span></span>' +
-      '<span class="chip chip-sariq">' + s.tugash + '</span>' +
-      '<a class="tugma tugma-kichik tugma-asosiy" href="sugurta-yangilash.html?id=' + encodeURIComponent(s.id) + '">Yangilash</a>' +
+    '<div class="qator">' +
+      '<span class="belgi lavanda">' + ik("soat") + '</span>' +
+      '<span class="matn"><b>' + s.obyekt + '</b>' +
+      '<span>' + s.polis + ' · ' + s.kompaniya + '</span></span>' +
+      '<span class="ong"><span class="chip chip-sariq">' + s.tugash + '</span>' +
+      '<a class="tugma tugma-kichik tugma-asosiy" href="sugurta-yangilash.html?id=' + encodeURIComponent(s.id) + '">Yangilash</a></span>' +
     '</div>').join("")
     : '<div class="bosh-holat">' + ik("tasdiq") + '<b>Yaqin muddatda tugaydigan polis yo\'q</b></div>';
 });

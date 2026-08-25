@@ -66,20 +66,18 @@ function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
       '</div>').join("") + '</div>';
 }
 function obyektQatori(y){
-  return '<a href="obyekt.html?id=' + encodeURIComponent(y.id) + '" style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
-    '<img class="foto" src="' + (y.mulk.rasmKichik || y.mulk.rasm) + '" alt="" loading="lazy" style="width:52px;height:38px;border-radius:14px;object-fit:cover;flex:none">' +
-    '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + y.mulk.qisqa + '</b>' +
-    '<span style="font-size:12.5px;color:var(--matn-3)">' + y.id + ' · ' + y.bosqichNomi + '</span></span>' +
-    '<span class="pul" style="color:var(--qalam)">' + y.qarzMatn + '</span>' +
-    MKB.halqa(y.qoplash, 40, 4) + '</a>';
+  return '<a class="qator" href="obyekt.html?id=' + encodeURIComponent(y.id) + '">' +
+    '<img class="media" src="' + (y.mulk.rasmKichik || y.mulk.rasm) + '" alt="" loading="lazy">' +
+    '<span class="matn"><b>' + y.mulk.qisqa + '</b>' +
+    '<span>' + y.id + ' · ' + y.bosqichNomi + '</span></span>' +
+    '<span class="ong"><span class="pul">' + y.qarzMatn + '</span>' +
+    MKB.shtrix(y.qoplash, 12) + '</span></a>';
 }
 function muddatQatori(m){
-  return '<a href="' + m.href + '" style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
-    '<span style="width:34px;height:34px;border-radius:14px;background:' + (m.xavfli ? 'var(--xavf-fon)' : 'var(--varaq-2)') +
-      ';display:grid;place-items:center;color:' + (m.xavfli ? 'var(--xavf-matn)' : 'var(--qalam)') + ';flex:none">' + ik(m.ikonka) + '</span>' +
-    '<span style="flex:1;min-width:0"><b style="display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + m.nom + '</b>' +
-    '<span style="font-size:12.5px;color:var(--matn-3)">' + m.izoh + '</span></span>' +
-    '<span style="font:500 12.5px var(--shrift-mono);color:' + (m.xavfli ? 'var(--xavf-matn)' : 'var(--qalam)') + ';white-space:nowrap">' + m.vaqt + '</span></a>';
+  return '<a class="qator" href="' + m.href + '">' +
+    '<span class="belgi ' + (m.xavfli ? "pushti" : "") + '">' + ik(m.ikonka) + '</span>' +
+    '<span class="matn"><b>' + m.nom + '</b><span>' + m.izoh + '</span></span>' +
+    '<span class="vaqt"' + (m.xavfli ? ' style="color:var(--pushti-matn)"' : '') + '>' + m.vaqt + '</span></a>';
 }
 
 document.addEventListener("mkb:tayyor", async () => {
@@ -95,9 +93,9 @@ document.addEventListener("mkb:tayyor", async () => {
 
   document.getElementById("k-royxat").innerHTML =
     yoz.slice().sort((a, b) => MKB.sonQiymat(b.qarzSon) - MKB.sonQiymat(a.qarzSon)).slice(0, 6).map(y =>
-      '<a href="qarzdorlar.html" style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
+      '<a href="qarzdorlar.html" class="qator">' +
         '<span style="width:36px;height:36px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:500 13px var(--shrift);flex:none">' + y.mijoz.belgi + '</span>' +
-        '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + y.mijoz.nom + '</b>' +
+        '<span class="matn"><b>' + y.mijoz.nom + '</b>' +
         '<span style="font-size:12.5px;color:var(--matn-3)">' + y.bosqichNomi + ' · ' + y.qarz.kunlar + ' kun</span></span>' +
         '<span class="pul">' + y.qarzMatn + '</span></a>').join("");
 
