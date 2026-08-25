@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Foydalanuvchi kartochkasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="foydalanuvchilar.html">Foydalanuvchilar</a><span class="ajratgich">/</span><span>Kartochka</span></div>
+    <div class="hs-qator"><h1>Foydalanuvchi kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:680px"><div class="karta-bosh"><span id="fk-belgi" style="width:50px;height:50px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 16px var(--shrift)">—</span><div><h2 id="fk-nom" style="font:700 18px var(--shrift-displey)">—</h2><span style="font-size:12px;color:var(--iz)" id="fk-sub">—</span></div></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-foyd"/></svg>Login / ID</dt>
+  <dd><span id="fk-id" class="kod-mono">—</span></dd>
+  <dt><svg class="ic"><use href="#i-xat"/></svg>Email</dt>
+  <dd id="fk-email">—</dd>
+  <dt><svg class="ic"><use href="#i-bank"/></svg>Bo'lim</dt>
+  <dd id="fk-bolim">—</dd>
+  <dt><svg class="ic"><use href="#i-qulf"/></svg>Rol</dt>
+  <dd id="fk-rol">—</dd>
+  <dt><svg class="ic"><use href="#i-tasdiq"/></svg>Holat</dt>
+  <dd id="fk-holat">—</dd>
+</dl>  <div class="maydon" style="margin-top:16px"><label class="maydon-yorliq">Rolni o'zgartirish</label>
+    <div class="kirish"><select id="fk-rol-tanlov"></select></div></div>
+  <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px">
+    <button type="button" class="tugma tugma-asosiy" id="fk-saqla">Saqlash</button></div>
+  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const f = id ? await MKBapi.bitta("FOYDLAR", id) : null;
+  if (!f){ location.replace("foydalanuvchilar.html"); return; }
+  document.getElementById("hs-meta").textContent = f.nom;
+  document.getElementById("fk-belgi").textContent = f.nom.split(" ").map(v => v[0]).join("").slice(0, 2);
+  document.getElementById("fk-nom").textContent = f.nom;
+  document.getElementById("fk-sub").textContent = f.bolim;
+  document.getElementById("fk-id").textContent = f.id;
+  document.getElementById("fk-email").textContent = f.email || "—";
+  document.getElementById("fk-bolim").textContent = f.bolim;
+  document.getElementById("fk-rol").textContent = f.rol;
+  document.getElementById("fk-holat").innerHTML = f.faol
+    ? '<span class="chip chip-yashil">Faol</span>' : '<span class="chip">O\'chirilgan</span>';
+  const ROLLAR = ["Administrator", "Filial rahbari", "Kredit menejeri",
+    "Aktivlar nazorati mutaxassisi", "Yurist", "Tavakkalchilik menejeri"];
+  document.getElementById("fk-rol-tanlov").innerHTML = ROLLAR.map(r =>
+    '<option' + (r === f.rol ? " selected" : "") + '>' + r + '</option>').join("");
+  document.getElementById("fk-saqla").addEventListener("click", async () => {
+    await MKBapi.yangilash("FOYDLAR", f.id, {rol: document.getElementById("fk-rol-tanlov").value});
+    MKB.toast("Rol yangilandi");
+    setTimeout(() => location.reload(), 600);
+  });
+});
+</script>
+</body>
+</html>

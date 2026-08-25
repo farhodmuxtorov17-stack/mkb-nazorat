@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Dinamika</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="hisobot">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>Dinamika</span></div>
+    <div class="hs-qator"><h1>Dinamika</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta"><div class="karta-bosh"><h2>Undiruv, mlrd so'm</h2><span class="soni">oylar kesimida</span></div><div id="hd-oylik"></div></section>
+  <section class="karta"><div class="karta-bosh"><h2>Yillik taqqoslama, mlrd so'm</h2></div><div id="hd-yillik"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+
+function gorizontalBar(joy, juftlar, rang){
+  const maks = Math.max(...juftlar.map(v => MKB.sonQiymat(v[1])), 1);
+  document.getElementById(joy).innerHTML = juftlar.map(([nom, v]) =>
+    '<div style="display:flex;align-items:center;gap:10px;padding:7px 0">' +
+      '<span style="width:150px;font-size:12.5px;color:var(--qalam);flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + nom + '</span>' +
+      '<div style="flex:1;height:8px;border-radius:99px;background:var(--kirish-fon)">' +
+        '<div style="height:100%;width:' + Math.round(MKB.sonQiymat(v) / maks * 100) + '%;border-radius:99px;background:' + (rang || 'var(--siyoh)') + '"></div></div>' +
+      '<b style="font:700 12px var(--shrift-mono);min-width:44px;text-align:right">' + v + '</b></div>').join("");
+}
+function ustunBar(joy, yorliqlar, qiymatlar){
+  const maks = Math.max(...qiymatlar);
+  document.getElementById(joy).innerHTML =
+    '<div style="display:flex;align-items:flex-end;gap:12px;height:160px">' +
+    qiymatlar.map((v, i) =>
+      '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">' +
+        '<span style="font:700 11.5px var(--shrift-mono);color:var(--qalam)">' + String(v).replace(".", ",") + '</span>' +
+        '<div style="width:100%;max-width:38px;height:' + Math.round(v / maks * 112) + 'px;border-radius:8px 8px 3px 3px;background:' +
+        (i === qiymatlar.length - 1 ? 'var(--brend)' : 'var(--siyoh)') + '"></div>' +
+        '<span style="font-size:11px;color:var(--iz)">' + yorliqlar[i] + '</span></div>').join("") + '</div>';
+}
+document.addEventListener("mkb:tayyor", () => {
+  const o = MKB_DATA.UNDIRUV_SERIYA.oylik, y = MKB_DATA.UNDIRUV_SERIYA.yillik;
+  ustunBar("hd-oylik", o.yorliq, o.qiymat);
+  ustunBar("hd-yillik", y.yorliq, y.qiymat);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Hujjat yuklash</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="hujjat">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Hujjatlar</span></div>
+    <div class="hs-qator"><h1>Hujjat yuklash</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hujjatlar.html">Markaz</a><a href="hujjat-shablonlar.html">Shablonlar</a><a href="hujjat-yuklash.html" class="faol">Yuklash</a><a href="hujjat-imzolash.html">Imzolash</a></nav>
+  <section class="karta" style="max-width:680px"><div class="karta-bosh"><h2>Hujjat yuklash</h2></div>
+  <form id="hy-forma" class="forma-tor">
+    <div class="maydon keng"><label class="maydon-yorliq">Hujjat nomi <b>*</b></label>
+      <div class="kirish"><input name="nom" placeholder="Masalan: Kadastr ko'chirmasi"></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Obyekt</label>
+      <div class="kirish"><select name="obyektId" id="hy-obyekt"><option value="">Bog'lanmagan</option></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Turi <b>*</b></label>
+      <div class="kirish"><select name="tur"><option>Texnik pasport</option><option>Kadastr hujjati</option><option>Sud hujjati</option><option>Shartnoma</option><option>Dalolatnoma</option><option>Boshqa</option></select></div></div>
+    <div class="maydon keng"><label class="maydon-yorliq">Fayl <b>*</b></label>
+      <div class="kirish"><input type="file" name="fayl"></div></div>
+    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
+      <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-yuklash"/></svg>Omborga joylash</button></div>
+  </form></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  document.getElementById("hy-obyekt").innerHTML += yoz.map(y =>
+    '<option value="' + y.id + '">' + y.id + " — " + y.mulk.qisqa + '</option>').join("");
+  document.getElementById("hy-forma").addEventListener("submit", async e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target, ["nom", "tur"]);
+    if (!q) return;
+    await MKBapi.yangi("HUJJATLAR", {id: "HJ-" + Date.now().toString(36).toUpperCase(),
+      nom: q.nom, ikon: "pdf", iturl: "i-hujjat", obyektId: q.obyektId || "",
+      tur: q.tur, teg: "pdf", sana: new Date().toLocaleDateString("uz"),
+      holat: "Ko'rib chiqilmoqda", hajm: "yangi"});
+    MKB.toast("Hujjat omborga joylandi");
+    setTimeout(() => location.href = "hujjatlar.html", 700);
+  });
+});
+</script>
+</body>
+</html>

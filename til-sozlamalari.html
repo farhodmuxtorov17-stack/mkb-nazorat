@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Til sozlamalari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><span>Til</span></div>
+    <div class="hs-qator"><h1>Til sozlamalari</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:640px"><div class="karta-bosh"><h2>Interfeys tili</h2></div><div id="til-tanlov" style="display:flex;flex-direction:column;gap:8px"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+  function chiz(){
+    const joriy = joriyTil();
+    document.getElementById("til-tanlov").innerHTML = [
+      ["uz", "O'zbek tili", "Tizimning asosiy tili — barcha hujjatlar va shakllar"],
+      ["ru", "Русский язык", "Интерфейс и уведомления на русском языке"],
+    ].map(([kod, nom, izoh]) =>
+      '<button type="button" data-til="' + kod + '" style="display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid ' +
+      (joriy === kod ? 'var(--siyoh)' : 'var(--chiziq)') + ';border-radius:12px;background:' +
+      (joriy === kod ? 'var(--brend-fon)' : 'var(--varaq)') + ';text-align:left;width:100%">' +
+        '<b style="font:700 15px var(--shrift)">' + kod.toUpperCase() + '</b>' +
+        '<span style="flex:1"><b style="display:block;font-size:13.5px">' + nom + '</b>' +
+        '<span style="font-size:12px;color:var(--iz)">' + izoh + '</span></span>' +
+        (joriy === kod ? '<span style="color:var(--brend-quyuq)">' + ik("tasdiq") + '</span>' : '') +
+      '</button>').join("");
+    document.querySelectorAll("[data-til]").forEach(b => b.addEventListener("click", () => {
+      localStorage.setItem("mkb-til", b.dataset.til);
+      tarjimaQil();
+      chiz();
+      MKB.toast(b.dataset.til === "ru" ? "Язык интерфейса изменён" : "Interfeys tili o'zgartirildi");
+    }));
+  }
+  chiz();
+});
+</script>
+</body>
+</html>

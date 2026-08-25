@@ -1,276 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>(function(){var t=localStorage.getItem("mkb-tema");if(t==="realty"||t==="estate")document.documentElement.dataset.tema=t})()</script>
-<title>MKB — Foydalanuvchilar va rollar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082605">
-<style>
-/* ---- Foydalanuvchilar va rollar (ekran 18) ---- */
-.fr-grid{display:grid;grid-template-columns:400px minmax(0,1fr) 400px;gap:18px;align-items:start}
-.fr-grid h3{font-size:16.5px;font-weight:750}
-.f-son{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 8px;margin-left:9px;background:#EEF2FF;color:#3730A3;border-radius:99px;font-size:12.5px;font-weight:750;vertical-align:2px}
-.fr-qidiruv{display:flex;gap:10px;margin-top:14px}
-.fr-qidiruv .kirish{height:46px;flex:1}
-.fr-filtr{height:46px;padding:0 16px;border:1px solid var(--kirish-chiziq);border-radius:12px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:650}
-.fr-filtr:hover{background:#F4F4F5}
-.fr-filtr .ic{width:17px;height:17px}
-
-.foyd-band{
-  width:100%;text-align:left;display:flex;align-items:center;gap:12px;
-  border:1px solid var(--chiziq);border-radius:14px;padding:11px 13px;margin-top:10px;
-  transition:border-color var(--tez),box-shadow var(--tez);
-}
-.foyd-band:hover{box-shadow:var(--soya)}
-.foyd-band.faol{border-color:#C7D2FE;background:#FAFAFA;box-shadow:0 0 0 1px #C7D2FE}
-.foyd-band .avatar{width:42px;height:42px}
-.foyd-band b{display:block;font-size:14px;font-weight:650}
-.rol-teg{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;margin-top:4px}
-.rol-teg.admin{background:var(--rol-admin-fon);color:var(--rol-admin-matn)}
-.rol-teg.filial{background:var(--rol-filial-fon);color:var(--rol-filial-matn)}
-.rol-teg.kredit{background:var(--rol-kredit-fon);color:var(--rol-kredit-matn)}
-.rol-teg.ta'minot{background:var(--rol-aktiv-fon);color:var(--rol-aktiv-matn)}
-.rol-teg.yurist{background:var(--rol-yurist-fon);color:var(--rol-yurist-matn)}
-.rol-teg.tavakkal{background:var(--rol-tavakkal-fon);color:var(--rol-tavakkal-matn)}
-.foyd-band .bolim{margin-left:auto;font-size:13px;color:var(--matn-3);text-align:right;flex:none}
-.foyd-band .holat{display:flex;align-items:center;gap:7px;font-size:13px;color:#3F3F46;flex:none;width:64px;justify-content:flex-end}
-.foyd-band .holat .nuqta{width:7px;height:7px;border-radius:99px;background:#059669}
-.foyd-band .holat.nofaol .nuqta{background:#C7C7CD}
-
-/* Markaz */
-.profil-blok{text-align:center;padding-top:6px}
-.profil-blok .avatar{width:104px;height:104px;margin:0 auto;position:relative}
-.profil-blok .avatar .onlayn{position:absolute;right:5px;bottom:5px;width:15px;height:15px;border-radius:99px;background:#4F46E5;border:3px solid #fff}
-.profil-blok h2{font-size:20px;font-weight:750;margin-top:12px}
-.malumot-jadval{margin-top:8px}
-.mj-qator{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #F4F4F5;font-size:13.5px}
-.mj-qator:last-child{border-bottom:none}
-.mj-qator .ic{width:17px;height:17px;color:#52525B}
-.mj-qator .yorliq{color:var(--matn-3)}
-.mj-qator b{margin-left:auto;font-weight:650;text-align:right}
-.mj-qator b .nuqta{display:inline-block;width:7px;height:7px;border-radius:99px;background:#059669;margin-right:6px;vertical-align:1px}
-.foyd-tana{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 22px;align-items:start}
-.ruxsat-rasm{display:grid;place-items:center}
-.ruxsat-rasm img{max-width:220px}
-.ruxsatlar{grid-column:1/-1;margin-top:10px}
-.ruxsatlar h4{font-size:15.5px;font-weight:750;margin-bottom:6px}
-.ruxsat-band{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 10px;border-bottom:1px solid #F4F4F5;border-radius:9px;transition:background var(--tez)}
-.ruxsat-band:hover{background:#FAFAFA}
-.ruxsat-band:last-child{border-bottom:none}
-.ruxsat-band .ic{width:19px;height:19px;color:#3F3F46}
-.ruxsat-band b{font-size:14px;font-weight:650}
-.ruxsat-band span{font-size:12.5px;color:var(--matn-3)}
-.ruxsat-band .strelka{margin-left:auto;color:var(--matn-4)}
-.ruxsat-band .strelka .ic{width:15px;height:15px}
-
-/* O'ng ustun */
-.rol-band{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 8px;border-bottom:1px solid #F4F4F5;border-radius:10px;transition:background var(--tez)}
-.rol-band:hover{background:#FAFAFA}
-.rol-band:last-of-type{border-bottom:none}
-.rol-tile{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile-tor)}
-.rol-tile .ic{width:19px;height:19px}
-.rol-tile.yashil{background:#EEF2FF;color:#3730A3}
-.rol-tile.kok{background:#F0F9FF;color:#0369A1}
-.rol-tile.binafsha{background:#F5F3FF;color:#6D28D9}
-.rol-tile.sariq{background:#FFF0DC;color:#C46A0A}
-.rol-tile.kul{background:#F4F4F5;color:#52525B}
-.rol-band b{display:block;font-size:14.5px;font-weight:650}
-.rol-band span{display:block;font-size:12.5px;color:var(--matn-3)}
-.rol-band .son{margin-left:auto;font-size:14px;font-weight:750}
-
-.matritsa{margin-top:2px}
-.matritsa h3{margin-bottom:12px}
-.matritsa table{width:100%;border-collapse:collapse;font-size:13px}
-.matritsa th{font-size:12px;font-weight:650;color:var(--matn-3);text-align:center;padding:8px 4px;border-bottom:1px solid var(--chiziq)}
-.matritsa th:first-child{text-align:left}
-.matritsa td{padding:9px 4px;text-align:center;border-bottom:1px solid #F4F4F5;color:var(--matn-4)}
-.matritsa tr:last-child td{border-bottom:none}
-.matritsa td:first-child{text-align:left;font-weight:600;color:#3F3F46}
-.matritsa .ha{color:#059669}
-.matritsa .ha .ic{width:16px;height:16px;stroke-width:2.2;vertical-align:-3px}
-.matritsa .koz .ic{width:15px;height:15px;color:#52525B;vertical-align:-3px}
-@media (max-width:1700px){.fr-grid{grid-template-columns:360px minmax(0,1fr)}.fr-grid > aside{grid-column:1/-1}}
-@media (max-width:1100px){.fr-grid{grid-template-columns:minmax(0,1fr)}.foyd-tana{grid-template-columns:minmax(0,1fr)}}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Foydalanuvchilar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
-<body data-sahifa="sozlamalar" data-ruxsat="admin">
-
-<div class="app">
-<aside class="sidebar" data-shell-sidebar></aside>
-
-<div class="asosiy">
-  <header class="topbar" data-shell-topbar></header>
-
-  <main class="kontent">
-    <div class="sahifa-qator"><h1>Foydalanuvchilar va rollar</h1></div>
-
-    <div class="fr-grid">
-
-      <!-- Chap: foydalanuvchilar -->
-      <div class="karta">
-        <h3>Foydalanuvchilar<span class="f-son" id="f-son">–</span></h3>
-        <div class="fr-qidiruv">
-          <div class="kirish"><input id="f-izlash" placeholder="Qidirish..." aria-label="Foydalanuvchi qidirish"></div>
-          <button class="fr-filtr" data-toast="Filtrlar: rol, bo'lim, holat"><svg class="ic"><use href="#i-slayder"/></svg>Filtrlar</button>
-        </div>
-        <div id="foyd-royxat"></div>
-        <div class="sahifalash" style="padding:14px 0 0">
-          <span class="oraliq">Jami: <b id="f-jami">–</b></span>
-          <button class="s-tugma" data-toast="Oldingi sahifa" aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
-          <button class="s-tugma aktiv" disabled aria-current="page">1</button>
-          <button class="s-tugma" data-toast="Keyingi sahifa" aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
-        </div>
-      </div>
-
-      <!-- Markaz: ma'lumotlar -->
-      <div class="karta">
-        <h3>Foydalanuvchi ma'lumotlari</h3>
-        <div class="foyd-tana">
-          <div class="profil-blok">
-            <span class="avatar">
-              <svg viewBox="0 0 34 34" style="width:80px;height:80px;display:block;margin:12px auto 0"><circle cx="17" cy="12" r="6.5" fill="#A1A1AA"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#A1A1AA"/></svg>
-              <span class="onlayn"></span>
-            </span>
-            <h2 id="p-nom">Javlon Karimov</h2>
-            <span class="rol-teg admin" id="p-rol" style="margin-top:8px">Administrator</span>
-            <div class="ruxsat-rasm" style="margin-top:18px"><img src="assets/ruxsat_belgisi.webp" alt="Ruxsatlar belgisi illyustratsiyasi"></div>
-          </div>
-
-          <div class="malumot-jadval">
-            <div class="mj-qator"><svg class="ic"><use href="#i-hujjat"/></svg><span class="yorliq">ID raqami</span><b id="p-id">U056789012</b></div>
-            <div class="mj-qator"><svg class="ic"><use href="#i-mail"/></svg><span class="yorliq">Email</span><b id="p-email">javlon.karimov@mkbank.uz</b></div>
-            <div class="mj-qator"><svg class="ic"><use href="#i-tel"/></svg><span class="yorliq">Telefon</span><b id="p-tel">+998 90 123 45 67</b></div>
-            <div class="mj-qator"><svg class="ic"><use href="#i-panel"/></svg><span class="yorliq">Bo'lim</span><b id="p-bolim">IT bo'limi</b></div>
-            <div class="mj-qator"><svg class="ic"><use href="#i-foyd"/></svg><span class="yorliq">Lavozim</span><b id="p-lavozim">Tizim administratori</b></div>
-            <div class="mj-qator"><svg class="ic"><use href="#i-kalendar"/></svg><span class="yorliq">Ishga kirish sanasi</span><b id="p-sana">15-yan, 2022</b></div>
-            <div class="mj-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Holat</span><b><span class="nuqta" id="p-holat-nuqta"></span><span id="p-holat">Faol</span></b></div>
-          </div>
-
-          <div class="ruxsatlar">
-            <h4>Ruxsatlar va huquqlar</h4>
-            <button class="ruxsat-band" data-toast="Tizim boshqaruvi ruxsatlari"><svg class="ic"><use href="#i-sozlama"/></svg><span><b>Tizim boshqaruvi</b><br><span>Foydalanuvchilar, rollar, sozlamalar va xavfsizlik</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
-            <button class="ruxsat-band" data-toast="Ma'lumotlar boshqaruvi ruxsatlari"><svg class="ic"><use href="#i-foyd"/></svg><span><b>Ma'lumotlar boshqaruvi</b><br><span>Barcha modul va ma'lumotlarga to'liq kirish</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
-            <button class="ruxsat-band" data-toast="Hisobotlar ruxsatlari"><svg class="ic"><use href="#i-shartnoma"/></svg><span><b>Hisobotlar</b><br><span>Hisobotlarni ko'rish, yaratish va eksport qilish</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
-            <button class="ruxsat-band" data-toast="Integratsiyalar ruxsatlari"><svg class="ic"><use href="#i-ekran"/></svg><span><b>Integratsiyalar</b><br><span>API, integratsiyalar va tizim ulanishlari</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
-            <button class="ruxsat-band" data-toast="Audit jurnali ruxsatlari"><svg class="ic"><use href="#i-qalqon"/></svg><span><b>Audit jurnali</b><br><span>Tizim faoliyati va o'zgarishlarni ko'rish</span></span><span class="strelka"><svg class="ic"><use href="#i-ong"/></svg></span></button>
-          </div>
-        </div>
-      </div>
-
-      <!-- O'ng: rollar -->
-      <aside style="display:flex;flex-direction:column;gap:18px">
-        <div class="karta">
-          <div style="display:flex;align-items:center;margin-bottom:8px">
-            <h3>Rollar ro'yxati<span class="f-son">5</span></h3>
-            <button class="tugma tugma-asos tugma-kichik" style="margin-left:auto" id="yangi-rol"><svg class="ic"><use href="#i-qoshish"/></svg>Yangi rol</button>
-          </div>
-          <button class="rol-band" data-toast="Administrator roli tafsiloti"><span class="rol-tile kok"><svg class="ic"><use href="#i-sozlama"/></svg></span><span><b>Administrator</b><span>Hisob yozuvlari, ma'lumotnomalar, audit</span></span><span class="son">1</span></button>
-          <button class="rol-band" data-toast="Filial rahbari roli tafsiloti"><span class="rol-tile kok"><svg class="ic"><use href="#i-bank"/></svg></span><span><b>Filial rahbari</b><span>Portfel, tasdiqlash, hisobot</span></span><span class="son">1</span></button>
-          <button class="rol-band" data-toast="Kredit menejeri roli tafsiloti"><span class="rol-tile kok"><svg class="ic"><use href="#i-qarz"/></svg></span><span><b>Kredit menejeri</b><span>Muammoli portfel bilan ishlash</span></span><span class="son">2</span></button>
-          <button class="rol-band" data-toast="Aktivlar nazorati roli tafsiloti"><span class="rol-tile kok"><svg class="ic"><use href="#i-bino"/></svg></span><span><b>Aktivlar nazorati mutaxassisi</b><span>Ko'rik, sug'urta va baholash nazorati</span></span><span class="son">2</span></button>
-          <button class="rol-band" data-toast="Yurist roli tafsiloti"><span class="rol-tile kul"><svg class="ic"><use href="#i-tarozi"/></svg></span><span><b>Yurist</b><span>Da'vo, sud va ijro hujjatlari</span></span><span class="son">1</span></button>
-          <button class="rol-band" data-toast="Tavakkalchilik roli tafsiloti"><span class="rol-tile kul"><svg class="ic"><use href="#i-aktiv"/></svg></span><span><b>Tavakkalchilik menejeri</b><span>Tasnif, zaxira, qiymat nazorati</span></span><span class="son">1</span></button>
-        </div>
-
-        <div class="karta matritsa">
-          <h3>Rollar bo'yicha ruxsat matritsasi</h3>
-          <div class="jadval-orash">
-            <table>
-              <thead><tr id="matritsa-sarlavha"></tr></thead>
-              <tbody id="matritsa-tanasi"></tbody>
-            </table>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </main>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Sozlamalar</span></div>
+    <div class="hs-qator"><h1>Foydalanuvchilar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="sozlama-xavfsizlik.html">Xavfsizlik</a><a href="foydalanuvchilar.html" class="faol">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="malumotnomalar.html">Ma'lumotnomalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="integratsiyalar.html">Integratsiyalar</a></nav>
+  <div id="jadval-joy"></div>
+</main>
 </div>
 </div>
-
-<script src="malumot.js?v=26082605"></script>
-<script src="tarjima.js?v=26082605"></script>
-<script src="mkb.js?v=26082605"></script>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
 <script>
-document.addEventListener("DOMContentLoaded", ()=>{
-
-const AVATAR = `<span class="avatar"><svg viewBox="0 0 34 34" style="width:32px;height:32px;display:block;margin:5px auto 0"><circle cx="17" cy="12" r="6.5" fill="#A1A1AA"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#A1A1AA"/></svg></span>`;
-const FOYDLAR = MKB_DATA.FOYDLAR;
-/* Hisoblagichlar ro'yxatdan (Д-7) */
-function sonYangila(n){
-  document.getElementById("f-son").textContent = n;
-  document.getElementById("f-jami").textContent = n;
-}
-sonYangila(FOYDLAR.length);   /* yagona manba (Д-1) */
-let faol = 0, izlash = "";
-
-function royxatChiz(){
-  const r = FOYDLAR.filter(f=>!izlash || f.nom.toLowerCase().includes(izlash));
-  sonYangila(r.length);
-  document.getElementById("foyd-royxat").innerHTML = r.map(f=>{
-    const i = FOYDLAR.indexOf(f);
-    return `
-    <button class="foyd-band ${i===faol?"faol":""}" data-i="${i}">
-      ${AVATAR}
-      <span style="min-width:0"><b>${f.nom}</b><span class="rol-teg ${f.teg}">${f.rol}</span></span>
-      <span class="bolim">${f.bolim}</span>
-      <span class="holat ${f.faol?"":"nofaol"}"><span class="nuqta"></span>${f.faol?"Faol":"Nofaol"}</span>
-    </button>`;
-  }).join("");
-  document.querySelectorAll(".foyd-band").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      faol = +b.dataset.i; royxatChiz(); profilChiz();
+document.addEventListener("mkb:tayyor", async () => {
+  async function chiz(){
+    const r = await MKBapi.royxat("FOYDLAR");
+    document.getElementById("hs-meta").textContent = r.filter(f => f.faol).length + " ta faol / " + r.length;
+    MKB.jadval("jadval-joy", {
+      qatorlar: r,
+      qidiruv: ["nom", "rol", "bolim"],
+      filtrlar: [{kalit: "rol", nom: "Rol", variantlar: [...new Set(r.map(f => f.rol))]}],
+      ustunlar: [
+        {kalit: "nom", nom: "Xodim", chiz: f =>
+          '<span class="obyekt-katak"><span style="width:36px;height:36px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 12px var(--shrift)">' +
+          f.nom.split(" ").map(v => v[0]).join("").slice(0, 2) + '</span>' +
+          '<span><span class="nom">' + f.nom + '</span><br><span class="sub">' + (f.email || "") + '</span></span></span>'},
+        {kalit: "rol", nom: "Rol", chiz: f => '<span class="chip chip-info">' + f.rol + '</span>'},
+        {kalit: "bolim", nom: "Bo'lim"},
+        {kalit: "faol", nom: "Holat", chiz: f => f.faol
+          ? '<span class="chip chip-yashil">Faol</span>' : '<span class="chip">O\'chirilgan</span>'},
+        {kalit: "id", nom: "", saralash: false, chiz: f =>
+          '<button type="button" class="tugma tugma-kichik tugma-oq" data-almash="' + f.id + '">' +
+          (f.faol ? "O'chirish" : "Yoqish") + '</button>'},
+      ],
+      bosilganda: f => location.href = "foydalanuvchi.html?id=" + encodeURIComponent(f.id),
+      chizilganda(bolak, el){
+        el.querySelectorAll("[data-almash]").forEach(b => b.addEventListener("click", async ev => {
+          ev.stopPropagation();
+          const f = r.find(x => x.id === b.dataset.almash);
+          await MKBapi.yangilash("FOYDLAR", f.id, {faol: !f.faol});
+          MKB.toast(f.faol ? "Hisob o'chirildi" : "Hisob faollashtirildi");
+          chiz();
+        }));
+      },
     });
-  });
-}
-function profilChiz(){
-  const f = FOYDLAR[faol];
-  document.getElementById("p-nom").textContent = f.nom;
-  const rt = document.getElementById("p-rol");
-  rt.textContent = f.rol; rt.className = "rol-teg "+f.teg;
-  document.getElementById("p-id").textContent = f.id;
-  document.getElementById("p-email").textContent = f.email;
-  document.getElementById("p-bolim").textContent = f.bolim;
-  document.getElementById("p-lavozim").textContent = f.lavozim;
-  document.getElementById("p-tel").textContent = f.tel;
-  document.getElementById("p-sana").textContent = f.sana;
-  document.getElementById("p-holat").textContent = f.faol ? "Faol" : "Nofaol";
-  document.getElementById("p-holat-nuqta").style.background = f.faol ? "#059669" : "#9AA1A9";
-}
-document.getElementById("f-izlash").addEventListener("input", e=>{ izlash = e.target.value.toLowerCase(); royxatChiz(); });
-royxatChiz(); profilChiz();
-
-/* Ruxsat matritsasi — mkb.js dagi ROL_RUXSAT dan hosil qilinadi.
-   Ilgari bu yerda qo'lda yozilgan jadval turardi va u haqiqiy rol modeliga
-   mos emas edi: "Auditor" va "Moliya" ustunlari tizimda yo'q rollar edi,
-   "Bank rahbariyati" va "Undiruv mutaxassisi" esa umuman ko'rsatilmagan. */
-const HA  = `<span class="ha"><svg class="ic"><use href="#i-belgi-doira"/></svg></span>`;
-const YOQ = "–";
-const ROLLAR = Object.entries(MKB.ROL_KALIT);          // [ko'rinadigan nom, kalit]
-
-document.getElementById("matritsa-sarlavha").innerHTML =
-  `<th>Modul / Rollar</th>` + ROLLAR.map(([nom]) => `<th>${nom}</th>`).join("");
-
-document.getElementById("matritsa-tanasi").innerHTML = MKB.MENYU.map(([bolim, , , nom]) => {
-  const kataklar = ROLLAR.map(([, kalit]) => {
-    const royxat = MKB.ROL_RUXSAT[kalit];
-    return `<td>${!royxat || royxat.includes(bolim) ? HA : YOQ}</td>`;
-  }).join("");
-  return `<tr><td>${nom}</td>${kataklar}</tr>`;
-}).join("");
-
-/* Yangi rol */
-document.getElementById("yangi-rol").addEventListener("click", ()=>{
-  MKB.modal("Yangi rol yaratish",
-    `<div style="display:grid;gap:14px;margin-top:6px">
-      <div><label class="maydon-yorliq">Rol nomi</label><div class="kirish"><input placeholder="Masalan: Nazoratchi"></div></div>
-      <div><label class="maydon-yorliq">Tavsif</label><div class="kirish"><input placeholder="Qisqa tavsif"></div></div>
-    </div>`,
-    { okMatn:"Yaratish", ok(){ MKB.toast("Yangi rol yaratildi"); } });
-});
+  }
+  chiz();
 });
 </script>
 </body>

@@ -1,379 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>(function(){var t=localStorage.getItem("mkb-tema");if(t==="realty"||t==="estate")document.documentElement.dataset.tema=t})()</script>
-<title>MKB — Moliyaviy hisobotlar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082605">
-<style>
-/* ---- Moliyaviy hisobotlar (ekran 10) ---- */
-.davr-chip{
-  display:flex;align-items:center;gap:10px;height:48px;padding:0 18px;
-  background:var(--karta);border-radius:14px;box-shadow:var(--soya);
-  font-size:14px;font-weight:600;color:#3F3F46;transition:box-shadow var(--tez);
-}
-.davr-chip:hover{box-shadow:0 1px 2px rgba(23,26,31,.05),0 10px 28px rgba(23,26,31,.09)}
-.davr-chip .ic{width:18px;height:18px;color:#52525B}
-
-.m-qator{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1.05fr) minmax(0,.95fr);gap:18px}
-.m-qator h3{font-size:16.5px;font-weight:750}
-.grafik-bosh{display:flex;align-items:center;margin-bottom:6px}
-.grafik-bosh .tanlov{width:auto;min-width:104px;height:40px;margin-left:auto}
-.grafik-legend{display:flex;align-items:center;gap:8px;font-size:13px;color:#52525B;margin:4px 0 2px}
-.grafik-legend .nuqta{width:8px;height:8px;border-radius:99px;background:#4F46E5}
-
-.tuzilma-korpus{display:flex;align-items:center;gap:20px;margin-top:10px}
-.tuzilma-jami{display:flex;margin-top:16px;padding-top:14px;border-top:1px solid var(--chiziq);font-size:14.5px}
-.tuzilma-jami span{font-weight:650;color:#3F3F46}
-.tuzilma-jami b{margin-left:auto;font-weight:800}
-
-.top-band{display:flex;align-items:center;gap:12px;width:100%;padding:9px 4px;border-radius:12px;text-align:left;transition:background var(--tez)}
-.top-band:hover{background:#FAFAFA}
-.top-band img{width:46px;height:40px;object-fit:cover;border-radius:10px;outline:1px solid rgba(23,26,31,.06);outline-offset:-1px;flex:none}
-.top-band .matn{flex:1;min-width:0}
-.top-band b{display:block;font-size:14px;font-weight:650}
-.top-band span{display:block;font-size:12.5px;color:var(--matn-4)}
-.top-band .qiymat{text-align:right;flex:none}
-.top-band .qiymat b{color:#3730A3;font-size:13.5px}
-.top-band .qiymat span{font-size:12.5px}
-.barcha-tugma{
-  width:100%;height:46px;margin-top:12px;border-radius:12px;border:1px solid var(--kirish-chiziq);
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  font-size:14px;font-weight:700;color:#18181B;transition:background var(--tez);
-}
-.barcha-tugma:hover{background:#F4F4F5}
-.barcha-tugma .ic{width:15px;height:15px}
-
-.m-past{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
-.sharh-korpus{display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px;align-items:center}
-.sharh-korpus img{max-width:100%;max-height:250px;margin:auto}
-.metrika-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
-.metrika{padding:16px 18px;border-bottom:1px solid var(--chiziq)}
-.metrika:nth-child(odd){border-right:1px solid var(--chiziq)}
-.metrika:nth-child(3),.metrika:nth-child(4){border-bottom:none}
-.metrika .yorliq{font-size:13.5px;color:var(--matn-2);font-weight:550}
-.metrika .qiymat{display:flex;align-items:center;gap:10px;margin-top:8px}
-.metrika .qiymat b{font-size:26px;font-weight:750;letter-spacing:-.01em}
-.metrika .meyor{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12.5px;color:var(--matn-4)}
-.metrika .meyor .ic{width:17px;height:17px;color:#059669}
-
-.hisobot-band{display:flex;align-items:center;gap:13px;padding:12px 4px;border-bottom:1px solid #F4F4F5}
-.hisobot-band:last-child{border-bottom:none}
-.fayl-ikon{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:none;font-size:10px;font-weight:800;color:#fff;box-shadow:var(--chuqur-tile-tor)}
-.fayl-ikon.pdf{background:#E8563F}
-.fayl-ikon.xlsx{background:#3E9B4F}
-.hisobot-band .matn{flex:1;min-width:0}
-.hisobot-band b{display:block;font-size:14px;font-weight:650;line-height:1.35}
-.hisobot-band span{display:block;font-size:12.5px;color:var(--matn-4);margin-top:1px}
-@media (max-width:1500px){.m-qator{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.m-qator .karta:first-child{grid-column:1/-1}}
-@media (max-width:1240px){.m-past{grid-template-columns:minmax(0,1fr)}.sharh-korpus{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:900px){.m-qator{grid-template-columns:minmax(0,1fr)}.metrika-grid{grid-template-columns:minmax(0,1fr)}.metrika{border-right:none!important}.metrika:nth-child(3){border-bottom:1px solid var(--chiziq)}}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Hisobotlar markazi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
-<body data-sahifa="hisobotlar">
-
-<div class="app">
-<aside class="sidebar" data-shell-sidebar></aside>
-
-<div class="asosiy">
-  <header class="topbar" data-shell-topbar></header>
-
-  <main class="kontent">
-
-    <div class="sahifa-qator">
-      <h1>Moliyaviy hisobotlar</h1>
-      <div class="sahifa-harakat" style="position:relative">
-        <button class="davr-chip" id="davr-tugma">01.01.2026 – 24.08.2026<svg class="ic"><use href="#i-kalendar"/></svg></button>
-        <div class="menyu-popover" id="davr-menyu" style="top:calc(100% + 8px);right:150px;min-width:210px">
-          <button type="button">Joriy yil (YTD)</button>
-          <button type="button">So'nggi chorak</button>
-          <button type="button">So'nggi oy</button>
-          <button type="button">O'tgan yil</button>
-        </div>
-        <button class="tugma tugma-oq" id="eksport-tugma"><svg class="ic"><use href="#i-yuklab"/></svg>Eksport</button>
-      </div>
-    </div>
-
-    <!-- KPI -->
-    <section class="kpi-band" aria-label="Moliyaviy ko'rsatkichlar">
-      <button class="kpi" data-toast="Daromadlar tafsiloti">
-        <span class="kpi-tile dark"><svg class="ic"><use href="#i-daromad"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Undirilgan mablag' (YTD)</div>
-          <div class="kpi-qiymat"><b><span data-kpi="0">—</span> <small>mlrd so'm</small></b><span class="delta" data-kpi-d="0"></span></div>
-          <div class="kpi-izoh">O'tgan yilga nisbatan</div>
-        </div>
-      </button>
-      <button class="kpi" data-toast="Sof foyda tafsiloti">
-        <span class="kpi-tile lime"><svg class="ic"><use href="#i-papka"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Realizatsiya tushumi (YTD)</div>
-          <div class="kpi-qiymat"><b><span data-kpi="1">—</span> <small>mlrd so'm</small></b><span class="delta" data-kpi-d="1"></span></div>
-          <div class="kpi-izoh">O'tgan yilga nisbatan</div>
-        </div>
-      </button>
-      <button class="kpi" data-toast="Xarajatlar tafsiloti">
-        <span class="kpi-tile dark"><svg class="ic"><use href="#i-hisobot"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Nazorat xarajatlari (YTD)</div>
-          <div class="kpi-qiymat"><b><span data-kpi="2">—</span> <small>mlrd so'm</small></b><span class="delta salbiy" data-kpi-d="2"></span></div>
-          <div class="kpi-izoh">O'tgan yilga nisbatan</div>
-        </div>
-      </button>
-      <button class="kpi" data-toast="Pul oqimi tafsiloti">
-        <span class="kpi-tile lime"><svg class="ic"><use href="#i-grafik"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Sof qoplama (YTD)</div>
-          <div class="kpi-qiymat"><b><span data-kpi="3">—</span> <small>mlrd so'm</small></b><span class="delta" data-kpi-d="3"></span></div>
-          <div class="kpi-izoh">O'tgan yilga nisbatan</div>
-        </div>
-      </button>
-    </section>
-
-    <!-- O'rta qator -->
-    <section class="m-qator">
-      <div class="karta">
-        <div class="grafik-bosh">
-          <h3>Daromad dinamikasi</h3>
-          <button class="tanlov" id="grafik-granul" data-variantlar='["Oylik","Choraklik","Yillik"]'><span class="t-yorliq">Oylik</span><svg class="ic"><use href="#i-past"/></svg></button>
-        </div>
-        <div class="grafik-legend"><span class="nuqta"></span>Daromad (mlrd so'm)</div>
-        <svg id="daromad-grafik" width="100%" height="250" role="img"
-             aria-label="Daromad dinamikasi: yanvardan avgustgacha 5,8 dan 12 milliard so'mgacha o'sish"></svg>
-      </div>
-
-      <div class="karta">
-        <h3>Daromad tuzilmasi</h3>
-        <div class="tuzilma-korpus">
-          <svg id="tuzilma-donut" width="170" height="170" viewBox="0 0 170 170" role="img" filter="url(#depth-md)"
-               aria-label="Daromad tuzilmasi: ijara 45,2%, savdo 26,7%, xizmat 18,3%, boshqa 9,8%"></svg>
-          <div class="legend">
-            <button class="legend-qator" data-toast="Auksion tushumlari tafsiloti"><span class="nuqta" style="background:#3E9B4F"></span><span class="nomi">Auksion tushumlari</span><b>45,2%</b></button>
-            <button class="legend-qator" data-toast="Savdo tushumlari tafsiloti"><span class="nuqta" style="background:#C7D2FE"></span><span class="nomi">Savdo tushumlari</span><b>26,7%</b></button>
-            <button class="legend-qator" data-toast="Xizmat ko'rsatish tafsiloti"><span class="nuqta" style="background:#7BAEFC"></span><span class="nomi">Xizmat ko'rsatish</span><b>18,3%</b></button>
-            <button class="legend-qator" data-toast="Boshqa daromadlar tafsiloti"><span class="nuqta" style="background:#C7C7CD"></span><span class="nomi">Boshqa daromadlar</span><b>9,8%</b></button>
-          </div>
-        </div>
-        <div class="tuzilma-jami"><span>Jami:</span><b>100%</b></div>
-      </div>
-
-      <div class="karta">
-        <h3 style="margin-bottom:8px">Top obyektlar (balans qiymati)</h3>
-        <!-- Top obyektlar ma'lumotdan quriladi (Д-7) -->
-        <div id="top-obyektlar"></div>
-        <a class="barcha-tugma" href="obyektlar.html">Barcha obyektlar<svg class="ic"><use href="#i-ong"/></svg></a>
-      </div>
-    </section>
-
-    <!-- Pastki qator -->
-    <section class="m-past">
-      <div class="karta">
-        <h3 style="font-size:16.5px;font-weight:750;margin-bottom:14px">Moliyaviy ko'rsatkichlar sharhi</h3>
-        <div class="sharh-korpus">
-          <img loading="lazy" src="assets/moliya_illyustratsiya.webp" alt="Moliyaviy ko'rsatkichlar 3D illyustratsiyasi">
-          <div class="metrika-grid">
-            <div class="metrika">
-              <div class="yorliq">Joriy likvidlik koeffitsienti</div>
-              <div class="qiymat"><b>1,78</b></div>
-              <div class="meyor">Me'yor: &gt; 1.5<svg class="ic"><use href="#i-belgi-doira"/></svg></div>
-            </div>
-            <div class="metrika">
-              <div class="yorliq">Qarz / Kapital nisbati</div>
-              <div class="qiymat"><b>0,42</b></div>
-              <div class="meyor">Me'yor: &lt; 0.6<svg class="ic"><use href="#i-belgi-doira"/></svg></div>
-            </div>
-            <div class="metrika">
-              <div class="yorliq">Aktiv obyektlari rentabelligi (ROA)</div>
-              <div class="qiymat"><b>8,7%</b></div>
-              <div class="meyor">Me'yor: &gt; 5%<svg class="ic"><use href="#i-belgi-doira"/></svg></div>
-            </div>
-            <div class="metrika">
-              <div class="yorliq">Kapital rentabelligi (ROE)</div>
-              <div class="qiymat"><b>14,2%</b></div>
-              <div class="meyor">Me'yor: &gt; 10%<svg class="ic"><use href="#i-belgi-doira"/></svg></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="karta">
-        <div style="display:flex;align-items:center;margin-bottom:8px">
-          <h3 style="font-size:16.5px;font-weight:750">Hisobotlar</h3>
-          <a class="karta-havola" href="hisobotlar-markazi.html">Hisobotlar markazi<svg class="ic"><use href="#i-ong"/></svg></a>
-        </div>
-        <div class="hisobot-band">
-          <span class="fayl-ikon pdf">PDF</span>
-          <span class="matn"><b>Moliyaviy hisobot – 2026 Q2</b><span>PDF · 2.4 MB · 15.07.2026</span></span>
-          <button class="amal-tugma" data-toast="Moliyaviy hisobot yuklab olinmoqda" aria-label="Yuklab olish"><svg class="ic"><use href="#i-yuklab"/></svg></button>
-        </div>
-        <div class="hisobot-band">
-          <span class="fayl-ikon xlsx">XLSX</span>
-          <span class="matn"><b>Daromadlar va xarajatlar tahlili</b><span>XLSX · 1.8 MB · 10.08.2026</span></span>
-          <button class="amal-tugma" data-toast="Tahlil fayli yuklab olinmoqda" aria-label="Yuklab olish"><svg class="ic"><use href="#i-yuklab"/></svg></button>
-        </div>
-        <div class="hisobot-band">
-          <span class="fayl-ikon pdf">PDF</span>
-          <span class="matn"><b>Pul oqimi hisoboti – 2026 Q2</b><span>PDF · 1.2 MB · 08.07.2026</span></span>
-          <button class="amal-tugma" data-toast="Pul oqimi hisoboti yuklab olinmoqda" aria-label="Yuklab olish"><svg class="ic"><use href="#i-yuklab"/></svg></button>
-        </div>
-        <div class="hisobot-band">
-          <span class="fayl-ikon xlsx">XLSX</span>
-          <span class="matn"><b>Byudjet bajarilishi – Iyul 2026</b><span>XLSX · 950 KB · 05.08.2026</span></span>
-          <button class="amal-tugma" data-toast="Byudjet fayli yuklab olinmoqda" aria-label="Yuklab olish"><svg class="ic"><use href="#i-yuklab"/></svg></button>
-        </div>
-      </div>
-    </section>
-
-  </main>
+<body data-sahifa="hisobot">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Hisobotlar</span></div>
+    <div class="hs-qator"><h1>Hisobotlar markazi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html" class="faol">Markaz</a><a href="hisobot-portfel.html">Portfel</a><a href="hisobot-undiruv.html">Undiruv</a><a href="hisobot-realizatsiya.html">Realizatsiya</a><a href="hisobot-zaxira.html">Zaxira</a><a href="hisobot-hudud.html">Hudud</a><a href="hisobot-kpi.html">KPI</a></nav>
+  <section class="karta"><div class="karta-bosh"><h2>Tayyor hisobotlar</h2><span class="soni" id="hm-soni"></span><button type="button" class="tugma tugma-kichik tugma-asosiy" id="hm-yangi" style="margin-left:auto"><svg class="ic"><use href="#i-qoshish"/></svg>Hisobot shakllantirish</button></div><div id="hm-royxat"></div></section>
+</main>
 </div>
 </div>
-
-<script src="malumot.js?v=26082605"></script>
-<script src="tarjima.js?v=26082605"></script>
-<script src="mkb.js?v=26082605"></script>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
 <script>
-document.addEventListener("DOMContentLoaded", ()=>{
-
-/* Davr dropdown */
-const dt = document.getElementById("davr-tugma"), dm = document.getElementById("davr-menyu");
-dt.addEventListener("click", e=>{
-  e.stopPropagation();
-  const ochiq = dm.classList.contains("ochiq");
-  document.querySelectorAll(".menyu-popover.ochiq").forEach(x=>x.classList.remove("ochiq"));
-  dm.classList.toggle("ochiq", !ochiq);
-});
-dm.querySelectorAll("button").forEach(b=>b.addEventListener("click", e=>{
-  e.stopPropagation(); dm.classList.remove("ochiq");
-  const davr = DAVR_KOEF[b.textContent];
-  if (davr){
-    dt.childNodes[0].nodeValue = davr.label + " ";
-    KPI_BAZA.forEach((base,i)=>{
-      const qiymat = (base.qiymat*davr.k).toFixed(2).replace(".",",");
-      document.getElementById("kpi-qiymat-"+i).innerHTML = `${qiymat} <small>${base.birlik}</small>`;
-      document.getElementById("kpi-delta-"+i).textContent = (base.delta>=0?"↑ ":"↓ ")+Math.abs(base.delta).toFixed(1).replace(".",",")+"%";
-    });
-  }
-  MKB.toast("Davr: "+b.textContent+"", "i-kalendar");
-}));
-document.getElementById("eksport-tugma").addEventListener("click", ()=>MKB.toast("Moliyaviy hisobot eksport qilinmoqda", "i-yuklab"));
-
-/* Daromad grafigi */
-const svg = document.getElementById("daromad-grafik");
-const NS = "http://www.w3.org/2000/svg";
-function el(t,a){const n=document.createElementNS(NS,t);for(const k in a)n.setAttribute(k,a[k]);svg.appendChild(n);return n;}
-/* Grafik qatorlari yagona oylik seriyadan YIG'ILADI — granulyatsiyalar
-   endi bir-biriga zid bo'la olmaydi. */
-const SER = MKB_DATA.UNDIRUV_SERIYA;
-const chQiymat = [];
-for (let i = 0; i < SER.oylik.qiymat.length; i += 3){
-  chQiymat.push(+SER.oylik.qiymat.slice(i, i + 3).reduce((a, b) => a + b, 0).toFixed(1));
-}
-const ytd = +SER.oylik.qiymat.reduce((a, b) => a + b, 0).toFixed(1);
-const GRANULYARLIK = {
-  "Oylik":     {yorliq: SER.oylik.yorliq, qiymat: SER.oylik.qiymat, maxY: 70},
-  "Choraklik": {yorliq: ["2026 Q1","2026 Q2","2026 Q3*"], qiymat: chQiymat, maxY: 180},
-  "Yillik":    {yorliq: SER.yillik.yorliq.concat(["2026*"]), qiymat: SER.yillik.qiymat.concat([ytd]), maxY: 440}
-};
-let OYLAR = GRANULYARLIK["Oylik"].yorliq;
-let QIYMAT = GRANULYARLIK["Oylik"].qiymat;
-let grafikMaxY = GRANULYARLIK["Oylik"].maxY;
-function chiz(){
-  svg.innerHTML = "";
-  const W = svg.clientWidth || 620, H = 250;
-  const chap = 30, ong = 14, tepa = 12, past = 30;
-  const pw = W-chap-ong, ph = H-tepa-past;
-  const x = i => OYLAR.length>1 ? chap + i/(OYLAR.length-1)*pw : chap+pw/2;
-  const y = v => tepa + ph - v/grafikMaxY*ph;
-  const qadam = grafikMaxY/5;
-  [0,1,2,3,4,5].map(n=>Math.round(n*qadam)).forEach(t=>{
-    el("line",{x1:chap,y1:y(t),x2:W-ong,y2:y(t),stroke:"#EDEEE9","stroke-width":1,"stroke-dasharray":t?"":"0"});
-    const tx = el("text",{x:chap-8,y:y(t)+3.5,"text-anchor":"end","font-size":10.5,fill:"#71717A","font-family":"'Manrope',sans-serif"});
-    tx.textContent = t;
+document.addEventListener("mkb:tayyor", () => {
+  const qoshimcha = JSON.parse(localStorage.getItem("mkb4-hisobotlar") || "[]");
+  const r = qoshimcha.concat(MKB_DATA.HISOBOTLAR);
+  document.getElementById("hm-soni").textContent = r.length + " ta";
+  document.getElementById("hm-royxat").innerHTML = r.map(h =>
+    '<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--chiziq-2)">' +
+      '<span style="width:40px;height:40px;border-radius:11px;background:var(--varaq-2);display:grid;place-items:center;font:700 10px var(--shrift);color:var(--qalam)">' + h.format + '</span>' +
+      '<span style="flex:1;min-width:0"><b style="display:block;font-size:13.5px">' + h.nom + '</b>' +
+      '<span style="font-size:11.5px;color:var(--iz)">' + h.sub + '</span></span>' +
+      '<span style="font-size:11.5px;color:var(--iz);text-align:right">' + h.sana + '<br>' + (h.hajm || "") + '</span>' +
+      '<button type="button" class="tugma tugma-kichik tugma-oq" data-toast="Hisobot yuklab olinmoqda: ' + h.nom + '">' + ik("yuklab") + 'Yuklab olish</button>' +
+    '</div>').join("");
+  document.getElementById("hm-yangi").addEventListener("click", () => {
+    MKB.modal("Hisobot shakllantirish",
+      '<div class="forma-tor">' +
+      '<div class="maydon"><label class="maydon-yorliq">Yo\'nalish <b>*</b></label><div class="kirish"><select name="tur">' +
+      '<option>Portfel hisoboti</option><option>Undiruv hisoboti</option><option>Realizatsiya hisoboti</option>' +
+      '<option>Zaxira hisoboti</option><option>Hududiy kesim</option></select></div></div>' +
+      '<div class="maydon"><label class="maydon-yorliq">Davr</label><div class="kirish"><select name="davr">' +
+      '<option>Joriy oy</option><option>Chorak</option><option>Yil boshidan</option></select></div></div>' +
+      '<div class="maydon"><label class="maydon-yorliq">Format</label><div class="kirish"><select name="format">' +
+      '<option>PDF</option><option>XLSX</option></select></div></div></div>',
+      {okMatn: "Shakllantirish", ok(modal){
+        const q = MKB.forma(modal, ["tur"]);
+        if (!q) return false;
+        const j = JSON.parse(localStorage.getItem("mkb4-hisobotlar") || "[]");
+        j.unshift({nom: q.tur, sub: q.davr + " · so'rov bo'yicha shakllantirildi",
+          format: q.format, sana: new Date().toLocaleDateString("uz"), hajm: "1,1 MB"});
+        localStorage.setItem("mkb4-hisobotlar", JSON.stringify(j.slice(0, 20)));
+        MKB.toast("Hisobot tayyor — ro'yxatga qo'shildi");
+        location.reload();
+      }});
   });
-  OYLAR.forEach((o,i)=>{
-    const t = el("text",{x:x(i),y:H-8,"text-anchor":"middle","font-size":11,fill:"#71717A","font-family":"'Manrope',sans-serif"});
-    t.textContent = o;
-  });
-  const nuqtalar = QIYMAT.map((v,i)=>`${x(i)},${y(v)}`).join(" ");
-  el("polygon",{points:`${x(0)},${y(0)} ${nuqtalar} ${x(QIYMAT.length-1)},${y(0)}`,fill:"url(#grad-area-3d)"});
-  el("polyline",{points:nuqtalar,fill:"none",stroke:"#4F46E5","stroke-width":2.2,"stroke-linejoin":"round","stroke-linecap":"round",filter:"url(#depth-sm)"});
-  QIYMAT.forEach((v,i)=>el("circle",{cx:x(i),cy:y(v),r:4.2,fill:"#4F46E5",stroke:"#fff","stroke-width":2.2}));
-}
-chiz();
-let rz; window.addEventListener("resize", ()=>{clearTimeout(rz); rz=setTimeout(chiz,120);});
-document.getElementById("grafik-granul").addEventListener("tanlov", e=>{
-  const g = GRANULYARLIK[e.detail];
-  OYLAR = g.yorliq; QIYMAT = g.qiymat; grafikMaxY = g.maxY;
-  chiz();
 });
-
-/* Davr filtri — KPI'larni tanlangan davrga moslashtiradi */
-const DAVR_KOEF = {
-  "Joriy yil (YTD)": {k:1, label:"01.01.2026 – 24.08.2026"},
-  "So'nggi chorak":  {k:0.42, label:"25.05.2026 – 24.08.2026"},
-  "So'nggi oy":      {k:0.16, label:"25.07.2026 – 24.08.2026"},
-  "O'tgan yil":      {k:1.16, label:"01.01.2025 – 31.12.2025"}
-};
-const KPI_BAZA = MKB_DATA.KPI_BAZA;   /* yagona manba (Д-1) */
-/* Boshlang'ich KPI qiymatlari ham shu massivdan (ilgari HTML literal edi) */
-KPI_BAZA.forEach((b, i) => {
-  const v = document.querySelector('[data-kpi="' + i + '"]');
-  const d = document.querySelector('[data-kpi-d="' + i + '"]');
-  if (v) v.textContent = MKB_DATA.son(b.qiymat);
-  if (d) d.textContent = (b.delta >= 0 ? "↑ " : "↓ ") + Math.abs(b.delta).toLocaleString("ru-RU").replace(".", ",") + "%";
-});
-document.querySelectorAll(".kpi-band .kpi").forEach((k,i)=>{
-  k.querySelector(".kpi-qiymat b").id = "kpi-qiymat-"+i;
-  k.querySelector(".kpi-qiymat .delta").id = "kpi-delta-"+i;
-});
-
-/* Tuzilma donut */
-(function(){
-  const s = document.getElementById("tuzilma-donut");
-  const cx=85, cy=85, r=64, w=30, C=2*Math.PI*r, gap=2.4;
-  const data = [[45.2,"#3E9B4F"],[26.7,"#C7D2FE"],[18.3,"#7BAEFC"],[9.8,"#C7C7CD"]];
-  let boshi=-90;
-  data.forEach(([f,rang])=>{
-    const yoy = f/100*360 - gap;
-    const c = document.createElementNS(NS,"circle");
-    c.setAttribute("cx",cx);c.setAttribute("cy",cy);c.setAttribute("r",r);
-    c.setAttribute("fill","none");c.setAttribute("stroke",rang);c.setAttribute("stroke-width",w);
-    c.setAttribute("stroke-dasharray",(Math.max(yoy,1.5)/360*C)+" "+C);
-    c.setAttribute("transform","rotate("+(boshi+gap/2)+" "+cx+" "+cy+")");
-    s.appendChild(c);
-    boshi += f/100*360;
-  });
-  const yorug = document.createElementNS(NS,"circle");
-  yorug.setAttribute("cx",cx); yorug.setAttribute("cy",cy); yorug.setAttribute("r",r);
-  yorug.setAttribute("fill","none"); yorug.setAttribute("stroke","url(#grad-ring-overlay)");
-  yorug.setAttribute("stroke-width",w);
-  yorug.setAttribute("pointer-events","none");
-  s.appendChild(yorug);
-})();
-});
-
-/* Top-5 obyekt: baholangan qiymat bo'yicha, faol + sotuvdagilar (Д-7) */
-(function(){
-  const el = document.getElementById("top-obyektlar");
-  if (!el) return;
-  const D = MKB_DATA;
-  const royxat = D.YOZUVLAR.map(y => ({id: y.id, nom: y.mulk.qisqa, hudud: y.mulk.hudud, baho: y.mulk.baho, rasm: y.mulk.rasm}))
-    .concat(D.SOTUV.map(l => ({id: l.id, nom: l.qisqa || l.nom, hudud: l.hudud, baho: l.baho, rasm: l.rasm})))
-    .sort((a, b) => b.baho - a.baho).slice(0, 5);
-  const jami = D.jamiBaho() + D.SOTUV.reduce((s, l) => s + l.baho, 0);
-  const ochiq = MKB.sahifaRuxsatlimi("obyekt.html");
-  el.innerHTML = royxat.map(o => {
-    const ich = `<img src="${o.rasm}" alt="" loading="lazy"><span class="matn"><b>${o.nom}</b><span>${o.hudud}</span></span>` +
-      `<span class="qiymat"><b>${D.pul(o.baho)}</b><span>${Math.round(o.baho / jami * 100)}%</span></span>`;
-    return ochiq
-      ? `<a class="top-band" href="obyekt.html?id=${encodeURIComponent(o.id)}">${ich}</a>`
-      : `<div class="top-band">${ich}</div>`;
-  }).join("");
-})();
 </script>
 </body>
 </html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Amallar tarixi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Sozlamalar</span></div>
+    <div class="hs-qator"><h1>Amallar tarixi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="sozlama-xavfsizlik.html">Xavfsizlik</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="malumotnomalar.html">Ma'lumotnomalar</a><a href="amallar-tarixi.html" class="faol">Amallar tarixi</a><a href="integratsiyalar.html">Integratsiyalar</a></nav>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  let r = MKBapi.amallar();
+  if (MKBapi.rejim() === "server"){
+    try{ r = await MKBapi.royxat("amallar"); }catch(_){ }
+  }
+  document.getElementById("hs-meta").textContent = r.length + " ta yozuv";
+  MKB.jadval("jadval-joy", {
+    qatorlar: r,
+    qidiruv: ["kim", "kolleksiya", "obyektId", "turi"],
+    filtrlar: [{kalit: "turi", nom: "Amal", variantlar: [...new Set(r.map(a => a.turi))]}],
+    sahifaHajmi: 16,
+    ustunlar: [
+      {kalit: "vaqt", nom: "Vaqt", chiz: a => '<span class="kod-mono" style="font-size:11.5px">' + a.vaqt + '</span>'},
+      {kalit: "kim", nom: "Kim", chiz: a => '<b>' + a.kim + '</b><br><span style="font-size:11px;color:var(--iz)">' + a.rol + '</span>'},
+      {kalit: "turi", nom: "Amal", chiz: a => '<span class="chip">' + a.turi + '</span>'},
+      {kalit: "kolleksiya", nom: "Bo'lim"},
+      {kalit: "obyektId", nom: "Yozuv", chiz: a => '<span class="kod-mono">' + (a.obyektId || "—") + '</span>'},
+      {kalit: "tafsilot", nom: "Tafsilot", chiz: a => '<span style="color:var(--iz);font-size:12px">' + (a.tafsilot || "") + '</span>'},
+    ],
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Eslatma sozlamalari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="vazifa">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Vazifalar</span></div>
+    <div class="hs-qator"><h1>Eslatma sozlamalari</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html">Vazifalar</a><a href="tasdiqlar.html">Tasdiqlar</a><a href="bildirishnomalar.html">Bildirishnomalar</a><a href="taqvim.html">Taqvim</a><a href="eslatmalar.html" class="faol">Eslatmalar</a></nav>
+  <section class="karta" style="max-width:640px"><div class="karta-bosh"><h2>Eslatma sozlamalari</h2></div><div id="es-royxat"></div><div style="display:flex;justify-content:flex-end;margin-top:14px"><button type="button" class="tugma tugma-asosiy" id="es-saqla">Saqlash</button></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+  const SOZLAMALAR = [
+    ["korik", "Ko'rik muddati yaqinlashganda", "3 kun oldin"],
+    ["sud", "Sud majlisi arafasida", "1 kun oldin"],
+    ["sugurta", "Polis muddati tugashidan oldin", "30 kun oldin"],
+    ["baholash", "Baholash eskirganda", "12 oydan so'ng"],
+    ["tolov", "Savdo to'lovi kechikkanda", "darhol"],
+  ];
+  const saqlangan = JSON.parse(localStorage.getItem("mkb4-eslatmalar") || "{}");
+  document.getElementById("es-royxat").innerHTML = SOZLAMALAR.map(([kalit, nom, muddat]) =>
+    '<label style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--chiziq-2);cursor:pointer">' +
+      '<input type="checkbox" data-kalit="' + kalit + '"' + (saqlangan[kalit] !== false ? " checked" : "") +
+      ' style="width:17px;height:17px;accent-color:var(--siyoh)">' +
+      '<span style="flex:1"><b style="display:block;font-size:13px">' + nom + '</b>' +
+      '<span style="font-size:11.5px;color:var(--iz)">' + muddat + '</span></span></label>').join("");
+  document.getElementById("es-saqla").addEventListener("click", () => {
+    const q = {};
+    document.querySelectorAll("[data-kalit]").forEach(c => q[c.dataset.kalit] = c.checked);
+    localStorage.setItem("mkb4-eslatmalar", JSON.stringify(q));
+    MKB.toast("Eslatma sozlamalari saqlandi");
+  });
+});
+</script>
+</body>
+</html>

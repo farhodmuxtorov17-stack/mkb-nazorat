@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Umumiy taqvim</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="vazifa">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Vazifalar</span></div>
+    <div class="hs-qator"><h1>Umumiy taqvim</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html">Vazifalar</a><a href="tasdiqlar.html">Tasdiqlar</a><a href="bildirishnomalar.html">Bildirishnomalar</a><a href="taqvim.html" class="faol">Taqvim</a><a href="eslatmalar.html">Eslatmalar</a></nav>
+  <div id="tq-kunlar" style="display:flex;flex-direction:column;gap:14px"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const koriklar = (await MKBapi.royxat("KORIKLAR")).filter(k => k.holat === "rejada")
+    .map(k => ({sana: k.sana, soat: "", nom: "Ko'rik: " + k.obyektId, izoh: k.inspektor,
+      ikonka: "korik", href: "korik-akti.html?id=" + encodeURIComponent(k.id)}));
+  const majlislar = (await MKBapi.royxat("SUD_MAJLISLAR")).filter(m => m.holat === "rejada")
+    .map(m => ({sana: m.sana, soat: m.soat, nom: "Sud: " + m.obyekt, izoh: m.sud + " · " + m.zal,
+      ikonka: "sud", href: "sud-majlis.html?id=" + encodeURIComponent(m.id)}));
+  const hamma = koriklar.concat(majlislar);
+  document.getElementById("hs-meta").textContent = hamma.length + " ta tadbir";
+  const kunlar = {};
+  hamma.forEach(v => (kunlar[v.sana] = kunlar[v.sana] || []).push(v));
+  document.getElementById("tq-kunlar").innerHTML = Object.entries(kunlar).map(([sana, r]) =>
+    '<section class="karta"><div class="karta-bosh"><h2>' + sana + '</h2>' +
+    '<span class="soni">' + r.length + ' ta tadbir</span></div>' +
+    r.map(v => '<a href="' + v.href + '" style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
+      '<span style="width:34px;height:34px;border-radius:10px;background:var(--varaq-2);display:grid;place-items:center;color:var(--qalam)">' + ik(v.ikonka) + '</span>' +
+      '<span style="flex:1;min-width:0"><b style="display:block;font-size:12.5px">' + v.nom + '</b>' +
+      '<span style="font-size:11px;color:var(--iz)">' + v.izoh + '</span></span>' +
+      (v.soat ? '<b class="kod-mono" style="font-size:11.5px">' + v.soat + '</b>' : '') + '</a>').join("") +
+    '</section>').join("");
+});
+</script>
+</body>
+</html>

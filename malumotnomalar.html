@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Ma'lumotnomalar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Sozlamalar</span></div>
+    <div class="hs-qator"><h1>Ma'lumotnomalar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="sozlama-xavfsizlik.html">Xavfsizlik</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="malumotnomalar.html" class="faol">Ma'lumotnomalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="integratsiyalar.html">Integratsiyalar</a></nav>
+  <div id="mn-royxat" style="display:flex;flex-direction:column;gap:14px"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+  const BOLIMLAR2 = [
+    ["Undiruv bosqichlari", MKB_DATA.BOSQICHLAR.map(b => [b.nom, "kalit: " + b.kalit])],
+    ["Tasnif toifalari", MKB_DATA.TASNIF.map(t => [t.nom, "zaxira " + t.zaxira + "% · " + t.kundan + " kundan"])],
+    ["Auksion bosqichlari", MKB_DATA.AUKSION_BOSQICH.map(([k, n]) => [n, "kalit: " + k])],
+    ["Sudlar", ["Toshkent shahar sudi", "Toshkent viloyat sudi", "Samarqand sudi", "Namangan sudi", "Buxoro sudi"].map(s => [s, "fuqarolik ishlari"])],
+    ["Baholovchi tashkilotlar", ["«Baholash Servis» MChJ", "«Expert Baho» MChJ", "«Milliy Baholash Markazi» DUK"].map(s => [s, "akkreditatsiyalangan"])],
+  ];
+  document.getElementById("hs-meta").textContent = BOLIMLAR2.length + " ta ma'lumotnoma";
+  document.getElementById("mn-royxat").innerHTML = BOLIMLAR2.map(([nom, bandlar]) =>
+    '<section class="karta"><div class="karta-bosh"><h2>' + nom + '</h2>' +
+    '<span class="soni">' + bandlar.length + ' ta yozuv</span></div>' +
+    bandlar.map(([b, izoh]) =>
+      '<div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--chiziq-2);font-size:13px">' +
+      '<b>' + b + '</b><span style="color:var(--iz);font-size:12px">' + izoh + '</span></div>').join("") +
+    '</section>').join("");
+});
+</script>
+</body>
+</html>

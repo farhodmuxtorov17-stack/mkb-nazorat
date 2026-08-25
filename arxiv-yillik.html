@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Yillik jamlanma</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="arxiv">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Arxiv</span></div>
+    <div class="hs-qator"><h1>Yillik jamlanma</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="arxiv.html">Reyestr</a><a href="arxiv-yillik.html" class="faol">Yillik jamlanma</a></nav>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Yakunlangan ishlar</span>
+      <span class="m-qiymat"><span id="ay-soni">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Jami tushum</span>
+      <span class="m-qiymat"><span id="ay-tushum">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">O'rtacha nazorat davri</span>
+      <span class="m-qiymat"><span id="ay-davr">—</span></span>
+      <span class="m-izoh">Qabuldan savdogacha</span>
+    </div>
+  </section>
+  <section class="karta"><div class="karta-bosh"><h2>Yillik jamlanma</h2></div><div id="ay-jadval"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("ARXIV");
+  document.getElementById("ay-soni").textContent = r.length;
+  document.getElementById("ay-tushum").innerHTML =
+    MKB.fmt(Math.round(r.reduce((a, x) => a + MKB.sonQiymat(x.summa), 0))) + "<small>mln so'm</small>";
+  const oylar = r.map(x => parseInt(x.nazorat) || 0).filter(Boolean);
+  document.getElementById("ay-davr").innerHTML =
+    Math.round(oylar.reduce((a, b) => a + b, 0) / (oylar.length || 1)) + "<small>oy</small>";
+  const yillar = {};
+  r.forEach(a => {
+    const g = yillar[a.yil] = yillar[a.yil] || {soni: 0, summa: 0};
+    g.soni++; g.summa += MKB.sonQiymat(a.summa);
+  });
+  document.getElementById("ay-jadval").innerHTML =
+    '<div class="jadval-orash"><table class="jadval"><thead><tr><th>Yil</th>' +
+    '<th style="text-align:right">Sotilgan</th><th style="text-align:right">Tushum, mln</th>' +
+    '<th style="text-align:right">O\'rtacha, mln</th></tr></thead><tbody>' +
+    Object.entries(yillar).sort().map(([yil, g]) =>
+      '<tr><td><b>' + yil + '</b></td><td class="son">' + g.soni + '</td>' +
+      '<td class="son pul">' + MKB.fmt(Math.round(g.summa)) + '</td>' +
+      '<td class="son pul">' + MKB.fmt(Math.round(g.summa / g.soni)) + '</td></tr>').join("") +
+    '</tbody></table></div>';
+});
+</script>
+</body>
+</html>

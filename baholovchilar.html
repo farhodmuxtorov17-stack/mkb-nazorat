@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Baholovchi tashkilotlar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="baholash">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Baholash</span></div>
+    <div class="hs-qator"><h1>Baholovchi tashkilotlar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Reyestr</a><a href="baholash-buyurtma.html">Buyurtma</a><a href="baholash-hisobot-kiritish.html">Hisobot kiritish</a><a href="baholovchilar.html" class="faol">Baholovchilar</a><a href="baholash-dinamika.html">Dinamika</a></nav>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("BAHOLASHLAR");
+  const guruh = {};
+  r.forEach(b => {
+    const g = guruh[b.baholovchi] = guruh[b.baholovchi] || {nom: b.baholovchi, soni: 0, jami: 0, oxirgi: ""};
+    g.soni++; g.jami += b.qiymat || 0; g.oxirgi = b.sana;
+  });
+  const qatorlar = Object.values(guruh).map((g, i) => Object.assign(g, {id: "BT-" + i,
+    litsenziya: "BS-" + (2041 + i * 7), shartnoma: "2026 yil uchun"}));
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta akkreditatsiyalangan tashkilot";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    ustunlar: [
+      {kalit: "nom", nom: "Tashkilot", chiz: q => '<b>' + q.nom + '</b>'},
+      {kalit: "litsenziya", nom: "Litsenziya", chiz: q => '<span class="kod-mono">' + q.litsenziya + '</span>'},
+      {kalit: "soni", nom: "Hisobotlar", son: true},
+      {kalit: "jami", nom: "Baholangan hajm", son: true, chiz: q => '<span class="pul">' + MKB.fmt(Math.round(q.jami)) + ' mln</span>'},
+      {kalit: "oxirgi", nom: "Oxirgi hisobot"},
+      {kalit: "shartnoma", nom: "Shartnoma"},
+    ],
+  });
+});
+</script>
+</body>
+</html>

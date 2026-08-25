@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Baholash buyurtmasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="baholash">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Baholash</span></div>
+    <div class="hs-qator"><h1>Baholash buyurtmasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Reyestr</a><a href="baholash-buyurtma.html" class="faol">Buyurtma</a><a href="baholash-hisobot-kiritish.html">Hisobot kiritish</a><a href="baholovchilar.html">Baholovchilar</a><a href="baholash-dinamika.html">Dinamika</a></nav>
+  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Baholash buyurtmasi</h2></div>
+  <form id="bb-forma" class="forma-tor">
+    <div class="maydon keng"><label class="maydon-yorliq">Obyekt <b>*</b></label>
+      <div class="kirish"><select name="obyektId" id="bb-obyekt"></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Baholovchi tashkilot <b>*</b></label>
+      <div class="kirish"><select name="baholovchi"><option>«Baholash Servis» MChJ</option><option>«Expert Baho» MChJ</option><option>«Milliy Baholash Markazi» DUK</option></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Sabab <b>*</b></label>
+      <div class="kirish"><select name="sabab"><option>Yillik qayta baholash</option><option>Savdoga tayyorlash</option><option>Sud jarayoni uchun</option><option>Zaxira hisobi</option></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Muddat</label>
+      <div class="kirish"><input name="muddat" value="10 ish kuni"></div></div>
+    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
+      <a class="tugma tugma-oq" href="baholash.html">Bekor qilish</a>
+      <button class="tugma tugma-asosiy" type="submit">Buyurtma berish</button></div>
+  </form></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  document.getElementById("bb-obyekt").innerHTML = yoz.map(y =>
+    '<option value="' + y.id + '">' + y.id + " — " + y.mulk.qisqa + '</option>').join("");
+  document.getElementById("bb-forma").addEventListener("submit", async e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target, ["obyektId", "baholovchi", "sabab"]);
+    if (!q) return;
+    const id = "BH-2026/0" + String(200 + Math.floor((Date.now() / 60000) % 700));
+    await MKBapi.yangi("BAHOLASHLAR", {id, obyektId: q.obyektId, sana: "buyurtma berildi",
+      qiymat: 0, avvalgi: 0, baholovchi: q.baholovchi, usul: q.sabab,
+      keyingi: q.muddat, holat: "jarayonda"});
+    MKB.toast("Buyurtma ro'yxatga olindi — " + id);
+    setTimeout(() => location.href = "baholash.html", 700);
+  });
+});
+</script>
+</body>
+</html>

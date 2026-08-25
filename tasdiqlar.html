@@ -1,313 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>(function(){var t=localStorage.getItem("mkb-tema");if(t==="realty"||t==="estate")document.documentElement.dataset.tema=t})()</script>
-<title>MKB — Tasdiqlar va topshiriqlar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082605">
-<style>
-/* ---- Tasdiqlar va topshiriqlar (ekran 22, Rahbar ko'rinishi) ---- */
-.tt-grid{display:grid;grid-template-columns:350px minmax(0,1fr) 360px;gap:18px;align-items:start}
-.tt-grid > *{min-width:0}
-.tt-grid h3{font-size:16.5px;font-weight:750}
-.t-son{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 8px;margin-left:8px;background:#EEF2FF;color:#3730A3;border-radius:99px;font-size:12.5px;font-weight:750;vertical-align:2px}
-.kt-band{
-  width:100%;text-align:left;display:flex;gap:12px;
-  border:1px solid var(--chiziq);border-radius:14px;padding:14px;margin-top:12px;
-  transition:border-color var(--tez),box-shadow var(--tez);
-}
-.kt-band:hover{box-shadow:var(--soya)}
-.kt-band.faol{border-color:#C7D2FE;background:#FAFAFA;box-shadow:0 0 0 1px #C7D2FE}
-.kt-tile{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile)}
-.kt-tile .ic{width:20px;height:20px}
-.kt-tile.yashil{background:#EEF2FF;color:#3730A3}
-.kt-tile.sariq{background:#FFFBEB;color:#B45309}
-.kt-tile.binafsha{background:#F5F3FF;color:#6D28D9}
-.kt-tile.qizil{background:#FEF2F2;color:#B91C1C}
-.kt-band b{display:block;font-size:14.5px;font-weight:650;line-height:1.35}
-.kt-band .org{display:block;font-size:12.5px;color:var(--matn-3);margin-top:2px}
-.kt-band .meta{display:flex;align-items:center;margin-top:8px}
-.kt-band .vaqt{font-size:12px;color:var(--matn-4)}
-.jiddiylik{margin-left:auto;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:99px}
-.jiddiylik.yuqori{background:#FEF2F2;color:#B91C1C}
-.jiddiylik.orta{background:#FFFBEB;color:#B45309}
-.jiddiylik.past{background:#F0F9FF;color:#0369A1}
-.barcha-band{display:flex;align-items:center;gap:8px;width:100%;margin-top:14px;padding:12px 6px 2px;font-size:14px;font-weight:650;color:#3F3F46;border-radius:8px}
-.barcha-band .ic{margin-left:auto;width:16px;height:16px}
-
-/* Markaz */
-.td-bosh{display:flex;align-items:flex-start;gap:14px}
-.td-bosh .kt-tile{width:52px;height:52px}
-.td-bosh .kt-tile .ic{width:24px;height:24px}
-.td-bosh h2{font-size:20px;font-weight:750;line-height:1.3}
-.td-bosh .sub{font-size:13.5px;color:var(--matn-3);margin-top:4px}
-.td-bosh .jiddiylik{margin-left:auto;flex:none;font-size:12.5px;padding:6px 14px}
-.td-korpus{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;margin-top:18px}
-.td-tavsif h4{font-size:14.5px;font-weight:750;margin-bottom:6px}
-.td-tavsif p{font-size:14px;color:var(--matn-2);line-height:1.6}
-.td-qator{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #F4F4F5;font-size:13.5px}
-.td-qator:last-child{border-bottom:none}
-.td-qator .ic{width:17px;height:17px;color:#52525B}
-.td-qator .yorliq{color:var(--matn-3)}
-.td-qator b{margin-left:auto;font-weight:650;text-align:right}
-.td-rasm{display:grid;place-items:center}
-.td-rasm img{max-width:100%;max-height:360px}
-.hujjat-blok{margin-top:14px}
-.hujjat-blok h4{font-size:14.5px;font-weight:750;margin-bottom:8px}
-.hujjat-band{display:flex;align-items:center;gap:12px;border:1px solid var(--chiziq);border-radius:13px;padding:12px 14px;width:100%;text-align:left;transition:background var(--tez)}
-.hujjat-band:hover{background:#FAFAFA}
-.hujjat-band .tile{width:38px;height:38px;border-radius:10px;background:#F4F4F5;display:grid;place-items:center;color:#52525B;box-shadow:var(--chuqur-tile-tor)}
-.hujjat-band .tile .ic{width:17px;height:17px}
-.hujjat-band b{font-size:13.5px;font-weight:650}
-.hujjat-band span{display:block;font-size:12px;color:var(--matn-4)}
-.hujjat-band .yuk{margin-left:auto;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#3F3F46}
-.hujjat-band .yuk:hover{background:#E8EAEE}
-.td-harakat{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-
-/* O'ng ustun */
-.blok-karta h3{display:flex;align-items:center;gap:9px;font-size:15.5px}
-.blok-karta h3 .ic{width:19px;height:19px;color:#3F3F46}
-.m-band2{padding:11px 0;border-bottom:1px solid #F4F4F5}
-.m-band2:last-of-type{border-bottom:none}
-.m-band2 .yorliq{font-size:12.5px;color:var(--matn-4)}
-.m-band2 b{display:block;font-size:14.5px;font-weight:700;margin-top:3px}
-.qolgan{font-size:20px;font-weight:750;color:#047857}
-.shaxs-band{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #F4F4F5}
-.shaxs-band:last-of-type{border-bottom:none}
-.shaxs-band .avatar{width:40px;height:40px}
-.shaxs-band .harf{width:40px;height:40px;border-radius:99px;background:#EEF0F3;display:grid;place-items:center;font-size:12.5px;font-weight:750;color:#52525B;flex:none;box-shadow:var(--chuqur-tile-tor)}
-.shaxs-band .rol{display:block;font-size:12px;color:var(--matn-4)}
-.shaxs-band b{display:block;font-size:14px;font-weight:650}
-.shaxs-band .aloqa{margin-left:auto;display:flex;gap:8px}
-.shaxs-band .aloqa button{width:34px;height:34px;border:1px solid var(--kirish-chiziq);border-radius:10px;display:grid;place-items:center;color:#3F3F46}
-.shaxs-band .aloqa button:hover{background:#F4F4F5}
-.shaxs-band .aloqa .ic{width:15px;height:15px}
-.ft-band{display:flex;gap:10px;padding:9px 0;font-size:13px}
-.ft-band .nuqta{width:8px;height:8px;border-radius:99px;background:#4F46E5;margin-top:5px;flex:none}
-.ft-band b{font-weight:650}
-.ft-band span{display:block;color:var(--matn-4);font-size:12px;margin-top:2px}
-.tt-grid > aside{display:flex;flex-direction:column;gap:18px}
-@media (max-width:1760px){.tt-grid{grid-template-columns:320px minmax(0,1fr)}.tt-grid > aside{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}}
-@media (max-width:1440px){.tt-grid{grid-template-columns:minmax(0,1fr)}.tt-grid > aside{grid-template-columns:minmax(0,1fr)}.td-korpus{grid-template-columns:minmax(0,1fr)}}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Tasdiqlar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
-<body data-sahifa="hisobotlar">
-
-<div class="app">
-<aside class="sidebar" data-shell-sidebar></aside>
-
-<div class="asosiy">
-  <header class="topbar" data-shell-topbar></header>
-
-  <main class="kontent">
-    <div class="sahifa-qator">
-      <h1>Tasdiqlar va topshiriqlar</h1>
-      <div class="sahifa-harakat">
-        <a class="tugma tugma-oq" href="vazifalar.html"><svg class="ic"><use href="#i-vazifa"/></svg>Jarayonlar ko'rinishi</a>
-      </div>
-    </div>
-
-    <div class="tt-grid">
-
-      <!-- Kutilayotgan tasdiqlar -->
-      <div class="karta">
-        <h3>Kutilayotgan tasdiqlar<span class="t-son" id="t-son">4</span></h3>
-        <div id="kt-royxat"></div>
-        <button class="barcha-band" data-toast="Barcha tasdiqlar ro'yxati">Barchasini ko'rish<svg class="ic"><use href="#i-strelka"/></svg></button>
-      </div>
-
-      <!-- Markaz -->
-      <div class="karta">
-        <div class="td-bosh">
-          <span class="kt-tile yashil" id="d-tile"><svg class="ic"><use href="#i-ekran"/></svg></span>
-          <div>
-            <h2 id="d-sarlavha">Masofaviy ko'rik sessiyasini tasdiqlash</h2>
-            <div class="sub" id="d-sub">Navruz Plaza &nbsp;·&nbsp; AK-2025/0934</div>
-          </div>
-          <span class="jiddiylik yuqori" id="d-jiddiylik">Yuqori</span>
-        </div>
-
-        <div class="td-korpus">
-          <div>
-            <div class="td-tavsif">
-              <h4>Tavsif</h4>
-              <p id="d-tavsif">Investor bilan masofaviy ko'rik sessiyasini o'tkazish uchun ruxsat so'ralmoqda.</p>
-            </div>
-            <div style="margin-top:12px">
-              <div class="td-qator"><svg class="ic"><use href="#i-foyd"/></svg><span class="yorliq">So'rovchi</span><b id="d-sorovchi">Javlon Karimov</b></div>
-              <div class="td-qator"><svg class="ic"><use href="#i-vazifa"/></svg><span class="yorliq">Lavozimi</span><b id="d-lavozim">Aktiv obyektlari direktori</b></div>
-              <div class="td-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">Vaqt</span><b id="d-muddat-vaqt">26-may, 2025 &nbsp;·&nbsp; 15:00</b></div>
-              <div class="td-qator"><svg class="ic"><use href="#i-pin"/></svg><span class="yorliq">Joy</span><b id="d-joy">Navruz Plaza, 1201-xona</b></div>
-              <div class="td-qator"><svg class="ic"><use href="#i-tashrif"/></svg><span class="yorliq">Ishtirokchilar</span><b id="d-ishtirokchilar">3 nafar</b></div>
-              <div class="td-qator"><svg class="ic"><use href="#i-ekran"/></svg><span class="yorliq">Sessiya turi</span><b id="d-sessiya-turi">Video konferensiya</b></div>
-              <div class="td-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Qo'shimcha</span><b id="d-qoshimcha">Investor: Global Invest Ltd.</b></div>
-            </div>
-          </div>
-          <div class="td-rasm"><img src="assets/tasdiq_hujjat_3d.webp" alt="Tasdiqlash hujjatlari illyustratsiyasi"></div>
-        </div>
-
-        <div class="hujjat-blok">
-          <h4>Hujjatlar</h4>
-          <button class="hujjat-band" id="d-hujjat-band" style="width:100%;text-align:left;cursor:pointer">
-            <span class="tile"><svg class="ic"><use href="#i-hujjat"/></svg></span>
-            <span><b id="d-hujjat-nom">Session_Request_GreenTower.pdf</b><span id="d-hujjat-hajm">1.2 MB</span></span>
-            <span class="yuk" aria-label="Yuklab olish"><svg class="ic"><use href="#i-yuklab"/></svg></span>
-          </button>
-        </div>
-
-        <div class="td-harakat">
-          <button class="tugma tugma-asos" id="tasdiqla"><svg class="ic"><use href="#i-belgi-doira"/></svg>Tasdiqlash</button>
-          <button class="tugma tugma-chiziqli" id="rad-et"><svg class="ic"><use href="#i-yopish"/></svg>Rad etish</button>
-          <button class="tugma tugma-chiziqli" data-toast="So'rov qayta ko'rib chiqishga yuborildi"><svg class="ic"><use href="#i-soat"/></svg>Qayta ko'rib chiqish</button>
-        </div>
-      </div>
-
-      <!-- O'ng ustun -->
-      <aside>
-        <div class="karta blok-karta">
-          <h3><svg class="ic"><use href="#i-kalendar"/></svg>Muddatlar</h3>
-          <div class="m-band2"><span class="yorliq">So'rov sanasi</span><b id="d-sorov-sana">24-may, 2025 &nbsp;·&nbsp; 14:20</b></div>
-          <div class="m-band2"><span class="yorliq">Javob muddati</span><b id="d-javob-muddati">26-may, 2025 &nbsp;·&nbsp; 15:00</b></div>
-          <div class="m-band2"><span class="yorliq">Qolgan vaqt</span><b class="qolgan" id="d-qolgan">0 soat 28 daqiqa</b></div>
-        </div>
-
-        <div class="karta blok-karta">
-          <h3><svg class="ic"><use href="#i-vazifa"/></svg>Topshiriqlar</h3>
-          <div class="shaxs-band">
-            <span class="avatar"><svg viewBox="0 0 34 34" style="width:30px;height:30px;display:block;margin:5px auto 0"><circle cx="17" cy="12" r="6.5" fill="#A1A1AA"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#A1A1AA"/></svg></span>
-            <span><span class="rol">Mas'ul shaxs</span><b id="d-masul-nom">Javlon Karimov</b><span class="rol" id="d-masul-lavozim">Aktiv obyektlari direktori</span></span>
-            <span class="aloqa">
-              <button id="d-masul-tel" data-toast="Qo'ng'iroq: +998 90 123-45-67" aria-label="Qo'ng'iroq"><svg class="ic"><use href="#i-tel"/></svg></button>
-              <button data-toast="Email yuborish oynasi" aria-label="Email"><svg class="ic"><use href="#i-mail"/></svg></button>
-            </span>
-          </div>
-          <div class="shaxs-band">
-            <span class="harf" id="d-korib-harf">SK</span>
-            <span><span class="rol">Ko'rib chiqish uchun</span><b id="d-korib-nom">Saida Karimova</b><span class="rol" id="d-korib-lavozim">Yuridik maslahatchi</span></span>
-          </div>
-          <div class="shaxs-band">
-            <span class="harf" id="d-nusxa-harf">TM</span>
-            <span><span class="rol">Nusxa</span><b id="d-nusxa-nom">Temur Mirzayev</b><span class="rol" id="d-nusxa-lavozim">CFO</span></span>
-          </div>
-        </div>
-
-        <div class="karta blok-karta">
-          <h3><svg class="ic"><use href="#i-soat"/></svg>Faoliyat tarixi</h3>
-          <div class="ft-band"><span class="nuqta"></span><span><b>So'rov yaratildi</b><span id="d-faoliyat">Javlon Karimov &nbsp;·&nbsp; 24-may, 14:20</span></span></div>
-        </div>
-      </aside>
-    </div>
-  </main>
+<body data-sahifa="vazifa">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Vazifalar</span></div>
+    <div class="hs-qator"><h1>Tasdiqlar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html">Vazifalar</a><a href="tasdiqlar.html" class="faol">Tasdiqlar</a><a href="bildirishnomalar.html">Bildirishnomalar</a><a href="taqvim.html">Taqvim</a><a href="eslatmalar.html">Eslatmalar</a></nav>
+  <section class="karta"><div id="t-royxat"></div></section>
+</main>
 </div>
 </div>
-
-<script src="malumot.js?v=26082605"></script>
-<script src="tarjima.js?v=26082605"></script>
-<script src="mkb.js?v=26082605"></script>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
 <script>
-document.addEventListener("DOMContentLoaded", ()=>{
-
-const TASDIQLAR = MKB_DATA.TASDIQLAR;   /* yagona manba (Д-1) */
-function bosHarflar(ism){ return ism.split(" ").map(s=>s[0]).join("").toUpperCase().slice(0,2); }
-let faol = 0;
-
-function royxatChiz(){
-  document.getElementById("t-son").textContent = TASDIQLAR.length;
-  document.getElementById("kt-royxat").innerHTML = TASDIQLAR.map((t,i)=>`
-    <button class="kt-band ${i===faol?"faol":""}" data-i="${i}">
-      <span class="kt-tile ${t.tile}"><svg class="ic"><use href="#${t.ikon}"/></svg></span>
-      <span style="flex:1;min-width:0">
-        <b>${t.sarlavha}</b>
-        <span class="org">${t.org}</span>
-        <span class="meta"><span class="vaqt">${t.vaqt}</span><span class="jiddiylik ${t.j}">${t.jm}</span></span>
-      </span>
-    </button>`).join("");
-  document.querySelectorAll(".kt-band").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      faol = +b.dataset.i; royxatChiz(); detalChiz();
-    });
-  });
-}
-function detalChiz(){
-  const t = TASDIQLAR[faol];
-  document.getElementById("d-sarlavha").textContent = t.sarlavha;
-  document.getElementById("d-sub").innerHTML = t.sub;
-  document.getElementById("d-tavsif").textContent = t.tavsif;
-  const j = document.getElementById("d-jiddiylik");
-  j.textContent = t.jm; j.className = "jiddiylik "+t.j;
-  const tile = document.getElementById("d-tile");
-  tile.className = "kt-tile "+t.tile;
-  tile.innerHTML = `<svg class="ic"><use href="#${t.ikon}"/></svg>`;
-  document.getElementById("d-sorovchi").textContent = t.sorovchi;
-  document.getElementById("d-lavozim").textContent = t.lavozim;
-  document.getElementById("d-muddat-vaqt").innerHTML = t.javobMuddati;
-  document.getElementById("d-joy").textContent = t.joy;
-  document.getElementById("d-ishtirokchilar").textContent = t.ishtirokchilar;
-  document.getElementById("d-sessiya-turi").textContent = t.sessiyaTuri;
-  document.getElementById("d-qoshimcha").textContent = t.qoshimcha;
-  document.getElementById("d-hujjat-nom").textContent = t.hujjatNomi;
-  document.getElementById("d-hujjat-hajm").textContent = t.hujjatHajmi;
-  document.getElementById("d-sorov-sana").innerHTML = t.sorovSana;
-  document.getElementById("d-javob-muddati").innerHTML = t.javobMuddati;
-  document.getElementById("d-qolgan").textContent = t.qolgan;
-  document.getElementById("d-masul-nom").textContent = t.masulNom;
-  document.getElementById("d-masul-lavozim").textContent = t.masulLavozim;
-  document.getElementById("d-masul-tel").dataset.toast = "Qo'ng'iroq: "+t.masulTel;
-  document.getElementById("d-korib-nom").textContent = t.koribNom;
-  document.getElementById("d-korib-lavozim").textContent = t.koribLavozim;
-  document.getElementById("d-korib-harf").textContent = bosHarflar(t.koribNom);
-  document.getElementById("d-nusxa-nom").textContent = t.nusxaNom;
-  document.getElementById("d-nusxa-lavozim").textContent = t.nusxaLavozim;
-  document.getElementById("d-nusxa-harf").textContent = bosHarflar(t.nusxaNom);
-  document.getElementById("d-faoliyat").innerHTML = t.sorovchi+" &nbsp;·&nbsp; "+t.sorovSana.replace(" &nbsp;·&nbsp; ", ", ");
-}
-royxatChiz(); detalChiz();
-
-document.getElementById("d-hujjat-band").addEventListener("click", ()=>{
-  MKB.toast(TASDIQLAR[faol].hujjatNomi+" yuklab olinmoqda", "i-yuklab");
-});
-
-function navbatdanOlish(){
-  TASDIQLAR.splice(faol, 1);
-  if (faol >= TASDIQLAR.length) faol = Math.max(0, TASDIQLAR.length - 1);
-  royxatChiz();
-  if (TASDIQLAR.length) detalChiz();
-  else document.querySelector(".td-korpus").closest(".karta").innerHTML =
-    `<div style="padding:48px 24px;text-align:center;color:var(--matn-4)">
-      <svg class="ic" style="width:32px;height:32px;margin:0 auto 12px"><use href="#i-belgi-doira"/></svg>
-      <div style="font-size:14.5px;font-weight:650">Barcha so'rovlar ko'rib chiqildi</div>
-      <div style="font-size:13px;margin-top:4px">Kutilayotgan tasdiqlar navbati bo'sh</div>
-    </div>`;
-}
-
-document.getElementById("tasdiqla").addEventListener("click", ()=>{
-  const t = TASDIQLAR[faol];
-  MKB.toast(t.sarlavha+" — tasdiqlandi", "i-belgi-doira");
-  navbatdanOlish();
-});
-document.getElementById("rad-et").addEventListener("click", ()=>{
-  MKB.modal("So'rovni rad etish",
-    `<div style="margin-top:6px"><label class="maydon-yorliq" for="rad-sabab">Rad etish sababi</label>
-     <div class="kirish kirish-katta"><textarea id="rad-sabab" placeholder="Sababni kiriting..."></textarea></div></div>`,
-    {xavf:true, okMatn:"Rad etish", ok(){
-      MKB.toast("So'rov rad etildi");
-      navbatdanOlish();
-    }});
-  /* Bo'sh sabab bilan rad etishga yo'l qo'ymaymiz \u2014 capture-bosqich (vazifalar.html andozasi) */
-  const modallar = document.querySelectorAll(".modal-fon");
-  const fon = modallar[modallar.length-1];
-  fon.addEventListener("click", e=>{
-    if (!e.target.closest("[data-m-ok]")) return;
-    if (!document.getElementById("rad-sabab").value.trim()){
-      e.stopPropagation();
-      MKB.toast("Rad etish sababini kiriting");
-    }
-  }, true);
-});
+document.addEventListener("mkb:tayyor", async () => {
+  async function chiz(){
+    const r = await MKBapi.royxat("TASDIQLAR");
+    document.getElementById("hs-meta").textContent =
+      r.filter(t => !t.hal).length + " ta kutilmoqda · " + r.length + " ta jami";
+    document.getElementById("t-royxat").innerHTML = r.map(t =>
+      '<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--chiziq-2)">' +
+        '<span style="width:38px;height:38px;border-radius:10px;background:var(--' + (t.tile === "yashil" ? 'yashil-fon' : 'brend-fon') +
+        ');display:grid;place-items:center;color:var(--brend-quyuq)">' + ik("muhr") + '</span>' +
+        '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px">' + t.sarlavha + '</b>' +
+        '<span style="font-size:11.5px;color:var(--iz)">' + [t.org, t.sub, t.vaqt].filter(Boolean).join(" · ") + '</span></span>' +
+        (t.hal ? '<span class="chip ' + (t.hal === "tasdiqlandi" ? 'chip-yashil">Tasdiqlangan' : 'chip-xavf">Rad etilgan') + '</span>'
+          : '<button type="button" class="tugma tugma-kichik tugma-oq" data-rad="' + t.id + '">Rad</button>' +
+            '<button type="button" class="tugma tugma-kichik tugma-asosiy" data-ok="' + t.id + '">Tasdiqlash</button>') +
+      '</div>').join("");
+    document.querySelectorAll("[data-ok]").forEach(b => b.addEventListener("click", async () => {
+      await MKBapi.yangilash("TASDIQLAR", b.dataset.ok, {hal: "tasdiqlandi"}); MKB.toast("Tasdiqlandi"); chiz();
+    }));
+    document.querySelectorAll("[data-rad]").forEach(b => b.addEventListener("click", async () => {
+      await MKBapi.yangilash("TASDIQLAR", b.dataset.rad, {hal: "rad"}); MKB.toast("Rad etildi"); chiz();
+    }));
+  }
+  chiz();
 });
 </script>
 </body>

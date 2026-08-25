@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Qiymat dinamikasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="baholash">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Baholash</span></div>
+    <div class="hs-qator"><h1>Qiymat dinamikasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Reyestr</a><a href="baholash-buyurtma.html">Buyurtma</a><a href="baholash-hisobot-kiritish.html">Hisobot kiritish</a><a href="baholovchilar.html">Baholovchilar</a><a href="baholash-dinamika.html" class="faol">Dinamika</a></nav>
+  <section class="karta"><div class="karta-bosh"><h2>Qiymat dinamikasi</h2><div class="tanlov" id="dn-tanlov" role="button" tabindex="0" style="margin-left:auto"><span class="t-yorliq" id="dn-yorliq">Obyekt tanlang</span><svg class="ic strelka"><use href="#i-past"/></svg><div class="menyu-popover" id="dn-menyu" style="top:calc(100% + 6px);right:0"></div></div></div><div id="dn-grafik" style="min-height:200px"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("BAHOLASHLAR");
+  const obyektlar = [...new Set(r.map(b => b.obyektId))];
+  const menyu = document.getElementById("dn-menyu");
+  menyu.innerHTML = obyektlar.map(id => {
+    const y = MKB_DATA.OBYEKT_INDEKS[id] || {};
+    return '<button type="button" data-id="' + id + '">' + (y.qisqa || id) + '</button>';
+  }).join("");
+  function chiz(id){
+    const y = MKB_DATA.OBYEKT_INDEKS[id] || {};
+    document.getElementById("dn-yorliq").textContent = y.qisqa || id;
+    const seriya = r.filter(b => b.obyektId === id && b.qiymat)
+      .map(b => ({sana: b.sana, q: b.qiymat, a: b.avvalgi}));
+    const nuqtalar = [];
+    seriya.forEach(s => { if (s.a) nuqtalar.push({sana: "avvalgi", v: s.a}); nuqtalar.push({sana: s.sana, v: s.q}); });
+    if (!nuqtalar.length){ document.getElementById("dn-grafik").innerHTML =
+      '<div class="bosh-holat">' + ik("grafik") + '<b>Ma\'lumot yo\'q</b></div>'; return; }
+    const maks = Math.max(...nuqtalar.map(n => n.v));
+    document.getElementById("dn-grafik").innerHTML =
+      '<div style="display:flex;align-items:flex-end;gap:26px;height:190px;padding-top:10px">' +
+      nuqtalar.map((n, i) =>
+        '<div style="flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:6px">' +
+          '<span class="pul" style="font-size:12px">' + MKB.fmt(n.v) + '</span>' +
+          '<div style="width:100%;max-width:56px;height:' + Math.round(n.v / maks * 130) + 'px;border-radius:9px 9px 3px 3px;background:' +
+          (i === nuqtalar.length - 1 ? 'var(--brend)' : 'var(--siyoh)') + '"></div>' +
+          '<span style="font-size:11px;color:var(--iz)">' + n.sana + '</span></div>').join("") + '</div>';
+  }
+  chiz(obyektlar[0]);
+  const t = document.getElementById("dn-tanlov");
+  t.addEventListener("click", e => {
+    if (e.target.closest(".menyu-popover")) return;
+    menyu.classList.toggle("ochiq");
+  });
+  menyu.addEventListener("click", e => {
+    const b = e.target.closest("[data-id]");
+    if (b) chiz(b.dataset.id);
+  });
+  document.addEventListener("click", e => { if (!e.target.closest("#dn-tanlov")) menyu.classList.remove("ochiq"); });
+});
+</script>
+</body>
+</html>

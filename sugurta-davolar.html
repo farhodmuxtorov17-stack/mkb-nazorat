@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Sug'urta da'volari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sugurta">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Sug'urta</span></div>
+    <div class="hs-qator"><h1>Sug'urta da'volari</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sugurta.html">Polislar</a><a href="sugurta-tugayotgan.html">Tugayotganlar</a><a href="sugurta-davolar.html" class="faol">Da'volar</a><a href="sugurta-yangilash.html">Yangilash</a></nav>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("SUGURTA_DAVOLARI");
+  document.getElementById("hs-meta").textContent = r.length + " ta da'vo";
+  MKB.jadval("jadval-joy", {
+    qatorlar: r,
+    qidiruv: ["obyekt", "hodisa", "polis"],
+    ustunlar: [
+      {kalit: "id", nom: "Da'vo", chiz: q => '<span class="kod-mono">' + q.id + '</span>'},
+      {kalit: "obyekt", nom: "Obyekt"},
+      {kalit: "hodisa", nom: "Hodisa", chiz: q => '<span style="white-space:normal;display:block;max-width:280px">' + q.hodisa + '</span>'},
+      {kalit: "kompaniya", nom: "Kompaniya"},
+      {kalit: "summa", nom: "Da'vo summasi", son: true, chiz: q => '<span class="pul">' + String(q.summa).replace(".", ",") + ' mln</span>'},
+      {kalit: "holat", nom: "Holat", chiz: q => q.holat === "tolangan"
+        ? '<span class="chip chip-yashil">To\'langan</span>'
+        : q.holat === "topshirilgan" ? '<span class="chip chip-info">Topshirilgan</span>'
+        : '<span class="chip chip-sariq">Ko\'rib chiqilmoqda</span>'},
+    ],
+    bosilganda: q => location.href = "obyekt.html?id=" + encodeURIComponent(q.obyektId),
+  });
+});
+</script>
+</body>
+</html>

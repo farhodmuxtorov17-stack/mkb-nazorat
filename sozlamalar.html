@@ -1,259 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>(function(){var t=localStorage.getItem("mkb-tema");if(t==="realty"||t==="estate")document.documentElement.dataset.tema=t})()</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Sozlamalar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082605">
-<style>
-/* ---- Sozlamalar (ekran 21) ---- */
-.sz-grid{display:grid;grid-template-columns:300px minmax(0,1fr) 400px;gap:18px;align-items:start}
-.bolim-karta h3{font-size:16px;font-weight:750;margin-bottom:10px}
-.bolim-band{
-  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
-  padding:12px 14px;border-radius:12px;font-size:14px;font-weight:600;color:#3F3F46;
-  transition:background var(--tez);
-}
-.bolim-band:hover{background:#F4F4F5}
-.bolim-band.aktiv{background:#EEF2FF;box-shadow:inset 0 0 0 1px #C7D2FE;color:#3730A3}
-.bolim-band .ic{width:19px;height:19px;color:#52525B}
-.bolim-band.aktiv .ic{color:#3730A3}
-
-.param-karta h3{font-size:17px;font-weight:750}
-.param-karta .sub{font-size:13px;color:var(--matn-3);margin-top:3px}
-.param-qator{
-  display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px;align-items:center;
-  padding:18px 0;border-bottom:1px solid #F4F4F5;
-}
-.param-qator:last-of-type{border-bottom:none}
-.param-qator .nomi{font-size:14.5px;font-weight:650}
-.param-qator .izoh{font-size:12.5px;color:var(--matn-3);margin-top:3px}
-.param-qator .ulagich{justify-self:end}
-.saqlash-qator{display:flex;justify-content:flex-end;margin-top:14px}
-
-/* Tizim holati */
-.holat-bosh{display:flex;align-items:center}
-.holat-bosh h3{font-size:16.5px;font-weight:750}
-.holat-bosh .chip{margin-left:auto}
-.server-rasm{display:grid;place-items:center;margin:8px 0}
-.server-rasm img{max-height:250px}
-.th-qator{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #F4F4F5;font-size:13.5px}
-.th-qator:last-of-type{border-bottom:none}
-.th-qator .ic{width:17px;height:17px;color:#52525B}
-.th-qator .yorliq{color:var(--matn-3)}
-.th-qator b{margin-left:auto;font-weight:650;text-align:right}
-.th-qator b .nuqta{display:inline-block;width:7px;height:7px;border-radius:99px;background:#059669;margin-right:6px;vertical-align:1px}
-.disk-iz{height:7px;border-radius:99px;background:#EDEFE9;margin-top:8px;overflow:hidden}
-.disk-iz span{display:block;height:100%;width:42%;background:#4F46E5;border-radius:99px}
-.diagnostika-tugma{
-  width:100%;height:52px;margin-top:16px;border-radius:13px;border:1px solid var(--kirish-chiziq);
-  display:flex;align-items:center;gap:11px;padding:0 18px;
-  font-size:14.5px;font-weight:700;transition:background var(--tez);
-}
-.diagnostika-tugma:hover{background:#F4F4F5}
-.diagnostika-tugma .ic{width:19px;height:19px;color:#3F3F46}
-.diagnostika-tugma .strelka{margin-left:auto;width:16px;height:16px;color:#71717A}
-
-/* Audit jurnali (modal ichida) */
-.audit-royxat{max-height:min(300px,44vh);overflow-y:auto;padding-right:4px;margin-top:2px}
-.audit-qator{padding:10px 2px;border-bottom:1px solid #F4F4F5}
-.audit-qator:last-of-type{border-bottom:none}
-.audit-tepa{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
-.audit-vaqt{font-size:11.5px;font-weight:600;color:var(--matn-4)}
-.audit-rol{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap}
-.audit-rol.admin{background:var(--rol-admin-fon);color:var(--rol-admin-matn)}
-.audit-rol.filial{background:var(--rol-filial-fon);color:var(--rol-filial-matn)}
-.audit-rol.kredit{background:var(--rol-kredit-fon);color:var(--rol-kredit-matn)}
-.audit-rol.ta'minot{background:var(--rol-aktiv-fon);color:var(--rol-aktiv-matn)}
-.audit-rol.yurist{background:var(--rol-yurist-fon);color:var(--rol-yurist-matn)}
-.audit-rol.tavakkal{background:var(--rol-tavakkal-fon);color:var(--rol-tavakkal-matn)}
-.audit-rol.sistema{background:#F4F4F5;color:#52525B}
-.audit-amal{font-size:13.5px;color:#3F3F46;line-height:1.4}
-.audit-amal b{font-weight:750;color:#18181B}
-.audit-obyekt{font-size:12px;color:var(--matn-3);margin-top:2px}
-@media (max-width:1600px){.sz-grid{grid-template-columns:270px minmax(0,1fr)}.sz-grid > aside{grid-column:1/-1}}
-@media (max-width:1100px){.sz-grid{grid-template-columns:minmax(0,1fr)}.param-qator{grid-template-columns:minmax(0,1fr);gap:10px}}
-</style>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
-<body data-sahifa="sozlamalar">
-
-<div class="app">
-<aside class="sidebar" data-shell-sidebar></aside>
-
-<div class="asosiy">
-  <header class="topbar" data-shell-topbar></header>
-
-  <main class="kontent">
-    <div class="sahifa-qator"><h1>Sozlamalar</h1></div>
-
-    <div class="sz-grid">
-
-      <!-- Bo'limlar -->
-      <div class="karta bolim-karta">
-        <h3>Sozlama bo'limlari</h3>
-        <button class="bolim-band aktiv" data-toast="Tizim parametrlari — quyida"><svg class="ic"><use href="#i-sozlama"/></svg>Tizim parametrlari</button>
-        <button class="bolim-band" data-toast="Hudud va til sozlamalari"><svg class="ic"><use href="#i-xarita"/></svg>Hudud va til</button>
-        <button class="bolim-band" data-toast="Valyuta va soliqlar sozlamalari"><svg class="ic"><use href="#i-daromad"/></svg>Valyuta va soliqlar</button>
-        <button class="bolim-band" data-toast="Hujjatlar va fayllar sozlamalari"><svg class="ic"><use href="#i-hujjat"/></svg>Hujjatlar va fayllar</button>
-        <button class="bolim-band" data-toast="Integratsiyalar sozlamalari"><svg class="ic"><use href="#i-ekran"/></svg>Integratsiyalar</button>
-        <button class="bolim-band" data-toast="Elektron pochta sozlamalari"><svg class="ic"><use href="#i-mail"/></svg>Elektron pochta</button>
-        <button class="bolim-band" data-toast="Ma'lumotlarni saqlash sozlamalari"><svg class="ic"><use href="#i-aktiv"/></svg>Ma'lumotlarni saqlash</button>
-        <button class="bolim-band" id="audit-jurnali-tugma"><svg class="ic"><use href="#i-qalqon"/></svg>Audit jurnali</button>
-        <a class="bolim-band" data-ruxsat-yashir href="holatlar.html"><svg class="ic"><use href="#i-ogoh"/></svg>Xatolik va holat ekranlari</a>
-      </div>
-
-      <!-- Parametrlar -->
-      <div class="karta param-karta">
-        <h3>Tizim parametrlari</h3>
-        <div class="sub">Tizimning asosiy ishlash parametrlarini sozlang.</div>
-
-        <form id="param-forma" style="margin-top:8px">
-          <div class="param-qator">
-            <div><div class="nomi">Tizim nomi</div><div class="izoh">Tizimda ko'rsatiladigan nom.</div></div>
-            <div class="kirish"><input value="Ta'minot aktivlari nazorat tizimi"></div>
-          </div>
-          <div class="param-qator">
-            <div><div class="nomi">Tizim tili</div><div class="izoh">Asosiy interfeys tili.</div></div>
-            <button type="button" class="tanlov" data-variantlar='["O&#39;zbek tili","Русский язык","English"]'><span class="t-yorliq">O'zbek tili</span><svg class="ic"><use href="#i-past"/></svg></button>
-          </div>
-          <div class="param-qator">
-            <div><div class="nomi">Vaqt zonasi</div><div class="izoh">Hisobotlar va vaqt ko'rsatkichlari uchun.</div></div>
-            <button type="button" class="tanlov" data-variantlar='["Asia/Tashkent (UTC +05:00)","Asia/Samarkand (UTC +05:00)","UTC"]'><span class="t-yorliq">Asia/Tashkent (UTC +05:00)</span><svg class="ic"><use href="#i-past"/></svg></button>
-          </div>
-          <div class="param-qator">
-            <div><div class="nomi">Avtomatik zaxira nusxa</div><div class="izoh">Ma'lumotlar har kuni avtomatik zaxiralanadi.</div></div>
-            <label class="ulagich"><input type="checkbox" checked data-nom="Avtomatik zaxira nusxa"><span class="yoq"></span></label>
-          </div>
-          <div class="param-qator">
-            <div><div class="nomi">Faol sessiyalarni kuzatish</div><div class="izoh">Foydalanuvchi sessiyalarini nazorat qilishni yoqish.</div></div>
-            <label class="ulagich"><input type="checkbox" checked data-nom="Sessiyalarni kuzatish"><span class="yoq"></span></label>
-          </div>
-          <div class="param-qator">
-            <div><div class="nomi">Tizim bildirishnomalari</div><div class="izoh">Muhim tizim hodisalari haqida xabar berish.</div></div>
-            <label class="ulagich"><input type="checkbox" checked data-nom="Tizim bildirishnomalari"><span class="yoq"></span></label>
-          </div>
-          <div class="param-qator">
-            <div><div class="nomi">Ikki bosqichli autentifikatsiya</div><div class="izoh">Tizimga kirishda SMS orqali tasdiqlash kodini talab qilish.</div></div>
-            <label class="ulagich"><input type="checkbox" data-nom="Ikki bosqichli autentifikatsiya"><span class="yoq"></span></label>
-          </div>
-          <div class="param-qator">
-            <div><div class="nomi">Hisobotlar formati</div><div class="izoh">Hisobotlar eksporti formati.</div></div>
-            <button type="button" class="tanlov" data-variantlar='["PDF","XLSX","DOCX"]'><span class="t-yorliq">PDF</span><svg class="ic"><use href="#i-past"/></svg></button>
-          </div>
-          <div class="param-qator">
-            <div><div class="nomi">Elementlar sahifadagi soni</div><div class="izoh">Jadvallarda sahifada ko'rsatiladigan elementlar soni.</div></div>
-            <button type="button" class="tanlov" data-variantlar='["10","25","50","100"]'><span class="t-yorliq">25</span><svg class="ic"><use href="#i-past"/></svg></button>
-          </div>
-          <div class="saqlash-qator">
-            <button type="submit" class="tugma tugma-asos"><svg class="ic"><use href="#i-belgi-doira"/></svg>Saqlash</button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Tizim holati -->
-      <aside class="karta">
-        <div class="holat-bosh">
-          <h3>Tizim holati</h3>
-          <span class="chip chip-asos"><span class="nuqta"></span>Barqaror</span>
-        </div>
-        <div class="server-rasm"><img src="assets/server_3d.webp" alt="Server holati illyustratsiyasi"></div>
-        <div class="th-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Tizim versiyasi</span><b>v2.4.1</b></div>
-        <div class="th-qator"><svg class="ic"><use href="#i-vazifa"/></svg><span class="yorliq">Oxirgi zaxira nusxa</span><b>24-avg, 04:15</b></div>
-        <div class="th-qator"><svg class="ic"><use href="#i-aktiv"/></svg><span class="yorliq">Ma'lumotlar bazasi</span><b>PostgreSQL 15.4</b></div>
-        <div class="th-qator"><svg class="ic"><use href="#i-ekran"/></svg><span class="yorliq">Server holati</span><b><span class="nuqta"></span>Ishlayapti</b></div>
-        <div class="th-qator" style="display:block">
-          <div style="display:flex;align-items:center;gap:11px">
-            <svg class="ic"><use href="#i-hujjat"/></svg><span class="yorliq">Disk foydalanish</span><b style="margin-left:auto">42% (213 GB / 512 GB)</b>
-          </div>
-          <div class="disk-iz"><span></span></div>
-        </div>
-        <div class="th-qator">
-          <svg class="ic"><use href="#i-foyd"/></svg><span class="yorliq">Faol foydalanuvchilar</span>
-          <b style="display:flex;align-items:center;gap:10px">18
-            <svg width="72" height="22" viewBox="0 0 72 22" aria-hidden="true"><polyline points="0,14 9,12 18,15 27,10 36,13 45,8 54,12 63,7 72,10" fill="none" stroke="#4F46E5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#depth-sm)"/></svg>
-          </b>
-        </div>
-        <div class="th-qator"><svg class="ic"><use href="#i-soat"/></svg><span class="yorliq">Tizim ishlash vaqti</span><b>23 kun, 14 soat</b></div>
-        <button class="diagnostika-tugma" id="diagnostika">
-          <svg class="ic"><use href="#i-monitor"/></svg>Tizim diagnostikasi
-          <svg class="ic strelka"><use href="#i-ong"/></svg>
-        </button>
-      </aside>
-    </div>
-  </main>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Sozlamalar</span></div>
+    <div class="hs-qator"><h1>Sozlamalar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html" class="faol">Profil</a><a href="sozlama-xavfsizlik.html">Xavfsizlik</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="malumotnomalar.html">Ma'lumotnomalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="integratsiyalar.html">Integratsiyalar</a></nav>
+  <section class="karta" style="max-width:680px"><div class="karta-bosh"><h2>Shaxsiy profil</h2></div>
+  <form id="pr-forma" class="forma-tor">
+    <div class="maydon"><label class="maydon-yorliq">F.I.Sh.</label>
+      <div class="kirish"><input name="ism" id="pr-ism"></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Lavozim</label>
+      <div class="kirish"><input name="rol" id="pr-rol" readonly></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Filial</label>
+      <div class="kirish"><input name="filial" id="pr-filial" readonly></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Telefon</label>
+      <div class="kirish"><input name="tel" id="pr-tel" placeholder="+998 __ ___ __ __"></div></div>
+    <div class="maydon keng"><label class="maydon-yorliq">Email</label>
+      <div class="kirish"><input name="email" id="pr-email" placeholder="ism.familiya@mkbank.uz"></div></div>
+    <div class="keng" style="display:flex;justify-content:flex-end">
+      <button class="tugma tugma-asosiy" type="submit">Profilni saqlash</button></div>
+  </form></section>
+</main>
 </div>
 </div>
-
-<script src="malumot.js?v=26082605"></script>
-<script src="tarjima.js?v=26082605"></script>
-<script src="mkb.js?v=26082605"></script>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
 <script>
-document.addEventListener("DOMContentLoaded", ()=>{
-
-document.querySelectorAll(".bolim-band").forEach(b=>{
-  if (b.tagName === "A") return;
-  b.addEventListener("click", ()=>{
-    document.querySelectorAll(".bolim-band").forEach(x=>x.classList.remove("aktiv"));
-    b.classList.add("aktiv");
+document.addEventListener("mkb:tayyor", () => {
+  const s = MKBapi.sessiya() || {};
+  const saqlangan = JSON.parse(localStorage.getItem("mkb4-profil") || "{}");
+  document.getElementById("pr-ism").value = saqlangan.ism || s.ism || "";
+  document.getElementById("pr-rol").value = s.rol || "";
+  document.getElementById("pr-filial").value = s.filial || "";
+  document.getElementById("pr-tel").value = saqlangan.tel || "";
+  document.getElementById("pr-email").value = saqlangan.email || "";
+  document.getElementById("pr-forma").addEventListener("submit", e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target);
+    localStorage.setItem("mkb4-profil", JSON.stringify(q));
+    const sess = MKBapi.sessiya();
+    if (sess && q.ism){ sess.ism = q.ism; localStorage.setItem("mkb4-sessiya", JSON.stringify(sess)); }
+    MKB.toast("Profil saqlandi");
   });
-});
-
-document.getElementById("param-forma").addEventListener("submit", e=>{
-  e.preventDefault();
-  MKB.toast("Sozlamalar muvaffaqiyatli saqlandi", "i-belgi-doira");
-});
-document.querySelectorAll('.param-qator input[type="checkbox"]').forEach(c=>{
-  c.addEventListener("change", ()=>MKB.toast(c.dataset.nom+" "+(c.checked?"yoqildi":"o'chirildi")));
-});
-document.getElementById("diagnostika").addEventListener("click", ()=>{
-  MKB.modal("Tizim diagnostikasi",
-    `<div style="display:grid;gap:10px;margin-top:6px;font-size:14px">
-      <div style="display:flex;gap:10px;align-items:center"><span style="color:#059669">●</span> Ma'lumotlar bazasi ulanishi — 12 ms</div>
-      <div style="display:flex;gap:10px;align-items:center"><span style="color:#059669">●</span> Fayl xotirasi — normal</div>
-      <div style="display:flex;gap:10px;align-items:center"><span style="color:#059669">●</span> Navbat xizmati — 0 kutilayotgan vazifa</div>
-      <div style="display:flex;gap:10px;align-items:center"><span style="color:#F2C230">●</span> SMTP — sekin javob (420 ms)</div>
-    </div>`,
-    { okMatn:"Yopish", ok(){} });
-});
-
-/* Audit jurnali — faqat o'qish uchun; yozuvlarni o'chirish yoki tahrirlash imkoniyati yo'q */
-/* Audit jurnali — faqat administrator (API.md /audit) */
-if (MKB.rolKaliti() !== "admin"){
-  const el = document.querySelector("[data-audit-karta]") ||
-    (document.querySelector("[data-audit-sarlavha]") && document.querySelector("[data-audit-sarlavha]").closest(".karta"));
-  if (el) el.remove();
-}
-const AUDIT_ROL_QISQA = {"Administrator":"admin","Filial rahbari":"filial","Kredit menejeri":"kredit","Aktivlar nazorati mutaxassisi": "aktiv","Yurist":"yurist","Tavakkalchilik menejeri":"tavakkal"};
-const AMALLAR_JURNALI = MKB_DATA.AMALLAR_JURNALI;   /* yagona manba (Д-1) */
-function auditRoyxatChiz(qidiruv){
-  const q = (qidiruv||"").toLowerCase().trim();
-  const royxat = AMALLAR_JURNALI.filter(a=>!q || (a.vaqt+" "+a.ism+" "+a.rol+" "+a.amal+" "+a.obyekt).toLowerCase().includes(q));
-  document.getElementById("audit-royxat").innerHTML = royxat.length ? royxat.map(a=>`
-    <div class="audit-qator">
-      <div class="audit-tepa">
-        <span class="audit-vaqt">${a.vaqt}</span>
-        <span class="audit-rol ${AUDIT_ROL_QISQA[a.rol]||"sistema"}">${a.rol}</span>
-      </div>
-      <div class="audit-amal"><b>${a.ism}</b> — ${a.amal}</div>
-      <div class="audit-obyekt">${a.obyekt}</div>
-    </div>`).join("") : `<div style="padding:26px 4px;text-align:center;color:var(--matn-4);font-size:13.5px">Hech qanday yozuv topilmadi</div>`;
-}
-document.getElementById("audit-jurnali-tugma").addEventListener("click", ()=>{
-  MKB.modal("Audit jurnali",
-    `<div style="font-size:13px;color:var(--matn-3);margin-top:2px;margin-bottom:14px">Barcha yozuvlar avtomatik qayd etiladi va tahrirlab yoki o'chirib bo'lmaydi.</div>
-    <div class="kirish" style="margin-bottom:10px">
-      <svg class="ic"><use href="#i-izlash"/></svg>
-      <input type="search" id="audit-izlash" placeholder="Qidirish..." aria-label="Audit jurnalidan qidirish">
-    </div>
-    <div class="audit-royxat" id="audit-royxat"></div>`,
-    { okMatn:"Yopish", ok(){} });
-  auditRoyxatChiz();
-  document.getElementById("audit-izlash").addEventListener("input", e=>auditRoyxatChiz(e.target.value));
-});
 });
 </script>
 </body>

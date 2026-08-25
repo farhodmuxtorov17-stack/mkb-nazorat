@@ -1,62 +1,128 @@
-<!doctype html><meta charset="utf-8"><title>MKB — QA tekshiruvi</title>
-<body style="font:13px monospace;padding:12px">
-<div id="out">запуск…</div>
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>MKB — QA tekshiruvi</title>
+<style>
+body{font:13px/1.5 system-ui;margin:0;padding:20px;background:#F4F2EB;color:#191A14}
+h1{font-size:16px;margin:0 0 6px}
+#holat{font-weight:700;margin-bottom:14px}
+table{border-collapse:collapse;width:100%;background:#fff;font-size:12px}
+th,td{border:1px solid #E2E0D5;padding:5px 9px;text-align:left}
+th{background:#FAF9F3}
+.ok{color:#2F7D46;font-weight:700}
+.xato{color:#B5430F;font-weight:700}
+iframe{position:fixed;left:-3000px;top:0;width:1366px;height:900px;border:0}
+</style>
+</head>
+<body>
+<h1>Barcha ekranlar tekshiruvi</h1>
+<div id="holat">Tayyorlanmoqda…</div>
+<table id="natija"><thead>
+<tr><th>#</th><th>Fayl</th><th>Sarlavha</th><th>Qobiq</th><th>Gorizontal skroll</th><th>Matn</th><th>Holat</th></tr>
+</thead><tbody></tbody></table>
+<iframe id="ramka"></iframe>
 <script>
-const PAGES = ["../arxiv.html", "../auksion.html", "../baholash.html", "../bildirishnomalar.html", "../dala-korigi.html", "../foydalanuvchilar.html", "../aktiv-hodisalari.html", "../aktiv-monitoringi.html", "../hisobotlar-markazi.html", "../hisobotlar.html", "../holatlar.html", "../hujjatlar.html", "../index.html", "../korik-akti.html", "../korik-rejasi.html", "../korik-tarixi.html", "../korik-tayinlash.html", "../login.html", "../musodara-qabul.html", "../obyekt-tarkibi.html", "../obyekt.html", "../obyektlar.html", "../qarzdorlar.html", "../shartnomalar.html", "../sozlamalar.html", "../sugurta.html", "../tasdiqlar.html", "../tasniflash.html", "../undiruv.html", "../vazifalar.html", "../xaritalar.html", "../xato.html", "../yer-maydonlari.html"];
-const R = [];
-let i = 0;
-const out = document.getElementById('out');
+/* Sessiya oldindan o'rnatiladi — sahifalar kirishga yo'naltirmasin */
+localStorage.setItem("mkb4-sessiya", JSON.stringify({
+  token: "qa", ism: "Sinov Tekshiruvchi", rol: "Administrator", filial: "Toshkent shahar filiali"
+}));
+localStorage.setItem("mkb-til", "uz");
 
-function step(){
-  if (i >= PAGES.length){
-    window.__QA__ = R;
-    out.textContent = 'ГОТОВО ' + R.length;
-    console.log('QA_DONE', JSON.stringify(R));
+const OCHIQ = ["kirish.html", "parol-tiklash.html", "parol-yangilash.html",
+  "xato-403.html", "xato-404.html", "index.html"];
+const SAHIFALAR = [
+  "kirish.html","parol-tiklash.html","parol-yangilash.html","xato-403.html","xato-404.html",
+  "panel.html","panel-filial.html","panel-kredit.html","panel-aktiv.html","panel-yurist.html",
+  "panel-tavakkal.html","korsatkichlar.html",
+  "qarzdorlar.html","qarzdor.html","qarzdor-muloqot.html","qarzdor-tolovlar.html",
+  "shartnomalar.html","shartnoma.html?id=AK-2026/4471","muddati-otganlar.html",
+  "restrukturizatsiya.html","restrukturizatsiya-arizasi.html","muloqot-jurnali.html","portfel-segmentlar.html",
+  "obyektlar.html","obyekt.html?id=AK-2025/0934","obyekt-moliya.html?id=AK-2025/0934",
+  "obyekt-hujjatlar.html?id=AK-2025/0934","obyekt-koriklar.html?id=AK-2025/0934",
+  "obyekt-xarajatlar.html?id=AK-2025/1187","obyekt-galereya.html?id=AK-2025/0934",
+  "obyekt-3d.html?id=AK-2025/0934","obyekt-qavat.html?id=AK-2025/0934",
+  "obyekt-tarix.html?id=AK-2025/0934","obyekt-tahrir.html?id=AK-2025/0934",
+  "obyekt-pasport.html?id=AK-2025/0934",
+  "qabul-boshlash.html","qabul-hujjatlar.html","qabul-tasdiqlash.html",
+  "undiruv.html","ish.html?id=AK-2026/4471","davo-tayyorlash.html","sud-kalendar.html",
+  "sud-majlis.html?id=SM-2026/0140","qaror-kiritish.html","ijro-hujjatlari.html",
+  "ijro-nazorati.html","advokatlar.html","dalolatnomalar.html","yuridik-hisobot.html",
+  "korik-rejasi.html","korik-kalendar.html","korik-tayinlash.html",
+  "korik-otkazish.html?id=KO-2026/0412","korik-akti.html?id=KO-2026/0412",
+  "korik-akti-chop.html?id=KO-2026/0412","korik-tarixi.html","korik-kechikkan.html","korik-marshrut.html",
+  "baholash.html","baholash-buyurtma.html","baholash-hisobot-kiritish.html",
+  "baholash-hisobot.html?id=BH-2026/0110","baholovchilar.html","baholash-dinamika.html",
+  "sugurta.html","sugurta-polis.html?id=PL-2026/11842","sugurta-tugayotgan.html",
+  "sugurta-davolar.html","sugurta-yangilash.html",
+  "tasniflash.html","zaxira-hisobi.html","tasnif-dinamika.html","tasnif-tasdiqlash.html","tasnif-chop.html",
+  "savdo.html","lot.html?id=AK-2024/0286","elon-tahriri.html?id=AK-2024/0286",
+  "auksion-jadvali.html","auksion-takliflar.html","auksion-natija.html",
+  "auksion-bayonnoma.html?id=AK-2024/0286","tolov-nazorati.html",
+  "ijara.html","ijara-shartnoma.html?id=IJ-2026/0031","xaridorlar.html",
+  "xaridor.html?id=XR-011","savdo-natijalari.html",
+  "arxiv.html","arxiv-obyekt.html?id=AK-2023/0088","arxiv-yillik.html",
+  "hisobotlar.html","hisobot-portfel.html","hisobot-undiruv.html","hisobot-realizatsiya.html",
+  "hisobot-zaxira.html","hisobot-hudud.html","hisobot-filial.html","hisobot-dinamika.html",
+  "hisobot-top.html","hisobot-xarajat.html","hisobot-kpi.html","hisobot-eksport.html",
+  "xarita.html","xarita-obyektlar.html",
+  "vazifalar.html","vazifa.html","tasdiqlar.html","bildirishnomalar.html","taqvim.html","eslatmalar.html",
+  "hujjatlar.html","hujjat-shablonlar.html","hujjat-yuklash.html","hujjat-imzolash.html","hujjat.html?id=HJ-101",
+  "sozlamalar.html","sozlama-xavfsizlik.html","foydalanuvchilar.html","foydalanuvchi.html?id=U056789011",
+  "rollar.html","filiallar.html","malumotnomalar.html","amallar-tarixi.html","integratsiyalar.html",
+  "til-sozlamalari.html","tizim-haqida.html",
+];
+
+const ramka = document.getElementById("ramka");
+const tana = document.querySelector("tbody");
+const natijalar = [];
+let i = 0;
+
+function keyingi(){
+  if (i >= SAHIFALAR.length){
+    const xatolar = natijalar.filter(n => !n.ok).length;
+    document.getElementById("holat").textContent =
+      "YAKUN: " + natijalar.length + " ekran, " + xatolar + " ta muammo";
+    document.getElementById("holat").className = xatolar ? "xato" : "ok";
+    console.log("QA_YAKUN", JSON.stringify({jami: natijalar.length, xatolar,
+      muammolar: natijalar.filter(n => !n.ok)}));
     return;
   }
-  const p = PAGES[i++];
-  out.textContent = 'проверка ' + i + '/' + PAGES.length + ': ' + p;
-  const f = document.createElement('iframe');
-  f.width = 1600; f.height = 900;
-  f.style.cssText = 'position:absolute;left:-9999px;top:0;border:0';
-  f.src = p;
-  let done = false;
-  const finish = () => {
-    if (done) return; done = true;
-    let rec = {page:p};
-    try {
-      const d = f.contentDocument, w = f.contentWindow;
-      rec.title = d.title;
-      rec.badImg = [...d.querySelectorAll('img')]
-        .filter(im => im.complete && im.naturalWidth === 0)
-        .map(im => im.getAttribute('src'));
-      rec.hasNav = !!d.querySelector('aside, nav, .yon, .sidebar, [class*=yon]');
-      rec.hasTop = !!d.querySelector('header, .ustki, .topbar, [class*=ustki]');
-      rec.hScroll = d.documentElement.scrollWidth - d.documentElement.clientWidth;
-      rec.textLen = (d.body.innerText || '').length;
-      const bad = [];
-      try {
-        for (const e of w.performance.getEntriesByType('resource')){
-          const st = e.responseStatus;
-          if (st !== undefined && st !== 0 && st >= 400) bad.push(e.name.split('8777')[1] + ' ' + st);
-        }
-      } catch(_){}
-      rec.http = bad;
-      const small = [...d.querySelectorAll('button, a[href], input, select, [role=button]')]
-        .filter(el => { const r = el.getBoundingClientRect();
-          return r.width > 0 && r.height > 0 && (r.height < 32 || r.width < 32); })
-        .map(el => (el.tagName + '.' + (el.className||'').toString().split(' ')[0]));
-      rec.small = [...new Set(small)].slice(0, 8);
-      rec.smallN = small.length;
-    } catch(err){ rec.err = String(err); }
-    R.push(rec);
-    f.remove();
-    setTimeout(step, 30);
-  };
-  f.onload = () => setTimeout(finish, 700);
-  f.onerror = finish;
-  setTimeout(finish, 9000);
-  document.body.appendChild(f);
+  const sahifa = SAHIFALAR[i];
+  ramka.src = "../" + sahifa + (sahifa.includes("?") ? "&" : "?") + "qa=" + i;
+  const vaqt = setTimeout(() => tekshir(sahifa, true), 6000);
+  ramka.onload = () => { clearTimeout(vaqt); setTimeout(() => tekshir(sahifa, false), 900); };
 }
-step();
+
+function tekshir(sahifa, vaqtOtdi){
+  let n = {fayl: sahifa, sarlavha: "", qobiq: "-", skroll: "-", matn: 0, ok: false, izoh: ""};
+  try{
+    const d = ramka.contentDocument;
+    const w = ramka.contentWindow;
+    n.sarlavha = d.title.replace("MKB — ", "");
+    const ochiq = OCHIQ.some(o => sahifa.startsWith(o.split("?")[0]));
+    const qobiqBor = !!d.querySelector(".relsa .relsa-band, .kirish-sahna, .xato-sahna");
+    n.qobiq = qobiqBor ? "bor" : "YO'Q";
+    n.skroll = d.documentElement.scrollWidth > w.innerWidth + 2 ? "BOR!" : "yo'q";
+    n.matn = (d.body.innerText || "").trim().length;
+    n.ok = !vaqtOtdi && qobiqBor && n.skroll === "yo'q" && n.matn > 120;
+    if (vaqtOtdi) n.izoh = "yuklanish 6s dan oshdi";
+    else if (!qobiqBor) n.izoh = "qobiq topilmadi";
+    else if (n.skroll !== "yo'q") n.izoh = "gorizontal skroll";
+    else if (n.matn <= 120) n.izoh = "matn juda kam (" + n.matn + ")";
+  }catch(e){
+    n.izoh = "o'qib bo'lmadi: " + e.message;
+  }
+  natijalar.push(n);
+  tana.insertAdjacentHTML("beforeend",
+    "<tr><td>" + (i + 1) + "</td><td>" + n.fayl + "</td><td>" + n.sarlavha +
+    "</td><td>" + n.qobiq + "</td><td>" + n.skroll + "</td><td>" + n.matn +
+    "</td><td class='" + (n.ok ? "ok'>OK" : "xato'>" + (n.izoh || "XATO")) + "</td></tr>");
+  document.getElementById("holat").textContent = (i + 1) + " / " + SAHIFALAR.length;
+  i++;
+  keyingi();
+}
+keyingi();
 </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Filiallar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Sozlamalar</span></div>
+    <div class="hs-qator"><h1>Filiallar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="sozlama-xavfsizlik.html">Xavfsizlik</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html" class="faol">Filiallar</a><a href="malumotnomalar.html">Ma'lumotnomalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="integratsiyalar.html">Integratsiyalar</a></nav>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const NOMLAR = ["Toshkent shahar filiali", "Yunusobod filiali", "Chilonzor filiali",
+    "Samarqand filiali", "Namangan filiali", "Buxoro filiali"];
+  const qatorlar = NOMLAR.map((nom, i) => {
+    const r = yoz.filter(y => y.filial === nom);
+    return {id: i, nom, obyektlar: r.length,
+      qarz: Math.round(r.reduce((a, y) => a + MKB.sonQiymat(y.qarzSon), 0)),
+      qoplash: r.length ? Math.round(r.reduce((a, y) => a + y.qoplash, 0) / r.length) : 0,
+      hodim: 4 + (i * 3) % 9};
+  });
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta filial tarmoqda";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    ustunlar: [
+      {kalit: "nom", nom: "Filial", chiz: q => '<b>' + q.nom + '</b>'},
+      {kalit: "hodim", nom: "Mas'ul xodimlar", son: true},
+      {kalit: "obyektlar", nom: "Muammoli obyektlar", son: true},
+      {kalit: "qarz", nom: "Qoldiq qarz", son: true, chiz: q =>
+        q.qarz ? '<span class="pul">' + MKB.fmt(q.qarz) + ' mln</span>' : "—"},
+      {kalit: "qoplash", nom: "O'rtacha qoplash", son: true, chiz: q =>
+        q.qoplash ? MKB.halqa(q.qoplash, 38, 4) : "—"},
+    ],
+  });
+});
+</script>
+</body>
+</html>

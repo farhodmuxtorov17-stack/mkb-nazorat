@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Zaxira hisobi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="zaxira">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Tasnif va zaxira</span></div>
+    <div class="hs-qator"><h1>Zaxira hisobi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="tasniflash.html">Tasniflash</a><a href="zaxira-hisobi.html" class="faol">Zaxira hisobi</a><a href="tasnif-dinamika.html">Dinamika</a><a href="tasnif-tasdiqlash.html">Tasdiqlash</a></nav>
+  <div id="jadval-joy"></div>
+  <section class="karta"><div class="karta-bosh"><h2>Toifalar bo'yicha jamlanma</h2></div><div id="zx-jamlanma"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const stat = MKB_DATA.tasnifStatistikasi();
+  document.getElementById("hs-meta").textContent = "Jami zaxira: " + MKB.fmt(Math.round(MKB_DATA.jamiZaxira())) + " mln so'm";
+  MKB.jadval("jadval-joy", {
+    qatorlar: stat.map((s, i) => Object.assign({id: i}, s)),
+    ustunlar: [
+      {kalit: "nom", nom: "Toifa", chiz: s => '<span style="display:inline-flex;align-items:center;gap:8px">' +
+        '<i style="width:9px;height:9px;border-radius:99px;background:' + s.rang + '"></i><b>' + s.nom + '</b></span>'},
+      {kalit: "foizStavka", nom: "Zaxira stavkasi", son: true, chiz: s => s.foizStavka + "%"},
+      {kalit: "son", nom: "Obyektlar", son: true},
+      {kalit: "qarz", nom: "Qarz hajmi", son: true, chiz: s => '<span class="pul">' + MKB.fmt(Math.round(s.qarz)) + ' mln</span>'},
+      {kalit: "zaxira", nom: "Zaxira", son: true, chiz: s => '<span class="pul">' + MKB.fmt(Math.round(s.zaxira)) + ' mln</span>'},
+    ],
+  });
+  const jamiQ = stat.reduce((a, s) => a + s.qarz, 0), jamiZ = stat.reduce((a, s) => a + s.zaxira, 0);
+  document.getElementById("zx-jamlanma").innerHTML =
+    '<div style="display:flex;height:14px;border-radius:99px;overflow:hidden;border:1px solid var(--chiziq-2)">' +
+    stat.filter(s => s.qarz > 0).map(s =>
+      '<div style="width:' + (s.qarz / jamiQ * 100) + '%;background:' + s.rang + '" title="' + s.nom + '"></div>').join("") + '</div>' +
+    '<div style="display:flex;justify-content:space-between;margin-top:10px;font-size:12.5px;color:var(--qalam)">' +
+    '<span>Portfel: <b class="pul">' + MKB.fmt(Math.round(jamiQ)) + ' mln</b></span>' +
+    '<span>Zaxira: <b class="pul">' + MKB.fmt(Math.round(jamiZ)) + ' mln</b> (' + Math.round(jamiZ / jamiQ * 100) + '%)</span></div>';
+});
+</script>
+</body>
+</html>

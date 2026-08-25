@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Rollar matritsasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Sozlamalar</span></div>
+    <div class="hs-qator"><h1>Rollar matritsasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="sozlama-xavfsizlik.html">Xavfsizlik</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html" class="faol">Rollar</a><a href="filiallar.html">Filiallar</a><a href="malumotnomalar.html">Ma'lumotnomalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="integratsiyalar.html">Integratsiyalar</a></nav>
+  <section class="karta"><div class="karta-bosh"><h2>Rol — bo'lim matritsasi</h2><span class="soni">tizim bo'ylab amal qiladi</span></div><div class="jadval-orash"><table class="jadval" id="rollar-jadval"></table></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+  const bolimlar = BOLIMLAR.map(b => ({kalit: b.kalit, yorliq: b.yorliq})).concat([{kalit: "sozlama", yorliq: "Sozlamalar"}]);
+  const rollar = Object.keys(ROL_RUXSAT);
+  const ROL_NOMI = {admin: "Administrator", filial: "Filial rahbari", kredit: "Kredit menejeri",
+    aktiv: "Aktivlar nazorati", yurist: "Yurist", tavakkal: "Tavakkalchilik"};
+  document.getElementById("rollar-jadval").innerHTML =
+    '<thead><tr><th>Bo\'lim</th>' + rollar.map(r => '<th style="text-align:center">' + ROL_NOMI[r] + '</th>').join("") + '</tr></thead><tbody>' +
+    bolimlar.map(b => '<tr><td><b>' + b.yorliq + '</b></td>' +
+      rollar.map(r => {
+        const bor = !ROL_RUXSAT[r] || ROL_RUXSAT[r].includes(b.kalit);
+        return '<td style="text-align:center">' + (bor
+          ? '<span style="display:inline-grid;place-items:center;width:22px;height:22px;border-radius:99px;background:var(--brend-fon);color:var(--brend-quyuq)">' + ik("tasdiq") + '</span>'
+          : '<span style="color:var(--xira)">—</span>') + '</td>';
+      }).join("") + '</tr>').join("") + '</tbody>';
+});
+</script>
+</body>
+</html>

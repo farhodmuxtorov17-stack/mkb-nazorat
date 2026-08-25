@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Xavfsizlik</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Sozlamalar</span></div>
+    <div class="hs-qator"><h1>Xavfsizlik</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="sozlama-xavfsizlik.html" class="faol">Xavfsizlik</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="malumotnomalar.html">Ma'lumotnomalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="integratsiyalar.html">Integratsiyalar</a></nav>
+  <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px" class="panel-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Parolni almashtirish</h2></div>
+    <form id="xv-forma" style="display:flex;flex-direction:column;gap:14px">
+      <div class="maydon"><label class="maydon-yorliq">Joriy parol <b>*</b></label>
+        <div class="kirish"><svg class="ic"><use href="#i-qulf"/></svg><input name="joriy" type="password"></div></div>
+      <div class="maydon"><label class="maydon-yorliq">Yangi parol <b>*</b></label>
+        <div class="kirish"><svg class="ic"><use href="#i-qulf"/></svg><input name="yangi" type="password"></div>
+        <span class="maydon-izoh">Kamida 8 belgi, katta-kichik harf va raqam</span></div>
+      <div class="maydon"><label class="maydon-yorliq">Takrorlang <b>*</b></label>
+        <div class="kirish"><svg class="ic"><use href="#i-qulf"/></svg><input name="takror" type="password"></div>
+        <span class="maydon-izoh xato" id="xv-xato" hidden>Parollar mos emas yoki talabga javob bermaydi</span></div>
+      <button class="tugma tugma-asosiy" type="submit">Parolni yangilash</button>
+    </form></section>
+    <section class="karta"><div class="karta-bosh"><h2>Faol sessiyalar</h2></div><div id="xv-sessiyalar"></div></section>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+  document.getElementById("xv-forma").addEventListener("submit", e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target, ["joriy", "yangi", "takror"]);
+    if (!q) return;
+    const kuchli = q.yangi.length >= 8 && /[A-Z]/.test(q.yangi) && /[a-z]/.test(q.yangi) && /\d/.test(q.yangi);
+    const xato = document.getElementById("xv-xato");
+    if (!kuchli || q.yangi !== q.takror){ xato.hidden = false; return; }
+    xato.hidden = true;
+    e.target.reset();
+    MKB.toast("Parol muvaffaqiyatli yangilandi");
+  });
+  const s = MKBapi.sessiya() || {};
+  document.getElementById("xv-sessiyalar").innerHTML = [
+    {qurilma: "Ish kompyuteri — Windows / Chrome", vaqt: "Hozir faol", joriy: true},
+    {qurilma: "Mobil qurilma — Android", vaqt: "Kecha, 18:42", joriy: false},
+  ].map(v =>
+    '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--chiziq-2)">' +
+      '<span style="width:36px;height:36px;border-radius:10px;background:var(--varaq-2);display:grid;place-items:center;color:var(--qalam)">' + ik("qulf") + '</span>' +
+      '<span style="flex:1"><b style="display:block;font-size:12.5px">' + v.qurilma + '</b>' +
+      '<span style="font-size:11.5px;color:var(--iz)">' + v.vaqt + '</span></span>' +
+      (v.joriy ? '<span class="chip chip-brend">joriy</span>'
+        : '<button type="button" class="tugma tugma-kichik tugma-oq" data-toast="Sessiya yakunlandi">Yakunlash</button>') +
+    '</div>').join("");
+});
+</script>
+</body>
+</html>

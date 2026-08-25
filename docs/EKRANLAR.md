@@ -1,6 +1,6 @@
 # Ekranlar reyestri
 
-Jami: **59 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
+Jami: **127 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 
 ## Kirish va xatolar (6)
 
@@ -90,3 +90,121 @@ Jami: **59 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | `korik-otkazish.html` | Ko'rik o'tkazish | Akt to'ldirish (nazorat ro'yxati) |
 | `korik-akti.html` | Ko'rik dalolatnomasi | Akt varaqasi |
 | `korik-akti-chop.html` | Dalolatnoma (chop) | Rasmiy chop shakli KN-02 |
+
+## Baholash (6)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `baholash.html` | Baholash reyestri | Hisobotlar + KPI |
+| `baholash-buyurtma.html` | Baholash buyurtmasi | Buyurtma formasi |
+| `baholash-hisobot-kiritish.html` | Hisobot kiritish | Natija kiritish formasi |
+| `baholash-hisobot.html` | Baholash hisoboti | Hisobot varaqasi |
+| `baholovchilar.html` | Baholovchi tashkilotlar | Akkreditatsiya reyestri |
+| `baholash-dinamika.html` | Qiymat dinamikasi | Obyekt kesimida grafik |
+
+## Sug'urta (5)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `sugurta.html` | Sug'urta polislari | Polislar + KPI |
+| `sugurta-polis.html` | Polis varaqasi | Polis tafsiloti |
+| `sugurta-tugayotgan.html` | Tugayotgan polislar | Yangilash navbati |
+| `sugurta-davolar.html` | Sug'urta da'volari | Hodisalar bo'yicha da'volar |
+| `sugurta-yangilash.html` | Polisni yangilash | Yangilash formasi |
+
+## Tasnif va zaxira (5)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `tasniflash.html` | Aktivlar tasnifi | Interaktiv qayta tasniflash |
+| `zaxira-hisobi.html` | Zaxira hisobi | Toifalar jamlanmasi |
+| `tasnif-dinamika.html` | Zaxira dinamikasi | Choraklar kesimi |
+| `tasnif-tasdiqlash.html` | Tasdiqlash navbati | So'rovlarni tasdiqlash |
+| `tasnif-chop.html` | Tasnif jadvali (chop) | Rasmiy chop shakli TZ-03 |
+
+## Realizatsiya (13)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `savdo.html` | Savdo doskasi | Auksion bosqichlari doskasi |
+| `lot.html` | Lot kartochkasi | Lot + takliflar boshqaruvi |
+| `elon-tahriri.html` | Savdo e'loni | E'lon formasi |
+| `auksion-jadvali.html` | Auksion jadvali | Savdo sanalari |
+| `auksion-takliflar.html` | Takliflar reyestri | Barcha takliflar |
+| `auksion-natija.html` | Auksion natijasi | G'olibni rasmiylashtirish |
+| `auksion-bayonnoma.html` | Auksion bayonnomasi | Rasmiy chop shakli AB-04 |
+| `tolov-nazorati.html` | To'lov nazorati | Savdo to'lovlari kuzatuvi |
+| `ijara.html` | Ijara shartnomalari | Ijara reyestri + KPI |
+| `ijara-shartnoma.html` | Ijara shartnomasi | Shartnoma + to'lov qabul |
+| `xaridorlar.html` | Xaridorlar reyestri | Ishtirokchilar bazasi |
+| `xaridor.html` | Xaridor kartochkasi | Ishtirok tarixi |
+| `savdo-natijalari.html` | Savdo natijalari | Tushum tahlili |
+
+## Arxiv (3)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `arxiv.html` | Realizatsiya arxivi | Yakunlangan ishlar |
+| `arxiv-obyekt.html` | Arxiv yozuvi | Yozuv tafsiloti |
+| `arxiv-yillik.html` | Yillik jamlanma | Yillar kesimi |
+
+## Hisobotlar (12)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `hisobotlar.html` | Hisobotlar markazi | Tayyor hisobotlar + shakllantirish |
+| `hisobot-portfel.html` | Portfel hisoboti | Holat va tur kesimlari |
+| `hisobot-undiruv.html` | Undiruv hisoboti | Oylik dinamika |
+| `hisobot-realizatsiya.html` | Realizatsiya hisoboti | Savdo natijalari |
+| `hisobot-zaxira.html` | Zaxira hisoboti | Toifalar kesimi |
+| `hisobot-hudud.html` | Hududiy kesim | Hududlar taqsimoti |
+| `hisobot-filial.html` | Filial kesimi | Filiallar jadvali |
+| `hisobot-dinamika.html` | Dinamika | Oylik va yillik seriyalar |
+| `hisobot-top.html` | Yirik yozuvlar | Top reyting |
+| `hisobot-xarajat.html` | Xarajatlar hisoboti | Saqlash xarajatlari |
+| `hisobot-kpi.html` | Samaradorlik (KPI) | Asosiy ko'rsatkichlar |
+| `hisobot-eksport.html` | Ma'lumot eksporti | Eksport ustasi + jurnal |
+
+## Hududiy xarita (2)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `xarita.html` | Hududiy xarita | Leaflet + hudud paneli |
+| `xarita-obyektlar.html` | Obyektlar xaritasi | Reyestr nuqtalari + qoplash rangi |
+
+## Vazifalar (6)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `vazifalar.html` | Vazifalar | Ro'yxat + belgilash + qo'shish |
+| `tasdiqlar.html` | Tasdiqlar | Tasdiqlash navbati |
+| `bildirishnomalar.html` | Bildirishnomalar | O'qish holati bilan oqim |
+| `taqvim.html` | Umumiy taqvim | Ko'rik + sud tadbirlari |
+| `eslatmalar.html` | Eslatma sozlamalari | Kanal va muddatlar |
+| `vazifa.html` | Vazifa kartochkasi | Bitta vazifa tafsiloti |
+
+## Hujjatlar (5)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `hujjatlar.html` | Hujjatlar markazi | Ombor jadvali |
+| `hujjat-shablonlar.html` | Rasmiy shakllar | Chop shakllari katalogi |
+| `hujjat-yuklash.html` | Hujjat yuklash | Omborga joylash formasi |
+| `hujjat-imzolash.html` | Imzolash navbati | Tasdiqlanmagan hujjatlar |
+| `hujjat.html` | Hujjat varaqasi | Hujjat tafsiloti + imzolash |
+
+## Sozlamalar (11)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `sozlamalar.html` | Sozlamalar | Profil formasi |
+| `sozlama-xavfsizlik.html` | Xavfsizlik | Parol + sessiyalar |
+| `foydalanuvchilar.html` | Foydalanuvchilar | Hisoblar boshqaruvi |
+| `foydalanuvchi.html` | Foydalanuvchi kartochkasi | Hisob + rol almashtirish |
+| `rollar.html` | Rollar matritsasi | Rol-bo'lim jadvali |
+| `filiallar.html` | Filiallar | Tarmoq ko'rsatkichlari |
+| `malumotnomalar.html` | Ma'lumotnomalar | Tizim lug'atlari |
+| `amallar-tarixi.html` | Amallar tarixi | Kim, qachon, nima qildi |
+| `integratsiyalar.html` | Integratsiyalar | Tashqi tizimlar |
+| `til-sozlamalari.html` | Til sozlamalari | UZ/RU tanlovi |
+| `tizim-haqida.html` | Tizim haqida | Versiya va litsenziyalar |

@@ -125,6 +125,34 @@
       holat: i % 3 === 0 ? "korib chiqilmoqda" : i % 3 === 1 ? "kelishilgan" : "rad etilgan",
     }));
 
+  /* ---------- Id berish (id'siz kolleksiyalar uchun) ---------- */
+  (D.ARXIV || []).forEach(a => { if (!a.id) a.id = a.kod; });
+  (D.BAHOLASHLAR || []).forEach((b, i) => { if (!b.id) b.id = "BH-2026/0" + (110 + i * 3); });
+  (D.SUGURTALAR || []).forEach(s => { if (!s.id) s.id = s.polis; });
+  (D.HODISALAR || []).forEach(h => { if (!h.id) h.id = h.kod; });
+  (D.HUJJATLAR || []).forEach((h, i) => { if (!h.id) h.id = "HJ-" + String(101 + i); });
+  (D.TASDIQLAR || []).forEach((t, i) => { if (!t.id) t.id = "TS-" + String(41 + i); });
+  (D.MENING_VAZIFALARIM || []).forEach((v, i) => { if (!v.id) v.id = "VZ-" + String(71 + i); });
+  (D.BILDIRISHLAR || []).forEach((b, i) => { if (!b.id) b.id = "BL-" + String(21 + i); });
+
+  /* ---------- Sug'urta da'volari (jiddiy hodisalardan) ---------- */
+  D.SUGURTA_DAVOLARI = (D.HODISALAR || [])
+    .filter(h => h.jiddiylik === "yuqori")
+    .slice(0, 4)
+    .map((h, i) => {
+      const y = D.OBYEKT_INDEKS[h.obyektId] || {};
+      const polis = (D.SUGURTALAR || []).find(s => s.obyektId === h.obyektId);
+      return {
+        id: "SD-2026/00" + (12 + i * 5),
+        obyektId: h.obyektId, obyekt: y.qisqa || h.obyektId,
+        polis: polis ? polis.polis : "—",
+        kompaniya: polis ? polis.kompaniya : "O'zbekinvest",
+        hodisa: h.hodisa, sana: h.vaqt,
+        summa: Math.round((y.baho || 300) * (4 + i)) / 100,
+        holat: i === 0 ? "korib chiqilmoqda" : i % 2 ? "tolangan" : "topshirilgan",
+      };
+    });
+
   /* ---------- Taxalluslar (yagona nom bilan murojaat uchun) ---------- */
   D.POLISLAR = D.SUGURTALAR;
   D.VAZIFALAR = D.MENING_VAZIFALARIM;

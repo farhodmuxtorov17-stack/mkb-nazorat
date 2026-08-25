@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Integratsiyalar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Sozlamalar</span></div>
+    <div class="hs-qator"><h1>Integratsiyalar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="sozlama-xavfsizlik.html">Xavfsizlik</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="malumotnomalar.html">Ma'lumotnomalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="integratsiyalar.html" class="faol">Integratsiyalar</a></nav>
+  <div id="in-panjara" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+  const TIZIMLAR = [
+    ["bank", "Bank ABS", "Kredit shartnomalari va qoldiqlar sinxronizatsiyasi", "ulangan", "har 30 daqiqada"],
+    ["gavel", "E-auksion portali", "Lotlar e'loni va takliflar oqimi", "ulangan", "real vaqtda"],
+    ["manzil", "Kadastr xizmati", "Obyekt huquqiy holati tekshiruvi", "ulangan", "so'rov bo'yicha"],
+    ["sud", "Sud portali", "Ish holati va majlislar jadvali", "sozlanmoqda", "kunlik"],
+    ["sugurta", "Sug'urta shlyuzi", "Polislar va da'volar almashinuvi", "ulangan", "kunlik"],
+    ["xat", "SMS/Email markazi", "Qarzdorlarga ogohlantirish yuborish", "ulangan", "navbat bo'yicha"],
+  ];
+  const saqlangan = JSON.parse(localStorage.getItem("mkb4-integratsiya") || "{}");
+  document.getElementById("hs-meta").textContent = TIZIMLAR.length + " ta tashqi tizim";
+  document.getElementById("in-panjara").innerHTML = TIZIMLAR.map(([ikonka, nom, izoh, holat, chastota], i) => {
+    const yoq = saqlangan[nom] === false;
+    return '<section class="karta"><div class="karta-bosh" style="margin-bottom:8px">' +
+      '<span style="width:40px;height:40px;border-radius:11px;background:var(--varaq-2);display:grid;place-items:center;color:var(--qalam)">' + ik(ikonka) + '</span>' +
+      '<div><h2 style="font-size:14.5px">' + nom + '</h2>' +
+      '<span style="font-size:11px;color:var(--iz)">' + chastota + '</span></div>' +
+      '<span class="chip ' + (yoq ? '' : holat === "ulangan" ? 'chip-yashil' : 'chip-sariq') + '" style="margin-left:auto">' +
+      (yoq ? "o'chirilgan" : holat) + '</span></div>' +
+      '<p style="font-size:12.5px;color:var(--iz);line-height:1.55;margin-bottom:12px">' + izoh + '</p>' +
+      '<button type="button" class="tugma tugma-kichik ' + (yoq ? 'tugma-asosiy' : 'tugma-oq') + '" data-nom="' + nom + '">' +
+      (yoq ? "Yoqish" : "O'chirish") + '</button></section>';
+  }).join("");
+  document.getElementById("in-panjara").addEventListener("click", e => {
+    const b = e.target.closest("[data-nom]");
+    if (!b) return;
+    const q = JSON.parse(localStorage.getItem("mkb4-integratsiya") || "{}");
+    q[b.dataset.nom] = q[b.dataset.nom] === false;
+    localStorage.setItem("mkb4-integratsiya", JSON.stringify(q));
+    MKB.toast(q[b.dataset.nom] === false ? "Integratsiya o'chirildi" : "Integratsiya yoqildi");
+    location.reload();
+  });
+});
+</script>
+</body>
+</html>

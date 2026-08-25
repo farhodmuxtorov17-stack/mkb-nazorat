@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Vazifa kartochkasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="vazifa">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="vazifalar.html">Vazifalar</a><span class="ajratgich">/</span><span>Vazifa</span></div>
+    <div class="hs-qator"><h1>Vazifa kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:640px"><div class="karta-bosh"><h2 id="vk-nom">—</h2></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-vazifa"/></svg>Bo'lim</dt>
+  <dd id="vk-tur">—</dd>
+  <dt><svg class="ic"><use href="#i-bogliq"/></svg>Bog'liq hujjat</dt>
+  <dd><span id="vk-kod" class="kod-mono">—</span></dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Muddat</dt>
+  <dd id="vk-muddat">—</dd>
+  <dt><svg class="ic"><use href="#i-xavf"/></svg>Muhimlik</dt>
+  <dd id="vk-muhimlik">—</dd>
+  <dt><svg class="ic"><use href="#i-tasdiq"/></svg>Holat</dt>
+  <dd id="vk-holat">—</dd>
+</dl><div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px"><button type="button" class="tugma tugma-asosiy" id="vk-bajar"><svg class="ic"><use href="#i-tasdiq"/></svg>Bajarildi</button></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const r = await MKBapi.royxat("MENING_VAZIFALARIM");
+  const v = r.find(x => x.id === id) || r[0];
+  if (!v){ location.replace("vazifalar.html"); return; }
+  document.getElementById("hs-meta").textContent = v.id;
+  document.getElementById("vk-nom").textContent = v.nom;
+  document.getElementById("vk-tur").textContent = v.tur;
+  document.getElementById("vk-kod").textContent = v.kod || "—";
+  document.getElementById("vk-muddat").textContent = (v.bugunmi ? "Bugun, " : "") + (v.vaqt || v.sana || "—");
+  document.getElementById("vk-muhimlik").innerHTML = v.muhimlik === "yuqori"
+    ? '<span class="chip chip-xavf">Shoshilinch</span>' : '<span class="chip">Odatiy</span>';
+  document.getElementById("vk-holat").innerHTML = v.bajarildi
+    ? '<span class="chip chip-yashil">Bajarilgan</span>' : '<span class="chip chip-sariq">Jarayonda</span>';
+  document.getElementById("vk-bajar").addEventListener("click", async () => {
+    await MKBapi.yangilash("MENING_VAZIFALARIM", v.id, {bajarildi: true});
+    MKB.toast("Vazifa yakunlandi");
+    setTimeout(() => location.href = "vazifalar.html", 600);
+  });
+});
+</script>
+</body>
+</html>

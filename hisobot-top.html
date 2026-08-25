@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Yirik yozuvlar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="hisobot">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>Yirik yozuvlar</span></div>
+    <div class="hs-qator"><h1>Yirik yozuvlar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const qatorlar = yoz.map(y => ({id: y.id, obyekt: y.mulk.qisqa, qarzN: MKB.sonQiymat(y.qarzSon),
+    qarzMatn: y.qarzMatn, bahoMatn: y.bahoMatn, qoplash: y.qoplash, kunlar: y.qarz.kunlar}));
+  document.getElementById("hs-meta").textContent = "Eng yirik va eng xavfli yozuvlar";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    ustunlar: [
+      {kalit: "obyekt", nom: "Obyekt"},
+      {kalit: "qarzN", nom: "Qarz", son: true, chiz: q => '<span class="pul">' + q.qarzMatn + '</span>'},
+      {kalit: "bahoMatn", nom: "Baho", son: true, saralash: false, chiz: q => '<span class="pul">' + q.bahoMatn + '</span>'},
+      {kalit: "kunlar", nom: "Kechikish", son: true, chiz: q => q.kunlar + " kun"},
+      {kalit: "qoplash", nom: "Qoplash", son: true, chiz: q => MKB.halqa(q.qoplash, 38, 4)},
+    ],
+    saralash: "qarzN",
+    bosilganda: q => location.href = "obyekt.html?id=" + encodeURIComponent(q.id),
+  });
+  const th = document.querySelector('th[data-kalit="qarzN"]');
+  if (th) th.click();
+});
+</script>
+</body>
+</html>

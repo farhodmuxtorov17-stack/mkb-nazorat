@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Lot kartochkasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="savdo">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="savdo.html">Realizatsiya</a><span class="ajratgich">/</span><span>Lot</span></div>
+    <div class="hs-qator"><h1>Lot kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="foto-shapka"><img id="l-rasm" src="" alt=""><div><div style="flex:1;min-width:220px"><div style="display:flex;gap:8px;margin-bottom:8px" id="l-chiplar"></div><h2 id="l-nom">—</h2><div class="fs-meta"><span class="kod-mono" id="l-id" style="color:rgba(255,255,255,.85)">—</span> · <span id="l-hudud">—</span></div></div><div style="text-align:right"><span style="font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.6)">Boshlang'ich narx</span><b style="display:block;font:700 26px var(--shrift-displey)" id="l-baho">—</b></div></div></section>
+  <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px" class="panel-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Takliflar</h2><span class="soni" id="l-taklif-soni"></span><button type="button" class="tugma tugma-kichik tugma-asosiy" id="l-taklif-qoshish" style="margin-left:auto"><svg class="ic"><use href="#i-qoshish"/></svg>Taklif kiritish</button></div><div id="l-takliflar"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>Lot ma'lumoti</h2></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-kub"/></svg>Turi</dt>
+  <dd id="l-tur">—</dd>
+  <dt><svg class="ic"><use href="#i-hujjat"/></svg>Ish raqami</dt>
+  <dd><span id="l-ish" class="kod-mono">—</span></dd>
+  <dt><svg class="ic"><use href="#i-muhr"/></svg>Ijro hujjati</dt>
+  <dd><span id="l-ijro" class="kod-mono">—</span></dd>
+  <dt><svg class="ic"><use href="#i-korik"/></svg>O'tkazilgan ko'riklar</dt>
+  <dd id="l-korik">—</dd>
+  <dt><svg class="ic"><use href="#i-gavel"/></svg>Bosqich</dt>
+  <dd id="l-bosqich">—</dd>
+</dl><div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><a class="tugma tugma-kichik tugma-oq" id="l-elon" href="#"><svg class="ic"><use href="#i-tahrir"/></svg>E'lon tahriri</a><a class="tugma tugma-kichik tugma-oq" id="l-natija" href="#"><svg class="ic"><use href="#i-muhr"/></svg>Natija kiritish</a></div></section>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const l = id ? await MKBapi.bitta("SOTUV", id) : null;
+  if (!l){ location.replace("xato-404.html"); return; }
+  document.getElementById("hs-meta").textContent = l.id;
+  document.getElementById("l-rasm").src = l.rasm;
+  document.getElementById("l-nom").textContent = l.nom;
+  document.getElementById("l-id").textContent = l.id;
+  document.getElementById("l-hudud").textContent = l.hududToliq || l.hudud;
+  document.getElementById("l-baho").textContent = MKB.fmt(l.baho) + " mln";
+  const b = MKB_DATA.AUKSION_BOSQICH.find(v => v[0] === l.bosqich);
+  document.getElementById("l-chiplar").innerHTML =
+    '<span class="chip chip-brend">' + (b ? b[1] : l.bosqich) + '</span>' +
+    '<span class="chip chip-siyoh">' + l.tur + '</span>';
+  document.getElementById("l-tur").textContent = l.tur;
+  document.getElementById("l-ish").textContent = l.ish || "—";
+  document.getElementById("l-ijro").textContent = l.ijro || "—";
+  document.getElementById("l-korik").textContent = (l.korik || 0) + " ta";
+  document.getElementById("l-bosqich").textContent = b ? b[1] : l.bosqich;
+  document.getElementById("l-elon").href = "elon-tahriri.html?id=" + encodeURIComponent(l.id);
+  document.getElementById("l-natija").href = "auksion-natija.html?id=" + encodeURIComponent(l.id);
+  async function takliflarChiz(){
+    const t = (await MKBapi.royxat("TAKLIFLAR")).filter(v => v.obyektId === l.id)
+      .sort((a, b2) => MKB.sonQiymat(b2.summa) - MKB.sonQiymat(a.summa));
+    document.getElementById("l-taklif-soni").textContent = t.length + " ta";
+    document.getElementById("l-takliflar").innerHTML = t.length ? t.map((v, i) =>
+      '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--chiziq-2)">' +
+        '<span style="width:26px;height:26px;border-radius:99px;background:' + (i === 0 ? 'var(--brend)' : 'var(--kirish-fon)') +
+        ';color:var(--siyoh);display:grid;place-items:center;font:700 11.5px var(--shrift);flex:none">' + (i + 1) + '</span>' +
+        '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px">' + v.kim + '</b>' +
+        '<span style="font-size:11px;color:var(--iz)">' + v.turi + ' · ' + v.sana + '</span></span>' +
+        '<b class="pul">' + MKB.fmt(v.summa) + ' mln</b>' +
+        (i === 0 ? '<span class="chip chip-brend">yetakchi</span>' : '') + '</div>').join("")
+      : '<div class="bosh-holat">' + ik("gavel") + '<b>Takliflar hali yo\'q</b><span>E\'lon kanallarini kengaytiring</span></div>';
+  }
+  takliflarChiz();
+  document.getElementById("l-taklif-qoshish").addEventListener("click", () => {
+    MKB.modal("Yangi taklif — " + l.id,
+      '<div class="forma-tor">' +
+      '<div class="maydon keng"><label class="maydon-yorliq">Ishtirokchi <b>*</b></label>' +
+      '<div class="kirish"><input name="kim" placeholder="F.I.Sh. yoki tashkilot"></div></div>' +
+      '<div class="maydon"><label class="maydon-yorliq">Turi</label>' +
+      '<div class="kirish"><select name="turi"><option>Jismoniy shaxs</option><option>Yuridik shaxs</option><option>B2B mijoz</option></select></div></div>' +
+      '<div class="maydon"><label class="maydon-yorliq">Summa, mln <b>*</b></label>' +
+      '<div class="kirish"><input name="summa" type="number" min="1" placeholder="' + l.baho + '"></div></div></div>',
+      {okMatn: "Qo'shish", ok(modal){
+        const q = MKB.forma(modal, ["kim", "summa"]);
+        if (!q) return false;
+        MKBapi.yangi("TAKLIFLAR", {id: "TK-" + Date.now().toString(36).toUpperCase(),
+          obyektId: l.id, obyekt: l.nom, kim: q.kim, turi: q.turi || "Jismoniy shaxs",
+          summa: +q.summa, sana: new Date().toLocaleDateString("uz"), holat: "korib chiqilmoqda"})
+          .then(takliflarChiz);
+        MKB.toast("Taklif ro'yxatga olindi");
+      }});
+  });
+});
+</script>
+</body>
+</html>

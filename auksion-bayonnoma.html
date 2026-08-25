@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Auksion bayonnomasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="savdo">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="savdo.html">Realizatsiya</a><span class="ajratgich">/</span><span>Bayonnoma</span></div>
+    <div class="hs-qator"><h1>Auksion bayonnomasi</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar"><button type="button" class="tugma tugma-asosiy" onclick="window.print()"><svg class="ic"><use href="#i-chop"/></svg>Chop etish</button></div></div>
+  </div>
+  <section class="karta">
+    <div style="display:flex;align-items:flex-start;gap:16px;border-bottom:2px solid var(--siyoh);padding-bottom:14px;margin-bottom:16px">
+      <div style="flex:1"><b style="font:700 16px var(--shrift-displey)">«Mikrokreditbank» ATB</b>
+        <div style="font-size:11.5px;color:var(--iz)">Auksion komissiyasi</div></div>
+      <div style="text-align:right;font-size:11.5px;color:var(--iz)">Shakl AB-04<br><span id="ab-sana"></span></div></div>
+    <h2 style="font:700 19px var(--shrift-displey);text-align:center;margin-bottom:16px">AUKSION BAYONNOMASI</h2>
+    <div id="ab-dl"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:34px;font-size:12.5px">
+      <div>Komissiya raisi: ______________________<div style="color:var(--iz);font-size:11px;margin-top:4px">imzo</div></div>
+      <div>G'olib ishtirokchi: ____________________<div style="color:var(--iz);font-size:11px;margin-top:4px">imzo</div></div>
+    </div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const l = id ? await MKBapi.bitta("SOTUV", id) : null;
+  if (!l){ location.replace("savdo.html"); return; }
+  const n = JSON.parse(localStorage.getItem("mkb4-natija-" + l.id) || "{}");
+  document.getElementById("hs-meta").textContent = l.id;
+  document.getElementById("ab-sana").textContent = new Date().toLocaleDateString("uz-UZ");
+  const q = (a, b) =>
+    '<dt style="color:var(--iz);padding:7px 16px 7px 0;border-bottom:1px solid var(--chiziq-2)">' + a +
+    '</dt><dd style="font-weight:500;text-align:right;padding:7px 0;border-bottom:1px solid var(--chiziq-2)">' + b + '</dd>';
+  document.getElementById("ab-dl").innerHTML = '<dl class="malumot-royxat" style="font-size:12.5px">' +
+    q("Lot", l.nom + ' <span class="kod-mono">' + l.id + "</span>") +
+    q("Ish raqami", l.ish || "—") +
+    q("Boshlang'ich narx", MKB.fmt(l.baho) + " mln so'm") +
+    q("Yakuniy narx", n.narx ? MKB.fmt(n.narx) + " mln so'm" : "—") +
+    q("G'olib", n.golib || l.golib || "—") +
+    q("Savdo sanasi", n.sana || "—") + "</dl>";
+});
+</script>
+</body>
+</html>

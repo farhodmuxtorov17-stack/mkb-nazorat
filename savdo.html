@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Savdo doskasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>
+.doska{display:grid;grid-auto-flow:column;grid-auto-columns:272px;gap:14px;overflow-x:auto;padding-bottom:8px}
+.doska-ustun{background:var(--varaq-2);border:1px solid var(--chiziq-2);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:10px;min-height:200px}
+.doska-bosh{display:flex;align-items:center;gap:8px;padding:4px 6px}
+.doska-bosh b{font-size:12.5px}
+.doska-bosh .soni{margin-left:auto;font:700 11px var(--shrift-mono);background:var(--varaq);border:1px solid var(--chiziq-2);border-radius:99px;padding:2px 8px;color:var(--qalam)}
+.ish-karta{background:var(--varaq);border:1px solid var(--chiziq-2);border-radius:12px;padding:12px;display:block;transition:transform var(--tez),box-shadow var(--tez)}
+.ish-karta:hover{transform:translateY(-2px);box-shadow:0 6px 18px -8px rgba(25,26,20,.18)}
+.ish-karta .ik{font:500 10.5px var(--shrift-mono);color:var(--iz)}
+.ish-karta b{display:block;font-size:12.5px;margin:3px 0 6px;line-height:1.35}
+.ish-karta .past{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--iz)}
+</style>
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="savdo">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Realizatsiya</span></div>
+    <div class="hs-qator"><h1>Savdo doskasi</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar"><a class="tugma tugma-asosiy" href="auksion-natija.html"><svg class="ic"><use href="#i-gavel"/></svg>Natija kiritish</a></div></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="savdo.html" class="faol">Doska</a><a href="auksion-jadvali.html">Auksion jadvali</a><a href="auksion-takliflar.html">Takliflar</a><a href="tolov-nazorati.html">To'lovlar</a><a href="ijara.html">Ijara</a><a href="xaridorlar.html">Xaridorlar</a><a href="savdo-natijalari.html">Natijalar</a></nav>
+  <div class="doska" id="doska"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("SOTUV");
+  const takliflar = await MKBapi.royxat("TAKLIFLAR");
+  document.getElementById("hs-meta").textContent = r.length + " ta lot savdo jarayonida";
+  document.getElementById("doska").innerHTML = MKB_DATA.AUKSION_BOSQICH.map(([kalit, nom, rang]) => {
+    const lotlar = r.filter(l => l.bosqich === kalit);
+    return '<div class="doska-ustun"><div class="doska-bosh">' +
+      '<span style="width:8px;height:8px;border-radius:99px;background:' + rang + '"></span>' +
+      '<b>' + nom + '</b><span class="soni">' + lotlar.length + '</span></div>' +
+      (lotlar.length ? lotlar.map(l => {
+        const t = takliflar.filter(v => v.obyektId === l.id).length;
+        return '<a class="ish-karta" href="lot.html?id=' + encodeURIComponent(l.id) + '">' +
+          '<img class="foto" src="' + l.rasm + '" alt="" loading="lazy" style="width:100%;height:104px;object-fit:cover;border-radius:9px;margin-bottom:9px">' +
+          '<span class="ik">' + l.id + '</span><b>' + l.nom + '</b>' +
+          '<div class="past"><span class="pul" style="color:var(--qalam)">' + MKB.fmt(l.baho) + ' mln</span>' +
+          (t ? '<span class="chip chip-brend">' + t + ' taklif</span>' : '<span>' + l.hudud + '</span>') +
+          '</div></a>';
+      }).join("") : '<div style="font-size:11.5px;color:var(--xira);text-align:center;padding:16px 0">Lot yo\'q</div>');
+  }).map(x => x + "</div>").join("");
+});
+</script>
+</body>
+</html>

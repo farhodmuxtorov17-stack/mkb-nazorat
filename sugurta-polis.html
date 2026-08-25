@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Polis varaqasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="sugurta">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="sugurta.html">Sug'urta</a><span class="ajratgich">/</span><span>Polis</span></div>
+    <div class="hs-qator"><h1>Polis varaqasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Polis varaqasi</h2><span class="soni kod-mono" id="sp-id"></span><a class="tugma tugma-kichik tugma-asosiy" href="sugurta-yangilash.html" id="sp-yangila" style="margin-left:auto"><svg class="ic"><use href="#i-yangilash"/></svg>Yangilash</a></div><div id="sp-obyekt" style="margin-bottom:14px"></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-sugurta"/></svg>Sug'urta kompaniyasi</dt>
+  <dd id="sp-kompaniya">—</dd>
+  <dt><svg class="ic"><use href="#i-pul"/></svg>Sug'urta summasi</dt>
+  <dd><span id="sp-summa" class="pul">—</span></dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Amal qilish muddati</dt>
+  <dd id="sp-tugash">—</dd>
+  <dt><svg class="ic"><use href="#i-tasdiq"/></svg>Holat</dt>
+  <dd id="sp-holat">—</dd>
+  <dt><svg class="ic"><use href="#i-xavf"/></svg>Bog'liq da'volar</dt>
+  <dd id="sp-davolar">—</dd>
+</dl></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const s = id ? await MKBapi.bitta("SUGURTALAR", id) : null;
+  if (!s){ location.replace("xato-404.html"); return; }
+  const y = MKB_DATA.OBYEKT_INDEKS[s.obyektId] || {};
+  document.getElementById("hs-meta").textContent = s.polis;
+  document.getElementById("sp-id").textContent = s.polis;
+  document.getElementById("sp-obyekt").innerHTML =
+    '<a href="obyekt.html?id=' + encodeURIComponent(s.obyektId) + '" style="display:flex;gap:12px;align-items:center">' +
+    '<img class="foto" src="' + (y.rasmKichik || y.rasm || "") + '" style="width:86px;height:60px;border-radius:10px;object-fit:cover" alt="">' +
+    '<span><b style="display:block;font-size:14px">' + (y.qisqa || s.obyekt) + '</b>' +
+    '<span style="font-size:11.5px;color:var(--iz)">' + s.obyektId + '</span></span></a>';
+  document.getElementById("sp-kompaniya").textContent = s.kompaniya;
+  document.getElementById("sp-summa").textContent = MKB.fmt(s.summa) + " mln so'm";
+  document.getElementById("sp-tugash").textContent = s.tugash + " gacha";
+  document.getElementById("sp-holat").innerHTML = s.holat === "amalda"
+    ? '<span class="chip chip-yashil">Amalda</span>' : '<span class="chip chip-xavf">' + s.holat + '</span>';
+  const d = (await MKBapi.royxat("SUGURTA_DAVOLARI")).filter(v => v.obyektId === s.obyektId);
+  document.getElementById("sp-davolar").textContent = d.length ? d.map(v => v.id).join(", ") : "yo'q";
+});
+</script>
+</body>
+</html>

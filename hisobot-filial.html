@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Filial kesimi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="hisobot">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>Filial kesimi</span></div>
+    <div class="hs-qator"><h1>Filial kesimi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const guruh = {};
+  yoz.forEach(y => {
+    const g = guruh[y.filial] = guruh[y.filial] || {filial: y.filial, soni: 0, qarz: 0, qoplash: 0};
+    g.soni++; g.qarz += MKB.sonQiymat(y.qarzSon); g.qoplash += y.qoplash;
+  });
+  const qatorlar = Object.values(guruh).map((g, i) =>
+    Object.assign(g, {id: i, ortacha: Math.round(g.qoplash / g.soni)}));
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta filial";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    ustunlar: [
+      {kalit: "filial", nom: "Filial", chiz: q => '<b>' + q.filial + '</b>'},
+      {kalit: "soni", nom: "Obyektlar", son: true},
+      {kalit: "qarz", nom: "Qoldiq qarz", son: true, chiz: q => '<span class="pul">' + MKB.fmt(Math.round(q.qarz)) + ' mln</span>'},
+      {kalit: "ortacha", nom: "O'rtacha qoplash", son: true, chiz: q => MKB.halqa(q.ortacha, 38, 4)},
+    ],
+  });
+});
+</script>
+</body>
+</html>

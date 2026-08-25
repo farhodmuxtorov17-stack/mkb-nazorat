@@ -20,7 +20,7 @@ const KOLLEKSIYALAR = ["YOZUVLAR", "KORIKLAR", "ARXIV", "HUDUDLAR", "TASNIF",
   "SUGURTALAR", "BAHOLASHLAR", "HODISALAR", "HUJJATLAR", "TASDIQLAR",
   "MENING_VAZIFALARIM", "BILDIRISHLAR", "FOYDLAR", "ADVOKATLAR",
   "SUD_MAJLISLAR", "IJARA", "TAKLIFLAR", "XARIDORLAR", "XARAJATLAR",
-  "RESTRUKTURIZATSIYA"];
+  "RESTRUKTURIZATSIYA", "SUGURTA_DAVOLARI", "SOTUV"];
 
 function snapshotOqi(){
   const qum = {window: {}, document: undefined, localStorage: undefined};
@@ -117,7 +117,8 @@ function statika(req, res){
 
 /* ---------- API marshrutlash ---------- */
 async function api(req, res, yol){
-  const [, , resurs, id] = yol.split("/"); /* /api/resurs/id */
+  const [, , resurs, xomId] = yol.split("/"); /* /api/resurs/id */
+  const id = xomId ? decodeURIComponent(xomId) : xomId;
   const sToken = req.headers["x-sessiya"];
   const sessiya = sToken ? SESSIYALAR.get(sToken) : null;
 

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Hujjat varaqasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="hujjat">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="hujjatlar.html">Hujjatlar</a><span class="ajratgich">/</span><span>Varaqa</span></div>
+    <div class="hs-qator"><h1>Hujjat varaqasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:680px"><div class="karta-bosh"><h2 id="hk-nom">—</h2><span class="soni kod-mono" id="hk-id"></span></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-hujjat"/></svg>Turi</dt>
+  <dd id="hk-tur">—</dd>
+  <dt><svg class="ic"><use href="#i-aktivlar"/></svg>Bog'liq obyekt</dt>
+  <dd id="hk-obyekt">—</dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Sana</dt>
+  <dd id="hk-sana">—</dd>
+  <dt><svg class="ic"><use href="#i-kub"/></svg>Hajm</dt>
+  <dd id="hk-hajm">—</dd>
+  <dt><svg class="ic"><use href="#i-tasdiq"/></svg>Holat</dt>
+  <dd id="hk-holat">—</dd>
+</dl>  <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px"><button type="button" class="tugma tugma-oq" data-toast="Hujjat yuklab olinmoqda"><svg class="ic"><use href="#i-yuklab"/></svg>Yuklab olish</button><button type="button" class="tugma tugma-asosiy" id="hk-imzola"><svg class="ic"><use href="#i-muhr"/></svg>Imzolash</button></div>  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const h = id ? await MKBapi.bitta("HUJJATLAR", id) : null;
+  if (!h){ location.replace("hujjatlar.html"); return; }
+  document.getElementById("hs-meta").textContent = h.id;
+  document.getElementById("hk-nom").textContent = h.nom;
+  document.getElementById("hk-id").textContent = h.id;
+  document.getElementById("hk-tur").textContent = h.tur;
+  document.getElementById("hk-obyekt").innerHTML = h.obyektId
+    ? '<a href="obyekt.html?id=' + encodeURIComponent(h.obyektId) + '" style="font-weight:700;color:var(--brend-quyuq)">' + h.obyektId + '</a>' : "—";
+  document.getElementById("hk-sana").textContent = h.sana;
+  document.getElementById("hk-hajm").textContent = h.hajm || "—";
+  document.getElementById("hk-holat").innerHTML = '<span class="chip ' +
+    (h.holat === "Tasdiqlangan" ? "chip-yashil" : "chip-sariq") + '">' + h.holat + '</span>';
+  document.getElementById("hk-imzola").addEventListener("click", async () => {
+    await MKBapi.yangilash("HUJJATLAR", h.id, {holat: "Tasdiqlangan"});
+    MKB.toast("Hujjat imzolandi va tasdiqlandi");
+    setTimeout(() => location.reload(), 600);
+  });
+});
+</script>
+</body>
+</html>

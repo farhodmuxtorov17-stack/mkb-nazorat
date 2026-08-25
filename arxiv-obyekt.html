@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Arxiv yozuvi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="arxiv">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="arxiv.html">Arxiv</a><span class="ajratgich">/</span><span>Yozuv</span></div>
+    <div class="hs-qator"><h1>Arxiv yozuvi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:760px"><div class="karta-bosh"><h2>Arxiv yozuvi</h2><span class="soni kod-mono" id="ao-kod"></span></div><div id="ao-rasm" style="margin-bottom:14px"></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-kub"/></svg>Obyekt</dt>
+  <dd id="ao-nom">—</dd>
+  <dt><svg class="ic"><use href="#i-hujjat"/></svg>Ish raqami</dt>
+  <dd><span id="ao-ish" class="kod-mono">—</span></dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Balansga qabul</dt>
+  <dd id="ao-qabul">—</dd>
+  <dt><svg class="ic"><use href="#i-soat"/></svg>Nazorat davri</dt>
+  <dd id="ao-nazorat">—</dd>
+  <dt><svg class="ic"><use href="#i-gavel"/></svg>Sotilgan sana</dt>
+  <dd id="ao-sotilgan">—</dd>
+  <dt><svg class="ic"><use href="#i-foyd"/></svg>Xaridor</dt>
+  <dd id="ao-xaridor">—</dd>
+  <dt><svg class="ic"><use href="#i-pul"/></svg>Savdo summasi</dt>
+  <dd><span id="ao-summa" class="pul">—</span></dd>
+</dl></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const a = id ? await MKBapi.bitta("ARXIV", id) : null;
+  if (!a){ location.replace("arxiv.html"); return; }
+  document.getElementById("hs-meta").textContent = a.kod;
+  document.getElementById("ao-kod").textContent = a.kod;
+  if (a.rasm) document.getElementById("ao-rasm").innerHTML =
+    '<img class="foto" src="' + a.rasm + '" alt="" style="width:100%;max-height:240px;object-fit:cover;border-radius:12px">';
+  document.getElementById("ao-nom").textContent = a.nom + " (" + a.tur + ")";
+  document.getElementById("ao-ish").textContent = a.ish || "—";
+  document.getElementById("ao-qabul").textContent = a.qabul || "—";
+  document.getElementById("ao-nazorat").textContent = a.nazorat || "—";
+  document.getElementById("ao-sotilgan").textContent = a.sotilgan;
+  document.getElementById("ao-xaridor").textContent = a.xaridor;
+  document.getElementById("ao-summa").textContent = MKB.fmt(a.summa) + " mln so'm";
+});
+</script>
+</body>
+</html>

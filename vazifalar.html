@@ -1,459 +1,89 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>(function(){var t=localStorage.getItem("mkb-tema");if(t==="realty"||t==="estate")document.documentElement.dataset.tema=t})()</script>
-<title>MKB — Vazifalar va tasdiqlar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082605">
-<style>
-/* ---- Vazifalar va tasdiqlar (ekran 9) ---- */
-.vz-grid{display:grid;grid-template-columns:350px minmax(0,1fr) 400px;gap:18px;align-items:start}
-.vz-karta h3{font-size:16.5px;font-weight:750}
-.vz-son{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 8px;margin-left:9px;background:#EEF2FF;color:#3730A3;border-radius:99px;font-size:12.5px;font-weight:750;vertical-align:2px}
-
-.tasdiq-kartacha{
-  width:100%;text-align:left;border:1px solid var(--chiziq);border-radius:14px;
-  padding:14px;margin-top:12px;transition:border-color var(--tez),box-shadow var(--tez);
-}
-.tasdiq-kartacha:hover{box-shadow:var(--soya)}
-.tasdiq-kartacha.faol{border-color:#C7D2FE;background:#FAFAFA;box-shadow:0 0 0 1px #C7D2FE}
-.tk-bosh{display:flex;align-items:flex-start;gap:11px}
-.tk-ikon{width:36px;height:36px;border-radius:10px;background:#EEF2FF;color:#4F46E5;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile-tor)}
-.tk-ikon.kul{background:#F4F4F5;color:#6A7078}
-.tk-ikon .ic{width:18px;height:18px}
-.tk-bosh b{display:block;font-size:14.5px;font-weight:650;line-height:1.3}
-.tk-bosh span{display:block;font-size:12.5px;color:var(--matn-4);margin-top:2px}
-.tk-past{display:flex;align-items:center;margin-top:11px}
-.tk-past .summa{font-size:14px;font-weight:750}
-.tk-past .firma{font-size:12.5px;color:var(--matn-4);margin-left:8px}
-.tk-vaqt{margin-left:auto;text-align:right}
-.tk-vaqt b{display:block;font-size:12.5px;font-weight:700;color:#E0442B}
-.tk-vaqt b.oddiy{color:#52525B}
-.tk-vaqt span{display:block;font-size:12px;color:var(--matn-4)}
-.vz-havola{display:flex;align-items:center;gap:8px;width:100%;margin-top:14px;padding:12px 6px 2px;font-size:14px;font-weight:650;color:#3F3F46;border-radius:8px}
-.vz-havola .ic{margin-left:auto;width:16px;height:16px}
-
-/* Markaziy karta */
-.jarayon-bosh{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.jarayon-bosh h2{font-size:20px;font-weight:750}
-.jarayon-meta{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:13.5px;color:var(--matn-3);flex-wrap:wrap}
-.jarayon-meta b{color:#3F3F46;font-weight:650}
-.jarayon-tablar{display:flex;gap:24px;border-bottom:1px solid var(--chiziq);margin-top:16px}
-.jarayon-tab{padding:10px 2px 13px;font-size:14.5px;font-weight:650;color:#52525B;border-bottom:2px solid transparent;margin-bottom:-1px}
-.jarayon-tab.aktiv{color:#18181B;border-bottom-color:var(--asos)}
-.jarayon-blok{background:#FAFBF8;border-radius:16px;padding:22px;margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px}
-.jarayon-blok h4{font-size:15.5px;font-weight:750;margin-bottom:18px}
-.qadam{display:flex;gap:14px;position:relative;padding-bottom:26px}
-.qadam:last-child{padding-bottom:0}
-.qadam::before{content:"";position:absolute;left:15px;top:34px;bottom:2px;width:2px;background:#E3E6DE}
-.qadam:last-child::before{display:none}
-.qadam-belgi{width:32px;height:32px;border-radius:99px;display:grid;place-items:center;flex:none;font-size:13px;font-weight:750;z-index:1;box-shadow:var(--chuqur-tile-tor)}
-.qadam-belgi.bajarildi{background:#4F46E5;color:#fff}
-.qadam-belgi.joriy{background:var(--tile-och);color:#3730A3}
-.qadam-belgi.kutish{background:#F4F4F5;color:#71717A}
-.qadam-belgi .ic{width:15px;height:15px;stroke-width:2.4}
-.qadam-matn b{display:block;font-size:14.5px;font-weight:700}
-.qadam-matn span{display:block;font-size:13px;color:var(--matn-3);margin-top:2px}
-.qadam-ong{margin-left:auto;text-align:right;flex:none}
-.qadam-ong .vaqt{display:block;font-size:12.5px;color:var(--matn-3)}
-.qadam-ong .holat{display:inline-block;margin-top:3px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
-.holat.tasdiq{color:#3730A3}
-.holat.kutilmoqda{background:#DFEBF7;color:#456A8D}
-.jarayon-rasm{display:grid;place-items:center}
-.jarayon-rasm img{max-width:100%;max-height:300px}
-.izoh-quti{background:#EEF2FF;border-radius:13px;padding:14px 16px;margin-top:16px}
-.izoh-quti b{font-size:13.5px;font-weight:750;display:block;margin-bottom:4px}
-.izoh-quti span{font-size:13.5px;color:#4A524A}
-.faoliyat-jadval{margin-top:18px}
-.faoliyat-jadval h4{font-size:15.5px;font-weight:750;margin-bottom:8px}
-.fj-qator{display:grid;grid-template-columns:120px 160px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px solid #F4F4F5;font-size:13px}
-.fj-qator:last-child{border-bottom:none}
-.fj-qator .vaqt{color:var(--matn-4)}
-.fj-qator .kim{font-weight:650;color:#3F3F46}
-.fj-qator .nima{color:var(--matn-2)}
-
-/* O'ng ustun */
-.vazifa-kartacha{
-  width:100%;text-align:left;border:1px solid var(--chiziq);border-radius:14px;
-  padding:13px 14px;margin-top:12px;display:flex;gap:11px;
-  transition:border-color var(--tez),box-shadow var(--tez);
-}
-.vazifa-kartacha:hover{box-shadow:var(--soya)}
-.vazifa-kartacha.faol{border-color:#C7D2FE;background:#FAFAFA;box-shadow:0 0 0 1px #C7D2FE}
-.vazifa-kartacha .tk-ikon{width:34px;height:34px}
-.vazifa-kartacha b{display:block;font-size:14px;font-weight:700;line-height:1.3}
-.vazifa-kartacha .sub{display:block;font-size:12.5px;color:var(--matn-3);margin-top:2px}
-.vazifa-kartacha .kod{display:block;font-size:12px;color:var(--matn-4);margin-top:2px}
-
-/* Muhimlik segmentli tanlovi (Yangi vazifa modali) */
-.vz-mh-segment{display:grid;grid-template-columns:repeat(4,1fr);background:var(--kanvas);border:1px solid var(--kirish-chiziq);border-radius:12px;padding:4px;gap:0}
-.vz-mh-tugma{height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:650;color:var(--matn-3);position:relative;transition:background var(--tez),color var(--tez)}
-.vz-mh-tugma:hover{color:#18181B}
-.vz-mh-tugma[aria-pressed="true"]{background:#F4F4F5;color:#3F3F46}
-.vz-mh-tugma[aria-pressed="true"][data-mh="yuqori"]{background:var(--sariq-fon);color:#B45309}
-.vz-mh-tugma[aria-pressed="true"][data-mh="kritik"]{background:var(--qizil-fon);color:#B91C1C}
-.vz-mh-tugma + .vz-mh-tugma::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--kirish-chiziq)}
-.vz-mh-tugma[aria-pressed="true"]::before,
-.vz-mh-tugma[aria-pressed="true"] + .vz-mh-tugma::before{opacity:0}
-
-/* Taqvim */
-.taqvim-bosh{display:flex;align-items:center;margin:2px 0 12px}
-.taqvim-bosh b{font-size:15px;font-weight:750}
-.taqvim-bosh .nav{margin-left:auto;display:flex;gap:6px}
-.taqvim-bosh .nav button{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#52525B}
-.taqvim-bosh .nav button:hover{background:#F4F4F5}
-.taqvim{width:100%;border-collapse:collapse;table-layout:fixed}
-.taqvim th{font-size:12px;font-weight:650;color:var(--matn-4);padding:6px 0;text-align:center}
-.taqvim td{padding:3px 0;text-align:center}
-.taqvim button{
-  width:34px;height:34px;border-radius:99px;font-size:13px;font-weight:600;color:#3F3F46;
-  transition:background var(--tez);
-}
-.taqvim button:hover{background:#F4F4F5}
-.taqvim button.boshqa-oy{color:#C3C7CC}
-.taqvim button.bugun{background:#4F46E5;color:#fff;font-weight:750}
-.taqvim button.belgili{box-shadow:inset 0 0 0 1.5px #4F46E5;color:#3730A3;font-weight:700}
-.vz-grid > aside{display:flex;flex-direction:column;gap:18px}
-@media (max-width:1760px){.vz-grid{grid-template-columns:320px minmax(0,1fr)}
-  .vz-grid > aside{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}}
-@media (max-width:1320px){.vz-grid{grid-template-columns:minmax(0,1fr)}
-  .vz-grid > aside{grid-template-columns:minmax(0,1fr)}
-  .jarayon-blok{grid-template-columns:minmax(0,1fr)}}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Vazifalar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
-<body data-sahifa="portfel">
-
-<div class="app">
-<aside class="sidebar" data-shell-sidebar></aside>
-
-<div class="asosiy">
-  <header class="topbar" data-shell-topbar></header>
-
-  <main class="kontent">
-    <div class="sahifa-qator">
-      <div>
-        <h1>Vazifalar va tasdiqlar</h1>
-        <div class="sahifa-izoh">Tasdiqlash jarayonlarini ko'rib chiqing va vazifalaringizni boshqaring.</div>
-      </div>
-      <div class="sahifa-harakat">
-        <a class="tugma tugma-oq" href="tasdiqlar.html"><svg class="ic"><use href="#i-belgi-doira"/></svg>Rahbar tasdiqlash ko'rinishi</a>
-      </div>
+<body data-sahifa="vazifa">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Vazifalar</span></div>
+    <div class="hs-qator"><h1>Vazifalar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html" class="faol">Vazifalar</a><a href="tasdiqlar.html">Tasdiqlar</a><a href="bildirishnomalar.html">Bildirishnomalar</a><a href="taqvim.html">Taqvim</a><a href="eslatmalar.html">Eslatmalar</a></nav>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Bugungi vazifalar</span>
+      <span class="m-qiymat"><span id="v-bugun">—</span></span>
     </div>
-
-    <div class="vz-grid">
-
-      <!-- Tasdiqlash navbati -->
-      <div class="karta vz-karta">
-        <h3>Tasdiqlash navbati<span class="vz-son">5</span></h3>
-        <div id="navbat"></div>
-        <button class="vz-havola" data-toast="Barcha tasdiqlash so'rovlari">Barchasini ko'rish<svg class="ic"><use href="#i-strelka"/></svg></button>
-      </div>
-
-      <!-- Markaziy jarayon -->
-      <div class="karta">
-        <div class="jarayon-bosh">
-          <h2 id="j-nom">Xarid so'rovnomasi</h2>
-          <span class="chip chip-asos" style="margin-left:auto"><svg class="ic" style="width:13px;height:13px"><use href="#i-belgi-doira"/></svg>Jarayonda</span>
-        </div>
-        <div class="jarayon-meta">
-          <b id="j-kod">№ BB-2026-0114</b><span>·</span><span>24-avg, 2026</span><span>·</span><b id="j-summa">12 000 000 so’m</b>
-        </div>
-
-        <div class="jarayon-tablar" role="tablist">
-          <button class="jarayon-tab aktiv" data-t="jarayon">Jarayon</button>
-          <button class="jarayon-tab" data-t="malumot">Ma'lumotlar</button>
-        </div>
-
-        <div data-jp="jarayon">
-          <div class="jarayon-blok">
-            <div id="qadam-royxat"></div>
-            <div class="jarayon-rasm">
-              <img src="assets/tasdiq_illyustratsiya.webp" alt="Tasdiqlash jarayoni illyustratsiyasi">
-            </div>
-          </div>
-
-          <div class="izoh-quti">
-            <b>Izoh</b>
-            <span id="j-izoh">Moliyaviy limit doirasida. Tasdiqlash uchun yuborildi.</span>
-          </div>
-
-          <div style="display:flex;gap:10px;margin-top:18px">
-            <button class="tugma tugma-asos" id="nav-tasdiqla">
-              <svg class="ic"><use href="#i-belgi"/></svg>Tasdiqlash
-            </button>
-            <button class="tugma tugma-chiziqli" id="rad-tugma">Rad etish</button>
-          </div>
-
-          <div class="faoliyat-jadval">
-            <h4>Faoliyat tarixi</h4>
-            <div id="faoliyat-royxat"></div>
-          </div>
-        </div>
-
-        <div data-jp="malumot" hidden>
-          <div class="detal-jadval" id="malumot-royxat" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px 12px;margin-top:18px"></div>
-        </div>
-      </div>
-
-      <!-- O'ng ustun -->
-      <aside>
-        <div class="karta vz-karta">
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-            <h3>Mening vazifalarim<span class="vz-son" id="vz-son-mening">4</span></h3>
-            <button class="tugma tugma-oq tugma-kichik" id="vz-yangi-tugma" style="margin-left:auto">
-              <svg class="ic"><use href="#i-qoshish"/></svg>Yangi vazifa
-            </button>
-          </div>
-          <div id="mening-vazifalar-royxat"></div>
-          <button class="vz-havola" data-toast="Barcha vazifalar ro'yxati">Barchasini ko'rish<svg class="ic"><use href="#i-strelka"/></svg></button>
-        </div>
-
-        <div class="karta">
-          <h3 style="font-size:16.5px;font-weight:750;margin-bottom:10px">Muddatlar taqvimi</h3>
-          <div class="taqvim-bosh">
-            <b>Avgust 2026</b>
-            <div class="nav">
-              <button data-toast="Oldingi oy" aria-label="Oldingi oy"><svg class="ic" style="width:15px;height:15px"><use href="#i-chap"/></svg></button>
-              <button data-toast="Keyingi oy" aria-label="Keyingi oy"><svg class="ic" style="width:15px;height:15px"><use href="#i-ong"/></svg></button>
-            </div>
-          </div>
-          <table class="taqvim">
-            <thead><tr><th>Du</th><th>Se</th><th>Ch</th><th>Pa</th><th>Ju</th><th>Sh</th><th>Ya</th></tr></thead>
-            <tbody id="taqvim-tanasi"></tbody>
-          </table>
-        </div>
-      </aside>
+    <div class="metrika"><span class="m-yorliq">Shoshilinch</span>
+      <span class="m-qiymat"><span id="v-shosh">—</span></span>
     </div>
-  </main>
+    <div class="metrika"><span class="m-yorliq">Tasdiq kutmoqda</span>
+      <span class="m-qiymat"><span id="v-tasdiq">—</span></span>
+    </div>
+  </section>
+  <section class="karta"><div class="karta-bosh"><h2>Vazifalar ro'yxati</h2><span class="soni" id="v-soni"></span><button type="button" class="tugma tugma-kichik tugma-asosiy" id="v-qoshish" style="margin-left:auto"><svg class="ic"><use href="#i-qoshish"/></svg>Vazifa qo'shish</button></div><div id="v-royxat"></div></section>
+</main>
 </div>
 </div>
-
-<script src="malumot.js?v=26082605"></script>
-<script src="tarjima.js?v=26082605"></script>
-<script src="mkb.js?v=26082605"></script>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
 <script>
-document.addEventListener("DOMContentLoaded", ()=>{
-
-/* Tasdiqlash navbati */
-const NAVBAT = MKB_DATA.NAVBAT;   /* yagona manba (Д-1) */
-function navbatChiz(){
-document.getElementById("navbat").innerHTML = NAVBAT.map((n,i)=>`
-  <button class="tasdiq-kartacha ${n.faol?"faol":""}" data-i="${i}">
-    <span class="tk-bosh">
-      <span class="tk-ikon ${n.faol?"":"kul"}"><svg class="ic"><use href="#i-shartnoma"/></svg></span>
-      <span><b>${n.nom}</b><span>${n.kod}</span></span>
-    </span>
-    <span class="tk-past">
-      <span class="summa">${n.summa}</span>
-      <span class="tk-vaqt"><b class="${n.shosh?"":"oddiy"}">${n.muddat}</b><span>${n.soat}</span></span>
-    </span>
-    <span class="tk-past" style="margin-top:4px"><span class="firma" style="margin-left:0">${n.firma}</span></span>
-  </button>`).join("");
-  document.querySelectorAll(".vz-son")[0].textContent = NAVBAT.length;
-  ulaNavbat();
-}
-
-navbatChiz();
-
-/* Tasdiqlash: joriy so'rov navbatdan chiqadi, keyingisi tanlanadi */
-document.getElementById("nav-tasdiqla").addEventListener("click", ()=>{
-  const i = NAVBAT.findIndex(n => n.faol);
-  if (i < 0) return;
-  const n = NAVBAT[i];
-  NAVBAT.splice(i, 1);
-  MKB.toast(`${n.nom} tasdiqlandi \u2014 keyingi bosqichga o'tdi`);
-  if (NAVBAT.length){
-    NAVBAT.forEach(x => x.faol = false);
-    NAVBAT[0].faol = true;
-    navbatChiz();
-    detalYangila(NAVBAT[0]);
-  } else {
-    navbatChiz();
-    document.getElementById("j-nom").textContent = "Navbat bo'sh";
-    document.getElementById("j-izoh").textContent = "Barcha so'rovlar ko'rib chiqildi.";
+document.addEventListener("mkb:tayyor", async () => {
+  async function chiz(){
+    const r = await MKBapi.royxat("MENING_VAZIFALARIM");
+    const tasdiqlar = await MKBapi.royxat("TASDIQLAR");
+    document.getElementById("v-bugun").textContent = r.filter(v => v.bugunmi && !v.bajarildi).length;
+    document.getElementById("v-shosh").textContent = r.filter(v => v.muhimlik === "yuqori" && !v.bajarildi).length;
+    document.getElementById("v-tasdiq").textContent = tasdiqlar.filter(t => !t.hal).length;
+    document.getElementById("v-soni").textContent = r.length + " ta";
+    document.getElementById("v-royxat").innerHTML = r.map(v =>
+      '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--chiziq-2);' +
+      (v.bajarildi ? 'opacity:.5' : '') + '">' +
+        '<button type="button" data-belgi="' + v.id + '" aria-label="Bajarildi deb belgilash" style="width:22px;height:22px;border-radius:7px;border:1.5px solid ' +
+        (v.bajarildi ? 'var(--siyoh);background:var(--siyoh);color:var(--brend)' : 'var(--chiziq-3)') + ';display:grid;place-items:center;flex:none">' +
+        (v.bajarildi ? ik("tasdiq") : '') + '</button>' +
+        '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px;' + (v.bajarildi ? 'text-decoration:line-through' : '') + '">' + v.nom + '</b>' +
+        '<span style="font-size:11.5px;color:var(--iz)">' + v.tur + ' · ' + (v.kod || "") + '</span></span>' +
+        (v.muhimlik === "yuqori" && !v.bajarildi ? '<span class="chip chip-xavf">shoshilinch</span>' : '') +
+        '<span style="font:700 11.5px var(--shrift-mono);color:var(--qalam)">' + (v.bugunmi ? "Bugun " : "") + (v.vaqt || v.sana || "") + '</span>' +
+      '</div>').join("");
+    document.querySelectorAll("[data-belgi]").forEach(b => b.addEventListener("click", async () => {
+      const v = r.find(x => x.id === b.dataset.belgi);
+      await MKBapi.yangilash("MENING_VAZIFALARIM", v.id, {bajarildi: !v.bajarildi});
+      chiz();
+    }));
   }
-});
-
-function detalYangila(n){
-  document.getElementById("j-nom").textContent = n.nom;
-  document.getElementById("j-kod").textContent = n.kod;
-  document.getElementById("j-summa").textContent = n.summa;
-  document.getElementById("j-izoh").textContent = n.izoh;
-
-  document.getElementById("qadam-royxat").innerHTML = `<h4>Tasdiqlash jarayoni</h4>` + n.qadamlar.map(([holat,nom,kim,vaqt,holatMatn],i)=>`
-    <div class="qadam">
-      <span class="qadam-belgi ${holat}">${holat==="bajarildi" ? '<svg class="ic"><use href="#i-belgi"/></svg>' : i+1}</span>
-      <span class="qadam-matn"><b>${nom}</b><span>${kim}</span></span>
-      <span class="qadam-ong">${vaqt?`<span class="vaqt">${vaqt}</span>`:""}<span class="holat ${holat==="bajarildi"?"tasdiq":"kutilmoqda"}">${holatMatn}</span></span>
-    </div>`).join("");
-
-  document.getElementById("faoliyat-royxat").innerHTML = n.tarix.map(([vaqt,kim,nima])=>`
-    <div class="fj-qator"><span class="vaqt">${vaqt}</span><span class="kim">${kim}</span><span class="nima">${nima}</span></div>`).join("");
-
-  const m = n.malumot;
-  const MAYDON = [["So'rov turi",m.turi],["Asos",m.asos],["Obyekt",m.obyekt],["Ijrochi",m.ijrochi],["Summa",n.summa],["Muddat",m.muddatIsh]];
-  document.getElementById("malumot-royxat").innerHTML = MAYDON.map(([yorliq,qiymat])=>`
-    <div><div style="font-size:12.5px;color:var(--matn-4)">${yorliq}</div><div style="font-size:14px;font-weight:650;margin-top:3px">${qiymat}</div></div>`).join("");
-}
-
-function ulaNavbat(){
-document.querySelectorAll(".tasdiq-kartacha").forEach(k=>{
-  k.addEventListener("click", ()=>{
-    document.querySelectorAll(".tasdiq-kartacha").forEach(x=>x.classList.remove("faol"));
-    k.classList.add("faol");
-    detalYangila(NAVBAT[+k.dataset.i]);
+  chiz();
+  document.getElementById("v-qoshish").addEventListener("click", () => {
+    MKB.modal("Yangi vazifa",
+      '<div class="forma-tor">' +
+      '<div class="maydon keng"><label class="maydon-yorliq">Vazifa <b>*</b></label>' +
+      '<div class="kirish"><input name="nom" placeholder="Nima qilish kerak?"></div></div>' +
+      '<div class="maydon"><label class="maydon-yorliq">Bo\'lim</label><div class="kirish"><select name="tur">' +
+      '<option>Aktivlar nazorati</option><option>Yuridik</option><option>Baholash</option><option>Savdo</option></select></div></div>' +
+      '<div class="maydon"><label class="maydon-yorliq">Muhimlik</label><div class="kirish"><select name="muhimlik">' +
+      '<option value="oddiy">Odatiy</option><option value="yuqori">Shoshilinch</option></select></div></div></div>',
+      {okMatn: "Qo'shish", ok(modal){
+        const q = MKB.forma(modal, ["nom"]);
+        if (!q) return false;
+        MKBapi.yangi("MENING_VAZIFALARIM", {id: "VZ-" + Date.now().toString(36),
+          nom: q.nom, tur: q.tur, kod: "", sana: new Date().toISOString().slice(0, 10),
+          vaqt: "", bugunmi: true, muhimlik: q.muhimlik, bajarildi: false}).then(chiz);
+        MKB.toast("Vazifa ro'yxatga qo'shildi");
+      }});
   });
-});
-}
-
-detalYangila(NAVBAT[0]);
-
-/* Markaz tablari */
-document.querySelectorAll(".jarayon-tab").forEach(t=>{
-  t.addEventListener("click", ()=>{
-    document.querySelectorAll(".jarayon-tab").forEach(x=>x.classList.remove("aktiv"));
-    t.classList.add("aktiv");
-    document.querySelectorAll("[data-jp]").forEach(p=>p.hidden = p.dataset.jp !== t.dataset.t);
-  });
-});
-
-/* Rad etish */
-document.getElementById("rad-tugma").addEventListener("click", ()=>{
-  MKB.modal("So'rovni rad etish",
-    `<div style="margin-top:6px"><label class="maydon-yorliq">Rad etish sababi</label>
-     <div class="kirish kirish-katta"><textarea placeholder="Sababni kiriting..."></textarea></div></div>`,
-    {xavf:true, okMatn:"Rad etish", ok(){ MKB.toast("So'rov rad etildi va muallifga qaytarildi"); }});
-});
-
-/* Vazifalar (Mening vazifalarim) */
-const MUHIMLIK_LABEL = {past:"Past", orta:"O'rta", yuqori:"Yuqori", kritik:"Kritik"};
-const MUHIMLIK_CHIP = {past:"chip-kul", orta:"chip-kul", yuqori:"chip-sariq", kritik:"chip-qizil"};
-const OY_NOMI = ["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentabr","oktabr","noyabr","dekabr"];
-// Ilova ichidagi shartli "bugun" — yuqoridagi soat/sana ko'rsatkichi va taqvim shu sanaga moslangan
-const VZ_BUGUN = {y:2026, m:8, d:24};
-function vzMuddatFormat(qiymat){
-  if (!qiymat) return {sana:"Muddatsiz", bugunmi:false};
-  const [y,m,d] = qiymat.split("-").map(Number);
-  if (y===VZ_BUGUN.y && m===VZ_BUGUN.m && d===VZ_BUGUN.d) return {sana:"Bugun", bugunmi:true};
-  return {sana:`${d}-${OY_NOMI[m-1]}`, bugunmi:false};
-}
-
-const MENING_VAZIFALARIM = MKB_DATA.MENING_VAZIFALARIM;   /* yagona manba (Д-1) */
-/* Sana ISO ko'rinishda saqlanadi; ko'rsatish matni shu yerda hosil bo'ladi (Д-7) */
-MENING_VAZIFALARIM.forEach(v => {
-  if (/^\d{4}-\d{2}-\d{2}$/.test(v.sana)){
-    const f = vzMuddatFormat(v.sana);
-    v.sana = f.sana; v.bugunmi = f.bugunmi;
-  }
-});
-
-function vazifalarChiz(){
-  document.getElementById("mening-vazifalar-royxat").innerHTML = MENING_VAZIFALARIM.map((v,i)=>{
-    const kul = v.muhimlik==="past" || v.muhimlik==="orta";
-    return `
-    <button class="vazifa-kartacha${i===0?" faol":""}">
-      <span class="tk-ikon${kul?" kul":""}"><svg class="ic"><use href="#${v.ikon}"/></svg></span>
-      <span style="flex:1;min-width:0">
-        <b>${v.nom}</b><span class="sub">${v.tur}</span><span class="kod">${v.kod}</span>
-        <span class="chip ${MUHIMLIK_CHIP[v.muhimlik]}" style="height:24px;margin-top:6px">${MUHIMLIK_LABEL[v.muhimlik]}</span>
-      </span>
-      <span class="tk-vaqt"><b class="${v.bugunmi?"":"oddiy"}">${v.sana}</b><span>${v.vaqt}</span></span>
-    </button>`;
-  }).join("");
-  document.querySelectorAll(".vazifa-kartacha").forEach(v=>{
-    v.addEventListener("click", ()=>{
-      document.querySelectorAll(".vazifa-kartacha").forEach(x=>x.classList.remove("faol"));
-      v.classList.add("faol");
-      MKB.toast(v.querySelector("b").textContent+" vazifasi ochildi");
-    });
-  });
-}
-vazifalarChiz();
-
-/* Yangi vazifa qo'shish */
-document.getElementById("vz-yangi-tugma").addEventListener("click", ()=>{
-  let mhTanlangan = "orta";
-  MKB.modal("Yangi vazifa",
-    `<div style="display:flex;flex-direction:column;gap:16px;margin-top:4px">
-       <div><label class="maydon-yorliq" for="vz-f-nom">Vazifa nomi</label>
-         <div class="kirish"><input id="vz-f-nom" type="text" maxlength="120" placeholder="Masalan: Shartnoma loyihasini tekshirish"></div></div>
-       <div><label class="maydon-yorliq" for="vz-f-tur">Tavsif / tur</label>
-         <div class="kirish"><input id="vz-f-tur" type="text" maxlength="80" placeholder="Masalan: Ko'rib chiqish"></div></div>
-       <div><label class="maydon-yorliq" for="vz-f-ijro">Ijrochi</label>
-         <div class="kirish"><input id="vz-f-ijro" type="text" maxlength="80" placeholder="F.I.Sh. kiriting"></div></div>
-       <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px">
-         <div><label class="maydon-yorliq" for="vz-f-sana">Muddat sanasi</label>
-           <div class="kirish"><input id="vz-f-sana" type="date"></div></div>
-         <div><label class="maydon-yorliq" for="vz-f-vaqt">Muddat vaqti</label>
-           <div class="kirish"><input id="vz-f-vaqt" type="time"></div></div>
-       </div>
-       <div><label class="maydon-yorliq">Muhimlik</label>
-         <div class="vz-mh-segment" role="group" aria-label="Muhimlik darajasi">
-           <button type="button" class="vz-mh-tugma" data-mh="past" aria-pressed="false">Past</button>
-           <button type="button" class="vz-mh-tugma" data-mh="orta" aria-pressed="true">O'rta</button>
-           <button type="button" class="vz-mh-tugma" data-mh="yuqori" aria-pressed="false">Yuqori</button>
-           <button type="button" class="vz-mh-tugma" data-mh="kritik" aria-pressed="false">Kritik</button>
-         </div>
-       </div>
-     </div>`,
-    { okMatn:"Qo'shish", ok(){
-        const nom = document.getElementById("vz-f-nom").value.trim();
-        if (!nom) return; // himoya chorasi: bo'sh holatda "capture" tinglovchisi yopilishni allaqachon to'xtatgan
-        const tur = document.getElementById("vz-f-tur").value.trim() || "Qo'lda kiritilgan vazifa";
-        const ijro = document.getElementById("vz-f-ijro").value.trim();
-        const {sana, bugunmi} = vzMuddatFormat(document.getElementById("vz-f-sana").value);
-        const vaqt = document.getElementById("vz-f-vaqt").value.trim() || "—";
-        const raqam = Math.floor(1000 + Math.random()*9000);
-        MENING_VAZIFALARIM.unshift({
-          nom, tur, kod:`№ VZ-2026-${raqam}`, sana, vaqt, bugunmi,
-          ikon:"i-vazifa", muhimlik: mhTanlangan, ijrochi: ijro || "Belgilanmagan"
-        });
-        document.getElementById("vz-son-mening").textContent = MENING_VAZIFALARIM.length;
-        vazifalarChiz();
-        MKB.toast("Yangi vazifa qo'shildi");
-      } });
-
-  // MKB.modal standart holatda "OK" bosilganda modalni darhol yopadi (mkb.js'ga
-  // tegmasdan buni o'zgartirib bo'lmaydi). Shuning uchun bosishni "capture" bosqichida
-  // ushlab, vazifa nomi bo'sh bo'lsa yopilishning o'ziga yo'l qo'ymaymiz — modal ochiq
-  // qoladi va faqat ogohlantirish chiqadi; nom to'ldirilgan bo'lsa, oddiy oqim davom etadi.
-  const modallar = document.querySelectorAll(".modal-fon");
-  const fon = modallar[modallar.length-1];
-  fon.addEventListener("click", e=>{
-    if (!e.target.closest("[data-m-ok]")) return;
-    if (!document.getElementById("vz-f-nom").value.trim()){
-      e.stopPropagation();
-      MKB.toast("Vazifa nomini kiriting");
-    }
-  }, true);
-  fon.querySelectorAll(".vz-mh-tugma").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      fon.querySelectorAll(".vz-mh-tugma").forEach(x=>x.setAttribute("aria-pressed","false"));
-      b.setAttribute("aria-pressed","true");
-      mhTanlangan = b.dataset.mh;
-    });
-  });
-});
-
-/* Taqvim: Avgust 2026 (1-avgust = shanba) */
-const KUNLAR = [
-  [27,28,29,30,31,1,2],[3,4,5,6,7,8,9],[10,11,12,13,14,15,16],
-  [17,18,19,20,21,22,23],[24,25,26,27,28,29,30],[31,1,2,3,4,5,6]
-];
-
-document.getElementById("taqvim-tanasi").innerHTML = KUNLAR.map((h,hi)=>`
-  <tr>${h.map((k,ki)=>{
-    const boshqa = (hi===0 && k>20) || (hi===5 && k<10);
-    const cls = boshqa ? "boshqa-oy" : k===24 ? "bugun" : (k===25||k===26) && !boshqa ? "belgili" : "";
-    return `<td><button class="${cls}" data-kun="${k}">${k}</button></td>`;
-  }).join("")}</tr>`).join("");
-document.querySelectorAll(".taqvim button").forEach(b=>{
-  b.addEventListener("click", ()=>MKB.toast(b.dataset.kun+"-avg: "+(b.classList.contains("bugun")?"2 ta muddat":"muddatlar yo'q")+"", "i-kalendar"));
-});
 });
 </script>
 </body>

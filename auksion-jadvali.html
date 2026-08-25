@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Auksion jadvali</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="savdo">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Realizatsiya</span></div>
+    <div class="hs-qator"><h1>Auksion jadvali</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="savdo.html">Doska</a><a href="auksion-jadvali.html" class="faol">Auksion jadvali</a><a href="auksion-takliflar.html">Takliflar</a><a href="tolov-nazorati.html">To'lovlar</a><a href="ijara.html">Ijara</a><a href="xaridorlar.html">Xaridorlar</a><a href="savdo-natijalari.html">Natijalar</a></nav>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("SOTUV");
+  const takliflar = await MKBapi.royxat("TAKLIFLAR");
+  const SANALAR = ["05-sen, 2026", "12-sen, 2026", "19-sen, 2026", "26-sen, 2026"];
+  const qatorlar = r.map((l, i) => {
+    const e = JSON.parse(localStorage.getItem("mkb4-elon-" + l.id) || "{}");
+    return {id: l.id, nom: l.nom, tur: l.tur, baho: l.baho,
+      sana: e.sana || SANALAR[i % SANALAR.length],
+      takliflar: takliflar.filter(t => t.obyektId === l.id).length,
+      bosqich: (MKB_DATA.AUKSION_BOSQICH.find(v => v[0] === l.bosqich) || [])[1] || l.bosqich};
+  });
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta lot jadvalda";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    qidiruv: ["nom", "id"],
+    filtrlar: [{kalit: "bosqich", nom: "Bosqich", variantlar: [...new Set(qatorlar.map(q => q.bosqich))]}],
+    ustunlar: [
+      {kalit: "sana", nom: "Auksion sanasi", chiz: q => '<b class="kod-mono">' + q.sana + '</b>'},
+      {kalit: "nom", nom: "Lot"},
+      {kalit: "tur", nom: "Turi"},
+      {kalit: "baho", nom: "Boshlang'ich narx", son: true, chiz: q => '<span class="pul">' + MKB.fmt(q.baho) + ' mln</span>'},
+      {kalit: "takliflar", nom: "Takliflar", son: true, chiz: q =>
+        q.takliflar ? '<span class="chip chip-brend">' + q.takliflar + '</span>' : "0"},
+      {kalit: "bosqich", nom: "Bosqich", chiz: q => '<span class="chip chip-info">' + q.bosqich + '</span>'},
+    ],
+    bosilganda: q => location.href = "lot.html?id=" + encodeURIComponent(q.id),
+  });
+});
+</script>
+</body>
+</html>

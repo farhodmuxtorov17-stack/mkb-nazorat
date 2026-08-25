@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Ijara shartnomalari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="savdo">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Realizatsiya</span></div>
+    <div class="hs-qator"><h1>Ijara shartnomalari</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="savdo.html">Doska</a><a href="auksion-jadvali.html">Auksion jadvali</a><a href="auksion-takliflar.html">Takliflar</a><a href="tolov-nazorati.html">To'lovlar</a><a href="ijara.html" class="faol">Ijara</a><a href="xaridorlar.html">Xaridorlar</a><a href="savdo-natijalari.html">Natijalar</a></nav>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Faol shartnomalar</span>
+      <span class="m-qiymat"><span id="ij-faol">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Oylik daromad</span>
+      <span class="m-qiymat"><span id="ij-oylik">—</span></span>
+      <span class="m-izoh">Jami ijara to'lovi</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Kechikkan to'lovlar</span>
+      <span class="m-qiymat"><span id="ij-kechikkan">—</span></span>
+    </div>
+  </section>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("IJARA");
+  document.getElementById("ij-faol").textContent = r.filter(i => i.holat === "amalda").length;
+  document.getElementById("ij-oylik").innerHTML =
+    r.reduce((a, i) => a + MKB.sonQiymat(i.oylik), 0).toFixed(1).replace(".", ",") + "<small>mln so'm</small>";
+  document.getElementById("ij-kechikkan").textContent = r.filter(i => i.holat === "kechikkan").length;
+  MKB.jadval("jadval-joy", {
+    qatorlar: r,
+    qidiruv: ["obyekt", "ijarachi"],
+    ustunlar: [
+      {kalit: "id", nom: "Shartnoma", chiz: q => '<span class="kod-mono">' + q.id + '</span>'},
+      {kalit: "obyekt", nom: "Obyekt"},
+      {kalit: "ijarachi", nom: "Ijarachi"},
+      {kalit: "oylik", nom: "Oylik to'lov", son: true, chiz: q => '<span class="pul">' + String(q.oylik).replace(".", ",") + ' mln</span>'},
+      {kalit: "tolangan", nom: "To'langan", chiz: q => q.tolangan + " / " + q.jami + " oy"},
+      {kalit: "holat", nom: "Holat", chiz: q => q.holat === "amalda"
+        ? '<span class="chip chip-yashil">Amalda</span>' : '<span class="chip chip-xavf">Kechikkan</span>'},
+    ],
+    bosilganda: q => location.href = "ijara-shartnoma.html?id=" + encodeURIComponent(q.id),
+  });
+});
+</script>
+</body>
+</html>

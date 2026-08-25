@@ -81,7 +81,7 @@ function rolBoshSahifasi(rol){
 }
 
 /* ---------- Tarjima (UZ -> RU) ---------- */
-const TARJIMA_ATTR = ["placeholder", "title", "aria-label", "alt", "data-toast"];
+const TARJIMA_ATTR = ["placeholder", "title", "aria-label", "alt", "data-toast", "data-yorliq"];
 function joriyTil(){ return localStorage.getItem("mkb-til") === "ru" ? "ru" : "uz"; }
 function lugat(){ return window.MKB_LUGAT || {}; }
 const ASL_MATN = new WeakMap();
@@ -96,8 +96,15 @@ function tarjimaQil(ildiz){
     const asl = ASL_MATN.get(n);
     const k = asl.trim();
     if (!k) continue;
-    if (ru && L[k]) n.nodeValue = asl.replace(k, L[k]);
-    else if (!ru) n.nodeValue = asl;
+    if (ru){
+      let t = L[k];
+      if (t == null){
+        for (const [q, alm] of (window.MKB_TARJIMA_QOIDALARI || [])){
+          if (q.test(k)){ t = k.replace(q, alm); break; }
+        }
+      }
+      if (t != null) n.nodeValue = asl.replace(k, t);
+    } else n.nodeValue = asl;
   }
   (ildiz || document).querySelectorAll(TARJIMA_ATTR.map(a => "[" + a + "]").join(",")).forEach(el => {
     TARJIMA_ATTR.forEach(a => {
@@ -365,7 +372,7 @@ const MKB = {
         : '<tr><td colspan="' + cfg.ustunlar.length + '"><div class="bosh-holat">' + ik("hujjat") +
           "<b>Hech narsa topilmadi</b><span>Qidiruv yoki filtr shartlarini o\'zgartirib ko\'ring</span></div></td></tr>") +
         "</tbody></table></div>" +
-        '<div class="jadval-past"><span>Jami: <b>' + jami + "</b> ta yozuv</span>" +
+        '<div class="jadval-past"><span style="font-weight:500">Jami: ' + jami + " ta yozuv</span>" +
         '<div class="sahifalash">' +
           '<button type="button" data-sahifa="old"' + (holat.sahifa <= 1 ? " disabled" : "") + ">" + ik("chap") + "</button>" +
           Array.from({length: sahifalar}, (_, i) =>
@@ -507,4 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   tarjimaQil();
   document.dispatchEvent(new CustomEvent("mkb:tayyor"));
+  /* Sahifa skriptlari ma'lumotni keyin chizadi — tarjima ikki bosqichda takrorlanadi */
+  setTimeout(tarjimaQil, 250);
+  setTimeout(tarjimaQil, 1000);
 });

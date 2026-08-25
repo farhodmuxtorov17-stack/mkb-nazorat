@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Ma'lumot eksporti</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="hisobot">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>Eksport</span></div>
+    <div class="hs-qator"><h1>Ma'lumot eksporti</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Ma'lumot eksporti</h2></div>
+  <form id="ex-forma" class="forma-tor">
+    <div class="maydon"><label class="maydon-yorliq">Bo'lim <b>*</b></label>
+      <div class="kirish"><select name="bolim"><option>Aktivlar reyestri</option><option>Qarzdorlar</option><option>Undiruv ishlari</option><option>Ko'riklar</option><option>Savdolar</option><option>Arxiv</option></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Format <b>*</b></label>
+      <div class="kirish"><select name="format"><option>XLSX</option><option>CSV</option><option>PDF</option></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Davr</label>
+      <div class="kirish"><select name="davr"><option>Barcha davr</option><option>Joriy oy</option><option>Joriy chorak</option></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Maydonlar</label>
+      <div class="kirish"><select name="maydon"><option>Standart to'plam</option><option>Kengaytirilgan</option></select></div></div>
+    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
+      <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-yuklab"/></svg>Eksport qilish</button></div>
+  </form>
+  <div id="ex-jurnal" style="margin-top:18px"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+  function jurnal(){
+    const j = JSON.parse(localStorage.getItem("mkb4-eksport") || "[]");
+    document.getElementById("ex-jurnal").innerHTML = j.length ?
+      '<div class="karta-bosh"><h2 style="font-size:14px">So\'nggi eksportlar</h2></div>' +
+      j.map(v => '<div style="display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--chiziq-2);font-size:12.5px">' +
+        '<span>' + v.bolim + ' · ' + v.format + '</span><span style="color:var(--iz)">' + v.vaqt + '</span></div>').join("") : "";
+  }
+  jurnal();
+  document.getElementById("ex-forma").addEventListener("submit", e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target, ["bolim", "format"]);
+    if (!q) return;
+    const j = JSON.parse(localStorage.getItem("mkb4-eksport") || "[]");
+    j.unshift({bolim: q.bolim, format: q.format, vaqt: new Date().toLocaleString("uz")});
+    localStorage.setItem("mkb4-eksport", JSON.stringify(j.slice(0, 10)));
+    MKB.toast(q.bolim + " " + q.format + " shaklida tayyorlanmoqda");
+    jurnal();
+  });
+});
+</script>
+</body>
+</html>

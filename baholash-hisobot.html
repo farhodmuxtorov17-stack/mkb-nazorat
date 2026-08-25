@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Baholash hisoboti</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="baholash">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="baholash.html">Baholash</a><span class="ajratgich">/</span><span>Hisobot</span></div>
+    <div class="hs-qator"><h1>Baholash hisoboti</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:760px"><div class="karta-bosh"><h2>Baholash hisoboti</h2><span class="soni kod-mono" id="bh-id"></span></div><div id="bh-obyekt" style="margin-bottom:14px"></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-baholash"/></svg>Baholovchi</dt>
+  <dd id="bh-baholovchi">—</dd>
+  <dt><svg class="ic"><use href="#i-info"/></svg>Usul / sabab</dt>
+  <dd id="bh-usul">—</dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Sana</dt>
+  <dd id="bh-sana">—</dd>
+  <dt><svg class="ic"><use href="#i-grafik"/></svg>Yangi qiymat</dt>
+  <dd><span id="bh-qiymat" class="pul">—</span></dd>
+  <dt><svg class="ic"><use href="#i-diagramma"/></svg>Avvalgi qiymat</dt>
+  <dd><span id="bh-avvalgi" class="pul">—</span></dd>
+  <dt><svg class="ic"><use href="#i-foiz"/></svg>O'zgarish</dt>
+  <dd id="bh-delta">—</dd>
+  <dt><svg class="ic"><use href="#i-soat"/></svg>Keyingi baholash</dt>
+  <dd id="bh-keyingi">—</dd>
+</dl></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const b = id ? await MKBapi.bitta("BAHOLASHLAR", id) : null;
+  if (!b){ location.replace("xato-404.html"); return; }
+  const y = MKB_DATA.OBYEKT_INDEKS[b.obyektId] || {};
+  document.getElementById("hs-meta").textContent = b.id;
+  document.getElementById("bh-id").textContent = b.id;
+  document.getElementById("bh-obyekt").innerHTML =
+    '<a href="obyekt.html?id=' + encodeURIComponent(b.obyektId) + '" style="display:flex;gap:12px;align-items:center">' +
+    '<img class="foto" src="' + (y.rasmKichik || y.rasm || "") + '" style="width:86px;height:60px;border-radius:10px;object-fit:cover" alt="">' +
+    '<span><b style="display:block;font-size:14px">' + (y.qisqa || b.obyektId) + '</b>' +
+    '<span style="font-size:11.5px;color:var(--iz)">' + b.obyektId + '</span></span></a>';
+  document.getElementById("bh-baholovchi").textContent = b.baholovchi;
+  document.getElementById("bh-usul").textContent = b.usul;
+  document.getElementById("bh-sana").textContent = b.sana;
+  document.getElementById("bh-qiymat").textContent = b.qiymat ? MKB.fmt(b.qiymat) + " mln so'm" : "kutilmoqda";
+  document.getElementById("bh-avvalgi").textContent = b.avvalgi ? MKB.fmt(b.avvalgi) + " mln so'm" : "—";
+  const d = b.avvalgi && b.qiymat ? Math.round((b.qiymat - b.avvalgi) / b.avvalgi * 1000) / 10 : 0;
+  document.getElementById("bh-delta").innerHTML =
+    '<span class="delta ' + (d >= 0 ? 'ijobiy">↑ ' : 'salbiy">↓ ') + Math.abs(d).toFixed(1).replace(".", ",") + '%</span>';
+  document.getElementById("bh-keyingi").textContent = b.keyingi || "—";
+});
+</script>
+</body>
+</html>

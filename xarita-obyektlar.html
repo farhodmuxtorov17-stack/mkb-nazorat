@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Obyektlar xaritasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
+<script src="assets/vendor/leaflet/leaflet.js"></script>
+<style>
+.xarita-karta{position:relative;background:var(--varaq);border:1px solid var(--chiziq-2);border-radius:var(--r-hero);overflow:hidden;min-height:520px}
+#leaflet-joy{position:absolute;inset:0;z-index:1}
+.xarita-yon{position:absolute;right:16px;top:16px;bottom:16px;width:270px;z-index:5;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(6px);border:1px solid var(--chiziq);
+  border-radius:14px;padding:14px;overflow-y:auto}
+.xarita-yon h3{font:700 13.5px var(--shrift);margin-bottom:8px}
+.hudud-band{display:flex;align-items:center;gap:9px;width:100%;padding:8px 9px;border-radius:9px;font-size:12.5px;text-align:left;transition:background var(--tez)}
+.hudud-band:hover{background:var(--kirish-fon)}
+.hudud-band.faol{background:var(--brend-fon)}
+.hudud-band b{margin-left:auto;font:700 11.5px var(--shrift-mono)}
+</style>
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="xarita">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Hududiy xarita</span></div>
+    <div class="hs-qator"><h1>Obyektlar xaritasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="xarita.html">Hududiy</a><a href="xarita-obyektlar.html" class="faol">Obyektlar</a></nav>
+  <div class="xarita-karta">
+    <div id="leaflet-joy"></div>
+    <aside class="xarita-yon"><h3>Reyestr obyektlari</h3><div id="xo-royxat"></div></aside>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const xarita = L.map("leaflet-joy", {zoomControl: true}).setView([41.31, 69.25], 11);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(xarita);
+  const nuqtalar = MKB_DATA.XARITA_NUQTALARI || [];
+  const markerlar = {};
+  yoz.forEach((y, i) => {
+    const n = nuqtalar[i % nuqtalar.length];
+    if (!n) return;
+    const m = L.circleMarker([n.lat + (i * 0.004), n.lng + ((i % 3) * 0.005)], {radius: 8,
+      color: "#16170F", weight: 2, fillColor: y.qoplash < 100 ? "#E2551E" : "#C8ED45", fillOpacity: .92})
+      .addTo(xarita)
+      .bindPopup('<b>' + y.mulk.qisqa + '</b><br>' + y.id + ' · qoplash ' + y.qoplash + '%<br>' +
+        '<a href="obyekt.html?id=' + encodeURIComponent(y.id) + '">Kartochkani ochish</a>');
+    markerlar[y.id] = m;
+  });
+  document.getElementById("xo-royxat").innerHTML = yoz.map(y =>
+    '<button type="button" class="hudud-band" data-id="' + y.id + '">' +
+    '<span style="width:8px;height:8px;border-radius:99px;background:' + (y.qoplash < 100 ? 'var(--xavf)' : 'var(--brend)') + '"></span>' +
+    '<span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + y.mulk.qisqa + '</span></button>').join("");
+  document.getElementById("xo-royxat").addEventListener("click", e => {
+    const b = e.target.closest("[data-id]");
+    if (!b) return;
+    const m = markerlar[b.dataset.id];
+    if (m){ xarita.flyTo(m.getLatLng(), 13, {duration: .5}); m.openPopup(); }
+  });
+});
+</script>
+</body>
+</html>

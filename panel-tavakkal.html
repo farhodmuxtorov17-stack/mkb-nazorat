@@ -87,7 +87,7 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("m-zaxira").innerHTML =
     (D.jamiZaxira ? MKB.fmt(Math.round(D.jamiZaxira())) : "—") + "<small>mln so'm</small>";
   const tasnifNomi = y => (y.tasnif && y.tasnif.nom) || y.tasnif || "";
-  const yomon = yoz.filter(y => tasnifNomi(y) && !["Standart", "Substandart"].includes(tasnifNomi(y))).length;
+  const yomon = yoz.filter(y => y.tasnif && (y.tasnif.zaxira || 0) >= 50).length;
   document.getElementById("m-yomon").textContent = yomon;
   document.getElementById("m-eski").textContent = D.BAHOLASHLAR.filter(b => (b.sana || "").includes("2025")).length || 1;
   document.getElementById("m-qoplash").innerHTML =

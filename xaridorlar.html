@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Xaridorlar reyestri</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="savdo">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Realizatsiya</span></div>
+    <div class="hs-qator"><h1>Xaridorlar reyestri</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="savdo.html">Doska</a><a href="auksion-jadvali.html">Auksion jadvali</a><a href="auksion-takliflar.html">Takliflar</a><a href="tolov-nazorati.html">To'lovlar</a><a href="ijara.html">Ijara</a><a href="xaridorlar.html" class="faol">Xaridorlar</a><a href="savdo-natijalari.html">Natijalar</a></nav>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("XARIDORLAR");
+  document.getElementById("hs-meta").textContent = r.length + " ta ishtirokchi";
+  MKB.jadval("jadval-joy", {
+    qatorlar: r,
+    qidiruv: ["nom"],
+    filtrlar: [{kalit: "tur", nom: "Turi", variantlar: [...new Set(r.map(x => x.tur))]}],
+    ustunlar: [
+      {kalit: "nom", nom: "Ishtirokchi", chiz: q =>
+        '<span class="obyekt-katak"><span style="width:36px;height:36px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 12px var(--shrift)">' +
+        q.nom.replace(/[«»]/g, "").split(" ").map(v => v[0]).join("").slice(0, 2).toUpperCase() + '</span>' +
+        '<span><span class="nom">' + q.nom + '</span><br><span class="sub">' + q.tur + '</span></span></span>'},
+      {kalit: "ishtirok", nom: "Ishtiroklar", son: true},
+      {kalit: "yutgan", nom: "Yutgan savdolar", son: true, chiz: q =>
+        q.yutgan ? '<span class="chip chip-brend">' + q.yutgan + '</span>' : "0"},
+      {kalit: "holat", nom: "Holat", chiz: q => '<span class="chip chip-yashil">Faol</span>'},
+    ],
+    bosilganda: q => location.href = "xaridor.html?id=" + encodeURIComponent(q.id),
+  });
+});
+</script>
+</body>
+</html>
