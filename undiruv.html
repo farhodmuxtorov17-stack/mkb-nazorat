@@ -6,16 +6,26 @@
 <title>MKB — Undiruv doskasi</title>
 <link rel="stylesheet" href="yadro/app.css?v=26082621">
 <style>
-.doska{display:grid;grid-auto-flow:column;grid-auto-columns:272px;gap:14px;overflow-x:auto;padding-bottom:8px}
-.doska-ustun{background:var(--varaq-2);border:1px solid var(--chiziq-2);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:10px;min-height:200px}
-.doska-bosh{display:flex;align-items:center;gap:8px;padding:4px 6px}
-.doska-bosh b{font-size:12.5px}
-.doska-bosh .soni{margin-left:auto;font:700 11px var(--shrift-mono);background:var(--varaq);border:1px solid var(--chiziq-2);border-radius:99px;padding:2px 8px;color:var(--qalam)}
-.ish-karta{background:var(--varaq);border:1px solid var(--chiziq-2);border-radius:16px;padding:12px;display:block;transition:transform var(--tez),box-shadow var(--tez)}
-.ish-karta:hover{transform:translateY(-2px);box-shadow:0 6px 18px -8px rgba(25,26,20,.18)}
-.ish-karta .ik{font:500 10.5px var(--shrift-mono);color:var(--iz)}
-.ish-karta b{display:block;font-size:12.5px;margin:3px 0 6px;line-height:1.35}
-.ish-karta .past{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--matn-3)}
+.doska{display:grid;grid-auto-flow:column;grid-auto-columns:300px;gap:18px;overflow-x:auto;padding:4px 2px 12px}
+.doska-ustun{display:flex;flex-direction:column;gap:12px;min-height:220px}
+.doska-bosh{display:flex;align-items:center;gap:10px;padding:2px 6px 0}
+.doska-bosh b{font-size:14.5px;font-weight:500}
+.doska-bosh .nuq{width:9px;height:9px;border-radius:99px;flex:none}
+.doska-bosh .soni{margin-left:auto;font-size:12.5px;color:var(--matn-3);
+  background:var(--oq);border-radius:999px;padding:3px 11px;box-shadow:var(--soya-past)}
+.ish-karta{background:var(--oq);border-radius:22px;padding:16px 18px;display:block;
+  box-shadow:var(--soya-past);transition:transform var(--tez),box-shadow var(--tez)}
+.ish-karta:hover{transform:translateY(-3px);box-shadow:var(--soya)}
+.ish-karta .bosh{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.ish-karta .yuz{width:38px;height:38px;border-radius:999px;background:var(--siyoh);color:var(--oq);
+  display:grid;place-items:center;font:500 13px var(--shrift);flex:none}
+.ish-karta .ik{font-size:12px;color:var(--matn-3)}
+.ish-karta b{display:block;font-size:14px;font-weight:500;line-height:1.3}
+.ish-karta .obyekt{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--chiziq-2)}
+.ish-karta .obyekt img{width:44px;height:36px;border-radius:12px;object-fit:cover;flex:none;background:var(--persik)}
+.ish-karta .obyekt span{font-size:12.5px;color:var(--matn-2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ish-karta .past{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:10px;border-top:1px solid var(--chiziq-2)}
+.doska-bosh-ustun{position:sticky;top:0}
 </style>
 </head>
 <body data-sahifa="yuridik">
@@ -47,16 +57,20 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("doska").innerHTML = MKB_DATA.BOSQICHLAR.map(b => {
     const r = yoz.filter(y => y.ish.bosqich === b.kalit);
     return '<div class="doska-ustun"><div class="doska-bosh">' +
-      '<span style="width:8px;height:8px;border-radius:99px;background:' + b.rang + '"></span>' +
+      '<span class="nuq" style="background:' + b.rang + '"></span>' +
       '<b>' + b.nom + '</b><span class="soni">' + r.length + '</span></div>' +
       (r.length ? r.map(y =>
         '<a class="ish-karta" href="ish.html?id=' + encodeURIComponent(y.id) + '">' +
-          '<span class="ik">' + y.ish.raqam + '</span><b>' + y.mijoz.nom + '</b>' +
-          '<span style="font-size:12.5px;color:var(--matn-3);display:block;margin-bottom:8px">' + y.mulk.qisqa + '</span>' +
-          '<div class="past"><span class="pul" style="color:var(--qalam)">' + y.qarzMatn + '</span>' +
-          (y.ish.shoshilinch ? '<span class="chip chip-xavf">shoshilinch</span>' : '<span>' + y.qarz.kunlar + ' kun</span>') +
+          '<div class="bosh"><span class="yuz">' + y.mijoz.belgi + '</span>' +
+          '<span style="min-width:0"><b>' + y.mijoz.nom + '</b>' +
+          '<span class="ik">' + y.ish.raqam + '</span></span></div>' +
+          '<div class="obyekt"><img src="' + (y.mulk.rasmKichik || y.mulk.rasm) + '" alt="" loading="lazy">' +
+          '<span>' + y.mulk.qisqa + '</span></div>' +
+          '<div class="past"><span class="pul">' + y.qarzMatn + '</span>' +
+          (y.ish.shoshilinch ? '<span class="chip chip-xavf chip-kichik">shoshilinch</span>'
+            : '<span class="chip chip-kichik">' + y.qarz.kunlar + ' kun</span>') +
           '</div></a>').join("")
-      : '<div style="font-size:12.5px;color:var(--xira);text-align:center;padding:16px 0">Ish yo\'q</div>');
+      : '<div class="karta" style="padding:20px;text-align:center;font-size:12.5px;color:var(--matn-3);box-shadow:none;background:rgba(255,255,255,.5)">Ish yo&#39;q</div>');
   }).map(x => x + "</div>").join("");
 });
 </script>
