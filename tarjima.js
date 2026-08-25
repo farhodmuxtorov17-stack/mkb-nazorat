@@ -6,6 +6,7 @@
    ============================================================ */
 window.MKB_LUGAT = {
  /* 24.08.2026: lug'at to'liq qamrovgacha to'ldirildi */
+  "Ish o'rni": "Рабочее место",
   "Aylantirish uchun sudrang": "Перетащите, чтобы повернуть",
   "Obyekt topilmadi": "Объект не найден",
   "Dalolatnoma topilmadi": "Акт не найден",
