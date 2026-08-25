@@ -5,6 +5,9 @@
    Xos ismlar, manzillar va hujjat raqamlari ataylab tarjima qilinmaydi.
    ============================================================ */
 window.MKB_LUGAT = {
+  "Pasport": "Паспорт",
+  "Kartalar": "Карточки",
+  "Ko'rinish": "Вид",
   "Telefon qilish": "Позвонить",
   "Xabar yuborish": "Отправить сообщение",
   "Xabar yuborildi va jurnalga yozildi": "Сообщение отправлено и записано в журнал",

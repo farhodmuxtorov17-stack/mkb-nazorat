@@ -46,7 +46,7 @@ Jami: **127 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | Fayl | Ekran | Izoh |
 |---|---|---|
 | `obyektlar.html` | Aktiv obyektlari reyestri | Markaziy reyestr: qidiruv, filtr, saralash |
-| `obyekt.html` | Obyekt kartochkasi | Umumiy ma'lumot + ish zanjiri |
+| `obyekt.html` | Obyekt kartochkasi | Umumiy ma'lumot + ish zanjiri (referens hero) |
 | `obyekt-moliya.html` | Obyekt moliyasi | Qarz, to'lovlar, baholash tarixi |
 | `obyekt-hujjatlar.html` | Obyekt hujjatlari | Hujjatlar + yuklash |
 | `obyekt-koriklar.html` | Obyekt ko'riklari | Ko'riklar tarixi |

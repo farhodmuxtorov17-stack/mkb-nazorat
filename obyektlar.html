@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Aktiv obyektlari reyestri</title>
 <link rel="stylesheet" href="yadro/app.css?v=26082621">
+<style>
+.kor-almash{display:inline-flex;gap:6px;background:var(--oq);border-radius:var(--r-pilyula);
+  padding:5px;box-shadow:var(--soya-past)}
+.kor-almash button{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 18px;
+  border-radius:999px;font-size:13.5px;color:var(--matn-2);transition:background var(--tez),color var(--tez)}
+.kor-almash button.faol{background:var(--siyoh);color:var(--oq)}
+.reyestr-asbob{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:2px}
+.reyestr-asbob .izlash{flex:1;min-width:220px;max-width:360px}
+</style>
 </head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
@@ -16,7 +25,17 @@
     <div class="hs-yorliq"><span>Aktivlar reyestri</span></div>
     <div class="hs-qator"><h1>Aktiv obyektlari reyestri</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar"><a class="tugma tugma-oq" href="xarita.html"><svg class="ic"><use href="#i-xarita"/></svg>Xaritada</a><a class="tugma tugma-asosiy" href="qabul-boshlash.html"><svg class="ic"><use href="#i-qoshish"/></svg>Balansga qabul</a></div></div>
   </div>
-  <div id="jadval-joy"></div>
+  <div class="reyestr-asbob">
+    <div class="izlash"><svg class="ic"><use href="#i-izlash"/></svg><input type="search" id="r-qidiruv" placeholder="Obyekt, id yoki hudud..." aria-label="Qidirish"></div>
+    <div class="tanlov" id="r-bosqich" role="button" tabindex="0" aria-expanded="false"><span class="t-old">Bosqich:</span><span class="t-yorliq">Barchasi</span><svg class="ic strelka"><use href="#i-past"/></svg><div class="menyu-popover" style="top:calc(100% + 8px);left:0"></div></div>
+    <div class="tanlov" id="r-hudud" role="button" tabindex="0" aria-expanded="false"><span class="t-old">Hudud:</span><span class="t-yorliq">Barchasi</span><svg class="ic strelka"><use href="#i-past"/></svg><div class="menyu-popover" style="top:calc(100% + 8px);left:0"></div></div>
+    <div class="kor-almash" style="margin-left:auto" role="group" aria-label="Ko&#39;rinish">
+      <button type="button" data-kor="karta" class="faol"><svg class="ic"><use href="#i-galereya"/></svg>Kartalar</button>
+      <button type="button" data-kor="jadval"><svg class="ic"><use href="#i-hujjat"/></svg>Jadval</button>
+    </div>
+  </div>
+  <div class="obyekt-tor" id="karta-joy"></div>
+  <div id="jadval-joy" hidden></div>
 </main>
 </div>
 </div>
@@ -32,39 +51,120 @@
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
   const qatorlar = yoz.map(y => ({
-    id: y.id, nom: y.mulk.nom, qisqa: y.mulk.qisqa, rasm: y.mulk.rasmKichik || y.mulk.rasm,
-    hudud: y.mulk.hudud, tur: y.mulk.tur, bosqich: y.bosqichNomi, chip: y.bosqichChip || "chip-info",
+    id: y.id, nom: y.mulk.nom, qisqa: y.mulk.qisqa, rasm: y.mulk.rasm,
+    rasmKichik: y.mulk.rasmKichik || y.mulk.rasm, manzil: y.mulk.manzil,
+    hudud: y.mulk.hudud, tur: y.mulk.tur, maydon: y.mulk.maydon,
+    bosqich: y.bosqichNomi,
     qarzN: MKB.sonQiymat(y.qarz.jami || y.qarzSon), qarzMatn: y.qarzMatn,
     bahoN: MKB.sonQiymat(y.mulk.baho), bahoMatn: y.bahoMatn, qoplash: y.qoplash,
   }));
   document.getElementById("hs-meta").textContent = qatorlar.length + " ta obyekt nazoratda";
-  MKB.jadval("jadval-joy", {
-    qatorlar,
-    qidiruv: ["nom", "id", "hudud", "tur", "bosqich"],
-    qidiruvYozuvi: "Obyekt, id yoki hudud...",
-    filtrlar: [
-      {kalit: "bosqich", nom: "Bosqich", variantlar: [...new Set(qatorlar.map(q => q.bosqich))]},
-      {kalit: "hudud", nom: "Hudud", variantlar: [...new Set(qatorlar.map(q => q.hudud))]},
-      {kalit: "tur", nom: "Turi", variantlar: [...new Set(qatorlar.map(q => q.tur))]},
-    ],
-    ustunlar: [
-      {kalit: "nom", nom: "Obyekt", chiz: q =>
-        '<span class="obyekt-katak"><img class="foto" src="' + q.rasm + '" alt="" loading="lazy">' +
-        '<span><span class="nom">' + q.qisqa + '</span><br><span class="sub kod-mono">' + q.id + '</span></span></span>'},
-      {kalit: "hudud", nom: "Hudud"},
-      {kalit: "tur", nom: "Turi"},
-      {kalit: "bosqich", nom: "Bosqich", chiz: q => '<span class="chip chip-info">' + q.bosqich + '</span>'},
-      {kalit: "qarzN", nom: "Qoldiq qarz", son: true, chiz: q => '<span class="pul">' + q.qarzMatn + '</span>'},
-      {kalit: "bahoN", nom: "Baholangan", son: true, chiz: q => '<span class="pul">' + q.bahoMatn + '</span>'},
-      {kalit: "qoplash", nom: "Qoplash", son: true, chiz: q => MKB.shtrix(q.qoplash)},
-    ],
-    saralash: "qoplash",
-    bosilganda: q => location.href = "obyekt.html?id=" + encodeURIComponent(q.id),
+
+  const holat = {qidiruv: "", bosqich: "", hudud: "", kor: localStorage.getItem("mkb4-reyestr-kor") || "karta"};
+
+  function moslar(){
+    const q = holat.qidiruv.toLowerCase();
+    return qatorlar.filter(x =>
+      (!q || [x.nom, x.id, x.hudud, x.tur, x.bosqich].some(v => String(v).toLowerCase().includes(q))) &&
+      (!holat.bosqich || x.bosqich === holat.bosqich) &&
+      (!holat.hudud || x.hudud === holat.hudud));
+  }
+
+  function kartaHTML(x){
+    const zona = x.qoplash >= 140 ? "beyj-mint" : x.qoplash >= 100 ? "beyj-sariq" : "beyj-pushti";
+    return '<a class="obyekt-karta" href="obyekt.html?id=' + encodeURIComponent(x.id) + '">' +
+      '<div class="obyekt-media"><img src="' + x.rasm + '" alt="" loading="lazy">' +
+        '<span class="beyj ' + zona + '">' + x.bosqich + '</span>' +
+        '<span class="amallar">' +
+          '<span class="amal-doira">' + ik("korish") + '</span>' +
+          '<span class="amal-doira">' + ik("strelka") + '</span></span></div>' +
+      '<div class="obyekt-tana"><h3>' + x.qisqa + '</h3>' +
+        '<span class="manzil">' + x.manzil + '</span>' +
+        '<span class="obyekt-narx">' + x.bahoMatn + '</span>' +
+        '<div class="obyekt-past">' +
+          '<span class="obyekt-xoss">' + ik("kub") + x.tur + '</span>' +
+          '<span class="obyekt-xoss">' + ik("qavat") + x.maydon + '</span>' +
+          '<span style="margin-left:auto">' + MKB.shtrix(x.qoplash, 12) + '</span>' +
+        '</div></div></a>';
+  }
+
+  let jadval = null;
+  function chiz(){
+    const r = moslar();
+    const kartada = holat.kor === "karta";
+    document.getElementById("karta-joy").hidden = !kartada;
+    document.getElementById("jadval-joy").hidden = kartada;
+    if (kartada){
+      document.getElementById("karta-joy").innerHTML = r.length ? r.map(kartaHTML).join("")
+        : '<div class="karta bosh-holat" style="grid-column:1/-1">' + ik("aktivlar") +
+          "<b>Hech narsa topilmadi</b><span>Qidiruv yoki filtr shartlarini o'zgartiring</span></div>";
+    } else if (!jadval){
+      jadval = MKB.jadval("jadval-joy", {
+        qatorlar: r,
+        ustunlar: [
+          {kalit: "qisqa", nom: "Obyekt", chiz: q =>
+            '<span class="obyekt-katak"><img src="' + q.rasmKichik + '" alt="" loading="lazy">' +
+            '<span><span class="nom">' + q.qisqa + '</span><br><span class="sub kod-mono">' + q.id + '</span></span></span>'},
+          {kalit: "hudud", nom: "Hudud"},
+          {kalit: "tur", nom: "Turi"},
+          {kalit: "bosqich", nom: "Bosqich", chiz: q => '<span class="chip chip-info">' + q.bosqich + '</span>'},
+          {kalit: "qarzN", nom: "Qoldiq qarz", son: true, chiz: q => '<span class="pul">' + q.qarzMatn + '</span>'},
+          {kalit: "bahoN", nom: "Baholangan", son: true, chiz: q => '<span class="pul">' + q.bahoMatn + '</span>'},
+          {kalit: "qoplash", nom: "Qoplash", son: true, chiz: q => MKB.shtrix(q.qoplash)},
+        ],
+        saralash: "qoplash",
+        bosilganda: q => location.href = "obyekt.html?id=" + encodeURIComponent(q.id),
+      });
+    } else {
+      jadval.yangila(r);
+    }
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+
+  /* Filtr menyulari */
+  function menyuQur(idQism, kalit, hamma){
+    const t = document.getElementById(idQism);
+    const pop = t.querySelector(".menyu-popover");
+    pop.innerHTML = '<button type="button" data-q="">' + hamma + "</button>" +
+      [...new Set(qatorlar.map(x => x[kalit]))].map(v =>
+        '<button type="button" data-q="' + v + '">' + v + "</button>").join("");
+    t.addEventListener("click", e => {
+      if (e.target.closest(".menyu-popover")) return;
+      document.querySelectorAll(".menyu-popover.ochiq").forEach(p => p !== pop && p.classList.remove("ochiq"));
+      pop.classList.toggle("ochiq");
+      t.setAttribute("aria-expanded", pop.classList.contains("ochiq"));
+    });
+    pop.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+      holat[kalit] = b.dataset.q;
+      t.querySelector(".t-yorliq").textContent = b.dataset.q || hamma;
+      pop.classList.remove("ochiq");
+      chiz();
+    }));
+  }
+  menyuQur("r-bosqich", "bosqich", "Barchasi");
+  menyuQur("r-hudud", "hudud", "Barchasi");
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".tanlov")) document.querySelectorAll(".menyu-popover.ochiq").forEach(p => p.classList.remove("ochiq"));
   });
+
+  /* Qidiruv */
+  const qi = document.getElementById("r-qidiruv");
+  qi.addEventListener("input", () => { holat.qidiruv = qi.value; chiz(); });
   const p = new URLSearchParams(location.search);
-  const q = p.get("qidiruv");
-  if (q){ const el = document.querySelector("[data-jadval-qidiruv]");
-    if (el){ el.value = q; el.dispatchEvent(new Event("input")); } }
+  if (p.get("qidiruv")){ qi.value = p.get("qidiruv"); holat.qidiruv = qi.value; }
+
+  /* Ko'rinish almashtirgichi */
+  document.querySelectorAll("[data-kor]").forEach(b => {
+    b.classList.toggle("faol", b.dataset.kor === holat.kor);
+    b.addEventListener("click", () => {
+      holat.kor = b.dataset.kor;
+      localStorage.setItem("mkb4-reyestr-kor", holat.kor);
+      document.querySelectorAll("[data-kor]").forEach(x => x.classList.toggle("faol", x === b));
+      chiz();
+    });
+  });
+
+  chiz();
 });
 </script>
 </body>
