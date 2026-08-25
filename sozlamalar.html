@@ -228,10 +228,10 @@ if (MKB.rolKaliti() !== "admin"){
   if (el) el.remove();
 }
 const AUDIT_ROL_QISQA = {"Administrator":"admin","Filial rahbari":"filial","Kredit menejeri":"kredit","Aktivlar nazorati mutaxassisi": "aktiv","Yurist":"yurist","Tavakkalchilik menejeri":"tavakkal"};
-const AUDIT_JURNAL = MKB_DATA.AUDIT_JURNAL;   /* yagona manba (Д-1) */
+const AMALLAR_JURNALI = MKB_DATA.AMALLAR_JURNALI;   /* yagona manba (Д-1) */
 function auditRoyxatChiz(qidiruv){
   const q = (qidiruv||"").toLowerCase().trim();
-  const royxat = AUDIT_JURNAL.filter(a=>!q || (a.vaqt+" "+a.ism+" "+a.rol+" "+a.amal+" "+a.obyekt).toLowerCase().includes(q));
+  const royxat = AMALLAR_JURNALI.filter(a=>!q || (a.vaqt+" "+a.ism+" "+a.rol+" "+a.amal+" "+a.obyekt).toLowerCase().includes(q));
   document.getElementById("audit-royxat").innerHTML = royxat.length ? royxat.map(a=>`
     <div class="audit-qator">
       <div class="audit-tepa">

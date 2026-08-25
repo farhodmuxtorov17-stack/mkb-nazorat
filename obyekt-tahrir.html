@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Yozuvni tahrirlash</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Obyekt kartochkasi</span></div>
+    <div class="hs-qator"><h1>Yozuvni tahrirlash</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="foto-shapka" aria-label="Obyekt">
+    <img id="fs-rasm" src="" alt="">
+    <div>
+      <div style="flex:1;min-width:220px">
+        <div style="display:flex;gap:8px;margin-bottom:8px" id="fs-chiplar"></div>
+        <h2 id="fs-nom">—</h2>
+        <div class="fs-meta"><span class="kod-mono" id="fs-id" style="color:rgba(255,255,255,.85)">—</span> · <span id="fs-manzil">—</span></div>
+      </div>
+      <div id="fs-halqa"></div>
+    </div>
+  </section>
+  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Yozuvni tahrirlash</h2></div>
+  <form id="tahrir-forma" class="forma-tor">
+    <div class="maydon"><label class="maydon-yorliq">Ish bosqichi <b>*</b></label>
+      <div class="kirish"><select name="bosqich" id="t-bosqich"></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Mas'ul xodim <b>*</b></label>
+      <div class="kirish"><input name="masul" id="t-masul"></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Nazorat muddati</label>
+      <div class="kirish"><input name="muddat" id="t-muddat" placeholder="kk.oo.yyyy"></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Shoshilinchlik</label>
+      <div class="kirish"><select name="shoshilinch"><option value="">Odatiy</option><option value="1">Shoshilinch</option></select></div></div>
+    <div class="maydon keng"><label class="maydon-yorliq">Izoh (tarixga yoziladi)</label>
+      <textarea class="kirish-matn" name="izoh" placeholder="O'zgarish sababi va qisqacha izoh"></textarea></div>
+    <div class="keng" style="display:flex;gap:10px;justify-content:flex-end">
+      <a class="tugma tugma-oq" id="t-bekor" href="#">Bekor qilish</a>
+      <button class="tugma tugma-asosiy" type="submit">Saqlash</button></div>
+  </form></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const x = id ? await MKBapi.bitta('YOZUVLAR', id) : null;
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("fs-rasm").src = x.mulk.rasm;
+  document.getElementById("fs-nom").textContent = x.mulk.nom;
+  document.getElementById("fs-id").textContent = x.id;
+  document.getElementById("fs-manzil").textContent = x.mulk.manzil;
+  document.getElementById("fs-chiplar").innerHTML =
+    "<span class=\"chip chip-brend\">" + x.bosqichNomi + "</span>" +
+    "<span class=\"chip chip-siyoh\">" + x.mulk.tur + "</span>";
+  document.getElementById("fs-halqa").innerHTML = MKB.halqa(x.qoplash, 74, 6).replace('class="halqa', 'class="halqa katta');
+  /* tab havolalariga ?id= ulab qo'yamiz */
+  document.querySelectorAll(".bolim-tablar a").forEach(a => {
+    if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
+  });
+  document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
+
+  document.getElementById("t-bosqich").innerHTML = MKB_DATA.BOSQICHLAR.map(b =>
+    '<option value="' + b.kalit + '"' + (b.kalit === x.ish.bosqich ? ' selected' : '') + '>' + b.nom + '</option>').join("");
+  document.getElementById("t-masul").value = x.ish.masul || "";
+  document.getElementById("t-muddat").value = x.ish.muddat || "";
+  document.getElementById("t-bekor").href = "obyekt.html?id=" + encodeURIComponent(x.id);
+  document.getElementById("tahrir-forma").addEventListener("submit", async e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target, ["bosqich", "masul"]);
+    if (!q) return;
+    const b = MKB_DATA.BOSQICHLAR.find(v => v.kalit === q.bosqich);
+    const tarix = (x.ish.tarix || []).concat(q.izoh
+      ? [[new Date().toLocaleDateString("uz"), "Yozuv yangilandi", q.izoh]] : []);
+    await MKBapi.yangilash("YOZUVLAR", x.id, {
+      ish: Object.assign({}, x.ish, {bosqich: q.bosqich, masul: q.masul,
+        muddat: q.muddat, shoshilinch: !!q.shoshilinch, tarix}),
+      bosqichNomi: b ? b.nom : x.bosqichNomi,
+    });
+    MKB.toast("Yozuv saqlandi — " + x.id);
+    setTimeout(() => location.href = "obyekt.html?id=" + encodeURIComponent(x.id), 600);
+  });
+
+});
+</script>
+</body>
+</html>

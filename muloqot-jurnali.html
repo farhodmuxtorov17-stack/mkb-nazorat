@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Umumiy muloqot jurnali</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="portfel">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Umumiy muloqot jurnali</span></div>
+    <div class="hs-qator"><h1>Umumiy muloqot jurnali</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const qatorlar = [];
+  yoz.forEach(y => (MKB_DATA.MULOQOTLAR[y.id] || []).forEach(m =>
+    qatorlar.push({id: y.id, mijoz: y.mijoz.nom, sana: m[0], kanal: m[1], natija: m[2]})));
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta yozuv";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    qidiruv: ["mijoz", "natija"],
+    filtrlar: [{kalit: "kanal", nom: "Kanal", variantlar: [...new Set(qatorlar.map(q => q.kanal))]}],
+    ustunlar: [
+      {kalit: "sana", nom: "Sana"},
+      {kalit: "mijoz", nom: "Mijoz"},
+      {kalit: "kanal", nom: "Kanal", chiz: q => '<span class="chip">' + q.kanal + '</span>'},
+      {kalit: "natija", nom: "Natija", chiz: q => '<span style="white-space:normal;display:block;max-width:480px;line-height:1.45">' + q.natija + '</span>'},
+    ],
+    bosilganda: q => location.href = "qarzdor-muloqot.html?id=" + encodeURIComponent(q.id),
+  });
+});
+</script>
+</body>
+</html>

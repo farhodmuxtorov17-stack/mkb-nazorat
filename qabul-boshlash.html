@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Balansga qabul — asos</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Balansga qabul</span></div>
+    <div class="hs-qator"><h1>Balansga qabul qilish</h1><span class="hs-meta" id="hs-meta">1-qadam / 3</span></div>
+  </div>
+  <div class="karta" style="padding:14px 20px"><div id="q-zanjir"></div></div>
+  <section class="karta" style="max-width:760px"><div class="karta-bosh"><h2>Qabul asosi</h2></div>
+  <form id="q1-forma" class="forma-tor">
+    <div class="maydon keng"><label class="maydon-yorliq">Obyekt (ijro bosqichidagi yozuvlar) <b>*</b></label>
+      <div class="kirish"><select name="obyektId" id="q1-obyekt"></select></div>
+      <span class="maydon-izoh">Faqat sud qarori ijro bosqichiga yetgan yozuvlar ko'rsatiladi</span></div>
+    <div class="maydon"><label class="maydon-yorliq">Qabul turi <b>*</b></label>
+      <div class="kirish"><select name="turi"><option>Sud qarori ijrosi bo'yicha</option><option>Ixtiyoriy topshirish</option></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Asos hujjat raqami <b>*</b></label>
+      <div class="kirish"><input name="asos" placeholder="IH-2026/____"></div></div>
+    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
+      <a class="tugma tugma-oq" href="obyektlar.html">Bekor qilish</a>
+      <button class="tugma tugma-asosiy" type="submit">Davom etish<svg class="ic"><use href="#i-ong"/></svg></button></div>
+  </form></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+
+  document.getElementById("q-zanjir").innerHTML = MKB.zanjir(
+    [{nom: "Asos va obyekt"}, {nom: "Hujjatlar va komissiya"}, {nom: "Tasdiqlash"}], 0);
+
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const nomzodlar = yoz.filter(y => ["ijro", "qaror"].includes(y.ish.bosqich));
+  document.getElementById("q1-obyekt").innerHTML = nomzodlar.map(y =>
+    '<option value="' + y.id + '">' + y.id + " — " + y.mulk.qisqa + '</option>').join("");
+  const oldingi = JSON.parse(sessionStorage.getItem("mkb4-qabul") || "{}");
+  if (oldingi.asos) document.querySelector('[name="asos"]').value = oldingi.asos;
+  document.getElementById("q1-forma").addEventListener("submit", e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target, ["obyektId", "asos"]);
+    if (!q) return;
+    sessionStorage.setItem("mkb4-qabul", JSON.stringify(q));
+    location.href = "qabul-hujjatlar.html";
+  });
+});
+</script>
+</body>
+</html>

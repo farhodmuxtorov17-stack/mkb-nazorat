@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Obyekt hujjatlari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Obyekt kartochkasi</span></div>
+    <div class="hs-qator"><h1>Obyekt kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="obyekt.html" data-id-qoshib="1">Umumiy</a><a href="obyekt-moliya.html" data-id-qoshib="1">Moliya</a><a href="obyekt-hujjatlar.html" class="faol" data-id-qoshib="1">Hujjatlar</a><a href="obyekt-koriklar.html" data-id-qoshib="1">Ko'riklar</a><a href="obyekt-xarajatlar.html" data-id-qoshib="1">Xarajatlar</a><a href="obyekt-galereya.html" data-id-qoshib="1">Galereya</a><a href="obyekt-3d.html" data-id-qoshib="1">3D navigator</a><a href="obyekt-qavat.html" data-id-qoshib="1">Qavat rejasi</a><a href="obyekt-tarix.html" data-id-qoshib="1">Tarix</a></nav>
+  <section class="foto-shapka" aria-label="Obyekt">
+    <img id="fs-rasm" src="" alt="">
+    <div>
+      <div style="flex:1;min-width:220px">
+        <div style="display:flex;gap:8px;margin-bottom:8px" id="fs-chiplar"></div>
+        <h2 id="fs-nom">—</h2>
+        <div class="fs-meta"><span class="kod-mono" id="fs-id" style="color:rgba(255,255,255,.85)">—</span> · <span id="fs-manzil">—</span></div>
+      </div>
+      <div id="fs-halqa"></div>
+    </div>
+  </section>
+  <section class="karta"><div class="karta-bosh"><h2>Obyekt hujjatlari</h2><span class="soni" id="h-soni"></span><button type="button" class="tugma tugma-kichik tugma-asosiy" id="h-qoshish" style="margin-left:auto"><svg class="ic"><use href="#i-yuklash"/></svg>Hujjat yuklash</button></div><div id="h-royxat"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const x = id ? await MKBapi.bitta('YOZUVLAR', id) : null;
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("fs-rasm").src = x.mulk.rasm;
+  document.getElementById("fs-nom").textContent = x.mulk.nom;
+  document.getElementById("fs-id").textContent = x.id;
+  document.getElementById("fs-manzil").textContent = x.mulk.manzil;
+  document.getElementById("fs-chiplar").innerHTML =
+    "<span class=\"chip chip-brend\">" + x.bosqichNomi + "</span>" +
+    "<span class=\"chip chip-siyoh\">" + x.mulk.tur + "</span>";
+  document.getElementById("fs-halqa").innerHTML = MKB.halqa(x.qoplash, 74, 6).replace('class="halqa', 'class="halqa katta');
+  /* tab havolalariga ?id= ulab qo'yamiz */
+  document.querySelectorAll(".bolim-tablar a").forEach(a => {
+    if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
+  });
+  document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
+
+  function chiz(){
+    const ish = (x.ish.hujjatlar || []).map(h => ({tur: h[0], nom: h[1], hajm: h[2], sana: "", holat: "Tasdiqlangan"}));
+    const ombor = MKB_DATA.HUJJATLAR.filter(h => h.obyektId === x.id)
+      .map(h => ({tur: (h.teg || "PDF").toUpperCase(), nom: h.nom, hajm: h.hajm || "", sana: h.sana, holat: h.holat}));
+    const qoshimcha = JSON.parse(localStorage.getItem("mkb4-hujjat-" + x.id) || "[]");
+    const r = ish.concat(ombor, qoshimcha);
+    document.getElementById("h-soni").textContent = r.length + " ta hujjat";
+    document.getElementById("h-royxat").innerHTML = r.map(h =>
+      '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--chiziq-2)">' +
+        '<span style="width:38px;height:38px;border-radius:10px;background:var(--varaq-2);display:grid;place-items:center;font:700 9.5px var(--shrift);color:var(--qalam);letter-spacing:.04em">' + (h.tur || "PDF").slice(0, 4) + '</span>' +
+        '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + h.nom + '</b>' +
+        '<span style="font-size:11px;color:var(--iz)">' + [h.hajm, h.sana, h.holat].filter(Boolean).join(" · ") + '</span></span>' +
+        '<button type="button" class="tugma tugma-kichik tugma-oq" data-toast="Hujjat yuklab olinmoqda: ' + h.nom.replace(/"/g, "") + '">' + ik("yuklab") + 'Yuklab olish</button>' +
+      '</div>').join("");
+  }
+  chiz();
+  document.getElementById("h-qoshish").addEventListener("click", () => {
+    MKB.modal("Hujjat yuklash",
+      '<div class="forma-tor">' +
+        '<div class="maydon keng"><label class="maydon-yorliq">Hujjat nomi <b>*</b></label>' +
+          '<div class="kirish">' + ik("hujjat") + '<input name="nom" placeholder="Masalan: Kadastr ko\'chirmasi"></div></div>' +
+        '<div class="maydon"><label class="maydon-yorliq">Turi</label>' +
+          '<div class="kirish"><input name="tur" value="PDF"></div></div>' +
+        '<div class="maydon"><label class="maydon-yorliq">Fayl</label>' +
+          '<div class="kirish">' + ik("yuklash") + '<input name="fayl" type="file"></div></div>' +
+      '</div>',
+      {okMatn: "Saqlash", ok(modal){
+        const q = MKB.forma(modal, ["nom"]);
+        if (!q) return false;
+        const j = JSON.parse(localStorage.getItem("mkb4-hujjat-" + x.id) || "[]");
+        j.push({tur: q.tur || "PDF", nom: q.nom, hajm: "yangi", sana: "bugun", holat: "Ko'rib chiqilmoqda"});
+        localStorage.setItem("mkb4-hujjat-" + x.id, JSON.stringify(j));
+        chiz();
+        MKB.toast("Hujjat ro'yxatga qo'shildi");
+      }});
+  });
+
+});
+</script>
+</body>
+</html>

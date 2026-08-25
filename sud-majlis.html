@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Sud majlisi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="sud-kalendar.html">Sud kalendari</a><span class="ajratgich">/</span><span>Majlis</span></div>
+    <div class="hs-qator"><h1>Sud majlisi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:760px"><div class="karta-bosh"><h2>Majlis varaqasi</h2><span class="soni kod-mono" id="sm-id"></span></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-aktivlar"/></svg>Obyekt / ish</dt>
+  <dd id="sm-obyekt">—</dd>
+  <dt><svg class="ic"><use href="#i-sud"/></svg>Sud</dt>
+  <dd id="sm-sud">—</dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Sana va vaqt</dt>
+  <dd id="sm-vaqt">—</dd>
+  <dt><svg class="ic"><use href="#i-manzil"/></svg>Zal</dt>
+  <dd id="sm-zal">—</dd>
+  <dt><svg class="ic"><use href="#i-foydalar"/></svg>Advokat</dt>
+  <dd id="sm-advokat">—</dd>
+  <dt><svg class="ic"><use href="#i-info"/></svg>Mavzu</dt>
+  <dd id="sm-mavzu">—</dd>
+  <dt><svg class="ic"><use href="#i-tasdiq"/></svg>Holat</dt>
+  <dd id="sm-holat">—</dd>
+</dl>  <div class="maydon" style="margin-top:16px"><label class="maydon-yorliq">Majlis bayonnomasi</label>
+    <textarea class="kirish-matn" id="sm-bayon" placeholder="Majlis natijasi va qarorlar"></textarea></div>
+  <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px">
+    <a class="tugma tugma-oq" href="sud-kalendar.html">Kalendarga qaytish</a>
+    <button class="tugma tugma-asosiy" id="sm-saqla"><svg class="ic"><use href="#i-tasdiq"/></svg>O'tkazildi deb belgilash</button></div>
+  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const m = id ? await MKBapi.bitta("SUD_MAJLISLAR", id) : null;
+  if (!m){ location.replace("xato-404.html"); return; }
+  document.getElementById("hs-meta").textContent = m.id;
+  document.getElementById("sm-id").textContent = m.id;
+  document.getElementById("sm-obyekt").innerHTML =
+    '<a href="ish.html?id=' + encodeURIComponent(m.obyektId) + '" style="font-weight:700;color:var(--brend-quyuq)">' + m.obyekt + '</a>';
+  document.getElementById("sm-sud").textContent = m.sud;
+  document.getElementById("sm-vaqt").textContent = m.sana + ", " + m.soat;
+  document.getElementById("sm-zal").textContent = m.zal;
+  document.getElementById("sm-advokat").textContent = m.advokat;
+  document.getElementById("sm-mavzu").textContent = m.mavzu;
+  document.getElementById("sm-holat").innerHTML = m.holat === "rejada"
+    ? '<span class="chip chip-brend">Rejada</span>' : '<span class="chip chip-yashil">O\'tkazildi</span>';
+  if (m.bayon) document.getElementById("sm-bayon").value = m.bayon;
+  document.getElementById("sm-saqla").addEventListener("click", async () => {
+    await MKBapi.yangilash("SUD_MAJLISLAR", m.id, {
+      holat: "otkazildi", bayon: document.getElementById("sm-bayon").value.trim()});
+    MKB.toast("Majlis yakunlandi — bayonnoma saqlandi");
+    setTimeout(() => location.href = "sud-kalendar.html", 700);
+  });
+});
+</script>
+</body>
+</html>

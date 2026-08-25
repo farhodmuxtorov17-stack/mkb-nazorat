@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Obyekt ko'riklari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Obyekt kartochkasi</span></div>
+    <div class="hs-qator"><h1>Obyekt kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="obyekt.html" data-id-qoshib="1">Umumiy</a><a href="obyekt-moliya.html" data-id-qoshib="1">Moliya</a><a href="obyekt-hujjatlar.html" data-id-qoshib="1">Hujjatlar</a><a href="obyekt-koriklar.html" class="faol" data-id-qoshib="1">Ko'riklar</a><a href="obyekt-xarajatlar.html" data-id-qoshib="1">Xarajatlar</a><a href="obyekt-galereya.html" data-id-qoshib="1">Galereya</a><a href="obyekt-3d.html" data-id-qoshib="1">3D navigator</a><a href="obyekt-qavat.html" data-id-qoshib="1">Qavat rejasi</a><a href="obyekt-tarix.html" data-id-qoshib="1">Tarix</a></nav>
+  <section class="foto-shapka" aria-label="Obyekt">
+    <img id="fs-rasm" src="" alt="">
+    <div>
+      <div style="flex:1;min-width:220px">
+        <div style="display:flex;gap:8px;margin-bottom:8px" id="fs-chiplar"></div>
+        <h2 id="fs-nom">—</h2>
+        <div class="fs-meta"><span class="kod-mono" id="fs-id" style="color:rgba(255,255,255,.85)">—</span> · <span id="fs-manzil">—</span></div>
+      </div>
+      <div id="fs-halqa"></div>
+    </div>
+  </section>
+  <section class="karta"><div class="karta-bosh"><h2>Ko'riklar tarixi</h2><span class="soni" id="k-soni"></span><a class="tugma tugma-kichik tugma-asosiy" href="korik-tayinlash.html" style="margin-left:auto" data-id-qoshib><svg class="ic"><use href="#i-qoshish"/></svg>Ko'rik tayinlash</a></div><div id="k-royxat"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const x = id ? await MKBapi.bitta('YOZUVLAR', id) : null;
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("fs-rasm").src = x.mulk.rasm;
+  document.getElementById("fs-nom").textContent = x.mulk.nom;
+  document.getElementById("fs-id").textContent = x.id;
+  document.getElementById("fs-manzil").textContent = x.mulk.manzil;
+  document.getElementById("fs-chiplar").innerHTML =
+    "<span class=\"chip chip-brend\">" + x.bosqichNomi + "</span>" +
+    "<span class=\"chip chip-siyoh\">" + x.mulk.tur + "</span>";
+  document.getElementById("fs-halqa").innerHTML = MKB.halqa(x.qoplash, 74, 6).replace('class="halqa', 'class="halqa katta');
+  /* tab havolalariga ?id= ulab qo'yamiz */
+  document.querySelectorAll(".bolim-tablar a").forEach(a => {
+    if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
+  });
+  document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
+
+  const r = MKB_DATA.KORIKLAR.filter(k => k.obyektId === x.id);
+  document.getElementById("k-soni").textContent = r.length + " ta yozuv";
+  document.getElementById("k-royxat").innerHTML = r.length ? r.map(k =>
+    '<a href="korik-akti.html?id=' + encodeURIComponent(k.id) + '" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--chiziq-2)">' +
+      '<span style="width:38px;height:38px;border-radius:10px;background:' +
+        (k.holat === "rejada" ? "var(--brend-fon)" : "var(--yashil-fon)") + ';display:grid;place-items:center;color:' +
+        (k.holat === "rejada" ? "var(--brend-quyuq)" : "var(--yashil)") + '">' + ik("korik") + '</span>' +
+      '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px">' + k.id + ' · ' + (k.tur || "Rejali") + '</b>' +
+      '<span style="font-size:11px;color:var(--iz)">' + k.inspektor + (k.izoh ? " · " + k.izoh.slice(0, 60) + "…" : "") + '</span></span>' +
+      '<span class="chip ' + (k.holat === "rejada" ? "chip-brend" : "chip-yashil") + '">' + k.sana + '</span></a>').join("")
+    : '<div class="bosh-holat">' + ik("korik") + '<b>Ko\'riklar hali yo\'q</b><span>Birinchi ko\'rikni tayinlang</span></div>';
+
+});
+</script>
+</body>
+</html>

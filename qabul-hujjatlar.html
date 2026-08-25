@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Balansga qabul — hujjatlar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Balansga qabul</span></div>
+    <div class="hs-qator"><h1>Balansga qabul qilish</h1><span class="hs-meta" id="hs-meta">2-qadam / 3</span></div>
+  </div>
+  <div class="karta" style="padding:14px 20px"><div id="q-zanjir"></div></div>
+  <section class="karta" style="max-width:760px"><div class="karta-bosh"><h2>Hujjatlar to'plami va komissiya</h2><span class="soni" id="q2-obyekt"></span></div>
+  <form id="q2-forma">
+    <div id="q2-hujjatlar" style="display:flex;flex-direction:column;gap:4px;margin-bottom:18px"></div>
+    <div class="forma-tor">
+      <div class="maydon"><label class="maydon-yorliq">Komissiya raisi <b>*</b></label>
+        <div class="kirish"><input name="rais" placeholder="F.I.Sh."></div></div>
+      <div class="maydon"><label class="maydon-yorliq">Komissiya a'zosi <b>*</b></label>
+        <div class="kirish"><input name="azo" placeholder="F.I.Sh."></div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;gap:10px;margin-top:18px">
+      <a class="tugma tugma-oq" href="qabul-boshlash.html"><svg class="ic"><use href="#i-chap"/></svg>Orqaga</a>
+      <button class="tugma tugma-asosiy" type="submit">Davom etish<svg class="ic"><use href="#i-ong"/></svg></button></div>
+  </form></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+
+  document.getElementById("q-zanjir").innerHTML = MKB.zanjir(
+    [{nom: "Asos va obyekt"}, {nom: "Hujjatlar va komissiya"}, {nom: "Tasdiqlash"}], 1);
+
+  const h = JSON.parse(sessionStorage.getItem("mkb4-qabul") || "{}");
+  if (!h.obyektId){ location.replace("qabul-boshlash.html"); return; }
+  document.getElementById("q2-obyekt").textContent = h.obyektId;
+  const KERAK = ["Sud qarori nusxasi", "Ijro varaqasi", "Baholash hisoboti",
+    "Kadastr hujjatlari", "Topshirish-qabul dalolatnomasi loyihasi"];
+  document.getElementById("q2-hujjatlar").innerHTML = KERAK.map((nom, i) =>
+    '<label style="display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--chiziq-2);border-radius:10px;cursor:pointer;font-size:13px">' +
+      '<input type="checkbox" data-hujjat style="width:16px;height:16px;accent-color:var(--siyoh)"' +
+      ((h.hujjatlar || [])[i] ? " checked" : "") + '><span style="flex:1">' + nom + '</span>' +
+      '<span class="chip">' + (i < 2 ? "asl nusxa" : "nusxa") + '</span></label>').join("");
+  document.getElementById("q2-forma").addEventListener("submit", e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target, ["rais", "azo"]);
+    if (!q) return;
+    const belgilar = [...document.querySelectorAll("[data-hujjat]")].map(c => c.checked);
+    if (belgilar.some(b => !b)){ MKB.toast("Barcha hujjatlar belgilangan bo'lishi shart", "xavf"); return; }
+    Object.assign(h, q, {hujjatlar: belgilar});
+    sessionStorage.setItem("mkb4-qabul", JSON.stringify(h));
+    location.href = "qabul-tasdiqlash.html";
+  });
+});
+</script>
+</body>
+</html>

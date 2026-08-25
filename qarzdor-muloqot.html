@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Muloqot jurnali</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="portfel">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="qarzdorlar.html">Qarzdorlar portfeli</a><span class="ajratgich">/</span><span>Muloqot</span></div>
+    <div class="hs-qator"><h1>Muloqot jurnali</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="qarzdor.html">Umumiy</a><a href="qarzdor-muloqot.html" class="faol">Muloqot jurnali</a><a href="qarzdor-tolovlar.html">To'lov intizomi</a></nav>
+  <section class="karta" style="display:flex;align-items:center;gap:16px">
+    <span id="m-belgi" style="width:56px;height:56px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 18px var(--shrift);flex:none">—</span>
+    <div style="flex:1;min-width:0"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b id="m-nom" style="font:700 19px var(--shrift-displey)">—</b><span id="m-chip"></span></div>
+    <span style="font-size:12.5px;color:var(--iz)" id="m-sub">—</span></div>
+    <a class="tugma tugma-oq" id="m-obyekt-havola" href="#"><svg class="ic"><use href="#i-aktivlar"/></svg>Obyekt kartochkasi</a>
+  </section>
+  <section class="karta"><div class="karta-bosh"><h2>Muloqot jurnali</h2><span class="soni" id="mj-soni"></span><button type="button" class="tugma tugma-kichik tugma-asosiy" id="mj-qoshish" style="margin-left:auto"><svg class="ic"><use href="#i-qoshish"/></svg>Muloqot qayd etish</button></div><div id="mj-lenta"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const x = yoz.find(y => y.id === id) || yoz[0];
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("hs-meta").textContent = x.mijoz.raqam;
+  document.getElementById("m-belgi").textContent = x.mijoz.belgi;
+  document.getElementById("m-nom").textContent = x.mijoz.nom;
+  document.getElementById("m-chip").innerHTML = '<span class="chip ' + (x.mijoz.yur ? 'chip-info">Yuridik shaxs' : 'chip-brend">Jismoniy shaxs') + '</span>';
+  document.getElementById("m-sub").textContent = x.mijoz.tur + " · " + x.filial + " · " + (x.mijoz.tel || "");
+  document.getElementById("m-obyekt-havola").href = "obyekt.html?id=" + encodeURIComponent(x.id);
+  document.querySelectorAll(".bolim-tablar a").forEach(a => { if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(x.id); });
+
+  const KANAL_IK = {"Telefon": "tel", "SMS": "chat", "Xat": "xat", "Uchrashuv": "foydalar", "Ogohlantirish": "xavf"};
+  function royxat(){
+    const asl = (MKB_DATA.MULOQOTLAR[x.id] || []);
+    const q = JSON.parse(localStorage.getItem("mkb4-muloqot-" + x.id) || "[]");
+    return q.concat(asl);
+  }
+  function chiz(){
+    const r = royxat();
+    document.getElementById("mj-soni").textContent = r.length + " ta yozuv";
+    document.getElementById("mj-lenta").innerHTML = r.map(v =>
+      '<div style="display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--chiziq-2)">' +
+        '<span style="width:36px;height:36px;border-radius:10px;background:var(--varaq-2);display:grid;place-items:center;color:var(--qalam);flex:none">' + ik(KANAL_IK[v[1]] || "chat") + '</span>' +
+        '<span style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px">' +
+        '<b style="font-size:12.5px">' + v[1] + '</b><span style="font-size:11px;color:var(--iz)">' + v[0] + '</span></div>' +
+        '<span style="font-size:12.5px;color:var(--qalam);line-height:1.55">' + v[2] + '</span></span></div>').join("");
+  }
+  chiz();
+  document.getElementById("mj-qoshish").addEventListener("click", () => {
+    MKB.modal("Muloqot qayd etish",
+      '<div class="forma-tor">' +
+      '<div class="maydon"><label class="maydon-yorliq">Kanal <b>*</b></label><div class="kirish"><select name="kanal">' +
+      '<option>Telefon</option><option>SMS</option><option>Xat</option><option>Uchrashuv</option><option>Ogohlantirish</option></select></div></div>' +
+      '<div class="maydon"><label class="maydon-yorliq">Sana</label><div class="kirish"><input name="sana" value="' + new Date().toLocaleDateString("uz") + '"></div></div>' +
+      '<div class="maydon keng"><label class="maydon-yorliq">Natija <b>*</b></label>' +
+      '<textarea class="kirish-matn" name="natija" placeholder="Suhbat natijasi, kelishuvlar"></textarea></div></div>',
+      {okMatn: "Saqlash", ok(modal){
+        const q = MKB.forma(modal, ["kanal", "natija"]);
+        if (!q) return false;
+        const j = JSON.parse(localStorage.getItem("mkb4-muloqot-" + x.id) || "[]");
+        j.unshift([q.sana, q.kanal, q.natija]);
+        localStorage.setItem("mkb4-muloqot-" + x.id, JSON.stringify(j));
+        chiz();
+        MKB.toast("Muloqot jurnalga qayd etildi");
+      }});
+  });
+});
+</script>
+</body>
+</html>

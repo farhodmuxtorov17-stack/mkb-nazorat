@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Ish varaqasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="undiruv.html">Undiruv va sud</a><span class="ajratgich">/</span><span>Ish varaqasi</span></div>
+    <div class="hs-qator"><h1>Ish varaqasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px" class="panel-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Ish varaqasi</h2><span class="soni kod-mono" id="i-raqam"></span><a class="tugma tugma-kichik tugma-asosiy" id="i-qaror" href="qaror-kiritish.html" style="margin-left:auto"><svg class="ic"><use href="#i-muhr"/></svg>Qaror kiritish</a></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-foyd"/></svg>Qarzdor</dt>
+  <dd id="i-mijoz">—</dd>
+  <dt><svg class="ic"><use href="#i-aktivlar"/></svg>Ta'minot obyekti</dt>
+  <dd id="i-obyekt">—</dd>
+  <dt><svg class="ic"><use href="#i-pul"/></svg>Da'vo summasi</dt>
+  <dd><span id="i-summa" class="pul">—</span></dd>
+  <dt><svg class="ic"><use href="#i-sud"/></svg>Sud</dt>
+  <dd id="i-sud">—</dd>
+  <dt><svg class="ic"><use href="#i-muhr"/></svg>Sud qarori</dt>
+  <dd id="i-qaror-r">—</dd>
+  <dt><svg class="ic"><use href="#i-hujjat"/></svg>Ijro hujjati</dt>
+  <dd><span id="i-ijro" class="kod-mono">—</span></dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Nazorat muddati</dt>
+  <dd id="i-muddat">—</dd>
+  <dt><svg class="ic"><use href="#i-foydalar"/></svg>Advokat</dt>
+  <dd id="i-advokat">—</dd>
+</dl></section>
+    <section class="karta"><div class="karta-bosh"><h2>Ish hujjatlari</h2></div><div id="i-hujjatlar"></div><div class="karta-bosh" style="margin:16px 0 8px"><h2>Yaqin majlislar</h2></div><div id="i-majlislar"></div></section>
+  </div>
+  <section class="karta"><div class="karta-bosh"><h2>Ish bosqichi</h2></div><div id="i-zanjir"></div></section>
+  <section class="karta"><div class="karta-bosh"><h2>Ish tarixi</h2></div><div id="i-tarix"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const x = id ? await MKBapi.bitta("YOZUVLAR", id) : null;
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("hs-meta").textContent = x.ish.raqam + " · " + x.bosqichNomi;
+  document.getElementById("i-raqam").textContent = x.ish.raqam;
+  document.getElementById("i-qaror").href = "qaror-kiritish.html?id=" + encodeURIComponent(x.id);
+  document.getElementById("i-mijoz").textContent = x.mijoz.nom;
+  document.getElementById("i-obyekt").innerHTML =
+    '<a href="obyekt.html?id=' + encodeURIComponent(x.id) + '" style="font-weight:700;color:var(--brend-quyuq)">' + x.mulk.qisqa + '</a>';
+  document.getElementById("i-summa").textContent = x.qarzMatn;
+  document.getElementById("i-sud").textContent = x.ish.sud || "—";
+  document.getElementById("i-qaror-r").textContent = x.ish.qaror || "—";
+  document.getElementById("i-ijro").textContent = x.ish.ijro || "—";
+  document.getElementById("i-muddat").textContent = x.ish.muddat || "—";
+  const majlislar = (MKB_DATA.SUD_MAJLISLAR || []).filter(m => m.obyektId === x.id);
+  document.getElementById("i-advokat").textContent = majlislar.length ? majlislar[0].advokat : "biriktirilmagan";
+  document.getElementById("i-hujjatlar").innerHTML = (x.ish.hujjatlar || []).map(h =>
+    '<div style="display:flex;align-items:center;gap:11px;padding:8px 0;border-bottom:1px solid var(--chiziq-2)">' +
+      '<span style="width:34px;height:34px;border-radius:9px;background:var(--varaq-2);display:grid;place-items:center;font:700 9px var(--shrift)">' + h[0] + '</span>' +
+      '<span style="flex:1;font-size:12.5px;font-weight:500">' + h[1] + '</span>' +
+      '<span style="font-size:11px;color:var(--iz)">' + h[2] + '</span></div>').join("") || "—";
+  document.getElementById("i-majlislar").innerHTML = majlislar.length ? majlislar.map(m =>
+    '<a href="sud-majlis.html?id=' + encodeURIComponent(m.id) + '" style="display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--chiziq-2);font-size:12.5px">' +
+      '<span>' + m.mavzu + ' · ' + m.zal + '</span><b class="kod-mono">' + m.sana + ' ' + m.soat + '</b></a>').join("")
+    : '<span style="font-size:12px;color:var(--iz)">Majlis belgilanmagan</span>';
+  const joriy = MKB_DATA.BOSQICHLAR.findIndex(b => b.kalit === x.ish.bosqich);
+  document.getElementById("i-zanjir").innerHTML =
+    MKB.zanjir(MKB_DATA.BOSQICHLAR.map(b => ({nom: b.nom})), Math.max(joriy, 0));
+  document.getElementById("i-tarix").innerHTML = (x.ish.tarix || []).slice().reverse().map(t =>
+    '<div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--chiziq-2);font-size:12.5px">' +
+      '<span class="kod-mono" style="flex:none;color:var(--iz)">' + t[0] + '</span>' +
+      '<span><b>' + t[1] + '</b><br><span style="color:var(--iz)">' + t[2] + '</span></span></div>').join("");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Ijro nazorati</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Undiruv va sud</span></div>
+    <div class="hs-qator"><h1>Ijro nazorati</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div id="ijro-royxat" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const r = yoz.filter(y => ["qaror", "ijro", "musodara"].includes(y.ish.bosqich));
+  document.getElementById("hs-meta").textContent = r.length + " ta ish ijro nazoratida";
+  const QADAMLAR = ["Qaror kuchga kirdi", "Ijro hujjati berildi", "Ijro ish yuritish", "Balansga qabul"];
+  document.getElementById("ijro-royxat").innerHTML = r.map(y => {
+    const daraja = y.ish.bosqich === "musodara" ? 4 : y.ish.bosqich === "ijro" ? 2 : 1;
+    return '<a class="karta" href="ish.html?id=' + encodeURIComponent(y.id) + '" style="display:block">' +
+      '<div class="karta-bosh" style="margin-bottom:8px"><h2 style="font-size:14px">' + y.mulk.qisqa + '</h2>' +
+      '<span class="soni kod-mono">' + (y.ish.ijro !== "—" ? y.ish.ijro : y.ish.raqam) + '</span></div>' +
+      '<div style="display:flex;flex-direction:column;gap:7px">' +
+      QADAMLAR.map((qd, i) =>
+        '<div style="display:flex;align-items:center;gap:9px;font-size:12px;color:' + (i < daraja ? 'var(--siyoh)' : 'var(--xira)') + '">' +
+        (i < daraja
+          ? '<span style="width:17px;height:17px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center">' + ik("tasdiq") + '</span>'
+          : '<span style="width:17px;height:17px;border-radius:99px;border:1.5px solid var(--chiziq-3)"></span>') +
+        qd + '</div>').join("") + '</div>' +
+      '<div style="display:flex;justify-content:space-between;margin-top:12px;font-size:11.5px;color:var(--iz)">' +
+      '<span>' + y.mijoz.nom + '</span><b class="pul" style="color:var(--qalam)">' + y.qarzMatn + '</b></div></a>';
+  }).join("");
+});
+</script>
+</body>
+</html>

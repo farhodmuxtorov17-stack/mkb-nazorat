@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Sud qarorini kiritish</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="undiruv.html">Undiruv va sud</a><span class="ajratgich">/</span><span>Qaror</span></div>
+    <div class="hs-qator"><h1>Sud qarorini kiritish</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Sud qarorini kiritish</h2></div>
+  <form id="qr-forma" class="forma-tor">
+    <div class="maydon keng"><label class="maydon-yorliq">Ish <b>*</b></label>
+      <div class="kirish"><select name="obyektId" id="qr-yozuv"></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Qaror raqami <b>*</b></label>
+      <div class="kirish"><input name="raqam" placeholder="2-1234/2026"></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Qaror sanasi <b>*</b></label>
+      <div class="kirish"><input name="sana" placeholder="kk.oo.yyyy"></div></div>
+    <div class="maydon keng"><label class="maydon-yorliq">Xulosa <b>*</b></label>
+      <textarea class="kirish-matn" name="xulosa" placeholder="Sud xulosasi: da'vo qanoatlantirildi..."></textarea></div>
+    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
+      <a class="tugma tugma-oq" href="undiruv.html">Bekor qilish</a>
+      <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-muhr"/></svg>Qarorni saqlash</button></div>
+  </form></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const oldindan = new URLSearchParams(location.search).get("id");
+  const nomzod = yoz.filter(y => ["sud", "davo"].includes(y.ish.bosqich));
+  const royxat = nomzod.length ? nomzod : yoz;
+  document.getElementById("qr-yozuv").innerHTML = royxat.map(y =>
+    '<option value="' + y.id + '"' + (y.id === oldindan ? ' selected' : '') + '>' +
+    y.ish.raqam + " — " + y.mijoz.nom + '</option>').join("");
+  document.getElementById("qr-forma").addEventListener("submit", async e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target, ["obyektId", "raqam", "sana", "xulosa"]);
+    if (!q) return;
+    const y = yoz.find(v => v.id === q.obyektId);
+    const tarix = (y.ish.tarix || []).concat([[q.sana, "Sud qarori qabul qilindi", q.raqam + ": " + q.xulosa.slice(0, 90)]]);
+    await MKBapi.yangilash("YOZUVLAR", y.id, {
+      ish: Object.assign({}, y.ish, {bosqich: "qaror", qaror: q.raqam, tarix}),
+      bosqichNomi: "Sud qarori"});
+    MKB.toast("Qaror kiritildi — " + q.raqam);
+    setTimeout(() => location.href = "ish.html?id=" + encodeURIComponent(y.id), 700);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Ijro hujjatlari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Undiruv va sud</span></div>
+    <div class="hs-qator"><h1>Ijro hujjatlari</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const qatorlar = yoz.filter(y => y.ish.ijro && y.ish.ijro !== "—").map(y => ({
+    id: y.id, ijro: y.ish.ijro, qaror: y.ish.qaror || "—", mijoz: y.mijoz.nom,
+    obyekt: y.mulk.qisqa, bosqich: y.bosqichNomi, muddat: y.ish.muddat || "—",
+  }));
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta ijro hujjati";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    qidiruv: ["ijro", "mijoz", "obyekt"],
+    ustunlar: [
+      {kalit: "ijro", nom: "Ijro hujjati", chiz: q => '<span class="kod-mono">' + q.ijro + '</span>'},
+      {kalit: "qaror", nom: "Sud qarori", chiz: q => '<span class="kod-mono">' + q.qaror + '</span>'},
+      {kalit: "mijoz", nom: "Qarzdor"},
+      {kalit: "obyekt", nom: "Obyekt"},
+      {kalit: "muddat", nom: "Muddat"},
+      {kalit: "bosqich", nom: "Bosqich", chiz: q => '<span class="chip chip-info">' + q.bosqich + '</span>'},
+    ],
+    bosilganda: q => location.href = "ish.html?id=" + encodeURIComponent(q.id),
+  });
+});
+</script>
+</body>
+</html>

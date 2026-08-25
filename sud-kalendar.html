@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Sud majlislari kalendari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Undiruv va sud</span></div>
+    <div class="hs-qator"><h1>Sud majlislari kalendari</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div id="kalendar" style="display:flex;flex-direction:column;gap:14px"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("SUD_MAJLISLAR");
+  document.getElementById("hs-meta").textContent = r.length + " ta majlis";
+  const kunlar = {};
+  r.forEach(m => { (kunlar[m.sana] = kunlar[m.sana] || []).push(m); });
+  document.getElementById("kalendar").innerHTML = Object.entries(kunlar).map(([sana, royxat]) =>
+    '<section class="karta"><div class="karta-bosh">' +
+      '<span style="width:46px;text-align:center;border:1.5px solid var(--siyoh);border-radius:11px;padding:5px 0;flex:none">' +
+        '<b style="display:block;font:700 16px var(--shrift-displey)">' + sana.split("-")[0] + '</b>' +
+        '<span style="font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--iz)">' + sana.split("-")[1].split(",")[0] + '</span></span>' +
+      '<h2>' + sana + '</h2><span class="soni">' + royxat.length + ' ta majlis</span></div>' +
+      royxat.map(m =>
+        '<a href="sud-majlis.html?id=' + encodeURIComponent(m.id) + '" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--chiziq-2)">' +
+          '<b class="kod-mono" style="flex:none;width:44px">' + m.soat + '</b>' +
+          '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px">' + m.obyekt + '</b>' +
+          '<span style="font-size:11.5px;color:var(--iz)">' + m.sud + ' · ' + m.zal + ' · ' + m.advokat + '</span></span>' +
+          '<span class="chip ' + (m.holat === "rejada" ? "chip-brend\">Rejada" : "chip-yashil\">O'tkazildi") + '</span></a>').join("") +
+    '</section>').join("");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Balansga qabul — tasdiqlash</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Balansga qabul</span></div>
+    <div class="hs-qator"><h1>Balansga qabul qilish</h1><span class="hs-meta" id="hs-meta">3-qadam / 3</span></div>
+  </div>
+  <div class="karta" style="padding:14px 20px"><div id="q-zanjir"></div></div>
+  <section class="karta" style="max-width:760px"><div class="karta-bosh"><h2>Yakuniy tasdiqlash</h2><span class="soni kod-mono" id="q3-raqam"></span></div>
+  <div id="q3-xulosa"></div>
+  <div style="display:flex;justify-content:space-between;gap:10px;margin-top:20px">
+    <a class="tugma tugma-oq" href="qabul-hujjatlar.html"><svg class="ic"><use href="#i-chap"/></svg>Orqaga</a>
+    <button class="tugma tugma-asosiy" id="q3-tasdiq"><svg class="ic"><use href="#i-muhr"/></svg>Balansga qabul qilish</button></div>
+  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+
+  document.getElementById("q-zanjir").innerHTML = MKB.zanjir(
+    [{nom: "Asos va obyekt"}, {nom: "Hujjatlar va komissiya"}, {nom: "Tasdiqlash"}], 2);
+
+  const h = JSON.parse(sessionStorage.getItem("mkb4-qabul") || "{}");
+  if (!h.obyektId){ location.replace("qabul-boshlash.html"); return; }
+  const x = await MKBapi.bitta("YOZUVLAR", h.obyektId);
+  const raqam = "QD-2026/" + String(1000 + Math.floor((Date.now() / 60000) % 9000));
+  document.getElementById("q3-raqam").textContent = raqam;
+  document.getElementById("q3-xulosa").innerHTML = '<dl class="malumot-royxat">' +
+    '<dt>' + ik("aktivlar") + 'Obyekt</dt><dd>' + x.mulk.qisqa + ' <span class="kod-mono">' + x.id + '</span></dd>' +
+    '<dt>' + ik("muhr") + 'Qabul turi</dt><dd>' + (h.turi || "—") + '</dd>' +
+    '<dt>' + ik("hujjat") + 'Asos hujjat</dt><dd class="kod-mono">' + h.asos + '</dd>' +
+    '<dt>' + ik("foydalar") + 'Komissiya</dt><dd>' + h.rais + ", " + h.azo + '</dd>' +
+    '<dt>' + ik("pul") + 'Qoldiq qarz</dt><dd class="pul">' + x.qarzMatn + '</dd>' +
+    '<dt>' + ik("grafik") + 'Balans qiymati</dt><dd class="pul">' + x.bahoMatn + '</dd></dl>' +
+    '<p style="font-size:12.5px;color:var(--iz);line-height:1.6;margin-top:14px">Tasdiqlangach obyekt '
+    + '«Musodara qilingan» bosqichiga o\'tadi, dalolatnoma raqami ish tarixiga yoziladi va saqlash '
+    + 'xarajatlari hisobi ochiladi.</p>';
+  document.getElementById("q3-tasdiq").addEventListener("click", async () => {
+    const tarix = (x.ish.tarix || []).concat([[new Date().toLocaleDateString("uz"),
+      "Balansga qabul qilindi", "Dalolatnoma " + raqam + " · " + h.turi + " · komissiya: " + h.rais]]);
+    await MKBapi.yangilash("YOZUVLAR", x.id, {
+      ish: Object.assign({}, x.ish, {bosqich: "musodara", tarix}),
+      bosqichNomi: "Musodara qilingan",
+    });
+    sessionStorage.removeItem("mkb4-qabul");
+    MKB.toast("Obyekt balansga qabul qilindi — " + raqam);
+    setTimeout(() => location.href = "obyekt.html?id=" + encodeURIComponent(x.id), 800);
+  });
+});
+</script>
+</body>
+</html>

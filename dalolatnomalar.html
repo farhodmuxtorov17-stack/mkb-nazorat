@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Ish hujjatlari reyestri</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Undiruv va sud</span></div>
+    <div class="hs-qator"><h1>Ish hujjatlari reyestri</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const qatorlar = [];
+  yoz.forEach(y => (y.ish.hujjatlar || []).forEach(h =>
+    qatorlar.push({id: y.id, tur: h[0], nom: h[1], hajm: h[2], obyekt: y.mulk.qisqa, ish: y.ish.raqam})));
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta hujjat";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    qidiruv: ["nom", "obyekt", "ish"],
+    ustunlar: [
+      {kalit: "nom", nom: "Hujjat"},
+      {kalit: "tur", nom: "Format", chiz: q => '<span class="chip">' + q.tur + '</span>'},
+      {kalit: "ish", nom: "Ish raqami", chiz: q => '<span class="kod-mono">' + q.ish + '</span>'},
+      {kalit: "obyekt", nom: "Obyekt"},
+      {kalit: "hajm", nom: "Hajm", son: true},
+    ],
+    bosilganda: q => location.href = "ish.html?id=" + encodeURIComponent(q.id),
+  });
+});
+</script>
+</body>
+</html>

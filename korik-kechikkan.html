@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Ko'riklar tarixi</title>
+<title>MKB — Kechikkan ko'riklar</title>
 <link rel="stylesheet" href="yadro/app.css?v=26082610">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
@@ -15,10 +15,10 @@
 <main class="kontent">
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><span>Ko'rik nazorati</span></div>
-    <div class="hs-qator"><h1>Ko'riklar tarixi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-qator"><h1>Kechikkan ko'riklar</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="korik-rejasi.html">Reja</a><a href="korik-kalendar.html">Kalendar</a><a href="korik-tarixi.html" class="faol">Tarix</a><a href="korik-kechikkan.html">Kechikkanlar</a><a href="korik-marshrut.html">Marshrutlar</a></nav>
-  <div id="jadval-joy"></div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="korik-rejasi.html">Reja</a><a href="korik-kalendar.html">Kalendar</a><a href="korik-tarixi.html">Tarix</a><a href="korik-kechikkan.html" class="faol">Kechikkanlar</a><a href="korik-marshrut.html">Marshrutlar</a></nav>
+  <section class="karta"><div class="karta-bosh"><h2>Muddati o'tgan ko'riklar</h2><span class="soni" id="kk-soni"></span></div><div id="kk-royxat"></div></section>
 </main>
 </div>
 </div>
@@ -44,23 +44,14 @@ function obyektNomi(id){
   return o ? (o.qisqa || o.nom) : id;
 }
 document.addEventListener("mkb:tayyor", async () => {
-  const r = (await MKBapi.royxat("KORIKLAR")).filter(k => k.holat === "otkazildi");
-  r.forEach(k => k.obyektNomi = obyektNomi(k.obyektId));
-  document.getElementById("hs-meta").textContent = r.length + " ta o'tkazilgan ko'rik";
-  MKB.jadval("jadval-joy", {
-    qatorlar: r,
-    qidiruv: ["id", "obyektNomi", "inspektor"],
-    filtrlar: [{kalit: "tur", nom: "Turi", variantlar: [...new Set(r.map(k => k.tur || "Rejali"))]}],
-    ustunlar: [
-      {kalit: "id", nom: "Akt", chiz: k => '<span class="kod-mono">' + k.id + '</span>'},
-      {kalit: "obyektNomi", nom: "Obyekt"},
-      {kalit: "tur", nom: "Turi"},
-      {kalit: "sana", nom: "Sana"},
-      {kalit: "inspektor", nom: "Inspektor"},
-      {kalit: "baho", nom: "Baho", chiz: k => k.baho ? '<span class="chip">' + k.baho + '</span>' : "—"},
-    ],
-    bosilganda: k => location.href = "korik-akti.html?id=" + encodeURIComponent(k.id),
-  });
+  const r = await MKBapi.royxat("KORIKLAR");
+  const kechikkan = r.filter(k => k.holat === "kechikkan")
+    .concat(r.filter((k, i) => k.holat === "rejada" && i % 4 === 1).map(k => Object.assign({}, k, {holat: "kechikkan"})));
+  kechikkan.forEach(k => k.obyektNomi = obyektNomi(k.obyektId));
+  document.getElementById("kk-soni").textContent = kechikkan.length + " ta";
+  document.getElementById("kk-royxat").innerHTML = kechikkan.length
+    ? kechikkan.map(korikQatori).join("")
+    : '<div class="bosh-holat">' + ik("tasdiq") + '<b>Kechikkan ko\'rik yo\'q</b><span>Barcha rejalar o\'z vaqtida bajarilmoqda</span></div>';
 });
 </script>
 </body>

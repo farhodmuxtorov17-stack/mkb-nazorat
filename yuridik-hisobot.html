@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Yuridik ko'rsatkichlar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Undiruv va sud</span></div>
+    <div class="hs-qator"><h1>Yuridik ko'rsatkichlar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Ochiq ishlar</span>
+      <span class="m-qiymat"><span id="yh-1">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Sudda</span>
+      <span class="m-qiymat"><span id="yh-2">—</span></span>
+      <span class="m-izoh">Da'vo va sud bosqichi</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Qaror ijrosida</span>
+      <span class="m-qiymat"><span id="yh-3">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">O'tkazilgan majlislar</span>
+      <span class="m-qiymat"><span id="yh-4">—</span></span>
+    </div>
+  </section>
+  <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px" class="panel-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Bosqichlar bo'yicha ishlar</h2></div><div id="yh-bosqich"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>Advokatlar yuklamasi</h2></div><div id="yh-advokat"></div></section>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const majlislar = await MKBapi.royxat("SUD_MAJLISLAR");
+  document.getElementById("yh-1").textContent = yoz.length;
+  document.getElementById("yh-2").textContent = yoz.filter(y => ["davo", "sud"].includes(y.ish.bosqich)).length;
+  document.getElementById("yh-3").textContent = yoz.filter(y => y.ish.bosqich === "ijro").length;
+  document.getElementById("yh-4").textContent = majlislar.filter(m => m.holat === "otkazildi").length;
+  function barlar(joy, juftlar){
+    const maks = Math.max(...juftlar.map(v => v[1]), 1);
+    document.getElementById(joy).innerHTML = juftlar.map(([nom, son]) =>
+      '<div style="display:flex;align-items:center;gap:10px;padding:7px 0">' +
+        '<span style="width:150px;font-size:12.5px;color:var(--qalam);flex:none">' + nom + '</span>' +
+        '<div style="flex:1;height:8px;border-radius:99px;background:var(--kirish-fon)">' +
+          '<div style="height:100%;width:' + Math.round(son / maks * 100) + '%;border-radius:99px;background:var(--siyoh)"></div></div>' +
+        '<b style="font:700 12px var(--shrift-mono);width:22px;text-align:right">' + son + '</b></div>').join("");
+  }
+  barlar("yh-bosqich", MKB_DATA.BOSQICHLAR.map(b => [b.nom, yoz.filter(y => y.ish.bosqich === b.kalit).length]));
+  const adv = {};
+  majlislar.forEach(m => adv[m.advokat] = (adv[m.advokat] || 0) + 1);
+  barlar("yh-advokat", Object.entries(adv));
+});
+</script>
+</body>
+</html>

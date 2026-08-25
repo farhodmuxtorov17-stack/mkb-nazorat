@@ -1,453 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>(function(){var t=localStorage.getItem("mkb-tema");if(t==="realty"||t==="estate")document.documentElement.dataset.tema=t})()</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Kredit shartnomalari</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082605">
-<style>
-/* ---- Shartnomalar (ekran 13) ---- */
-.sh-kpi{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
-.sh-kpi .karta{display:flex;align-items:center;gap:13px;padding:18px 20px}
-.sh-kpi .tile{width:44px;height:44px;border-radius:12px;background:#EEF2FF;color:#4F46E5;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile)}
-.sh-kpi .tile.sariq{background:var(--sariq-fon);color:#B45309}
-.sh-kpi .tile.qizil{background:var(--qizil-fon);color:#B91C1C}
-.sh-kpi .tile.kok{background:var(--kok-fon);color:#0369A1}
-.sh-kpi .tile .ic{width:21px;height:21px}
-.sh-kpi .nuqta{width:10px;height:10px;border-radius:99px;flex:none}
-.sh-kpi .yorliq{font-size:13.5px;color:var(--matn-3);line-height:1.3}
-.sh-kpi b{display:block;font-size:24px;font-weight:750;letter-spacing:-.01em;line-height:1.2}
-.sh-kpi .sub{font-size:11.5px;color:var(--matn-4)}
-
-.filtr-qator{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.f-izlash{display:flex;align-items:center;gap:10px;flex:1;min-width:180px;max-width:340px;background:var(--karta);border-radius:14px;height:48px;padding:0 18px;box-shadow:var(--soya)}
-.f-izlash input{flex:1;border:none;outline:none;background:none;font:inherit;font-size:14.5px;min-width:0}
-.f-izlash .ic{width:19px;height:19px;color:#52525B}
-.filtr-qator .tanlov{width:auto;min-width:150px;background:var(--karta);border:none;box-shadow:var(--soya)}
-.f-tugma{margin-left:auto;display:flex;align-items:center;gap:9px;height:48px;padding:0 18px;background:var(--karta);border-radius:14px;box-shadow:var(--soya);font-size:14.5px;font-weight:650;color:#18181B}
-.f-tugma .ic{width:18px;height:18px;color:#3F3F46}
-
-.sh-grid{display:grid;grid-template-columns:400px minmax(0,1fr) 250px;gap:18px;align-items:start}
-
-/* Chap ro'yxat */
-.sh-tablar{display:flex;gap:20px;border-bottom:1px solid var(--chiziq);margin-bottom:8px}
-.sh-tab{padding:8px 2px 12px;font-size:14px;font-weight:650;color:#52525B;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
-.sh-tab .son{font-size:12px;color:var(--matn-4);margin-left:4px}
-.sh-tab.aktiv{color:#18181B;border-bottom-color:var(--asos)}
-.sh-tab.aktiv .son{color:#3730A3}
-.sh-band{
-  width:100%;text-align:left;display:flex;gap:12px;border:1px solid var(--chiziq);border-radius:14px;
-  padding:12px;margin-top:10px;transition:border-color var(--tez),box-shadow var(--tez);
-}
-.sh-band:hover{box-shadow:var(--soya)}
-.sh-band.faol{border-color:#C7D2FE;background:#FAFAFA;box-shadow:0 0 0 1px #C7D2FE}
-.sh-band img{width:74px;height:64px;object-fit:cover;border-radius:11px;outline:1px solid rgba(23,26,31,.06);outline-offset:-1px;flex:none}
-.sh-band .kod{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:650;color:#3F3F46}
-.sh-band .kod .nuqta{width:7px;height:7px;border-radius:99px;background:#059669}
-.sh-band b{display:block;font-size:14px;font-weight:650;margin-top:2px}
-.sh-band .firma{display:block;font-size:12.5px;color:var(--matn-3)}
-.sh-band .sana{display:block;font-size:12px;color:var(--matn-4);margin-top:3px}
-.sh-band .summa{display:block;font-size:13px;font-weight:700;margin-top:2px}
-.sh-teg{margin-left:auto;flex:none;align-self:flex-start;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:99px}
-.sh-teg.faol{background:#EEF2FF;color:#3730A3}
-.sh-teg.kun30{background:#FFFBEB;color:#B45309}
-.sh-teg.otgan{background:#FEF2F2;color:#B91C1C}
-.sh-teg.kechikkan{background:#FFFBEB;color:#97460A}
-.sh-teg.undiruvda{background:#FEF2F2;color:#B91C1C}
-.tolov.kechikkan .tolov-belgi{background:#FEF2F2;color:#B91C1C}
-.tolov.kechikkan .holat{color:#B91C1C}
-
-/* Markaz */
-.tafsilot-bosh{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.tafsilot-bosh h3{font-size:17px;font-weight:750;display:flex;align-items:center;gap:10px}
-.tafsilot-bosh h3 .ic{width:20px;height:20px}
-.tafsilot-bosh .yangilanish{margin-left:auto;font-size:12.5px;color:var(--matn-4)}
-.sh-tafsilot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 340px;gap:14px 18px;margin-top:16px}
-.sh-maydon{display:flex;gap:11px;padding:8px 0}
-.sh-maydon .ic{width:18px;height:18px;color:#52525B;margin-top:2px}
-.sh-maydon .yorliq{font-size:12.5px;color:var(--matn-4)}
-.sh-maydon b{display:block;font-size:14px;font-weight:650;margin-top:2px;line-height:1.4}
-.sh-maydon .sub{display:block;font-size:12px;color:var(--matn-4)}
-.sh-rasm{grid-row:1/6;grid-column:3;position:relative;border-radius:14px;overflow:hidden;background:#FAFAF8;min-height:280px}
-.sh-rasm img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:10px}
-.sh-rasm .chip3d{position:absolute;left:12px;bottom:12px;height:34px;padding:0 13px;border-radius:10px;background:#fff;box-shadow:var(--soya-pin);font-size:12.5px;font-weight:750}
-.sh-rasm .kengay{position:absolute;right:12px;bottom:12px;width:40px;height:40px;border-radius:11px;background:#fff;box-shadow:var(--soya-pin);display:grid;place-items:center}
-.sh-rasm .kengay .ic{width:16px;height:16px}
-
-.tolov-blok{margin-top:20px;padding-top:18px;border-top:1px solid var(--chiziq)}
-.tolov-blok h4{font-size:15.5px;font-weight:750;margin-bottom:20px}
-.tolovlar{display:flex;align-items:flex-start;position:relative;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
-.tolov{flex:1;min-width:74px;text-align:center;position:relative}
-.tolov::before{content:"";position:absolute;top:14px;left:calc(-50% + 15px);right:calc(50% + 15px);height:2px;background:#C7D2FE}
-.tolov:first-child::before{display:none}
-.tolov.kutish::before,.tolov.reja::before{background:#E4E4E7}
-.tolov-belgi{width:30px;height:30px;border-radius:99px;margin:0 auto;display:grid;place-items:center;position:relative;z-index:1;box-shadow:var(--chuqur-tile-tor)}
-.tolov.tolandi .tolov-belgi{background:#4F46E5;color:#fff}
-.tolov.kutish .tolov-belgi{background:#F4F4F5;color:#71717A;font-size:12px;font-weight:750}
-.tolov.reja .tolov-belgi{background:#F4F4F5;color:var(--matn-4);font-size:12px;font-weight:750}
-.tolov-belgi .ic{width:14px;height:14px;stroke-width:2.6}
-.tolov b{display:block;font-size:13px;font-weight:700;margin-top:9px}
-.tolov .sana{display:block;font-size:11.5px;color:var(--matn-4);margin-top:2px}
-.tolov .summa{display:block;font-size:11.5px;color:var(--matn-3);margin-top:2px}
-.tolov .holat{display:inline-block;font-size:11px;font-weight:700;margin-top:5px}
-.tolov.tolandi .holat{color:#3730A3}
-.tolov.kutish .holat{color:#B45309}
-.tolov.reja .holat{color:#71717A}
-
-.uzaytirish{margin-top:20px;padding-top:18px;border-top:1px solid var(--chiziq)}
-.uzaytirish h4{font-size:15.5px;font-weight:750;margin-bottom:18px}
-.uz-qadamlar{display:flex;align-items:flex-start}
-.uz-qadam{flex:1;text-align:center;position:relative}
-.uz-qadam::before{content:"";position:absolute;top:15px;left:calc(-50% + 16px);right:calc(50% + 16px);height:2px;background:#C7D2FE}
-.uz-qadam:first-child::before{display:none}
-.uz-qadam.kutish::before{background:#E4E4E7}
-.uz-belgi{width:32px;height:32px;border-radius:99px;margin:0 auto;display:grid;place-items:center;font-size:13px;font-weight:750;position:relative;z-index:1;box-shadow:var(--chuqur-tile-tor)}
-.uz-qadam.bajarildi .uz-belgi{background:#4F46E5;color:#fff}
-.uz-qadam.joriy .uz-belgi{background:var(--tile-och);color:#3730A3;box-shadow:var(--chuqur-tile-tor)}
-.uz-qadam.kutish .uz-belgi{background:#F4F4F5;color:#71717A}
-.uz-belgi .ic{width:15px;height:15px;stroke-width:2.6}
-.uz-qadam b{display:block;font-size:13px;font-weight:700;margin-top:9px}
-.uz-qadam span{display:block;font-size:11.5px;color:var(--matn-4);margin-top:2px}
-
-/* O'ng ustun */
-.amal-karta h3{font-size:16.5px;font-weight:750;margin-bottom:12px}
-.amal-band{
-  display:flex;align-items:center;gap:11px;width:100%;text-align:left;
-  border:1px solid var(--kirish-chiziq);border-radius:13px;height:52px;padding:0 16px;margin-top:10px;
-  font-size:14px;font-weight:650;color:#18181B;transition:background var(--tez),border-color var(--tez);
-}
-.amal-band:hover{background:#FAFAFA}
-.amal-band .ic{width:18px;height:18px;color:#52525B}
-.amal-band.asosiy{background:#EEF2FF;border-color:#C7D2FE;color:#3730A3}
-.amal-band.asosiy:hover{background:#C7D2FE}
-.amal-band.xavfli{color:#E0442B}
-.amal-band.xavfli .ic{color:#E0442B}
-.amal-band.xavfli:hover{background:var(--qizil-fon);border-color:#F5C9C2}
-.menejer-karta{margin-top:0}
-.menejer-karta h3{font-size:16.5px;font-weight:750;margin-bottom:14px}
-.menejer{display:flex;align-items:center;gap:12px}
-.menejer .avatar{width:46px;height:46px}
-.menejer b{display:block;font-size:15px;font-weight:700}
-.menejer span{display:block;font-size:13px;color:var(--matn-3)}
-.menejer-aloqa{display:flex;gap:10px;margin-top:14px}
-.menejer-aloqa button{flex:1;height:44px;border:1px solid var(--kirish-chiziq);border-radius:12px;display:grid;place-items:center;color:#3F3F46;transition:background var(--tez)}
-.menejer-aloqa button:hover{background:#F4F4F5}
-.menejer-aloqa .ic{width:18px;height:18px}
-.sh-grid > aside{display:flex;flex-direction:column;gap:18px}
-@media (max-width:1600px){.sh-grid{grid-template-columns:360px minmax(0,1fr)}.sh-grid > aside{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}.sh-tafsilot{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.sh-rasm{grid-row:auto;grid-column:1/-1}}
-@media (max-width:1500px){.sh-kpi{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:1200px){.sh-grid{grid-template-columns:minmax(0,1fr)}.sh-grid > aside{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:900px){.sh-kpi{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.tolovlar{flex-wrap:wrap;gap:14px}.tolov{flex:0 0 30%}.tolov::before{display:none}}
-</style>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
 </head>
 <body data-sahifa="portfel">
-
-<div class="app">
-<aside class="sidebar" data-shell-sidebar></aside>
-
-<div class="asosiy">
-  <header class="topbar" data-shell-topbar></header>
-
-  <main class="kontent">
-    <div class="sahifa-qator"><h1>Kredit shartnomalari</h1></div>
-
-    <!-- KPI -->
-    <section class="sh-kpi" aria-label="Shartnoma ko'rsatkichlari">
-      <button class="karta" data-toast="Barcha shartnomalar">
-        <span class="tile"><svg class="ic"><use href="#i-shartnoma"/></svg></span>
-        <span><span class="yorliq">Jami shartnomalar</span><b id="sk-jami">—</b></span>
-      </button>
-      <button class="karta" data-toast="Faol shartnomalar">
-        <span class="tile"><svg class="ic"><use href="#i-belgi-doira"/></svg></span>
-        <span><span class="yorliq">Faol</span><b id="sk-faol">—</b></span>
-      </button>
-      <button class="karta" data-toast="Muddati yaqinlashganlar">
-        <span class="tile sariq"><svg class="ic"><use href="#i-muddat"/></svg></span>
-        <span><span class="yorliq">To'lov kechikkan</span><b id="sk-kechikkan">—</b><span class="sub">Undiruvgacha bosqich</span></span>
-      </button>
-      <button class="karta" data-toast="Muddati o'tganlar">
-        <span class="tile qizil"><svg class="ic"><use href="#i-ogoh"/></svg></span>
-        <span><span class="yorliq">Sud jarayonida</span><b id="sk-sudda">—</b></span>
-      </button>
-      <button class="karta" data-toast="Tuzilish jarayonidagilar">
-        <span class="tile kok"><svg class="ic"><use href="#i-qalam"/></svg></span>
-        <span><span class="yorliq">Yakunlangan</span><b id="sk-yakun">—</b></span>
-      </button>
-    </section>
-
-    <div class="filtr-qator">
-      <div class="f-izlash" onclick="this.querySelector('input').focus()">
-        <input type="search" id="sh-qidiruv" placeholder="Qidirish..." aria-label="Shartnomalarni qidirish">
-        <svg class="ic"><use href="#i-izlash"/></svg>
-      </div>
-      <button class="tanlov" id="sh-f-obyekt" data-royxat="obyekt" data-royxat-bosh="Barcha obyektlar"><span class="t-yorliq">Barcha obyektlar</span><svg class="ic"><use href="#i-past"/></svg></button>
-      <button class="tanlov" id="sh-f-tur" data-variantlar='["Barcha turlar","Ipoteka krediti","Investitsiya krediti","Aylanma mablag&#39; krediti","Avtokredit","Agrokredit","Mikroqarz"]'><span class="t-yorliq">Barcha turlar</span><svg class="ic"><use href="#i-past"/></svg></button>
-      <button class="tanlov" id="sh-f-holat" data-variantlar='["Barcha holatlar","Amalda","To&#39;lov kechikkan","Undiruvda","Yopilgan"]'><span class="t-yorliq">Barcha holatlar</span><svg class="ic"><use href="#i-past"/></svg></button>
-      <button class="tanlov" data-toast="Sana oralig'ini tanlash" style="width:auto;min-width:140px;background:var(--karta);border:none;box-shadow:var(--soya)"><span class="t-yorliq">Sana oralig'i</span><svg class="ic"><use href="#i-kalendar"/></svg></button>
-      <button class="f-tugma" data-toast="Kengaytirilgan filtrlar"><svg class="ic"><use href="#i-slayder"/></svg>Filtrlar</button>
-    </div>
-
-    <div class="sh-grid">
-
-      <!-- Chap ro'yxat -->
-      <div class="karta">
-        <div class="sh-tablar">
-          <button class="sh-tab aktiv">Barchasi<span class="son">128</span></button>
-          <button class="sh-tab">Faol<span class="son">96</span></button>
-          <button class="sh-tab">Muddati yaqinlashgan<span class="son">14</span></button>
-        </div>
-        <div id="sh-royxat"></div>
-        <div class="sahifalash" style="padding:14px 0 0">
-          <span class="oraliq">Jami: <b id="sk-jami2">—</b></span>
-          <button class="s-tugma" data-toast="Oldingi sahifa" aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
-          <button class="s-tugma aktiv" disabled aria-current="page">1</button>
-          <button class="s-tugma" data-toast="2-sahifa">2</button>
-          <button class="s-tugma" data-toast="3-sahifa">3</button>
-          <button class="s-tugma" data-toast="Keyingi sahifa" aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
-        </div>
-      </div>
-
-      <!-- Markaz -->
-      <div class="karta">
-        <div class="tafsilot-bosh">
-          <h3><svg class="ic"><use href="#i-slayder"/></svg>Shartnoma tafsilotlari</h3>
-          <span class="chip chip-asos" id="t-holat">Faol</span>
-          <span class="yangilanish">Oxirgi yangilanish: <span id="t-yangilanish">24-may, 14:20</span></span>
-        </div>
-
-        <div class="sh-tafsilot">
-          <div class="sh-maydon"><svg class="ic"><use href="#i-shartnoma"/></svg><span><span class="yorliq">Shartnoma raqami</span><b id="t-raqam">IK-2024/00125</b></span></div>
-          <div class="sh-maydon"><svg class="ic"><use href="#i-kalendar"/></svg><span><span class="yorliq">Boshlanish sanasi</span><b id="t-boshi">01.01.2024</b></span></div>
-          <div class="sh-rasm">
-            <img id="t-rasm" src="assets/bino_tower.webp" alt="Shartnoma obyekti">
-            <button class="chip3d" data-toast="3D aylantirish">3D</button>
-            <a class="kengay" id="t-havola" href="obyekt.html?id=green-tower" aria-label="Obyektni ochish"><svg class="ic"><use href="#i-kengay"/></svg></a>
-          </div>
-          <div class="sh-maydon"><svg class="ic"><use href="#i-foyd"/></svg><span><span class="yorliq">Qarzdor mijoz</span><b id="t-tenant">«Navruz Savdo» MChJ <svg class="ic" style="width:15px;height:15px;color:#047857;vertical-align:-2px"><use href="#i-belgi"/></svg></b></span></div>
-          <div class="sh-maydon"><svg class="ic"><use href="#i-kalendar"/></svg><span><span class="yorliq">Tugash sanasi</span><b id="t-tugashi">31.12.2026</b></span></div>
-          <div class="sh-maydon"><svg class="ic"><use href="#i-bino"/></svg><span><span class="yorliq">Aktiv obyekti</span><b id="t-obyekt">Navruz Plaza</b><span class="sub" id="t-kod">AK-2025/0934</span></span></div>
-          <div class="sh-maydon"><svg class="ic"><use href="#i-soat"/></svg><span><span class="yorliq">Shartnoma muddati</span><b id="t-muddat">3 yil</b></span></div>
-          <div class="sh-maydon"><svg class="ic"><use href="#i-pin"/></svg><span><span class="yorliq">Manzil</span><b style="font-weight:550" id="t-manzil">Toshkent sh., Shayxontohur tumani,<br>Navoiy ko'chasi, 15</b></span></div>
-          <div class="sh-maydon"><svg class="ic"><use href="#i-daromad"/></svg><span><span class="yorliq">To'lov summasi</span><b id="t-summa">12 450 000 000 so'm</b><span class="sub">Yillik to'lov</span></span></div>
-          <div class="sh-maydon"><svg class="ic"><use href="#i-hujjat"/></svg><span><span class="yorliq">Shartnoma turi</span><b id="t-turi">Kredit shartnomasi</b></span></div>
-          <div class="sh-maydon"><svg class="ic"><use href="#i-belgi-doira"/></svg><span><span class="yorliq">To'lov sharti</span><b id="t-shart">Har chorakda</b></span></div>
-        </div>
-
-        <div class="tolov-blok">
-          <h4>To'lov jadvali</h4>
-          <div class="tolovlar" id="tolov-royxat"></div>
-        </div>
-
-        <div class="uzaytirish">
-          <h4>Uzaytirish jarayoni</h4>
-          <div class="uz-qadamlar" id="uzaytirish-royxat"></div>
-        </div>
-      </div>
-
-      <!-- O'ng ustun -->
-      <aside>
-        <div class="karta amal-karta">
-          <h3>Tezkor amallar</h3>
-          <button class="amal-band asosiy" data-toast="Shartnoma tasdiqlandi"><svg class="ic" style="color:#3730A3"><use href="#i-belgi-doira"/></svg>Tasdiqlash</button>
-          <button class="amal-band" data-toast="Uzaytirish jarayoni boshlandi"><svg class="ic"><use href="#i-kalendar"/></svg>Uzaytirish</button>
-          <button class="amal-band" data-toast="Shartnoma PDF yuklab olinmoqda"><svg class="ic"><use href="#i-yuklab"/></svg>Shartnomani yuklab olish</button>
-          <button class="amal-band" data-toast="To'lov jadvali XLSX yuklab olinmoqda"><svg class="ic"><use href="#i-yuklab"/></svg>To'lov jadvalini yuklab olish</button>
-          <button class="amal-band xavfli" id="bekor-qilish"><svg class="ic"><use href="#i-savat"/></svg>Shartnomani bekor qilish</button>
-        </div>
-
-        <div class="karta menejer-karta">
-          <h3>Mas'ul menejer</h3>
-          <div class="menejer">
-            <span class="avatar"><svg viewBox="0 0 34 34" style="width:36px;height:36px;display:block;margin:6px auto 0"><circle cx="17" cy="12" r="6.5" fill="#A1A1AA"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#A1A1AA"/></svg></span>
-            <span><b id="mj-ism">Javlon Karimov</b><span>Menejer</span></span>
-          </div>
-          <div class="menejer-aloqa">
-            <button id="mj-tel" data-toast="Qo'ng'iroq: +998 90 123-45-67" aria-label="Qo'ng'iroq qilish"><svg class="ic"><use href="#i-tel"/></svg></button>
-            <button id="mj-email" data-toast="Email: j.karimov@mkbank.uz" aria-label="Email yozish"><svg class="ic"><use href="#i-mail"/></svg></button>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </main>
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Kredit shartnomalari</span></div>
+    <div class="hs-qator"><h1>Kredit shartnomalari</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div id="jadval-joy"></div>
+</main>
 </div>
 </div>
-
-<script src="malumot.js?v=26082605"></script>
-<script src="tarjima.js?v=26082605"></script>
-<script src="mkb.js?v=26082605"></script>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
 <script>
-document.addEventListener("DOMContentLoaded", ()=>{
-
-/* Kredit shartnomalari yagona manbadan — raqamlar undiruv ishlari bilan bir xil */
-const TEG_XARITA = {
-  ogohlantirish: ["kechikkan", "To'lov kechikkan"],
-  davo:          ["kechikkan", "To'lov kechikkan"],
-  sud:           ["undiruvda", "Undiruvda"],
-  qaror:         ["undiruvda", "Undiruvda"],
-  ijro:          ["undiruvda", "Undiruvda"],
-  musodara:      ["undiruvda", "Undiruvda"],
-  auksion:       ["undiruvda", "Undiruvda"]
-};
-function tolovJadvali(y){
-  // To'lov intizomi massividan (12 oy) jadval quriladi — alohida raqam yozilmaydi
-  const oylik = +(y.shartnoma.berilgan / 36).toFixed(1);
-  const oylar = ["iyun","iyul","avgust","sentyabr","oktyabr","noyabr","dekabr","yanvar","fevral","mart","aprel","may"];
-  return y.tolov.map((t, i) => [
-    (i + 1) + "-to'lov", "01." + String(i < 7 ? i + 6 : i - 6).padStart(2, "0") + (i < 7 ? ".2025" : ".2026"),
-    MKB_DATA.pul(oylik), t ? "tolandi" : "kechikkan", t ? "To'langan" : "Kechiktirilgan"
-  ]);
-}
-const SHARTNOMALAR = MKB_DATA.YOZUVLAR.map(y => {
-  const [teg, tegMatn] = TEG_XARITA[y.ish.bosqich];
-  return {
-    raqam: y.shartnoma.raqam,
-    obyekt: y.mulk.nom,
-    kod: y.id,
-    id: y.id,
-    firma: y.mijoz.nom,
-    boshi: y.shartnoma.sana,
-    tugashi: "—",
-    summa: MKB_DATA.pul(y.shartnoma.berilgan),
-    teg, tegMatn,
-    holat: y.bosqichNomi,
-    rasm: y.mulk.rasm,
-    muddat: "36 oy",
-    manzil: y.mulk.hududToliq + ",<br>" + y.mulk.manzil,
-    turi: y.shartnoma.tur,
-    shart: "Har oyda",
-    yangilanish: "Bugun",
-    menejer: {
-      ism: y.ish.masul,
-      tel: "+998 71 200-00-00",
-      email: (y.ish.masul.split(" ")[0][0] + "." + y.ish.masul.split(" ").slice(-1)[0]).toLowerCase().replace(/'/g,"") + "@mkbank.uz"
-    },
-    uzaytirish: [
-      ["bajarildi", "Shartnoma imzolandi", y.shartnoma.sana],
-      ["bajarildi", "Kechikish aniqlandi", y.qarz.kunlar + " kun oldin"],
-      ["joriy", y.bosqichNomi, y.ish.muddat.split(" — ")[0]],
-      ["kutish", "Realizatsiya / yopish", "—"]
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const qatorlar = yoz.map(y => ({
+    id: y.id, raqam: y.shartnoma.raqam, tur: y.shartnoma.tur, sana: y.shartnoma.sana,
+    berilgan: y.shartnoma.berilgan, mijoz: y.mijoz.nom, filial: y.filial,
+    qarzN: MKB.sonQiymat(y.qarzSon), qarzMatn: y.qarzMatn, bosqich: y.bosqichNomi,
+  }));
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta shartnoma";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    qidiruv: ["raqam", "mijoz", "tur"],
+    qidiruvYozuvi: "Shartnoma raqami, mijoz...",
+    filtrlar: [
+      {kalit: "tur", nom: "Kredit turi", variantlar: [...new Set(qatorlar.map(q => q.tur))]},
+      {kalit: "filial", nom: "Filial", variantlar: [...new Set(qatorlar.map(q => q.filial))]},
     ],
-    tolovlar: tolovJadvali(y)
-  };
-});
-
-let faolIdx = 0;
-
-/* Filtr holati: matn + obyekt + tur + holat */
-const F = {matn: "", obyekt: null, tur: null, holat: null};
-function shMos(s, y){
-  if (F.matn && !(s.raqam + " " + s.firma + " " + s.obyekt).toLowerCase().includes(F.matn)) return false;
-  if (F.obyekt && y.mulk.qisqa !== F.obyekt) return false;
-  if (F.tur && s.tur !== F.tur) return false;
-  if (F.holat){
-    const k = y.ish.bosqich;
-    const h = k === "ogohlantirish" ? "To'lov kechikkan"
-      : ["davo","sud","qaror","ijro","musodara","auksion"].includes(k) ? "Undiruvda" : "Amalda";
-    if (h !== F.holat) return false;
-  }
-  return true;
-}
-function royxatChiz(){
-  document.getElementById("sh-royxat").innerHTML = SHARTNOMALAR.map((s,i)=>{
-    if (!shMos(s, MKB_DATA.YOZUVLAR[i])) return "";
-    return `
-    <button class="sh-band ${i===faolIdx?"faol":""}" data-i="${i}">
-      <img src="${s.rasm}" alt="">
-      <span style="flex:1;min-width:0">
-        <span class="kod"><span class="nuqta"></span>${s.raqam}</span>
-        <b>${s.obyekt}</b>
-        <span class="firma">${s.firma}</span>
-        <span class="sana">${s.boshi} – ${s.tugashi}</span>
-        <span class="summa">${s.summa}</span>
-      </span>
-      <span class="sh-teg ${s.teg}">${s.tegMatn}</span>
-    </button>`;
-  }).join("") || `<div style="text-align:center;color:var(--matn-3);padding:26px 0">Filtrga mos shartnoma yo'q</div>`;
-  document.querySelectorAll(".sh-band").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      faolIdx = +b.dataset.i;
-      royxatChiz(); tafsilotChiz();
-    });
-  });
-}
-
-function tafsilotChiz(){
-  const s = SHARTNOMALAR[faolIdx];
-  document.getElementById("t-raqam").textContent = s.raqam;
-  document.getElementById("t-boshi").textContent = s.boshi;
-  document.getElementById("t-tugashi").textContent = s.tugashi;
-  document.getElementById("t-tenant").innerHTML = s.firma+' <svg class="ic" style="width:15px;height:15px;color:#047857;vertical-align:-2px"><use href="#i-belgi"/></svg>';
-  document.getElementById("t-obyekt").textContent = s.obyekt;
-  document.getElementById("t-kod").textContent = s.kod;
-  document.getElementById("t-muddat").textContent = s.muddat;
-  document.getElementById("t-summa").textContent = s.summa;
-  document.getElementById("t-rasm").src = s.rasm;
-  document.getElementById("t-havola").href = "obyekt.html?id="+s.id;
-  document.getElementById("t-manzil").innerHTML = s.manzil;
-  document.getElementById("t-turi").textContent = s.turi;
-  document.getElementById("t-shart").textContent = s.shart;
-  document.getElementById("t-yangilanish").textContent = s.yangilanish;
-  const h = document.getElementById("t-holat");
-  h.textContent = s.holat;
-  h.className = "chip " + (s.teg==="faol" ? "chip-asos" : s.teg==="kechikkan" ? "chip-sariq" : "chip-qizil");
-
-  document.getElementById("tolov-royxat").innerHTML = s.tolovlar.map(([nom,sana,summa,holat,holatMatn],i)=>`
-    <button class="tolov ${holat}" data-toast="${nom}: ${holat==="tolandi"?"to'langan":holat==="kechikkan"?"to'lov kechiktirilgan":"reja bo'yicha"}">
-      <span class="tolov-belgi">${holat==="tolandi" ? '<svg class="ic"><use href="#i-belgi"/></svg>' : i+1}</span>
-      <b>${nom}</b><span class="sana">${sana}</span><span class="summa">${summa}</span><span class="holat">${holatMatn}</span>
-    </button>`).join("");
-
-  document.getElementById("uzaytirish-royxat").innerHTML = s.uzaytirish.map(([holat,matn,sana],i)=>`
-    <div class="uz-qadam ${holat}">
-      <span class="uz-belgi">${holat==="bajarildi" ? '<svg class="ic"><use href="#i-belgi"/></svg>' : i+1}</span>
-      <b>${matn}</b><span>${sana}</span>
-    </div>`).join("");
-
-  document.getElementById("mj-ism").textContent = s.menejer.ism;
-  const mjTel = document.getElementById("mj-tel");
-  mjTel.dataset.toast = "Qo'ng'iroq: "+s.menejer.tel;
-  const mjEmail = document.getElementById("mj-email");
-  mjEmail.dataset.toast = "Email: "+s.menejer.email;
-}
-
-document.querySelectorAll(".sh-tab").forEach(t=>{
-  t.addEventListener("click", ()=>{
-    document.querySelectorAll(".sh-tab").forEach(x=>x.classList.remove("aktiv"));
-    t.classList.add("aktiv");
-    MKB.toast(t.textContent.replace(/\d+$/,"").trim()+" ro'yxati");
+    ustunlar: [
+      {kalit: "raqam", nom: "Raqam", chiz: q => '<span class="kod-mono">' + q.raqam + '</span>'},
+      {kalit: "mijoz", nom: "Mijoz"},
+      {kalit: "tur", nom: "Kredit turi"},
+      {kalit: "sana", nom: "Sana"},
+      {kalit: "berilgan", nom: "Berilgan summa", son: true, chiz: q => '<span class="pul">' + q.berilgan + '</span>'},
+      {kalit: "qarzN", nom: "Qoldiq", son: true, chiz: q => '<span class="pul">' + q.qarzMatn + '</span>'},
+    ],
+    bosilganda: q => location.href = "shartnoma.html?id=" + encodeURIComponent(q.id),
   });
 });
-
-document.getElementById("bekor-qilish").addEventListener("click", ()=>{
-  const s = SHARTNOMALAR[faolIdx];
-  MKB.modal("Shartnomani bekor qilish",
-    `${s.raqam} (${s.obyekt}) shartnomasini bekor qilmoqchimisiz? Bu amal yuridik oqibatlarga ega.`,
-    {xavf:true, okMatn:"Bekor qilish", ok(){ MKB.toast("Shartnoma bekor qilish jarayoni boshlandi"); }});
-});
-
-royxatChiz();
-document.getElementById("sh-qidiruv").addEventListener("input", e => {
-  F.matn = e.target.value.trim().toLowerCase(); royxatChiz();
-});
-[["sh-f-obyekt","obyekt","Barcha obyektlar"],["sh-f-tur","tur","Barcha turlar"],["sh-f-holat","holat","Barcha holatlar"]]
-  .forEach(([id, kalit, bosh]) => {
-    document.getElementById(id).addEventListener("tanlov", e => {
-      F[kalit] = e.detail === bosh ? null : e.detail; royxatChiz();
-    });
-  }); tafsilotChiz();
-});
-
-/* KPI lar portfel kesimidan (Д-7) */
-(function(){
-  const S = MKB_DATA.PORTFEL.shartnoma, q = (i, v) => { const e = document.getElementById(i); if (e) e.textContent = v; };
-  q("sk-jami", MKB_DATA.fmt(S.jami)); q("sk-faol", S.faol);
-  q("sk-kechikkan", S.kechikkan); q("sk-sudda", S.sudda); q("sk-yakun", S.yakunlangan);
-  q("sk-jami2", MKB_DATA.fmt(S.jami));
-})();
 </script>
 </body>
 </html>

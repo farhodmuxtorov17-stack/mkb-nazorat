@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Advokatlar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Undiruv va sud</span></div>
+    <div class="hs-qator"><h1>Advokatlar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div id="jadval-joy"></div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("ADVOKATLAR");
+  const majlislar = await MKBapi.royxat("SUD_MAJLISLAR");
+  const qatorlar = r.map(a => Object.assign({}, a,
+    {ishlar: majlislar.filter(m => m.advokat === a.ism).length}));
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta advokat shartnomada";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    qidiruv: ["ism", "ixtisos"],
+    ustunlar: [
+      {kalit: "ism", nom: "Advokat", chiz: q =>
+        '<span class="obyekt-katak"><span style="width:36px;height:36px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 12px var(--shrift)">' +
+        q.ism.split(" ").map(v => v[0]).join("").slice(0, 2) + '</span>' +
+        '<span><span class="nom">' + q.ism + '</span><br><span class="sub kod-mono">' + q.litsenziya + '</span></span></span>'},
+      {kalit: "ixtisos", nom: "Ixtisos"},
+      {kalit: "tajriba", nom: "Tajriba"},
+      {kalit: "ishlar", nom: "Faol majlislar", son: true},
+      {kalit: "tel", nom: "Telefon", chiz: q => '<span class="kod-mono">' + q.tel + '</span>'},
+    ],
+  });
+});
+</script>
+</body>
+</html>

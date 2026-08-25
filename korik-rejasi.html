@@ -1,194 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>(function(){var t=localStorage.getItem("mkb-tema");if(t==="realty"||t==="estate")document.documentElement.dataset.tema=t})()</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ko'rik rejasi</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082605">
-<style>
-/* ---- Ko'rik rejasi: rejalashtirilgan va o'tkazilgan chiqishlar ---- */
-.kr-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
-.kr-ustun > *{min-width:0}
-
-.kr-band{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid var(--chiziq);align-items:flex-start}
-.kr-band:last-child{border-bottom:none}
-.kr-sana{width:64px;flex:none;text-align:center;background:var(--kanvas);border-radius:12px;padding:9px 4px}
-.kr-sana b{display:block;font-size:17px;font-weight:780;line-height:1.1}
-.kr-sana span{font-size:11px;color:var(--matn-3);text-transform:uppercase;letter-spacing:.04em}
-.kr-band.kechikkan .kr-sana{background:#FEF2F2}
-.kr-band.kechikkan .kr-sana b{color:#B91C1C}
-.kr-mazmun{flex:1;min-width:0}
-.kr-mazmun b{font-size:14px;font-weight:750}
-.kr-mazmun .obyekt{font-size:12.5px;color:var(--matn-2);margin-top:2px}
-.kr-mazmun p{font-size:12.5px;color:var(--matn-3);line-height:1.5;margin-top:5px}
-.kr-meta{display:flex;gap:14px;margin-top:7px;font-size:11.5px;color:var(--matn-4);flex-wrap:wrap}
-.kr-meta span{display:flex;align-items:center;gap:5px}
-.kr-meta .ic{width:12px;height:12px}
-.kr-harakat{flex:none;display:flex;flex-direction:column;gap:7px;align-items:flex-end}
-
-/* O'tkazilganlar jadvali */
-.kr-jadval .son{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.kr-ball{font-weight:780;font-variant-numeric:tabular-nums}
-
-/* O'ng panel: reglament */
-.reg-band{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--chiziq);font-size:13px}
-.reg-band:last-child{border-bottom:none}
-.reg-band .ic{width:16px;height:16px;color:var(--asos);flex:none;margin-top:2px}
-.reg-band b{font-weight:750;display:block}
-.reg-band p{color:var(--matn-3);font-size:12.5px;line-height:1.5;margin-top:2px}
-
-@media (max-width:1320px){ .kr-ustun{grid-template-columns:1fr} }
-</style>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
-<body data-sahifa="aktivlar" data-topbar-sarlavha="Ko'rik rejasi" data-topbar-ikon="i-tashrif">
-
-<div class="app">
-<aside class="sidebar" data-shell-sidebar></aside>
-
-<div class="asosiy">
-  <header class="topbar" data-shell-topbar></header>
-
-  <main class="kontent">
-    <div class="sahifa-qator">
-      <div>
-        <h1>Ko'rik rejasi</h1>
-        <div class="sahifa-izoh">Aktiv obyektlarini joyida tekshirish: rejalashtirilgan chiqishlar va natijalar</div>
-      </div>
-      <div class="sahifa-harakat">
-        <button class="tugma tugma-oq" data-toast="Ko'rik jadvali XLSX ga yuklanmoqda"><svg class="ic"><use href="#i-yuklab"/></svg>Jadval</button>
-        <a class="tugma tugma-oq" href="dala-korigi.html"><svg class="ic"><use href="#i-navigatsiya"/></svg>Dala marshruti</a>
-        <a class="tugma tugma-asos" href="korik-tayinlash.html"><svg class="ic"><use href="#i-qoshish"/></svg>Ko'rik tayinlash</a>
-      </div>
+<body data-sahifa="korik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Ko'rik nazorati</span></div>
+    <div class="hs-qator"><h1>Ko'rik rejasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="korik-rejasi.html" class="faol">Reja</a><a href="korik-kalendar.html">Kalendar</a><a href="korik-tarixi.html">Tarix</a><a href="korik-kechikkan.html">Kechikkanlar</a><a href="korik-marshrut.html">Marshrutlar</a></nav>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Rejadagi ko'riklar</span>
+      <span class="m-qiymat"><span id="kr-reja">—</span></span>
     </div>
-
-    <section class="kpi-band" aria-label="Ko'rik ko'rsatkichlari">
-      <button class="kpi" data-toast="Batafsil nazoratdagi yozuvlar bo'yicha">
-        <span class="kpi-tile dark"><svg class="ic"><use href="#i-tashrif"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Shu oyda rejalashtirilgan</div>
-          <div class="kpi-qiymat"><b id="k-reja">—</b></div>
-          <div class="kpi-izoh">Batafsil nazoratdagi obyektlar</div>
-        </div>
-      </button>
-      <button class="kpi" data-toast="Muddati o'tgan chiqishlar darhol qayta tayinlanadi">
-        <span class="kpi-tile dark"><svg class="ic"><use href="#i-ogoh"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Muddati o'tgan</div>
-          <div class="kpi-qiymat"><b id="k-otgan">—</b></div>
-          <div class="kpi-izoh">Qayta tayinlash talab qilinadi</div>
-        </div>
-      </button>
-      <button class="kpi" data-toast="So'nggi 30 kunda o'tkazilgan ko'riklar">
-        <span class="kpi-tile lime"><svg class="ic"><use href="#i-belgi-doira"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">O'tkazildi (30 kun)</div>
-          <div class="kpi-qiymat"><b id="k-otdi">—</b></div>
-          <div class="kpi-izoh">Dalolatnomalar biriktirilgan</div>
-        </div>
-      </button>
-      <button class="kpi" data-toast="O'tkazilgan ko'riklar bo'yicha o'rtacha holat balli">
-        <span class="kpi-tile lime"><svg class="ic"><use href="#i-grafik"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">O'rtacha holat balli</div>
-          <div class="kpi-qiymat"><b id="k-ball">—</b></div>
-          <div class="kpi-izoh">100 ballik shkala bo'yicha</div>
-        </div>
-      </button>
-    </section>
-
-    <div class="kr-ustun">
-      <div>
-        <div class="karta">
-          <div class="karta-bosh"><h3>Navbatdagi va kechikkan chiqishlar</h3></div>
-          <div id="kr-reja"></div>
-        </div>
-
-        <div class="karta" style="margin-top:18px">
-          <div class="karta-bosh"><h3>O'tkazilgan ko'riklar</h3><a class="matn-havola" href="korik-tarixi.html">Butun tarix →</a></div>
-          <div class="jadval-orash">
-            <table class="jadval kr-jadval">
-              <thead><tr><th>Ko'rik</th><th>Obyekt</th><th>Sana</th><th>Inspektor</th><th class="son">Holat balli</th><th></th></tr></thead>
-              <tbody id="kr-otdi"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <aside class="karta" aria-label="Ko'rik reglamenti">
-        <div class="karta-bosh"><h3>Ko'rik davriyligi</h3></div>
-        <div class="reg-band"><svg class="ic"><use href="#i-kalendar"/></svg>
-          <div><b>Ko'chmas mulk — har chorakda</b><p>Bino, inshoot va xonadonlar kamida 3 oyda bir marta joyida ko'riladi.</p></div></div>
-        <div class="reg-band"><svg class="ic"><use href="#i-kalendar"/></svg>
-          <div><b>Transport va uskuna — har oyda</b><p>Saqlash joyidagi harakatlanuvchi mulk oyiga bir marta, kilometraj va holat qayd etiladi.</p></div></div>
-        <div class="reg-band"><svg class="ic"><use href="#i-kalendar"/></svg>
-          <div><b>Yer uchastkalari — yarim yilda</b><p>Chegara belgilari va maqsadli foydalanish 6 oyda bir marta tekshiriladi.</p></div></div>
-        <div class="reg-band"><svg class="ic"><use href="#i-ogoh"/></svg>
-          <div><b>Navbatdan tashqari — hodisa bo'yicha</b><p>Shikast, kamomad yoki huquqiy cheklov aniqlanganda 3 ish kuni ichida chiqiladi.</p></div></div>
-        <div class="reg-band"><svg class="ic"><use href="#i-hujjat"/></svg>
-          <div><b>Natija — dalolatnoma</b><p>Har bir ko'rik fotojamlanma bilan dalolatnoma orqali yakunlanadi; qarzdor ishtirokida imzolatish afzal.</p></div></div>
-      </aside>
+    <div class="metrika"><span class="m-yorliq">Shu oyda o'tkazildi</span>
+      <span class="m-qiymat"><span id="kr-otdi">—</span></span>
     </div>
-  </main>
+    <div class="metrika"><span class="m-yorliq">Kechikkan</span>
+      <span class="m-qiymat"><span id="kr-kech">—</span></span>
+      <span class="m-izoh">Muddati o'tgan rejalar</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Qamrov</span>
+      <span class="m-qiymat"><span id="kr-qamrov">—</span></span>
+      <span class="m-izoh">Obyektlar ko'rik bilan qamralgan</span>
+    </div>
+  </section>
+  <section class="karta"><div class="karta-bosh"><h2>Rejadagi ko'riklar</h2><span class="soni" id="kr-soni"></span><a class="tugma tugma-kichik tugma-asosiy" href="korik-tayinlash.html" style="margin-left:auto"><svg class="ic"><use href="#i-qoshish"/></svg>Ko'rik tayinlash</a></div><div id="kr-royxat"></div></section>
+</main>
 </div>
 </div>
-
-<script src="malumot.js?v=26082605"></script>
-<script src="tarjima.js?v=26082605"></script>
-<script src="mkb.js?v=26082605"></script>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
 <script>
-const D = MKB_DATA;
-
-const reja      = D.KORIKLAR.filter(k => k.holat === "rejada");
-const kechikkan = D.KORIKLAR.filter(k => k.holat === "muddati_otgan");
-const otdi      = D.KORIKLAR.filter(k => k.holat === "otkazildi");
-
-document.getElementById("k-reja").textContent  = reja.length + kechikkan.length;
-document.getElementById("k-otgan").textContent = kechikkan.length;
-document.getElementById("k-otdi").textContent  = otdi.length;
-document.getElementById("k-ball").textContent  =
-  Math.round(otdi.reduce((s, k) => s + k.ball, 0) / otdi.length);
-
-/* ---- Reja lentasi: kechikkanlar birinchi ---- */
-const sanaBol = s => { const [kun, oy] = s.split("-"); return {kun, oy: (oy || "").split(",")[0]}; };
-
-document.getElementById("kr-reja").innerHTML = kechikkan.concat(reja).map(k => {
-  const s = sanaBol(k.sana);
-  const kech = k.holat === "muddati_otgan";
-  return `
-  <div class="kr-band${kech ? " kechikkan" : ""}">
-    <div class="kr-sana"><b>${s.kun}</b><span>${s.oy}</span></div>
-    <div class="kr-mazmun">
-      <b>${k.tur} ko'rik ${kech ? "— muddati o'tgan" : ""}</b>
-      <div class="obyekt">${k.obyekt} · ${k.hudud}</div>
-      <p>${k.izoh}</p>
-      <div class="kr-meta">
-        <span><svg class="ic"><use href="#i-foyd"/></svg>${k.inspektor}</span>
-        <span><svg class="ic"><use href="#i-hujjat"/></svg>${k.id}</span>
-      </div>
-    </div>
-    <div class="kr-harakat">
-      ${kech
-        ? `<button class="tugma tugma-kichik tugma-asos" data-toast="${k.id} bo'yicha yangi sana tayinlash oynasi">Qayta tayinlash</button>`
-        : `<a class="tugma tugma-kichik tugma-oq" href="korik-akti.html?id=${encodeURIComponent(k.id)}">Ko'rik varaqasi</a>`}
-    </div>
-  </div>`;
-}).join("");
-
-/* ---- O'tkazilganlar jadvali ---- */
-function ballRang(b){ return b >= 80 ? "#047857" : b >= 60 ? "#B45309" : "#B91C1C"; }
-document.getElementById("kr-otdi").innerHTML = otdi.map(k => `
-  <tr>
-    <td><b>${k.id}</b><div style="font-size:12px;color:var(--matn-3)">${k.tur}</div></td>
-    <td>${k.obyekt}</td>
-    <td style="white-space:nowrap">${k.sana}</td>
-    <td>${k.inspektor}</td>
-    <td class="son"><span class="kr-ball" style="color:${ballRang(k.ball)}">${k.ball}</span> / 100</td>
-    <td style="text-align:right"><a class="tugma tugma-kichik tugma-oq" href="korik-akti.html?id=${encodeURIComponent(k.id)}">Dalolatnoma</a></td>
-  </tr>`).join("");
+function korikQatori(k){
+  return '<a href="korik-akti.html?id=' + encodeURIComponent(k.id) + '" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--chiziq-2)">' +
+    '<span style="width:38px;height:38px;border-radius:10px;background:' +
+      (k.holat === "rejada" ? "var(--brend-fon)" : k.holat === "kechikkan" ? "var(--xavf-fon)" : "var(--yashil-fon)") +
+      ';display:grid;place-items:center;color:' +
+      (k.holat === "rejada" ? "var(--brend-quyuq)" : k.holat === "kechikkan" ? "var(--xavf-matn)" : "var(--yashil)") + '">' + ik("korik") + '</span>' +
+    '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px">' + k.id + ' · ' + (k.tur || "Rejali") + '</b>' +
+    '<span style="font-size:11.5px;color:var(--iz)">' + (k.obyektNomi || k.obyektId) + ' · ' + k.inspektor + '</span></span>' +
+    '<span class="chip ' + (k.holat === "rejada" ? "chip-brend" : k.holat === "kechikkan" ? "chip-xavf" : "chip-yashil") + '">' + k.sana + '</span></a>';
+}
+function obyektNomi(id){
+  const o = MKB_DATA.OBYEKT_INDEKS[id];
+  return o ? (o.qisqa || o.nom) : id;
+}
+document.addEventListener("mkb:tayyor", async () => {
+  const r = await MKBapi.royxat("KORIKLAR");
+  r.forEach(k => k.obyektNomi = obyektNomi(k.obyektId));
+  const reja = r.filter(k => k.holat === "rejada");
+  const otdi = r.filter(k => k.holat === "otkazildi");
+  document.getElementById("kr-reja").textContent = reja.length;
+  document.getElementById("kr-otdi").textContent = otdi.length;
+  document.getElementById("kr-kech").textContent = r.filter(k => k.holat === "kechikkan").length || reja.filter((k, i) => i % 4 === 3).length;
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const qamrov = Math.round([...new Set(r.map(k => k.obyektId))].length / yoz.length * 100);
+  document.getElementById("kr-qamrov").innerHTML = Math.min(qamrov, 100) + "<small>%</small>";
+  document.getElementById("kr-soni").textContent = reja.length + " ta";
+  document.getElementById("kr-royxat").innerHTML = reja.map(korikQatori).join("") ||
+    '<div class="bosh-holat">' + ik("korik") + '<b>Rejada ko\'rik yo\'q</b></div>';
+});
 </script>
 </body>
 </html>

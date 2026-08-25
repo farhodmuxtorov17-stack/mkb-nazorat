@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Shartnoma kartochkasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="portfel">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="shartnomalar.html">Kredit shartnomalari</a><span class="ajratgich">/</span><span>Kartochka</span></div>
+    <div class="hs-qator"><h1>Shartnoma kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:860px"><div class="karta-bosh"><h2 id="s-raqam" class="kod-mono">—</h2><span class="soni" id="s-tur"></span><a class="tugma tugma-kichik tugma-oq" id="s-mijoz-havola" href="#" style="margin-left:auto"><svg class="ic"><use href="#i-foyd"/></svg>Qarzdor kartochkasi</a></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-foyd"/></svg>Mijoz</dt>
+  <dd id="s-mijoz">—</dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Shartnoma sanasi</dt>
+  <dd id="s-sana">—</dd>
+  <dt><svg class="ic"><use href="#i-pul"/></svg>Berilgan summa</dt>
+  <dd><span id="s-berilgan" class="pul">—</span></dd>
+  <dt><svg class="ic"><use href="#i-xavf"/></svg>Qoldiq qarz</dt>
+  <dd><span id="s-qoldiq" class="pul">—</span></dd>
+  <dt><svg class="ic"><use href="#i-soat"/></svg>Kechikish</dt>
+  <dd id="s-kunlar">—</dd>
+  <dt><svg class="ic"><use href="#i-bank"/></svg>Filial</dt>
+  <dd id="s-filial">—</dd>
+  <dt><svg class="ic"><use href="#i-aktivlar"/></svg>Ta'minot obyekti</dt>
+  <dd id="s-obyekt">—</dd>
+  <dt><svg class="ic"><use href="#i-yuridik"/></svg>Undiruv bosqichi</dt>
+  <dd id="s-bosqich">—</dd>
+</dl></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const x = id ? await MKBapi.bitta("YOZUVLAR", id) : null;
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("hs-meta").textContent = x.shartnoma.raqam;
+  document.getElementById("s-raqam").textContent = x.shartnoma.raqam;
+  document.getElementById("s-tur").textContent = x.shartnoma.tur;
+  document.getElementById("s-mijoz-havola").href = "qarzdor.html?id=" + encodeURIComponent(x.id);
+  document.getElementById("s-mijoz").textContent = x.mijoz.nom;
+  document.getElementById("s-sana").textContent = x.shartnoma.sana;
+  document.getElementById("s-berilgan").textContent = x.shartnoma.berilgan;
+  document.getElementById("s-qoldiq").textContent = x.qarzMatn;
+  document.getElementById("s-kunlar").textContent = x.qarz.kunlar + " kun";
+  document.getElementById("s-filial").textContent = x.filial;
+  document.getElementById("s-obyekt").innerHTML =
+    '<a href="obyekt.html?id=' + encodeURIComponent(x.id) + '" style="font-weight:700;color:var(--brend-quyuq)">' + x.mulk.qisqa + '</a>';
+  document.getElementById("s-bosqich").textContent = x.bosqichNomi;
+});
+</script>
+</body>
+</html>

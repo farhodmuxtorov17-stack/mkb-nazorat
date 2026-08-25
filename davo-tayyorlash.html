@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Da'vo tayyorlash</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="yuridik">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="undiruv.html">Undiruv va sud</a><span class="ajratgich">/</span><span>Da'vo</span></div>
+    <div class="hs-qator"><h1>Da'vo tayyorlash</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:760px"><div class="karta-bosh"><h2>Da'vo arizasi tayyorlash</h2></div>
+  <form id="d-forma" class="forma-tor">
+    <div class="maydon keng"><label class="maydon-yorliq">Yozuv <b>*</b></label>
+      <div class="kirish"><select name="obyektId" id="d-yozuv"></select></div>
+      <span class="maydon-izoh">Ogohlantirish bosqichidagi ishlar birinchi ko'rsatiladi</span></div>
+    <div class="maydon"><label class="maydon-yorliq">Sud <b>*</b></label>
+      <div class="kirish"><select name="sud"><option>Toshkent shahar sudi</option><option>Toshkent viloyat sudi</option><option>Samarqand sudi</option><option>Namangan sudi</option><option>Buxoro sudi</option></select></div></div>
+    <div class="maydon"><label class="maydon-yorliq">Da'vo summasi</label>
+      <div class="kirish"><input name="summa" id="d-summa" readonly></div></div>
+    <div class="maydon keng"><label class="maydon-yorliq">Da'vo asosi <b>*</b></label>
+      <textarea class="kirish-matn" name="asos" placeholder="Shartnoma bandlari va qonun moddalariga havola"></textarea></div>
+    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
+      <a class="tugma tugma-oq" href="undiruv.html">Bekor qilish</a>
+      <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-sud"/></svg>Da'voni ro'yxatga olish</button></div>
+  </form></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const tartib = yoz.slice().sort((a, b) =>
+    (a.ish.bosqich === "ogohlantirish" ? 0 : 1) - (b.ish.bosqich === "ogohlantirish" ? 0 : 1));
+  const sel = document.getElementById("d-yozuv");
+  sel.innerHTML = tartib.map(y =>
+    '<option value="' + y.id + '">' + y.ish.raqam + " — " + y.mijoz.nom + '</option>').join("");
+  const summa = () => {
+    const y = yoz.find(v => v.id === sel.value);
+    document.getElementById("d-summa").value = y ? y.qarzMatn : "";
+  };
+  sel.addEventListener("change", summa); summa();
+  document.getElementById("d-forma").addEventListener("submit", async e => {
+    e.preventDefault();
+    const q = MKB.forma(e.target, ["obyektId", "sud", "asos"]);
+    if (!q) return;
+    const y = yoz.find(v => v.id === q.obyektId);
+    const tarix = (y.ish.tarix || []).concat([[new Date().toLocaleDateString("uz"),
+      "Da'vo arizasi tayyorlandi", q.sud + "ga taqdim etish uchun. " + q.asos.slice(0, 80)]]);
+    await MKBapi.yangilash("YOZUVLAR", y.id, {
+      ish: Object.assign({}, y.ish, {bosqich: "davo", sud: q.sud, tarix}),
+      bosqichNomi: "Da'vo arizasi"});
+    MKB.toast("Da'vo ro'yxatga olindi — " + y.ish.raqam);
+    setTimeout(() => location.href = "ish.html?id=" + encodeURIComponent(y.id), 700);
+  });
+});
+</script>
+</body>
+</html>

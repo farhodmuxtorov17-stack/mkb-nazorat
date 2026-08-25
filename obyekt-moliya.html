@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Obyekt moliyasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Obyekt kartochkasi</span></div>
+    <div class="hs-qator"><h1>Obyekt kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="obyekt.html" data-id-qoshib="1">Umumiy</a><a href="obyekt-moliya.html" class="faol" data-id-qoshib="1">Moliya</a><a href="obyekt-hujjatlar.html" data-id-qoshib="1">Hujjatlar</a><a href="obyekt-koriklar.html" data-id-qoshib="1">Ko'riklar</a><a href="obyekt-xarajatlar.html" data-id-qoshib="1">Xarajatlar</a><a href="obyekt-galereya.html" data-id-qoshib="1">Galereya</a><a href="obyekt-3d.html" data-id-qoshib="1">3D navigator</a><a href="obyekt-qavat.html" data-id-qoshib="1">Qavat rejasi</a><a href="obyekt-tarix.html" data-id-qoshib="1">Tarix</a></nav>
+  <section class="foto-shapka" aria-label="Obyekt">
+    <img id="fs-rasm" src="" alt="">
+    <div>
+      <div style="flex:1;min-width:220px">
+        <div style="display:flex;gap:8px;margin-bottom:8px" id="fs-chiplar"></div>
+        <h2 id="fs-nom">—</h2>
+        <div class="fs-meta"><span class="kod-mono" id="fs-id" style="color:rgba(255,255,255,.85)">—</span> · <span id="fs-manzil">—</span></div>
+      </div>
+      <div id="fs-halqa"></div>
+    </div>
+  </section>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Asosiy qarz</span>
+      <span class="m-qiymat"><span id="mo-asosiy">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Hisoblangan foiz</span>
+      <span class="m-qiymat"><span id="mo-foiz">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Jami qarz</span>
+      <span class="m-qiymat"><span id="mo-jami">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Kechikish</span>
+      <span class="m-qiymat"><span id="mo-kun">—</span></span>
+      <span class="m-izoh">Kalendar kunlarda</span>
+    </div>
+  </section>
+  <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px" class="panel-tor">
+    <section class="karta"><div class="karta-bosh"><h2>To'lov intizomi</h2><span class="soni">so'nggi 12 oy</span></div><div id="tolov-grafik"></div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--iz);margin-top:10px"><span id="tolov-chap"></span><span id="tolov-ong"></span></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>Baholash tarixi</h2><a class="karta-havola" href="baholash.html">Baholash bo'limi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="baholash-royxat"></div></section>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const x = id ? await MKBapi.bitta('YOZUVLAR', id) : null;
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("fs-rasm").src = x.mulk.rasm;
+  document.getElementById("fs-nom").textContent = x.mulk.nom;
+  document.getElementById("fs-id").textContent = x.id;
+  document.getElementById("fs-manzil").textContent = x.mulk.manzil;
+  document.getElementById("fs-chiplar").innerHTML =
+    "<span class=\"chip chip-brend\">" + x.bosqichNomi + "</span>" +
+    "<span class=\"chip chip-siyoh\">" + x.mulk.tur + "</span>";
+  document.getElementById("fs-halqa").innerHTML = MKB.halqa(x.qoplash, 74, 6).replace('class="halqa', 'class="halqa katta');
+  /* tab havolalariga ?id= ulab qo'yamiz */
+  document.querySelectorAll(".bolim-tablar a").forEach(a => {
+    if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
+  });
+  document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
+
+  document.getElementById("mo-asosiy").textContent = x.asosiyMatn;
+  document.getElementById("mo-foiz").textContent = x.foizMatn;
+  document.getElementById("mo-jami").textContent = x.qarzMatn;
+  document.getElementById("mo-kun").innerHTML = x.qarz.kunlar + "<small>kun</small>";
+  const t = x.tolov || [];
+  document.getElementById("tolov-grafik").innerHTML =
+    '<div style="display:flex;align-items:flex-end;gap:6px;height:110px">' +
+    t.map((v, i) => '<div style="flex:1;border-radius:6px 6px 2px 2px;height:' +
+      (v ? 62 + ((i * 7) % 34) : 16) + '%;background:' + (v ? 'var(--siyoh)' : 'var(--xavf)') +
+      ';opacity:' + (v ? .85 : 1) + '" title="' + (i + 1) + '-oy"></div>').join("") + '</div>';
+  const otk = t.filter(v => !v).length;
+  document.getElementById("tolov-chap").textContent = (t.length - otk) + " ta to'lov o'z vaqtida";
+  document.getElementById("tolov-ong").textContent = otk + " ta o'tkazib yuborilgan";
+  const b = MKB_DATA.BAHOLASHLAR.filter(v => v.obyektId === x.id);
+  document.getElementById("baholash-royxat").innerHTML = b.length ? b.map(v =>
+    '<div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
+      '<span style="width:34px;height:34px;border-radius:10px;background:var(--varaq-2);display:grid;place-items:center;color:var(--qalam)">' + ik("baholash") + '</span>' +
+      '<span style="flex:1"><b style="display:block;font-size:12.5px">' + v.baholovchi + '</b>' +
+      '<span style="font-size:11px;color:var(--iz)">' + v.usul + ' · ' + v.sana + '</span></span>' +
+      '<span class="pul">' + MKB.fmt(v.qiymat) + ' mln</span>' +
+      '<span class="delta ' + (v.qiymat >= (v.avvalgi || v.qiymat) ? 'ijobiy">↑' : 'salbiy">↓') + '</span></div>').join("")
+    : '<div class="bosh-holat">' + ik("baholash") + '<b>Baholash o\'tkazilmagan</b><span>Buyurtma yaratish uchun Baholash bo\'limiga o\'ting</span></div>';
+
+});
+</script>
+</body>
+</html>

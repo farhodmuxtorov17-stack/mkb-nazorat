@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Obyekt pasporti</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Obyekt kartochkasi</span></div>
+    <div class="hs-qator"><h1>Obyekt pasporti</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar"><button type="button" class="tugma tugma-asosiy" onclick="window.print()"><svg class="ic"><use href="#i-chop"/></svg>Chop etish</button></div></div>
+  </div>
+  <section class="karta" id="pasport">
+    <div style="display:flex;align-items:flex-start;gap:16px;border-bottom:2px solid var(--siyoh);padding-bottom:14px;margin-bottom:16px">
+      <div style="flex:1"><b style="font:700 16px var(--shrift-displey)">«Mikrokreditbank» ATB</b>
+        <div style="font-size:11.5px;color:var(--iz)">Muammoli aktivlar bilan ishlash departamenti</div></div>
+      <div style="text-align:right;font-size:11.5px;color:var(--iz)">Shakl AN-01<br><span id="p-sana"></span></div>
+    </div>
+    <h2 style="font:700 19px var(--shrift-displey);text-align:center;margin-bottom:16px">OBYEKT PASPORTI</h2>
+    <div style="display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px" class="panel-tor">
+      <img id="p-rasm" class="foto" src="" alt="" style="width:100%;border-radius:10px">
+      <div id="p-dl"></div>
+    </div>
+    <div id="p-dl2" style="margin-top:8px"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:34px;font-size:12.5px">
+      <div>Bo'lim boshlig'i: ______________________<div style="color:var(--iz);font-size:11px;margin-top:4px">imzo</div></div>
+      <div>Mas'ul xodim: <span id="p-masul"></span> ______________<div style="color:var(--iz);font-size:11px;margin-top:4px">imzo</div></div>
+    </div>
+  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const x = id ? await MKBapi.bitta('YOZUVLAR', id) : null;
+  if (!x){ location.replace("xato-404.html"); return; }
+
+  document.getElementById("hs-meta").textContent = x.id;
+  document.getElementById("p-sana").textContent = new Date().toLocaleDateString("uz-UZ");
+  document.getElementById("p-rasm").src = x.mulk.rasm;
+  document.getElementById("p-masul").textContent = x.ish.masul;
+  const q = (yorliq, qiymat) =>
+    '<dt style="color:var(--iz);padding:7px 16px 7px 0;border-bottom:1px solid var(--chiziq-2)">' + yorliq +
+    '</dt><dd style="font-weight:500;text-align:right;padding:7px 0;border-bottom:1px solid var(--chiziq-2)">' + qiymat + '</dd>';
+  document.getElementById("p-dl").innerHTML = '<dl class="malumot-royxat" style="font-size:12.5px">' +
+    q("Obyekt raqami", '<span class="kod-mono">' + x.id + "</span>") +
+    q("Nomi", x.mulk.nom) + q("Turi", x.mulk.tur) +
+    q("Manzil", x.mulk.manzil) + q("Maydon", x.mulk.maydon) + "</dl>";
+  document.getElementById("p-dl2").innerHTML = '<dl class="malumot-royxat" style="font-size:12.5px">' +
+    q("Qarzdor", x.mijoz.nom + " (" + x.mijoz.raqam + ")") +
+    q("Kredit shartnomasi", x.shartnoma.raqam + " · " + x.shartnoma.sana) +
+    q("Qoldiq qarz", x.qarzMatn) + q("Baholangan qiymat", x.bahoMatn + " (" + x.mulk.bahoSana + ")") +
+    q("Ta'minot bilan qoplash", x.qoplash + "%") +
+    q("Joriy bosqich", x.bosqichNomi) + q("Ish raqami", x.ish.raqam) + "</dl>";
+});
+</script>
+</body>
+</html>

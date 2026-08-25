@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Qarzdor kartochkasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="portfel">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="qarzdorlar.html">Qarzdorlar portfeli</a><span class="ajratgich">/</span><span>Qarzdor kartochkasi</span></div>
+    <div class="hs-qator"><h1>Qarzdor kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="qarzdor.html" class="faol">Umumiy</a><a href="qarzdor-muloqot.html">Muloqot jurnali</a><a href="qarzdor-tolovlar.html">To'lov intizomi</a></nav>
+  <section class="karta" style="display:flex;align-items:center;gap:16px">
+    <span id="m-belgi" style="width:56px;height:56px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 18px var(--shrift);flex:none">—</span>
+    <div style="flex:1;min-width:0"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b id="m-nom" style="font:700 19px var(--shrift-displey)">—</b><span id="m-chip"></span></div>
+    <span style="font-size:12.5px;color:var(--iz)" id="m-sub">—</span></div>
+    <a class="tugma tugma-oq" id="m-obyekt-havola" href="#"><svg class="ic"><use href="#i-aktivlar"/></svg>Obyekt kartochkasi</a>
+  </section>
+  <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px" class="panel-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Shartnoma va qarz</h2></div><dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-hujjat"/></svg>Kredit shartnomasi</dt>
+  <dd><span id="q-shartnoma" class="kod-mono">—</span></dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Berilgan sana</dt>
+  <dd id="q-sana">—</dd>
+  <dt><svg class="ic"><use href="#i-pul"/></svg>Asosiy qarz</dt>
+  <dd><span id="q-asosiy" class="pul">—</span></dd>
+  <dt><svg class="ic"><use href="#i-foiz"/></svg>Hisoblangan foiz</dt>
+  <dd><span id="q-foiz" class="pul">—</span></dd>
+  <dt><svg class="ic"><use href="#i-xavf"/></svg>Jami qarz</dt>
+  <dd><span id="q-jami" class="pul">—</span></dd>
+  <dt><svg class="ic"><use href="#i-soat"/></svg>Kechikish</dt>
+  <dd id="q-kunlar">—</dd>
+  <dt><svg class="ic"><use href="#i-yuridik"/></svg>Joriy bosqich</dt>
+  <dd id="q-bosqich">—</dd>
+  <dt><svg class="ic"><use href="#i-foydalar"/></svg>Mas'ul xodim</dt>
+  <dd id="q-masul">—</dd>
+</dl></section>
+    <section class="karta"><div class="karta-bosh"><h2>Ta'minot obyekti</h2></div><div id="q-obyekt"></div><div class="karta-bosh" style="margin:18px 0 10px"><h2>So'nggi muloqot</h2><a class="karta-havola" href="qarzdor-muloqot.html" data-id-qoshib>Jurnal<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="q-muloqot"></div></section>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const x = yoz.find(y => y.id === id) || yoz[0];
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("hs-meta").textContent = x.mijoz.raqam;
+  document.getElementById("m-belgi").textContent = x.mijoz.belgi;
+  document.getElementById("m-nom").textContent = x.mijoz.nom;
+  document.getElementById("m-chip").innerHTML = '<span class="chip ' + (x.mijoz.yur ? 'chip-info">Yuridik shaxs' : 'chip-brend">Jismoniy shaxs') + '</span>';
+  document.getElementById("m-sub").textContent = x.mijoz.tur + " · " + x.filial + " · " + (x.mijoz.tel || "");
+  document.getElementById("m-obyekt-havola").href = "obyekt.html?id=" + encodeURIComponent(x.id);
+  document.querySelectorAll(".bolim-tablar a").forEach(a => { if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(x.id); });
+
+  document.getElementById("q-shartnoma").textContent = x.shartnoma.raqam;
+  document.getElementById("q-sana").textContent = x.shartnoma.sana + " · " + x.shartnoma.berilgan;
+  document.getElementById("q-asosiy").textContent = x.asosiyMatn;
+  document.getElementById("q-foiz").textContent = x.foizMatn;
+  document.getElementById("q-jami").textContent = x.qarzMatn;
+  document.getElementById("q-kunlar").textContent = x.qarz.kunlar + " kun";
+  document.getElementById("q-bosqich").textContent = x.bosqichNomi;
+  document.getElementById("q-masul").textContent = x.ish.masul;
+  document.getElementById("q-obyekt").innerHTML =
+    '<a href="obyekt.html?id=' + encodeURIComponent(x.id) + '" style="display:flex;gap:12px;align-items:center">' +
+    '<img class="foto" src="' + (x.mulk.rasmKichik || x.mulk.rasm) + '" style="width:86px;height:60px;border-radius:10px;object-fit:cover" alt="">' +
+    '<span style="flex:1;min-width:0"><b style="display:block;font-size:13.5px">' + x.mulk.qisqa + '</b>' +
+    '<span style="font-size:11.5px;color:var(--iz)">' + x.id + ' · ' + x.mulk.tur + ' · baho ' + x.bahoMatn + '</span></span>' +
+    MKB.halqa(x.qoplash, 44, 4.5) + '</a>';
+  const m = (MKB_DATA.MULOQOTLAR[x.id] || []).slice(0, 3);
+  document.getElementById("q-muloqot").innerHTML = m.length ? m.map(v =>
+    '<div style="padding:8px 0;border-bottom:1px solid var(--chiziq-2);font-size:12.5px">' +
+    '<div style="display:flex;justify-content:space-between;color:var(--iz);font-size:11px"><span>' + v[1] + '</span><span>' + v[0] + '</span></div>' +
+    '<div style="margin-top:2px;color:var(--qalam)">' + v[2] + '</div></div>').join("")
+    : '<div class="bosh-holat" style="padding:22px">' + ik("chat") + '<b>Muloqot qayd etilmagan</b></div>';
+});
+</script>
+</body>
+</html>

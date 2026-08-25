@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Foto galereya</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Obyekt kartochkasi</span></div>
+    <div class="hs-qator"><h1>Obyekt kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="obyekt.html" data-id-qoshib="1">Umumiy</a><a href="obyekt-moliya.html" data-id-qoshib="1">Moliya</a><a href="obyekt-hujjatlar.html" data-id-qoshib="1">Hujjatlar</a><a href="obyekt-koriklar.html" data-id-qoshib="1">Ko'riklar</a><a href="obyekt-xarajatlar.html" data-id-qoshib="1">Xarajatlar</a><a href="obyekt-galereya.html" class="faol" data-id-qoshib="1">Galereya</a><a href="obyekt-3d.html" data-id-qoshib="1">3D navigator</a><a href="obyekt-qavat.html" data-id-qoshib="1">Qavat rejasi</a><a href="obyekt-tarix.html" data-id-qoshib="1">Tarix</a></nav>
+  <section class="foto-shapka" aria-label="Obyekt">
+    <img id="fs-rasm" src="" alt="">
+    <div>
+      <div style="flex:1;min-width:220px">
+        <div style="display:flex;gap:8px;margin-bottom:8px" id="fs-chiplar"></div>
+        <h2 id="fs-nom">—</h2>
+        <div class="fs-meta"><span class="kod-mono" id="fs-id" style="color:rgba(255,255,255,.85)">—</span> · <span id="fs-manzil">—</span></div>
+      </div>
+      <div id="fs-halqa"></div>
+    </div>
+  </section>
+  <section class="karta"><div class="karta-bosh"><h2>Foto hujjatlar</h2><span class="soni" id="g-soni"></span></div><div id="g-panjara" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const x = id ? await MKBapi.bitta('YOZUVLAR', id) : null;
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("fs-rasm").src = x.mulk.rasm;
+  document.getElementById("fs-nom").textContent = x.mulk.nom;
+  document.getElementById("fs-id").textContent = x.id;
+  document.getElementById("fs-manzil").textContent = x.mulk.manzil;
+  document.getElementById("fs-chiplar").innerHTML =
+    "<span class=\"chip chip-brend\">" + x.bosqichNomi + "</span>" +
+    "<span class=\"chip chip-siyoh\">" + x.mulk.tur + "</span>";
+  document.getElementById("fs-halqa").innerHTML = MKB.halqa(x.qoplash, 74, 6).replace('class="halqa', 'class="halqa katta');
+  /* tab havolalariga ?id= ulab qo'yamiz */
+  document.querySelectorAll(".bolim-tablar a").forEach(a => {
+    if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
+  });
+  document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
+
+  const fotolar = [
+    {rasm: x.mulk.rasm, nom: "Umumiy ko'rinish", sana: x.mulk.bahoSana},
+    {rasm: "assets/gal_gen.webp", nom: "Texnik xona", sana: "so'nggi ko'rik"},
+    {rasm: "assets/gal_konf", nom: "Ichki holat", sana: "so'nggi ko'rik"},
+    {rasm: "assets/gal_ofis.webp", nom: "Ish maydoni", sana: "so'nggi ko'rik"},
+    {rasm: "assets/gal_uy.webp", nom: "Kirish qismi", sana: "so'nggi ko'rik"},
+  ].map(f => (f.rasm.endsWith(".webp") ? f : Object.assign(f, {rasm: f.rasm + ".webp"})));
+  const xonalar = Object.values(MKB_DATA.XONALAR).filter(v => v.obyektId === x.id)
+    .map(v => ({rasm: v.rasm, nom: v.nom, sana: v.maydon}));
+  const r = xonalar.length ? [fotolar[0]].concat(xonalar) : fotolar;
+  document.getElementById("g-soni").textContent = r.length + " ta foto";
+  document.getElementById("g-panjara").innerHTML = r.map((f, i) =>
+    '<figure style="margin:0;cursor:zoom-in" data-i="' + i + '">' +
+      '<img class="foto" src="' + f.rasm + '" alt="' + f.nom + '" loading="lazy" style="width:100%;height:150px;object-fit:cover;border-radius:12px">' +
+      '<figcaption style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--iz);margin-top:7px"><b style="color:var(--qalam)">' + f.nom + '</b><span>' + (f.sana || "") + '</span></figcaption></figure>').join("");
+  document.getElementById("g-panjara").addEventListener("click", e => {
+    const fig = e.target.closest("figure");
+    if (!fig) return;
+    const f = r[+fig.dataset.i];
+    MKB.modal(f.nom, '<img src="' + f.rasm + '" alt="" style="width:100%;border-radius:12px">', {okMatn: "Yopish"});
+  });
+
+});
+</script>
+</body>
+</html>

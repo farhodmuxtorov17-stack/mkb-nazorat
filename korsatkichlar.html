@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Umumiy ko'rsatkichlar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="panel">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Boshqaruv paneli</span></div>
+    <div class="hs-qator"><h1>Umumiy ko'rsatkichlar</h1><span class="hs-meta" id="hs-meta">Moliyaviy natijalar va dinamika</span></div>
+  </div>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Undirilgan mablag'</span>
+      <span class="m-qiymat"><span id="u-1">—</span><span class="delta" id="u-1d"></span></span>
+      <span class="m-izoh">Yil boshidan</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Auksion tushumi</span>
+      <span class="m-qiymat"><span id="u-2">—</span><span class="delta" id="u-2d"></span></span>
+      <span class="m-izoh">Yakunlangan savdolar</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Ijara daromadi</span>
+      <span class="m-qiymat"><span id="u-3">—</span><span class="delta" id="u-3d"></span></span>
+      <span class="m-izoh">Joriy yil</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Saqlash xarajatlari</span>
+      <span class="m-qiymat"><span id="u-4">—</span><span class="delta" id="u-4d"></span></span>
+      <span class="m-izoh">Balansdagi obyektlar</span>
+    </div>
+  </section>
+  <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="panel-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Undiruv dinamikasi, mlrd so'm</h2></div><div id="u-grafik"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>Hududlar kesimi</h2><a class="karta-havola" href="xarita.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="u-hudud"></div></section>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+
+function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
+  const maks = Math.max(...qiymatlar);
+  document.getElementById(joy).innerHTML =
+    '<div style="display:flex;align-items:flex-end;gap:10px;height:150px">' +
+    qiymatlar.map((v, i) =>
+      '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">' +
+        '<span style="font:700 11.5px var(--shrift-mono);color:var(--qalam)">' + v + '</span>' +
+        '<div style="width:100%;max-width:34px;height:' + Math.round(v / maks * 104) + 'px;border-radius:7px 7px 3px 3px;background:' +
+          (i === (brendIdx == null ? qiymatlar.length - 1 : brendIdx) ? 'var(--brend)' : 'var(--siyoh)') + ';opacity:' +
+          (i === (brendIdx == null ? qiymatlar.length - 1 : brendIdx) ? '1' : '.82') + '"></div>' +
+        '<span style="font-size:11px;color:var(--iz)">' + yorliqlar[i] + '</span>' +
+      '</div>').join("") + '</div>';
+}
+function obyektQatori(y){
+  return '<a href="obyekt.html?id=' + encodeURIComponent(y.id) + '" style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
+    '<img class="foto" src="' + (y.mulk.rasmKichik || y.mulk.rasm) + '" alt="" loading="lazy" style="width:52px;height:38px;border-radius:8px;object-fit:cover;flex:none">' +
+    '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + y.mulk.qisqa + '</b>' +
+    '<span style="font-size:11.5px;color:var(--iz)">' + y.id + ' · ' + y.bosqichNomi + '</span></span>' +
+    '<span class="pul" style="color:var(--qalam)">' + y.qarzMatn + '</span>' +
+    MKB.halqa(y.qoplash, 40, 4) + '</a>';
+}
+function muddatQatori(m){
+  return '<a href="' + m.href + '" style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
+    '<span style="width:34px;height:34px;border-radius:10px;background:' + (m.xavfli ? 'var(--xavf-fon)' : 'var(--varaq-2)') +
+      ';display:grid;place-items:center;color:' + (m.xavfli ? 'var(--xavf-matn)' : 'var(--qalam)') + ';flex:none">' + ik(m.ikonka) + '</span>' +
+    '<span style="flex:1;min-width:0"><b style="display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + m.nom + '</b>' +
+    '<span style="font-size:11px;color:var(--iz)">' + m.izoh + '</span></span>' +
+    '<span style="font:700 11.5px var(--shrift-mono);color:' + (m.xavfli ? 'var(--xavf-matn)' : 'var(--qalam)') + ';white-space:nowrap">' + m.vaqt + '</span></a>';
+}
+
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_DATA;
+  const K = D.KPI_BAZA || [];
+  [["u-1", 0], ["u-2", 1], ["u-3", 3], ["u-4", 2]].forEach(([id, i], k) => {
+    const b = K[i] || K[k] || {qiymat: "—", birlik: "", delta: 0};
+    document.getElementById(id).innerHTML =
+      String(b.qiymat).replace(".", ",") + "<small>" + b.birlik + "</small>";
+    const d = document.getElementById(id + "d");
+    d.className = "delta " + (b.manfiy ? "salbiy" : "ijobiy");
+    d.textContent = (b.manfiy ? "↓ " : "↑ ") + String(Math.abs(b.delta)).replace(".", ",") + "%";
+  });
+  const s = D.UNDIRUV_SERIYA.oylik;
+  ustunlarChiz("u-grafik", s.yorliq, s.qiymat, s.qiymat.length - 1);
+  const maks = Math.max(...D.HUDUDLAR.map(h => parseInt(String(h[1]).replace(/\s/g, ""), 10)));
+  document.getElementById("u-hudud").innerHTML = D.HUDUDLAR.slice(0, 8).map(h => {
+    const v = parseInt(String(h[1]).replace(/\s/g, ""), 10);
+    return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0">' +
+      '<span style="width:120px;font-size:12.5px;color:var(--qalam);flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + h[0] + '</span>' +
+      '<div style="flex:1;height:8px;border-radius:99px;background:var(--kirish-fon)">' +
+        '<div style="height:100%;width:' + Math.round(v / maks * 100) + '%;border-radius:99px;background:var(--siyoh)"></div></div>' +
+      '<b style="font:700 12px var(--shrift-mono);width:44px;text-align:right">' + h[1] + '</b></div>';
+  }).join("");
+});
+</script>
+</body>
+</html>

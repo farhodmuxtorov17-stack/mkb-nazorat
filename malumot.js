@@ -908,7 +908,7 @@ const BILDIRISHLAR = [
 
 
 /* ---------- Audit jurnali: o'zgarmas yozuv, matn qayta hisoblanmaydi (ТЗ 8) ---------- */
-const AUDIT_JURNAL = [
+const AMALLAR_JURNALI = [
   {vaqt:"24-avg, 14:20", ism:"Sattorov Jasur", rol:"Aktivlar nazorati mutaxassisi", amal:`Hodisani "Bartaraf etilmoqda" ustuniga ko'chirdi`, obyekt:"#GH-2026-00204 \u2014 Yunusobod 12-kvartal, 45-uy (kommunal qarzdorlik)"},
   {vaqt:"24-avg, 13:55", ism:"Karimova Feruza", rol:"Aktivlar nazorati mutaxassisi", amal:"Ko'rik dalolatnomasini rasmiylashtirdi", obyekt:"KO-2026/0391 \u2014 Navruz Plaza"},
   {vaqt:"24-avg, 12:10", ism:"Yo'ldoshev Alisher", rol:"Filial rahbari", amal:"Baholash buyurtmasini tasdiqladi", obyekt:"AK-2026/5512 \u2014 Chevrolet Malibu 2"},
@@ -1159,7 +1159,7 @@ window.MKB_DATA = {
   TASNIF, tasnifla, tasnifStatistikasi, jamiZaxira,
   HODISALAR, HUJJATLAR, XONALAR,
   KORIKLAR, SUGURTALAR, BAHOLASHLAR, TASDIQLAR, UCHASTKALAR,
-  SAVDO_MIJOZLAR, MULOQOTLAR, NAVBAT, MENING_VAZIFALARIM, BILDIRISHLAR, AUDIT_JURNAL,
+  SAVDO_MIJOZLAR, MULOQOTLAR, NAVBAT, MENING_VAZIFALARIM, BILDIRISHLAR, AMALLAR_JURNALI,
   FOYDLAR, HISOBOTLAR, HUDUDLAR, AUKSION_BOSQICH, AVTO, KPI_BAZA, UNDIRUV_SERIYA,
   pul, son, fmt,
   bosqichStatistikasi, holatStatistikasi,

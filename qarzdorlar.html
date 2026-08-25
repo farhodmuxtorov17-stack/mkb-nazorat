@@ -1,331 +1,66 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>(function(){var t=localStorage.getItem("mkb-tema");if(t==="realty"||t==="estate")document.documentElement.dataset.tema=t})()</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Qarzdor mijozlar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082605">
-<style>
-/* ---- Qarzdor mijozlar reyestri ---- */
-.filtr-qator{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.f-izlash{display:flex;align-items:center;gap:10px;flex:1;min-width:210px;max-width:400px;background:var(--karta);border-radius:14px;height:48px;padding:0 18px;box-shadow:var(--soya)}
-.f-izlash input{flex:1;border:none;outline:none;background:none;font:inherit;font-size:14.5px;min-width:0}
-.f-izlash .ic{width:19px;height:19px;color:var(--matn-3)}
-.filtr-qator .tanlov{width:auto;min-width:150px;background:var(--karta);border:none;box-shadow:var(--soya)}
-
-.q-grid{display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:18px;align-items:start}
-.q-grid > *{min-width:0}
-@media (max-width:1400px){.q-grid{grid-template-columns:minmax(0,1fr)}}
-
-.jadval tr[data-qatorli]{cursor:pointer}
-.jadval tr.tanlangan{background:var(--asos-fon)}
-.mijoz-katak{display:flex;align-items:center;gap:12px}
-.mijoz-belgi{
-  width:38px;height:38px;border-radius:11px;flex:none;display:grid;place-items:center;
-  font-size:13px;font-weight:750;letter-spacing:.02em;
-  background:var(--asos-fon);color:var(--asos-toq);
-}
-.mijoz-belgi.yur{background:#F2EAFE;color:#6A2FC0}
-.mijoz-katak b{display:block;font-size:14px;font-weight:650;color:var(--matn)}
-.mijoz-katak .tag{display:block;font-size:12.5px;color:var(--matn-3);margin-top:1px}
-.summa{font-size:14.5px;font-weight:750;color:var(--matn);white-space:nowrap}
-.summa small{font-size:11.5px;font-weight:600;color:var(--matn-4);margin-left:3px}
-.kechikish{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;white-space:nowrap}
-.kechikish .nuqta{width:8px;height:8px;border-radius:99px;background:currentColor;flex:none}
-.k-past{color:#97460A}.k-orta{color:#B04A0C}.k-yuqori{color:#B91C1C}
-
-/* Tanlangan qarzdor kartochkasi */
-.q-panel{position:sticky;top:18px;display:flex;flex-direction:column;gap:14px}
-.q-bosh{display:flex;align-items:center;gap:14px}
-.q-bosh .mijoz-belgi{width:52px;height:52px;border-radius:15px;font-size:17px}
-.q-bosh b{display:block;font-size:17px;font-weight:750;line-height:1.25}
-.q-bosh .tag{display:block;font-size:13px;color:var(--matn-3);margin-top:3px}
-.q-qator{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--chiziq);font-size:13.5px}
-.q-qator:last-child{border-bottom:none}
-.q-qator .yorliq{color:var(--matn-3)}
-.q-qator b{font-weight:700;text-align:right}
-.q-bosqich{
-  display:flex;align-items:center;gap:11px;background:var(--asos-fon);
-  border-radius:var(--r-ich);padding:13px 15px;
-}
-.q-bosqich .ic{width:20px;height:20px;color:var(--asos);flex:none}
-.q-bosqich .yorliq{display:block;font-size:11px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;color:var(--asos-toq)}
-.q-bosqich b{display:block;font-size:14.5px;font-weight:750;color:var(--matn);margin-top:2px}
-.panel-sarlavha{font-size:15px;font-weight:750;color:var(--matn)}
-.tolov-grafik{display:flex;align-items:flex-end;gap:5px;height:62px;margin-top:11px}
-.tolov-grafik span{flex:1;border-radius:5px 5px 2px 2px;background:var(--asos)}
-.tolov-grafik span.otkazib{background:#E4B7AE}
-.grafik-izoh{display:flex;justify-content:space-between;font-size:11.5px;color:var(--matn-4);margin-top:8px}
-.q-amallar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}
-.q-amallar .tugma{width:100%;justify-content:center}
-.q-amallar .keng{grid-column:1 / -1}
-</style>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
 </head>
-<body data-sahifa="portfel" data-topbar-sarlavha="Qarzdor mijozlar" data-topbar-ikon="i-qarz">
-
-<div class="app">
-<aside class="sidebar" data-shell-sidebar></aside>
-
-<div class="asosiy">
-  <header class="topbar" data-shell-topbar></header>
-
-  <main class="kontent">
-    <div class="sahifa-qator">
-      <div>
-        <h1>Qarzdor mijozlar</h1>
-        <div class="sahifa-izoh">Muddati o'tgan kredit va lizing shartnomalari bo'yicha qarzdorlar reyestri</div>
-      </div>
-      <div class="sahifa-harakat">
-        <button class="tugma tugma-oq" id="eksport-tugma"><svg class="ic"><use href="#i-yuklash"/></svg>Eksport</button>
-        <a class="tugma tugma-asos" data-ruxsat-yashir href="undiruv.html"><svg class="ic"><use href="#i-tarozi"/></svg>Undiruv ishlariga o'tish</a>
-      </div>
-    </div>
-
-    <section class="kpi-band" aria-label="Qarzdorlik ko'rsatkichlari">
-      <div class="kpi">
-        <span class="kpi-tile dark"><svg class="ic"><use href="#i-qarz"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Jami qarzdorlar</div>
-          <div class="kpi-qiymat"><b id="qk-qarzdor">—</b><span class="delta salbiy">↑ 12</span></div>
-          <div class="kpi-izoh">O'tgan oyga nisbatan</div>
-        </div>
-      </div>
-      <div class="kpi">
-        <span class="kpi-tile lime"><svg class="ic"><use href="#i-pul"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Muddati o'tgan qarz</div>
-          <div class="kpi-qiymat"><b><span id="qk-qarz">—</span> <small>mlrd so'm</small></b></div>
-          <div class="kpi-izoh">Asosiy qarz va hisoblangan foizlar bilan</div>
-        </div>
-      </div>
-      <div class="kpi">
-        <span class="kpi-tile dark"><svg class="ic"><use href="#i-tarozi"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Sud jarayonida</div>
-          <div class="kpi-qiymat"><b id="qk-sud">—</b></div>
-          <div class="kpi-izoh">Da'vo arizasi berilgan ishlar</div>
-        </div>
-      </div>
-      <div class="kpi">
-        <span class="kpi-tile lime"><svg class="ic"><use href="#i-bino"/></svg></span>
-        <div class="kpi-matn">
-          <div class="kpi-yorliq">Musodara qilingan aktiv</div>
-          <div class="kpi-qiymat"><b id="qk-musodara">—</b><span class="delta" id="qk-musodara-d">—</span></div>
-          <div class="kpi-izoh">Bank balansiga qabul qilingan</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="filtr-qator">
-      <div class="f-izlash" onclick="this.querySelector('input').focus()">
-        <input type="search" id="izlash" placeholder="Mijoz, shartnoma raqami yoki INN..." aria-label="Qarzdorlar orasidan qidirish">
-        <svg class="ic"><use href="#i-izlash"/></svg>
-      </div>
-      <button class="tanlov" id="f-bosqich" data-variantlar='["Barcha bosqichlar","Ogohlantirish","Da&#39;vo arizasi","Sud jarayonida","Sud qarori","Qaror ijrosi","Musodara qilingan","Auksionda"]'><span class="t-yorliq">Barcha bosqichlar</span><svg class="ic"><use href="#i-past"/></svg></button>
-      <button class="tanlov" id="f-filial" data-royxat="filial" data-royxat-bosh="Barcha filiallar"><span class="t-yorliq">Barcha filiallar</span><svg class="ic"><use href="#i-past"/></svg></button>
-      <button class="tanlov" id="f-kechikish" data-variantlar='["Kechikish: barchasi","30 kungacha","31–90 kun","91–180 kun","180 kundan ortiq"]'><span class="t-yorliq">Kechikish: barchasi</span><svg class="ic"><use href="#i-past"/></svg></button>
-    </div>
-
-    <div class="q-grid">
-      <div class="karta jadval-korpus">
-        <div class="jadval-orash">
-          <table class="jadval">
-            <thead>
-              <tr><th>Mijoz</th><th>Shartnoma</th><th>Qoldiq qarz</th><th>Kechikish</th><th>Aktiv obyekti</th><th>Bosqich</th></tr>
-            </thead>
-            <tbody id="q-jadval"></tbody>
-          </table>
-        </div>
-        <div class="sahifalash">
-          <span class="oraliq">Ko'rsatilmoqda: <b id="jami">8</b> ta yozuv · jami <span id="qk-jami2">—</span></span>
-          <button class="s-tugma" disabled aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
-          <button class="s-tugma aktiv" disabled aria-current="page">1</button>
-          <button class="s-tugma" data-toast="Keyingi sahifa yuklanmoqda">2</button>
-          <button class="s-tugma" data-toast="Keyingi sahifa yuklanmoqda" aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
-        </div>
-      </div>
-
-      <aside class="karta q-panel" aria-label="Tanlangan qarzdor tafsiloti">
-        <div class="q-bosh">
-          <span class="mijoz-belgi" id="p-belgi">KJ</span>
-          <div>
-            <b id="p-nom">—</b>
-            <span class="tag" id="p-tur">—</span>
-          </div>
-        </div>
-
-        <div class="q-bosqich">
-          <svg class="ic"><use href="#i-tarozi"/></svg>
-          <div>
-            <span class="yorliq">Joriy bosqich</span>
-            <b id="p-bosqich">—</b>
-          </div>
-        </div>
-
-        <div>
-          <div class="q-qator"><span class="yorliq">Shartnoma raqami</span><b id="p-shartnoma">—</b></div>
-          <div class="q-qator"><span class="yorliq">Kredit turi</span><b id="p-kredit">—</b></div>
-          <div class="q-qator"><span class="yorliq">Filial</span><b id="p-filial">—</b></div>
-          <div class="q-qator"><span class="yorliq">Qoldiq asosiy qarz</span><b id="p-asosiy">—</b></div>
-          <div class="q-qator"><span class="yorliq">Foiz va penya</span><b id="p-penya">—</b></div>
-          <div class="q-qator"><span class="yorliq">Kechikish muddati</span><b id="p-kechikish">—</b></div>
-          <div class="q-qator"><span class="yorliq">Aktiv obyekti</span><b id="p-obyekt">—</b></div>
-          <div class="q-qator"><span class="yorliq">Baholangan qiymati</span><b id="p-baho">—</b></div>
-          <div class="q-qator"><span class="yorliq">Mas'ul mutaxassis</span><b id="p-masul">—</b></div>
-          <div class="q-qator"><span class="yorliq">Telefon</span><b id="p-tel">—</b></div>
-        </div>
-
-        <div>
-          <div class="panel-sarlavha">Muloqot tarixi</div>
-          <div id="p-muloqot"></div>
-        </div>
-
-        <div>
-          <div class="panel-sarlavha">So'nggi 12 oy to'lov intizomi</div>
-          <div class="tolov-grafik" id="p-grafik" aria-hidden="true"></div>
-          <div class="grafik-izoh"><span id="p-grafik-chap">—</span><span id="p-grafik-ong">—</span></div>
-        </div>
-
-        <div class="q-amallar">
-          <a class="tugma tugma-oq tugma-kichik" id="p-obyekt-havola" data-ruxsat-yashir href="obyektlar.html"><svg class="ic"><use href="#i-bino"/></svg>Obyekt</a>
-          <a class="tugma tugma-oq tugma-kichik" href="shartnomalar.html"><svg class="ic"><use href="#i-shartnoma"/></svg>Shartnoma</a>
-          <a class="tugma tugma-asos tugma-kichik keng" data-ruxsat-yashir href="undiruv.html"><svg class="ic"><use href="#i-tarozi"/></svg>Undiruv ishini ochish</a>
-        </div>
-      </aside>
-    </div>
-  </main>
+<body data-sahifa="portfel">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Qarzdor mijozlar</span></div>
+    <div class="hs-qator"><h1>Qarzdor mijozlar</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar"><a class="tugma tugma-oq" href="muloqot-jurnali.html"><svg class="ic"><use href="#i-chat"/></svg>Muloqot jurnali</a><a class="tugma tugma-asosiy" href="restrukturizatsiya-arizasi.html"><svg class="ic"><use href="#i-qoshish"/></svg>Restrukturizatsiya</a></div></div>
+  </div>
+  <div id="jadval-joy"></div>
+</main>
 </div>
 </div>
-
-<script src="malumot.js?v=26082605"></script>
-<script src="tarjima.js?v=26082605"></script>
-<script src="mkb.js?v=26082605"></script>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
 <script>
-/* ---- Qarzdorlar reyestri ---- */
-/* Ma'lumot yagona manbadan olinadi — sahifada nusxa saqlanmaydi */
-const QARZDORLAR = MKB_DATA.YOZUVLAR.map(y => ({
-  id: y.id,
-  nom: y.mijoz.nom,
-  tur: y.mijoz.tur + " \u00b7 " + y.mijoz.raqam,
-  belgi: y.mijoz.belgi,
-  yur: y.mijoz.yur,
-  tel: y.mijoz.tel,
-  shartnoma: y.shartnoma.raqam,
-  kredit: y.shartnoma.tur,
-  filial: y.filial,
-  asosiy: y.asosiyMatn,
-  penya: y.foizMatn,
-  qoldiq: y.qarzSon,
-  kunlar: y.qarz.kunlar,
-  obyekt: y.mulk.nom,
-  baho: y.bahoMatn,
-  masul: y.ish.masul,
-  bosqich: y.bosqichNomi,
-  chip: y.bosqichChip,
-  tolov: y.tolov
-}));
-
-
-const yId = id => document.getElementById(id);
-const kechikishSinf = k => k > 180 ? "k-yuqori" : k > 90 ? "k-orta" : "k-past";
-
-function jadvalChiz(royxat){
-  yId("q-jadval").innerHTML = royxat.map(q => `
-    <tr data-qatorli data-id="${q.id}">
-      <td>
-        <div class="mijoz-katak">
-          <span class="mijoz-belgi${q.yur ? " yur" : ""}">${q.belgi}</span>
-          <span><b>${q.nom}</b><span class="tag">${q.filial}</span></span>
-        </div>
-      </td>
-      <td><b style="font-weight:650">${q.shartnoma}</b><br><span style="font-size:12.5px;color:var(--matn-3)">${q.kredit}</span></td>
-      <td><span class="summa">${q.qoldiq}<small>mln so'm</small></span></td>
-      <td><span class="kechikish ${kechikishSinf(q.kunlar)}"><span class="nuqta"></span>${q.kunlar} kun</span></td>
-      <td style="max-width:230px">${q.obyekt}</td>
-      <td><span class="chip ${q.chip}">${q.bosqich}</span></td>
-    </tr>`).join("");
-  yId("jami").textContent = royxat.length;
-  yId("q-jadval").querySelectorAll("tr").forEach(tr =>
-    tr.addEventListener("click", () => tanla(tr.dataset.id)));
-}
-
-function tanla(id){
-  const q = QARZDORLAR.find(x => x.id === id);
-  if (!q) return;
-  document.querySelectorAll("#q-jadval tr").forEach(tr =>
-    tr.classList.toggle("tanlangan", tr.dataset.id === id));
-  yId("p-belgi").textContent = q.belgi;
-  yId("p-belgi").className = "mijoz-belgi" + (q.yur ? " yur" : "");
-  yId("p-nom").textContent = q.nom;
-  yId("p-tur").textContent = q.tur;
-  yId("p-bosqich").textContent = q.bosqich;
-  yId("p-shartnoma").textContent = q.shartnoma;
-  yId("p-kredit").textContent = q.kredit;
-  yId("p-filial").textContent = q.filial;
-  yId("p-asosiy").textContent = q.asosiy;
-  yId("p-penya").textContent = q.penya;
-  yId("p-kechikish").textContent = q.kunlar + " kun";
-  yId("p-obyekt").textContent = q.obyekt;
-  yId("p-baho").textContent = q.baho;
-  yId("p-masul").textContent = q.masul;
-  yId("p-tel").textContent = q.tel || "—";
-  yId("p-muloqot").innerHTML = (MKB_DATA.MULOQOTLAR[q.id] || []).map(([sana, kanal, natija]) => `
-    <div style="padding:8px 0;border-bottom:1px solid var(--chiziq);font-size:12.5px">
-      <div style="display:flex;justify-content:space-between;gap:8px;color:var(--matn-4);font-size:11.5px">
-        <span>${kanal}</span><span>${sana}</span>
-      </div>
-      <div style="margin-top:2px;color:var(--matn-2)">${natija}</div>
-    </div>`).join("") || `<div style="color:var(--matn-4);font-size:12.5px;padding:6px 0">Muloqot qayd etilmagan</div>`;
-  yId("p-grafik").innerHTML = q.tolov
-    .map((t, i) => `<span class="${t ? "" : "otkazib"}" style="height:${t ? 62 + ((i * 7) % 34) : 15}%"></span>`)
-    .join("");
-  const otkazilgan = q.tolov.filter(t => !t).length;
-  yId("p-grafik-chap").textContent = (12 - otkazilgan) + " ta to'lov o'z vaqtida";
-  yId("p-grafik-ong").textContent = otkazilgan + " ta o'tkazib yuborilgan";
-  yId("p-obyekt-havola").href = "obyektlar.html?qidiruv=" + encodeURIComponent(q.obyekt.split(",")[0]);
-}
-
-function filtrla(){
-  const s = yId("izlash").value.trim().toLowerCase();
-  const bosqich = yId("f-bosqich").querySelector(".t-yorliq").textContent;
-  const filial = yId("f-filial").querySelector(".t-yorliq").textContent;
-  const kech = yId("f-kechikish").querySelector(".t-yorliq").textContent;
-  const oraliq = {"30 kungacha":[0,30], "31–90 kun":[31,90], "91–180 kun":[91,180], "180 kundan ortiq":[181,9999]}[kech];
-  const royxat = QARZDORLAR.filter(q => {
-    if (s && !(q.nom + " " + q.shartnoma + " " + q.tur + " " + q.obyekt).toLowerCase().includes(s)) return false;
-    if (bosqich !== "Barcha bosqichlar" && q.bosqich !== bosqich) return false;
-    if (filial !== "Barcha filiallar" && q.filial !== filial) return false;
-    if (oraliq && (q.kunlar < oraliq[0] || q.kunlar > oraliq[1])) return false;
-    return true;
+document.addEventListener("mkb:tayyor", async () => {
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const qatorlar = yoz.map(y => ({
+    id: y.id, nom: y.mijoz.nom, belgi: y.mijoz.belgi, yur: y.mijoz.yur,
+    raqam: y.mijoz.raqam, tel: y.mijoz.tel || "—", filial: y.filial,
+    bosqich: y.bosqichNomi, kunlar: y.qarz.kunlar,
+    qarzN: MKB.sonQiymat(y.qarzSon), qarzMatn: y.qarzMatn, obyekt: y.mulk.qisqa,
+  }));
+  document.getElementById("hs-meta").textContent = qatorlar.length + " ta qarzdor";
+  MKB.jadval("jadval-joy", {
+    qatorlar,
+    qidiruv: ["nom", "raqam", "obyekt", "bosqich"],
+    qidiruvYozuvi: "Mijoz, hujjat raqami...",
+    filtrlar: [
+      {kalit: "bosqich", nom: "Bosqich", variantlar: [...new Set(qatorlar.map(q => q.bosqich))]},
+      {kalit: "filial", nom: "Filial", variantlar: [...new Set(qatorlar.map(q => q.filial))]},
+    ],
+    ustunlar: [
+      {kalit: "nom", nom: "Mijoz", chiz: q =>
+        '<span class="obyekt-katak"><span style="width:38px;height:38px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 12px var(--shrift);flex:none">' + q.belgi + '</span>' +
+        '<span><span class="nom">' + q.nom + '</span><br><span class="sub">' + q.raqam + '</span></span></span>'},
+      {kalit: "obyekt", nom: "Ta'minot obyekti"},
+      {kalit: "bosqich", nom: "Bosqich", chiz: q => '<span class="chip chip-info">' + q.bosqich + '</span>'},
+      {kalit: "kunlar", nom: "Kechikish", son: true, chiz: q =>
+        '<span class="' + (q.kunlar > 180 ? 'chip chip-xavf' : 'chip') + '">' + q.kunlar + ' kun</span>'},
+      {kalit: "qarzN", nom: "Qoldiq qarz", son: true, chiz: q => '<span class="pul">' + q.qarzMatn + '</span>'},
+    ],
+    saralash: "qarzN",
+    bosilganda: q => location.href = "qarzdor.html?id=" + encodeURIComponent(q.id),
   });
-  jadvalChiz(royxat);
-  if (royxat.length) tanla(royxat[0].id);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  jadvalChiz(QARZDORLAR);
-  tanla(QARZDORLAR[0].id);
-  yId("izlash").addEventListener("input", filtrla);
-  ["f-bosqich","f-filial","f-kechikish"].forEach(id =>
-    yId(id).addEventListener("tanlov", filtrla));
-  yId("eksport-tugma").addEventListener("click", () =>
-    MKB.toast("Qarzdorlar reyestri XLSX shaklida tayyorlanmoqda", "i-yuklash"));
+  const sy = MKB.jadval; /* saralashni kamayish tartibiga o'tkazish */
+  const th = document.querySelector('th[data-kalit="qarzN"]');
+  if (th) th.click();
 });
-
-/* KPI lar portfel kesimidan (Д-7) */
-(function(){
-  const U = MKB_DATA.PORTFEL.undiruv, q = (i, v) => { const e = document.getElementById(i); if (e) e.textContent = v; };
-  q("qk-qarzdor", MKB_DATA.fmt(U.qarzdorlar));
-  q("qk-qarz", U.muddatiOtganQarzMlrd);
-  q("qk-sud", U.sudJarayonida);
-  q("qk-musodara", U.musodara);
-  q("qk-musodara-d", MKB_DATA.PORTFEL.delta.balansda);
-  q("qk-jami2", MKB_DATA.fmt(U.qarzdorlar));
-})();
 </script>
 </body>
 </html>

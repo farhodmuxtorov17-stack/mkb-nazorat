@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Filial paneli</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="panel">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Boshqaruv paneli</span></div>
+    <div class="hs-qator"><h1>Filial paneli</h1><span class="hs-meta" id="hs-meta">Filial kesimidagi holat</span><div class="hs-amallar"><a class="tugma tugma-oq" href="hisobotlar.html"><svg class="ic"><use href="#i-hisobot"/></svg>Hisobotlar</a><a class="tugma tugma-asosiy" href="korsatkichlar.html"><svg class="ic"><use href="#i-grafik"/></svg>Ko'rsatkichlar</a></div></div>
+  </div>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Filial obyektlari</span>
+      <span class="m-qiymat"><span id="m-soni">—</span></span>
+      <span class="m-izoh">Joriy filial bo'yicha</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Filial qarzi</span>
+      <span class="m-qiymat"><span id="m-qarz">—</span></span>
+      <span class="m-izoh">Qoldiq qarz summasi</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">O'rtacha qoplash</span>
+      <span class="m-qiymat"><span id="m-qoplash">—</span></span>
+      <span class="m-izoh">Filial kesimida</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Rejadagi ko'riklar</span>
+      <span class="m-qiymat"><span id="m-korik">—</span></span>
+      <span class="m-izoh">Shu hafta ichida</span>
+    </div>
+  </section>
+  <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="panel-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Filial obyektlari</h2><a class="karta-havola" href="obyektlar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="f-royxat"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>So'nggi hodisalar</h2><a class="karta-havola" href="vazifalar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="f-hodisalar"></div></section>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+
+function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
+  const maks = Math.max(...qiymatlar);
+  document.getElementById(joy).innerHTML =
+    '<div style="display:flex;align-items:flex-end;gap:10px;height:150px">' +
+    qiymatlar.map((v, i) =>
+      '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">' +
+        '<span style="font:700 11.5px var(--shrift-mono);color:var(--qalam)">' + v + '</span>' +
+        '<div style="width:100%;max-width:34px;height:' + Math.round(v / maks * 104) + 'px;border-radius:7px 7px 3px 3px;background:' +
+          (i === (brendIdx == null ? qiymatlar.length - 1 : brendIdx) ? 'var(--brend)' : 'var(--siyoh)') + ';opacity:' +
+          (i === (brendIdx == null ? qiymatlar.length - 1 : brendIdx) ? '1' : '.82') + '"></div>' +
+        '<span style="font-size:11px;color:var(--iz)">' + yorliqlar[i] + '</span>' +
+      '</div>').join("") + '</div>';
+}
+function obyektQatori(y){
+  return '<a href="obyekt.html?id=' + encodeURIComponent(y.id) + '" style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
+    '<img class="foto" src="' + (y.mulk.rasmKichik || y.mulk.rasm) + '" alt="" loading="lazy" style="width:52px;height:38px;border-radius:8px;object-fit:cover;flex:none">' +
+    '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + y.mulk.qisqa + '</b>' +
+    '<span style="font-size:11.5px;color:var(--iz)">' + y.id + ' · ' + y.bosqichNomi + '</span></span>' +
+    '<span class="pul" style="color:var(--qalam)">' + y.qarzMatn + '</span>' +
+    MKB.halqa(y.qoplash, 40, 4) + '</a>';
+}
+function muddatQatori(m){
+  return '<a href="' + m.href + '" style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
+    '<span style="width:34px;height:34px;border-radius:10px;background:' + (m.xavfli ? 'var(--xavf-fon)' : 'var(--varaq-2)') +
+      ';display:grid;place-items:center;color:' + (m.xavfli ? 'var(--xavf-matn)' : 'var(--qalam)') + ';flex:none">' + ik(m.ikonka) + '</span>' +
+    '<span style="flex:1;min-width:0"><b style="display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + m.nom + '</b>' +
+    '<span style="font-size:11px;color:var(--iz)">' + m.izoh + '</span></span>' +
+    '<span style="font:700 11.5px var(--shrift-mono);color:' + (m.xavfli ? 'var(--xavf-matn)' : 'var(--qalam)') + ';white-space:nowrap">' + m.vaqt + '</span></a>';
+}
+
+document.addEventListener("mkb:tayyor", async () => {
+  const s = MKBapi.sessiya() || {};
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const meniki = yoz.filter(y => y.filial === s.filial);
+  const r = meniki.length ? meniki : yoz;
+
+  document.getElementById("m-soni").textContent = r.length;
+  const qarz = r.reduce((a, y) => a + MKB.sonQiymat(y.qarzSon), 0);
+  document.getElementById("m-qarz").innerHTML = MKB.fmt(Math.round(qarz)) + "<small>mln so'm</small>";
+  document.getElementById("m-qoplash").innerHTML =
+    Math.round(r.reduce((a, y) => a + y.qoplash, 0) / r.length) + "<small>%</small>";
+  const korik = MKB_DATA.KORIKLAR.filter(k => k.holat === "rejada").length;
+  document.getElementById("m-korik").textContent = korik;
+
+  document.getElementById("f-royxat").innerHTML =
+    r.slice().sort((a, b) => a.qoplash - b.qoplash).slice(0, 6).map(obyektQatori).join("");
+
+  document.getElementById("f-hodisalar").innerHTML = MKB_DATA.HODISALAR.slice(0, 5).map(h =>
+    '<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
+      '<span style="width:8px;height:8px;border-radius:99px;background:' + h.rang + ';margin-top:5px;flex:none"></span>' +
+      '<span style="flex:1;min-width:0"><b style="display:block;font-size:12.5px">' + h.hodisa + '</b>' +
+      '<span style="font-size:11px;color:var(--iz)">' + h.obyektId + ' · ' + h.vaqt + '</span></span></div>').join("");
+});
+</script>
+</body>
+</html>

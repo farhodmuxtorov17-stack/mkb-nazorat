@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — To'lov intizomi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082610">
+</head>
+<body data-sahifa="portfel">
+<div class="qobiq">
+<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="qarzdorlar.html">Qarzdorlar portfeli</a><span class="ajratgich">/</span><span>To'lovlar</span></div>
+    <div class="hs-qator"><h1>To'lov intizomi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="qarzdor.html">Umumiy</a><a href="qarzdor-muloqot.html">Muloqot jurnali</a><a href="qarzdor-tolovlar.html" class="faol">To'lov intizomi</a></nav>
+  <section class="karta" style="display:flex;align-items:center;gap:16px">
+    <span id="m-belgi" style="width:56px;height:56px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 18px var(--shrift);flex:none">—</span>
+    <div style="flex:1;min-width:0"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b id="m-nom" style="font:700 19px var(--shrift-displey)">—</b><span id="m-chip"></span></div>
+    <span style="font-size:12.5px;color:var(--iz)" id="m-sub">—</span></div>
+    <a class="tugma tugma-oq" id="m-obyekt-havola" href="#"><svg class="ic"><use href="#i-aktivlar"/></svg>Obyekt kartochkasi</a>
+  </section>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">O'z vaqtida</span>
+      <span class="m-qiymat"><span id="t-vaqtida">—</span></span>
+      <span class="m-izoh">so'nggi 12 oyda</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">O'tkazib yuborilgan</span>
+      <span class="m-qiymat"><span id="t-otkazgan">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Intizom darajasi</span>
+      <span class="m-qiymat"><span id="t-daraja">—</span></span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Oxirgi to'lov</span>
+      <span class="m-qiymat"><span id="t-oxirgi">—</span></span>
+    </div>
+  </section>
+  <section class="karta"><div class="karta-bosh"><h2>Oylik to'lovlar</h2><span class="soni">so'nggi 12 oy</span></div><div id="t-grafik"></div><div id="t-jadval" style="margin-top:16px"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26082610"></script>
+<script src="malumot-qoshimcha.js?v=26082610"></script>
+<script src="tarjima.js?v=26082610"></script>
+<script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/api.js?v=26082610"></script>
+<script src="yadro/app.js?v=26082610"></script>
+<script>
+document.addEventListener("mkb:tayyor", async () => {
+  const id = new URLSearchParams(location.search).get("id");
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const x = yoz.find(y => y.id === id) || yoz[0];
+  if (!x){ location.replace("xato-404.html"); return; }
+  document.getElementById("hs-meta").textContent = x.mijoz.raqam;
+  document.getElementById("m-belgi").textContent = x.mijoz.belgi;
+  document.getElementById("m-nom").textContent = x.mijoz.nom;
+  document.getElementById("m-chip").innerHTML = '<span class="chip ' + (x.mijoz.yur ? 'chip-info">Yuridik shaxs' : 'chip-brend">Jismoniy shaxs') + '</span>';
+  document.getElementById("m-sub").textContent = x.mijoz.tur + " · " + x.filial + " · " + (x.mijoz.tel || "");
+  document.getElementById("m-obyekt-havola").href = "obyekt.html?id=" + encodeURIComponent(x.id);
+  document.querySelectorAll(".bolim-tablar a").forEach(a => { if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(x.id); });
+
+  const OYLAR = ["Sen","Okt","Noy","Dek","Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg"];
+  const t = x.tolov || [];
+  const oylik = Math.round(MKB.sonQiymat(x.qarz.asosiy) / 24 * 10) / 10;
+  const otk = t.filter(v => !v).length;
+  document.getElementById("t-vaqtida").textContent = t.length - otk;
+  document.getElementById("t-otkazgan").textContent = otk;
+  document.getElementById("t-daraja").innerHTML = Math.round((t.length - otk) / t.length * 100) + "<small>%</small>";
+  const oxirgiIdx = t.lastIndexOf(true);
+  document.getElementById("t-oxirgi").textContent = oxirgiIdx < 0 ? "—" : OYLAR[oxirgiIdx];
+  document.getElementById("t-grafik").innerHTML =
+    '<div style="display:flex;align-items:flex-end;gap:8px;height:120px">' +
+    t.map((v, i) => '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">' +
+      '<div style="width:100%;max-width:30px;border-radius:6px 6px 2px 2px;height:' + (v ? 60 + ((i * 7) % 34) : 14) + '%;background:' +
+      (v ? 'var(--siyoh)' : 'var(--xavf)') + '"></div>' +
+      '<span style="font-size:10.5px;color:var(--iz)">' + OYLAR[i] + '</span></div>').join("") + '</div>';
+  document.getElementById("t-jadval").innerHTML =
+    '<div class="jadval-orash"><table class="jadval"><thead><tr><th>Oy</th><th>Reja</th><th>Fakt</th><th>Holat</th></tr></thead><tbody>' +
+    t.map((v, i) => '<tr><td>' + OYLAR[i] + ', ' + (i < 4 ? '2025' : '2026') + '</td>' +
+      '<td class="pul">' + String(oylik).replace(".", ",") + ' mln</td>' +
+      '<td class="pul">' + (v ? String(oylik).replace(".", ",") + ' mln' : '0') + '</td>' +
+      '<td>' + (v ? '<span class="chip chip-yashil">To\'landi</span>' : '<span class="chip chip-xavf">O\'tkazib yuborildi</span>') + '</td></tr>').join("") +
+    '</tbody></table></div>';
+});
+</script>
+</body>
+</html>
