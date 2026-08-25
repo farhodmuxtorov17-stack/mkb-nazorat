@@ -6,8 +6,8 @@
 <title>MKB — Aktivlar tasnifi va zaxira</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082503">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082602">
 <style>
 /* ---- Aktivlar tasnifi va imkoniyatli yo'qotishlar zaxirasi ---- */
 .ts-ustun{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
@@ -32,7 +32,7 @@
 .ts-qator.tanlangan{background:var(--asos-fon)}
 .ts-qator:hover{background:var(--kanvas)}
 
-/* Qoplash ko'rsatkichi: garov qarzni qanchalik yopadi */
+/* Qoplash ko'rsatkichi: ta'minot qarzni qanchalik yopadi */
 .qop-iz{position:relative;height:6px;border-radius:99px;background:var(--chiziq);min-width:64px;overflow:hidden}
 .qop-iz i{display:block;height:100%;border-radius:99px}
 .qop-matn{font-size:11.5px;color:var(--matn-3);font-variant-numeric:tabular-nums}
@@ -52,10 +52,10 @@
 .migratsiya p{font-size:12.5px;color:var(--matn-3);line-height:1.55;margin-top:6px}
 .migratsiya b{color:var(--matn-2)}
 
-.mezon{background:#FFF8E7;border:1px solid #F0DFB4;border-radius:12px;padding:12px 14px;display:flex;gap:10px;margin-top:16px}
-.mezon .ic{width:16px;height:16px;color:#7A5600;flex:none;margin-top:2px}
-.mezon div{font-size:12.5px;color:#6B5210;line-height:1.6}
-.mezon b{display:block;font-weight:750;margin-bottom:2px;color:#5A4409}
+.mezon{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;display:flex;gap:10px;margin-top:16px}
+.mezon .ic{width:16px;height:16px;color:#B45309;flex:none;margin-top:2px}
+.mezon div{font-size:12.5px;color:#92400E;line-height:1.6}
+.mezon b{display:block;font-weight:750;margin-bottom:2px;color:#78350F}
 
 @media (max-width:1320px){ .ts-ustun{grid-template-columns:1fr} }
 </style>
@@ -97,15 +97,15 @@
           <div class="kpi-izoh">Qarzning <span id="k-zaxira-foiz">—</span> qismi</div>
         </div>
       </button>
-      <button class="kpi" data-toast="Garovning baholangan qiymati qarzga nisbatan">
+      <button class="kpi" data-toast="Ta'minotning baholangan qiymati qarzga nisbatan">
         <span class="kpi-tile lime"><svg class="ic"><use href="#i-bino"/></svg></span>
         <div class="kpi-matn">
-          <div class="kpi-yorliq">Garov bilan qoplash</div>
+          <div class="kpi-yorliq">Ta'minot bilan qoplash</div>
           <div class="kpi-qiymat"><b id="k-qoplash">—</b></div>
           <div class="kpi-izoh">Baholangan qiymat / qoldiq qarz</div>
         </div>
       </button>
-      <button class="kpi" data-toast="Garov qiymati yetmaydigan qism">
+      <button class="kpi" data-toast="Ta'minot qiymati yetmaydigan qism">
         <span class="kpi-tile dark"><svg class="ic"><use href="#i-ogoh"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Ta'minlanmagan qoldiq</div>
@@ -163,16 +163,16 @@
         <code>malumot.js</code> dagi <code>TASNIF</code> jadvalida — yagona joyda — saqlanadi.
         Ular Markaziy bankning aktivlar sifatini tasniflash tartibining amaldagi tahririga
         va bank ichki siyosatiga muvofiq buyurtmachi tomonidan tasdiqlanadi.
-        Garovni hisobga olib zaxirani kamaytirish tartibi ham shu bosqichda aniqlanadi.
+        Ta'minotni hisobga olib zaxirani kamaytirish tartibi ham shu bosqichda aniqlanadi.
       </div>
     </div>
   </main>
 </div>
 </div>
 
-<script src="malumot.js?v=26082503"></script>
-<script src="tarjima.js?v=26082503"></script>
-<script src="mkb.js?v=26082503"></script>
+<script src="malumot.js?v=26082602"></script>
+<script src="tarjima.js?v=26082602"></script>
+<script src="mkb.js?v=26082602"></script>
 <script>
 const D = MKB_DATA;
 const pul = D.pul;
@@ -227,7 +227,7 @@ document.getElementById("ts-jami").innerHTML = `
 
 /* ---- Yozuvlar jadvali ---- */
 function qoplashRang(foiz){
-  return foiz >= 100 ? "#1F7A3D" : foiz >= 70 ? "#B45309" : "#C0392B";
+  return foiz >= 100 ? "#047857" : foiz >= 70 ? "#B45309" : "#B91C1C";
 }
 
 let fFilial = null;
@@ -282,7 +282,7 @@ function panelChiz(id){
       <div class="hisob-qator"><span>Kechikish</span><b>${y.qarz.kunlar} kun</b></div>
       <div class="hisob-qator"><span>Toifa</span><b><span class="chip ${y.tasnif.chip}">${y.tasnif.nom}</span></b></div>
       <div class="hisob-qator"><span>Zaxira stavkasi</span><b>${y.tasnif.zaxira}%</b></div>
-      <div class="hisob-qator"><span>Garov baholangan qiymati</span><b>${pul(y.garov.baho)}</b></div>
+      <div class="hisob-qator"><span>Ta'minot baholangan qiymati</span><b>${pul(y.mulk.baho)}</b></div>
       <div class="hisob-qator"><span>Qoplash darajasi</span><b style="color:${qoplashRang(y.qoplash)}">${y.qoplash}%</b></div>
       <div class="hisob-qator"><span>Ta'minlanmagan qoldiq</span><b>${y.ochiqQoldiq > 0 ? pul(y.ochiqQoldiq) : "yo'q"}</b></div>
     </div>
@@ -297,7 +297,7 @@ function panelChiz(id){
     ${MKB.sahifaRuxsatlimi("obyekt.html") ? `
     <a class="tugma tugma-oq" style="margin-top:14px;width:100%;justify-content:center"
        href="obyekt.html?id=${encodeURIComponent(y.id)}">
-      <svg class="ic"><use href="#i-bino"/></svg>Garov obyekti kartochkasi
+      <svg class="ic"><use href="#i-bino"/></svg>Aktiv obyekti kartochkasi
     </a>` : ""}`;
 }
 

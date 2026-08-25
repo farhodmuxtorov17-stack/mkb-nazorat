@@ -115,7 +115,7 @@ POST /api/v1/sessiya/yangilash                                -> продлен�
 {
   "id": "USR-0041", "ism": "Ismoilov Otabek",
   "rol": "admin", "bolim": "Axborot texnologiyalari departamenti",
-  "ruxsat": ["panel","portfel","garov","yuridik",
+  "ruxsat": ["panel","portfel","aktivlar","yuridik",
              "realizatsiya","zaxira","hisobotlar","sozlamalar"],
   "korishRejimi": null
 }
@@ -134,9 +134,9 @@ POST /api/v1/sessiya/yangilash                                -> продлен�
 | Роль | Разделы |
 |---|---|
 | `admin` | все |
-| `filial` | panel, portfel, garov, yuridik, realizatsiya, hisobotlar, sozlamalar |
-| `kredit` | panel, portfel, garov, hisobotlar, sozlamalar |
-| `garov` | panel, portfel, garov, realizatsiya, hisobotlar, sozlamalar |
+| `filial` | panel, portfel, ta'minot, yuridik, realizatsiya, hisobotlar, sozlamalar |
+| `kredit` | panel, portfel, ta'minot, hisobotlar, sozlamalar |
+| `ta'minot` | panel, portfel, ta'minot, realizatsiya, hisobotlar, sozlamalar |
 | `yurist` | panel, portfel, yuridik, realizatsiya, hisobotlar, sozlamalar |
 | `tavakkal` | panel, portfel, zaxira, hisobotlar, sozlamalar |
 
@@ -158,8 +158,8 @@ POST /api/v1/sessiya/yangilash                                -> продлен�
 | GET | `/obyektlar` | все | реестр; фильтры `hudud`, `filial`, `bosqich`, `tur` |
 | GET | `/obyektlar/{id}` | все | карточка объекта |
 | GET | `/obyektlar/{id}/tarix` | все | история изменений |
-| PATCH | `/obyektlar/{id}` | admin, garov | правка атрибутов залога |
-| GET | `/ishlar` | admin, filial, kredit, yurist, garov | дела о взыскании |
+| PATCH | `/obyektlar/{id}` | admin, ta'minot | правка атрибутов залога |
+| GET | `/ishlar` | admin, filial, kredit, yurist, ta'minot | дела о взыскании |
 | POST | `/ishlar/{id}/bosqich` | admin, yurist | перевод на следующий этап |
 
 Переход этапа — отдельный метод, а не `PATCH` поля: он несёт побочные
@@ -168,7 +168,7 @@ POST /api/v1/sessiya/yangilash                                -> продлен�
 
 ```
 POST /api/v1/ishlar/UI-2026-0412/bosqich
-{ "bosqich": "musodara", "asos": "IV-2026/4471", "izoh": "..." }
+{ "bosqich": "musodara", "asos": "IH-2026/4471", "izoh": "..." }
 ```
 
 Порядок этапов задан жёстко (раздел 5 ТЗ). Попытка перескочить — `409`.
@@ -177,21 +177,21 @@ POST /api/v1/ishlar/UI-2026-0412/bosqich
 
 | Метод | Путь | Роли |
 |---|---|---|
-| GET | `/koriklar` · `/koriklar/{id}` | admin, garov, filial, kredit |
-| POST | `/koriklar` | admin, garov |
-| POST | `/koriklar/{id}/natija` | admin, garov |
-| GET | `/sugurtalar` | admin, garov, filial, kredit |
-| POST | `/sugurtalar/{id}/uzaytirish-talabi` | admin, garov, kredit |
-| GET | `/baholashlar` | admin, garov, filial, tavakkal |
-| POST | `/baholashlar/buyurtma` | admin, garov (утверждение — filial) |
-| GET/POST | `/hodisalar` | admin, garov, yurist, filial |
-| POST | `/hodisalar/{kod}/hal` | admin, garov, yurist |
+| GET | `/koriklar` · `/koriklar/{id}` | admin, ta'minot, filial, kredit |
+| POST | `/koriklar` | admin, ta'minot |
+| POST | `/koriklar/{id}/natija` | admin, ta'minot |
+| GET | `/sugurtalar` | admin, ta'minot, filial, kredit |
+| POST | `/sugurtalar/{id}/uzaytirish-talabi` | admin, ta'minot, kredit |
+| GET | `/baholashlar` | admin, ta'minot, filial, tavakkal |
+| POST | `/baholashlar/buyurtma` | admin, ta'minot (утверждение — filial) |
+| GET/POST | `/hodisalar` | admin, ta'minot, yurist, filial |
+| POST | `/hodisalar/{kod}/hal` | admin, ta'minot, yurist |
 
 `POST /koriklar/{id}/natija` принимает акт осмотра: пункты проверки, балл
 состояния, фотографии (через предподписанные URL), координаты и отметку времени
 съёмки. Расхождение координат с адресом объекта более 500 м помечается в записи.
 
-Закрытие события двухшаговое: `hal` (решено — доступно garov/yurist, требует
+Закрытие события двухшаговое: `hal` (решено — доступно ta'minot/yurist, требует
 непустых `xulosa` и `asos`) и финальное `yopish` (закрыто — только администратор).
 `POST /hodisalar/{kod}/hal` требует непустых `xulosa` и `asos` — заключения и
 основания закрытия; это уже реализовано в интерфейсе и дублируется сервером.
@@ -213,8 +213,8 @@ POST /api/v1/ishlar/UI-2026-0412/bosqich
 
 | Метод | Путь | Роли |
 |---|---|---|
-| GET | `/marshrutlar/bugungi` | admin, garov |
-| POST | `/marshrutlar` | admin, garov |
+| GET | `/marshrutlar/bugungi` | admin, ta'minot |
+| POST | `/marshrutlar` | admin, ta'minot |
 
 Формирование дневного маршрута инспектора из назначенных осмотров; мобильное
 рабочее место (раздел 10) читает тот же ресурс.
@@ -223,9 +223,9 @@ POST /api/v1/ishlar/UI-2026-0412/bosqich
 
 | Метод | Путь | Роли |
 |---|---|---|
-| GET | `/auksion/lotlar` | admin, garov, yurist, filial |
-| POST | `/auksion/lotlar/{id}/bosqich` | admin, garov |
-| GET | `/arxiv` | admin, garov, yurist, filial |
+| GET | `/auksion/lotlar` | admin, ta'minot, yurist, filial |
+| POST | `/auksion/lotlar/{id}/bosqich` | admin, ta'minot |
+| GET | `/arxiv` | admin, ta'minot, yurist, filial |
 
 Записи архива доступны только на чтение — см. раздел 7.
 
@@ -234,7 +234,7 @@ POST /api/v1/ishlar/UI-2026-0412/bosqich
 | Метод | Путь | Роли |
 |---|---|---|
 | GET | `/hujjatlar` | по разделу объекта |
-| POST | `/hujjatlar` | admin, yurist, garov |
+| POST | `/hujjatlar` | admin, yurist, ta'minot |
 | GET | `/hujjatlar/{id}/yuklab` | по разделу объекта |
 
 Загрузка: `POST` возвращает предподписанный URL объектного хранилища; файл
@@ -268,7 +268,7 @@ docx, xlsx`, обязательная антивирусная проверка 
 2. состояние объекта выводится из этапа дела, а не хранится отдельно (Д-2);
 3. этап `auksion` невозможен без даты приёма на баланс;
 4. этапы `musodara` и `auksion` невозможны без исполнительного листа;
-5. `garov.baho > 0`, `qarz.kunlar > 0`;
+5. `ta'minot.baho > 0`, `qarz.kunlar > 0`;
 6. сумма по разрезу состояний равна `portfel.jami`;
 7. сумма по разрезу регионов равна `portfel.jami`;
 8. разрезы контроля (осмотры, страховка, оценка) в сумме дают `portfel.jami`;

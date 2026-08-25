@@ -89,8 +89,8 @@ const IKONLAR = `
          Barcha sahifalar shu bir manbadan foydalanadi (bar/donut/halqa/chiziq grafiklar). -->
     <linearGradient id="grad-bar-3d" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#3F86C8"/>
-      <stop offset=".55" stop-color="#0E6B5C"/>
-      <stop offset="1" stop-color="#084C41"/>
+      <stop offset=".55" stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#3730A3"/>
     </linearGradient>
     <linearGradient id="grad-bar-3d-passiv" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#E3EDF7"/>
@@ -98,16 +98,16 @@ const IKONLAR = `
       <stop offset="1" stop-color="#AFC8DE"/>
     </linearGradient>
     <linearGradient id="grad-area-3d" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0E6B5C" stop-opacity=".38"/>
-      <stop offset="1" stop-color="#0E6B5C" stop-opacity="0"/>
+      <stop offset="0" stop-color="#4F46E5" stop-opacity=".38"/>
+      <stop offset="1" stop-color="#4F46E5" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="grad-ring-3d" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#4A93D4"/>
-      <stop offset="1" stop-color="#084C41"/>
+      <stop offset="1" stop-color="#3730A3"/>
     </linearGradient>
     <linearGradient id="grad-ring-3d-qizil" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#F0897A"/>
-      <stop offset="1" stop-color="#C43C31"/>
+      <stop offset="1" stop-color="#B91C1C"/>
     </linearGradient>
     <linearGradient id="grad-dark-3d" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#1E3448"/>
@@ -135,11 +135,11 @@ const IKONLAR = `
 /* ---------- Rollar (RBAC) — texnik talablar §3 matritsasi asosida ---------- */
 /* ---------- Rol modeli: muammoli aktivlar bilan ishlash amaliyoti ----------
    Rollar bank bo'linmalariga mos keladi, jismoniy qo'riqlash xizmatiga emas.
-   Qo'riqlash — bankning vazifasi emas; bank garovning MAVJUDLIGI va
+   Qo'riqlash — bankning vazifasi emas; bank ta'minotning MAVJUDLIGI va
    HOLATINI nazorat qiladi (ko'rik, baholash, sug'urta), uni qo'riqlamaydi. */
 const ROL_KALIT = {
   "Kredit menejeri":              "kredit",
-  "Garov xizmati mutaxassisi":    "garov",
+  "Aktivlar nazorati mutaxassisi": "aktiv",
   "Yurist":                       "yurist",
   "Tavakkalchilik menejeri":      "tavakkal",
   "Filial rahbari":               "filial",
@@ -148,9 +148,9 @@ const ROL_KALIT = {
 /* Bo'limlar: bank kredit jarayoni bo'ylab, TZ 4-bo'lim */
 const ROL_RUXSAT = {
   admin:    null,                                   // barcha bo'limlar
-  filial:   ["panel","portfel","garov","yuridik","realizatsiya","hisobotlar","sozlamalar"],
-  kredit:   ["panel","portfel","garov","hisobotlar","sozlamalar"],
-  garov:    ["panel","portfel","garov","realizatsiya","hisobotlar","sozlamalar"],
+  filial:   ["panel","portfel","aktivlar","yuridik","realizatsiya","hisobotlar","sozlamalar"],
+  kredit:   ["panel","portfel","aktivlar","hisobotlar","sozlamalar"],
+  aktiv:    ["panel","portfel","aktivlar","realizatsiya","hisobotlar","sozlamalar"],
   yurist:   ["panel","portfel","yuridik","realizatsiya","hisobotlar","sozlamalar"],
   tavakkal: ["panel","portfel","zaxira","hisobotlar","sozlamalar"]
 };
@@ -177,7 +177,7 @@ const FOYD_ISM = {
   admin:    "Ismoilov Otabek",
   filial:   "Yo'ldoshev Alisher",
   kredit:   "Qodirova Nilufar",
-  garov:    "Sattorov Jasur",
+  aktiv: "Sattorov Jasur",
   yurist:   "Rahimov Bekzod",
   tavakkal: "Xolmatova Zulfiya"
 };
@@ -185,7 +185,7 @@ const FOYD_BOLIM = {
   admin:    "Axborot texnologiyalari departamenti",
   filial:   "Yunusobod filiali · boshqaruvchi",
   kredit:   "Muammoli kreditlar boshqarmasi",
-  garov:    "Garov ta'minoti bo'limi",
+  aktiv:    "Aktivlar nazorati bo'limi",
   yurist:   "Yuridik departament · da'vo-ariza sektori",
   tavakkal: "Tavakkalchiliklarni boshqarish departamenti"
 };
@@ -295,12 +295,12 @@ function tilKuzatuvi(){
 
 /* ---------- Sidebar / Topbar shablonlari ---------- */
 /* ---------- Bo'limlar: kredit jarayoni ketma-ketligi bo'yicha ----------
-   Muammoli qarz -> garov ta'minoti -> yuridik ish -> realizatsiya,
+   Muammoli qarz -> aktivlar nazorati -> yuridik ish -> realizatsiya,
    yon tomonda tasnif va zaxira (MB talablari) hamda hisobot. */
 const MENYU = [
   ["panel",        "index.html",           "i-panel",    "Boshqaruv paneli"],
   ["portfel",      "qarzdorlar.html",      "i-qarz",     "Muammoli portfel"],
-  ["garov",        "obyektlar.html",       "i-bino",     "Garov ta'minoti"],
+  ["aktivlar", "obyektlar.html",       "i-bino",     "Aktivlar nazorati"],
   ["yuridik",      "undiruv.html",         "i-tarozi",   "Yuridik ish"],
   ["realizatsiya", "musodara-qabul.html",  "i-bolg",     "Realizatsiya"],
   ["zaxira",       "tasniflash.html",      "i-aktiv",    "Tasnif va zaxira"],
@@ -313,17 +313,17 @@ const BOLIM_TAB = {
     ["shartnomalar.html","Shartnomalar"],
     ["vazifalar.html","Ish navbati"]
   ],
-  garov: [
-    ["obyektlar.html","Garov reyestri"],
+  aktivlar: [
+    ["obyektlar.html","Aktivlar reyestri"],
     ["xaritalar.html","Xarita"],
     ["korik-rejasi.html","Ko'rik rejasi"],
     ["baholash.html","Qayta baholash"],
     ["sugurta.html","Sug'urta nazorati"],
-    ["garov-monitoringi.html","Monitoring"]
+    ["aktiv-monitoringi.html","Monitoring"]
   ],
   yuridik: [
     ["undiruv.html","Da'vo va sud ishlari"],
-    ["garov-hodisalari.html","Garov hodisalari"],
+    ["aktiv-hodisalari.html","Aktiv hodisalari"],
     ["hujjatlar.html","Hujjatlar"]
   ],
   realizatsiya: [
@@ -351,12 +351,12 @@ const TAB_RUXSAT = {"foydalanuvchilar.html":["admin"], "holatlar.html":["admin"]
 
 /* ---------- Sahifa darajasidagi QO'SHIMCHA ruxsatlar (Р-3 kengaytmasi) ----------
    Ba'zi sahifalar o'z bo'limidan tashqari yana bir bo'lim egalariga ham ochiq:
-   masalan, garov hodisalari yuridik bo'limda turadi, lekin ТЗ §2 bo'yicha
-   ular garov xizmatining ham zonasi. Kalit — fayl nomi; qiymat —
+   masalan, aktiv hodisalari yuridik bo'limda turadi, lekin ТЗ §2 bo'yicha
+   ular ta'minot xizmatining ham zonasi. Kalit — fayl nomi; qiymat —
    {bolimlar: [...]} (shu bo'limlardan BIRORTASI bo'lsa kifoya) va/yoki
    {rollar: [...]} (rol kaliti bo'yicha to'g'ridan-to'g'ri ruxsat). */
 const SAHIFA_QOSHIMCHA = {
-  "garov-hodisalari.html": {bolimlar: ["garov"]},
+  "aktiv-hodisalari.html": {bolimlar: ["aktivlar"]},
   "baholash.html":         {bolimlar: ["zaxira"]},
   "tasniflash.html":       {rollar: ["filial"]}
 };
@@ -372,9 +372,9 @@ const SAHIFA_BOLIMI = (() => {
     royxat.forEach(([href]) => { m[href] = bolim; }));
   /* ichki sahifalar (tab/menyuda yo'q) */
   Object.assign(m, {
-    "obyekt.html": "garov", "obyekt-tarkibi.html": "garov",
-    "korik-akti.html": "garov", "korik-tarixi.html": "garov",
-    "korik-tayinlash.html": "garov", "dala-korigi.html": "garov",
+    "obyekt.html": "aktivlar", "obyekt-tarkibi.html": "aktivlar",
+    "korik-akti.html": "aktivlar", "korik-tarixi.html": "aktivlar",
+    "korik-tayinlash.html": "aktivlar", "dala-korigi.html": "aktivlar",
     "musodara-qabul.html": "realizatsiya", "auksion.html": "realizatsiya",
     "arxiv.html": "realizatsiya", "holatlar.html": "sozlamalar",
     "xato.html": "panel", "index.html": "panel"
@@ -414,9 +414,9 @@ function bolimTabHTML(bolim){
 const LOGO_SVG = `
 <svg width="38" height="38" viewBox="0 0 44 44" aria-hidden="true">
   <g transform="translate(0,-6)">
-    <path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#0E6B5C"/>
-    <path d="M2 24.239 17.776 35.755 41.798 20.342V8L17.776 23.413 2 11.897v12.342Z" fill="#2E9E52"/>
-    <path d="M29.518 35.935V48h12.28V28.056l-12.28 7.879Z" fill="#0E6B5C"/>
+    <path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#4F46E5"/>
+    <path d="M2 24.239 17.776 35.755 41.798 20.342V8L17.776 23.413 2 11.897v12.342Z" fill="#818CF8"/>
+    <path d="M29.518 35.935V48h12.28V28.056l-12.28 7.879Z" fill="#4F46E5"/>
   </g>
 </svg>`;
 
@@ -432,7 +432,7 @@ function sidebarHTML(aktiv){
       ${LOGO_SVG}
       <span class="logo-matn">
         <span class="logo-soz">Mikrokreditbank</span>
-        <span class="logo-tag">Garov aktivlari nazorati</span>
+        <span class="logo-tag">Aktivlar nazorati</span>
       </span>
     </a>
   </div>
@@ -452,8 +452,8 @@ function topbarHTML(){
   const rolKalit = ROL_KALIT[joriyRol()];
   const chap = sarlavha
     ? `<div style="display:flex;align-items:center;gap:14px">
-         <svg class="ic" style="width:26px;height:26px;color:#101B29"><use href="#${ikon}"/></svg>
-         <span style="font-size:24px;font-weight:750;letter-spacing:-.01em;color:#101B29">${sarlavha}</span>
+         <svg class="ic" style="width:26px;height:26px;color:#18181B"><use href="#${ikon}"/></svg>
+         <span style="font-size:24px;font-weight:750;letter-spacing:-.01em;color:#18181B">${sarlavha}</span>
        </div>`
     : `<div class="izlash" onclick="this.querySelector('input').focus()">
          <input type="search" id="global-izlash" placeholder="Obyekt, shartnoma yoki mijoz bo'yicha qidirish..." aria-label="Qidirish">
@@ -486,7 +486,7 @@ function topbarHTML(){
     <div class="holat-karta">
       <div class="profil" id="profil-tugma" role="button" tabindex="0" style="cursor:pointer" aria-haspopup="menu" aria-expanded="false">
         <span class="avatar rol-${rolKalit}" aria-hidden="true">
-          <svg viewBox="0 0 34 34"><circle cx="17" cy="12" r="6.5" fill="#8493A3"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#8493A3"/></svg>
+          <svg viewBox="0 0 34 34"><circle cx="17" cy="12" r="6.5" fill="#A1A1AA"/><path d="M4 34c1.6-8 7-11.5 13-11.5S28.4 26 30 34z" fill="#A1A1AA"/></svg>
         </span>
         <div class="matnlar">
           <b>${FOYD_ISM[rolKalit]}</b>
@@ -614,7 +614,7 @@ function tanlovUla(root){
    45-uy", "Yunusobod xonadoni") va ro'yxatda umuman obyekti yo'q hudud
    ("Namangan") ham uchrardi. Endi ro'yxat reyestrdan quriladi.
 
-   data-royxat="obyekt"  — faol garov obyektlari
+   data-royxat="obyekt"  — faol aktiv obyektlari
    data-royxat="obyekt-hammasi" — faol va realizatsiyadagilar
    data-royxat="hudud" / "filial"
    data-royxat-bosh="Barcha obyektlar" — ro'yxat boshiga qo'shiladigan band */
@@ -630,7 +630,7 @@ function royxatlarniToldir(root){
         .filter(o => tur === "obyekt-hammasi" ? o.manba !== "arxiv" : o.manba === "faol")
         .map(o => o.qisqa);
     } else if (tur === "hudud"){
-      bandlar = yagona(D.YOZUVLAR.map(y => y.garov.hudud));
+      bandlar = yagona(D.YOZUVLAR.map(y => y.mulk.hudud));
     } else if (tur === "filial"){
       bandlar = yagona(D.YOZUVLAR.map(y => y.filial));
     } else return;

@@ -6,30 +6,30 @@
 <title>MKB — Realizatsiya arxivi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082503">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082602">
 <style>
 /* ---- Sotilganlar doimiy arxivi ---- */
 .arxiv-eslatma{
-  display:flex;gap:12px;background:#FFF6DE;border:1px solid #F2E2B4;border-radius:15px;padding:14px 18px;
+  display:flex;gap:12px;background:#FFFBEB;border:1px solid #F2E2B4;border-radius:15px;padding:14px 18px;
   font-size:13.5px;color:#7A5C10;line-height:1.55;
 }
-.arxiv-eslatma .ic{width:19px;height:19px;color:#7A5600;flex:none;margin-top:2px}
+.arxiv-eslatma .ic{width:19px;height:19px;color:#B45309;flex:none;margin-top:2px}
 .filtr-qator{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .f-izlash{display:flex;align-items:center;gap:10px;flex:1;min-width:200px;max-width:380px;background:var(--karta);border-radius:14px;height:48px;padding:0 18px;box-shadow:var(--soya)}
 .f-izlash input{flex:1;border:none;outline:none;background:none;font:inherit;font-size:14.5px;min-width:0}
-.f-izlash .ic{width:19px;height:19px;color:#56626E}
+.f-izlash .ic{width:19px;height:19px;color:#52525B}
 .filtr-qator .tanlov{width:auto;min-width:140px;background:var(--karta);border:none;box-shadow:var(--soya)}
-.arxiv-chip{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:650;color:#515F6D}
+.arxiv-chip{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:650;color:#52525B}
 .arxiv-chip .ic{width:17px;height:17px}
 .hujjat-mini{display:flex;gap:6px}
 .hujjat-mini button{
   width:32px;height:32px;border:1px solid var(--kirish-chiziq);border-radius:9px;
-  display:grid;place-items:center;color:#515F6D;transition:background var(--tez);
+  display:grid;place-items:center;color:#52525B;transition:background var(--tez);
 }
-.hujjat-mini button:hover{background:#EFEEE6;color:#101B29}
+.hujjat-mini button:hover{background:#F4F4F5;color:#18181B}
 .hujjat-mini .ic{width:14px;height:14px}
-.arxiv-teg{display:inline-flex;align-items:center;gap:7px;background:#EFEEE6;color:#515F6D;font-size:12px;font-weight:700;border-radius:99px;padding:5px 12px}
+.arxiv-teg{display:inline-flex;align-items:center;gap:7px;background:#F4F4F5;color:#52525B;font-size:12px;font-weight:700;border-radius:99px;padding:5px 12px}
 .arxiv-teg .ic{width:13px;height:13px}
 </style>
 </head>
@@ -45,7 +45,7 @@
     <div class="sahifa-qator">
       <div>
         <h1>Realizatsiya arxivi</h1>
-        <div class="sahifa-izoh">Realizatsiya qilingan garov obyektlarining doimiy arxivi</div>
+        <div class="sahifa-izoh">Realizatsiya qilingan aktiv obyektlarining doimiy arxivi</div>
       </div>
       <div class="sahifa-harakat">
         <button class="tugma tugma-oq" data-toast="Arxiv ro'yxati XLSX eksport qilinmoqda"><svg class="ic"><use href="#i-yuklash"/></svg>Eksport</button>
@@ -55,7 +55,7 @@
 
     <div class="arxiv-eslatma">
       <svg class="ic"><use href="#i-qalqon"/></svg>
-      <span><b>Doimiy saqlash rejimi.</b> Arxiv yozuvlari faqat o'qish uchun — realizatsiya yakunlangach obyekt faol garov reyestridan chiqariladi, ammo barcha hujjatlari bilan bu yerda <b>hech qachon o'chirilmasdan</b> saqlanadi. Har bir yozuv audit jurnali bilan bog'langan.</span>
+      <span><b>Doimiy saqlash rejimi.</b> Arxiv yozuvlari faqat o'qish uchun — realizatsiya yakunlangach obyekt faol aktivlar reyestridan chiqariladi, ammo barcha hujjatlari bilan bu yerda <b>hech qachon o'chirilmasdan</b> saqlanadi. Har bir yozuv audit jurnali bilan bog'langan.</span>
     </div>
 
     <div class="filtr-qator">
@@ -88,16 +88,16 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082503"></script>
-<script src="tarjima.js?v=26082503"></script>
-<script src="mkb.js?v=26082503"></script>
+<script src="malumot.js?v=26082602"></script>
+<script src="tarjima.js?v=26082602"></script>
+<script src="mkb.js?v=26082602"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
 /* Arxiv yozuvlari yagona manbadan */
 const ARXIV = MKB_DATA.ARXIV.map(x => ({
   nom: x.nom, kod: x.kod, tur: x.tur, sana: x.sotilgan, xaridor: x.xaridor,
-  summa: MKB_DATA.pul(x.summa), mib: x.ish, yil: x.yil, rasm: x.rasm,
+  summa: MKB_DATA.pul(x.summa), ish: x.ish, yil: x.yil, rasm: x.rasm,
   qabul: x.qabul, nazorat: x.nazorat
 }));
 
@@ -105,7 +105,7 @@ let qidiruv = "", yil = "Barcha yillar", tur = "Barcha turlar";
 
 function chiz(){
   const r = ARXIV.filter(a=>
-    (!qidiruv || (a.nom+" "+a.xaridor+" "+a.mib).toLowerCase().includes(qidiruv)) &&
+    (!qidiruv || (a.nom+" "+a.xaridor+" "+a.ish).toLowerCase().includes(qidiruv)) &&
     (yil==="Barcha yillar" || a.yil===yil) &&
     (tur==="Barcha turlar" || a.tur===tur)
   );
@@ -117,7 +117,7 @@ function chiz(){
       <td><b>${a.sana}</b></td>
       <td>${a.xaridor}</td>
       <td><b>${a.summa}</b></td>
-      <td>${a.mib}</td>
+      <td>${a.ish}</td>
       <td><span class="hujjat-mini">
         <button data-h="Oldi-sotdi shartnomasi" aria-label="Shartnoma"><svg class="ic"><use href="#i-shartnoma"/></svg></button>
         <button data-h="To'lov tasdiqnomasi" aria-label="To'lov"><svg class="ic"><use href="#i-daromad"/></svg></button>
@@ -134,13 +134,13 @@ function chiz(){
       if (hb){ MKB.toast(hb.dataset.h+" yuklab olinmoqda — "+a.nom+"", "i-yuklab"); return; }
       MKB.modal("Arxiv yozuvi — "+a.nom,
         `<div style="display:grid;gap:0;margin-top:4px;font-size:13.5px">
-          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">MIB'dan qabul qilingan</span><b style="margin-left:auto">${a.qabul}</b></div>
-          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">Nazorat davri</span><b style="margin-left:auto">${a.nazorat}</b></div>
-          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">Sotilgan sana</span><b style="margin-left:auto">${a.sana}</b></div>
-          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">Xaridor</span><b style="margin-left:auto">${a.xaridor}</b></div>
-          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F1F4F8"><span style="color:var(--matn-3)">Sotuv summasi</span><b style="margin-left:auto">${a.summa}</b></div>
-          <div style="display:flex;padding:9px 0"><span style="color:var(--matn-3)">MIB ijro ishi</span><b style="margin-left:auto">${a.mib}</b></div>
-          <div style="background:#EFEEE6;border-radius:11px;padding:10px 13px;font-size:12.5px;color:#515F6D;margin-top:8px">
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F4F4F5"><span style="color:var(--matn-3)">Balansga qabul qilingan</span><b style="margin-left:auto">${a.qabul}</b></div>
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F4F4F5"><span style="color:var(--matn-3)">Nazorat davri</span><b style="margin-left:auto">${a.nazorat}</b></div>
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F4F4F5"><span style="color:var(--matn-3)">Sotilgan sana</span><b style="margin-left:auto">${a.sana}</b></div>
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F4F4F5"><span style="color:var(--matn-3)">Xaridor</span><b style="margin-left:auto">${a.xaridor}</b></div>
+          <div style="display:flex;padding:9px 0;border-bottom:1px solid #F4F4F5"><span style="color:var(--matn-3)">Sotuv summasi</span><b style="margin-left:auto">${a.summa}</b></div>
+          <div style="display:flex;padding:9px 0"><span style="color:var(--matn-3)">Ijro ishi</span><b style="margin-left:auto">${a.ish}</b></div>
+          <div style="background:#F4F4F5;border-radius:11px;padding:10px 13px;font-size:12.5px;color:#52525B;margin-top:8px">
             Yozuv faqat o'qish uchun. O'zgartirish va o'chirish audit siyosatiga ko'ra taqiqlangan.
           </div>
         </div>`,

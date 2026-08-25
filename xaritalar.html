@@ -6,8 +6,8 @@
 <title>MKB — Hududiy xarita</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082503">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082602">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 <style>
 /* ---- Hududiy xarita (ekran 5) ---- */
@@ -16,10 +16,10 @@
   position:absolute;inset:0;width:100%;height:72%;z-index:1;
 }
 .ustki-qator{position:relative;z-index:4;display:flex;align-items:flex-start}
-.ustki-qator .tanlov{width:auto;min-width:210px;background:var(--karta);border:none;box-shadow:var(--soya);height:52px;border-radius:14px;font-weight:600;color:#1C2836}
+.ustki-qator .tanlov{width:auto;min-width:210px;background:var(--karta);border:none;box-shadow:var(--soya);height:52px;border-radius:14px;font-weight:600;color:#18181B}
 .rejim{margin-left:auto;display:flex;gap:6px;background:var(--karta);border-radius:13px;padding:5px;box-shadow:var(--soya)}
-.rejim button{height:40px;min-width:52px;border-radius:9px;font-size:14px;font-weight:700;color:#515F6D;transition:all var(--tez)}
-.rejim button.aktiv{border:1.5px solid var(--asos);color:#101B29;background:#FBFEF9}
+.rejim button{height:40px;min-width:52px;border-radius:9px;font-size:14px;font-weight:700;color:#52525B;transition:all var(--tez)}
+.rejim button.aktiv{border:1.5px solid var(--asos);color:#18181B;background:#FBFEF9}
 
 .legenda{
   position:absolute;z-index:4;right:390px;top:120px;
@@ -36,11 +36,11 @@
 }
 .hudud-panel h3{font-size:17px;font-weight:750;margin-bottom:8px}
 .hudud-band{display:flex;align-items:center;gap:11px;width:100%;padding:9px 8px;margin:0 -8px;border-radius:10px;font-size:14.5px;transition:background var(--tez);text-align:left}
-.hudud-band:hover{background:#F1F0E8}
-.hudud-band.faol{background:#E3F1ED;box-shadow:inset 0 0 0 1px #96CBBC}
-.hudud-band .ic{width:18px;height:18px;color:#56626E}
-.hudud-band .nomi{color:#2C3A49;font-weight:550}
-.hudud-band b{margin-left:auto;font-weight:750;font-variant-numeric:tabular-nums;color:#101B29}
+.hudud-band:hover{background:#F4F4F5}
+.hudud-band.faol{background:#EEF2FF;box-shadow:inset 0 0 0 1px #C7D2FE}
+.hudud-band .ic{width:18px;height:18px;color:#52525B}
+.hudud-band .nomi{color:#3F3F46;font-weight:550}
+.hudud-band b{margin-left:auto;font-weight:750;font-variant-numeric:tabular-nums;color:#18181B}
 .hudud-band .delta{width:56px;text-align:right;font-size:13px}
 .hudud-jami{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:16px;border-top:1px solid var(--chiziq)}
 .hudud-jami span{font-size:15.5px;font-weight:750}
@@ -54,9 +54,9 @@
 .hudud-kartalar .h-karta{background:var(--karta);border-radius:16px;box-shadow:var(--soya);padding:18px;text-align:left;transition:transform var(--tez)}
 .hudud-kartalar .h-karta:hover{transform:translateY(-2px)}
 .h-karta .bosh{display:flex;align-items:center;gap:12px}
-.h-karta .tile{width:46px;height:46px;border-radius:13px;background:#E3F1ED;display:grid;place-items:center;color:#0E6B5C;flex:none;box-shadow:var(--chuqur-tile)}
+.h-karta .tile{width:46px;height:46px;border-radius:13px;background:#EEF2FF;display:grid;place-items:center;color:#4F46E5;flex:none;box-shadow:var(--chuqur-tile)}
 .h-karta .tile .ic{width:22px;height:22px}
-.h-karta .nomi{font-size:14.5px;font-weight:650;color:#1C2836}
+.h-karta .nomi{font-size:14.5px;font-weight:650;color:#18181B}
 .h-karta .qiymat{display:flex;align-items:baseline;gap:10px;margin-top:2px}
 .h-karta .qiymat b{font-size:24px;font-weight:750;letter-spacing:-.01em}
 .h-karta .izoh{font-size:12.5px;color:var(--matn-4);margin-top:2px}
@@ -74,7 +74,7 @@
 }
 </style>
 </head>
-<body data-sahifa="garov" data-topbar-sarlavha="Hududiy xarita" data-topbar-ikon="i-xarita">
+<body data-sahifa="aktivlar" data-topbar-sarlavha="Hududiy xarita" data-topbar-ikon="i-xarita">
 
 <div class="app">
 <aside class="sidebar" data-shell-sidebar></aside>
@@ -98,16 +98,16 @@
 
       <div class="legenda">
         <h4>Faollik darajasi</h4>
-        <div class="legenda-qator"><span class="nuqta" style="background:#14836F"></span>Yuqori</div>
-        <div class="legenda-qator"><span class="nuqta" style="background:#5FA893"></span>O'rtacha</div>
-        <div class="legenda-qator"><span class="nuqta" style="background:#A8CFC2"></span>Past</div>
-        <div class="legenda-qator"><span class="nuqta" style="background:#C7C7CD"></span>Faol emas</div>
+        <div class="legenda-qator"><span class="nuqta" style="background:#4338CA"></span>Yuqori</div>
+        <div class="legenda-qator"><span class="nuqta" style="background:#818CF8"></span>O'rtacha</div>
+        <div class="legenda-qator"><span class="nuqta" style="background:#C7D2FE"></span>Past</div>
+        <div class="legenda-qator"><span class="nuqta" style="background:#D4D4D8"></span>Faol emas</div>
       </div>
 
       <aside class="hudud-panel">
         <h3>Hududlar bo'yicha jami</h3>
         <div id="hudud-royxat"></div>
-        <div class="hudud-jami"><span>Jami garov obyekti</span><b id="hj-jami">—</b><span class="delta" id="hj-delta"></span></div>
+        <div class="hudud-jami"><span>Jami aktiv obyekti</span><b id="hj-jami">—</b><span class="delta" id="hj-delta"></span></div>
       </aside>
 
       <div class="hudud-kartalar" id="hudud-kartalar"></div>
@@ -117,9 +117,9 @@
 </div>
 
 <script src="assets/vendor/leaflet/leaflet.js"></script>
-<script src="malumot.js?v=26082503"></script>
-<script src="tarjima.js?v=26082503"></script>
-<script src="mkb.js?v=26082503"></script>
+<script src="malumot.js?v=26082602"></script>
+<script src="tarjima.js?v=26082602"></script>
+<script src="mkb.js?v=26082602"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -150,7 +150,7 @@ function chizma(){
     p.push(`${(i/(n-1)*100).toFixed(1)},${y.toFixed(1)}`);
   }
   return `<svg class="chizma" viewBox="0 0 100 38" preserveAspectRatio="none">
-    <polyline points="${p.join(" ")}" fill="none" stroke="#0E6B5C" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" filter="url(#depth-sm)"/>
+    <polyline points="${p.join(" ")}" fill="none" stroke="#4F46E5" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" filter="url(#depth-sm)"/>
   </svg>`;
 }
 document.getElementById("hudud-kartalar").innerHTML = KARTALAR.map(k=>`
@@ -183,7 +183,7 @@ const HUDUD_GEO = {
   "Surxondaryo viloyati": {lat:37.9401, lng:67.5714, daraja:"past"},
   "Qoraqalpog'iston R.":  {lat:42.4531, lng:59.6103, daraja:"past"}
 };
-const DARAJA_RANG = {yuqori:"#14836F", ortacha:"#5FA893", past:"#A8CFC2", nofaol:"#C9C6BA"};
+const DARAJA_RANG = {yuqori:"#4338CA", ortacha:"#5FA893", past:"#A8CFC2", nofaol:"#C9C6BA"};
 
 const uzMap = L.map("leaflet-uzb", {zoomControl:false, attributionControl:true, scrollWheelZoom:true})
   .setView([41.35, 64.4], 6);

@@ -6,8 +6,8 @@
 <title>MKB — Ko'rik dalolatnomasi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082503">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082602">
 <style>
 /* ---- Ko'rik dalolatnomasi: bitta chiqish natijasi ---- */
 .ka-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
@@ -28,8 +28,8 @@
 .tb-band:last-child{border-bottom:none}
 .tb-holat{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:none;margin-top:1px}
 .tb-holat .ic{width:14px;height:14px}
-.tb-ha{background:#E6F5EA;color:#1F7A3D}
-.tb-yoq{background:#FDEEEC;color:#C43C31}
+.tb-ha{background:#ECFDF5;color:#047857}
+.tb-yoq{background:#FEF2F2;color:#B91C1C}
 .tb-band b{font-size:13.5px;font-weight:750;display:block}
 .tb-band p{font-size:12.5px;color:var(--matn-3);line-height:1.5;margin-top:2px}
 
@@ -51,7 +51,7 @@
 @media (max-width:1320px){ .ka-ustun{grid-template-columns:1fr} }
 </style>
 </head>
-<body data-sahifa="garov" data-topbar-sarlavha="Ko'rik dalolatnomasi" data-topbar-ikon="i-hujjat">
+<body data-sahifa="aktivlar" data-topbar-sarlavha="Ko'rik dalolatnomasi" data-topbar-ikon="i-hujjat">
 
 <div class="app">
 <aside class="sidebar" data-shell-sidebar></aside>
@@ -119,9 +119,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082503"></script>
-<script src="tarjima.js?v=26082503"></script>
-<script src="mkb.js?v=26082503"></script>
+<script src="malumot.js?v=26082602"></script>
+<script src="tarjima.js?v=26082602"></script>
+<script src="mkb.js?v=26082602"></script>
 <script>
 const D = MKB_DATA;
 
@@ -148,9 +148,9 @@ document.getElementById("ka-sarlavha").textContent = "Dalolatnoma " + korik.id;
 document.getElementById("ka-izoh").textContent =
   korik.tur + " ko'rik · " + korik.sana + (korik.holat === "otkazildi" ? "" : " · hali o'tkazilmagan");
 
-document.getElementById("ka-rasm").src = y.garov.rasm;
-document.getElementById("ka-obyekt").textContent = y.garov.nom;
-document.getElementById("ka-sub").textContent = y.id + " · " + y.garov.hududToliq + " · " + y.garov.tur;
+document.getElementById("ka-rasm").src = y.mulk.rasm;
+document.getElementById("ka-obyekt").textContent = y.mulk.nom;
+document.getElementById("ka-sub").textContent = y.id + " · " + y.mulk.hududToliq + " · " + y.mulk.tur;
 
 document.getElementById("ka-meta").innerHTML = [
   ["Ko'rik turi", korik.tur],
@@ -164,10 +164,10 @@ document.getElementById("ka-meta").innerHTML = [
 const UMUMIY = [
   ["Obyekt joyida va identifikatsiya qilindi", true, "Manzil, kadastr yoki VIN bo'yicha moslik tekshirildi."],
   ["Ko'zga ko'rinadigan shikastlar yo'q", korik.ball >= 80, korik.ball >= 80 ? "Konstruktiv holat qoniqarli." : "Aniqlangan kamchiliklar dalolatnomaga kiritildi."],
-  ["Uchinchi shaxslar egallamagan", korik.obyektId !== "GR-2026/3308", korik.obyektId === "GR-2026/3308" ? "Ijarachi aniqlandi — yuridik bo'limga yo'naltirildi." : "Ruxsatsiz foydalanish belgilari yo'q."],
+  ["Uchinchi shaxslar egallamagan", korik.obyektId !== "AK-2026/3308", korik.obyektId === "AK-2026/3308" ? "Ijarachi aniqlandi — yuridik bo'limga yo'naltirildi." : "Ruxsatsiz foydalanish belgilari yo'q."],
   ["Sug'urta polisi amalda", (D.SUGURTALAR.find(g => g.obyektId === korik.obyektId) || {}).holat === "amalda",
     "Polis holati sug'urta nazorati bo'limidan tekshirildi."],
-  ["Garov ro'yxati to'liq", korik.obyektId !== "GR-2025/1187", korik.obyektId === "GR-2025/1187" ? "Kamomad aniqlandi — hodisa ochildi." : "Ro'yxatdagi barcha pozitsiyalar joyida."]
+  ["Ta'minot ro'yxati to'liq", korik.obyektId !== "AK-2025/1187", korik.obyektId === "AK-2025/1187" ? "Kamomad aniqlandi — hodisa ochildi." : "Ro'yxatdagi barcha pozitsiyalar joyida."]
 ];
 const otkazilganmi = korik.holat === "otkazildi";
 document.getElementById("ka-bandlar").innerHTML = !otkazilganmi
@@ -180,7 +180,7 @@ document.getElementById("ka-bandlar").innerHTML = !otkazilganmi
 
 /* ---- Fotojamlanma: obyekt suratlari asosida ---- */
 const FOTO = [
-  [y.garov.rasm, "Umumiy ko'rinish"],
+  [y.mulk.rasm, "Umumiy ko'rinish"],
   ["assets/kirish_eshigi.webp", "Kirish qismi"],
   ["assets/uchastka_aero.webp", "Hudud chegarasi"],
   ["assets/kirish_sahna.webp", "Atrof holati"]
@@ -198,7 +198,7 @@ document.getElementById("ka-xulosa").textContent = otdi
   : "Ko'rik hali o'tkazilmagan. Dalolatnoma chiqishdan keyin to'ldiriladi.";
 document.getElementById("ka-inspektor").textContent = korik.inspektor;
 document.getElementById("ka-qarzdor").textContent =
-  korik.obyektId === "GR-2026/2210" ? "Ishtirok etdi, imzoladi" : "Xabardor qilindi";
+  korik.obyektId === "AK-2026/2210" ? "Ishtirok etdi, imzoladi" : "Xabardor qilindi";
 document.getElementById("ka-holat").textContent = otdi ? "Imzolangan" : "Kutilmoqda";
 
 /* ---- Bog'liq ish ---- */

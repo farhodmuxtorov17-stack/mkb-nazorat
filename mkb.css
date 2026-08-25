@@ -1,43 +1,43 @@
 /* ============================================================
-   MIKROKREDITBANK — Garov obyektlarini raqamli nazorat tizimi
+   MIKROKREDITBANK — Aktiv obyektlarini raqamli nazorat tizimi
    Yagona dizayn tizimi: tokenlar va umumiy komponentlar.
    Firma ranglari bank identifikatsiyasidan olingan:
-   asosiy zumrad #0E6B5C, aksent bronza #B98A2F, ijobiy holat yashili #2E9E52.
+   asosiy zumrad #4F46E5, aksent bronza #4F46E5, ijobiy holat yashili #059669.
    ============================================================ */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 :root{
-  --shrift-ui:'Golos Text',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --shrift-serif:'Spectral',Georgia,'Times New Roman',serif;
+  --shrift-ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --shrift-serif:'Inter Tight','Inter',system-ui,sans-serif;   /* displey ovozi */
   --shrift-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
 
-  --kanvas:#F5F4EF;          /* fil suyagi qog'oz — bank hujjati iliqligi */
+  --kanvas:#FAFAFA;
   --karta:#FFFFFF;
-  --matn:#152131;
-  --matn-2:#3D4B5C;
-  --matn-3:#56626E;   /* WCAG AA: 6.24:1 oq fonda */
-  --matn-4:#6B7684;   /* WCAG AA: 4.61:1 oq fonda */
-  --chiziq:#E6E4DA;
-  --kirish-chiziq:#E0DED2;
+  --matn:#18181B;
+  --matn-2:#3F3F46;
+  --matn-3:#52525B;   /* WCAG AA oq fonda */
+  --matn-4:#71717A;   /* WCAG AA oq fonda */
+  --chiziq:#E4E4E7;
+  --kirish-chiziq:#E4E4E7;
 
   /* Firma ranglari */
-  --asos:#0E6B5C;        /* asosiy harakat, havolalar — oq fonda 7.86:1 */
-  --asos-toq:#084C41;
-  --asos-fon:#E3F1ED;     /* amaliyotda g'olib chiqqan tint */
-  --asos-hover:#14836F;
-  --asos-matn:#0A5348;    /* och fonda izumrud matn */
-  --brend-aksent:#B98A2F; /* mis: aktiv chiziq, fokus halqasi */
-  --mis-och:#D8B45A;      /* mis gradiyentning yorug' tomoni */
-  --mis-toq:#8F6A1F;
-  --ijobiy:#2E9E52;       /* semantik yashil: muvaffaqiyatli holatlar */
-  --delta:#268030;        /* ijobiy o'zgarish matni — oq fonda 4.99:1 */
+  --asos:#4F46E5;        /* asosiy aksent — indigo */
+  --asos-toq:#3730A3;
+  --asos-fon:#EEF2FF;
+  --asos-hover:#4338CA;
+  --asos-matn:#3730A3;
+  --brend-aksent:#4F46E5;
+  --mis-och:#818CF8;
+  --mis-toq:#4338CA;
+  --ijobiy:#059669;
+  --delta:#047857;
 
-  --tile-dark:#0C2B25;
-  --tile-dark-ikon:#8FD4C2;
-  --tile-och:#CDE8E0;
-  --tile-och-ikon:#0A5348;
+  --tile-dark:#18181B;
+  --tile-dark-ikon:#A5B4FC;
+  --tile-och:#E0E7FF;
+  --tile-och-ikon:#3730A3;
 
-  /* Garov obyekti turlari */
+  /* Aktiv obyekti turlari */
   --t-kvartira:#3E7BD6;
   --t-uy:#2FA39B;
   --t-tijorat:#8B5CF6;
@@ -46,39 +46,39 @@
   --t-transport:#D2536A;
 
   /* Obyekt hayot sikli holatlari */
-  --h-garov:#7BAEFC;      /* garovda — hali qarzdor tasarrufida */
+  --h-taminot:#7BAEFC;      /* ta'minotda — hali qarzdor tasarrufida */
   --h-musodara:#E8763C;   /* musodara qilingan — qabul jarayonida */
-  --h-nazorat:#2E9E52;    /* bank nazoratida — holat ijobiy */
+  --h-nazorat:#059669;    /* bank nazoratida — holat ijobiy */
   --h-ijara:#3E7BD6;      /* ijaraga berilgan */
   --h-tamir:#D98324;      /* ta'mir/tiklash ishlari */
   --h-auksion:#8B5CF6;    /* auksionga chiqarilgan */
   --h-sotilgan:#8A94A0;   /* realizatsiya qilingan */
 
   /* Rol identifikatori — firma va status ranglaridan ATAYLAB mustaqil */
-  --rol-admin:#1E2A38;    --rol-admin-fon:#EFEEE6;    --rol-admin-matn:#37414F;
+  --rol-admin:#1E2A38;    --rol-admin-fon:#F4F4F5;    --rol-admin-matn:#37414F;
   --rol-filial:#7B3FD4;   --rol-filial-fon:#F2EAFE;   --rol-filial-matn:#6A2FC0;
   --rol-kredit:#B45309;   --rol-kredit-fon:#FDF1E3;   --rol-kredit-matn:#97460A;
-  --rol-garov:#0E7490;    --rol-garov-fon:#E3F4F8;    --rol-garov-matn:#0B5F76;
+  --rol-aktiv:#0E7490;    --rol-aktiv-fon:#E3F4F8;    --rol-aktiv-matn:#0B5F76;
   --rol-yurist:#3D4FB8;   --rol-yurist-fon:#E7EBFB;   --rol-yurist-matn:#3D4FB8;
   --rol-tavakkal:#4D7C0F; --rol-tavakkal-fon:#EFF5E2; --rol-tavakkal-matn:#3F660C;
 
-  --qizil:#D8432F;
-  --qizil-fon:#FDEDEA;
-  --sariq-fon:#FFF6DE;
-  --kok-fon:#EEF4FE;
+  --qizil:#DC2626;
+  --qizil-fon:#FEF2F2;
+  --sariq-fon:#FFFBEB;
+  --kok-fon:#F0F9FF;
 
-  --soya:0 1px 2px rgba(16,30,48,.05), 0 4px 12px -2px rgba(16,30,48,.07), 0 12px 32px -12px rgba(16,30,48,.14);
-  --soya-pin:0 2px 6px rgba(16,30,48,.11), 0 8px 20px rgba(16,30,48,.11);
-  --soya-modal:0 10px 40px rgba(16,30,48,.20);
+  --soya:0 1px 2px rgba(9,9,11,.04);
+  --soya-pin:0 4px 12px rgba(9,9,11,.08), 0 12px 32px -8px rgba(9,9,11,.12);
+  --soya-modal:0 16px 48px -8px rgba(9,9,11,.18), 0 0 0 1px rgba(9,9,11,.04);
 
   /* To'q navigatsiya paneli — bank identifikatsiyasining asosiy vizual belgisi */
-  --nav-fon:#0A2A23;
-  --nav-fon-2:#061D18;
-  --nav-matn:#C2D8D1;
-  --nav-matn-och:#FFFFFF;
-  --nav-xira:#7FA399;
-  --nav-chiziq:rgba(255,255,255,.09);
-  --nav-aktiv:rgba(255,255,255,.10);
+  --nav-fon:#FAFAFA;
+  --nav-fon-2:#FAFAFA;
+  --nav-matn:#3F3F46;
+  --nav-matn-och:#18181B;
+  --nav-xira:#A1A1AA;
+  --nav-chiziq:#E4E4E7;
+  --nav-aktiv:#EEF2FF;
 
   /* Chuqurlik tizimi — statistik chipteglar/tile'lar uchun 3D-uslub.
      Har qanday mavjud fon rangi ustiga qo'llanadi (rangga bog'liq emas):
@@ -87,7 +87,7 @@
   --chuqur-tile:inset 0 1px 0 rgba(255,255,255,.45), inset 0 -4px 7px rgba(0,0,0,.12), 0 2px 5px rgba(16,30,48,.09), 0 10px 18px -8px rgba(16,30,48,.17);
   --chuqur-tile-tor:inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 4px rgba(0,0,0,.10), 0 1px 3px rgba(16,30,48,.08), 0 5px 10px -5px rgba(16,30,48,.15);
   --tile-dark-3d:linear-gradient(155deg,#144039 0%,var(--tile-dark) 55%,#062019 100%);
-  --tile-och-3d:linear-gradient(155deg,#ECF7F3 0%,var(--tile-och) 55%,#A5D4C6 100%);
+  --tile-och-3d:linear-gradient(155deg,#ECF7F3 0%,var(--tile-och) 55%,#A5B4FC 100%);
 
   --r-katta:18px; --r-karta:16px; --r-ich:12px; --r-el:10px;
   --tez:150ms cubic-bezier(.23,1,.32,1);
@@ -104,7 +104,7 @@ body{
 }
 h1,h2{text-wrap:balance}
 /* Sahifa sarlavhalari — brendning serif ovozi */
-.kontent h1{font-family:var(--shrift-serif);font-weight:600;letter-spacing:-.012em}
+.kontent h1{font-family:var(--shrift-serif);font-weight:650;letter-spacing:-.022em}
 /* Hujjat raqamlari uchun mono uslub */
 .kod-mono{font-family:var(--shrift-mono);font-size:.92em;font-weight:500;letter-spacing:.01em}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
@@ -122,20 +122,20 @@ img{display:block;max-width:100%}
 /* ============ Sidebar ============ */
 .sidebar{
   background:linear-gradient(180deg,var(--nav-fon) 0%,var(--nav-fon-2) 100%);
-  border-right:none;
+  border-right:1px solid var(--nav-chiziq);
   padding:22px 14px 16px;
   display:flex;flex-direction:column;
   position:sticky;top:0;height:100vh;overflow:hidden;
-  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent;
+  scrollbar-width:thin;scrollbar-color:#D4D4D8 transparent;
 }
 .sidebar::-webkit-scrollbar{width:6px}
-.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:99px}
+.sidebar::-webkit-scrollbar-thumb{background:#D4D4D8;border-radius:99px}
 /* Firma bloki: marka + ikki qatorli yozuv */
 .logo{padding:2px 4px 0;flex:none}
 .logo a{display:flex;align-items:center;gap:11px}
 .logo-matn{display:flex;flex-direction:column;gap:1px;min-width:0}
-.logo-soz{font-family:var(--shrift-serif);font-size:19px;font-weight:700;letter-spacing:.005em;color:var(--nav-matn-och);line-height:1.1}
-.logo-tag{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#C8A44E;line-height:1.15}
+.logo-soz{font-family:var(--shrift-serif);font-size:17.5px;font-weight:700;letter-spacing:-.02em;color:var(--nav-matn-och);line-height:1.1}
+.logo-tag{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#4F46E5;line-height:1.15}
 
 /* Sidebar guruh sarlavhasi — 20 ta bandni mantiqiy bloklarga ajratadi */
 .m-guruh{
@@ -179,35 +179,33 @@ img{display:block;max-width:100%}
   transition:background var(--tez),color var(--tez);
 }
 .m-band .ic{width:18px;height:18px;color:var(--nav-xira);transition:color var(--tez);flex:none}
-.m-band:hover{background:rgba(255,255,255,.06);color:var(--nav-matn-och)}
+.m-band:hover{background:#F4F4F5;color:var(--nav-matn-och)}
 .m-band:hover .ic{color:var(--nav-matn-och)}
-.m-band.aktiv{background:rgba(255,255,255,.07);color:var(--nav-matn-och);font-weight:650;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
-.m-band.aktiv .ic{color:var(--nav-matn-och)}
+.m-band.aktiv{background:var(--nav-aktiv);color:#3730A3;font-weight:600;box-shadow:none}
+.m-band.aktiv .ic{color:#4F46E5}
 .m-band.aktiv::after{
-  content:"";position:absolute;left:-14px;top:6px;bottom:6px;width:3px;
-  background:linear-gradient(180deg,var(--mis-och),var(--mis-toq));
-  border-radius:0 3px 3px 0;
-  box-shadow:0 0 8px rgba(216,180,90,.35);
+  content:"";position:absolute;left:-14px;top:8px;bottom:8px;width:2px;
+  background:var(--brend-aksent);border-radius:0 2px 2px 0;
 }
 /* Rol identifikatori — aktiv band chizig'i har bir rolda o'z rangida (har sahifada ko'rinadi) */
-.sidebar.rol-admin .m-band.aktiv::after{background:#8FC6B8}
+.sidebar.rol-admin .m-band.aktiv::after{background:#A5B4FC}
 .sidebar.rol-filial .m-band.aktiv::after{background:var(--rol-filial)}
 .sidebar.rol-kredit .m-band.aktiv::after{background:var(--rol-kredit)}
-.sidebar.rol-garov .m-band.aktiv::after{background:var(--rol-garov)}
+.sidebar.rol-aktiv .m-band.aktiv::after{background:var(--rol-aktiv)}
 .sidebar.rol-yurist .m-band.aktiv::after{background:var(--rol-yurist)}
 .sidebar.rol-tavakkal .m-band.aktiv::after{background:var(--rol-tavakkal)}
 .sidebar-past{flex:none;padding-top:14px;border-top:1px solid var(--nav-chiziq);margin-top:12px}
 .yordam{
   display:flex;align-items:center;gap:11px;width:100%;
   border:1px solid var(--nav-chiziq);border-radius:8px;
-  background:rgba(255,255,255,.05);color:var(--nav-matn);
+  background:#FFFFFF;color:var(--nav-matn);
   height:46px;padding:0 13px;text-align:left;font-size:13px;
-  font-size:15px;font-weight:600;color:#2C3A49;
+  font-size:15px;font-weight:600;color:#3F3F46;
   transition:background var(--tez);
 }
-.yordam:hover{background:#F1F0E8}
+.yordam:hover{background:#F4F4F5}
 .yordam .ic{width:21px;height:21px;color:#555B62}
-.yordam .strelka{margin-left:auto;width:16px;height:16px;color:#6B7684}
+.yordam .strelka{margin-left:auto;width:16px;height:16px;color:#71717A}
 
 /* ============ Topbar ============ */
 .topbar{
@@ -215,12 +213,7 @@ img{display:block;max-width:100%}
   background:var(--karta);border-bottom:1px solid var(--chiziq);
   position:sticky;top:0;z-index:40;
 position:relative;}
-/* Banknot gilyoshi — topbarning imzo-kromkasi */
-.topbar::after{
-  content:"";position:absolute;left:0;right:0;bottom:-6px;height:6px;pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='6' viewBox='0 0 56 6'%3E%3Cpath d='M0 3 Q7 0 14 3 T28 3 T42 3 T56 3' fill='none' stroke='%230E6B5C' stroke-opacity='.22' stroke-width='1'/%3E%3Cpath d='M0 3 Q7 6 14 3 T28 3 T42 3 T56 3' fill='none' stroke='%23B98A2F' stroke-opacity='.20' stroke-width='.8'/%3E%3C/svg%3E");
-  background-repeat:repeat-x;background-size:56px 6px;
-}
+
 .izlash{
   flex:1;max-width:520px;display:flex;align-items:center;gap:10px;flex-direction:row-reverse;
   background:var(--kanvas);border:1px solid var(--kirish-chiziq);
@@ -229,7 +222,7 @@ position:relative;}
 }
 .izlash:focus-within{border-color:var(--asos)}
 .izlash input{flex:1;border:none;outline:none;background:none;font:inherit;font-size:13.5px;color:var(--matn)}
-.izlash input::placeholder{color:#6B7684}
+.izlash input::placeholder{color:#71717A}
 .izlash .ic{width:18px;height:18px;color:var(--matn-4)}
 .topbar-ong{margin-left:auto;display:flex;align-items:center;gap:12px}
 .qongiroq{position:relative;width:38px;height:38px;display:grid;place-items:center;border-radius:8px;color:var(--matn-2);transition:background var(--tez)}
@@ -245,12 +238,12 @@ position:relative;}
   box-shadow:none;
 }
 .h-blok{display:flex;align-items:center;gap:11px}
-.h-blok .matnlar b{display:block;font-size:16.5px;font-weight:700;line-height:1.25;color:#101B29}
+.h-blok .matnlar b{display:block;font-size:16.5px;font-weight:700;line-height:1.25;color:#18181B}
 .h-blok .matnlar span{display:block;font-size:12.5px;color:var(--matn-4);line-height:1.3}
 .quyosh{width:26px;height:26px;color:#FFC531;stroke-width:1.9}
 .ajratgich{width:1px;height:34px;background:var(--chiziq)}
 .profil{display:flex;align-items:center;gap:10px;padding:4px 10px 4px 4px;border-radius:8px;transition:background var(--tez);position:relative}
-.profil:hover{background:#F1F0E8}
+.profil:hover{background:#F4F4F5}
 .avatar{
   width:36px;height:36px;border-radius:8px;flex:none;overflow:hidden;
   background:linear-gradient(180deg,#DFE3E9,#C9CFD8);
@@ -259,14 +252,14 @@ position:relative;}
 }
 .avatar.rol-admin{--_rol-rang:var(--rol-admin)}
 .avatar.rol-filial{--_rol-rang:var(--rol-filial)}
-.avatar.rol-garov{--_rol-rang:var(--rol-garov)}
+.avatar.rol-aktiv{--_rol-rang:var(--rol-aktiv)}
 .avatar.rol-kredit{--_rol-rang:var(--rol-kredit)}
 .avatar.rol-tavakkal{--_rol-rang:var(--rol-tavakkal)}
 .avatar.rol-yurist{background:var(--rol-yurist-fon);color:var(--rol-yurist-matn)}
 .avatar svg{width:34px;height:34px;display:block}
 .profil .strelka{width:17px;height:17px;color:#7A8087}
 .profil .matnlar{text-align:left}
-.profil .matnlar b{display:block;font-size:15px;font-weight:700;line-height:1.25;color:#101B29}
+.profil .matnlar b{display:block;font-size:15px;font-weight:700;line-height:1.25;color:#18181B}
 .profil .matnlar span{display:block;font-size:12.5px;color:var(--matn-4);line-height:1.3}
 .profil .matnlar span.rol-yorliq{
   display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;
@@ -275,89 +268,89 @@ position:relative;}
 .rol-yorliq::before{content:"";width:6px;height:6px;border-radius:99px;background:currentColor}
 .profil .matnlar span.rol-yorliq.rol-admin{background:var(--rol-admin-fon);color:var(--rol-admin-matn)}
 .profil .matnlar span.rol-yorliq.rol-filial{background:var(--rol-filial-fon);color:var(--rol-filial-matn)}
-.profil .matnlar span.rol-yorliq.rol-garov{background:var(--rol-garov-fon);color:var(--rol-garov-matn)}
+.profil .matnlar span.rol-yorliq.rol-aktiv{background:var(--rol-aktiv-fon);color:var(--rol-aktiv-matn)}
 .profil .matnlar span.rol-yorliq.rol-kredit{background:var(--rol-kredit-fon);color:var(--rol-kredit-matn)}
 .profil .matnlar span.rol-yorliq.rol-tavakkal{background:var(--rol-tavakkal-fon);color:var(--rol-tavakkal-matn)}
 .rol-yorliq.rol-yurist{background:var(--rol-yurist-fon);color:var(--rol-yurist-matn)}
-.popover-bolim{padding:8px 12px 4px;font-size:10.5px;font-weight:700;letter-spacing:.05em;color:#6B7684}
+.popover-bolim{padding:8px 12px 4px;font-size:10.5px;font-weight:700;letter-spacing:.05em;color:#71717A}
 
 /* ============ Sahifa boshi ============ */
 .sahifa-qator{display:flex;align-items:center;gap:16px;margin-top:8px;flex-wrap:wrap}
-.sahifa-qator h1{font-size:28px;font-weight:750;letter-spacing:-.015em;color:#101B29}
+.sahifa-qator h1{font-size:28px;font-weight:750;letter-spacing:-.015em;color:#18181B}
 .sahifa-izoh{font-size:14px;color:var(--matn-3);margin-top:3px}
 .sahifa-harakat{margin-left:auto;display:flex;align-items:center;gap:12px}
 
 /* ============ Tugmalar ============ */
 .tugma{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  height:44px;padding:0 18px;border-radius:12px;
+  height:40px;padding:0 16px;border-radius:8px;
   font-size:14.5px;font-weight:600;white-space:nowrap;
   transition:background var(--tez),box-shadow var(--tez),transform 80ms ease;
 }
 .tugma:active{transform:scale(.98)}
 .tugma .ic{width:19px;height:19px}
 .tugma-asos{
-  background:linear-gradient(180deg,#1B8A74 0%,var(--asos) 55%,#0A5348 100%);color:#fff;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 1px 2px rgba(8,46,40,.28), 0 8px 18px -6px rgba(8,46,40,.45);
+  background:var(--asos);color:#fff;
+  box-shadow:0 1px 2px rgba(9,9,11,.06);
 }
-.tugma-asos:hover{background:#14836F}
+.tugma-asos:hover{background:var(--asos-hover)}
 .tugma-asos:active{background:var(--asos-toq)}
-.tugma-oq{background:var(--karta);color:#1C2836;box-shadow:var(--soya)}
-.tugma-oq:hover{box-shadow:0 1px 2px rgba(23,26,31,.05),0 10px 28px rgba(23,26,31,.09)}
-.tugma-chiziqli{background:var(--karta);color:#1C2836;border:1px solid var(--kirish-chiziq)}
-.tugma-chiziqli:hover{background:#F1F0E8}
+.tugma-oq{background:#FFFFFF;color:#18181B;border:1px solid var(--chiziq);box-shadow:0 1px 2px rgba(9,9,11,.04)}
+.tugma-oq:hover{background:#FAFAFA;border-color:#D4D4D8}
+.tugma-chiziqli{background:transparent;color:#3F3F46;border:1px solid var(--chiziq)}
+.tugma-chiziqli:hover{background:#F4F4F5}
 .tugma-xavf{background:var(--qizil);color:#fff}
 .tugma-xavf:hover{background:#E14D42}
-.tugma-kichik{height:36px;padding:0 14px;font-size:13.5px;border-radius:10px}
-.tugma-ikonli{width:44px;height:44px;padding:0;border-radius:12px}
+.tugma-kichik{height:32px;padding:0 12px;font-size:13px;border-radius:6px}
+.tugma-ikonli{width:40px;height:40px;padding:0;border-radius:8px}
 
 /* ============ Kartalar ============ */
 .karta{
   background:#FFFFFF;
-  border:1px solid rgba(214,211,196,.65);border-radius:var(--r-karta);
-  box-shadow:var(--soya);padding:22px;
+  border:1px solid var(--chiziq);border-radius:12px;
+  box-shadow:var(--soya);padding:20px;
 }
 .karta-bosh{display:flex;align-items:center;margin-bottom:16px;gap:12px}
-.karta-bosh h2{font-size:17px;font-weight:750;color:#101B29}
+.karta-bosh h2{font-size:17px;font-weight:750;color:#18181B}
 .karta-havola{
   margin-left:auto;display:flex;align-items:center;gap:6px;
   font-size:14.5px;font-weight:650;color:#2B3036;border-radius:8px;
 }
-.karta-havola:hover{color:#101B29}
+.karta-havola:hover{color:#18181B}
 .karta-havola .ic{width:15px;height:15px;color:#555B62}
 
 /* ============ Forma elementlari ============ */
-.maydon-yorliq{display:block;font-size:14.5px;font-weight:600;color:#1C2836;margin-bottom:9px}
+.maydon-yorliq{display:block;font-size:14.5px;font-weight:600;color:#18181B;margin-bottom:9px}
 .kirish{
   display:flex;align-items:center;gap:11px;width:100%;
-  border:1px solid var(--kirish-chiziq);border-radius:12px;height:52px;
+  border:1px solid var(--kirish-chiziq);border-radius:10px;height:44px;
   padding:0 16px;background:var(--karta);
   transition:border-color var(--tez),box-shadow var(--tez);
 }
-.kirish:focus-within{border-color:var(--brend-aksent);box-shadow:0 0 0 3px rgba(185,138,47,.16)}
+.kirish:focus-within{border-color:var(--brend-aksent);box-shadow:0 0 0 3px rgba(79,70,229,.15)}
 .kirish input,.kirish select,.kirish textarea{
   flex:1;border:none;outline:none;background:none;font:inherit;font-size:15px;color:var(--matn);min-width:0;
 }
-.kirish input::placeholder{color:#A6ACB4}
-.kirish .ic{width:20px;height:20px;color:#56626E}
+.kirish input::placeholder{color:#A1A1AA}
+.kirish .ic{width:20px;height:20px;color:#52525B}
 .kirish-katta textarea{padding:14px 0;resize:vertical;min-height:96px}
 .tanlov{
   display:flex;align-items:center;gap:10px;width:100%;
-  border:1px solid var(--kirish-chiziq);border-radius:12px;height:48px;
+  border:1px solid var(--kirish-chiziq);border-radius:10px;height:40px;
   padding:0 16px;text-align:left;background:var(--karta);
   font-size:14.5px;font-weight:500;color:#6A7078;
   transition:border-color var(--tez),background var(--tez);
   position:relative;white-space:nowrap;
 }
-.tanlov:hover{border-color:#D7DAE0;background:#FAF9F4}
-.tanlov .ic{margin-left:auto;width:17px;height:17px;color:#56626E}
-.tanlov.tanlandi{color:#1C2836;font-weight:600}
+.tanlov:hover{border-color:#D4D4D8;background:#FAFAFA}
+.tanlov .ic{margin-left:auto;width:17px;height:17px;color:#52525B}
+.tanlov.tanlandi{color:#18181B;font-weight:600}
 
 /* Checkbox */
-.katakcha{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-size:14.5px;color:#2C3A49;user-select:none}
+.katakcha{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-size:14.5px;color:#3F3F46;user-select:none}
 .katakcha input{position:absolute;opacity:0;width:0;height:0}
 .katakcha .quti{
-  width:22px;height:22px;border-radius:7px;border:1.5px solid #D3D7DC;
+  width:22px;height:22px;border-radius:7px;border:1.5px solid #D4D4D8;
   display:grid;place-items:center;transition:background var(--tez),border-color var(--tez);flex:none;
 }
 .katakcha .quti svg{width:13px;height:13px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity var(--tez)}
@@ -380,18 +373,18 @@ position:relative;}
 
 /* ============ Badge / holat chiplari ============ */
 .chip{
-  display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 10px;
-  border-radius:8px;font-size:12px;font-weight:650;letter-spacing:.01em;white-space:nowrap;
-box-shadow:var(--chuqur-tile-tor);background-image:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,0));}
+  display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;
+  border-radius:6px;font-size:12px;font-weight:600;letter-spacing:.01em;white-space:nowrap;
+box-shadow:none;}
 .chip .nuqta{width:6px;height:6px;border-radius:99px;background:currentColor}
-.chip-asos{background:#E3F1ED;color:#0A5348}
-.chip-kok{background:var(--kok-fon);color:#2F6BCF}
-.chip-sariq{background:var(--sariq-fon);color:#7A5600}
-.chip-qizil{background:var(--qizil-fon);color:#C43C31}
-.chip-kul{background:#EFEEE6;color:#515F6D}
-.chip-binafsha{background:#F3EBFE;color:#8A4BD8}
-.chip-yashil{background:#E6F5EA;color:#1F7A3D}
-.chip-tarvuz{background:#FDEEE4;color:#B85A22}
+.chip-asos{background:var(--asos-fon);color:#3730A3}
+.chip-kok{background:var(--kok-fon);color:#0369A1}
+.chip-sariq{background:var(--sariq-fon);color:#B45309}
+.chip-qizil{background:var(--qizil-fon);color:#B91C1C}
+.chip-kul{background:#F4F4F5;color:#52525B}
+.chip-binafsha{background:#F5F3FF;color:#6D28D9}
+.chip-yashil{background:#ECFDF5;color:#047857}
+.chip-tarvuz{background:#FFF7ED;color:#C2410C}
 
 /* ============ Jadval ============ */
 .jadval-karta{padding:8px 0 0}
@@ -401,59 +394,59 @@ table.jadval{width:100%;border-collapse:collapse}
   position:sticky;top:0;z-index:2;
   font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
   color:var(--matn-4);text-align:left;padding:12px 16px;letter-spacing:.08em;
-  background:linear-gradient(180deg,#FAF9F4 0%,#F1F0E8 100%);
+  background:#FAFAFA;
   border-bottom:1px solid var(--chiziq);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 1px 0 rgba(16,30,48,.04);
+  box-shadow:none;
 }
 .jadval td{
-  padding:14px 18px;border-bottom:1px solid var(--chiziq);
-  font-size:14.5px;color:var(--matn-2);vertical-align:middle;white-space:nowrap;
+  padding:12px 16px;border-bottom:1px solid #F4F4F5;
+  font-size:13.5px;color:var(--matn-2);vertical-align:middle;white-space:nowrap;
 }
 .jadval tbody tr{transition:background var(--tez);cursor:pointer}
 .jadval tbody tr{position:relative}
 .jadval tbody tr:hover{
-  background:#F6F5EE;
-  box-shadow:inset 3px 0 0 var(--asos), 0 1px 0 rgba(16,30,48,.05);
+  background:#FAFAFA;
+  box-shadow:inset 2px 0 0 var(--asos);
 }
 .jadval tbody tr:last-child td{border-bottom:none}
 .jadval .raqam{text-align:right;font-variant-numeric:tabular-nums}
-.jadval b{color:#101B29;font-weight:650}
+.jadval b{color:#18181B;font-weight:600}
 .obyekt-katak{display:flex;align-items:center;gap:12px}
 .obyekt-katak img{width:52px;height:44px;object-fit:cover;border-radius:10px;outline:1px solid rgba(23,26,31,.06);outline-offset:-1px}
-.obyekt-katak .nom{font-size:14.5px;font-weight:650;color:#101B29;line-height:1.3}
+.obyekt-katak .nom{font-size:14.5px;font-weight:650;color:#18181B;line-height:1.3}
 .obyekt-katak .sub{font-size:12.5px;color:var(--matn-4)}
 
 /* Amal tugmalari (jadval qatorida) */
 .amal-tugma{
   width:40px;height:40px;border-radius:10px;display:inline-grid;place-items:center;
-  color:#515F6D;transition:background var(--tez),color var(--tez);
+  color:#52525B;transition:background var(--tez),color var(--tez);
 }
-.amal-tugma:hover{background:#EFEEE6;color:#101B29}
+.amal-tugma:hover{background:#F4F4F5;color:#18181B}
 .amal-tugma .ic{width:17px;height:17px}
-.amal-tugma.xavf:hover{background:var(--qizil-fon);color:#C43C31}
+.amal-tugma.xavf:hover{background:var(--qizil-fon);color:#B91C1C}
 
 /* ============ Pagination ============ */
 .sahifalash{display:flex;align-items:center;gap:8px;padding:16px 18px}
 .sahifalash .oraliq{font-size:13.5px;color:var(--matn-3);margin-right:auto}
 .s-tugma{
   min-width:40px;height:40px;padding:0 8px;border-radius:10px;border:1px solid var(--kirish-chiziq);
-  display:inline-grid;place-items:center;font-size:14px;font-weight:600;color:#2C3A49;
+  display:inline-grid;place-items:center;font-size:14px;font-weight:600;color:#3F3F46;
   transition:background var(--tez),border-color var(--tez);
 }
-.s-tugma:hover{background:#F1F0E8}
+.s-tugma:hover{background:#F4F4F5}
 .s-tugma.aktiv{background:var(--asos);border-color:var(--asos);color:#0B1B29}
 .s-tugma:disabled{opacity:.4;cursor:default}
 
 /* ============ Tab ============ */
-.tablar{display:flex;gap:6px;background:#EFEEE6;border-radius:14px;padding:5px;width:max-content}
+.tablar{display:flex;gap:6px;background:#F4F4F5;border-radius:14px;padding:5px;width:max-content}
 .tab{
-  height:42px;padding:0 20px;border-radius:10px;font-size:14.5px;font-weight:600;color:#515F6D;
+  height:42px;padding:0 20px;border-radius:10px;font-size:14.5px;font-weight:600;color:#52525B;
   transition:background var(--tez),color var(--tez),box-shadow var(--tez);
 }
-.tab:hover{color:#1C2836}
-.tab.aktiv{background:var(--karta);color:#101B29;box-shadow:0 1px 4px rgba(23,26,31,.08)}
-.tab .son{margin-left:8px;font-size:12px;font-weight:700;background:#E3E5E9;border-radius:99px;padding:2px 8px;color:#515F6D}
-.tab.aktiv .son{background:var(--asos-fon);color:#0A5348}
+.tab:hover{color:#18181B}
+.tab.aktiv{background:var(--karta);color:#18181B;box-shadow:0 1px 4px rgba(23,26,31,.08)}
+.tab .son{margin-left:8px;font-size:12px;font-weight:700;background:#E3E5E9;border-radius:99px;padding:2px 8px;color:#52525B}
+.tab.aktiv .son{background:var(--asos-fon);color:#3730A3}
 
 /* ============ Dropdown (popover) ============ */
 .menyu-popover{
@@ -472,8 +465,8 @@ table.jadval{width:100%;border-collapse:collapse}
 .menyu-popover button:hover, .menyu-popover a:hover{background:#F4F5F7}
 .menyu-popover .ic{width:18px;height:18px;color:#6A7078}
 .menyu-popover .ajrat{height:1px;background:var(--chiziq);margin:7px 6px}
-.menyu-popover .xavf{color:#C43C31}
-.menyu-popover .xavf .ic{color:#C43C31}
+.menyu-popover .xavf{color:#B91C1C}
+.menyu-popover .xavf .ic{color:#B91C1C}
 .menyu-popover .belgi{margin-left:auto;color:var(--asos);width:17px;height:17px}
 
 /* ============ Modal ============ */
@@ -486,7 +479,7 @@ table.jadval{width:100%;border-collapse:collapse}
 .modal-fon.ochiq{opacity:1;pointer-events:auto}
 .modal{
   position:relative;overflow:hidden;
-  background:linear-gradient(180deg,#FFFFFF 0%,#FBFAF5 100%);
+  background:linear-gradient(180deg,#FFFFFF 0%,#FCFCFC 100%);
   border:1px solid rgba(255,255,255,.6);border-radius:var(--r-katta);
   box-shadow:inset 0 1px 0 #fff, 0 4px 12px rgba(10,22,38,.14), 0 24px 64px -16px rgba(10,22,38,.38);
   width:min(520px,100%);padding:26px;
@@ -497,7 +490,7 @@ table.jadval{width:100%;border-collapse:collapse}
   background:linear-gradient(90deg,var(--asos),var(--brend-aksent));
 }
 .modal-fon.ochiq .modal{transform:none}
-.modal h3{font-size:18px;font-weight:750;color:#101B29}
+.modal h3{font-size:18px;font-weight:750;color:#18181B}
 .modal .modal-matn{font-size:14.5px;color:var(--matn-2);margin-top:8px;line-height:1.55}
 .modal .modal-harakat{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
 
@@ -517,47 +510,43 @@ table.jadval{width:100%;border-collapse:collapse}
 
 /* ============ Bo'sh holat ============ */
 .bosh-holat{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 24px}
-.bosh-holat .doira{width:52px;height:52px;border-radius:99px;background:#EFEEE6;display:grid;place-items:center;color:#6A7078;margin-bottom:14px}
-.bosh-holat h3{font-size:15.5px;font-weight:700;color:#1C2836}
+.bosh-holat .doira{width:52px;height:52px;border-radius:99px;background:#F4F4F5;display:grid;place-items:center;color:#6A7078;margin-bottom:14px}
+.bosh-holat h3{font-size:15.5px;font-weight:700;color:#18181B}
 .bosh-holat p{font-size:13.5px;color:var(--matn-3);margin:5px 0 16px;max-width:260px}
 
 /* ============ KPI (dashboard + boshqa sahifalar) ============ */
-.kpi-band{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.kpi-band{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;
+  background:var(--chiziq);border:1px solid var(--chiziq);border-radius:12px;overflow:hidden;
+}
 .kpi{
-  position:relative;overflow:hidden;
-  background:linear-gradient(180deg,#FFFFFF 0%,#FBFAF5 100%);
-  border:1px solid rgba(214,211,196,.65);border-radius:var(--r-karta);
-  box-shadow:var(--soya);
-  padding:18px 20px 22px;display:flex;align-items:flex-start;gap:14px;min-height:108px;
-  transition:transform var(--tez),box-shadow var(--tez);
+  position:relative;background:#FFFFFF;border:none;border-radius:0;box-shadow:none;
+  padding:16px 18px 18px;display:flex;align-items:flex-start;gap:12px;min-height:96px;
+  transition:background var(--tez);text-align:left;
 }
-.kpi::after{
-  content:"";position:absolute;left:20px;bottom:14px;width:28px;height:2px;border-radius:2px;
-  background:linear-gradient(90deg,var(--mis-och),var(--mis-toq));
-  opacity:.55;transition:width var(--tez),opacity var(--tez);pointer-events:none;
-}
-.kpi:hover::after{width:48px;opacity:.9}
-.kpi:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(16,30,48,.06), 0 10px 22px -4px rgba(16,30,48,.13), 0 22px 48px -20px rgba(16,30,48,.22)}
+.kpi:hover{background:#FCFCFD}
+.kpi::after{content:none}
+
 .kpi-tile{
-  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;
-  box-shadow:var(--chuqur-tile);position:relative;overflow:hidden;
-  align-self:flex-start;margin-top:2px;
+  width:34px;height:34px;border-radius:8px;display:grid;place-items:center;flex:none;
+  box-shadow:none;position:relative;overflow:hidden;
+  align-self:flex-start;margin-top:2px;border:1px solid var(--chiziq);background:#FAFAFA;
 }
-.kpi-tile::after{
+.kpi-tile::after{content:none;/*
   content:"";position:absolute;left:0;right:0;top:0;height:52%;border-radius:16px 16px 60% 60%;
-  background:linear-gradient(180deg,rgba(255,255,255,.30),rgba(255,255,255,0));pointer-events:none;
+  background:none;*/
 }
-.kpi-tile.dark{background:var(--tile-dark-3d);color:var(--tile-dark-ikon)}
-.kpi-tile.lime{background:var(--tile-och-3d);color:var(--tile-och-ikon)}
-.kpi-tile .ic{width:20px;height:20px;stroke-width:1.7;position:relative;z-index:1}
+.kpi-tile.dark{background:#F4F4F5;color:#52525B;border-color:var(--chiziq)}
+.kpi-tile.lime{background:var(--asos-fon);color:var(--asos);border-color:#E0E7FF}
+.kpi-tile .ic{width:17px;height:17px;stroke-width:1.8;position:relative;z-index:1}
 .kpi-matn{min-width:0}
 .kpi-yorliq{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--matn-4)}
 .kpi-qiymat{display:flex;align-items:baseline;gap:10px;margin-top:7px;flex-wrap:wrap}
-.kpi-qiymat b{font-size:28px;font-weight:700;letter-spacing:-.03em;color:var(--matn);line-height:1.12;white-space:normal;font-variant-numeric:tabular-nums;overflow-wrap:normal}
+.kpi-qiymat b{font-family:var(--shrift-serif);font-size:26px;font-weight:650;letter-spacing:-.03em;color:var(--matn);line-height:1.12;white-space:normal;font-variant-numeric:tabular-nums;overflow-wrap:normal}
 .kpi-qiymat b small{white-space:nowrap}
 .kpi-qiymat b small{font-size:19px;font-weight:700;letter-spacing:0}
-.delta{font-size:14px;font-weight:650;color:var(--delta);white-space:nowrap}
-.delta.salbiy{color:#D8432F}
+.delta{font-size:12px;font-weight:600;color:#047857;background:#ECFDF5;border-radius:6px;padding:2px 7px;white-space:nowrap}
+.delta.salbiy{color:#B91C1C;background:#FEF2F2}
 .kpi-izoh{font-size:12.5px;color:var(--matn-3);margin-top:5px}
 
 /* ============ Tezkor havola kartalari (umumiy) ============ */
@@ -572,14 +561,14 @@ table.jadval{width:100%;border-collapse:collapse}
 .havola-karta .ic{width:20px;height:20px}
 .havola-karta b{display:block;font-size:14.5px;font-weight:700}
 .havola-karta span{display:block;font-size:12.5px;color:var(--matn-4);margin-top:1px}
-.havola-karta .strelka{margin-left:auto;width:16px;height:16px;color:#6B7684;flex:none}
+.havola-karta .strelka{margin-left:auto;width:16px;height:16px;color:#71717A;flex:none}
 
 /* ============ Legend qatori ============ */
 .legend{display:flex;flex-direction:column;gap:13px}
 .legend-qator{display:flex;align-items:center;gap:10px;font-size:14.5px}
 .legend-qator .nuqta{width:9px;height:9px;border-radius:99px;flex:none}
 .legend-qator .nomi{color:#3F454C;font-weight:500}
-.legend-qator b{margin-left:auto;font-weight:650;color:#101B29;font-variant-numeric:tabular-nums;white-space:nowrap}
+.legend-qator b{margin-left:auto;font-weight:650;color:#18181B;font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* ============ Xarita (Leaflet/OpenStreetMap) — umumiy ============ */
 .pin-chip{
@@ -633,7 +622,7 @@ table.jadval{width:100%;border-collapse:collapse}
 /* Bo'lim ichidagi sahifalar tab'lari — sidebar'ni yengillatish uchun */
 .bolim-tablar{
   display:inline-flex;gap:3px;flex-wrap:wrap;align-self:flex-start;
-  background:linear-gradient(180deg,#EFEEE6 0%,#E6ECF3 100%);
+  background:linear-gradient(180deg,#F4F4F5 0%,#E6ECF3 100%);
   border:1px solid rgba(214,224,235,.9);border-radius:12px;padding:4px;
   box-shadow:inset 0 1px 2px rgba(16,30,48,.06);margin:-2px 0 2px;
 }
@@ -645,7 +634,7 @@ table.jadval{width:100%;border-collapse:collapse}
 .bolim-tablar a:hover{color:var(--matn);background:rgba(255,255,255,.6)}
 .bolim-tablar a.aktiv{
   color:var(--asos-toq);font-weight:750;
-  background:linear-gradient(180deg,#FFFFFF 0%,#F8F7F1 100%);
+  background:linear-gradient(180deg,#FFFFFF 0%,#FAFAFA 100%);
   box-shadow:inset 0 1px 0 #fff, 0 1px 2px rgba(16,30,48,.10), 0 4px 10px -3px rgba(16,30,48,.16);
 }
 
@@ -656,7 +645,7 @@ table.jadval{width:100%;border-collapse:collapse}
   box-shadow:0 1px 2px rgba(16,30,48,.18);
 }
 .holat-lenta{box-shadow:var(--soya);border-color:rgba(230,234,240,.9)}
-.hl-band{background:linear-gradient(180deg,#FFFFFF 0%,#FBFAF5 100%)}
+.hl-band{background:linear-gradient(180deg,#FFFFFF 0%,#FCFCFC 100%)}
 .hl-band:hover{background:linear-gradient(180deg,#FFFFFF 0%,#F4F9FE 100%)}
 
 /* Yon panel kartalari — yuqori qirrada firma aksenti */
@@ -697,7 +686,7 @@ table.jadval{width:100%;border-collapse:collapse}
   transition:transform var(--tez);transform-origin:50% 100%;
 }
 .pin-pro:hover svg{transform:scale(1.12) translateY(-2px)}
-.pin-pro.muhim svg{filter:drop-shadow(0 1px 1px rgba(10,22,38,.30)) drop-shadow(0 6px 12px rgba(10,22,38,.45)) drop-shadow(0 0 7px rgba(14,107,92,.45))}
+.pin-pro.muhim svg{filter:drop-shadow(0 1px 1px rgba(10,22,38,.30)) drop-shadow(0 6px 12px rgba(10,22,38,.45)) drop-shadow(0 0 7px rgba(79,70,229,.45))}
 
 .klaster{background:none;border:none}
 .klaster > span{

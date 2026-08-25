@@ -141,7 +141,7 @@ function zaxiraHisobiOl() {
 test("функция извлекается из исходника (private, не в экспортах MKB_DATA)", () => {
   const zx = zaxiraHisobiOl();
   eq(typeof zx, "function");
-  eq(zx.length, 3, "ожидается сигнатура (qarzJami, garovBaho, foiz)");
+  eq(zx.length, 3, "ожидается сигнатура (qarzJami, ta'minotBaho, foiz)");
   eq("zaxiraHisobi" in D, false, "если функцию экспортировали — перевести тесты на прямой вызов");
 });
 
@@ -174,9 +174,9 @@ test("округление до 0.1 млн: 24.9975 -> 25, 49.99 -> 50", () => {
   eq(r.ochiq, 50, "остаток округляется до одной десятой");
 });
 
-test("извлечённая функция совпадает с той, что заполнила запись GR-2025/1187", () => {
-  const y = D.topish("GR-2025/1187");
-  const r = zaxiraHisobiOl()(y.qarz.jami, y.garov.baho, y.tasnif.zaxira);
+test("извлечённая функция совпадает с той, что заполнила запись AK-2025/1187", () => {
+  const y = D.topish("AK-2025/1187");
+  const r = zaxiraHisobiOl()(y.qarz.jami, y.mulk.baho, y.tasnif.zaxira);
   eq(r.zaxira, y.zaxira);
   eq(r.ochiq, y.ochiqQoldiq);
   eq(r.qoplash, y.qoplash);
@@ -252,22 +252,22 @@ test("каждый obyektId вторичных коллекций разреша
 });
 
 test("несуществующий id: obyektNomi даёт префикс «?», obyekt() даёт null", () => {
-  eq(D.obyektNomi("GR-9999/0000"), "?GR-9999/0000");
-  eq(D.obyektNomi("GR-9999/0000", true), "?GR-9999/0000", "короткая форма тоже помечается");
-  eq(D.obyekt("GR-9999/0000"), null);
+  eq(D.obyektNomi("AK-9999/0000"), "?AK-9999/0000");
+  eq(D.obyektNomi("AK-9999/0000", true), "?AK-9999/0000", "короткая форма тоже помечается");
+  eq(D.obyekt("AK-9999/0000"), null);
 });
 
 test("короткое и полное имя различаются; без qisqa короткое падает на nom", () => {
-  eq(D.obyektNomi("GR-2025/0934", true), "Navruz Plaza");
-  eq(D.obyektNomi("GR-2025/0934"), "Navruz Plaza, 3-qavat savdo maydoni");
-  /* архивная запись GR-2023/0088 задана без qisqa */
-  eq(D.obyektNomi("GR-2023/0088", true), D.obyektNomi("GR-2023/0088"));
+  eq(D.obyektNomi("AK-2025/0934", true), "Navruz Plaza");
+  eq(D.obyektNomi("AK-2025/0934"), "Navruz Plaza, 3-qavat savdo maydoni");
+  /* архивная запись AK-2023/0088 задана без qisqa */
+  eq(D.obyektNomi("AK-2023/0088", true), D.obyektNomi("AK-2023/0088"));
 });
 
 test("joyNomi: разделитель по умолчанию, свой разделитель, без внутренней части", () => {
-  eq(D.joyNomi("GR-2025/0934", "1-qavat"), "Navruz Plaza, 1-qavat");
-  eq(D.joyNomi("GR-2025/0934", "3-qavat", " · "), "Navruz Plaza · 3-qavat");
-  eq(D.joyNomi("GR-2025/0934"), "Navruz Plaza", "без ichki — только короткое имя");
+  eq(D.joyNomi("AK-2025/0934", "1-qavat"), "Navruz Plaza, 1-qavat");
+  eq(D.joyNomi("AK-2025/0934", "3-qavat", " · "), "Navruz Plaza · 3-qavat");
+  eq(D.joyNomi("AK-2025/0934"), "Navruz Plaza", "без ichki — только короткое имя");
 });
 
 /* ============================================================
@@ -301,29 +301,29 @@ test("zaxira = jami * ставка / 100 c округлением до 0.1 (вс
 
 test("qoplash = round(baho/jami*100); ochiqQoldiq >= 0 и равен непокрытой части", () => {
   D.YOZUVLAR.forEach(y => {
-    eq(y.qoplash, Math.round(y.garov.baho / y.qarz.jami * 100), y.id + " qoplash");
+    eq(y.qoplash, Math.round(y.mulk.baho / y.qarz.jami * 100), y.id + " qoplash");
     ok(y.ochiqQoldiq >= 0, y.id + ": отрицательный непокрытый остаток");
     eq(y.ochiqQoldiq,
-      +(y.qarz.jami - Math.min(y.garov.baho, y.qarz.jami)).toFixed(1),
+      +(y.qarz.jami - Math.min(y.mulk.baho, y.qarz.jami)).toFixed(1),
       y.id + " ochiqQoldiq");
   });
 });
 
 /* Контрольные точки текущего датасета, посчитанные вручную. Они дают
    тесту способность падать независимо от формул выше. */
-test("контрольные точки: GR-2026/4471, GR-2026/0141, GR-2025/1187", () => {
-  const a = D.topish("GR-2026/4471");        /* 214 дн. -> umidsiz, 100% */
+test("контрольные точки: AK-2026/4471, AK-2026/0141, AK-2025/1187", () => {
+  const a = D.topish("AK-2026/4471");        /* 214 дн. -> umidsiz, 100% */
   eq(a.qarz.jami, 486.2); eq(a.tasnif.kalit, "umidsiz");
   eq(a.zaxira, 486.2); eq(a.qoplash, 107); eq(a.ochiqQoldiq, 0);
 
-  const b = D.topish("GR-2026/0141");        /* 34 дн. -> substandart, 25% */
+  const b = D.topish("AK-2026/0141");        /* 34 дн. -> substandart, 25% */
   eq(b.qarz.jami, 38.6); eq(b.tasnif.kalit, "substandart");
   eq(b.zaxira, 9.7, "25% от 38.6 — то же число названо в BILDIRISHLAR");
   /* baho теперь производная от BAHOLASHLAR (155.0 от 12.05.2026),
      а не устаревшие 620 из карточки: 155/38.6 = 402% */
   eq(b.qoplash, 402);
 
-  const c = D.topish("GR-2025/1187");        /* 402 дн. -> umidsiz */
+  const c = D.topish("AK-2025/1187");        /* 402 дн. -> umidsiz */
   eq(c.tasnif.kalit, "umidsiz"); eq(c.zaxira, 3840.4); eq(c.ochiqQoldiq, 0);
 });
 
@@ -362,23 +362,23 @@ test("мутация в пределах допуска ±0.05 (+0.04) нару�
 
 test("мутация: битый obyektId в HODISALAR ловится как «obyekt havolasi uzilgan»", () => {
   const M = yukla();
-  M.HODISALAR[0].obyektId = "GR-0000/0000";
+  M.HODISALAR[0].obyektId = "AK-0000/0000";
   const xato = M.moslikTekshiruvi();
   eq(xato.length, 1, "ошибки: " + xato.join(" | "));
   ok(/obyekt havolasi uzilgan/.test(xato[0]), "не тот текст: " + xato[0]);
-  ok(xato[0].includes("GR-0000/0000"), "в ошибке нет битого id: " + xato[0]);
+  ok(xato[0].includes("AK-0000/0000"), "в ошибке нет битого id: " + xato[0]);
   ok(xato[0].includes(M.HODISALAR[0].kod), "в ошибке нет кода события: " + xato[0]);
 });
 
 test("мутация: статус UCHASTKALAR, оторванный от этапа дела, ловится (Д-2)", () => {
   const M = yukla();
-  const u = M.UCHASTKALAR.find(x => x.kod === "GR-2025/0755");
-  ok(u, "в UCHASTKALAR нет участка GR-2025/0755");
-  u.status = "Garovda";                       /* по этапу mib должно быть «Musodara jarayonida» */
+  const u = M.UCHASTKALAR.find(x => x.kod === "AK-2025/0755");
+  ok(u, "в UCHASTKALAR нет участка AK-2025/0755");
+  u.status = "Ta'minotda";                       /* по этапу ijro должно быть «Musodara jarayonida» */
   const xato = M.moslikTekshiruvi();
   eq(xato.length, 1, "ошибки: " + xato.join(" | "));
   ok(/uchastka statusi ish bosqichiga mos emas/.test(xato[0]), "не тот текст: " + xato[0]);
-  ok(xato[0].includes("GR-2025/0755"), "в ошибке нет кода участка: " + xato[0]);
+  ok(xato[0].includes("AK-2025/0755"), "в ошибке нет кода участка: " + xato[0]);
 });
 
 /* ============================================================

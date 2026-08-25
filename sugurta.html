@@ -6,8 +6,8 @@
 <title>MKB — Sug'urta nazorati</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082503">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082602">
 <style>
 /* ---- Sug'urta nazorati: polislar amal qilishi ---- */
 .sg-ustun{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
@@ -15,10 +15,10 @@
 
 .sg-jadval .son{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sg-holat{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
-.sg-amalda{background:#E6F5EA;color:#1F7A3D}
-.sg-tugaydi{background:#FFF6DE;color:#7A5600}
-.sg-otgan{background:#FDEEEC;color:#C43C31}
-.sg-yoq{background:#EFEEE6;color:#515F6D}
+.sg-amalda{background:#ECFDF5;color:#047857}
+.sg-tugaydi{background:#FFFBEB;color:#B45309}
+.sg-otgan{background:#FEF2F2;color:#B91C1C}
+.sg-yoq{background:#F4F4F5;color:#52525B}
 
 /* Qamrov ko'rsatkichi: sug'urta summasi / baholangan qiymat */
 .qam-iz{position:relative;height:6px;border-radius:99px;background:var(--chiziq);min-width:64px;overflow:hidden}
@@ -35,7 +35,7 @@
 @media (max-width:1320px){ .sg-ustun{grid-template-columns:1fr} }
 </style>
 </head>
-<body data-sahifa="garov" data-topbar-sarlavha="Sug'urta nazorati" data-topbar-ikon="i-qalqon">
+<body data-sahifa="aktivlar" data-topbar-sarlavha="Sug'urta nazorati" data-topbar-ikon="i-qalqon">
 
 <div class="app">
 <aside class="sidebar" data-shell-sidebar></aside>
@@ -47,7 +47,7 @@
     <div class="sahifa-qator">
       <div>
         <h1>Sug'urta nazorati</h1>
-        <div class="sahifa-izoh">Garov obyektlari bo'yicha polislar amal qilishi va qamrov nazorati</div>
+        <div class="sahifa-izoh">Aktiv obyektlari bo'yicha polislar amal qilishi va qamrov nazorati</div>
       </div>
       <div class="sahifa-harakat">
         <button class="tanlov" id="f-holat" data-variantlar='["Barcha holatlar","Amalda","Tez orada tugaydi","Muddati o&#39;tgan","Polis yo&#39;q"]'><span class="t-yorliq">Barcha holatlar</span><svg class="ic"><use href="#i-past"/></svg></button>
@@ -106,13 +106,13 @@
       <aside class="karta" aria-label="Sug'urta talablari">
         <div class="karta-bosh"><h3>Talab va tartib</h3></div>
         <div class="tr-band"><svg class="ic"><use href="#i-qalqon"/></svg>
-          <div><b>Qamrov — baholangan qiymatdan kam emas</b><p>Sug'urta summasi garovning joriy baholangan qiymatini to'liq qoplashi shart.</p></div></div>
+          <div><b>Qamrov — baholangan qiymatdan kam emas</b><p>Sug'urta summasi ta'minotning joriy baholangan qiymatini to'liq qoplashi shart.</p></div></div>
         <div class="tr-band"><svg class="ic"><use href="#i-bank"/></svg>
           <div><b>Naf oluvchi — bank</b><p>Polisda naf oluvchi sifatida bank ko'rsatiladi; o'zgartirish bank roziligisiz taqiqlanadi.</p></div></div>
         <div class="tr-band"><svg class="ic"><use href="#i-soat"/></svg>
           <div><b>Uzaytirish — muddatdan 30 kun oldin</b><p>Tugashiga 30 kun qolganda qarzdorga yozma talabnoma yuboriladi.</p></div></div>
         <div class="tr-band"><svg class="ic"><use href="#i-ogoh"/></svg>
-          <div><b>Qamrovsiz obyekt — hodisa</b><p>Polis muddati o'tsa, garov hodisasi ochiladi va ish yurituvchiga topshiriq tushadi.</p></div></div>
+          <div><b>Qamrovsiz obyekt — hodisa</b><p>Polis muddati o'tsa, aktiv hodisasi ochiladi va ish yurituvchiga topshiriq tushadi.</p></div></div>
         <div class="tr-band"><svg class="ic"><use href="#i-hujjat"/></svg>
           <div><b>Yer uchastkalari sug'urtalanmaydi</b><p>Qonunchilikka ko'ra yer sug'urta predmeti emas; qamrov faqat inshootlarga taalluqli.</p></div></div>
       </aside>
@@ -121,9 +121,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082503"></script>
-<script src="tarjima.js?v=26082503"></script>
-<script src="mkb.js?v=26082503"></script>
+<script src="malumot.js?v=26082602"></script>
+<script src="tarjima.js?v=26082602"></script>
+<script src="mkb.js?v=26082602"></script>
 <script>
 const D = MKB_DATA;
 const pul = D.pul, f = D.fmt;
@@ -152,10 +152,10 @@ document.getElementById("sg-jadval").innerHTML = D.SUGURTALAR
   .filter(g => !fHolat || g.holat === fHolat)
   .map(g => {
   const y = D.YOZUVLAR.find(z => z.id === g.obyektId);
-  const baho = y ? y.garov.baho : 0;
-  const yer  = y && y.garov.tur === "Yer uchastkasi";
+  const baho = y ? y.mulk.baho : 0;
+  const yer  = y && y.mulk.tur === "Yer uchastkasi";
   const qamrov = baho > 0 && g.summa > 0 ? Math.round(g.summa / baho * 100) : 0;
-  const rang = qamrov >= 100 ? "#2E9E52" : qamrov >= 70 ? "#D98324" : "#C0392B";
+  const rang = qamrov >= 100 ? "#059669" : qamrov >= 70 ? "#D98324" : "#B91C1C";
   const [cls, nom] = HOLAT[g.holat];
   return `
   <tr>
@@ -167,7 +167,7 @@ document.getElementById("sg-jadval").innerHTML = D.SUGURTALAR
       ? '<span style="font-size:12px;color:var(--matn-4)">talab etilmaydi</span>'
       : g.summa > 0
         ? `<div class="qam-iz"><i style="width:${Math.min(qamrov, 100)}%;background:${rang}"></i></div><div class="qam-matn">${qamrov}%</div>`
-        : '<span style="font-size:12px;color:#C43C31">qamrov yo&#39;q</span>'}</td>
+        : '<span style="font-size:12px;color:#B91C1C">qamrov yo&#39;q</span>'}</td>
     <td style="white-space:nowrap">${g.tugash}</td>
     <td><span class="sg-holat ${cls}">${yer && g.holat === "yoq" ? "Talab etilmaydi" : nom}</span></td>
   </tr>`;

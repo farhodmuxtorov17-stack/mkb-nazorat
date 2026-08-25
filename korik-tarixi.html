@@ -6,17 +6,17 @@
 <title>MKB — Ko'riklar tarixi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082503">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082602">
 <style>
 /* ---- Ko'riklar tarixi: xronologik jurnal ---- */
 .kt-filtr{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 
 .kt-jadval .son{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .kt-holat{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
-.kt-otdi{background:#E6F5EA;color:#1F7A3D}
-.kt-reja{background:var(--kok-fon);color:#2A61BE}
-.kt-otgan{background:#FDEEEC;color:#C43C31}
+.kt-otdi{background:#ECFDF5;color:#047857}
+.kt-reja{background:var(--kok-fon);color:#0369A1}
+.kt-otgan{background:#FEF2F2;color:#B91C1C}
 .kt-ball{font-weight:780;font-variant-numeric:tabular-nums}
 
 /* Yig'ma statistika paneli */
@@ -35,7 +35,7 @@
 @media (max-width:1320px){ .kt-ustun{grid-template-columns:1fr} }
 </style>
 </head>
-<body data-sahifa="garov" data-topbar-sarlavha="Ko'riklar tarixi" data-topbar-ikon="i-soat">
+<body data-sahifa="aktivlar" data-topbar-sarlavha="Ko'riklar tarixi" data-topbar-ikon="i-soat">
 
 <div class="app">
 <aside class="sidebar" data-shell-sidebar></aside>
@@ -82,9 +82,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082503"></script>
-<script src="tarjima.js?v=26082503"></script>
-<script src="mkb.js?v=26082503"></script>
+<script src="malumot.js?v=26082602"></script>
+<script src="tarjima.js?v=26082602"></script>
+<script src="mkb.js?v=26082602"></script>
 <script>
 const D = MKB_DATA;
 
@@ -97,7 +97,7 @@ const HOLAT_TANLOV = {"O'tkazildi": "otkazildi", "Rejada": "rejada", "Muddati o'
 
 let fObyekt = null, fHolat = null;
 
-function ballRang(b){ return b >= 80 ? "#1F7A3D" : b >= 60 ? "#B45309" : "#C0392B"; }
+function ballRang(b){ return b >= 80 ? "#047857" : b >= 60 ? "#B45309" : "#B91C1C"; }
 
 function chiz(){
   const royxat = D.KORIKLAR.filter(k =>
@@ -128,7 +128,7 @@ document.getElementById("f-holat").addEventListener("tanlov", e => {
 });
 
 /* ---- Yig'ma statistika (Д-7 — jurnal massivdan hisoblanadi) ---- */
-const RANG = {otkazildi: "#2E9E52", rejada: "#3E7BD6", muddati_otgan: "#C0392B"};
+const RANG = {otkazildi: "#059669", rejada: "#3E7BD6", muddati_otgan: "#B91C1C"};
 const guruh = Object.keys(HOLAT).map(h => ({
   h, nom: HOLAT[h][1], son: D.KORIKLAR.filter(k => k.holat === h).length
 }));

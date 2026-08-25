@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MKB — Garov monitoringi</title>
+<title>MKB — Aktivlar monitoringi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082503">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082602">
 <style>
-/* ---- Garov monitoringi: nazorat holati bo'yicha yig'ma ekran ---- */
+/* ---- Aktivlar monitoringi: nazorat holati bo'yicha yig'ma ekran ---- */
 .mn-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
 .mn-ustun > *{min-width:0}
 
@@ -29,9 +29,9 @@
 /* Holat belgilari: uch nazorat o'qi */
 .mn-belgi{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
 .mn-belgi .ic{width:11px;height:11px}
-.b-yaxshi{background:#E6F5EA;color:#1F7A3D}
-.b-ogoh{background:#FFF6DE;color:#7A5600}
-.b-xavf{background:#FDEEEC;color:#C43C31}
+.b-yaxshi{background:#ECFDF5;color:#047857}
+.b-ogoh{background:#FFFBEB;color:#B45309}
+.b-xavf{background:#FEF2F2;color:#B91C1C}
 
 /* O'ng panel: e'tibor talab qilinadigan holatlar */
 .et-band{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--chiziq)}
@@ -49,7 +49,7 @@
 @media (max-width:1320px){ .mn-ustun{grid-template-columns:1fr} }
 </style>
 </head>
-<body data-sahifa="garov" data-topbar-sarlavha="Garov monitoringi" data-topbar-ikon="i-monitor">
+<body data-sahifa="aktivlar" data-topbar-sarlavha="Aktivlar monitoringi" data-topbar-ikon="i-monitor">
 
 <div class="app">
 <aside class="sidebar" data-shell-sidebar></aside>
@@ -60,7 +60,7 @@
   <main class="kontent">
     <div class="sahifa-qator">
       <div>
-        <h1>Garov monitoringi</h1>
+        <h1>Aktivlar monitoringi</h1>
         <div class="sahifa-izoh">Har bir obyekt bo'yicha ko'rik, sug'urta va baholash holati — bir ekranda</div>
       </div>
       <div class="sahifa-harakat">
@@ -94,7 +94,7 @@
           <div class="kpi-izoh"><span id="k-baho-izoh">—</span></div>
         </div>
       </button>
-      <button class="kpi" data-toast="Ochiq garov hodisalari — yuridik ish bo'limida">
+      <button class="kpi" data-toast="Ochiq aktiv hodisalari — yuridik ish bo'limida">
         <span class="kpi-tile dark"><svg class="ic"><use href="#i-ogoh"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Ochiq hodisalar</div>
@@ -129,9 +129,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082503"></script>
-<script src="tarjima.js?v=26082503"></script>
-<script src="mkb.js?v=26082503"></script>
+<script src="malumot.js?v=26082602"></script>
+<script src="tarjima.js?v=26082602"></script>
+<script src="mkb.js?v=26082602"></script>
 <script>
 const D = MKB_DATA;
 
@@ -172,24 +172,24 @@ function bahoHolati(id){
 const HOLAT_SOZ = {"b-yaxshi": "holat yaxshi", "b-ogoh": "e'tibor talab qilinadi", "b-xavf": "muammo"};
 const belgi = h => `<span class="mn-belgi ${h.cls}"><svg class="ic" aria-hidden="true"><use href="#${h.ikon}"/></svg><span class="sr-only">${HOLAT_SOZ[h.cls]}: </span>${h.matn}</span>`;
 
-function ballRang(b){ return b >= 80 ? "#1F7A3D" : b >= 60 ? "#B45309" : "#C0392B"; }
+function ballRang(b){ return b >= 80 ? "#047857" : b >= 60 ? "#B45309" : "#B91C1C"; }
 
 let fHudud = null;
 function jadvalChiz(){
 document.getElementById("mn-jadval").innerHTML = D.YOZUVLAR
-  .filter(y => !fHudud || y.garov.hudud === fHudud)
+  .filter(y => !fHudud || y.mulk.hudud === fHudud)
   .map(y => `
-  <tr class="mn-qator" data-id="${y.id}" tabindex="0" role="link" aria-label="${y.garov.qisqa} kartochkasini ochish">
+  <tr class="mn-qator" data-id="${y.id}" tabindex="0" role="link" aria-label="${y.mulk.qisqa} kartochkasini ochish">
     <td>
       <div class="mn-obyekt">
-        <img src="${y.garov.rasmKichik}" alt="" loading="lazy" width="44" height="44">
-        <div><b>${y.garov.qisqa}</b><span>${y.id} · ${y.garov.hudud}</span></div>
+        <img src="${y.mulk.rasmKichik}" alt="" loading="lazy" width="44" height="44">
+        <div><b>${y.mulk.qisqa}</b><span>${y.id} · ${y.mulk.hudud}</span></div>
       </div>
     </td>
     <td><span class="chip ${y.bosqichChip}">${y.bosqichNomi}</span></td>
     <td>
-      <div class="ball-iz"><i style="width:${y.garov.nazoratBall}%;background:${ballRang(y.garov.nazoratBall)}"></i></div>
-      <div class="ball-matn">${y.garov.nazoratBall} / 100</div>
+      <div class="ball-iz"><i style="width:${y.mulk.nazoratBall}%;background:${ballRang(y.mulk.nazoratBall)}"></i></div>
+      <div class="ball-matn">${y.mulk.nazoratBall} / 100</div>
     </td>
     <td>${belgi(korikHolati(y.id))}</td>
     <td>${belgi(sugurtaHolati(y.id))}</td>
@@ -230,8 +230,8 @@ D.BAHOLASHLAR.filter(b => b.holat === "eskirgan").forEach(b => etibor.push({
 }));
 
 const tile = t => t === "xavf"
-  ? 'style="background:#FDEEEC;color:#C43C31"'
-  : 'style="background:#FFF6DE;color:#7A5600"';
+  ? 'style="background:#FEF2F2;color:#B91C1C"'
+  : 'style="background:#FFFBEB;color:#B45309"';
 
 document.getElementById("mn-etibor").innerHTML = etibor.map(e => `
   <div class="et-band">
