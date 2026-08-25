@@ -45,6 +45,7 @@
 <script src="malumot-qoshimcha.js?v=26082610"></script>
 <script src="tarjima.js?v=26082610"></script>
 <script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/chizma.js?v=26082610"></script>
 <script src="yadro/api.js?v=26082610"></script>
 <script src="yadro/app.js?v=26082610"></script>
 <script>
@@ -59,14 +60,9 @@ document.addEventListener("mkb:tayyor", async () => {
   arxiv.forEach(a => yillar[a.yil] = (yillar[a.yil] || 0) + MKB.sonQiymat(a.summa));
   const juft = Object.entries(yillar).sort();
   const maks = Math.max(...juft.map(v => v[1]));
-  document.getElementById("sn-grafik").innerHTML =
-    '<div style="display:flex;align-items:flex-end;gap:22px;height:170px">' +
-    juft.map(([yil, v], i) =>
-      '<div style="flex:1;max-width:110px;display:flex;flex-direction:column;align-items:center;gap:6px">' +
-        '<span class="pul" style="font-size:12px">' + MKB.fmt(Math.round(v)) + '</span>' +
-        '<div style="width:100%;max-width:56px;height:' + Math.round(v / maks * 120) + 'px;border-radius:9px 9px 3px 3px;background:' +
-        (i === juft.length - 1 ? 'var(--brend)' : 'var(--siyoh)') + '"></div>' +
-        '<span style="font-size:11px;color:var(--iz)">' + yil + '</span></div>').join("") + '</div>';
+  MKBchizma.ustun("sn-grafik", {yorliqlar: juft.map(v => v[0]),
+    qiymatlar: juft.map(v => Math.round(v[1])), balandlik: 200, en: 54,
+    tooltipFormat: v => MKB.fmt(v) + " mln so'm"});
   const turlar = {};
   arxiv.forEach(a => turlar[a.tur] = (turlar[a.tur] || 0) + 1);
   const maks2 = Math.max(...Object.values(turlar));

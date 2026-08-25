@@ -44,6 +44,7 @@
 <script src="malumot-qoshimcha.js?v=26082610"></script>
 <script src="tarjima.js?v=26082610"></script>
 <script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/chizma.js?v=26082610"></script>
 <script src="yadro/api.js?v=26082610"></script>
 <script src="yadro/app.js?v=26082610"></script>
 <script>
@@ -82,7 +83,8 @@ document.addEventListener("mkb:tayyor", async () => {
   const yillar = {};
   arxiv.forEach(a => yillar[a.yil] = (yillar[a.yil] || 0) + MKB.sonQiymat(a.summa));
   const juft = Object.entries(yillar).sort();
-  ustunBar("hr-yil", juft.map(v => v[0]), juft.map(v => Math.round(v[1])));
+  MKBchizma.ustun("hr-yil", {yorliqlar: juft.map(v => v[0]), qiymatlar: juft.map(v => Math.round(v[1])),
+    balandlik: 200, tooltipFormat: v => MKB.fmt(v) + " mln"});
 });
 </script>
 </body>

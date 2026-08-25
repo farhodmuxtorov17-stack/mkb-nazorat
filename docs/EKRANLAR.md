@@ -17,7 +17,7 @@ Jami: **127 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 
 | Fayl | Ekran | Izoh |
 |---|---|---|
-| `panel.html` | Boshqaruv paneli | Administrator paneli |
+| `panel.html` | Boshqaruv paneli | Flagman dashbord: jonli grafiklar |
 | `panel-filial.html` | Filial paneli | Filial rahbari paneli |
 | `panel-kredit.html` | Kredit paneli | Kredit menejeri paneli |
 | `panel-aktiv.html` | Aktivlar paneli | Aktivlar mutaxassisi paneli |

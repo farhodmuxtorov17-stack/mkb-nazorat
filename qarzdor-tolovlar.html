@@ -46,6 +46,7 @@
 <script src="malumot-qoshimcha.js?v=26082610"></script>
 <script src="tarjima.js?v=26082610"></script>
 <script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/chizma.js?v=26082610"></script>
 <script src="yadro/api.js?v=26082610"></script>
 <script src="yadro/app.js?v=26082610"></script>
 <script>
@@ -71,12 +72,8 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("t-daraja").innerHTML = Math.round((t.length - otk) / t.length * 100) + "<small>%</small>";
   const oxirgiIdx = t.lastIndexOf(true);
   document.getElementById("t-oxirgi").textContent = oxirgiIdx < 0 ? "—" : OYLAR[oxirgiIdx];
-  document.getElementById("t-grafik").innerHTML =
-    '<div style="display:flex;align-items:flex-end;gap:8px;height:120px">' +
-    t.map((v, i) => '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">' +
-      '<div style="width:100%;max-width:30px;border-radius:6px 6px 2px 2px;height:' + (v ? 60 + ((i * 7) % 34) : 14) + '%;background:' +
-      (v ? 'var(--siyoh)' : 'var(--xavf)') + '"></div>' +
-      '<span style="font-size:10.5px;color:var(--iz)">' + OYLAR[i] + '</span></div>').join("") + '</div>';
+  MKBchizma.ustun("t-grafik", {yorliqlar: OYLAR, qiymatlar: t.map(v => v ? oylik : 0),
+    balandlik: 180, urgu: -1, tooltipFormat: v => v ? String(v).replace(".", ",") + " mln" : "to'lov yo'q"});
   document.getElementById("t-jadval").innerHTML =
     '<div class="jadval-orash"><table class="jadval"><thead><tr><th>Oy</th><th>Reja</th><th>Fakt</th><th>Holat</th></tr></thead><tbody>' +
     t.map((v, i) => '<tr><td>' + OYLAR[i] + ', ' + (i < 4 ? '2025' : '2026') + '</td>' +

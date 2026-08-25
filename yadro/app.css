@@ -41,8 +41,14 @@
 html{-webkit-font-smoothing:antialiased;text-size-adjust:100%}
 body{
   font:400 14px/1.5 var(--shrift);color:var(--siyoh);
-  background:var(--qogoz) url("../assets/fon_shahar.svg") center top/cover fixed no-repeat;
+  background:var(--qogoz);
   min-height:100vh;
+}
+/* Shahar foni — qobiq bilan birga suriladi (fixed qatlam artefaktlarisiz) */
+.qobiq{position:relative;isolation:isolate}
+.qobiq::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:var(--qogoz) url("../assets/fon_shahar.svg") center top/cover no-repeat;
 }
 img{max-width:100%;display:block}
 img.foto{outline:1px solid rgba(0,0,0,.08);outline-offset:-1px}
@@ -554,10 +560,20 @@ textarea.kirish-matn:focus{border-color:var(--chiziq-3);background:var(--varaq)}
   .relsa{top:0;height:100vh;border-radius:0}
   .sahna{border-radius:0;box-shadow:none}
   .shapka{border-radius:0}
-  body{background-attachment:scroll}
 }
 @media print{
   body{background:#fff !important}
+  body::before{display:none}
   .sahna{box-shadow:none;border-radius:0}
 }
+
+/* ---------- Chizma (grafiklar): tooltip va donut markazi ---------- */
+.chizma-tooltip{position:absolute;translate:-50% calc(-100% - 10px);z-index:30;pointer-events:none;
+  background:var(--siyoh);color:var(--relsa-oq);border-radius:9px;padding:7px 11px;
+  font-size:11.5px;line-height:1.35;white-space:nowrap;box-shadow:var(--soya-suzuvchi)}
+.chizma-tooltip b{display:block;font:600 12.5px var(--shrift-mono);font-variant-numeric:tabular-nums}
+.chizma-tooltip span{color:rgba(244,246,250,.62);font-size:10.5px}
+.chizma-donut-markaz{position:absolute;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none}
+.chizma-donut-markaz b{font:700 26px/1.05 var(--shrift-displey);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.chizma-donut-markaz span{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--iz)}
 

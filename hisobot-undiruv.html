@@ -41,6 +41,7 @@
 <script src="malumot-qoshimcha.js?v=26082610"></script>
 <script src="tarjima.js?v=26082610"></script>
 <script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/chizma.js?v=26082610"></script>
 <script src="yadro/api.js?v=26082610"></script>
 <script src="yadro/app.js?v=26082610"></script>
 <script>
@@ -73,7 +74,8 @@ document.addEventListener("mkb:tayyor", async () => {
     s.qiymat.reduce((a, b) => a + b, 0).toFixed(1).replace(".", ",") + "<small>mlrd</small>";
   document.getElementById("hu-3").textContent = MKB.fmt(MKB_DATA.PORTFEL.undiruv.qarzdorlar);
   document.getElementById("hu-4").textContent = yoz.filter(y => ["davo", "sud"].includes(y.ish.bosqich)).length;
-  ustunBar("hu-grafik", s.yorliq, s.qiymat);
+  MKBchizma.maydon("hu-grafik", {yorliqlar: s.yorliq, qiymatlar: s.qiymat, balandlik: 210,
+    rang: "--brend", tooltipFormat: v => String(v).replace(".", ",") + " mlrd"});
 });
 </script>
 </body>

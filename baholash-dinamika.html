@@ -26,6 +26,7 @@
 <script src="malumot-qoshimcha.js?v=26082610"></script>
 <script src="tarjima.js?v=26082610"></script>
 <script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/chizma.js?v=26082610"></script>
 <script src="yadro/api.js?v=26082610"></script>
 <script src="yadro/app.js?v=26082610"></script>
 <script>
@@ -47,14 +48,9 @@ document.addEventListener("mkb:tayyor", async () => {
     if (!nuqtalar.length){ document.getElementById("dn-grafik").innerHTML =
       '<div class="bosh-holat">' + ik("grafik") + '<b>Ma\'lumot yo\'q</b></div>'; return; }
     const maks = Math.max(...nuqtalar.map(n => n.v));
-    document.getElementById("dn-grafik").innerHTML =
-      '<div style="display:flex;align-items:flex-end;gap:26px;height:190px;padding-top:10px">' +
-      nuqtalar.map((n, i) =>
-        '<div style="flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:6px">' +
-          '<span class="pul" style="font-size:12px">' + MKB.fmt(n.v) + '</span>' +
-          '<div style="width:100%;max-width:56px;height:' + Math.round(n.v / maks * 130) + 'px;border-radius:9px 9px 3px 3px;background:' +
-          (i === nuqtalar.length - 1 ? 'var(--brend)' : 'var(--siyoh)') + '"></div>' +
-          '<span style="font-size:11px;color:var(--iz)">' + n.sana + '</span></div>').join("") + '</div>';
+    MKBchizma.ustun("dn-grafik", {yorliqlar: nuqtalar.map(n => n.sana),
+      qiymatlar: nuqtalar.map(n => n.v), balandlik: 200, en: 54,
+      tooltipFormat: v => MKB.fmt(v) + " mln so'm"});
   }
   chiz(obyektlar[0]);
   const t = document.getElementById("dn-tanlov");

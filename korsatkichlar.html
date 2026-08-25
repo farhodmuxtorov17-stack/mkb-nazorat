@@ -46,6 +46,7 @@
 <script src="malumot-qoshimcha.js?v=26082610"></script>
 <script src="tarjima.js?v=26082610"></script>
 <script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/chizma.js?v=26082610"></script>
 <script src="yadro/api.js?v=26082610"></script>
 <script src="yadro/app.js?v=26082610"></script>
 <script>
@@ -92,7 +93,9 @@ document.addEventListener("mkb:tayyor", () => {
     d.textContent = (b.manfiy ? "↓ " : "↑ ") + String(Math.abs(b.delta)).replace(".", ",") + "%";
   });
   const s = D.UNDIRUV_SERIYA.oylik;
-  ustunlarChiz("u-grafik", s.yorliq, s.qiymat, s.qiymat.length - 1);
+  MKBchizma.maydon("u-grafik", {yorliqlar: s.yorliq, qiymatlar: s.qiymat,
+    balandlik: 200, rang: "--brend", oqFormat: v => v.toFixed(0),
+    tooltipFormat: v => String(v).replace(".", ",") + " mlrd so'm"});
   const maks = Math.max(...D.HUDUDLAR.map(h => parseInt(String(h[1]).replace(/\s/g, ""), 10)));
   document.getElementById("u-hudud").innerHTML = D.HUDUDLAR.slice(0, 8).map(h => {
     const v = parseInt(String(h[1]).replace(/\s/g, ""), 10);

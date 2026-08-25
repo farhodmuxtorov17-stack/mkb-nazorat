@@ -25,6 +25,7 @@
 <script src="malumot-qoshimcha.js?v=26082610"></script>
 <script src="tarjima.js?v=26082610"></script>
 <script src="yadro/ikonlar.js?v=26082610"></script>
+<script src="yadro/chizma.js?v=26082610"></script>
 <script src="yadro/api.js?v=26082610"></script>
 <script src="yadro/app.js?v=26082610"></script>
 <script>
@@ -51,8 +52,10 @@ function ustunBar(joy, yorliqlar, qiymatlar){
 }
 document.addEventListener("mkb:tayyor", () => {
   const o = MKB_DATA.UNDIRUV_SERIYA.oylik, y = MKB_DATA.UNDIRUV_SERIYA.yillik;
-  ustunBar("hd-oylik", o.yorliq, o.qiymat);
-  ustunBar("hd-yillik", y.yorliq, y.qiymat);
+  MKBchizma.maydon("hd-oylik", {yorliqlar: o.yorliq, qiymatlar: o.qiymat, balandlik: 210,
+    rang: "--brend", tooltipFormat: v => String(v).replace(".", ",") + " mlrd"});
+  MKBchizma.ustun("hd-yillik", {yorliqlar: y.yorliq, qiymatlar: y.qiymat, balandlik: 200,
+    tooltipFormat: v => String(v).replace(".", ",") + " mlrd"});
 });
 </script>
 </body>
