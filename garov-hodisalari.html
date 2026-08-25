@@ -6,8 +6,8 @@
 <title>MKB — Garov hodisalari</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082501">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082502">
 <style>
 /* ---- Hodisalar markazi (ekran 7) ---- */
 .hodisa-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;align-items:start}
@@ -254,9 +254,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082501"></script>
-<script src="tarjima.js?v=26082501"></script>
-<script src="mkb.js?v=26082501"></script>
+<script src="malumot.js?v=26082502"></script>
+<script src="tarjima.js?v=26082502"></script>
+<script src="mkb.js?v=26082502"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -370,7 +370,7 @@ function detalChiz(h){
   mm.querySelectorAll("button").forEach(b=>b.addEventListener("click", e=>{
     e.stopPropagation(); mm.classList.remove("ochiq");
     if (b.dataset.amal==="ochirish"){
-      /* O'chirish — qaytarib bo'lmaydigan amal: yopish bilan bir xil gvard (rbac #2) */
+      /* O'chirish — qaytarib bo'lmaydigan amal: yopish bilan bir xil gvard */
       if (MKB.asilRol() !== "Administrator" || MKB.rolKaliti() !== "admin"){
         MKB.toast("Faqat Administrator hodisani o'chirishi mumkin", "i-qalqon");
         return;
@@ -553,7 +553,7 @@ document.getElementById("dinamika-davr").addEventListener("tanlov", e=>{
 });
 
 /* Umumiy ko'rsatkichlar davri */
-/* "Bugun" HODISALAR massividan hisoblanadi (Д-7, data-consistency #5);
+/* "Bugun" HODISALAR massividan hisoblanadi (Д-7);
    hafta/oy — ko'rgazmali massiv qamrab olmaydigan davrlar uchun shartli seriya. */
 function hodisaSoni(u){ return HODISALAR.filter(h => h.ustun === u).length; }
 const UMUMIY_MALUMOT = {

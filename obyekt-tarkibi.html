@@ -6,8 +6,8 @@
 <title>MKB — Obyekt tarkibi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082501">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Spectral:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mkb.css?v=26082502">
 <style>
 /* ---- Xonalar va qavatlar (ekran 16) ---- */
 .orqa-tugma{width:48px;height:48px;border-radius:14px;background:var(--karta);box-shadow:var(--soya);display:grid;place-items:center;color:#1C2836;flex:none}
@@ -99,11 +99,20 @@
 @media (max-width:1600px){.xq-grid{grid-template-columns:300px minmax(0,1fr)}.xq-grid > aside:last-child{grid-column:1/-1}}
 
 /* ---- Interaktiv 3D bino navigatori ---- */
-.bino3d{position:absolute;inset:0;display:grid;place-items:center;perspective:1400px;overflow:hidden}
+.bino3d{position:absolute;inset:0;display:grid;place-items:center;perspective:1400px;overflow:hidden;cursor:grab;touch-action:none}
+.bino3d.sudralmoqda{cursor:grabbing}
+.bino3d.sudralmoqda .b3-stack{transition:none}
+.b3-korsatma{
+  position:absolute;left:50%;bottom:10px;transform:translateX(-50%);
+  font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--matn-4);
+  background:rgba(255,255,255,.82);border:1px solid rgba(214,211,196,.8);
+  border-radius:99px;padding:4px 12px;pointer-events:none;white-space:nowrap;
+}
 .b3-stack{
   position:relative;width:340px;height:230px;
   transform-style:preserve-3d;
-  transform:rotateX(57deg) rotateZ(-42deg);
+  --rx:57deg; --rz:-42deg;
+  transform:rotateX(var(--rx)) rotateZ(var(--rz));
   transition:transform .5s cubic-bezier(.23,1,.32,1);
 }
 .b3-zamin{
@@ -253,9 +262,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082501"></script>
-<script src="tarjima.js?v=26082501"></script>
-<script src="mkb.js?v=26082501"></script>
+<script src="malumot.js?v=26082502"></script>
+<script src="tarjima.js?v=26082502"></script>
+<script src="mkb.js?v=26082502"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -437,7 +446,7 @@ hm.querySelectorAll("button").forEach(b=>b.addEventListener("click", e=>{
 }));
 });
 
-/* Rejim tugmalari holati (a11y #12) */
+/* Rejim tugmalari holati */
 ["rj-3d","rj-2d"].forEach(id => {
   const b = document.getElementById(id);
   if (b) b.addEventListener("click", () => {
@@ -445,6 +454,53 @@ hm.querySelectorAll("button").forEach(b=>b.addEventListener("click", e=>{
     document.getElementById("rj-2d").setAttribute("aria-pressed", String(id === "rj-2d"));
   });
 });
+
+/* Sudrab aylantirish: sahna sichqoncha/barmoq bilan buriladi */
+(function(){
+  const kon = document.getElementById("bino3d");
+  const stack = kon && kon.querySelector(".b3-stack");
+  if (!kon || !stack) return;
+  const hint = document.createElement("div");
+  hint.className = "b3-korsatma";
+  hint.textContent = "Aylantirish uchun sudrang";
+  kon.appendChild(hint);
+  let rx = 57, rz = -42, faol = false, x0 = 0, y0 = 0, surildi = false;
+  function qoll(){
+    stack.style.setProperty("--rx", rx + "deg");
+    stack.style.setProperty("--rz", rz + "deg");
+  }
+  kon.addEventListener("pointerdown", e => {
+    if (e.target.closest(".b3-qavat") && !e.shiftKey){
+      /* qavat ustida bosish — tanlash uchun; sudrash faqat bo'sh joydan yoki Shift bilan */
+    }
+    faol = true; surildi = false; x0 = e.clientX; y0 = e.clientY;
+    kon.setPointerCapture(e.pointerId);
+  });
+  kon.addEventListener("pointermove", e => {
+    if (!faol) return;
+    const dx = e.clientX - x0, dy = e.clientY - y0;
+    if (!surildi && Math.hypot(dx, dy) < 5) return;
+    if (!surildi){ surildi = true; kon.classList.add("sudralmoqda"); hint.style.opacity = "0"; }
+    rz += dx * 0.35; rx -= dy * 0.3;
+    rx = Math.max(28, Math.min(80, rx));
+    qoll();
+    x0 = e.clientX; y0 = e.clientY;
+  });
+  function tugat(e){
+    if (!faol) return;
+    faol = false;
+    kon.classList.remove("sudralmoqda");
+    if (surildi){
+      /* sudrashdan keyingi click qavat tanlamasin */
+      const stop = ev => { ev.stopPropagation(); ev.preventDefault(); kon.removeEventListener("click", stop, true); };
+      kon.addEventListener("click", stop, true);
+      setTimeout(() => kon.removeEventListener("click", stop, true), 60);
+    }
+  }
+  kon.addEventListener("pointerup", tugat);
+  kon.addEventListener("pointercancel", tugat);
+  kon.addEventListener("dblclick", () => { rx = 57; rz = -42; qoll(); });
+})();
 </script>
 </body>
 </html>

@@ -542,7 +542,7 @@ MKB.modal = function(sarlavha, matn, opts){
     </div>`;
   document.body.appendChild(fon);
   requestAnimationFrame(()=>fon.classList.add("ochiq"));
-  /* Fokus tuzog'i: Tab modal ichida aylanadi; yopilganda fokus qaytadi (a11y #10) */
+  /* Fokus tuzog'i: Tab modal ichida aylanadi; yopilganda fokus qaytadi */
   const qaytishFokus = document.activeElement;
   fon.addEventListener("keydown", e => {
     if (e.key !== "Tab") return;
@@ -681,7 +681,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
 
   /* div[role=button] elementlarda Enter/Space click hosil qilmaydi —
-     klaviatura foydalanuvchisi uchun qo'lda bog'laymiz (a11y #1) */
+     klaviatura foydalanuvchisi uchun qo'lda bog'laymiz */
   document.querySelectorAll('[role="button"][tabindex]').forEach(el => {
     el.addEventListener("keydown", e => {
       if (e.key === "Enter" || e.key === " "){ e.preventDefault(); el.click(); }
@@ -722,7 +722,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
 
   // RBAC qo'riqchisi: joriy rol uchun taqiqlangan sahifada 403 holati.
-  // Kontent DOM dan BUTUNLAY olib tashlanadi (rbac-audit #5): sahifa skriptlari
+  // Kontent DOM dan BUTUNLAY olib tashlanadi: sahifa skriptlari
   // bu vaqtga qadar allaqachon ishlagan, ularni buzish xavfi yo'q; yashirish
   // esa ma'lumotni (masalan, xodimlar reyestri) DOM da qoldirardi.
   // Sahifa darajasidagi qo'shimcha cheklov: data-ruxsat="admin,rahbar"

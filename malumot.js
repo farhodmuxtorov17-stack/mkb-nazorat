@@ -284,7 +284,7 @@ function zaxiraHisobi(qarzJami, garovBaho, foiz){
 }
 
 /* Kichik tumba varianti: jadval katagi 44–64px uchun 1254px asl nusxa
-   dekodlanmasin (perf #1). Fayl nomi _kichik qo'shimchasi bilan. */
+   dekodlanmasin. Fayl nomi _kichik qo'shimchasi bilan. */
 function kichikRasm(y){
   const r = y.garov.rasm || "";
   const k = r.replace(/\.webp$/, "_kichik.webp");
@@ -373,7 +373,7 @@ const PORTFEL = {
   /* Nazorat tadbirlari — butun portfel bo'yicha (Д-7 talabiga ko'ra
      kesim yig'indilari jami bilan moslikTekshiruvi() da solishtiriladi) */
   /* Portfel darajasidagi undiruv va shartnoma kesimlari — sahifalarda
-     qo'lda yozilgan raqamlar o'rniga (data-consistency #3, #10).
+     qo'lda yozilgan raqamlar o'rniga.
      417 qarzdor / 128 shartnoma ziddiyati bartaraf: qarzdor <= shartnoma. */
   undiruv: {qarzdorlar: 112, muddatiOtganQarzMlrd: "184,6", sudJarayonida: 96, musodara: 118},
   shartnoma: {jami: 128, faol: 96, kechikkan: 14, sudda: 3, yakunlangan: 15},
@@ -980,7 +980,7 @@ const AVTO = [
 
 const KPI_BAZA = [
   /* YTD (yanvar–iyul 2026) — portfel miqyosi; oylik seriya bilan moslikda:
-     jami = UNDIRUV_SERIYA oylik yig'indisi (data-consistency #6–7) */
+     jami = UNDIRUV_SERIYA oylik yig'indisi */
   {qiymat: 356.5, birlik: "mlrd so'm", delta: 8.2,  manfiy: false},   /* undirilgan YTD */
   {qiymat: 84.6,  birlik: "mlrd so'm", delta: 12.4, manfiy: false},   /* realizatsiya tushumi YTD */
   {qiymat: 9.3,   birlik: "mlrd so'm", delta: -3.1, manfiy: true},    /* nazorat xarajatlari YTD */
@@ -1117,7 +1117,7 @@ function moslikTekshiruvi(){
       xato.push(u.kod + ": uchastka statusi ish bosqichiga mos emas");
   });
 
-  /* --- 11: toifa kechikish kunlariga, zaxira toifa stavkasiga mos (docs-audit #12) --- */
+  /* --- 11: toifa kechikish kunlariga, zaxira toifa stavkasiga mos --- */
   YOZUVLAR.forEach(y => {
     const t = tasnifla(y.qarz.kunlar);
     if (y.tasnif.kalit !== t.kalit)

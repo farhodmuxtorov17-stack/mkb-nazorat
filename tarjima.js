@@ -5,7 +5,19 @@
    Xos ismlar, manzillar va hujjat raqamlari ataylab tarjima qilinmaydi.
    ============================================================ */
 window.MKB_LUGAT = {
- /* Avto-to'ldirish 24.08.2026: fleet-audit bo'yicha */
+ /* 24.08.2026: lug'at to'liq qamrovgacha to'ldirildi */
+  "Aylantirish uchun sudrang": "Перетащите, чтобы повернуть",
+  "Obyekt topilmadi": "Объект не найден",
+  "Dalolatnoma topilmadi": "Акт не найден",
+  "So'ralgan identifikator reyestrda yo'q:": "Запрошенный идентификатор отсутствует в реестре:",
+  "So'ralgan ko'rik reyestrda yo'q:": "Запрошенный осмотр отсутствует в реестре:",
+  "Reyestrga qaytish": "Вернуться в реестр",
+  "Ko'rik rejasiga qaytish": "Вернуться к плану осмотров",
+  "Navbat bo'sh": "Очередь пуста",
+  "Barcha so'rovlar ko'rib chiqildi.": "Все запросы рассмотрены.",
+  "Ko'rik hali o'tkazilmagan — tekshiruv bandlari chiqishdan keyin to'ldiriladi.": "Осмотр ещё не проведён — пункты проверки заполняются после выезда.",
+  "Fotojamlanma chiqish vaqtida yuklanadi.": "Фотофиксация загружается во время выезда.",
+  "Tanlov faqat ko'rsatma muhitida amal qiladi.": "Выбор действует только в ознакомительной среде.",
   "Ko'rik dalolatnomasi rasmiylashtirildi": "Оформлен акт осмотра",
   "Navbatdagi ko'rik rejalashtirildi": "Запланирован очередной осмотр",
   "Qisman to'lov qabul qilindi": "Принят частичный платёж",
