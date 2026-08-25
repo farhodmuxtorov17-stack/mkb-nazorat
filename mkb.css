@@ -11,6 +11,16 @@
   --shrift-serif:'Inter Tight','Inter',system-ui,sans-serif;   /* displey ovozi */
   --shrift-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
 
+  /* Tema boshqaradigan shakl tokenlari */
+  --r-karta2:12px;
+  --r-tugma:8px;
+  --r-kirish:10px;
+  --r-chip:6px;
+  --r-kpi:12px;
+  --cta-fon:var(--asos);          /* asosiy tugma foni (temada qora bo'lishi mumkin) */
+  --cta-hover:var(--asos-hover);
+  --cta-matn:#FFFFFF;
+
   --kanvas:#FAFAFA;
   --karta:#FFFFFF;
   --matn:#18181B;
@@ -283,17 +293,17 @@ position:relative;}
 /* ============ Tugmalar ============ */
 .tugma{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  height:40px;padding:0 16px;border-radius:8px;
+  height:40px;padding:0 16px;border-radius:var(--r-tugma);
   font-size:14.5px;font-weight:600;white-space:nowrap;
   transition:background var(--tez),box-shadow var(--tez),transform 80ms ease;
 }
 .tugma:active{transform:scale(.98)}
 .tugma .ic{width:19px;height:19px}
 .tugma-asos{
-  background:var(--asos);color:#fff;
+  background:var(--cta-fon);color:var(--cta-matn);
   box-shadow:0 1px 2px rgba(9,9,11,.06);
 }
-.tugma-asos:hover{background:var(--asos-hover)}
+.tugma-asos:hover{background:var(--cta-hover)}
 .tugma-asos:active{background:var(--asos-toq)}
 .tugma-oq{background:#FFFFFF;color:#18181B;border:1px solid var(--chiziq);box-shadow:0 1px 2px rgba(9,9,11,.04)}
 .tugma-oq:hover{background:#FAFAFA;border-color:#D4D4D8}
@@ -301,13 +311,13 @@ position:relative;}
 .tugma-chiziqli:hover{background:#F4F4F5}
 .tugma-xavf{background:var(--qizil);color:#fff}
 .tugma-xavf:hover{background:#E14D42}
-.tugma-kichik{height:32px;padding:0 12px;font-size:13px;border-radius:6px}
+.tugma-kichik{height:32px;padding:0 12px;font-size:13px;border-radius:calc(var(--r-tugma) - 2px)}
 .tugma-ikonli{width:40px;height:40px;padding:0;border-radius:8px}
 
 /* ============ Kartalar ============ */
 .karta{
   background:#FFFFFF;
-  border:1px solid var(--chiziq);border-radius:12px;
+  border:1px solid var(--chiziq);border-radius:var(--r-karta2);
   box-shadow:var(--soya);padding:20px;
 }
 .karta-bosh{display:flex;align-items:center;margin-bottom:16px;gap:12px}
@@ -323,7 +333,7 @@ position:relative;}
 .maydon-yorliq{display:block;font-size:14.5px;font-weight:600;color:#18181B;margin-bottom:9px}
 .kirish{
   display:flex;align-items:center;gap:11px;width:100%;
-  border:1px solid var(--kirish-chiziq);border-radius:10px;height:44px;
+  border:1px solid var(--kirish-chiziq);border-radius:var(--r-kirish);height:44px;
   padding:0 16px;background:var(--karta);
   transition:border-color var(--tez),box-shadow var(--tez);
 }
@@ -336,7 +346,7 @@ position:relative;}
 .kirish-katta textarea{padding:14px 0;resize:vertical;min-height:96px}
 .tanlov{
   display:flex;align-items:center;gap:10px;width:100%;
-  border:1px solid var(--kirish-chiziq);border-radius:10px;height:40px;
+  border:1px solid var(--kirish-chiziq);border-radius:var(--r-kirish);height:40px;
   padding:0 16px;text-align:left;background:var(--karta);
   font-size:14.5px;font-weight:500;color:#6A7078;
   transition:border-color var(--tez),background var(--tez);
@@ -374,7 +384,7 @@ position:relative;}
 /* ============ Badge / holat chiplari ============ */
 .chip{
   display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;
-  border-radius:6px;font-size:12px;font-weight:600;letter-spacing:.01em;white-space:nowrap;
+  border-radius:var(--r-chip);font-size:12px;font-weight:600;letter-spacing:.01em;white-space:nowrap;
 box-shadow:none;}
 .chip .nuqta{width:6px;height:6px;border-radius:99px;background:currentColor}
 .chip-asos{background:var(--asos-fon);color:#3730A3}
@@ -517,7 +527,7 @@ table.jadval{width:100%;border-collapse:collapse}
 /* ============ KPI (dashboard + boshqa sahifalar) ============ */
 .kpi-band{
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;
-  background:var(--chiziq);border:1px solid var(--chiziq);border-radius:12px;overflow:hidden;
+  background:var(--chiziq);border:1px solid var(--chiziq);border-radius:var(--r-kpi);overflow:hidden;
 }
 .kpi{
   position:relative;background:#FFFFFF;border:none;border-radius:0;box-shadow:none;
@@ -699,3 +709,129 @@ table.jadval{width:100%;border-collapse:collapse}
 }
 .klaster:hover > span{transform:scale(1.08)}
 .klaster small{font-size:8.5px;font-weight:700;letter-spacing:.04em;opacity:.75;line-height:1;margin-top:1px}
+
+/* ============================================================
+   TEMALAR: html[data-tema] — A "konsol" (asos), B "realty", C "estate"
+   Tanlov topbar'dagi almashtirgichda, localStorage['mkb-tema'].
+   ============================================================ */
+
+/* ---------- B: REALTY — iliq krem, lime aksent, pilyulalar, ikonka-relsa ---------- */
+html[data-tema="realty"]{
+  --kanvas:#F1EEE5;
+  --karta:#FBFAF5;
+  --chiziq:#E4DFD0;
+  --kirish-chiziq:#E4DFD0;
+  --matn:#191914;
+  --matn-2:#41403A;
+  --matn-3:#5C5B52;
+  --matn-4:#807E71;
+  --asos:#6A7F00;            /* lime'ning o'qiladigan to'q varianti (havolalar, aktiv) */
+  --asos-toq:#4C5B00;
+  --asos-hover:#7C9400;
+  --asos-fon:#EEF4CE;
+  --asos-matn:#4C5B00;
+  --brend-aksent:#C9EE3F;    /* yorqin lime — progress, urg'u */
+  --mis-och:#D9F56A; --mis-toq:#9CBD1E;
+  --nav-fon:#F1EEE5; --nav-fon-2:#F1EEE5;
+  --nav-matn:#41403A; --nav-matn-och:#191914;
+  --nav-xira:#8E8C7E; --nav-chiziq:#E4DFD0; --nav-aktiv:#191914;
+  --qizil:#E2543E; --qizil-fon:#FBE9E4;
+  --sariq-fon:#F6EFCF; --kok-fon:#E7EEF6;
+  --soya:0 1px 2px rgba(25,25,20,.05), 0 10px 30px -12px rgba(25,25,20,.10);
+  --r-karta2:22px; --r-tugma:999px; --r-kirish:999px; --r-chip:999px; --r-kpi:22px;
+  --cta-fon:#191914; --cta-hover:#2C2B24; --cta-matn:#F5F4E9;
+}
+html[data-tema="realty"] .app{grid-template-columns:84px minmax(0,1fr)}
+html[data-tema="realty"] .sidebar{padding:20px 14px 16px;align-items:center}
+html[data-tema="realty"] .logo-matn{display:none}
+html[data-tema="realty"] .logo a{justify-content:center}
+html[data-tema="realty"] .m-guruh{display:none}
+html[data-tema="realty"] .m-band{
+  height:48px;width:48px;padding:0;justify-content:center;border-radius:999px;
+  font-size:0;margin:3px auto;
+}
+html[data-tema="realty"] .m-band .ic{width:20px;height:20px}
+html[data-tema="realty"] .m-band.aktiv{background:#191914;color:#F5F4E9;box-shadow:none}
+html[data-tema="realty"] .m-band.aktiv .ic{color:#D9F56A}
+html[data-tema="realty"] .m-band.aktiv::after{content:none}
+html[data-tema="realty"] .sidebar-past{border-top:none;padding-top:6px}
+html[data-tema="realty"] .yordam{width:48px;height:48px;padding:0;justify-content:center;border-radius:999px;font-size:0;border:1px solid var(--chiziq)}
+html[data-tema="realty"] .yordam .ic{width:19px;height:19px}
+html[data-tema="realty"] .yordam .strelka{display:none}
+html[data-tema="realty"] .topbar{background:transparent;border-bottom:none}
+html[data-tema="realty"] .kpi-band{gap:14px;background:transparent;border:none;border-radius:0;overflow:visible}
+html[data-tema="realty"] .kpi{border:1px solid var(--chiziq);border-radius:22px;background:var(--karta);box-shadow:var(--soya)}
+html[data-tema="realty"] .kpi-tile{border-radius:999px;background:#EDEAE0;border-color:transparent}
+html[data-tema="realty"] .kpi-tile.lime{background:#E4F3A8;color:#3F4C00}
+html[data-tema="realty"] .jadval th{background:#F4F1E8}
+html[data-tema="realty"] .jadval tbody tr:hover{background:#F6F3EA;box-shadow:inset 2px 0 0 #9CBD1E}
+html[data-tema="realty"] .karta{box-shadow:var(--soya)}
+html[data-tema="realty"] .tanlov{background:var(--karta)}
+html[data-tema="realty"] .delta{background:#EAF6C2;color:#4C5B00}
+html[data-tema="realty"] .delta.salbiy{background:#FBE9E4;color:#B03A26}
+html[data-tema="realty"] :focus-visible{outline-color:#9CBD1E}
+
+/* ---------- C: ESTATE — oq + qora CTA, to'q ikonka-relsa, apelsin signal ---------- */
+html[data-tema="estate"]{
+  --kanvas:#F5F6F7;
+  --karta:#FFFFFF;
+  --chiziq:#E8EAED;
+  --kirish-chiziq:#E2E4E8;
+  --matn:#131417;
+  --matn-2:#3C3F45;
+  --matn-3:#585C64;
+  --matn-4:#8A8E96;
+  --asos:#17181B;             /* havola/aktiv — qora */
+  --asos-toq:#000000;
+  --asos-hover:#2A2B31;
+  --asos-fon:#FEECE4;
+  --asos-matn:#C2410C;
+  --brend-aksent:#F4581C;     /* signal apelsin */
+  --mis-och:#FF7A45; --mis-toq:#D6430E;
+  --nav-fon:#101113; --nav-fon-2:#101113;
+  --nav-matn:#A9ADB5; --nav-matn-och:#FFFFFF;
+  --nav-xira:#6E727B; --nav-chiziq:rgba(255,255,255,.08); --nav-aktiv:#FFFFFF;
+  --soya:0 1px 2px rgba(19,20,23,.05);
+  --r-karta2:14px; --r-tugma:10px; --r-kirish:10px; --r-chip:999px; --r-kpi:14px;
+  --cta-fon:#17181B; --cta-hover:#2A2B31; --cta-matn:#FFFFFF;
+}
+html[data-tema="estate"] .app{grid-template-columns:88px minmax(0,1fr)}
+html[data-tema="estate"] .sidebar{padding:20px 16px;align-items:center;border-right:none}
+html[data-tema="estate"] .logo-matn{display:none}
+html[data-tema="estate"] .logo a{justify-content:center}
+html[data-tema="estate"] .m-guruh{display:none}
+html[data-tema="estate"] .m-band{
+  height:46px;width:46px;padding:0;justify-content:center;border-radius:13px;
+  font-size:0;margin:4px auto;color:#A9ADB5;
+}
+html[data-tema="estate"] .m-band .ic{width:20px;height:20px;color:#A9ADB5}
+html[data-tema="estate"] .m-band:hover{background:rgba(255,255,255,.08)}
+html[data-tema="estate"] .m-band:hover .ic{color:#fff}
+html[data-tema="estate"] .m-band.aktiv{background:#FFFFFF;color:#101113;box-shadow:none}
+html[data-tema="estate"] .m-band.aktiv .ic{color:#101113}
+html[data-tema="estate"] .m-band.aktiv::after{content:none}
+html[data-tema="estate"] .sidebar-past{border-top:1px solid rgba(255,255,255,.08)}
+html[data-tema="estate"] .yordam{width:46px;height:46px;padding:0;justify-content:center;border-radius:13px;font-size:0;background:rgba(255,255,255,.06);color:#A9ADB5;border:none}
+html[data-tema="estate"] .yordam .ic{width:19px;height:19px}
+html[data-tema="estate"] .yordam .strelka{display:none}
+html[data-tema="estate"] .logo-soz,html[data-tema="estate"] .logo-tag{color:#fff}
+html[data-tema="estate"] .topbar{background:#FFFFFF}
+html[data-tema="estate"] .kpi-qiymat b{font-weight:700}
+html[data-tema="estate"] .chip-asos{background:#FEECE4;color:#C2410C}
+html[data-tema="estate"] .delta{background:#EDFDF3;color:#0B7A46}
+html[data-tema="estate"] .delta.salbiy{background:#FEECE4;color:#C2410C}
+html[data-tema="estate"] .jadval tbody tr:hover{box-shadow:inset 2px 0 0 #F4581C}
+html[data-tema="estate"] :focus-visible{outline-color:#F4581C}
+
+/* Tema almashtirgich (topbar) */
+.tema-almash{display:flex;gap:4px;background:var(--kanvas);border:1px solid var(--chiziq);border-radius:999px;padding:3px}
+.tema-almash button{
+  width:28px;height:28px;border-radius:999px;position:relative;
+  display:grid;place-items:center;
+}
+.tema-almash button i{width:14px;height:14px;border-radius:999px;display:block;border:1px solid rgba(0,0,0,.12)}
+.tema-almash button[data-tema="konsol"] i{background:linear-gradient(135deg,#FAFAFA 50%,#4F46E5 50%)}
+.tema-almash button[data-tema="realty"] i{background:linear-gradient(135deg,#F1EEE5 50%,#C9EE3F 50%)}
+.tema-almash button[data-tema="estate"] i{background:linear-gradient(135deg,#FFFFFF 50%,#17181B 50%)}
+.tema-almash button.aktiv{background:var(--karta);box-shadow:0 1px 2px rgba(9,9,11,.10);outline:1px solid var(--chiziq)}
+

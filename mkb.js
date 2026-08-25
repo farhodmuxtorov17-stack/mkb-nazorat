@@ -10,6 +10,12 @@
 "use strict";
 
 /* ---------- Ikonkalar (Lucide uslubi, 1.7 stroke) ---------- */
+/* Tema erta qo'llanadi (FOUCsiz): konsol | realty | estate */
+(function(){
+  const t = localStorage.getItem("mkb-tema");
+  if (t === "realty" || t === "estate") document.documentElement.dataset.tema = t;
+})();
+
 const IKONLAR = `
 <svg style="display:none" aria-hidden="true">
   <symbol id="i-panel" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="2" fill="currentColor" stroke="none"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="2" fill="currentColor" stroke="none"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="2" fill="currentColor" stroke="none"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2" fill="currentColor" stroke="none"/></symbol>
@@ -475,6 +481,11 @@ function topbarHTML(){
         <button type="button" data-filial="Namangan filiali">Namangan filiali</button>
       </div>
     </div>
+    <div class="tema-almash" role="group" aria-label="Interfeys mavzusi">
+      <button type="button" data-tema="konsol" title="Konsol" aria-label="Konsol mavzusi"><i></i></button>
+      <button type="button" data-tema="realty" title="Realty" aria-label="Realty mavzusi"><i></i></button>
+      <button type="button" data-tema="estate" title="Estate" aria-label="Estate mavzusi"><i></i></button>
+    </div>
     <div class="til-almash" role="group" aria-label="Interfeys tili">
       <button type="button" data-til="uz" class="${joriyTil()==="uz"?"aktiv":""}" aria-pressed="${joriyTil()==="uz"}">UZ</button>
       <button type="button" data-til="ru" class="${joriyTil()==="ru"?"aktiv":""}" aria-pressed="${joriyTil()==="ru"}">RU</button>
@@ -687,6 +698,22 @@ document.addEventListener("DOMContentLoaded", ()=>{
       if (e.key === "Enter" || e.key === " "){ e.preventDefault(); el.click(); }
     });
   });
+
+  /* Tema almashtirgich */
+  (function(){
+    const joriy = () => document.documentElement.dataset.tema || "konsol";
+    document.querySelectorAll(".tema-almash button").forEach(b => {
+      const yangila = () => document.querySelectorAll(".tema-almash button")
+        .forEach(x => x.classList.toggle("aktiv", x.dataset.tema === joriy()));
+      yangila();
+      b.addEventListener("click", () => {
+        const t = b.dataset.tema;
+        if (t === "konsol") { delete document.documentElement.dataset.tema; localStorage.removeItem("mkb-tema"); }
+        else { document.documentElement.dataset.tema = t; localStorage.setItem("mkb-tema", t); }
+        yangila();
+      });
+    });
+  })();
 
   /* Ruxsatsiz maqsadga olib boradigan havolalarni yashirish (Р-1):
      <a data-ruxsat-yashir href="..."> — rol ocholmaydigan sahifa bo'lsa,
