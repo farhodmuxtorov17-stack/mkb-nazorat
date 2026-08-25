@@ -8,22 +8,22 @@
 
 :root{
   /* Sirtlar */
-  --qogoz:#F4F2EB; --varaq:#FFFFFF; --varaq-2:#FAF9F3; --kirish-fon:#F0EEE5;
+  --qogoz:#EDEFF2; --varaq:#FFFFFF; --varaq-2:#F6F7F9; --kirish-fon:#F1F2F5;
   /* Matn (4 daraja) */
-  --siyoh:#191A14; --qalam:#4A4B41; --iz:#83847A; --xira:#B3B4A8;
+  --siyoh:#14161A; --qalam:#3F444C; --iz:#7A8089; --xira:#AEB3BB;
   /* Chiziqlar */
-  --chiziq:rgba(25,26,20,.10); --chiziq-2:rgba(25,26,20,.06); --chiziq-3:rgba(25,26,20,.16);
+  --chiziq:rgba(20,22,26,.10); --chiziq-2:rgba(20,22,26,.06); --chiziq-3:rgba(20,22,26,.16);
   /* Brend — yagona aksent */
-  --brend:#C8ED45; --brend-quyuq:#4A570E; --brend-fon:#F1F9D2;
+  --brend:#F4581C; --brend-quyuq:#B4400F; --brend-fon:#FEEDE4;
   /* Semantika */
-  --xavf:#E2551E; --xavf-fon:#FCEEE5; --xavf-matn:#B5430F;
-  --yashil:#2F7D46; --yashil-fon:#EAF3EC;
+  --xavf:#E2401B; --xavf-fon:#FDE9E3; --xavf-matn:#B23312;
+  --yashil:#0E8D74; --yashil-fon:#E3F3EF;
   --sariq:#A96A0A; --sariq-fon:#FAF2DE;
   --info:#3A6B8A; --info-fon:#EDF3F7;
   /* Relsa */
-  --relsa:#16170F; --relsa-matn:rgba(246,247,238,.62); --relsa-oq:#F6F7EE;
+  --relsa:#101216; --relsa-matn:rgba(240,242,246,.6); --relsa-oq:#F4F6FA;
   /* CTA */
-  --tugma-fon:#191A14; --tugma-matn:#F6F7EE; --tugma-hover:#24251C;
+  --tugma-fon:#14161A; --tugma-matn:#F4F6FA; --tugma-hover:#20242B;
   /* Shriftlar */
   --shrift:"Satoshi",system-ui,-apple-system,sans-serif;
   --shrift-displey:"Cabinet Grotesk","Satoshi",system-ui,sans-serif;
@@ -31,7 +31,7 @@
   /* O'lchamlar */
   --relsa-eni:88px; --shapka-boyi:64px;
   --r-kirish:10px; --r-karta:14px; --r-hero:20px; --r-pilyula:999px;
-  --soya-suzuvchi:0 12px 32px -12px rgba(25,26,20,.22), 0 0 0 1px rgba(25,26,20,.05);
+  --soya-suzuvchi:0 12px 32px -12px rgba(12,14,18,.24), 0 0 0 1px rgba(12,14,18,.05);
   --tez:140ms cubic-bezier(.23,1,.32,1);
   --sekin:220ms cubic-bezier(.23,1,.32,1);
 }
@@ -40,7 +40,8 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-font-smoothing:antialiased;text-size-adjust:100%}
 body{
-  font:400 14px/1.5 var(--shrift);color:var(--siyoh);background:var(--qogoz);
+  font:400 14px/1.5 var(--shrift);color:var(--siyoh);
+  background:var(--qogoz) url("../assets/fon_shahar.svg") center top/cover fixed no-repeat;
   min-height:100vh;
 }
 img{max-width:100%;display:block}
@@ -57,18 +58,21 @@ p,li,dd{text-wrap:pretty}
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
 
-/* ---------- Karkas ---------- */
-.qobiq{display:grid;grid-template-columns:var(--relsa-eni) minmax(0,1fr);min-height:100vh}
-.sahna{display:flex;flex-direction:column;min-width:0}
+/* ---------- Karkas: shahar ustidagi suzuvchi oyna ---------- */
+.qobiq{display:grid;grid-template-columns:var(--relsa-eni) minmax(0,1fr);gap:14px;
+  max-width:1760px;margin:0 auto;padding:14px;min-height:100vh}
+.sahna{display:flex;flex-direction:column;min-width:0;background:var(--varaq);
+  border-radius:18px;box-shadow:0 24px 60px -24px rgba(10,12,16,.35), 0 0 0 1px rgba(12,14,18,.06)}
 .kontent{
   flex:1;width:100%;max-width:1480px;margin:0 auto;
   padding:24px 28px 56px;display:flex;flex-direction:column;gap:20px;min-width:0;
 }
 
-/* ---------- Relsa (88px, qorong'u) ---------- */
+/* ---------- Relsa (suzuvchi qorong'u ustun) ---------- */
 .relsa{
-  position:sticky;top:0;height:100vh;background:var(--relsa);
-  display:flex;flex-direction:column;align-items:center;
+  position:sticky;top:14px;height:calc(100vh - 28px);background:var(--relsa);
+  display:flex;flex-direction:column;align-items:center;border-radius:18px;
+  box-shadow:0 24px 60px -24px rgba(10,12,16,.5);
   padding:14px 0 18px;gap:4px;z-index:50;
 }
 .relsa-logo{
@@ -104,8 +108,8 @@ p,li,dd{text-wrap:pretty}
 /* ---------- Sarlavha paneli ---------- */
 .shapka{
   height:var(--shapka-boyi);display:flex;align-items:center;gap:14px;
-  padding:0 28px;border-bottom:1px solid var(--chiziq);
-  background:var(--qogoz);position:sticky;top:0;z-index:40;
+  padding:0 28px;border-bottom:1px solid var(--chiziq-2);
+  background:var(--varaq);border-radius:18px 18px 0 0;z-index:40;flex:none;
 }
 .izlash{
   flex:1;max-width:520px;height:40px;display:flex;align-items:center;gap:10px;
@@ -138,7 +142,7 @@ p,li,dd{text-wrap:pretty}
 }
 .profil:hover{border-color:var(--chiziq-3)}
 .profil .yuz{
-  width:30px;height:30px;border-radius:99px;background:var(--siyoh);color:var(--brend);
+  width:30px;height:30px;border-radius:99px;background:var(--siyoh);color:#FFB38A;
   display:grid;place-items:center;font:700 12px var(--shrift);letter-spacing:.02em;
 }
 .profil .kim{line-height:1.15;padding-right:4px}
@@ -446,7 +450,7 @@ textarea.kirish-matn:focus{border-color:var(--chiziq-3);background:var(--varaq)}
 }
 @keyframes yaltirash{to{translate:100% 0}}
 .rejim-belgisi{
-  position:fixed;left:104px;bottom:18px;z-index:70;
+  position:fixed;left:120px;bottom:26px;z-index:70;
   display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;
   background:var(--varaq);border:1px solid var(--chiziq);border-radius:99px;
   padding:5px 11px;color:var(--iz);
@@ -527,3 +531,33 @@ textarea.kirish-matn:focus{border-color:var(--chiziq-3);background:var(--varaq)}
   .metrika .m-qiymat{font-size:24px}
   .kontent{padding:16px 14px 40px}
 }
+
+/* ---------- Shtrix-ko'rsatkich (qoplash mos-bari, 2-referens uslubi) ---------- */
+.shtrix{display:inline-flex;align-items:center;gap:8px;vertical-align:middle}
+.shtrix .panjara{display:inline-flex;gap:2px;align-items:center}
+.shtrix .panjara i{width:3px;height:15px;border-radius:1.5px;background:var(--kirish-fon)}
+.shtrix.z-yashil .panjara i.f{background:var(--yashil)}
+.shtrix.z-sariq .panjara i.f{background:#E8A13C}
+.shtrix.z-xavf .panjara i.f{background:var(--brend)}
+.shtrix b{font:600 11.5px var(--shrift-mono);color:var(--qalam);font-variant-numeric:tabular-nums}
+
+/* ---------- Qator amal tugmalari (soya-tugmalar) ---------- */
+.amal-tugmalar{display:inline-flex;gap:4px}
+.amal-tugma{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  color:var(--iz);border:1px solid transparent;transition:background var(--tez),color var(--tez),border-color var(--tez)}
+.amal-tugma:hover{background:var(--kirish-fon);color:var(--siyoh);border-color:var(--chiziq-2)}
+.amal-tugma .ic{width:15px;height:15px}
+
+/* ---------- Suzuvchi oyna — moslashuv va chop ---------- */
+@media (max-width:1100px){
+  .qobiq{padding:0;gap:0}
+  .relsa{top:0;height:100vh;border-radius:0}
+  .sahna{border-radius:0;box-shadow:none}
+  .shapka{border-radius:0}
+  body{background-attachment:scroll}
+}
+@media print{
+  body{background:#fff !important}
+  .sahna{box-shadow:none;border-radius:0}
+}
+

@@ -53,6 +53,11 @@ document.addEventListener("mkb:tayyor", async () => {
       {kalit: "kunlar", nom: "Kechikish", son: true, chiz: q =>
         '<span class="' + (q.kunlar > 180 ? 'chip chip-xavf' : 'chip') + '">' + q.kunlar + ' kun</span>'},
       {kalit: "qarzN", nom: "Qoldiq qarz", son: true, chiz: q => '<span class="pul">' + q.qarzMatn + '</span>'},
+      {kalit: "amal", nom: "", saralash: false, chiz: q =>
+        '<span class="amal-tugmalar">' +
+        '<button type="button" class="amal-tugma" title="Telefon: ' + q.tel + '" data-toast="Telefon terilmoqda: ' + q.tel + '">' + ik("tel") + "</button>" +
+        '<button type="button" class="amal-tugma" title="Xabar yuborish" data-toast="SMS oynasi ochildi: ' + q.nom.replace(/"/g, "") + '">' + ik("chat") + "</button>" +
+        '<a class="amal-tugma" title="Kartochka" href="qarzdor.html?id=' + encodeURIComponent(q.id) + '">' + ik("ong") + "</a></span>"},
     ],
     saralash: "qarzN",
     bosilganda: q => location.href = "qarzdor.html?id=" + encodeURIComponent(q.id),

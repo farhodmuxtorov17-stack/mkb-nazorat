@@ -277,6 +277,17 @@ const MKB = {
     return parda;
   },
 
+  /* Shtrix-ko'rsatkich: foiz -> mos-bar (jadval qatorlari uchun) */
+  shtrix(foiz, soni){
+    soni = soni || 22;
+    const toliq = Math.round(Math.max(0, Math.min(foiz, 200)) / 200 * soni);
+    const zona = foiz >= 140 ? "z-yashil" : foiz >= 100 ? "z-sariq" : "z-xavf";
+    let p = "";
+    for (let i = 0; i < soni; i++) p += '<i class="' + (i < toliq ? 'f' : '') + '"></i>';
+    return '<span class="shtrix ' + zona + '" role="img" aria-label="Qoplash ' + foiz + ' foiz">' +
+      '<span class="panjara">' + p + "</span><b>" + foiz + "%</b></span>";
+  },
+
   /* Qoplash halqasi: foiz -> SVG */
   halqa(foiz, olcham, qalinlik){
     olcham = olcham || 46; qalinlik = qalinlik || 4.5;
