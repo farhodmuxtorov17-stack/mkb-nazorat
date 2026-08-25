@@ -5,6 +5,14 @@
    Xos ismlar, manzillar va hujjat raqamlari ataylab tarjima qilinmaydi.
    ============================================================ */
 window.MKB_LUGAT = {
+  "Interfeys uslubi": "Стиль интерфейса",
+  "Konsol": "Консоль",
+  "Panorama": "Панорама",
+  "Konsol uslubi": "Стиль «Консоль»",
+  "Galereya uslubi": "Стиль «Галерея»",
+  "Panorama uslubi": "Стиль «Панорама»",
+  "Diqqat markazida · eng yuqori xavf": "В фокусе внимания · наивысший риск",
+  "Kechikish, kun": "Просрочка, дней",
   "Toshkent shahar sudi": "Ташкентский городской суд",
   "Toshkent viloyat sudi": "Ташкентский областной суд",
   "Samarqand sudi": "Самаркандский суд",

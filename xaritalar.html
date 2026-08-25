@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082604">
+<link rel="stylesheet" href="mkb.css?v=26082605">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 <style>
 /* ---- Hududiy xarita (ekran 5) ---- */
@@ -118,9 +118,9 @@
 </div>
 
 <script src="assets/vendor/leaflet/leaflet.js"></script>
-<script src="malumot.js?v=26082604"></script>
-<script src="tarjima.js?v=26082604"></script>
-<script src="mkb.js?v=26082604"></script>
+<script src="malumot.js?v=26082605"></script>
+<script src="tarjima.js?v=26082605"></script>
+<script src="mkb.js?v=26082605"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -241,11 +241,13 @@ const r2 = document.getElementById("r-2d"), r3 = document.getElementById("r-3d")
   if (b.id === "r-3d"){ uzMap.removeLayer(uzXarita); uzSputnik.addTo(uzMap); MKB.toast("Sputnik ko'rinishi yoqildi", "i-xarita"); }
   else { uzMap.removeLayer(uzSputnik); uzXarita.addTo(uzMap); MKB.toast("Sxematik xarita ko'rinishi", "i-xarita"); }
 }));
-});
 
 /* Jami HUDUDLARdan yig'iladi (Д-7) */
-document.getElementById("hj-jami").textContent = MKB_DATA.fmt(HUDUDLAR.reduce((a, h) => a + (+h[1]), 0));
+document.getElementById("hj-jami").textContent =
+  MKB_DATA.fmt(HUDUDLAR.reduce((a, h) => a + parseInt(String(h[1]).replace(/\s/g, ""), 10), 0));
 document.getElementById("hj-delta").textContent = MKB_DATA.PORTFEL.delta.hudud;
+});
+
 </script>
 </body>
 </html>

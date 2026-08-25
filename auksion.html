@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082604">
+<link rel="stylesheet" href="mkb.css?v=26082605">
 <style>
 /* ---- Auksion savdolari (Musodara qilingan aktiv obyektlarini realizatsiya qilish) ---- */
 .st-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
@@ -132,9 +132,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082604"></script>
-<script src="tarjima.js?v=26082604"></script>
-<script src="mkb.js?v=26082604"></script>
+<script src="malumot.js?v=26082605"></script>
+<script src="tarjima.js?v=26082605"></script>
+<script src="mkb.js?v=26082605"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -250,23 +250,9 @@ function panelChiz(){
   });
 }
 bosqichChiz(); panelChiz();
-});
-
-/* Tanlangan lot uchun so'nggi ko'rik akti (flow #7): akt bo'lmasa havola yashiriladi */
-(function(){
-  const a = document.getElementById("lot-akt");
-  if (!a) return;
-  function aktUlash(obyektId){
-    const k = MKB_DATA.KORIKLAR.filter(x => x.obyektId === obyektId && x.holat === "otkazildi")
-      .sort((x, y) => (x.sana < y.sana ? 1 : -1))[0];
-    if (k){ a.style.display = ""; a.href = "korik-akti.html?id=" + encodeURIComponent(k.id); }
-    else { a.style.display = "none"; }
-  }
-  window.lotAktUlash = aktUlash;
-})();
 
 /* KPI doska ma'lumotidan hisoblanadi (Д-7) */
-(function(){
+{
   const q = (i, v) => { const e = document.getElementById(i); if (e) e.textContent = v; };
   q("ak-doska", OBYEKTLAR.length);
   let korik = 0, muzokara = 0;
@@ -280,6 +266,20 @@ bosqichChiz(); panelChiz();
   q("ak-korik", korik);
   q("ak-muzokara", muzokara);
   q("ak-sotildi", MKB_DATA.ARXIV.filter(a => a.yil === "2026").length);
+}
+});
+
+/* Tanlangan lot uchun so'nggi ko'rik akti (flow #7): akt bo'lmasa havola yashiriladi */
+(function(){
+  const a = document.getElementById("lot-akt");
+  if (!a) return;
+  function aktUlash(obyektId){
+    const k = MKB_DATA.KORIKLAR.filter(x => x.obyektId === obyektId && x.holat === "otkazildi")
+      .sort((x, y) => (x.sana < y.sana ? 1 : -1))[0];
+    if (k){ a.style.display = ""; a.href = "korik-akti.html?id=" + encodeURIComponent(k.id); }
+    else { a.style.display = "none"; }
+  }
+  window.lotAktUlash = aktUlash;
 })();
 </script>
 </body>

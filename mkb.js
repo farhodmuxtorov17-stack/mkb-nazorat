@@ -456,22 +456,16 @@ function topbarHTML(){
   const sarlavha = document.body.dataset.topbarSarlavha;
   const ikon = document.body.dataset.topbarIkon || "i-xarita";
   const rolKalit = ROL_KALIT[joriyRol()];
-  const chap = sarlavha
-    ? `<div style="display:flex;align-items:center;gap:14px">
+  const chap = `${sarlavha ? `<div class="topbar-sarlavha-blok" style="display:flex;align-items:center;gap:14px">
          <svg class="ic" style="width:26px;height:26px;color:#18181B"><use href="#${ikon}"/></svg>
          <span style="font-size:24px;font-weight:750;letter-spacing:-.01em;color:#18181B">${sarlavha}</span>
-       </div>`
-    : `<div class="izlash" onclick="this.querySelector('input').focus()">
+       </div>` : ""}<div class="izlash${sarlavha ? " titleli" : ""}" onclick="this.querySelector('input').focus()">
          <input type="search" id="global-izlash" placeholder="Obyekt, shartnoma yoki mijoz bo'yicha qidirish..." aria-label="Qidirish">
          <svg class="ic"><use href="#i-izlash"/></svg>
+         <kbd aria-hidden="true">/</kbd>
        </div>`;
   return `
   ${chap}
-  <div class="global-qidiruv" role="search">
-    <svg class="ic"><use href="#i-izlash"/></svg>
-    <input id="global-qidiruv-input" type="search" placeholder="Aktivlar reyestridan qidirish…" aria-label="Reyestrdan qidirish">
-    <kbd>/</kbd>
-  </div>
   <div class="topbar-ong">
     <div class="filial-tanlov" data-popover-tugma role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false" aria-label="Filialni tanlash">
       <svg class="ic"><use href="#i-bank"/></svg>
@@ -486,10 +480,10 @@ function topbarHTML(){
         <button type="button" data-filial="Namangan filiali">Namangan filiali</button>
       </div>
     </div>
-    <div class="tema-almash" role="group" aria-label="Interfeys mavzusi">
-      <button type="button" data-tema="konsol" title="Konsol" aria-label="Konsol mavzusi"><i></i></button>
-      <button type="button" data-tema="realty" title="Realty" aria-label="Realty mavzusi"><i></i></button>
-      <button type="button" data-tema="estate" title="Estate" aria-label="Estate mavzusi"><i></i></button>
+    <div class="tema-almash" role="group" aria-label="Interfeys uslubi">
+      <button type="button" data-tema="konsol" title="Konsol" aria-label="Konsol uslubi"><i></i></button>
+      <button type="button" data-tema="realty" title="Galereya" aria-label="Galereya uslubi"><i></i></button>
+      <button type="button" data-tema="estate" title="Panorama" aria-label="Panorama uslubi"><i></i></button>
     </div>
     <div class="til-almash" role="group" aria-label="Interfeys tili">
       <button type="button" data-til="uz" class="${joriyTil()==="uz"?"aktiv":""}" aria-pressed="${joriyTil()==="uz"}">UZ</button>
@@ -704,27 +698,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
     });
   });
 
-  /* Global qidiruv (Estate temasi): Enter -> aktivlar reyestri */
-  (function(){
-    const q = document.getElementById("global-qidiruv-input");
-    if (!q) return;
-    if (!sahifaRuxsatlimi("obyektlar.html")){
-      const box = q.closest(".global-qidiruv");
-      if (box) box.remove();
-      return;
-    }
-    q.addEventListener("keydown", e => {
-      if (e.key === "Enter" && q.value.trim()){
-        location.href = "obyektlar.html?qidiruv=" + encodeURIComponent(q.value.trim());
-      }
-    });
-    document.addEventListener("keydown", e => {
-      if (e.key === "/" && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)){
-        e.preventDefault(); q.focus();
-      }
-    });
-  })();
-
   /* Tema almashtirgich */
   (function(){
     const joriy = () => document.documentElement.dataset.tema || "konsol";
@@ -815,11 +788,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // Global qidiruv → obyektlar sahifasi
   const gi = document.getElementById("global-izlash");
   if (gi){
-    gi.addEventListener("keydown", e=>{
-      if (e.key==="Enter" && gi.value.trim()){
-        location.href = "obyektlar.html?qidiruv="+encodeURIComponent(gi.value.trim());
-      }
-    });
+    if (!sahifaRuxsatlimi("obyektlar.html")){
+      const iz = gi.closest(".izlash");
+      if (iz) iz.remove();
+    } else {
+      gi.addEventListener("keydown", e=>{
+        if (e.key==="Enter" && gi.value.trim()){
+          location.href = "obyektlar.html?qidiruv="+encodeURIComponent(gi.value.trim());
+        }
+      });
+      document.addEventListener("keydown", e=>{
+        if (e.key==="/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){
+          e.preventDefault(); gi.focus();
+        }
+      });
+    }
   }
 
   // data-toast tugmalar

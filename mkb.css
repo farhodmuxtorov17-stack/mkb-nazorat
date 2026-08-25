@@ -835,12 +835,10 @@ html[data-tema="estate"] :focus-visible{outline-color:#F4581C}
 .tema-almash button[data-tema="estate"] i{background:linear-gradient(135deg,#FFFFFF 50%,#17181B 50%)}
 .tema-almash button.aktiv{background:var(--karta);box-shadow:0 1px 2px rgba(9,9,11,.10);outline:1px solid var(--chiziq)}
 
-/* ============ Global qidiruv (asosda yashirin, Estate ochadi) ============ */
-.global-qidiruv{display:none;align-items:center;gap:10px;flex:1;max-width:420px;height:40px;
-  padding:0 14px;border:1px solid var(--kirish-chiziq);border-radius:var(--r-kirish);background:var(--karta)}
-.global-qidiruv .ic{width:17px;height:17px;color:var(--matn-4)}
-.global-qidiruv input{flex:1;border:none;outline:none;background:none;font:inherit;font-size:13.5px;color:var(--matn);min-width:0}
-.global-qidiruv kbd{font:600 11px var(--shrift-mono);color:var(--matn-4);border:1px solid var(--chiziq);border-radius:5px;padding:1px 6px;background:var(--kanvas)}
+/* ============ Topbar izlash: sarlavhali sahifada yashirin (Panorama ochadi) ============ */
+.izlash.titleli{display:none}
+.izlash kbd{font:600 11px var(--shrift-mono);color:var(--matn-4);border:1px solid var(--chiziq);
+  border-radius:5px;padding:1px 6px;background:#FFFFFF;flex:none;order:-1}
 
 /* ============ B: REALTY — topbarsiz sahna, suzuvchi boshqaruv ============ */
 html[data-tema="realty"] .asosiy{position:relative}
@@ -850,10 +848,8 @@ html[data-tema="realty"] .topbar{
   background:var(--karta);border:1px solid var(--chiziq);border-radius:999px;
   box-shadow:var(--soya);
 }
-html[data-tema="realty"] .topbar .sahifa-sarlavha,
-html[data-tema="realty"] .topbar > .ic,
-html[data-tema="realty"] .topbar-sarlavha,
-html[data-tema="realty"] .topbar .ajratgich{display:none}
+html[data-tema="realty"] .topbar-sarlavha-blok,
+html[data-tema="realty"] .izlash{display:none}
 html[data-tema="realty"] .topbar-ong{gap:8px}
 html[data-tema="realty"] .filial-tanlov{border:none;background:transparent;height:36px}
 html[data-tema="realty"] .kontent{padding:86px 30px 44px;gap:20px}
@@ -923,6 +919,96 @@ html[data-tema="estate"] .profil .matnlar{display:none}
 html[data-tema="estate"] .profil{padding:4px}
 html[data-tema="estate"] .topbar-ong{gap:10px;flex:none}
 html[data-tema="estate"] .global-qidiruv{min-width:0}
-html[data-tema="estate"] .global-qidiruv{display:flex}
-html[data-tema="estate"] .topbar .sahifa-sarlavha,html[data-tema="estate"] .topbar-sarlavha{display:none}
+html[data-tema="estate"] .topbar-sarlavha-blok{display:none}
+html[data-tema="estate"] .izlash.titleli{display:flex}
+
+/* ============ Uslub tanlovi (kirish ekrani) ============ */
+.uslub-tanlov{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:26px}
+.ut-yorliq{font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--matn-4)}
+.ut-tugmalar{display:flex;gap:4px;background:var(--kanvas);border:1px solid var(--chiziq);border-radius:12px;padding:4px;width:max-content}
+.ut-tugmalar button{height:36px;padding:0 18px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--matn-2);transition:background var(--tez),color var(--tez)}
+.ut-tugmalar button:hover{background:#FFFFFF;color:var(--matn)}
+.ut-tugmalar button.aktiv{background:#FFFFFF;color:var(--matn);box-shadow:var(--soya)}
+
+/* ============ B GALEREYA: KPI alohida kartalar, xarita pastda ============ */
+html[data-tema="realty"] #dash-admin .kpi-band{background:none;border:none;gap:14px;overflow:visible;border-radius:0}
+html[data-tema="realty"] .kpi-band{background:none;border:none;gap:14px;overflow:visible;border-radius:0}
+html[data-tema="realty"] .kpi{background:var(--karta);border:1px solid var(--chiziq);border-radius:22px;
+  box-shadow:var(--soya);min-height:118px;padding:18px 20px;transition:transform var(--tez),box-shadow var(--tez)}
+html[data-tema="realty"] .kpi:hover{background:var(--karta);transform:translateY(-2px)}
+html[data-tema="realty"] .kpi-qiymat b{font-size:30px}
+html[data-tema="realty"] .kpi-tile{width:38px;height:38px;border-radius:999px}
+html[data-tema="realty"] #dash-admin{display:flex;flex-direction:column;gap:18px}
+html[data-tema="realty"] #dash-admin .sahifa-qator{order:-1}
+html[data-tema="realty"] #dash-admin .xarita-qator{order:9}
+
+/* B: reyestr — jadval o'rniga foto-kartalar to'ri */
+html[data-tema="realty"] .jadval-korpus{background:none;border:none;box-shadow:none;padding:0}
+html[data-tema="realty"] .jadval-orash{overflow:visible}
+html[data-tema="realty"] #obyekt-jadval{display:block;min-width:0;border:none}
+html[data-tema="realty"] #obyekt-jadval thead{display:none}
+html[data-tema="realty"] #obyekt-jadval tbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:16px}
+html[data-tema="realty"] #obyekt-jadval tr{display:flex;flex-direction:column;position:relative;
+  background:var(--karta);border:1px solid var(--chiziq);border-radius:20px;overflow:hidden;
+  padding-bottom:14px;cursor:pointer;transition:transform var(--tez),box-shadow var(--tez),border-color var(--tez)}
+html[data-tema="realty"] #obyekt-jadval tbody tr:hover{transform:translateY(-2px);box-shadow:var(--soya);background:var(--karta)}
+html[data-tema="realty"] #obyekt-jadval tr.tanlangan{border-color:#191914;box-shadow:0 0 0 1.5px #191914}
+html[data-tema="realty"] #obyekt-jadval td{display:block;border:none;padding:0 16px;height:auto;background:none;white-space:normal}
+html[data-tema="realty"] #obyekt-jadval td:first-child{padding:0}
+html[data-tema="realty"] .obyekt-katak{display:block}
+html[data-tema="realty"] .obyekt-katak img{width:100%;height:136px;border-radius:0;object-fit:cover;display:block}
+html[data-tema="realty"] .obyekt-katak > span:last-child{display:block;padding:12px 16px 6px}
+html[data-tema="realty"] .obyekt-katak .nom{font-size:15px;font-weight:700}
+html[data-tema="realty"] #obyekt-jadval td:nth-child(2),
+html[data-tema="realty"] #obyekt-jadval td:nth-child(3){display:inline-block;font-size:12.5px;color:var(--matn-3);padding-right:0;width:auto}
+html[data-tema="realty"] #obyekt-jadval td:nth-child(3){padding-left:5px}
+html[data-tema="realty"] #obyekt-jadval td:nth-child(3)::before{content:"· ";color:var(--matn-4)}
+html[data-tema="realty"] #obyekt-jadval td:nth-child(4){position:absolute;top:10px;left:10px;padding:0}
+html[data-tema="realty"] #obyekt-jadval td:nth-child(4) .status-katak{background:rgba(255,255,255,.94);
+  border-radius:999px;padding:5px 11px;font-size:11.5px;font-weight:700;box-shadow:var(--soya)}
+html[data-tema="realty"] #obyekt-jadval td:nth-child(5){font-size:16.5px;padding-top:8px}
+html[data-tema="realty"] #obyekt-jadval td:nth-child(6){position:absolute;top:96px;right:12px;padding:0}
+html[data-tema="realty"] #obyekt-jadval td:nth-child(6) .ball-halqa{background:#FFFFFF;border-radius:999px;box-shadow:var(--soya);padding:3px}
+
+/* B: kirish ekrani — quyuq zaytun panel, lime aksent */
+html[data-tema="realty"] .brend{background:radial-gradient(120% 90% at 12% -10%,#3D470E 0%,#262C09 48%,#141705 100%)}
+html[data-tema="realty"] .brend path{fill:#C9EE3F}
+html[data-tema="realty"] .brend .tik{background:rgba(201,238,63,.16);color:#D3F35A}
+
+/* ============ C PANORAMA: xarita chapda, KPI ustuni o'ngda ============ */
+html[data-tema="estate"] .kpi-band{background:none;border:none;gap:12px;overflow:visible;border-radius:0}
+html[data-tema="estate"] .kpi{background:var(--karta);border:1px solid var(--chiziq);border-radius:14px;box-shadow:var(--soya)}
+html[data-tema="estate"] .kpi:hover{background:#FFFFFF}
+html[data-tema="estate"] .kpi:first-child{background:#101113;border-color:#101113}
+html[data-tema="estate"] .kpi:first-child:hover{background:#17181C}
+html[data-tema="estate"] .kpi:first-child .kpi-yorliq{color:rgba(255,255,255,.62)}
+html[data-tema="estate"] .kpi:first-child .kpi-qiymat b{color:#FFFFFF}
+html[data-tema="estate"] .kpi:first-child .kpi-izoh{color:rgba(255,255,255,.55)}
+html[data-tema="estate"] .kpi:first-child .kpi-tile{background:rgba(255,255,255,.14);color:#FFC9B2}
+html[data-tema="estate"] #dash-admin{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
+html[data-tema="estate"] #dash-admin .sahifa-qator{grid-column:1/-1;grid-row:1}
+html[data-tema="estate"] #dash-admin .xarita-qator{grid-column:1;grid-row:2}
+html[data-tema="estate"] #dash-admin .kpi-band{grid-column:2;grid-row:2;grid-template-columns:minmax(0,1fr);align-content:start;gap:12px}
+html[data-tema="estate"] #dash-admin .kpi{min-height:0}
+html[data-tema="estate"] #dash-admin .past-qator{grid-column:1/-1;grid-row:3}
+html[data-tema="estate"] #dash-admin .realty-hero{display:none}
+@media (max-width:1240px){
+  html[data-tema="estate"] #dash-admin{grid-template-columns:minmax(0,1fr)}
+  html[data-tema="estate"] #dash-admin .sahifa-qator,
+  html[data-tema="estate"] #dash-admin .kpi-band,
+  html[data-tema="estate"] #dash-admin .xarita-qator,
+  html[data-tema="estate"] #dash-admin .past-qator{grid-column:1;grid-row:auto}
+  html[data-tema="estate"] #dash-admin .kpi-band{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* C: reyestr — yirik foto qatorlar */
+html[data-tema="estate"] .obyekt-katak img{width:86px;height:60px;border-radius:10px}
+html[data-tema="estate"] #obyekt-jadval td{padding-top:12px;padding-bottom:12px}
+html[data-tema="estate"] .obyekt-katak .nom{font-size:14.5px;font-weight:650}
+
+/* C: kirish ekrani — obyekt fotosi ustidagi to'q panel */
+html[data-tema="estate"] .brend{background:linear-gradient(200deg,rgba(12,13,16,.5) 0%,rgba(12,13,16,.93) 68%),
+  url("assets/hero_tower_800.webp") center/cover no-repeat #101113}
+html[data-tema="estate"] .brend path{fill:#F4581C}
+html[data-tema="estate"] .brend .tik{background:rgba(244,88,28,.18);color:#FF9468}
 

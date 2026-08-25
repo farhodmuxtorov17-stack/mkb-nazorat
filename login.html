@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082604">
+<link rel="stylesheet" href="mkb.css?v=26082605">
 <style>
 body{background:var(--kanvas);min-height:100vh;overflow-x:hidden}
 
@@ -184,6 +184,14 @@ body{background:var(--kanvas);min-height:100vh;overflow-x:hidden}
 
 <div class="forma-tomon">
 <main class="orash">
+  <div class="uslub-tanlov">
+    <span class="ut-yorliq">Interfeys uslubi</span>
+    <div class="ut-tugmalar" role="group" aria-label="Interfeys uslubi">
+      <button type="button" data-tema="konsol" aria-pressed="false">Konsol</button>
+      <button type="button" data-tema="realty" aria-pressed="false">Galereya</button>
+      <button type="button" data-tema="estate" aria-pressed="false">Panorama</button>
+    </div>
+  </div>
   <div class="m-logo">
     <svg width="34" height="34" viewBox="0 0 44 44" aria-hidden="true">
       <g transform="translate(0,-6)">
@@ -261,13 +269,14 @@ body{background:var(--kanvas);min-height:100vh;overflow-x:hidden}
       Administrator sifatida kirish →
     </button>
   </div>
+
 </main>
 </div>
 </div>
 
-<script src="malumot.js?v=26082604"></script>
-<script src="tarjima.js?v=26082604"></script>
-<script src="mkb.js?v=26082604"></script>
+<script src="malumot.js?v=26082605"></script>
+<script src="tarjima.js?v=26082605"></script>
+<script src="mkb.js?v=26082605"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   /* Login sahifasiga qaytish = sessiya yakuni: eski "asl rol" saqlanib
@@ -352,6 +361,25 @@ document.addEventListener("DOMContentLoaded", ()=>{
       }});
   });
 });
+</script>
+<script>
+/* Interfeys uslubini tanlash — tanlov brauzerda saqlanadi */
+(function(){
+  const joriy = () => document.documentElement.dataset.tema || "konsol";
+  const tugmalar = document.querySelectorAll(".ut-tugmalar button");
+  const yangila = () => tugmalar.forEach(b => {
+    const faol = b.dataset.tema === joriy();
+    b.classList.toggle("aktiv", faol);
+    b.setAttribute("aria-pressed", faol);
+  });
+  tugmalar.forEach(b => b.addEventListener("click", () => {
+    const t = b.dataset.tema;
+    if (t === "konsol"){ delete document.documentElement.dataset.tema; localStorage.removeItem("mkb-tema"); }
+    else { document.documentElement.dataset.tema = t; localStorage.setItem("mkb-tema", t); }
+    yangila();
+  }));
+  yangila();
+})();
 </script>
 </body>
 </html>

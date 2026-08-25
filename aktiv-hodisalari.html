@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082604">
+<link rel="stylesheet" href="mkb.css?v=26082605">
 <style>
 /* ---- Hodisalar markazi (ekran 7) ---- */
 .hodisa-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;align-items:start}
@@ -255,9 +255,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082604"></script>
-<script src="tarjima.js?v=26082604"></script>
-<script src="mkb.js?v=26082604"></script>
+<script src="malumot.js?v=26082605"></script>
+<script src="tarjima.js?v=26082605"></script>
+<script src="mkb.js?v=26082605"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -582,16 +582,16 @@ document.getElementById("jiddiylik-filtr").addEventListener("tanlov", e=>{
   royxatChiz(); kanbanChiz();
 });
 
-/* Boshlash */
+/* Boshlash: ro'yxat, kanban, detal va "Bugun" ko'rsatkichlari */
 royxatChiz(); kanbanChiz(); detalChiz(HODISALAR[0]);
-});
-
-/* Dastlabki "Bugun" qiymatlari hisoblab to'ldiriladi */
-document.addEventListener("DOMContentLoaded", () => {
+{
   const m = UMUMIY_MALUMOT["Bugun"];
   [["us-yangi","yangi"],["us-bartaraf","bartaraf"],["us-yopildi","yopildi"],["us-ortacha","ortacha"]].forEach(([id,key])=>{
     const e = document.getElementById(id); if (e) e.textContent = m[key][0];
+    const d = document.getElementById(id+"-d");
+    if (d){ d.textContent = m[key][1]; d.className = "delta" + (m[key][2] ? " salbiy" : ""); }
   });
+}
 });
 </script>
 </body>
