@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Garov monitoringi: nazorat holati bo'yicha yig'ma ekran ---- */
 .mn-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
@@ -30,7 +30,7 @@
 .mn-belgi{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
 .mn-belgi .ic{width:11px;height:11px}
 .b-yaxshi{background:#E6F5EA;color:#1F7A3D}
-.b-ogoh{background:#FFF6DE;color:#9A6E00}
+.b-ogoh{background:#FFF6DE;color:#7A5600}
 .b-xavf{background:#FDEEEC;color:#C43C31}
 
 /* O'ng panel: e'tibor talab qilinadigan holatlar */
@@ -64,7 +64,7 @@
         <div class="sahifa-izoh">Har bir obyekt bo'yicha ko'rik, sug'urta va baholash holati — bir ekranda</div>
       </div>
       <div class="sahifa-harakat">
-        <button class="tanlov" data-royxat="hudud" data-royxat-bosh="Barcha hududlar"><span class="t-yorliq">Barcha hududlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+        <button class="tanlov" id="f-hudud" data-royxat="hudud" data-royxat-bosh="Barcha hududlar"><span class="t-yorliq">Barcha hududlar</span><svg class="ic"><use href="#i-past"/></svg></button>
         <button class="tugma tugma-oq" data-toast="Monitoring hisoboti PDF ga yuklanmoqda"><svg class="ic"><use href="#i-yuklab"/></svg>Hisobot</button>
       </div>
     </div>
@@ -129,9 +129,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 const D = MKB_DATA;
 
@@ -149,8 +149,6 @@ document.getElementById("k-hodisa").textContent =
 
 /* ---- Har bir yozuv bo'yicha nazorat holati: uch o'q ---- */
 function korikHolati(id){
-  const k = D.KORIKLAR.filter(x => x.obyektId === id)
-    .sort((a, b) => (a.holat === "otkazildi" ? 0 : 1) - (b.holat === "otkazildi" ? 0 : 1));
   const otgan = D.KORIKLAR.find(x => x.obyektId === id && x.holat === "otkazildi");
   const kechikkan = D.KORIKLAR.find(x => x.obyektId === id && x.holat === "muddati_otgan");
   if (kechikkan) return {cls: "b-xavf", ikon: "i-ogoh", matn: "Ko'rik o'tkazilmadi"};
@@ -171,15 +169,20 @@ function bahoHolati(id){
   if (b.holat === "tugaydi")    return {cls: "b-ogoh", ikon: "i-soat", matn: b.keyingi + " gacha"};
   return {cls: "b-yaxshi", ikon: "i-belgi", matn: b.keyingi + " gacha"};
 }
-const belgi = h => `<span class="mn-belgi ${h.cls}"><svg class="ic"><use href="#${h.ikon}"/></svg>${h.matn}</span>`;
+const HOLAT_SOZ = {"b-yaxshi": "holat yaxshi", "b-ogoh": "e'tibor talab qilinadi", "b-xavf": "muammo"};
+const belgi = h => `<span class="mn-belgi ${h.cls}"><svg class="ic" aria-hidden="true"><use href="#${h.ikon}"/></svg><span class="sr-only">${HOLAT_SOZ[h.cls]}: </span>${h.matn}</span>`;
 
-function ballRang(b){ return b >= 80 ? "#2E9E52" : b >= 60 ? "#D98324" : "#C0392B"; }
+function ballRang(b){ return b >= 80 ? "#1F7A3D" : b >= 60 ? "#B45309" : "#C0392B"; }
 
-document.getElementById("mn-jadval").innerHTML = D.YOZUVLAR.map(y => `
-  <tr class="mn-qator" data-id="${y.id}" tabindex="0">
+let fHudud = null;
+function jadvalChiz(){
+document.getElementById("mn-jadval").innerHTML = D.YOZUVLAR
+  .filter(y => !fHudud || y.garov.hudud === fHudud)
+  .map(y => `
+  <tr class="mn-qator" data-id="${y.id}" tabindex="0" role="link" aria-label="${y.garov.qisqa} kartochkasini ochish">
     <td>
       <div class="mn-obyekt">
-        <img src="${y.garov.rasm}" alt="">
+        <img src="${y.garov.rasmKichik}" alt="" loading="lazy" width="44" height="44">
         <div><b>${y.garov.qisqa}</b><span>${y.id} · ${y.garov.hudud}</span></div>
       </div>
     </td>
@@ -196,7 +199,13 @@ document.getElementById("mn-jadval").innerHTML = D.YOZUVLAR.map(y => `
 document.querySelectorAll(".mn-qator").forEach(tr => {
   const och = () => location.href = "obyekt.html?id=" + encodeURIComponent(tr.dataset.id);
   tr.addEventListener("click", och);
-  tr.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); och(); } });
+  tr.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); och(); } });
+});
+}
+jadvalChiz();
+document.getElementById("f-hudud").addEventListener("tanlov", e => {
+  fHudud = e.detail === "Barcha hududlar" ? null : e.detail;
+  jadvalChiz();
 });
 
 /* ---- E'tibor paneli: uch manbadan yig'iladi, qo'lda yozilmaydi (Д-7) ---- */
@@ -222,7 +231,7 @@ D.BAHOLASHLAR.filter(b => b.holat === "eskirgan").forEach(b => etibor.push({
 
 const tile = t => t === "xavf"
   ? 'style="background:#FDEEEC;color:#C43C31"'
-  : 'style="background:#FFF6DE;color:#9A6E00"';
+  : 'style="background:#FFF6DE;color:#7A5600"';
 
 document.getElementById("mn-etibor").innerHTML = etibor.map(e => `
   <div class="et-band">

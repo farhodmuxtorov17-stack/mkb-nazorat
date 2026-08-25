@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- MIB'dan qabul qilish wizard'i (yangi jarayon) ---- */
 .orqa-tugma{width:48px;height:48px;border-radius:14px;background:var(--karta);box-shadow:var(--soya);display:grid;place-items:center;color:#1C2836;flex:none}
@@ -21,7 +21,7 @@
 .q-qadam.bajarildi::before,.q-qadam.joriy::before{background:#CDE8E0}
 .q-qadam .belgi{width:36px;height:36px;border-radius:99px;margin:0 auto;display:grid;place-items:center;font-size:14px;font-weight:750;position:relative;z-index:1;background:#EEF1F5;color:#6B7684;box-shadow:var(--chuqur-tile-tor)}
 .q-qadam.bajarildi .belgi{background:#0E6B5C;color:#fff}
-.q-qadam.joriy .belgi{background:#B2D4F3;color:#0A5348;box-shadow:var(--chuqur-tile-tor)}
+.q-qadam.joriy .belgi{background:var(--tile-och);color:#0A5348;box-shadow:var(--chuqur-tile-tor)}
 .q-qadam .belgi .ic{width:16px;height:16px;stroke-width:2.6}
 .q-qadam b{display:block;font-size:13px;font-weight:700;margin-top:9px}
 .q-qadam span{display:block;font-size:11.5px;color:var(--matn-4)}
@@ -36,7 +36,7 @@
   transition:all var(--tez);
 }
 .hujjat-tile:hover{border-color:#7FB4E0;background:#F7FAFD}
-.hujjat-tile.yuklandi{border-style:solid;border-color:#CDE8E0;background:#EAF3FC}
+.hujjat-tile.yuklandi{border-style:solid;border-color:#CDE8E0;background:var(--asos-fon)}
 .hujjat-tile .ic{width:24px;height:24px;color:#56626E;margin:0 auto}
 .hujjat-tile.yuklandi .ic{color:#0A5348}
 .hujjat-tile b{display:block;font-size:13.5px;font-weight:700;margin-top:9px}
@@ -63,12 +63,12 @@
 .j-belgi .ic{width:15px;height:15px}
 .j-belgi.yashil{background:#E3F1ED;color:#0A5348}
 .j-belgi.kok{background:#E7F0FE;color:#2F6BCF}
-.j-belgi.sariq{background:#FFF6DE;color:#9A6E00}
+.j-belgi.sariq{background:#FFF6DE;color:#7A5600}
 .j-belgi.binafsha{background:#F3EBFE;color:#8A4BD8}
 .j-belgi.kul{background:#EEF2F7;color:#515F6D}
 .j-band b{display:block;font-size:13.5px;font-weight:700;line-height:1.35}
 .j-band p{font-size:12px;color:var(--matn-3);line-height:1.5;margin-top:2px}
-@media (max-width:1240px){.w-grid{grid-template-columns:minmax(0,1fr)}.forma-grid{grid-template-columns:minmax(0,1fr)}.hujjat-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:1320px){.w-grid{grid-template-columns:minmax(0,1fr)}.forma-grid{grid-template-columns:minmax(0,1fr)}.hujjat-grid{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body data-sahifa="realizatsiya">
@@ -81,7 +81,7 @@
 
   <main class="kontent">
     <div class="sahifa-qator">
-      <a class="orqa-tugma" href="obyektlar.html" aria-label="Orqaga"><svg class="ic"><use href="#i-chap"/></svg></a>
+      <a class="orqa-tugma" href="obyektlar.html" id="orqa-havola" aria-label="Orqaga"><svg class="ic"><use href="#i-chap"/></svg></a>
       <div>
         <h1>MIB'dan obyekt qabul qilish</h1>
         <div class="sahifa-izoh">Musodara qilingan obyektni hujjatlari bilan tizimga kiritish va nazoratga olish</div>
@@ -93,8 +93,8 @@
       <div class="qadam-chiziq" id="qadamlar">
         <div class="q-qadam joriy" data-q="1"><span class="belgi">1</span><b>Obyekt ma'lumotlari</b><span>Asosiy rekvizitlar</span></div>
         <div class="q-qadam" data-q="2"><span class="belgi">2</span><b>MIB hujjatlari</b><span>Sud qarori va dalolatnoma</span></div>
-        <div class="q-qadam" data-q="3"><span class="belgi">3</span><b>Xavfsizlik rejasi</b><span>Texnik topshiriq</span></div>
-        <div class="q-qadam" data-q="4"><span class="belgi">4</span><b>Tasdiqlash</b><span>Nazoratga olish</span></div>
+        <div class="q-qadam" data-q="3"><span class="belgi">3</span><b>Nazoratga olish</b><span>Ko'rik va sug'urta</span></div>
+        <div class="q-qadam" data-q="4"><span class="belgi">4</span><b>Tasdiqlash</b><span>Yakuniy tekshiruv</span></div>
       </div>
     </div>
 
@@ -106,18 +106,18 @@
           <h3>Obyekt ma'lumotlari</h3>
           <div class="sub">MIB ijro ishi bo'yicha musodara qilingan obyekt rekvizitlarini kiriting.</div>
           <div class="forma-grid">
-            <div class="keng"><label class="maydon-yorliq">Obyekt nomi</label><div class="kirish"><svg class="ic"><use href="#i-bino"/></svg><input id="f-nom" placeholder="Masalan: Sergeli turar-joy binosi"></div></div>
+            <div class="keng"><label class="maydon-yorliq" for="f-nom">Obyekt nomi</label><div class="kirish"><svg class="ic"><use href="#i-bino"/></svg><input id="f-nom" placeholder="Masalan: Sergeli turar-joy binosi"></div></div>
             <div><label class="maydon-yorliq">Obyekt turi</label>
               <button type="button" class="tanlov" id="f-tur" data-variantlar='["Kvartira","Turar-joy binosi","Dala hovli","Biznes markazi","Savdo markazi","Do&#39;kon","Ombor","Yer uchastkasi"]'><span class="t-yorliq">Turini tanlang</span><svg class="ic"><use href="#i-past"/></svg></button>
             </div>
-            <div><label class="maydon-yorliq">Umumiy maydon (m²)</label><div class="kirish"><svg class="ic"><use href="#i-kengay"/></svg><input placeholder="Masalan: 1 250"></div></div>
-            <div class="keng"><label class="maydon-yorliq">Manzil</label><div class="kirish"><svg class="ic"><use href="#i-pin"/></svg><input placeholder="Viloyat, tuman, ko'cha, uy"></div></div>
-            <div><label class="maydon-yorliq">MIB ijro ishi raqami</label><div class="kirish"><svg class="ic"><use href="#i-hujjat"/></svg><input id="f-mib" placeholder="MIB-2026-____"></div></div>
-            <div><label class="maydon-yorliq">Sud qarori raqami</label><div class="kirish"><svg class="ic"><use href="#i-shartnoma"/></svg><input placeholder="SQ-2026-____"></div></div>
+            <div><label class="maydon-yorliq" for="f-maydon">Umumiy maydon (m²)</label><div class="kirish"><svg class="ic"><use href="#i-kengay"/></svg><input id="f-maydon" placeholder="Masalan: 1 250"></div></div>
+            <div class="keng"><label class="maydon-yorliq" for="f-manzil">Manzil</label><div class="kirish"><svg class="ic"><use href="#i-pin"/></svg><input id="f-manzil" placeholder="Viloyat, tuman, ko'cha, uy"></div></div>
+            <div><label class="maydon-yorliq" for="f-mib">MIB ijro ishi raqami</label><div class="kirish"><svg class="ic"><use href="#i-hujjat"/></svg><input id="f-mib" placeholder="MIB-2026-____"></div></div>
+            <div><label class="maydon-yorliq" for="f-sud">Sud qarori raqami</label><div class="kirish"><svg class="ic"><use href="#i-shartnoma"/></svg><input id="f-sud" placeholder="SQ-2026-____"></div></div>
             <div><label class="maydon-yorliq">MIB bo'limi</label>
               <button type="button" class="tanlov" data-variantlar='["Toshkent sh. MIB","Toshkent vil. MIB","Samarqand MIB","Buxoro MIB"]'><span class="t-yorliq">Bo'limni tanlang</span><svg class="ic"><use href="#i-past"/></svg></button>
             </div>
-            <div><label class="maydon-yorliq">Taxminiy qiymati (so'm)</label><div class="kirish"><svg class="ic"><use href="#i-daromad"/></svg><input placeholder="0"></div></div>
+            <div><label class="maydon-yorliq" for="f-qiymat">Taxminiy qiymati (so'm)</label><div class="kirish"><svg class="ic"><use href="#i-daromad"/></svg><input id="f-qiymat" placeholder="0"></div></div>
           </div>
         </div>
 
@@ -168,7 +168,7 @@
             <div class="xj-qator"><span class="yorliq">Turi</span><b id="x-tur">—</b></div>
             <div class="xj-qator"><span class="yorliq">MIB ijro ishi</span><b id="x-mib">—</b></div>
             <div class="xj-qator"><span class="yorliq">Yuklangan hujjatlar</span><b id="x-hujjat">0 / 4</b></div>
-            <div class="xj-qator"><span class="yorliq">Xavfsizlik topshirig'i</span><b>Yaratiladi (WO avtomatik)</b></div>
+            <div class="xj-qator"><span class="yorliq">Birinchi ko'rik</span><b>Topshiriq avtomatik yaratiladi</b></div>
             <div class="xj-qator"><span class="yorliq">Boshlang'ich holat</span><b><span class="chip chip-sariq" style="height:24px">Nazoratga olinmoqda</span></b></div>
           </div>
         </div>
@@ -194,9 +194,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -217,18 +217,34 @@ function korsat(){
     : 'Davom etish<svg class="ic"><use href="#i-strelka"/></svg>';
   if (qadam === 4){
     document.getElementById("x-nom").textContent = document.getElementById("f-nom").value || "Nomsiz obyekt";
-    document.getElementById("x-tur").textContent = document.querySelector("#f-tur .t-yorliq").textContent;
+    const turM = document.querySelector("#f-tur .t-yorliq").textContent;
+    document.getElementById("x-tur").textContent = turM === "Turini tanlang" ? "—" : turM;
     document.getElementById("x-mib").textContent = document.getElementById("f-mib").value || "—";
     document.getElementById("x-hujjat").textContent = hujjatlar+" / 4";
   }
 }
 document.getElementById("oldinga").addEventListener("click", ()=>{
+  /* Qadam validatsiyasi (flow-integrity #9): bo'sh forma oxirigacha o'tmaydi */
+  if (qadam === 1){
+    if (!document.getElementById("f-nom").value.trim()){
+      MKB.toast("Obyekt nomini kiriting"); return;
+    }
+    if (document.querySelector("#f-tur .t-yorliq").textContent === "Turini tanlang"){
+      MKB.toast("Obyekt turini tanlang"); return;
+    }
+    if (!document.getElementById("f-mib").value.trim()){
+      MKB.toast("MIB ijro ishi raqamini kiriting"); return;
+    }
+  }
+  if (qadam === 2 && hujjatlar < 2){
+    MKB.toast("Majburiy hujjatlarni yuklang — sud qarori va musodara dalolatnomasi"); return;
+  }
   if (qadam < 4){ qadam++; korsat(); return; }
   MKB.modal("Obyektni nazoratga olish",
-    "Obyekt tizimga kiritiladi, texnik xodimga qurilmalar o'rnatish topshirig'i (work-order) yuboriladi va obyekt Admin, Rahbariyat hamda Operatorlarga ko'rinadigan bo'ladi.",
+    "Obyekt bank balansiga qabul qilinadi: garov xizmatiga birinchi ko'rik topshirig'i tushadi, sug'urta polisi bank nomiga rasmiylashtiriladi. Obyekt filial rahbari, garov xizmati va yuristga ko'rinadigan bo'ladi.",
     { okMatn:"Tasdiqlash", ok(){
-      MKB.toast("Obyekt qabul qilindi — WO-2026-0001 texnik topshiriq yaratildi", "i-belgi-doira");
-      setTimeout(()=>location.href="obyektlar.html", 1100);
+      MKB.toast("Obyekt qabul qilindi — KO-2026/0413 birinchi ko'rik topshirig'i yaratildi", "i-belgi-doira");
+      setTimeout(()=>location.href = MKB.sahifaRuxsatlimi("obyektlar.html") ? "obyektlar.html" : "auksion.html", 1100);
     }});
 });
 document.getElementById("orqaga").addEventListener("click", ()=>{ if (qadam>1){ qadam--; korsat(); } });
@@ -243,6 +259,12 @@ document.querySelectorAll(".hujjat-tile").forEach(t=>{
   });
 });
 korsat();
+});
+
+/* Orqaga tugmasi rolga mos manzilga (rbac #11) */
+document.addEventListener("DOMContentLoaded", () => {
+  const a = document.getElementById("orqa-havola");
+  if (a && !MKB.sahifaRuxsatlimi("obyektlar.html")) a.href = "auksion.html";
 });
 </script>
 </body>

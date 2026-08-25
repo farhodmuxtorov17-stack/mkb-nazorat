@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Qayta baholash: garov qiymati dolzarbligi ---- */
 .bh-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
@@ -16,7 +16,7 @@
 .bh-jadval .son{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .bh-holat{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
 .bh-dolzarb{background:#E6F5EA;color:#1F7A3D}
-.bh-tugaydi{background:#FFF6DE;color:#9A6E00}
+.bh-tugaydi{background:#FFF6DE;color:#7A5600}
 .bh-eskirgan{background:#FDEEEC;color:#C43C31}
 
 .dinamika{display:inline-flex;align-items:center;gap:4px;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -58,7 +58,7 @@
         <div class="sahifa-izoh">Garov qiymatining dolzarbligi: baholash muddatlari va qiymat dinamikasi</div>
       </div>
       <div class="sahifa-harakat">
-        <button class="tanlov" data-variantlar='["Barcha holatlar","Dolzarb","Tez orada eskiradi","Eskirgan"]'><span class="t-yorliq">Barcha holatlar</span><svg class="ic"><use href="#i-past"/></svg></button>
+        <button class="tanlov" id="f-holat" data-variantlar='["Barcha holatlar","Dolzarb","Tez orada eskiradi","Eskirgan"]'><span class="t-yorliq">Barcha holatlar</span><svg class="ic"><use href="#i-past"/></svg></button>
         <button class="tugma tugma-asos" data-toast="Baholovchi tashkilotga buyurtma oynasi"><svg class="ic"><use href="#i-qoshish"/></svg>Baholash buyurtmasi</button>
       </div>
     </div>
@@ -117,9 +117,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 const D = MKB_DATA;
 const pul = D.pul, f = D.fmt;
@@ -147,9 +147,15 @@ const dinamika = b => {
     : `<span class="dinamika d-tushdi">↓ ${foiz}%</span>`;
 };
 
-document.getElementById("bh-jadval").innerHTML = D.BAHOLASHLAR.map((b, i) => {
-  const [cls, nom] = HOLAT[b.holat];
-  return `
+/* Filtr holati: null = hammasi (dead-control #4 tuzatildi) */
+let fHolat = null;
+const HOLAT_TANLOV = {"Dolzarb": "dolzarb", "Tez orada eskiradi": "tugaydi", "Eskirgan": "eskirgan"};
+
+function jadvalChiz(){
+  document.getElementById("bh-jadval").innerHTML = D.BAHOLASHLAR.map((b, i) => {
+    if (fHolat && b.holat !== fHolat) return "";
+    const [cls, nom] = HOLAT[b.holat];
+    return `
   <tr class="bh-qator" data-i="${i}" tabindex="0">
     <td><b>${b.obyekt}</b><div style="font-size:12px;color:var(--matn-3)">${b.obyektId}</div></td>
     <td style="white-space:nowrap">${b.sana}</td>
@@ -159,7 +165,9 @@ document.getElementById("bh-jadval").innerHTML = D.BAHOLASHLAR.map((b, i) => {
     <td style="white-space:nowrap">${b.keyingi}</td>
     <td><span class="bh-holat ${cls}">${nom}</span></td>
   </tr>`;
-}).join("");
+  }).join("") || `<tr><td colspan="7" style="text-align:center;color:var(--matn-3);padding:26px 0">Tanlangan holat bo'yicha baholash yo'q</td></tr>`;
+  ulaQatorlar();
+}
 
 /* ---- Panel ---- */
 function panelChiz(i){
@@ -197,16 +205,24 @@ function panelChiz(i){
     </a>` : ""}`;
 }
 
-const qatorlar = [...document.querySelectorAll(".bh-qator")];
-function tanla(tr){
-  qatorlar.forEach(x => x.classList.toggle("tanlangan", x === tr));
-  panelChiz(+tr.dataset.i);
+/* Qator ulanishi har chizishdan keyin qayta bog'lanadi */
+function ulaQatorlar(){
+  const qatorlar = [...document.querySelectorAll(".bh-qator")];
+  function tanla(tr){
+    qatorlar.forEach(x => x.classList.toggle("tanlangan", x === tr));
+    panelChiz(+tr.dataset.i);
+  }
+  qatorlar.forEach(tr => {
+    tr.addEventListener("click", () => tanla(tr));
+    tr.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); tanla(tr); } });
+  });
+  if (qatorlar.length) tanla(qatorlar[0]);
 }
-qatorlar.forEach(tr => {
-  tr.addEventListener("click", () => tanla(tr));
-  tr.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); tanla(tr); } });
+jadvalChiz();
+document.getElementById("f-holat").addEventListener("tanlov", e => {
+  fHolat = HOLAT_TANLOV[e.detail] || null;
+  jadvalChiz();
 });
-tanla(qatorlar[0]);
 </script>
 </body>
 </html>

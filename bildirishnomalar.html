@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Bildirishnomalar (ekran 19) ---- */
 .bn-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;align-items:start}
@@ -34,7 +34,7 @@
   transition:background var(--tez),border-color var(--tez);
 }
 .bn-band:hover{background:#F7F9FC}
-.bn-band.yangi{background:#EAF3FB;border-color:#C1D9F0}
+.bn-band.yangi{background:var(--asos-fon);border-color:#96CBBC}
 .bn-band .tile{width:42px;height:42px;border-radius:12px;border:1px solid var(--chiziq);background:#fff;display:grid;place-items:center;flex:none;color:#3A4756}
 .bn-band .tile .ic{width:19px;height:19px}
 .bn-band b{display:block;font-size:14.5px;font-weight:700}
@@ -101,9 +101,9 @@
           </div>
           <div id="bn-royxat"></div>
           <div class="sahifalash" style="padding:14px 0 0">
-            <span class="oraliq">Jami: <b>12</b></span>
+            <span class="oraliq">Jami: <b id="bl-jami">–</b></span>
             <button class="s-tugma" data-toast="Oldingi sahifa" aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
-            <button class="s-tugma aktiv">1</button>
+            <button class="s-tugma aktiv" disabled aria-current="page">1</button>
             <button class="s-tugma" data-toast="2-sahifa">2</button>
             <button class="s-tugma" data-toast="Keyingi sahifa" aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
           </div>
@@ -155,13 +155,14 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
-const BILDIRISHLAR = MKB_DATA.BILDIRISHLAR;   /* yagona manba (Д-1) */
+const BILDIRISHLAR = MKB_DATA.BILDIRISHLAR;
+document.addEventListener("DOMContentLoaded",()=>{const e=document.getElementById("bl-jami");if(e)e.textContent=BILDIRISHLAR.length;});   /* yagona manba (Д-1) */
 let filtr = "Barchasi";
 
 function royxatChiz(){
@@ -177,6 +178,10 @@ function royxatChiz(){
     b.addEventListener("click", ()=>{
       const x = BILDIRISHLAR[+b.dataset.i];
       x.yangi = false;
+      if (!MKB.sahifaRuxsatlimi(x.havola)){
+        MKB.toast("Bu bo'lim sizning rolingiz uchun ochiq emas", "i-qalqon");
+        return;
+      }
       location.href = x.havola;
     });
   });

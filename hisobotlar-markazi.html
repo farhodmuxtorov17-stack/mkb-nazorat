@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Hisobotlar markazi (ekran 20) ---- */
 .hm-filtrlar{display:flex;gap:14px;flex-wrap:wrap}
@@ -69,6 +69,8 @@
 
 /* Pastki qator */
 .hm-past{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px}
+.hm-past > *{min-width:0}
+.hm-grid > *{min-width:0}
 .avto-bosh{display:flex;align-items:center;margin-bottom:4px}
 .avto-bosh h3{font-size:16.5px;font-weight:750}
 .avto-bosh .sub{font-size:12.5px;color:var(--matn-4)}
@@ -151,7 +153,7 @@
         <div class="sahifalash" style="padding:14px 0 0">
           <span class="oraliq">Jami: <b>12</b></span>
           <button class="s-tugma" data-toast="Oldingi sahifa" aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
-          <button class="s-tugma aktiv">1</button>
+          <button class="s-tugma aktiv" disabled aria-current="page">1</button>
           <button class="s-tugma" data-toast="Keyingi sahifa" aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
         </div>
       </div>
@@ -221,9 +223,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -260,23 +262,23 @@ function detalYangila(){
   document.getElementById("d-hajm").textContent = h.hajm;
   document.getElementById("d-yaratilgan").innerHTML = `${h.sana}&nbsp; ${h.soat}`;
   document.getElementById("d-daromad").textContent = h.daromad;
-  document.getElementById("d-daromad-d").textContent = h.daromadD;
-  document.getElementById("d-daromad-d").className = "delta"+(h.daromadD.startsWith("-")?" salbiy":"");
+  document.getElementById("d-daromad-d").textContent = (h.daromadD >= 0 ? "\u2191 " : "\u2193 ") + Math.abs(h.daromadD) + "%";
+  document.getElementById("d-daromad-d").className = "delta"+(h.daromadD < 0 ? " salbiy" : "");
   document.getElementById("d-xarajat").textContent = h.xarajat;
-  document.getElementById("d-xarajat-d").textContent = h.xarajatD;
-  document.getElementById("d-xarajat-d").className = "delta"+(h.xarajatD.startsWith("-")?" salbiy":"");
+  document.getElementById("d-xarajat-d").textContent = (h.xarajatD >= 0 ? "\u2191 " : "\u2193 ") + Math.abs(h.xarajatD) + "%";
+  document.getElementById("d-xarajat-d").className = "delta"+(h.xarajatD < 0 ? " salbiy" : "");
   document.getElementById("d-foyda").textContent = h.foyda;
-  document.getElementById("d-foyda-d").textContent = h.foydaD;
-  document.getElementById("d-foyda-d").className = "delta"+(h.foydaD.startsWith("-")?" salbiy":"");
+  document.getElementById("d-foyda-d").textContent = (h.foydaD >= 0 ? "\u2191 " : "\u2193 ") + Math.abs(h.foydaD) + "%";
+  document.getElementById("d-foyda-d").className = "delta"+(h.foydaD < 0 ? " salbiy" : "");
   document.getElementById("d-indeks").textContent = h.indeks;
-  document.getElementById("d-indeks-d").textContent = h.indeksD;
-  document.getElementById("d-indeks-d").className = "delta"+(h.indeksD.startsWith("-")?" salbiy":"");
+  document.getElementById("d-indeks-d").textContent = (h.indeksD >= 0 ? "\u2191 " : "\u2193 ") + Math.abs(h.indeksD) + "%";
+  document.getElementById("d-indeks-d").className = "delta"+(h.indeksD < 0 ? " salbiy" : "");
   miniBarChiz(h.grafik);
 }
 kutubxonaChiz();
 
 /* Mini bar chart */
-const OY = ["Yan","Fev","Mar","Apr","May"];
+const OY = ["Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg"];
 function miniBarChiz(Q){
   const svg = document.getElementById("mini-bar");
   const NS = "http://www.w3.org/2000/svg";

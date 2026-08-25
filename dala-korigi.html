@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Dala ko'rigi: inspektorning kunlik marshruti ---- */
 .dk-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
@@ -131,9 +131,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 const D = MKB_DATA;
 let inspektor = "Sattorov Jasur";
@@ -160,7 +160,7 @@ function chiz(){
         <span class="n">${k._t === "otdi" ? "✓" : i + 1}</span>
         <span class="iz"></span>
       </div>
-      <img class="mr-rasm" src="${o.rasm}" alt="">
+      <img class="mr-rasm" src="${o.rasm}" alt="" loading="lazy" width="76" height="58">
       <div class="mr-mazmun">
         <b>${o.qisqa}</b>
         <div class="manzil">${o.hududToliq} · ${o.tur}</div>
@@ -193,7 +193,7 @@ function chiz(){
     ? `<div style="font-size:13px;color:var(--matn-3);margin-bottom:8px">${faol.obyekt} — ${faol.id}</div>` +
       BANDLAR.map(([nom, ok]) => `
       <div class="ch-band ${ok ? "" : "kut"}">
-        <span class="ch-belgi ${ok ? "ch-ha" : "ch-kut"}"><svg class="ic"><use href="#${ok ? "i-belgi" : "i-soat"}"/></svg></span>
+        <span class="ch-belgi ${ok ? "ch-ha" : "ch-kut"}" role="img" aria-label="${ok ? "bajarildi" : "kutilmoqda"}"><svg class="ic" aria-hidden="true"><use href="#${ok ? "i-belgi" : "i-soat"}"/></svg></span>
         <p>${nom}</p>
       </div>`).join("")
     : `<div style="text-align:center;color:var(--matn-3);padding:18px 0">Faol chiqish yo'q</div>`;

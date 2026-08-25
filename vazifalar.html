@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Vazifalar va tasdiqlar (ekran 9) ---- */
 .vz-grid{display:grid;grid-template-columns:350px minmax(0,1fr) 400px;gap:18px;align-items:start}
@@ -52,7 +52,7 @@
 .qadam:last-child::before{display:none}
 .qadam-belgi{width:32px;height:32px;border-radius:99px;display:grid;place-items:center;flex:none;font-size:13px;font-weight:750;z-index:1;box-shadow:var(--chuqur-tile-tor)}
 .qadam-belgi.bajarildi{background:#0E6B5C;color:#fff}
-.qadam-belgi.joriy{background:#B2D4F3;color:#0A5348}
+.qadam-belgi.joriy{background:var(--tile-och);color:#0A5348}
 .qadam-belgi.kutish{background:#EEF1F5;color:#6B7684}
 .qadam-belgi .ic{width:15px;height:15px;stroke-width:2.4}
 .qadam-matn b{display:block;font-size:14.5px;font-weight:700}
@@ -93,7 +93,7 @@
 .vz-mh-tugma{height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:650;color:var(--matn-3);position:relative;transition:background var(--tez),color var(--tez)}
 .vz-mh-tugma:hover{color:#1C2836}
 .vz-mh-tugma[aria-pressed="true"]{background:#EEF2F7;color:#2C3A49}
-.vz-mh-tugma[aria-pressed="true"][data-mh="yuqori"]{background:var(--sariq-fon);color:#9A6E00}
+.vz-mh-tugma[aria-pressed="true"][data-mh="yuqori"]{background:var(--sariq-fon);color:#7A5600}
 .vz-mh-tugma[aria-pressed="true"][data-mh="kritik"]{background:var(--qizil-fon);color:#C43C31}
 .vz-mh-tugma + .vz-mh-tugma::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--kirish-chiziq)}
 .vz-mh-tugma[aria-pressed="true"]::before,
@@ -119,7 +119,7 @@
 .vz-grid > aside{display:flex;flex-direction:column;gap:18px}
 @media (max-width:1760px){.vz-grid{grid-template-columns:320px minmax(0,1fr)}
   .vz-grid > aside{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}}
-@media (max-width:1100px){.vz-grid{grid-template-columns:minmax(0,1fr)}
+@media (max-width:1320px){.vz-grid{grid-template-columns:minmax(0,1fr)}
   .vz-grid > aside{grid-template-columns:minmax(0,1fr)}
   .jarayon-blok{grid-template-columns:minmax(0,1fr)}}
 </style>
@@ -181,7 +181,7 @@
           </div>
 
           <div style="display:flex;gap:10px;margin-top:18px">
-            <button class="tugma tugma-asos" data-toast="So'rov tasdiqlandi — keyingi bosqichga o'tdi">
+            <button class="tugma tugma-asos" id="nav-tasdiqla">
               <svg class="ic"><use href="#i-belgi"/></svg>Tasdiqlash
             </button>
             <button class="tugma tugma-chiziqli" id="rad-tugma">Rad etish</button>
@@ -231,14 +231,15 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
 /* Tasdiqlash navbati */
 const NAVBAT = MKB_DATA.NAVBAT;   /* yagona manba (Д-1) */
+function navbatChiz(){
 document.getElementById("navbat").innerHTML = NAVBAT.map((n,i)=>`
   <button class="tasdiq-kartacha ${n.faol?"faol":""}" data-i="${i}">
     <span class="tk-bosh">
@@ -251,6 +252,30 @@ document.getElementById("navbat").innerHTML = NAVBAT.map((n,i)=>`
     </span>
     <span class="tk-past" style="margin-top:4px"><span class="firma" style="margin-left:0">${n.firma}</span></span>
   </button>`).join("");
+  document.querySelectorAll(".vz-son")[0].textContent = NAVBAT.length;
+  ulaNavbat();
+}
+
+navbatChiz();
+
+/* Tasdiqlash: joriy so'rov navbatdan chiqadi, keyingisi tanlanadi (dead-control #14) */
+document.getElementById("nav-tasdiqla").addEventListener("click", ()=>{
+  const i = NAVBAT.findIndex(n => n.faol);
+  if (i < 0) return;
+  const n = NAVBAT[i];
+  NAVBAT.splice(i, 1);
+  MKB.toast(`${n.nom} tasdiqlandi \u2014 keyingi bosqichga o'tdi`);
+  if (NAVBAT.length){
+    NAVBAT.forEach(x => x.faol = false);
+    NAVBAT[0].faol = true;
+    navbatChiz();
+    detalYangila(NAVBAT[0]);
+  } else {
+    navbatChiz();
+    document.getElementById("j-nom").textContent = "Navbat bo'sh";
+    document.getElementById("j-izoh").textContent = "Barcha so'rovlar ko'rib chiqildi.";
+  }
+});
 
 function detalYangila(n){
   document.getElementById("j-nom").textContent = n.nom;
@@ -274,6 +299,7 @@ function detalYangila(n){
     <div><div style="font-size:12.5px;color:var(--matn-4)">${yorliq}</div><div style="font-size:14px;font-weight:650;margin-top:3px">${qiymat}</div></div>`).join("");
 }
 
+function ulaNavbat(){
 document.querySelectorAll(".tasdiq-kartacha").forEach(k=>{
   k.addEventListener("click", ()=>{
     document.querySelectorAll(".tasdiq-kartacha").forEach(x=>x.classList.remove("faol"));
@@ -281,6 +307,8 @@ document.querySelectorAll(".tasdiq-kartacha").forEach(k=>{
     detalYangila(NAVBAT[+k.dataset.i]);
   });
 });
+}
+
 detalYangila(NAVBAT[0]);
 
 /* Markaz tablari */
@@ -423,7 +451,7 @@ document.getElementById("taqvim-tanasi").innerHTML = KUNLAR.map((h,hi)=>`
     return `<td><button class="${cls}" data-kun="${k}">${k}</button></td>`;
   }).join("")}</tr>`).join("");
 document.querySelectorAll(".taqvim button").forEach(b=>{
-  b.addEventListener("click", ()=>MKB.toast(b.dataset.kun+"-may: "+(b.classList.contains("bugun")?"2 ta muddat":"muddatlar yo'q")+"", "i-kalendar"));
+  b.addEventListener("click", ()=>MKB.toast(b.dataset.kun+"-avg: "+(b.classList.contains("bugun")?"2 ta muddat":"muddatlar yo'q")+"", "i-kalendar"));
 });
 });
 </script>

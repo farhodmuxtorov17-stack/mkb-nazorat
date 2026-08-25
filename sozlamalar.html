@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Sozlamalar (ekran 21) ---- */
 .sz-grid{display:grid;grid-template-columns:300px minmax(0,1fr) 400px;gap:18px;align-items:start}
@@ -102,7 +102,7 @@
         <button class="bolim-band" data-toast="Elektron pochta sozlamalari"><svg class="ic"><use href="#i-mail"/></svg>Elektron pochta</button>
         <button class="bolim-band" data-toast="Ma'lumotlarni saqlash sozlamalari"><svg class="ic"><use href="#i-aktiv"/></svg>Ma'lumotlarni saqlash</button>
         <button class="bolim-band" id="audit-jurnali-tugma"><svg class="ic"><use href="#i-qalqon"/></svg>Audit jurnali</button>
-        <a class="bolim-band" href="holatlar.html"><svg class="ic"><use href="#i-ogoh"/></svg>Xatolik va holat ekranlari</a>
+        <a class="bolim-band" data-ruxsat-yashir href="holatlar.html"><svg class="ic"><use href="#i-ogoh"/></svg>Xatolik va holat ekranlari</a>
       </div>
 
       <!-- Parametrlar -->
@@ -161,7 +161,7 @@
         </div>
         <div class="server-rasm"><img src="assets/server_3d.webp" alt="Server holati illyustratsiyasi"></div>
         <div class="th-qator"><svg class="ic"><use href="#i-info"/></svg><span class="yorliq">Tizim versiyasi</span><b>v2.4.1</b></div>
-        <div class="th-qator"><svg class="ic"><use href="#i-vazifa"/></svg><span class="yorliq">Oxirgi zaxira nusxa</span><b>24-may, 04:15</b></div>
+        <div class="th-qator"><svg class="ic"><use href="#i-vazifa"/></svg><span class="yorliq">Oxirgi zaxira nusxa</span><b>24-avg, 04:15</b></div>
         <div class="th-qator"><svg class="ic"><use href="#i-aktiv"/></svg><span class="yorliq">Ma'lumotlar bazasi</span><b>PostgreSQL 15.4</b></div>
         <div class="th-qator"><svg class="ic"><use href="#i-ekran"/></svg><span class="yorliq">Server holati</span><b><span class="nuqta"></span>Ishlayapti</b></div>
         <div class="th-qator" style="display:block">
@@ -187,9 +187,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -220,6 +220,12 @@ document.getElementById("diagnostika").addEventListener("click", ()=>{
 });
 
 /* Audit jurnali — faqat o'qish uchun; yozuvlarni o'chirish yoki tahrirlash imkoniyati yo'q */
+/* Audit jurnali — faqat administrator (API.md /audit) */
+if (MKB.rolKaliti() !== "admin"){
+  const el = document.querySelector("[data-audit-karta]") ||
+    (document.querySelector("[data-audit-sarlavha]") && document.querySelector("[data-audit-sarlavha]").closest(".karta"));
+  if (el) el.remove();
+}
 const AUDIT_ROL_QISQA = {"Administrator":"admin","Filial rahbari":"filial","Kredit menejeri":"kredit","Garov xizmati mutaxassisi":"garov","Yurist":"yurist","Tavakkalchilik menejeri":"tavakkal"};
 const AUDIT_JURNAL = MKB_DATA.AUDIT_JURNAL;   /* yagona manba (Д-1) */
 function auditRoyxatChiz(qidiruv){

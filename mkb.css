@@ -4,6 +4,8 @@
    Firma ranglari bank identifikatsiyasidan olingan:
    asosiy zumrad #0E6B5C, aksent bronza #B98A2F, ijobiy holat yashili #2E9E52.
    ============================================================ */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
 :root{
   --kanvas:#F4F7F5;
   --karta:#FFFFFF;
@@ -17,7 +19,9 @@
   /* Firma ranglari */
   --asos:#0E6B5C;        /* asosiy harakat, havolalar — oq fonda 7.86:1 */
   --asos-toq:#084C41;
-  --asos-fon:#E7F3F0;
+  --asos-fon:#E3F1ED;     /* amaliyotda g'olib chiqqan tint (design-drift #12) */
+  --asos-hover:#14836F;
+  --asos-matn:#0A5348;    /* och fonda izumrud matn */
   --brend-aksent:#B98A2F; /* ikkilamchi aksent: aktiv band chizig'i, gradiyentlar */
   --ijobiy:#2E9E52;       /* semantik yashil: muvaffaqiyatli holatlar */
   --delta:#268030;        /* ijobiy o'zgarish matni — oq fonda 4.99:1 */
@@ -234,10 +238,11 @@ img{display:block;max-width:100%}
   box-shadow:inset 0 0 0 2px var(--_rol-rang,transparent);
 }
 .avatar.rol-admin{--_rol-rang:var(--rol-admin)}
-.avatar.rol-rahbar{--_rol-rang:var(--rol-rahbar)}
-.avatar.rol-operator{--_rol-rang:var(--rol-operator)}
-.avatar.rol-undiruv{--_rol-rang:var(--rol-undiruv)}
-.avatar.rol-texnik{--_rol-rang:var(--rol-texnik)}
+.avatar.rol-filial{--_rol-rang:var(--rol-filial)}
+.avatar.rol-garov{--_rol-rang:var(--rol-garov)}
+.avatar.rol-kredit{--_rol-rang:var(--rol-kredit)}
+.avatar.rol-tavakkal{--_rol-rang:var(--rol-tavakkal)}
+.avatar.rol-yurist{background:var(--rol-yurist-fon);color:var(--rol-yurist-matn)}
 .avatar svg{width:34px;height:34px;display:block}
 .profil .strelka{width:17px;height:17px;color:#7A8087}
 .profil .matnlar{text-align:left}
@@ -249,10 +254,11 @@ img{display:block;max-width:100%}
 }
 .rol-yorliq::before{content:"";width:6px;height:6px;border-radius:99px;background:currentColor}
 .profil .matnlar span.rol-yorliq.rol-admin{background:var(--rol-admin-fon);color:var(--rol-admin-matn)}
-.profil .matnlar span.rol-yorliq.rol-rahbar{background:var(--rol-rahbar-fon);color:var(--rol-rahbar-matn)}
-.profil .matnlar span.rol-yorliq.rol-operator{background:var(--rol-operator-fon);color:var(--rol-operator-matn)}
-.profil .matnlar span.rol-yorliq.rol-undiruv{background:var(--rol-undiruv-fon);color:var(--rol-undiruv-matn)}
-.profil .matnlar span.rol-yorliq.rol-texnik{background:var(--rol-texnik-fon);color:var(--rol-texnik-matn)}
+.profil .matnlar span.rol-yorliq.rol-filial{background:var(--rol-filial-fon);color:var(--rol-filial-matn)}
+.profil .matnlar span.rol-yorliq.rol-garov{background:var(--rol-garov-fon);color:var(--rol-garov-matn)}
+.profil .matnlar span.rol-yorliq.rol-kredit{background:var(--rol-kredit-fon);color:var(--rol-kredit-matn)}
+.profil .matnlar span.rol-yorliq.rol-tavakkal{background:var(--rol-tavakkal-fon);color:var(--rol-tavakkal-matn)}
+.rol-yorliq.rol-yurist{background:var(--rol-yurist-fon);color:var(--rol-yurist-matn)}
 .popover-bolim{padding:8px 12px 4px;font-size:10.5px;font-weight:700;letter-spacing:.05em;color:#6B7684}
 
 /* ============ Sahifa boshi ============ */
@@ -271,10 +277,9 @@ img{display:block;max-width:100%}
 .tugma:active{transform:scale(.98)}
 .tugma .ic{width:19px;height:19px}
 .tugma-asos{
-  background:linear-gradient(180deg,#2A72B8 0%,var(--asos) 55%,#0B4177 100%);color:#fff;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 1px 2px rgba(11,55,100,.28), 0 8px 18px -6px rgba(11,55,100,.45);
+  background:linear-gradient(180deg,#1B8A74 0%,var(--asos) 55%,#0A5348 100%);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 1px 2px rgba(8,46,40,.28), 0 8px 18px -6px rgba(8,46,40,.45);
 }
-.tugma-asos:hover{background:linear-gradient(180deg,#3480C9 0%,#1160A4 55%,#0A3A6B 100%)}
 .tugma-asos:hover{background:#14836F}
 .tugma-asos:active{background:var(--asos-toq)}
 .tugma-oq{background:var(--karta);color:#1C2836;box-shadow:var(--soya)}
@@ -361,7 +366,7 @@ box-shadow:var(--chuqur-tile-tor);background-image:linear-gradient(180deg,rgba(2
 .chip .nuqta{width:6px;height:6px;border-radius:99px;background:currentColor}
 .chip-asos{background:#E3F1ED;color:#0A5348}
 .chip-kok{background:var(--kok-fon);color:#2F6BCF}
-.chip-sariq{background:var(--sariq-fon);color:#9A6E00}
+.chip-sariq{background:var(--sariq-fon);color:#7A5600}
 .chip-qizil{background:var(--qizil-fon);color:#C43C31}
 .chip-kul{background:#EEF2F7;color:#515F6D}
 .chip-binafsha{background:#F3EBFE;color:#8A4BD8}
@@ -508,7 +513,7 @@ table.jadval{width:100%;border-collapse:collapse}
 }
 .kpi::after{
   content:"";position:absolute;right:-38px;top:-46px;width:126px;height:126px;border-radius:99px;
-  background:radial-gradient(circle at 50% 50%, rgba(15,83,146,.07), transparent 68%);pointer-events:none;
+  background:radial-gradient(circle at 50% 50%, rgba(14,107,92,.07), transparent 68%);pointer-events:none;
 }
 .kpi:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(16,30,48,.06), 0 10px 22px -4px rgba(16,30,48,.13), 0 22px 48px -20px rgba(16,30,48,.22)}
 .kpi-tile{
@@ -669,7 +674,7 @@ table.jadval{width:100%;border-collapse:collapse}
   transition:transform var(--tez);transform-origin:50% 100%;
 }
 .pin-pro:hover svg{transform:scale(1.12) translateY(-2px)}
-.pin-pro.muhim svg{filter:drop-shadow(0 1px 1px rgba(10,22,38,.30)) drop-shadow(0 6px 12px rgba(10,22,38,.45)) drop-shadow(0 0 7px rgba(15,83,146,.45))}
+.pin-pro.muhim svg{filter:drop-shadow(0 1px 1px rgba(10,22,38,.30)) drop-shadow(0 6px 12px rgba(10,22,38,.45)) drop-shadow(0 0 7px rgba(14,107,92,.45))}
 
 .klaster{background:none;border:none}
 .klaster > span{

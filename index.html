@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MKB — Boshqaruv paneli</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="mkb.css?v=26082501">
+<link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 <style>
 /* ---- Faqat shu sahifa: xarita, filtrlar, pastki qator ---- */
 .xarita-qator{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
@@ -97,7 +97,6 @@ html.erta-rol-yurist #dash-admin{display:none}
 html.erta-rol-yurist #dash-yurist{display:block}
 
 .salom{font-size:14px;color:var(--matn-3);margin-top:3px}
-.rol-qator{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px}
 .royxat-jadval td{cursor:default}
 .royxat-jadval tbody tr{cursor:pointer}
 .mini-holat{display:flex;align-items:center;gap:8px}
@@ -108,7 +107,7 @@ html.erta-rol-yurist #dash-yurist{display:block}
 .segment-legend span{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--matn-2)}
 .segment-legend .nuqta{width:8px;height:8px;border-radius:99px;flex:none}
 .segment-legend b{color:#101B29;font-weight:700;margin-left:2px}
-@media (max-width:1240px){.rol-qator{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:1240px){}
 </style>
 </head>
 <body data-sahifa="panel">
@@ -161,7 +160,7 @@ html.erta-rol-yurist #dash-yurist{display:block}
         <span class="kpi-tile dark"><svg class="ic"><use href="#i-bino"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Garov portfeli</div>
-          <div class="kpi-qiymat"><b id="kpi-portfel">—</b><span class="delta">↑ 8,2%</span></div>
+          <div class="kpi-qiymat"><b id="kpi-portfel">—</b><span class="delta" id="kpi-portfel-d"></span></div>
           <div class="kpi-izoh">Nazoratdagi obyektlar soni</div>
         </div>
       </a>
@@ -169,7 +168,7 @@ html.erta-rol-yurist #dash-yurist{display:block}
         <span class="kpi-tile lime"><svg class="ic"><use href="#i-papka"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Bank balansida</div>
-          <div class="kpi-qiymat"><b id="kpi-balansda">—</b><span class="delta">↑ 6</span></div>
+          <div class="kpi-qiymat"><b id="kpi-balansda">—</b><span class="delta" id="kpi-balansda-d"></span></div>
           <div class="kpi-izoh">Nazorat, ijara va auksiondagi obyektlar</div>
         </div>
       </a>
@@ -177,7 +176,7 @@ html.erta-rol-yurist #dash-yurist{display:block}
         <span class="kpi-tile dark"><svg class="ic"><use href="#i-grafik"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Portfel baholangan qiymati</div>
-          <div class="kpi-qiymat"><b><span id="kpi-baho">—</span> <small>trln so'm</small></b><span class="delta">↑ 7,6%</span></div>
+          <div class="kpi-qiymat"><b><span id="kpi-baho">—</span> <small>trln so'm</small></b><span class="delta" id="kpi-baho-d"></span></div>
           <div class="kpi-izoh">Mustaqil baholash bo'yicha</div>
         </div>
       </a>
@@ -185,7 +184,7 @@ html.erta-rol-yurist #dash-yurist{display:block}
         <span class="kpi-tile lime"><svg class="ic"><use href="#i-daromad"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Undirilgan mablag' (oy)</div>
-          <div class="kpi-qiymat"><b><span id="kpi-undiruv">—</span> <small>mlrd so'm</small></b><span class="delta">↑ 6,1%</span></div>
+          <div class="kpi-qiymat"><b><span id="kpi-undiruv">—</span> <small>mlrd so'm</small></b><span class="delta" id="kpi-undiruv-d"></span></div>
           <div class="kpi-izoh">Auksion va ijara tushumlari</div>
         </div>
       </a>
@@ -194,7 +193,7 @@ html.erta-rol-yurist #dash-yurist{display:block}
     <!-- Xarita + Filtrlar -->
     <section class="xarita-qator">
       <div class="xarita-karta">
-        <div id="leaflet-xarita" role="img" aria-label="Garov obyektlari joylashuvi — Toshkent shahri va viloyati xaritasi"></div>
+        <div id="leaflet-xarita" role="region" aria-label="Garov obyektlari joylashuvi — Toshkent shahri va viloyati xaritasi"></div>
 
         <div class="x-nazorat">
           <button class="x-tugma" id="x-lokatsiya" aria-label="Barcha obyektlarni ko'rsatish"><svg class="ic"><use href="#i-navigatsiya"/></svg></button>
@@ -216,27 +215,27 @@ html.erta-rol-yurist #dash-yurist{display:block}
         </div>
         <div class="obyekt-torlar">
           <a class="obyekt-kartacha" href="obyekt.html?id=GR-2025%2F0934">
-            <img src="assets/thumb_tower.webp" alt="Navruz Plaza savdo maydoni">
+            <img loading="lazy" src="assets/thumb_tower.webp" alt="Navruz Plaza savdo maydoni">
             <span class="obyekt-nom"><span class="nuqta" style="background:var(--t-tijorat)"></span><b>Navruz Plaza</b></span>
             <span class="obyekt-shahar">Toshkent · Auksionda</span>
           </a>
           <a class="obyekt-kartacha" href="obyekt.html?id=GR-2026%2F0141">
-            <img src="assets/thumb_dacha.webp" alt="Chorvoq dala hovlisi">
+            <img loading="lazy" src="assets/thumb_dacha.webp" alt="Chorvoq dala hovlisi">
             <span class="obyekt-nom"><span class="nuqta" style="background:var(--t-uy)"></span><b>Chorvoq dala hovlisi</b></span>
             <span class="obyekt-shahar">Bo'stonliq · Garovda</span>
           </a>
           <a class="obyekt-kartacha" href="obyekt.html?id=GR-2025%2F1187">
-            <img src="assets/thumb_mall.webp" alt="Zarafshon Tekstil ishlab chiqarish sexi">
+            <img loading="lazy" src="assets/thumb_mall.webp" alt="Zarafshon Tekstil ishlab chiqarish sexi">
             <span class="obyekt-nom"><span class="nuqta" style="background:var(--t-ishlab)"></span><b>Zarafshon Tekstil sexi</b></span>
             <span class="obyekt-shahar">Samarqand · Nazoratda</span>
           </a>
           <a class="obyekt-kartacha" href="obyekt.html?id=GR-2026%2F4471">
-            <img src="assets/thumb_dm.webp" alt="Yunusobod xonadoni">
+            <img loading="lazy" src="assets/thumb_dm.webp" alt="Yunusobod xonadoni">
             <span class="obyekt-nom"><span class="nuqta" style="background:var(--t-kvartira)"></span><b>Yunusobod, 23-xonadon</b></span>
             <span class="obyekt-shahar">Toshkent · Musodarada</span>
           </a>
           <a class="obyekt-kartacha" href="obyekt.html?id=GR-2026%2F3308">
-            <img src="assets/thumb_ofis.webp" alt="Nurafshon majmuasidagi xonadon">
+            <img loading="lazy" src="assets/thumb_ofis.webp" alt="Nurafshon majmuasidagi xonadon">
             <span class="obyekt-nom"><span class="nuqta" style="background:var(--t-kvartira)"></span><b>Nurafshon, 18-uy xonadoni</b></span>
             <span class="obyekt-shahar">Nurafshon · Musodarada</span>
           </a>
@@ -247,7 +246,7 @@ html.erta-rol-yurist #dash-yurist{display:block}
         <div class="karta-bosh"><h2>Obyektlar holati</h2></div>
         <div class="holat-korpus">
           <svg id="donut" width="150" height="150" viewBox="0 0 150 150" role="img" filter="url(#depth-md)"
-               aria-label="Obyektlar holati: Bank nazoratida 1082 (87%), Ijaraga berilgan 104 (8%), Musodara jarayonida 42 (3%), Auksionda 20 (2%)"></svg>
+               aria-label="Obyektlar holati bo'yicha taqsimot diagrammasi"></svg>
           <div class="legend" id="holat-legend"></div>
         </div>
         <div class="jami-yakun"><span>Jami:</span><b id="jami-yakun-son">—</b></div>
@@ -436,10 +435,10 @@ html.erta-rol-yurist #dash-yurist{display:block}
 </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="assets/vendor/leaflet/leaflet.js"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
   /* Salomlashish — rol asosida shaxsiylashtirilgan */
@@ -471,7 +470,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       .map(k => `<div style="display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--chiziq);font-size:13.5px">
         <span><b style="font-weight:750">${k.obyekt}</b>
         <span style="color:var(--matn-3)"> — ${k.tur.toLowerCase()} ko'rik, ${k.sana}</span></span>
-        <a class="matn-havola" href="korik-akti.html?id=${encodeURIComponent(k.id)}">${k.holat === "muddati_otgan" ? "Qayta tayinlash" : "Varaqa"}</a>
+        <a class="matn-havola" href="${k.holat === "muddati_otgan" ? "korik-tayinlash.html" : "korik-akti.html?id=" + encodeURIComponent(k.id)}">${k.holat === "muddati_otgan" ? "Qayta tayinlash" : "Varaqa"}</a>
       </div>`).join("");
 
     /* Tavakkalchilik */
@@ -517,7 +516,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
     `<a class="legend-qator" href="obyektlar.html?holat=${encodeURIComponent(h.nom)}"><span class="nuqta" style="background:${h.rang}"></span><span class="nomi">${h.nom}</span><b>${fmt(h.son)} (${h.foiz}%)</b></a>`).join("");
   document.getElementById("jami-yakun-son").textContent = fmt(PORTFEL.jami);
   const kpilar = {"kpi-portfel": fmt(PORTFEL.jami), "kpi-balansda": fmt(PORTFEL.balansda),
-                  "kpi-baho": PORTFEL.bahoTrln, "kpi-undiruv": PORTFEL.oylikUndiruvMlrd};
+                  "kpi-baho": PORTFEL.bahoTrln, "kpi-undiruv": PORTFEL.oylikUndiruvMlrd,
+                  "kpi-portfel-d": PORTFEL.delta.portfel, "kpi-balansda-d": PORTFEL.delta.balansda,
+                  "kpi-baho-d": PORTFEL.delta.baho, "kpi-undiruv-d": PORTFEL.delta.undiruv};
   Object.keys(kpilar).forEach(id => { const e = document.getElementById(id); if (e) e.textContent = kpilar[id]; });
   const C = 2*Math.PI*r, gapDeg = 2.6;
   let boshi = -90;
@@ -591,7 +592,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
     "Kvartira": "--t-kvartira", "Turar-joy": "--t-uy", "Tijorat": "--t-tijorat",
     "Ishlab chiqarish": "--t-ishlab", "Yer uchastkasi": "--t-yer", "Avtotransport": "--t-transport"
   };
-  const HOLAT_RANG = {"Garovda":"#7BAEFC","Nazoratda":"#2E9E52","Musodara jarayonida":"#E8763C","Ijaraga berilgan":"#3E7BD6","Auksionda":"#8B5CF6"};
+  const HOLAT_RANG = (() => {
+    /* Qiymatlar token nusxasi emas, tokenning o'zi (design-drift #14) */
+    const cs = getComputedStyle(document.documentElement);
+    const t = k => cs.getPropertyValue(k).trim();
+    return {"Garovda": t("--h-garovda"), "Nazoratda": t("--h-nazorat"),
+            "Musodara jarayonida": t("--h-musodara"), "Ijaraga berilgan": t("--h-ijara"),
+            "Auksonda": t("--h-auksion"), "Auksionda": t("--h-auksion"), "Sotilgan": t("--h-sotilgan")};
+  })();
   const NUQTALAR = MKB_DATA.XARITA_NUQTALARI.map(n => {
     if (n.kod){
       const y = MKB_DATA.topish(n.kod);
@@ -628,7 +636,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const pinQatlam = L.layerGroup();
   const nuqtaBelgilar = [];
   NUQTALAR.forEach(n => {
-    const belgi = L.marker([n.lat, n.lng], {icon: pinIkon(n)});
+    const belgi = L.marker([n.lat, n.lng], {title: (n.nom || "") + (n.holat ? " · " + n.holat : ""), icon: pinIkon(n)});
     belgi.bindTooltip(
       `<span class="pin-chip"><span class="pin-nuqta" style="background:${HOLAT_RANG[n.holat] || "#2E9E52"}"></span>${n.nom} · ${n.holat}</span>`,
       {direction:"top", className:"mkb-chip"});
@@ -651,6 +659,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const lat = g.lat / g.soni, lng = g.lng / g.soni;
     const d = g.soni >= 5 ? 46 : g.soni >= 3 ? 40 : 34;
     const belgi = L.marker([lat, lng], {
+      title: g.nom + " — " + g.soni + " ta obyekt",
       icon: L.divIcon({className: "klaster",
         html: `<span>${g.soni}<small>${g.nom}</small></span>`,
         iconSize: [d, d], iconAnchor: [d/2, d/2]})

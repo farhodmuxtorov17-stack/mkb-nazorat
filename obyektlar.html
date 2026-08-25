@@ -7,10 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Garov obyektlari reyestri (ekran 3) ---- */
 .asosiy-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:start}
+.asosiy-grid > *{min-width:0}
 .asosiy-grid.inspector-ochiq{grid-template-columns:minmax(0,1fr) 380px}
 
 .filtr-qator{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -35,8 +36,8 @@
 .jadval td:first-child{padding-left:22px}
 .jadval th .info{display:inline-grid;place-items:center;width:16px;height:16px;vertical-align:-3px;margin-left:5px;color:var(--matn-4);cursor:help}
 .jadval tbody tr{cursor:pointer}
-.jadval tbody tr.tanlangan{background:#EBF4FC;box-shadow:inset 0 1px 0 #C7DEF4, inset 0 -1px 0 #C7DEF4}
-.jadval tbody tr.tanlangan:hover{background:#E4F0FB}
+.jadval tbody tr.tanlangan{background:var(--asos-fon);box-shadow:inset 0 1px 0 #96CBBC, inset 0 -1px 0 #96CBBC}
+.jadval tbody tr.tanlangan:hover{background:var(--asos-fon)}
 .obyekt-katak img{width:64px;height:52px}
 .status-katak{display:flex;align-items:center;gap:8px;font-size:14.5px;color:#2C3A49}
 .status-katak .nuqta{width:8px;height:8px;border-radius:99px}
@@ -103,7 +104,7 @@
     <div class="sahifa-qator">
       <h1>Garov obyektlari reyestri</h1>
       <div class="sahifa-harakat" style="position:relative">
-        <a class="tugma tugma-oq" href="musodara-qabul.html"><svg class="ic"><use href="#i-aktiv"/></svg>MIB'dan qabul qilish</a>
+        <a class="tugma tugma-oq" data-ruxsat-yashir href="musodara-qabul.html"><svg class="ic"><use href="#i-aktiv"/></svg>MIB'dan qabul qilish</a>
         <button class="tugma tugma-oq" id="eksport-tugma" aria-haspopup="menu" aria-expanded="false">
           <svg class="ic"><use href="#i-yuklash"/></svg>
           Eksport
@@ -154,7 +155,7 @@
         <div class="sahifalash">
           <span class="oraliq">Ko'rsatilmoqda: <b id="jami-son">8</b> ta · portfelda <b id="portfel-son">—</b> ta obyekt</span>
           <button class="s-tugma" id="s-oldingi" aria-label="Oldingi sahifa" disabled><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
-          <button class="s-tugma aktiv">1</button>
+          <button class="s-tugma aktiv" disabled aria-current="page">1</button>
           <button class="s-tugma" id="s-keyingi" aria-label="Keyingi sahifa" disabled><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
         </div>
       </div>
@@ -166,9 +167,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -221,7 +222,7 @@ function jadvalChiz(royxat){
     <tr data-id="${o.id}" class="${o.id===tanlanganId?"tanlangan":""}" tabindex="0" aria-selected="${o.id===tanlanganId}">
       <td>
         <span class="obyekt-katak">
-          <img src="${o.rasm}" alt="">
+          <img src="${(o.rasmKichik || o.rasm)}" loading="lazy" alt="">
           <span><span class="nom">${o.nom}</span><br><span class="sub">${o.kod}</span></span>
         </span>
       </td>
@@ -260,7 +261,7 @@ function inspektorChiz(o){
 
     <div data-panel="umumiy">
       <div class="insp-rasm">
-        <img src="${o.rasm}" alt="${o.nom} 3D ko'rinishi">
+        <img src="${(o.rasmKichik || o.rasm)}" loading="lazy" alt="${o.nom} 3D ko'rinishi">
         <button class="insp-3d" data-toast="3D aylantirish rejimi">3D</button>
         <a class="insp-kengay" href="obyekt.html?id=${encodeURIComponent(o.id)}" aria-label="To'liq ochish"><svg class="ic"><use href="#i-kengay"/></svg></a>
       </div>

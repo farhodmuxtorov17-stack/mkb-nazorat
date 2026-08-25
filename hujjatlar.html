@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Hujjatlar markazi (ekran 12) ---- */
 .hj-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
@@ -54,7 +54,7 @@
 .tur-teg.hisobot{background:#F3EBFE;color:#8A4BD8}
 .holat-katak{display:flex;align-items:center;gap:8px;font-size:14px;color:#2C3A49}
 .holat-katak .nuqta{width:8px;height:8px;border-radius:99px}
-.jadval tbody tr.tanlangan{background:#EBF4FC;box-shadow:inset 0 1px 0 #C7DEF4, inset 0 -1px 0 #C7DEF4}
+.jadval tbody tr.tanlangan{background:var(--asos-fon);box-shadow:inset 0 1px 0 #96CBBC, inset 0 -1px 0 #96CBBC}
 
 /* O'ng panel */
 .hp-bosh{display:flex;align-items:flex-start;gap:10px}
@@ -131,9 +131,9 @@
           </table>
         </div>
         <div class="sahifalash">
-          <span class="oraliq">Jami: <b>128</b></span>
+          <span class="oraliq">Jami: <b id="hj-jami">–</b></span>
           <button class="s-tugma" data-toast="Oldingi sahifa" aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
-          <button class="s-tugma aktiv">1</button>
+          <button class="s-tugma aktiv" disabled aria-current="page">1</button>
           <button class="s-tugma" data-toast="2-sahifa">2</button>
           <button class="s-tugma" data-toast="3-sahifa">3</button>
           <span style="color:var(--matn-4)">…</span>
@@ -148,14 +148,15 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
 /* HUJJATLAR yagona manbadan (Д-1): obyekt nomi malumot.js reyestridan. */
 const HUJJATLAR = MKB_DATA.HUJJATLAR;
+document.addEventListener("DOMContentLoaded",()=>{const e=document.getElementById("hj-jami");if(e)e.textContent=HUJJATLAR.length;});
 let faolId = "DOC-2024-001";
 let turFiltri = "Barchasi";
 let qidiruv = "";
@@ -204,7 +205,7 @@ function panelChiz(h){
       </div>
       <button class="hp-yop" id="hp-yop" aria-label="Yopish"><svg class="ic" style="width:19px;height:19px"><use href="#i-yopish"/></svg></button>
     </div>
-    <div class="hp-rasm"><img src="${h.rasm}" alt="${h.obyekt}"></div>
+    <div class="hp-rasm"><img loading="lazy" src="${h.rasm}" alt="${h.obyekt}"></div>
     <div style="margin-top:12px">
       <div class="hp-qator"><svg class="ic"><use href="#i-bino"/></svg><span class="yorliq">Obyekt</span><b>${h.obyekt} (${h.kod})</b></div>
       <div class="hp-qator"><svg class="ic"><use href="#i-hujjat"/></svg><span class="yorliq">Turi</span><b>${h.tur}</b></div>

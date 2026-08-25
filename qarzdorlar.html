@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Qarzdor mijozlar reyestri ---- */
 .filtr-qator{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -17,6 +17,7 @@
 .filtr-qator .tanlov{width:auto;min-width:150px;background:var(--karta);border:none;box-shadow:var(--soya)}
 
 .q-grid{display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:18px;align-items:start}
+.q-grid > *{min-width:0}
 @media (max-width:1400px){.q-grid{grid-template-columns:minmax(0,1fr)}}
 
 .jadval tr[data-qatorli]{cursor:pointer}
@@ -79,7 +80,7 @@
       </div>
       <div class="sahifa-harakat">
         <button class="tugma tugma-oq" id="eksport-tugma"><svg class="ic"><use href="#i-yuklash"/></svg>Eksport</button>
-        <a class="tugma tugma-asos" href="undiruv.html"><svg class="ic"><use href="#i-tarozi"/></svg>Undiruv ishlariga o'tish</a>
+        <a class="tugma tugma-asos" data-ruxsat-yashir href="undiruv.html"><svg class="ic"><use href="#i-tarozi"/></svg>Undiruv ishlariga o'tish</a>
       </div>
     </div>
 
@@ -88,7 +89,7 @@
         <span class="kpi-tile dark"><svg class="ic"><use href="#i-qarz"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Jami qarzdorlar</div>
-          <div class="kpi-qiymat"><b>417</b><span class="delta salbiy">↑ 12</span></div>
+          <div class="kpi-qiymat"><b id="qk-qarzdor">—</b><span class="delta salbiy">↑ 12</span></div>
           <div class="kpi-izoh">O'tgan oyga nisbatan</div>
         </div>
       </div>
@@ -96,15 +97,15 @@
         <span class="kpi-tile lime"><svg class="ic"><use href="#i-pul"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Muddati o'tgan qarz</div>
-          <div class="kpi-qiymat"><b>184,6 <small>mlrd so'm</small></b></div>
-          <div class="kpi-izoh">Asosiy qarz, foiz va penya bilan</div>
+          <div class="kpi-qiymat"><b><span id="qk-qarz">—</span> <small>mlrd so'm</small></b></div>
+          <div class="kpi-izoh">Asosiy qarz va hisoblangan foizlar bilan</div>
         </div>
       </div>
       <div class="kpi">
         <span class="kpi-tile dark"><svg class="ic"><use href="#i-tarozi"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Sud jarayonida</div>
-          <div class="kpi-qiymat"><b>96</b></div>
+          <div class="kpi-qiymat"><b id="qk-sud">—</b></div>
           <div class="kpi-izoh">Da'vo arizasi berilgan ishlar</div>
         </div>
       </div>
@@ -112,7 +113,7 @@
         <span class="kpi-tile lime"><svg class="ic"><use href="#i-bino"/></svg></span>
         <div class="kpi-matn">
           <div class="kpi-yorliq">Musodara qilingan garov</div>
-          <div class="kpi-qiymat"><b>128</b><span class="delta">↑ 6</span></div>
+          <div class="kpi-qiymat"><b id="qk-musodara">—</b><span class="delta" id="qk-musodara-d">—</span></div>
           <div class="kpi-izoh">Bank balansiga qabul qilingan</div>
         </div>
       </div>
@@ -139,9 +140,9 @@
           </table>
         </div>
         <div class="sahifalash">
-          <span class="oraliq">Ko'rsatilmoqda: <b id="jami">8</b> ta yozuv · jami 417</span>
+          <span class="oraliq">Ko'rsatilmoqda: <b id="jami">8</b> ta yozuv · jami <span id="qk-jami2">—</span></span>
           <button class="s-tugma" disabled aria-label="Oldingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-chap"/></svg></button>
-          <button class="s-tugma aktiv">1</button>
+          <button class="s-tugma aktiv" disabled aria-current="page">1</button>
           <button class="s-tugma" data-toast="Keyingi sahifa yuklanmoqda">2</button>
           <button class="s-tugma" data-toast="Keyingi sahifa yuklanmoqda" aria-label="Keyingi"><svg class="ic" style="width:16px;height:16px"><use href="#i-ong"/></svg></button>
         </div>
@@ -174,6 +175,12 @@
           <div class="q-qator"><span class="yorliq">Garov obyekti</span><b id="p-obyekt">—</b></div>
           <div class="q-qator"><span class="yorliq">Baholangan qiymati</span><b id="p-baho">—</b></div>
           <div class="q-qator"><span class="yorliq">Mas'ul mutaxassis</span><b id="p-masul">—</b></div>
+          <div class="q-qator"><span class="yorliq">Telefon</span><b id="p-tel">—</b></div>
+        </div>
+
+        <div>
+          <div class="panel-sarlavha">Muloqot tarixi</div>
+          <div id="p-muloqot"></div>
         </div>
 
         <div>
@@ -183,9 +190,9 @@
         </div>
 
         <div class="q-amallar">
-          <a class="tugma tugma-oq tugma-kichik" id="p-obyekt-havola" href="obyektlar.html"><svg class="ic"><use href="#i-bino"/></svg>Obyekt</a>
+          <a class="tugma tugma-oq tugma-kichik" id="p-obyekt-havola" data-ruxsat-yashir href="obyektlar.html"><svg class="ic"><use href="#i-bino"/></svg>Obyekt</a>
           <a class="tugma tugma-oq tugma-kichik" href="shartnomalar.html"><svg class="ic"><use href="#i-shartnoma"/></svg>Shartnoma</a>
-          <a class="tugma tugma-asos tugma-kichik keng" href="undiruv.html"><svg class="ic"><use href="#i-tarozi"/></svg>Undiruv ishini ochish</a>
+          <a class="tugma tugma-asos tugma-kichik keng" data-ruxsat-yashir href="undiruv.html"><svg class="ic"><use href="#i-tarozi"/></svg>Undiruv ishini ochish</a>
         </div>
       </aside>
     </div>
@@ -193,9 +200,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 /* ---- Qarzdorlar reyestri ---- */
 /* Ma'lumot yagona manbadan olinadi — sahifada nusxa saqlanmaydi */
@@ -263,6 +270,14 @@ function tanla(id){
   yId("p-obyekt").textContent = q.obyekt;
   yId("p-baho").textContent = q.baho;
   yId("p-masul").textContent = q.masul;
+  yId("p-tel").textContent = y.mijoz.tel || "—";
+  yId("p-muloqot").innerHTML = (MKB_DATA.MULOQOTLAR[y.id] || []).map(([sana, kanal, natija]) => `
+    <div style="padding:8px 0;border-bottom:1px solid var(--chiziq);font-size:12.5px">
+      <div style="display:flex;justify-content:space-between;gap:8px;color:var(--matn-4);font-size:11.5px">
+        <span>${kanal}</span><span>${sana}</span>
+      </div>
+      <div style="margin-top:2px;color:var(--matn-2)">${natija}</div>
+    </div>`).join("") || `<div style="color:var(--matn-4);font-size:12.5px;padding:6px 0">Muloqot qayd etilmagan</div>`;
   yId("p-grafik").innerHTML = q.tolov
     .map((t, i) => `<span class="${t ? "" : "otkazib"}" style="height:${t ? 62 + ((i * 7) % 34) : 15}%"></span>`)
     .join("");
@@ -298,6 +313,17 @@ document.addEventListener("DOMContentLoaded", () => {
   yId("eksport-tugma").addEventListener("click", () =>
     MKB.toast("Qarzdorlar reyestri XLSX shaklida tayyorlanmoqda", "i-yuklash"));
 });
+
+/* KPI lar portfel kesimidan (Д-7, data-consistency #3) */
+(function(){
+  const U = MKB_DATA.PORTFEL.undiruv, q = (i, v) => { const e = document.getElementById(i); if (e) e.textContent = v; };
+  q("qk-qarzdor", MKB_DATA.fmt(U.qarzdorlar));
+  q("qk-qarz", U.muddatiOtganQarzMlrd);
+  q("qk-sud", U.sudJarayonida);
+  q("qk-musodara", U.musodara);
+  q("qk-musodara-d", MKB_DATA.PORTFEL.delta.balansda);
+  q("qk-jami2", MKB_DATA.fmt(U.qarzdorlar));
+})();
 </script>
 </body>
 </html>

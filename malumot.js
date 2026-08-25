@@ -34,7 +34,7 @@ const BOSQICH_HOLAT = {
 const YOZUVLAR = [
   {
     id: "GR-2026/4471",
-    mijoz: {nom: "Karimov Javlon Anvarovich", tur: "Jismoniy shaxs", raqam: "PINFL 3210 4471 8802", belgi: "KJ", yur: false},
+    mijoz: {nom: "Karimov Javlon Anvarovich", tur: "Jismoniy shaxs", raqam: "PINFL 3210 4471 8802", belgi: "KJ", yur: false, tel: "+998 90 123 44 71"},
     filial: "Yunusobod filiali",
     shartnoma: {raqam: "IP-2023/4471", tur: "Ipoteka krediti", sana: "12.04.2023", berilgan: 480.0},
     qarz: {asosiy: 412.0, foiz: 74.2, kunlar: 214},
@@ -60,7 +60,7 @@ const YOZUVLAR = [
   },
   {
     id: "GR-2025/1187",
-    mijoz: {nom: "«Zarafshon Tekstil» MChJ", tur: "Yuridik shaxs", raqam: "INN 302 481 776", belgi: "ZT", yur: true},
+    mijoz: {nom: "«Zarafshon Tekstil» MChJ", tur: "Yuridik shaxs", raqam: "INN 302 481 776", belgi: "ZT", yur: true, tel: "+998 71 234 11 87"},
     filial: "Samarqand filiali",
     shartnoma: {raqam: "IK-2022/1187", tur: "Investitsiya krediti", sana: "03.02.2022", berilgan: 4200.0},
     qarz: {asosiy: 3210.0, foiz: 630.4, kunlar: 402},
@@ -86,7 +86,7 @@ const YOZUVLAR = [
   },
   {
     id: "GR-2026/2210",
-    mijoz: {nom: "Ergasheva Dilnoza Baxtiyorovna", tur: "Jismoniy shaxs", raqam: "PINFL 5102 2210 4417", belgi: "ED", yur: false},
+    mijoz: {nom: "Ergasheva Dilnoza Baxtiyorovna", tur: "Jismoniy shaxs", raqam: "PINFL 5102 2210 4417", belgi: "ED", yur: false, tel: "+998 93 452 22 10"},
     filial: "Chilonzor filiali",
     shartnoma: {raqam: "IS-2024/2210", tur: "Iste'mol krediti (garov bilan)", sana: "26.07.2024", berilgan: 95.0},
     qarz: {asosiy: 81.4, foiz: 11.1, kunlar: 96},
@@ -111,7 +111,7 @@ const YOZUVLAR = [
   },
   {
     id: "GR-2025/0934",
-    mijoz: {nom: "«Navruz Savdo» MChJ", tur: "Yuridik shaxs", raqam: "INN 205 118 934", belgi: "NS", yur: true},
+    mijoz: {nom: "«Navruz Savdo» MChJ", tur: "Yuridik shaxs", raqam: "INN 205 118 934", belgi: "NS", yur: true, tel: "+998 71 209 09 34"},
     filial: "Toshkent shahar filiali",
     shartnoma: {raqam: "AM-2023/0934", tur: "Aylanma mablag' krediti", sana: "17.05.2023", berilgan: 1350.0},
     qarz: {asosiy: 1080.0, foiz: 180.6, kunlar: 268},
@@ -137,7 +137,7 @@ const YOZUVLAR = [
   },
   {
     id: "GR-2026/5512",
-    mijoz: {nom: "To'xtasinov Sherzod Rustamovich", tur: "Jismoniy shaxs", raqam: "PINFL 4417 5512 9003", belgi: "TS", yur: false},
+    mijoz: {nom: "To'xtasinov Sherzod Rustamovich", tur: "Jismoniy shaxs", raqam: "PINFL 4417 5512 9003", belgi: "TS", yur: false, tel: "+998 94 155 55 12"},
     filial: "Toshkent shahar filiali",
     shartnoma: {raqam: "AV-2024/5512", tur: "Avtokredit", sana: "09.09.2024", berilgan: 82.0},
     qarz: {asosiy: 68.2, foiz: 6.6, kunlar: 58},
@@ -161,7 +161,7 @@ const YOZUVLAR = [
   },
   {
     id: "GR-2026/3308",
-    mijoz: {nom: "Yusupova Nodira Alisherovna", tur: "Jismoniy shaxs", raqam: "PINFL 6014 3308 1120", belgi: "YN", yur: false},
+    mijoz: {nom: "Yusupova Nodira Alisherovna", tur: "Jismoniy shaxs", raqam: "PINFL 6014 3308 1120", belgi: "YN", yur: false, tel: "+998 97 330 33 08"},
     filial: "Chilonzor filiali",
     shartnoma: {raqam: "IP-2023/3308", tur: "Ipoteka krediti", sana: "28.06.2023", berilgan: 330.0},
     qarz: {asosiy: 276.0, foiz: 36.4, kunlar: 141},
@@ -186,7 +186,7 @@ const YOZUVLAR = [
   },
   {
     id: "GR-2025/0755",
-    mijoz: {nom: "«Bo'ston Agro» fermer xo'jaligi", tur: "Yuridik shaxs", raqam: "INN 411 020 755", belgi: "BA", yur: true},
+    mijoz: {nom: "«Bo'ston Agro» fermer xo'jaligi", tur: "Yuridik shaxs", raqam: "INN 411 020 755", belgi: "BA", yur: true, tel: "+998 95 707 07 55"},
     filial: "Namangan filiali",
     shartnoma: {raqam: "AG-2022/0755", tur: "Agrokredit", sana: "21.03.2022", berilgan: 950.0},
     qarz: {asosiy: 742.0, foiz: 148.0, kunlar: 335},
@@ -211,7 +211,7 @@ const YOZUVLAR = [
   },
   {
     id: "GR-2026/0141",
-    mijoz: {nom: "Rasulov Otabek Farhodovich", tur: "Jismoniy shaxs", raqam: "PINFL 3308 0141 7724", belgi: "RO", yur: false},
+    mijoz: {nom: "Rasulov Otabek Farhodovich", tur: "Jismoniy shaxs", raqam: "PINFL 3308 0141 7724", belgi: "RO", yur: false, tel: "+998 99 014 01 41"},
     filial: "Toshkent shahar filiali",
     shartnoma: {raqam: "MQ-2025/0141", tur: "Mikroqarz (garov bilan)", sana: "14.11.2025", berilgan: 40.0},
     qarz: {asosiy: 35.8, foiz: 2.8, kunlar: 34},
@@ -283,6 +283,14 @@ function zaxiraHisobi(qarzJami, garovBaho, foiz){
   return {zaxira, ochiq, qoplash};
 }
 
+/* Kichik tumba varianti: jadval katagi 44–64px uchun 1254px asl nusxa
+   dekodlanmasin (perf #1). Fayl nomi _kichik qo'shimchasi bilan. */
+function kichikRasm(y){
+  const r = y.garov.rasm || "";
+  const k = r.replace(/\.webp$/, "_kichik.webp");
+  y.garov.rasmKichik = /bino_/.test(r) ? k : r;
+}
+function yozuvHosilalari(){
 YOZUVLAR.forEach(y => {
   y.qarz.jami = +(y.qarz.asosiy + y.qarz.foiz).toFixed(1);   // Д-1: yagona qiymat
   y.bosqichNomi = bosqichnoma(y.ish.bosqich).nom;
@@ -302,6 +310,9 @@ YOZUVLAR.forEach(y => {
   y.qoplash     = h.qoplash;       // garovning qarzga nisbati, %
   y.zaxiraMatn  = pul(y.zaxira);
 });
+}
+yozuvHosilalari();
+YOZUVLAR.forEach(kichikRasm);
 
 /* ---------- Tasnif kesimi: portfel bo'yicha zaxira yuki (Д-7) ---------- */
 function tasnifStatistikasi(){
@@ -361,6 +372,13 @@ const PORTFEL = {
   ],
   /* Nazorat tadbirlari — butun portfel bo'yicha (Д-7 talabiga ko'ra
      kesim yig'indilari jami bilan moslikTekshiruvi() da solishtiriladi) */
+  /* Portfel darajasidagi undiruv va shartnoma kesimlari — sahifalarda
+     qo'lda yozilgan raqamlar o'rniga (data-consistency #3, #10).
+     417 qarzdor / 128 shartnoma ziddiyati bartaraf: qarzdor <= shartnoma. */
+  undiruv: {qarzdorlar: 112, muddatiOtganQarzMlrd: "184,6", sudJarayonida: 96, musodara: 118},
+  shartnoma: {jami: 128, faol: 96, kechikkan: 14, sudda: 3, yakunlangan: 15},
+  /* Ko'rsatkich deltalari (oldingi davrga nisbatan) — ilgari HTMLda literal edi */
+  delta: {portfel: "\u2191 8,2%", balansda: "\u2191 6", baho: "\u2191 7,6%", undiruv: "\u2191 6,1%", hudud: "\u2191 5,4%"},
   koriklar:  {jami: 1248, otkazilgan: 1094, rejada: 118, muddatiOtgan: 36},
   sugurtali: {jami: 1248, amalda: 1176, tugaydi30: 52, muddatiOtgan: 20},
   baholash:  {jami: 1248, dolzarb: 1063, tugaydi90: 141, eskirgan: 44}
@@ -514,7 +532,7 @@ HODISALAR.forEach(h => {
 });
 
 
-/* ---------- Qurilmalar (Garov 1:N Qurilma, ТЗ 3.2) ----------
+/* ---------- Hujjatlar bo'limi uchun yordamchi izoh ----------
    joyIchi — obyekt ICHIDAGI joy ("1-qavat", "Lobby"). Obyekt nomi bu yerda
    saqlanmaydi: ko'rinadigan `joy` reyestrdagi qisqa nom bilan birlashtiriladi. */
 
@@ -647,7 +665,7 @@ const SUGURTALAR = [
   {obyektId: "GR-2026/4471", polis: "PL-2026/11842", kompaniya: "O'zbekinvest",
    summa: 520.0,  tugash: "14-yan, 2027", holat: "amalda"},
   {obyektId: "GR-2025/1187", polis: "PL-2025/09315", kompaniya: "Gross Insurance",
-   summa: 4100.0, tugash: "19-sen, 2026", holat: "tugaydi"},
+   summa: 4150.0, tugash: "19-sen, 2026", holat: "tugaydi"},
   {obyektId: "GR-2026/2210", polis: "PL-2026/12073", kompaniya: "O'zbekinvest",
    summa: 340.0,  tugash: "03-mar, 2027", holat: "amalda"},
   {obyektId: "GR-2025/0934", polis: "PL-2025/08127", kompaniya: "Alfa Invest",
@@ -659,7 +677,7 @@ const SUGURTALAR = [
   {obyektId: "GR-2025/0755", polis: "—", kompaniya: "—",
    summa: 0, tugash: "—", holat: "yoq"},
   {obyektId: "GR-2026/0141", polis: "PL-2026/09842", kompaniya: "O'zbekinvest",
-   summa: 62.0, tugash: "16-dek, 2026", holat: "amalda"}
+   summa: 155.0, tugash: "16-dek, 2026", holat: "amalda"}
 ];
 SUGURTALAR.forEach(g => { g.obyekt = obyektNomi(g.obyektId, true); });
 
@@ -683,6 +701,66 @@ const BAHOLASHLAR = [
    baholovchi: "«Expert Baho» MChJ", usul: "Qiyosiy yondashuv", keyingi: "12.05.2027", holat: "dolzarb"}
 ];
 BAHOLASHLAR.forEach(b => { b.obyekt = obyektNomi(b.obyektId, true); });
+
+/* Kartochkadagi baholangan qiymat REYESTRDAN EMAS, BAHOLASHLARdan olinadi (Д-1):
+   ilgari ikki joyda saqlanib, GR-2026/0141 da 620 mln (kartochka) va 155 mln
+   (baholash reyestri) bo'lib ajralib ketgan edi — testlar shuni ushladi. */
+YOZUVLAR.forEach(y => {
+  const b = BAHOLASHLAR.find(x => x.obyektId === y.id);
+  if (b){
+    y.garov.baho = b.qiymat;
+    y.garov.bahoSana = b.sana;
+  }
+});
+yozuvHosilalari();   // baho o'zgargani uchun qoplash/zaxira qayta hisoblanadi
+YOZUVLAR.forEach(kichikRasm);
+
+/* ---------- Savdo bosqichlari va potensial xaridorlar (ТЗ 3.3: lot maydonlari) ----------
+   Ilgari auksion sahifasida saqlanardi — 3.1 taqiqiga zid edi. Savdo sanasi
+   ham shu yerda. */
+const SAVDO_MIJOZLAR = {
+  "GR-2025/1187": {bosqich: "tayyorlanmoqda", korik: 1,
+    mijozlar: [["«Baraka Tekstil» MChJ", "B2B mijoz", "korik", "Ko'rik 26-avg"]]},
+  "GR-2025/0934": {bosqich: "korik", korik: 2,
+    mijozlar: [["«Turon Retail» MChJ", "B2B mijoz", "muzokara", "Muzokarada"],
+               ["Qodirova Malika", "+998 93 555-66-77", "korik", "Ko'rik 27-avg"]]},
+  "GR-2024/0286": {mijozlar: [["«Sifat Qurilish» MChJ", "B2B mijoz", "korik", "Ko'rik 25-avg"],
+                              ["Aliyev Kamron", "+998 90 777-88-99", "korik", "Ko'rik 28-avg"]]},
+  "GR-2024/0512": {mijozlar: [["«Turon Retail» MChJ", "B2B mijoz · G'olib taklif", "tayyor", "Hujjatlar tayyorlanmoqda"]]}
+};
+/* Savdo sanalari lot bo'yicha */
+Object.assign(SAVDO_MIJOZLAR["GR-2025/0934"] = SAVDO_MIJOZLAR["GR-2025/0934"] || {}, {savdoSana: "09-sen, 2026"});
+Object.assign(SAVDO_MIJOZLAR["GR-2024/0286"] = SAVDO_MIJOZLAR["GR-2024/0286"] || {}, {savdoSana: "12-sen, 2026"});
+Object.assign(SAVDO_MIJOZLAR["GR-2024/0512"] = SAVDO_MIJOZLAR["GR-2024/0512"] || {}, {savdoSana: "05-sen, 2026"});
+
+/* ---------- Qarzdor bilan muloqot tarixi (ТЗ 4.2) ----------
+   Kanal + sana + qisqa natija. Kartochkada ko'rsatiladi. */
+const MULOQOTLAR = {
+  "GR-2026/4471": [
+    ["21-avg, 2026", "Telefon", "Qarzdor to'lovni 30-avgustgacha va'da qildi"],
+    ["12-avg, 2026", "Yozma talabnoma", "Ijro varaqasi muddati haqida ogohlantirildi"]],
+  "GR-2025/1187": [
+    ["19-avg, 2026", "Uchrashuv", "Rahbariyat bilan muzokara \u2014 kelishuvga erishilmadi"],
+    ["05-avg, 2026", "Telefon", "Buxgalteriya bog'lanishga va'da berdi, natija yo'q"]],
+  "GR-2026/2210": [
+    ["23-avg, 2026", "Telefon", "To'lov jadvali taklifi yuborildi, javob kutilmoqda"],
+    ["10-avg, 2026", "SMS", "Kechikish haqida eslatma yetkazildi"]],
+  "GR-2025/0934": [
+    ["15-avg, 2026", "Yozma talabnoma", "Auksion e'loni haqida rasmiy xabarnoma"],
+    ["02-avg, 2026", "Telefon", "Aloqa o'rnatilmadi \u2014 raqam javob bermaydi"]],
+  "GR-2026/5512": [
+    ["20-avg, 2026", "Telefon", "Qarzdor avtomobilni ixtiyoriy topshirishga rozi"],
+    ["08-avg, 2026", "Uchrashuv", "Saqlash maydonchasida holat ko'rigi birga o'tkazildi"]],
+  "GR-2026/3308": [
+    ["18-avg, 2026", "Yozma talabnoma", "Ruxsatsiz ijara bo'yicha tushuntirish so'raldi"],
+    ["06-avg, 2026", "Telefon", "Qarzdor ijarani rad etdi \u2014 ko'rik dalili bor"]],
+  "GR-2025/0755": [
+    ["16-avg, 2026", "Telefon", "MIB ijrosi bosqichi haqida xabardor qilindi"],
+    ["01-avg, 2026", "Yozma talabnoma", "Chegara belgilarini tiklash talabi yuborildi"]],
+  "GR-2026/0141": [
+    ["22-avg, 2026", "Telefon", "Suv bosishi bo'yicha sug'urta jarayoni tushuntirildi"],
+    ["11-avg, 2026", "SMS", "90 kunlik muddat tugashi haqida eslatma"]]
+};
 
 /* ---------- Tasdiqlar: kelishuv so'rovlari ----------
    joyIchi bo'lsa — obyekt ichidagi joy, aks holda bank ofisi (reyestrda yo'q). */
@@ -730,8 +808,8 @@ TASDIQLAR.forEach(t => { if (t.obyektId) t.joy = obyektNomi(t.obyektId, true); }
 /* ---------- Yer uchastkalari ----------
    kod reyestrdagi obyektga to'g'ri kelsa — status ish bosqichidan olinadi (Д-2). */
 const UCHASTKALAR = [
-  {kod:"GR-2025/0755", tuman:"Qibray tumani", viloyat:"Toshkent viloyati", maydon:"2.40 gektar", status:"Musodara jarayonida", srang:"#E8763C", narx:"42,5 ming so'm/m²",
-   kadastr:"11:09:03:02:0012", yerturi:"Qishloq xo'jaligi yerlari", jami:"1 020 000 000 so'm"},
+  {kod:"GR-2025/0755", tuman:"Qibray tumani", viloyat:"Toshkent viloyati", maydon:"2.40 gektar", status:"Musodara jarayonida", srang:"#E8763C", narx:"37,1 ming so'm/m²",
+   kadastr:"11:09:03:02:0012", yerturi:"Qishloq xo'jaligi yerlari", jami:"890 000 000 so'm"},
   {kod:"GR-2024/0331", tuman:"Zangiota tumani", viloyat:"Toshkent viloyati", maydon:"8.75 gektar", status:"Nazoratda", srang:"#2E9E52", narx:"180 ming so'm/m²",
    kadastr:"11:07:12:01:0044", yerturi:"Zaxira yerlar", jami:"15 750 000 000 so'm"},
   {kod:"GR-2024/0197", tuman:"Yuqorichirchiq tumani", viloyat:"Toshkent viloyati", maydon:"15.20 gektar", status:"Auksionda", srang:"#8B5CF6", narx:"260 ming so'm/m²",
@@ -901,11 +979,22 @@ const AVTO = [
 ];
 
 const KPI_BAZA = [
-  {qiymat:12.48, birlik:"mlrd so'm", delta:8.2, manfiy:false},
-  {qiymat:2.16,  birlik:"mlrd so'm", delta:5.6, manfiy:false},
-  {qiymat:8.93,  birlik:"mlrd so'm", delta:-3.1, manfiy:true},
-  {qiymat:3.55,  birlik:"mlrd so'm", delta:12.4, manfiy:false}
+  /* YTD (yanvar–iyul 2026) — portfel miqyosi; oylik seriya bilan moslikda:
+     jami = UNDIRUV_SERIYA oylik yig'indisi (data-consistency #6–7) */
+  {qiymat: 356.5, birlik: "mlrd so'm", delta: 8.2,  manfiy: false},   /* undirilgan YTD */
+  {qiymat: 84.6,  birlik: "mlrd so'm", delta: 12.4, manfiy: false},   /* realizatsiya tushumi YTD */
+  {qiymat: 9.3,   birlik: "mlrd so'm", delta: -3.1, manfiy: true},    /* nazorat xarajatlari YTD */
+  {qiymat: 347.2, birlik: "mlrd so'm", delta: 9.6,  manfiy: false}    /* sof qoplama YTD */
 ];
+
+/* Undiruv dinamikasi — 2026 yil oylari (mlrd so'm). Choraklar va yillik
+   YTD shu qatordan YIG'ILADI, alohida yozilmaydi (Д-7). */
+const UNDIRUV_SERIYA = {
+  oylik: {yorliq: ["Yan","Fev","Mar","Apr","May","Iyn","Iyl"],
+          qiymat: [42.1, 47.3, 44.8, 52.2, 57.6, 54.1, 58.4]},
+  yillik: {yorliq: ["2023","2024","2025"], qiymat: [318.6, 389.7, 412.3]}
+};
+
 
 
 /* ---------- Xarita nuqtalari: portfelning geo-namoyishi ----------
@@ -1028,6 +1117,39 @@ function moslikTekshiruvi(){
       xato.push(u.kod + ": uchastka statusi ish bosqichiga mos emas");
   });
 
+  /* --- 11: toifa kechikish kunlariga, zaxira toifa stavkasiga mos (docs-audit #12) --- */
+  YOZUVLAR.forEach(y => {
+    const t = tasnifla(y.qarz.kunlar);
+    if (y.tasnif.kalit !== t.kalit)
+      xato.push(y.id + ": tasnif toifasi kechikish kuniga mos emas");
+    if (Math.abs(y.zaxira - +(y.qarz.jami * y.tasnif.zaxira / 100).toFixed(1)) > 0.05)
+      xato.push(y.id + ": zaxira toifa stavkasidan hisoblanmagan");
+  });
+
+  /* --- 12: sug'urta qamrovi baholangan qiymatdan kam emas (ТЗ 4.3) ---
+     Yer sug'urtalanmaydi; polis yo'q/muddati o'tgan holatlar qamrov emas,
+     alohida hodisa sifatida kuzatiladi. */
+  SUGURTALAR.forEach(g => {
+    const y = YOZUVLAR.find(z => z.id === g.obyektId);
+    if (!y || y.garov.tur === "Yer uchastkasi") return;
+    if ((g.holat === "amalda" || g.holat === "tugaydi") && g.summa + 0.05 < y.garov.baho)
+      xato.push(g.obyektId + ": sug'urta summasi baholangan qiymatdan kam");
+  });
+
+  /* --- 13: kartochkadagi baho joriy baholash bilan sinxron (Д-1) --- */
+  BAHOLASHLAR.forEach(b => {
+    const y = YOZUVLAR.find(z => z.id === b.obyektId);
+    if (y && Math.abs(y.garov.baho - b.qiymat) > 0.05)
+      xato.push(b.obyektId + ": kartochka bahosi baholash reyestridan farq qiladi");
+  });
+
+  /* --- 14: undiruv/shartnoma kesimlari ichki mosligi --- */
+  const sh = PORTFEL.shartnoma;
+  if (sh.faol + sh.kechikkan + sh.sudda + sh.yakunlangan !== sh.jami)
+    xato.push("shartnoma kesimi yig'indisi mos emas");
+  if (PORTFEL.undiruv.qarzdorlar > sh.jami)
+    xato.push("qarzdorlar soni shartnomalardan ko'p bo'lishi mumkin emas");
+
   return xato;
 }
 
@@ -1037,8 +1159,8 @@ window.MKB_DATA = {
   TASNIF, tasnifla, tasnifStatistikasi, jamiZaxira,
   HODISALAR, HUJJATLAR, XONALAR,
   KORIKLAR, SUGURTALAR, BAHOLASHLAR, TASDIQLAR, UCHASTKALAR,
-  NAVBAT, MENING_VAZIFALARIM, BILDIRISHLAR, AUDIT_JURNAL,
-  FOYDLAR, HISOBOTLAR, HUDUDLAR, AUKSION_BOSQICH, AVTO, KPI_BAZA,
+  SAVDO_MIJOZLAR, MULOQOTLAR, NAVBAT, MENING_VAZIFALARIM, BILDIRISHLAR, AUDIT_JURNAL,
+  FOYDLAR, HISOBOTLAR, HUDUDLAR, AUKSION_BOSQICH, AVTO, KPI_BAZA, UNDIRUV_SERIYA,
   pul, son, fmt,
   bosqichStatistikasi, holatStatistikasi,
   jamiQarz, jamiBaho, moslikTekshiruvi,

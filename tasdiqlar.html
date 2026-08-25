@@ -7,10 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Tasdiqlar va topshiriqlar (ekran 22, Rahbar ko'rinishi) ---- */
 .tt-grid{display:grid;grid-template-columns:350px minmax(0,1fr) 360px;gap:18px;align-items:start}
+.tt-grid > *{min-width:0}
 .tt-grid h3{font-size:16.5px;font-weight:750}
 .t-son{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 8px;margin-left:8px;background:#E3F1ED;color:#0A5348;border-radius:99px;font-size:12.5px;font-weight:750;vertical-align:2px}
 .kt-band{
@@ -23,7 +24,7 @@
 .kt-tile{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;box-shadow:var(--chuqur-tile)}
 .kt-tile .ic{width:20px;height:20px}
 .kt-tile.yashil{background:#E3F1ED;color:#0A5348}
-.kt-tile.sariq{background:#FFF6DE;color:#9A6E00}
+.kt-tile.sariq{background:#FFF6DE;color:#7A5600}
 .kt-tile.binafsha{background:#F3EBFE;color:#8A4BD8}
 .kt-tile.qizil{background:#FDEEEC;color:#C43C31}
 .kt-band b{display:block;font-size:14.5px;font-weight:650;line-height:1.35}
@@ -32,7 +33,7 @@
 .kt-band .vaqt{font-size:12px;color:var(--matn-4)}
 .jiddiylik{margin-left:auto;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:99px}
 .jiddiylik.yuqori{background:#FDEEEC;color:#C43C31}
-.jiddiylik.orta{background:#FFF6DE;color:#9A6E00}
+.jiddiylik.orta{background:#FFF6DE;color:#7A5600}
 .jiddiylik.past{background:#E7F0FE;color:#2F6BCF}
 .barcha-band{display:flex;align-items:center;gap:8px;width:100%;margin-top:14px;padding:12px 6px 2px;font-size:14px;font-weight:650;color:#2C3A49;border-radius:8px}
 .barcha-band .ic{margin-left:auto;width:16px;height:16px}
@@ -89,8 +90,8 @@
 .ft-band b{font-weight:650}
 .ft-band span{display:block;color:var(--matn-4);font-size:12px;margin-top:2px}
 .tt-grid > aside{display:flex;flex-direction:column;gap:18px}
-@media (max-width:1600px){.tt-grid{grid-template-columns:320px minmax(0,1fr)}.tt-grid > aside{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}}
-@media (max-width:1200px){.tt-grid{grid-template-columns:minmax(0,1fr)}.tt-grid > aside{grid-template-columns:minmax(0,1fr)}.td-korpus{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:1760px){.tt-grid{grid-template-columns:320px minmax(0,1fr)}.tt-grid > aside{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}}
+@media (max-width:1440px){.tt-grid{grid-template-columns:minmax(0,1fr)}.tt-grid > aside{grid-template-columns:minmax(0,1fr)}.td-korpus{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body data-sahifa="hisobotlar">
@@ -203,9 +204,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -289,12 +290,22 @@ document.getElementById("tasdiqla").addEventListener("click", ()=>{
 });
 document.getElementById("rad-et").addEventListener("click", ()=>{
   MKB.modal("So'rovni rad etish",
-    `<div style="margin-top:6px"><label class="maydon-yorliq">Rad etish sababi</label>
-     <div class="kirish kirish-katta"><textarea placeholder="Sababni kiriting..."></textarea></div></div>`,
+    `<div style="margin-top:6px"><label class="maydon-yorliq" for="rad-sabab">Rad etish sababi</label>
+     <div class="kirish kirish-katta"><textarea id="rad-sabab" placeholder="Sababni kiriting..."></textarea></div></div>`,
     {xavf:true, okMatn:"Rad etish", ok(){
       MKB.toast("So'rov rad etildi");
       navbatdanOlish();
     }});
+  /* Bo'sh sabab bilan rad etishga yo'l qo'ymaymiz \u2014 capture-bosqich (vazifalar.html andozasi) */
+  const modallar = document.querySelectorAll(".modal-fon");
+  const fon = modallar[modallar.length-1];
+  fon.addEventListener("click", e=>{
+    if (!e.target.closest("[data-m-ok]")) return;
+    if (!document.getElementById("rad-sabab").value.trim()){
+      e.stopPropagation();
+      MKB.toast("Rad etish sababini kiriting");
+    }
+  }, true);
 });
 });
 </script>

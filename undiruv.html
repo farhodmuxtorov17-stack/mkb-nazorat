@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Undiruv jarayoni: bosqichlar zanjiri ---- */
 .bosqich-zanjir{
@@ -161,7 +161,7 @@
 
         <div class="u-amallar">
           <a class="tugma tugma-oq tugma-kichik" href="qarzdorlar.html"><svg class="ic"><use href="#i-qarz"/></svg>Qarzdor</a>
-          <a class="tugma tugma-oq tugma-kichik" id="d-obyekt-havola" href="obyektlar.html"><svg class="ic"><use href="#i-bino"/></svg>Obyekt</a>
+          <a class="tugma tugma-oq tugma-kichik" id="d-obyekt-havola" data-ruxsat-yashir href="obyektlar.html"><svg class="ic"><use href="#i-bino"/></svg>Obyekt</a>
           <button class="tugma tugma-asos tugma-kichik keng" id="bosqich-tugma"><svg class="ic"><use href="#i-strelka"/></svg>Keyingi bosqichga o'tkazish</button>
         </div>
       </aside>
@@ -170,9 +170,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 /* ---- Undiruv jarayoni bosqichlari ---- */
 /* Bosqich statistikasi va ishlar yagona manbadan hisoblanadi */
@@ -301,6 +301,11 @@ document.addEventListener("DOMContentLoaded", () => {
       `<p style="font-size:14px;color:var(--matn-2);line-height:1.6"><b>${i.raqam}</b> ishi <b>${i.bosqich}</b> bosqichidan <b>${keyingi.nom}</b> bosqichiga o'tkaziladi. O'zgarish audit jurnaliga yoziladi va mas'ul yuristga bildirishnoma yuboriladi.</p>`,
       {okMatn:"O'tkazish", ok(){
         i.bosqich = keyingi.nom;
+        /* Modal va'dasiga mos: o'tish ish tarixiga yoziladi (docs-audit #11) */
+        const y = MKB_DATA.YOZUVLAR.find(z => z.ish.raqam === i.raqam);
+        if (y && y.ish.tarix) y.ish.tarix.push(
+          ["24.08.2026", keyingi.nom + " bosqichiga o'tkazildi",
+           "Bosqich " + MKB.foydIsmi() + " tomonidan interfeys orqali o'zgartirildi."]);
         MKB.toast(i.raqam + " — " + keyingi.nom + " bosqichiga o'tkazildi", "i-belgi-doira");
         royxatChiz();
       }});

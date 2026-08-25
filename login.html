@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 body{background:var(--kanvas);min-height:100vh;overflow-x:hidden}
 
@@ -76,13 +76,13 @@ body{background:var(--kanvas);min-height:100vh;overflow-x:hidden}
 .koz-tugma:hover{background:#EEF2F7;color:#3A4756}
 .kirish-tugma{
   width:100%;height:58px;margin-top:24px;border-radius:14px;
-  background:linear-gradient(180deg,#2A72B8 0%,var(--asos) 55%,#0B4177 100%);color:#fff;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 2px 4px rgba(11,55,100,.25), 0 10px 22px -6px rgba(11,55,100,.45);
+  background:linear-gradient(180deg,#1B8A74 0%,#0E6B5C 55%,#0A5348 100%);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 2px 4px rgba(8,46,40,.25), 0 10px 22px -6px rgba(8,46,40,.45);
   display:flex;align-items:center;justify-content:center;gap:12px;
   font-size:17px;font-weight:700;
   transition:background var(--tez),transform 80ms ease;
 }
-.kirish-tugma:hover{background:linear-gradient(180deg,#3480C9 0%,#1160A4 55%,#0A3A6B 100%)}
+.kirish-tugma:hover{background:linear-gradient(180deg,#1F9680 0%,#0E6B5C 55%,#084C41 100%)}
 .kirish-tugma:active{transform:scale(.99)}
 .kirish-tugma .ic{width:21px;height:21px;stroke-width:2}
 .kirish-tugma[disabled]{opacity:.75;cursor:progress}
@@ -252,11 +252,14 @@ body{background:var(--kanvas);min-height:100vh;overflow-x:hidden}
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  /* Login sahifasiga qaytish = sessiya yakuni: eski "asl rol" saqlanib
+     qolmasin (aks holda keyingi foydalanuvchi rol almashtirgichini oladi) */
+  localStorage.removeItem("mkb-asil-rol");
   if (!window.MKB_DATA) return;
   const P = MKB_DATA.PORTFEL, fmt = MKB_DATA.fmt;
   const q = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
@@ -289,6 +292,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       document.querySelectorAll(".rol-tugma").forEach(x=>x.setAttribute("aria-pressed","false"));
       b.setAttribute("aria-pressed","true");
       localStorage.setItem("mkb-rol", b.dataset.rol);
+      localStorage.removeItem("mkb-asil-rol");
     });
   });
 

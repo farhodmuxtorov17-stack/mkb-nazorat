@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Aktivlar tasnifi va imkoniyatli yo'qotishlar zaxirasi ---- */
 .ts-ustun{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
@@ -48,12 +48,12 @@
 .hisob-jami b{font-size:17px;font-weight:780;color:var(--asos-toq)}
 
 .migratsiya{margin-top:14px;background:var(--kanvas);border-radius:12px;padding:12px 13px}
-.migratsiya .yorliq{font-size:11.5px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;color:var(--matn-4)}
+.migratsiya .yorliq{font-size:11.5px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;color:var(--matn-3)}
 .migratsiya p{font-size:12.5px;color:var(--matn-3);line-height:1.55;margin-top:6px}
 .migratsiya b{color:var(--matn-2)}
 
 .mezon{background:#FFF8E7;border:1px solid #F0DFB4;border-radius:12px;padding:12px 14px;display:flex;gap:10px;margin-top:16px}
-.mezon .ic{width:16px;height:16px;color:#9A6E00;flex:none;margin-top:2px}
+.mezon .ic{width:16px;height:16px;color:#7A5600;flex:none;margin-top:2px}
 .mezon div{font-size:12.5px;color:#6B5210;line-height:1.6}
 .mezon b{display:block;font-weight:750;margin-bottom:2px;color:#5A4409}
 
@@ -75,7 +75,7 @@
         <div class="sahifa-izoh">Muddati o'tgan kunlar bo'yicha toifa, toifa bo'yicha imkoniyatli yo'qotishlar zaxirasi</div>
       </div>
       <div class="sahifa-harakat">
-        <button class="tanlov" data-royxat="filial" data-royxat-bosh="Barcha filiallar"><span class="t-yorliq">Barcha filiallar</span><svg class="ic"><use href="#i-past"/></svg></button>
+        <button class="tanlov" id="f-filial" data-royxat="filial" data-royxat-bosh="Barcha filiallar"><span class="t-yorliq">Barcha filiallar</span><svg class="ic"><use href="#i-past"/></svg></button>
         <button class="tugma tugma-oq" data-toast="Tasnif jadvali XLSX ga yuklanmoqda"><svg class="ic"><use href="#i-yuklab"/></svg>Yuklab olish</button>
       </div>
     </div>
@@ -170,9 +170,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 const D = MKB_DATA;
 const pul = D.pul;
@@ -227,10 +227,14 @@ document.getElementById("ts-jami").innerHTML = `
 
 /* ---- Yozuvlar jadvali ---- */
 function qoplashRang(foiz){
-  return foiz >= 100 ? "#2E9E52" : foiz >= 70 ? "#D98324" : "#C0392B";
+  return foiz >= 100 ? "#1F7A3D" : foiz >= 70 ? "#B45309" : "#C0392B";
 }
 
-document.getElementById("ts-yozuv").innerHTML = D.YOZUVLAR.map(y => `
+let fFilial = null;
+function yozuvChiz(){
+document.getElementById("ts-yozuv").innerHTML = D.YOZUVLAR
+  .filter(y => !fFilial || y.filial === fFilial)
+  .map(y => `
   <tr class="ts-qator" data-id="${y.id}" tabindex="0">
     <td><b>${y.shartnoma.raqam}</b><div style="font-size:12px;color:var(--matn-3)">${y.id}</div></td>
     <td>${y.mijoz.nom}<div style="font-size:12px;color:var(--matn-3)">${y.filial}</div></td>
@@ -242,10 +246,13 @@ document.getElementById("ts-yozuv").innerHTML = D.YOZUVLAR.map(y => `
       <div class="qop-matn">${y.qoplash}%</div>
     </td>
     <td class="son"><b>${pul(y.zaxira)}</b></td>
-  </tr>`).join("");
+  </tr>`).join("") || `<tr><td colspan="7" style="text-align:center;color:var(--matn-3);padding:26px 0">Tanlangan filial bo'yicha yozuv yo'q</td></tr>`;
+}
+yozuvChiz();
 
 /* ---- O'ng panel: tanlangan yozuv bo'yicha hisob-kitob ---- */
 function panelChiz(id){
+  /* Ruxsatsiz havolani dinamik renderda ham yashiramiz */
   const y = D.topish(id);
   const i = D.TASNIF.findIndex(t => t.kalit === y.tasnif.kalit);
   const keyingi = D.TASNIF[i + 1];
@@ -287,22 +294,31 @@ function panelChiz(id){
       ${migratsiya}
     </div>
 
+    ${MKB.sahifaRuxsatlimi("obyekt.html") ? `
     <a class="tugma tugma-oq" style="margin-top:14px;width:100%;justify-content:center"
        href="obyekt.html?id=${encodeURIComponent(y.id)}">
       <svg class="ic"><use href="#i-bino"/></svg>Garov obyekti kartochkasi
-    </a>`;
+    </a>` : ""}`;
 }
 
-const qatorlar = [...document.querySelectorAll(".ts-qator")];
-function tanla(tr){
-  qatorlar.forEach(x => x.classList.toggle("tanlangan", x === tr));
-  panelChiz(tr.dataset.id);
+function ulaQatorlar(){
+  const qatorlar = [...document.querySelectorAll(".ts-qator")];
+  function tanla(tr){
+    qatorlar.forEach(x => x.classList.toggle("tanlangan", x === tr));
+    panelChiz(tr.dataset.id);
+  }
+  qatorlar.forEach(tr => {
+    tr.addEventListener("click", () => tanla(tr));
+    tr.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); tanla(tr); } });
+  });
+  if (qatorlar.length) tanla(qatorlar[0]);
 }
-qatorlar.forEach(tr => {
-  tr.addEventListener("click", () => tanla(tr));
-  tr.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); tanla(tr); } });
+ulaQatorlar();
+document.getElementById("f-filial").addEventListener("tanlov", e => {
+  fFilial = e.detail === "Barcha filiallar" ? null : e.detail;
+  yozuvChiz();
+  ulaQatorlar();
 });
-tanla(qatorlar[0]);
 </script>
 </body>
 </html>

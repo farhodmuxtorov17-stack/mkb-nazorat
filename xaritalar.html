@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MKB — Hududiy xarita</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="mkb.css?v=26082501">
+<link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 <style>
 /* ---- Hududiy xarita (ekran 5) ---- */
 .xarita-maydon{position:relative;min-height:calc(100vh - 130px)}
@@ -107,7 +107,7 @@
       <aside class="hudud-panel">
         <h3>Hududlar bo'yicha jami</h3>
         <div id="hudud-royxat"></div>
-        <div class="hudud-jami"><span>Jami garov obyekti</span><b>1 248</b><span class="delta">↑ 5,4%</span></div>
+        <div class="hudud-jami"><span>Jami garov obyekti</span><b id="hj-jami">—</b><span class="delta" id="hj-delta"></span></div>
       </aside>
 
       <div class="hudud-kartalar" id="hudud-kartalar"></div>
@@ -116,10 +116,10 @@
 </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="assets/vendor/leaflet/leaflet.js"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
@@ -202,6 +202,7 @@ HUDUDLAR.forEach(h=>{
   const d = Math.round(38 + 22*Math.sqrt(son/maxSon));
   const rang = DARAJA_RANG[geo.daraja];
   const belgi = L.marker([geo.lat, geo.lng], {
+    title: h[0] + " — " + h[1] + " ta obyekt",
     icon: L.divIcon({className:"klaster", html:`<span style="box-shadow:0 0 0 3px rgba(255,255,255,.92), 0 0 0 5px ${rang}, inset 0 1px 0 rgba(255,255,255,.22), 0 4px 10px rgba(10,22,38,.35)">${h[1]}<small>${h[0].replace(" viloyati","").replace(" shahri"," sh.")}</small></span>`, iconSize:[d,d], iconAnchor:[d/2,d/2]})
   }).addTo(uzMap);
   belgi.bindTooltip(
@@ -240,6 +241,10 @@ const r2 = document.getElementById("r-2d"), r3 = document.getElementById("r-3d")
   else { uzMap.removeLayer(uzSputnik); uzXarita.addTo(uzMap); MKB.toast("Sxematik xarita ko'rinishi", "i-xarita"); }
 }));
 });
+
+/* Jami HUDUDLARdan yig'iladi (Д-7) */
+document.getElementById("hj-jami").textContent = MKB_DATA.fmt(HUDUDLAR.reduce((a, h) => a + (+h[1]), 0));
+document.getElementById("hj-delta").textContent = MKB_DATA.PORTFEL.delta.hudud;
 </script>
 </body>
 </html>

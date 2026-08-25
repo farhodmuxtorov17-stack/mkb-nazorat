@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Ko'rik tayinlash: uch qadamli shakl ---- */
 .tay-ustun{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
@@ -98,11 +98,11 @@
             </div>
           </div>
           <div class="shakl-guruh">
-            <label class="maydon-yorliq">Rejalashtirilgan sana</label>
+            <label class="maydon-yorliq" for="t-sana">Rejalashtirilgan sana</label>
             <div class="kirish"><svg class="ic"><use href="#i-kalendar"/></svg><input id="t-sana" placeholder="kun-oy, yil — masalan: 30-avg, 2026"></div>
           </div>
           <div class="shakl-guruh">
-            <label class="maydon-yorliq">Izoh (ixtiyoriy)</label>
+            <label class="maydon-yorliq" for="t-izoh">Izoh (ixtiyoriy)</label>
             <div class="kirish"><svg class="ic"><use href="#i-hujjat"/></svg><input id="t-izoh" placeholder="Ko'rikda nimaga e'tibor qaratiladi"></div>
           </div>
         </section>
@@ -137,9 +137,9 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 const D = MKB_DATA;
 const holat = {obyekt: null, asos: "Reglament davriyligi", tur: "Rejali",
@@ -149,9 +149,13 @@ let qadam = 1;
 /* Katak guruhlarida bitta tanlov */
 function katakUla(id, kalit){
   document.querySelectorAll("#" + id + " .tur-katak").forEach(k => {
+    k.setAttribute("aria-pressed", k.classList.contains("tanlandi") ? "true" : "false");
     k.addEventListener("click", () => {
-      document.querySelectorAll("#" + id + " .tur-katak").forEach(x => x.classList.remove("tanlandi"));
+      document.querySelectorAll("#" + id + " .tur-katak").forEach(x => {
+        x.classList.remove("tanlandi"); x.setAttribute("aria-pressed", "false");
+      });
       k.classList.add("tanlandi");
+      k.setAttribute("aria-pressed", "true");
       holat[kalit] = k.dataset.v;
       xulosa();
     });
@@ -173,6 +177,8 @@ function qadamChiz(){
     const n = +q.dataset.q;
     q.classList.toggle("faol", n === qadam);
     q.classList.toggle("otdi", n < qadam);
+    if (n === qadam) q.setAttribute("aria-current", "step");
+    else q.removeAttribute("aria-current");
   });
   document.getElementById("t-orqaga").disabled = qadam === 1;
   document.getElementById("t-oldinga").innerHTML = qadam === 3
@@ -189,14 +195,14 @@ document.getElementById("t-oldinga").addEventListener("click", () => {
     `<p style="font-size:14px;line-height:1.6"><b>${holat.obyekt}</b> bo'yicha ${holat.tur.toLowerCase()}
      ko'rik <b>${holat.sana}</b> sanasiga tayinlandi. Ijrochi: <b>${holat.inspektor}</b>.
      ${holat.xabar === "Yozma xabarnoma" ? "Qarzdorga xabarnoma tayyorlanadi." : ""}</p>`,
-    {tasdiq: "Rejaga o'tish", bekor: "Yopish", onTasdiq: () => location.href = "korik-rejasi.html"});
+    {okMatn: "Rejaga o'tish", ok(){ location.href = "korik-rejasi.html"; }});
 });
 
 /* Xulosa paneli */
 function xulosa(){
   const o = holat.obyekt ? Object.values(D.OBYEKT_INDEKS).find(x => x.qisqa === holat.obyekt) : null;
   document.getElementById("xu-panel").innerHTML = `
-    ${o ? `<div class="xu-bosh"><img src="${o.rasm}" alt=""><div><b>${o.qisqa}</b><span>${o.id} · ${o.hududToliq}</span></div></div>` : ""}
+    ${o ? `<div class="xu-bosh"><img src="${o.rasm}" alt="" loading="lazy"><div><b>${o.qisqa}</b><span>${o.id} · ${o.hududToliq}</span></div></div>` : ""}
     <div class="xu-qator"><span>Obyekt</span><b>${holat.obyekt || "—"}</b></div>
     <div class="xu-qator"><span>Asos</span><b>${holat.asos}</b></div>
     <div class="xu-qator"><span>Turi</span><b>${holat.tur}</b></div>

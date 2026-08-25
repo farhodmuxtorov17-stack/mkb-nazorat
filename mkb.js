@@ -162,7 +162,7 @@ function joriyRol(){
   const r = localStorage.getItem("mkb-rol");
   // Yaroqsiz qiymatda eng KAM huquqli rol qaytariladi (fail-closed);
   // shell sahifalarda bundan oldinroq login'ga yo'naltirish ishlaydi.
-  return rolYaroqlimi(r) ? r : "Kredit menejeri";   // eng kam huquqli rol
+  return rolYaroqlimi(r) ? r : "Tavakkalchilik menejeri";   // eng tor qamrovli rol (Р-4)
 }
 function asilRol(){
   // Haqiqiy autentifikatsiya qilingan rol — "ko'rish" rejimida ham o'zgarmaydi.
@@ -343,16 +343,65 @@ const BOLIM_TAB = {
   sozlamalar: [
     ["sozlamalar.html","Umumiy"],
     ["foydalanuvchilar.html","Foydalanuvchilar"],
-    ["bildirishnomalar.html","Bildirishnomalar"]
+    ["bildirishnomalar.html","Bildirishnomalar"],
+    ["holatlar.html","Holat ekranlari"]
   ]
 };
 const TAB_RUXSAT = {"foydalanuvchilar.html":["admin"], "holatlar.html":["admin"]};
 
+/* ---------- Sahifa darajasidagi QO'SHIMCHA ruxsatlar (Р-3 kengaytmasi) ----------
+   Ba'zi sahifalar o'z bo'limidan tashqari yana bir bo'lim egalariga ham ochiq:
+   masalan, garov hodisalari yuridik bo'limda turadi, lekin ТЗ §2 bo'yicha
+   ular garov xizmatining ham zonasi. Kalit — fayl nomi; qiymat —
+   {bolimlar: [...]} (shu bo'limlardan BIRORTASI bo'lsa kifoya) va/yoki
+   {rollar: [...]} (rol kaliti bo'yicha to'g'ridan-to'g'ri ruxsat). */
+const SAHIFA_QOSHIMCHA = {
+  "garov-hodisalari.html": {bolimlar: ["garov"]},
+  "baholash.html":         {bolimlar: ["zaxira"]},
+  "tasniflash.html":       {rollar: ["filial"]}
+};
+
+/* Havola manziliga qarab: joriy rol shu sahifani ocha oladimi?
+   Bo'lim ro'yxatlari MENYU+BOLIM_TAB dan quriladi; ro'yxatda bo'lmagan
+   sahifa (obyekt.html kabi ichki sahifalar) o'z data-sahifa bo'limi
+   bo'yicha tekshiriladi — bu xarita ularni ham biladi. */
+const SAHIFA_BOLIMI = (() => {
+  const m = {};
+  MENYU.forEach(([bolim, href]) => { m[href] = bolim; });
+  Object.entries(BOLIM_TAB).forEach(([bolim, royxat]) =>
+    royxat.forEach(([href]) => { m[href] = bolim; }));
+  /* ichki sahifalar (tab/menyuda yo'q) */
+  Object.assign(m, {
+    "obyekt.html": "garov", "obyekt-tarkibi.html": "garov",
+    "korik-akti.html": "garov", "korik-tarixi.html": "garov",
+    "korik-tayinlash.html": "garov", "dala-korigi.html": "garov",
+    "musodara-qabul.html": "realizatsiya", "auksion.html": "realizatsiya",
+    "arxiv.html": "realizatsiya", "holatlar.html": "sozlamalar",
+    "xato.html": "panel", "index.html": "panel"
+  });
+  return m;
+})();
+
+function sahifaRuxsatlimi(href){
+  const fayl = (href || "").split("?")[0].split("#")[0].split("/").pop();
+  if (!fayl || !fayl.endsWith(".html")) return true;
+  const kalit = ROL_KALIT[joriyRol()];
+  const q = SAHIFA_QOSHIMCHA[fayl];
+  if (q){
+    if (q.rollar && q.rollar.includes(kalit)) return true;
+    if (q.bolimlar && q.bolimlar.some(b => ruxsatlimi(b))) return true;
+  }
+  if (TAB_RUXSAT[fayl] && !TAB_RUXSAT[fayl].includes(kalit)) return false;
+  const bolim = SAHIFA_BOLIMI[fayl];
+  return bolim ? ruxsatlimi(bolim) : true;
+}
+
 function bolimTabHTML(bolim){
   let royxat = BOLIM_TAB[bolim];
   if (!royxat) return "";
-  const kalit = ROL_KALIT[joriyRol()];
-  royxat = royxat.filter(([h]) => !TAB_RUXSAT[h] || TAB_RUXSAT[h].includes(kalit));
+  /* Tab ro'yxati rolning to'liq ruxsatiga qarab filtrlanadi —
+     403 ga olib boradigan tab ko'rsatilmaydi (Р-1) */
+  royxat = royxat.filter(([h]) => sahifaRuxsatlimi(h));
   if (!royxat.length) return "";
   const joriy = location.pathname.split("/").pop() || "index.html";
   return `<nav class="bolim-tablar" aria-label="Bo'lim sahifalari">${
@@ -413,7 +462,7 @@ function topbarHTML(){
   return `
   ${chap}
   <div class="topbar-ong">
-    <div class="filial-tanlov" data-popover-tugma role="button" tabindex="0" aria-haspopup="menu" aria-label="Filialni tanlash">
+    <div class="filial-tanlov" data-popover-tugma role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false" aria-label="Filialni tanlash">
       <svg class="ic"><use href="#i-bank"/></svg>
       <span class="f-nom">Toshkent shahar filiali</span>
       <svg class="ic strelka"><use href="#i-past"/></svg>
@@ -493,7 +542,21 @@ MKB.modal = function(sarlavha, matn, opts){
     </div>`;
   document.body.appendChild(fon);
   requestAnimationFrame(()=>fon.classList.add("ochiq"));
-  function yop(){ fon.classList.remove("ochiq"); setTimeout(()=>fon.remove(), 180); }
+  /* Fokus tuzog'i: Tab modal ichida aylanadi; yopilganda fokus qaytadi (a11y #10) */
+  const qaytishFokus = document.activeElement;
+  fon.addEventListener("keydown", e => {
+    if (e.key !== "Tab") return;
+    const f = [...fon.querySelectorAll("button, [href], input, textarea, select")]
+      .filter(x => !x.disabled && x.offsetParent !== null);
+    if (!f.length) return;
+    const birinchi = f[0], oxirgi = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === birinchi){ e.preventDefault(); oxirgi.focus(); }
+    else if (!e.shiftKey && document.activeElement === oxirgi){ e.preventDefault(); birinchi.focus(); }
+  });
+  function yop(){
+    fon.classList.remove("ochiq"); setTimeout(()=>fon.remove(), 180);
+    if (qaytishFokus && qaytishFokus.focus) qaytishFokus.focus();
+  }
   fon.addEventListener("click", e=>{ if (e.target===fon) yop(); });
   fon.querySelector("[data-m-yopish]").addEventListener("click", yop);
   fon.querySelector("[data-m-ok]").addEventListener("click", ()=>{ yop(); if (opts.ok) opts.ok(); });
@@ -514,6 +577,8 @@ function tanlovUla(root){
     if (btn.dataset.ulandi) return;
     btn.dataset.ulandi = "1";
     btn.setAttribute("data-popover-tugma","");
+    btn.setAttribute("aria-haspopup","listbox");
+    btn.setAttribute("aria-expanded","false");
     btn.style.position = "relative";
     const variantlar = JSON.parse(btn.dataset.variantlar);
     const yorliq = btn.querySelector(".t-yorliq") || btn.firstChild;
@@ -527,6 +592,7 @@ function tanlovUla(root){
       const ochiqmi = pop.classList.contains("ochiq");
       hammaPopoverYop();
       if (!ochiqmi) pop.classList.add("ochiq");
+      btn.setAttribute("aria-expanded", String(!ochiqmi));
     });
     pop.querySelectorAll("button").forEach(v=>{
       v.addEventListener("click", ()=>{
@@ -614,6 +680,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
   }
 
+  /* div[role=button] elementlarda Enter/Space click hosil qilmaydi —
+     klaviatura foydalanuvchisi uchun qo'lda bog'laymiz (a11y #1) */
+  document.querySelectorAll('[role="button"][tabindex]').forEach(el => {
+    el.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " "){ e.preventDefault(); el.click(); }
+    });
+  });
+
+  /* Ruxsatsiz maqsadga olib boradigan havolalarni yashirish (Р-1):
+     <a data-ruxsat-yashir href="..."> — rol ocholmaydigan sahifa bo'lsa,
+     element butunlay olib tashlanadi. */
+  document.querySelectorAll("a[data-ruxsat-yashir]").forEach(a => {
+    if (!sahifaRuxsatlimi(a.getAttribute("href"))) a.remove();
+  });
+
   // Profil menyu
   const pt = document.getElementById("profil-tugma");
   if (pt){
@@ -640,18 +721,26 @@ document.addEventListener("DOMContentLoaded", ()=>{
     });
   }
 
-  // RBAC qo'riqchisi: joriy rol uchun taqiqlangan sahifada 403 holati
-  // Eslatma: mavjud elementlarni O'CHIRMAYMIZ, yashiramiz — sahifaning o'z
-  // skriptlari getElementById bilan ishlashda xato bermasligi uchun.
+  // RBAC qo'riqchisi: joriy rol uchun taqiqlangan sahifada 403 holati.
+  // Kontent DOM dan BUTUNLAY olib tashlanadi (rbac-audit #5): sahifa skriptlari
+  // bu vaqtga qadar allaqachon ishlagan, ularni buzish xavfi yo'q; yashirish
+  // esa ma'lumotni (masalan, xodimlar reyestri) DOM da qoldirardi.
   // Sahifa darajasidagi qo'shimcha cheklov: data-ruxsat="admin,rahbar"
   const sahifa = document.body.dataset.sahifa;
+  const joriyFayl = location.pathname.split("/").pop() || "index.html";
   const sahifaRuxsat = (document.body.dataset.ruxsat || "").split(",").map(x=>x.trim()).filter(Boolean);
   const sahifaTaqiq = sahifaRuxsat.length && !sahifaRuxsat.includes(ROL_KALIT[joriyRol()]);
-  if (sahifa && sb && (!ruxsatlimi(sahifa) || sahifaTaqiq)){
+  const qoshimchaOchiq = (() => {
+    const q = SAHIFA_QOSHIMCHA[joriyFayl];
+    if (!q) return false;
+    if (q.rollar && q.rollar.includes(ROL_KALIT[joriyRol()])) return true;
+    return !!(q.bolimlar && q.bolimlar.some(b => ruxsatlimi(b)));
+  })();
+  if (sahifa && sb && !qoshimchaOchiq && (!ruxsatlimi(sahifa) || sahifaTaqiq)){
     const kontent = document.querySelector(".kontent");
     if (kontent){
       document.title = "MKB — Ruxsat yetarli emas";
-      [...kontent.children].forEach(el=>{ el.style.display = "none"; });
+      kontent.replaceChildren();
       const taqiq = document.createElement("div");
       kontent.appendChild(taqiq);
       taqiq.outerHTML = `
@@ -660,10 +749,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             <img src="assets/st_ruxsat.webp" alt="" style="width:230px;margin:0 auto 6px">
             <span style="display:inline-block;background:#FFF3D6;color:#B07C08;font-size:12px;font-weight:700;border-radius:99px;padding:5px 14px">Ruxsat rad etildi · 403</span>
             <h2 style="font-size:26px;font-weight:750;margin-top:14px">Ruxsat yetarli emas</h2>
-            <p style="font-size:14.5px;color:#5F6A5C;line-height:1.6;margin-top:10px">
-              Ushbu bo'limni ochish uchun <b>${joriyRol()}</b> rolida kerakli ruxsatlar mavjud emas.
-              Administrator bilan bog'laning yoki boshqa rol bilan kiring.
-            </p>
+            <p style="font-size:14.5px;color:#5F6A5C;line-height:1.6;margin-top:10px"><span>Ushbu bo'limni ochish uchun</span> <b>${joriyRol()}</b> <span>rolida kerakli ruxsatlar mavjud emas.</span> <span>Administrator bilan bog'laning yoki boshqa rol bilan kiring.</span></p>
             <div style="display:flex;gap:10px;justify-content:center;margin-top:22px">
               <a class="tugma tugma-asos" href="index.html"><svg class="ic"><use href="#i-uy"/></svg>Bosh sahifaga qaytish</a>
               <button class="tugma tugma-chiziqli" onclick="document.getElementById('profil-tugma').click()">Rolni almashtirish</button>
@@ -739,6 +825,7 @@ MKB.MENYU = MENYU;
 MKB.ROL_RUXSAT = ROL_RUXSAT;
 MKB.ROL_KALIT = ROL_KALIT;
 MKB.ruxsatlimi = ruxsatlimi;
+MKB.sahifaRuxsatlimi = sahifaRuxsatlimi;
 MKB.foydIsmi = () => FOYD_ISM[ROL_KALIT[joriyRol()]];
 window.MKB = MKB;
 })();

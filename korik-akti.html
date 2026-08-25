@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082406">
+<link rel="stylesheet" href="mkb.css?v=26082501">
 <style>
 /* ---- Ko'rik dalolatnomasi: bitta chiqish natijasi ---- */
 .ka-ustun{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
@@ -75,7 +75,7 @@
       <div>
         <div class="karta">
           <div class="ka-obyekt">
-            <img id="ka-rasm" src="" alt="Obyekt surati">
+            <img loading="lazy" id="ka-rasm" src="" alt="Obyekt surati">
             <div>
               <h2 id="ka-obyekt">—</h2>
               <div class="sub" id="ka-sub">—</div>
@@ -119,16 +119,29 @@
 </div>
 </div>
 
-<script src="malumot.js?v=26082406"></script>
-<script src="tarjima.js?v=26082406"></script>
-<script src="mkb.js?v=26082406"></script>
+<script src="malumot.js?v=26082501"></script>
+<script src="tarjima.js?v=26082501"></script>
+<script src="mkb.js?v=26082501"></script>
 <script>
 const D = MKB_DATA;
 
 /* URL dan ko'rik tanlanadi; ko'rsatilmasa — so'nggi o'tkazilgani */
 const soralgan = new URLSearchParams(location.search).get("id");
-const korik = D.KORIKLAR.find(k => k.id === soralgan)
-           || D.KORIKLAR.find(k => k.holat === "otkazildi");
+let korik = D.KORIKLAR.find(k => k.id === soralgan);
+if (soralgan && !korik){
+  /* Jim fallback o'rniga halol holat (flow-integrity #6) */
+  document.querySelector(".kontent").innerHTML = `
+    <div style="display:grid;place-items:center;min-height:60vh">
+      <div style="text-align:center;max-width:440px">
+        <img loading="lazy" src="assets/st_404.webp" alt="" style="width:220px;margin:0 auto 10px">
+        <h2 style="font-size:24px;font-weight:750">Dalolatnoma topilmadi</h2>
+        <p style="font-size:14px;color:var(--matn-3);margin-top:8px"><span>So'ralgan ko'rik reyestrda yo'q:</span> <b>${soralgan}</b></p>
+        <a class="tugma tugma-asos" style="margin-top:18px" href="korik-rejasi.html">Ko'rik rejasiga qaytish</a>
+      </div>
+    </div>`;
+  throw new Error("korik topilmadi");
+}
+if (!korik) korik = D.KORIKLAR.find(k => k.holat === "otkazildi");
 const y = D.YOZUVLAR.find(z => z.id === korik.obyektId);
 
 document.getElementById("ka-sarlavha").textContent = "Dalolatnoma " + korik.id;
@@ -156,9 +169,12 @@ const UMUMIY = [
     "Polis holati sug'urta nazorati bo'limidan tekshirildi."],
   ["Garov ro'yxati to'liq", korik.obyektId !== "GR-2025/1187", korik.obyektId === "GR-2025/1187" ? "Kamomad aniqlandi — hodisa ochildi." : "Ro'yxatdagi barcha pozitsiyalar joyida."]
 ];
-document.getElementById("ka-bandlar").innerHTML = UMUMIY.map(([nom, ok, izoh]) => `
+const otkazilganmi = korik.holat === "otkazildi";
+document.getElementById("ka-bandlar").innerHTML = !otkazilganmi
+  ? `<div style="color:var(--matn-3);font-size:13.5px;padding:14px 0">Ko'rik hali o'tkazilmagan — tekshiruv bandlari chiqishdan keyin to'ldiriladi.</div>`
+  : UMUMIY.map(([nom, ok, izoh]) => `
   <div class="tb-band">
-    <span class="tb-holat ${ok ? "tb-ha" : "tb-yoq"}"><svg class="ic"><use href="#${ok ? "i-belgi" : "i-yopish"}"/></svg></span>
+    <span class="tb-holat ${ok ? "tb-ha" : "tb-yoq"}" role="img" aria-label="${ok ? "bajarildi" : "bajarilmadi"}"><svg class="ic" aria-hidden="true"><use href="#${ok ? "i-belgi" : "i-yopish"}"/></svg></span>
     <div><b>${nom}</b><p>${izoh}</p></div>
   </div>`).join("");
 
@@ -169,8 +185,10 @@ const FOTO = [
   ["assets/uchastka_aero.webp", "Hudud chegarasi"],
   ["assets/kirish_sahna.webp", "Atrof holati"]
 ];
-document.getElementById("ka-foto").innerHTML = FOTO.map(([src, izoh]) => `
-  <figure><img src="${src}" alt="${izoh}"><figcaption>${izoh} · ${korik.sana}</figcaption></figure>`).join("");
+document.getElementById("ka-foto").innerHTML = !otkazilganmi
+  ? `<div style="color:var(--matn-3);font-size:13.5px">Fotojamlanma chiqish vaqtida yuklanadi.</div>`
+  : FOTO.map(([src, izoh]) => `
+  <figure><img loading="lazy" src="${src}" alt="${izoh}"><figcaption>${izoh} · ${korik.sana}</figcaption></figure>`).join("");
 
 /* ---- Xulosa ---- */
 const otdi = korik.holat === "otkazildi";
