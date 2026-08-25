@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mkb.css?v=26082603">
+<link rel="stylesheet" href="mkb.css?v=26082604">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 <style>
 /* ---- Faqat shu sahifa: xarita, filtrlar, pastki qator ---- */
@@ -136,6 +136,22 @@ html.erta-rol-yurist #dash-yurist{display:block}
          RAHBAR / ADMINISTRATOR — portfel, moliya, xarita
          ============================================================ -->
     <div id="dash-admin">
+    <!-- Realty temasi uchun diqqat markazidagi aktiv (boshqa temalarda yashirin) -->
+    <a class="realty-hero" id="realty-hero" href="#" hidden>
+      <div>
+        <div class="rh-yorliq">Diqqat markazida · eng yuqori xavf</div>
+        <h3 id="rh-nom">—</h3>
+        <div class="rh-statlar">
+          <div><b id="rh-qarz">—</b><span>Qoldiq qarz</span></div>
+          <div><b id="rh-qoplash">—</b><span>Ta'minot bilan qoplash</span></div>
+          <div><b id="rh-kun">—</b><span>Kechikish, kun</span></div>
+        </div>
+      </div>
+      <span></span>
+      <img id="rh-rasm" src="" alt="" loading="lazy">
+      <span class="rh-ochish" aria-hidden="true"><svg class="ic" style="width:18px;height:18px"><use href="#i-strelka"/></svg></span>
+    </a>
+
 
     <div class="sahifa-qator">
       <div>
@@ -437,9 +453,9 @@ html.erta-rol-yurist #dash-yurist{display:block}
 </div>
 
 <script src="assets/vendor/leaflet/leaflet.js"></script>
-<script src="malumot.js?v=26082603"></script>
-<script src="tarjima.js?v=26082603"></script>
-<script src="mkb.js?v=26082603"></script>
+<script src="malumot.js?v=26082604"></script>
+<script src="tarjima.js?v=26082604"></script>
+<script src="mkb.js?v=26082604"></script>
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
   /* Salomlashish — rol asosida shaxsiylashtirilgan */
@@ -516,6 +532,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("holat-legend").innerHTML = PORTFEL.holatlar.map(h =>
     `<a class="legend-qator" href="obyektlar.html?holat=${encodeURIComponent(h.nom)}"><span class="nuqta" style="background:${h.rang}"></span><span class="nomi">${h.nom}</span><b>${fmt(h.son)} (${h.foiz}%)</b></a>`).join("");
   document.getElementById("jami-yakun-son").textContent = fmt(PORTFEL.jami);
+  /* Realty hero: qoplashi eng past (xavfli) aktiv */
+  (function(){
+    const el = document.getElementById("realty-hero");
+    if (!el) return;
+    const y = [...MKB_DATA.YOZUVLAR].sort((a, b) => a.qoplash - b.qoplash)[0];
+    if (!y) return;
+    el.hidden = false;
+    el.href = "obyekt.html?id=" + encodeURIComponent(y.id);
+    document.getElementById("rh-nom").textContent = y.mulk.qisqa;
+    document.getElementById("rh-qarz").textContent = MKB_DATA.pul(y.qarz.jami);
+    document.getElementById("rh-qoplash").textContent = y.qoplash + "%";
+    document.getElementById("rh-kun").textContent = y.qarz.kunlar;
+    document.getElementById("rh-rasm").src = y.mulk.rasm;
+  })();
+
   const kpilar = {"kpi-portfel": fmt(PORTFEL.jami), "kpi-balansda": fmt(PORTFEL.balansda),
                   "kpi-baho": PORTFEL.bahoTrln, "kpi-undiruv": PORTFEL.oylikUndiruvMlrd,
                   "kpi-portfel-d": PORTFEL.delta.portfel, "kpi-balansda-d": PORTFEL.delta.balansda,

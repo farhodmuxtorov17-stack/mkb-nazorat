@@ -467,6 +467,11 @@ function topbarHTML(){
        </div>`;
   return `
   ${chap}
+  <div class="global-qidiruv" role="search">
+    <svg class="ic"><use href="#i-izlash"/></svg>
+    <input id="global-qidiruv-input" type="search" placeholder="Aktivlar reyestridan qidirish…" aria-label="Reyestrdan qidirish">
+    <kbd>/</kbd>
+  </div>
   <div class="topbar-ong">
     <div class="filial-tanlov" data-popover-tugma role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false" aria-label="Filialni tanlash">
       <svg class="ic"><use href="#i-bank"/></svg>
@@ -698,6 +703,27 @@ document.addEventListener("DOMContentLoaded", ()=>{
       if (e.key === "Enter" || e.key === " "){ e.preventDefault(); el.click(); }
     });
   });
+
+  /* Global qidiruv (Estate temasi): Enter -> aktivlar reyestri */
+  (function(){
+    const q = document.getElementById("global-qidiruv-input");
+    if (!q) return;
+    if (!sahifaRuxsatlimi("obyektlar.html")){
+      const box = q.closest(".global-qidiruv");
+      if (box) box.remove();
+      return;
+    }
+    q.addEventListener("keydown", e => {
+      if (e.key === "Enter" && q.value.trim()){
+        location.href = "obyektlar.html?qidiruv=" + encodeURIComponent(q.value.trim());
+      }
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "/" && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)){
+        e.preventDefault(); q.focus();
+      }
+    });
+  })();
 
   /* Tema almashtirgich */
   (function(){
