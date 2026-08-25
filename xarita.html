@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Hududiy xarita</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082620">
+<link rel="stylesheet" href="yadro/app.css?v=26082621">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 <script src="assets/vendor/leaflet/leaflet.js"></script>
 <style>
@@ -15,9 +15,9 @@
   border-radius:14px;padding:14px;overflow-y:auto}
 .xarita-yon h3{font:700 13.5px var(--shrift);margin-bottom:8px}
 .hudud-band{display:flex;align-items:center;gap:9px;width:100%;padding:8px 9px;border-radius:9px;font-size:12.5px;text-align:left;transition:background var(--tez)}
-.hudud-band:hover{background:var(--kirish-fon)}
+.hudud-band:hover{background:var(--band)}
 .hudud-band.faol{background:var(--brend-fon)}
-.hudud-band b{margin-left:auto;font:700 11.5px var(--shrift-mono)}
+.hudud-band b{margin-left:auto;font:500 12.5px var(--shrift-mono)}
 </style>
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
@@ -35,20 +35,20 @@
   <div class="xarita-karta">
     <div id="leaflet-joy"></div>
     <aside class="xarita-yon"><h3>Hududlar</h3><div id="hudud-royxat"></div>
-      <div style="border-top:1px solid var(--chiziq-2);margin:10px 0;padding-top:10px"><h3>Jami portfel</h3><b style="font:700 24px var(--shrift-displey)" id="xj-jami">—</b><span class="delta ijobiy" id="xj-delta" style="margin-left:8px"></span></div>
+      <div style="border-top:1px solid var(--chiziq-2);margin:10px 0;padding-top:10px"><h3>Jami portfel</h3><b style="font:500 24px var(--shrift-displey)" id="xj-jami">—</b><span class="delta ijobiy" id="xj-delta" style="margin-left:8px"></span></div>
     </aside>
   </div>
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082620"></script>
-<script src="malumot-qoshimcha.js?v=26082620"></script>
-<script src="tarjima.js?v=26082620"></script>
-<script src="yadro/ikonlar.js?v=26082620"></script>
-<script src="yadro/daraxt.js?v=26082620"></script>
-<script src="yadro/chizma.js?v=26082620"></script>
-<script src="yadro/api.js?v=26082620"></script>
-<script src="yadro/app.js?v=26082620"></script>
+<script src="malumot.js?v=26082621"></script>
+<script src="malumot-qoshimcha.js?v=26082621"></script>
+<script src="tarjima.js?v=26082621"></script>
+<script src="yadro/ikonlar.js?v=26082621"></script>
+<script src="yadro/daraxt.js?v=26082621"></script>
+<script src="yadro/chizma.js?v=26082621"></script>
+<script src="yadro/api.js?v=26082621"></script>
+<script src="yadro/app.js?v=26082621"></script>
 <script>
 document.addEventListener("mkb:tayyor", () => {
   const HUDUD_MARKAZ = {"Toshkent shahri": [41.31, 69.28], "Toshkent viloyati": [41.0, 69.6],
@@ -60,8 +60,8 @@ document.addEventListener("mkb:tayyor", () => {
   const guruhlar = {};
   (MKB_DATA.XARITA_NUQTALARI || []).forEach(n => {
     (guruhlar[n.guruh] = guruhlar[n.guruh] || []).push(n);
-    L.circleMarker([n.lat, n.lng], {radius: 7, color: "#14161A", weight: 2,
-      fillColor: "#F4581C", fillOpacity: .85})
+    L.circleMarker([n.lat, n.lng], {radius: 7, color: "#0B0B0A", weight: 2,
+      fillColor: "#C5F2B4", fillOpacity: .95})
       .addTo(xarita)
       .bindPopup("<b>" + n.nom + "</b><br>" + n.tur + " · " + n.holat);
   });

@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Boshqaruv paneli</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082620">
+<link rel="stylesheet" href="yadro/app.css?v=26082621">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
 /* Hero: referensdagi "Contact" bloki */
 .hero-fokus{position:relative;border-radius:var(--r-karta);box-shadow:var(--soya);overflow:hidden;
   padding:28px;display:grid;grid-template-columns:266px minmax(0,1fr);gap:28px;background:var(--oq)}
 .hero-fokus::before{content:"";position:absolute;inset:0;z-index:0;
-  background:linear-gradient(112deg,#FBEFE8 0%,#F7F2FC 48%,#EEF5F0 100%)}
-.hf-media{position:relative;z-index:1;border-radius:24px;overflow:hidden;min-height:248px;background:var(--persik)}
+  background:linear-gradient(112deg,var(--fon-issiq) 0%,var(--fon-sovuq) 48%,var(--fon-mint) 100%)}
+.hf-media{position:relative;z-index:1;border-radius:var(--r-plitka);overflow:hidden;min-height:248px;background:var(--persik)}
 .hf-media img{width:100%;height:100%;object-fit:cover}
 .hf-media .beyj{position:absolute;left:14px;top:14px}
 .hf-ong{position:relative;z-index:1;display:flex;flex-direction:column;gap:18px;min-width:0}
@@ -22,9 +22,9 @@
 .hf-masul{margin-left:auto;display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.72);
   backdrop-filter:blur(6px);border-radius:999px;padding:7px 18px 7px 7px}
 .hf-masul img,.hf-masul .yuz{width:38px;height:38px;border-radius:999px;object-fit:cover;
-  background:var(--siyoh);color:#fff;display:grid;place-items:center;font:500 13px var(--shrift)}
+  background:var(--siyoh);color:var(--oq);display:grid;place-items:center;font:500 13px var(--shrift)}
 .hf-masul .matn{line-height:1.25}
-.hf-masul .matn span{display:block;font-size:11.5px;color:var(--matn-3)}
+.hf-masul .matn span{display:block;font-size:12.5px;color:var(--matn-3)}
 .hf-masul .matn b{font-size:14px;font-weight:500}
 .hf-amallar{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
 /* Obyektlar seksiyasi */
@@ -46,8 +46,8 @@
 .vr-qator:hover{background:var(--plitka)}
 .vr-nom{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--matn-2);white-space:nowrap}
 .vr-nom i{width:9px;height:9px;border-radius:3px;flex:none}
-.vr-bar{height:24px;border-radius:8px;position:relative;background:var(--band);overflow:hidden}
-.vr-bar span{position:absolute;top:0;bottom:0;left:0;border-radius:8px;
+.vr-bar{height:24px;border-radius:var(--r-pilyula);position:relative;background:var(--band);overflow:hidden}
+.vr-bar span{position:absolute;top:0;bottom:0;left:0;border-radius:var(--r-pilyula);
   animation:vr-osish .8s cubic-bezier(.23,1,.32,1) both}
 @keyframes vr-osish{from{width:0 !important}}
 .vr-son{text-align:right;font-weight:500;font-size:14px;font-variant-numeric:tabular-nums}
@@ -118,14 +118,14 @@
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082620"></script>
-<script src="malumot-qoshimcha.js?v=26082620"></script>
-<script src="tarjima.js?v=26082620"></script>
-<script src="yadro/ikonlar.js?v=26082620"></script>
-<script src="yadro/daraxt.js?v=26082620"></script>
-<script src="yadro/chizma.js?v=26082620"></script>
-<script src="yadro/api.js?v=26082620"></script>
-<script src="yadro/app.js?v=26082620"></script>
+<script src="malumot.js?v=26082621"></script>
+<script src="malumot-qoshimcha.js?v=26082621"></script>
+<script src="tarjima.js?v=26082621"></script>
+<script src="yadro/ikonlar.js?v=26082621"></script>
+<script src="yadro/daraxt.js?v=26082621"></script>
+<script src="yadro/chizma.js?v=26082621"></script>
+<script src="yadro/api.js?v=26082621"></script>
+<script src="yadro/app.js?v=26082621"></script>
 <script>
 
 function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
@@ -134,28 +134,28 @@ function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
     '<div style="display:flex;align-items:flex-end;gap:10px;height:150px">' +
     qiymatlar.map((v, i) =>
       '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">' +
-        '<span style="font:700 11.5px var(--shrift-mono);color:var(--qalam)">' + v + '</span>' +
-        '<div style="width:100%;max-width:34px;height:' + Math.round(v / maks * 104) + 'px;border-radius:7px 7px 3px 3px;background:' +
+        '<span style="font:500 12.5px var(--shrift-mono);color:var(--qalam)">' + v + '</span>' +
+        '<div style="width:100%;max-width:34px;height:' + Math.round(v / maks * 104) + 'px;border-radius:14px 14px 4px 4px;background:' +
           (i === (brendIdx == null ? qiymatlar.length - 1 : brendIdx) ? 'var(--brend)' : 'var(--siyoh)') + ';opacity:' +
           (i === (brendIdx == null ? qiymatlar.length - 1 : brendIdx) ? '1' : '.82') + '"></div>' +
-        '<span style="font-size:11px;color:var(--iz)">' + yorliqlar[i] + '</span>' +
+        '<span style="font-size:12.5px;color:var(--matn-3)">' + yorliqlar[i] + '</span>' +
       '</div>').join("") + '</div>';
 }
 function obyektQatori(y){
   return '<a href="obyekt.html?id=' + encodeURIComponent(y.id) + '" style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
-    '<img class="foto" src="' + (y.mulk.rasmKichik || y.mulk.rasm) + '" alt="" loading="lazy" style="width:52px;height:38px;border-radius:8px;object-fit:cover;flex:none">' +
+    '<img class="foto" src="' + (y.mulk.rasmKichik || y.mulk.rasm) + '" alt="" loading="lazy" style="width:52px;height:38px;border-radius:14px;object-fit:cover;flex:none">' +
     '<span style="flex:1;min-width:0"><b style="display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + y.mulk.qisqa + '</b>' +
-    '<span style="font-size:11.5px;color:var(--iz)">' + y.id + ' · ' + y.bosqichNomi + '</span></span>' +
+    '<span style="font-size:12.5px;color:var(--matn-3)">' + y.id + ' · ' + y.bosqichNomi + '</span></span>' +
     '<span class="pul" style="color:var(--qalam)">' + y.qarzMatn + '</span>' +
     MKB.halqa(y.qoplash, 40, 4) + '</a>';
 }
 function muddatQatori(m){
   return '<a href="' + m.href + '" style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
-    '<span style="width:34px;height:34px;border-radius:10px;background:' + (m.xavfli ? 'var(--xavf-fon)' : 'var(--varaq-2)') +
+    '<span style="width:34px;height:34px;border-radius:14px;background:' + (m.xavfli ? 'var(--xavf-fon)' : 'var(--varaq-2)') +
       ';display:grid;place-items:center;color:' + (m.xavfli ? 'var(--xavf-matn)' : 'var(--qalam)') + ';flex:none">' + ik(m.ikonka) + '</span>' +
     '<span style="flex:1;min-width:0"><b style="display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + m.nom + '</b>' +
-    '<span style="font-size:11px;color:var(--iz)">' + m.izoh + '</span></span>' +
-    '<span style="font:700 11.5px var(--shrift-mono);color:' + (m.xavfli ? 'var(--xavf-matn)' : 'var(--qalam)') + ';white-space:nowrap">' + m.vaqt + '</span></a>';
+    '<span style="font-size:12.5px;color:var(--matn-3)">' + m.izoh + '</span></span>' +
+    '<span style="font:500 12.5px var(--shrift-mono);color:' + (m.xavfli ? 'var(--xavf-matn)' : 'var(--qalam)') + ';white-space:nowrap">' + m.vaqt + '</span></a>';
 }
 
 function seriya(oxirgi, oylikOsish, soni){

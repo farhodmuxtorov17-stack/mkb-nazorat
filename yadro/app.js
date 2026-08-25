@@ -282,6 +282,9 @@ function shapkaChiz(){
     const almash = ochiq => {
       yon.classList.toggle("ochiq", ochiq);
       parda.classList.toggle("ochiq", ochiq);
+      /* ba'zi muhitlarda media-qoida ustuvorligi ishlamaydi — to'g'ridan-to'g'ri */
+      yon.style.left = ochiq ? "0px" : "";
+      parda.style.display = ochiq ? "block" : "";
     };
     mt.addEventListener("click", () => almash(!yon.classList.contains("ochiq")));
     parda.addEventListener("click", () => almash(false));

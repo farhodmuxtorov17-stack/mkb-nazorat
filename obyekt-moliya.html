@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyekt moliyasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082620">
+<link rel="stylesheet" href="yadro/app.css?v=26082621">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="aktivlar">
@@ -51,14 +51,14 @@
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082620"></script>
-<script src="malumot-qoshimcha.js?v=26082620"></script>
-<script src="tarjima.js?v=26082620"></script>
-<script src="yadro/ikonlar.js?v=26082620"></script>
-<script src="yadro/daraxt.js?v=26082620"></script>
-<script src="yadro/chizma.js?v=26082620"></script>
-<script src="yadro/api.js?v=26082620"></script>
-<script src="yadro/app.js?v=26082620"></script>
+<script src="malumot.js?v=26082621"></script>
+<script src="malumot-qoshimcha.js?v=26082621"></script>
+<script src="tarjima.js?v=26082621"></script>
+<script src="yadro/ikonlar.js?v=26082621"></script>
+<script src="yadro/daraxt.js?v=26082621"></script>
+<script src="yadro/chizma.js?v=26082621"></script>
+<script src="yadro/api.js?v=26082621"></script>
+<script src="yadro/app.js?v=26082621"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -85,7 +85,7 @@ document.addEventListener("mkb:tayyor", async () => {
   const t = x.tolov || [];
   document.getElementById("tolov-grafik").innerHTML =
     '<div style="display:flex;align-items:flex-end;gap:6px;height:110px">' +
-    t.map((v, i) => '<div style="flex:1;border-radius:6px 6px 2px 2px;height:' +
+    t.map((v, i) => '<div style="flex:1;border-radius:12px 12px 4px 4px;height:' +
       (v ? 62 + ((i * 7) % 34) : 16) + '%;background:' + (v ? 'var(--siyoh)' : 'var(--xavf)') +
       ';opacity:' + (v ? .85 : 1) + '" title="' + (i + 1) + '-oy"></div>').join("") + '</div>';
   const otk = t.filter(v => !v).length;
@@ -94,9 +94,9 @@ document.addEventListener("mkb:tayyor", async () => {
   const b = MKB_DATA.BAHOLASHLAR.filter(v => v.obyektId === x.id);
   document.getElementById("baholash-royxat").innerHTML = b.length ? b.map(v =>
     '<div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
-      '<span style="width:34px;height:34px;border-radius:10px;background:var(--varaq-2);display:grid;place-items:center;color:var(--qalam)">' + ik("baholash") + '</span>' +
+      '<span style="width:34px;height:34px;border-radius:14px;background:var(--varaq-2);display:grid;place-items:center;color:var(--qalam)">' + ik("baholash") + '</span>' +
       '<span style="flex:1"><b style="display:block;font-size:12.5px">' + v.baholovchi + '</b>' +
-      '<span style="font-size:11px;color:var(--iz)">' + v.usul + ' · ' + v.sana + '</span></span>' +
+      '<span style="font-size:12.5px;color:var(--matn-3)">' + v.usul + ' · ' + v.sana + '</span></span>' +
       '<span class="pul">' + MKB.fmt(v.qiymat) + ' mln</span>' +
       '<span class="delta ' + (v.qiymat >= (v.avvalgi || v.qiymat) ? 'ijobiy">↑' : 'salbiy">↓') + '</span></div>').join("")
     : '<div class="bosh-holat">' + ik("baholash") + '<b>Baholash o\'tkazilmagan</b><span>Buyurtma yaratish uchun Baholash bo\'limiga o\'ting</span></div>';

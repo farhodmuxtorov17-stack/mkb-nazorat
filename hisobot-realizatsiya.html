@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Realizatsiya hisoboti</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082620">
+<link rel="stylesheet" href="yadro/app.css?v=26082621">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="hisobot">
@@ -40,14 +40,14 @@
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082620"></script>
-<script src="malumot-qoshimcha.js?v=26082620"></script>
-<script src="tarjima.js?v=26082620"></script>
-<script src="yadro/ikonlar.js?v=26082620"></script>
-<script src="yadro/daraxt.js?v=26082620"></script>
-<script src="yadro/chizma.js?v=26082620"></script>
-<script src="yadro/api.js?v=26082620"></script>
-<script src="yadro/app.js?v=26082620"></script>
+<script src="malumot.js?v=26082621"></script>
+<script src="malumot-qoshimcha.js?v=26082621"></script>
+<script src="tarjima.js?v=26082621"></script>
+<script src="yadro/ikonlar.js?v=26082621"></script>
+<script src="yadro/daraxt.js?v=26082621"></script>
+<script src="yadro/chizma.js?v=26082621"></script>
+<script src="yadro/api.js?v=26082621"></script>
+<script src="yadro/app.js?v=26082621"></script>
 <script>
 
 function gorizontalBar(joy, juftlar, rang){
@@ -55,9 +55,9 @@ function gorizontalBar(joy, juftlar, rang){
   document.getElementById(joy).innerHTML = juftlar.map(([nom, v]) =>
     '<div style="display:flex;align-items:center;gap:10px;padding:7px 0">' +
       '<span style="width:150px;font-size:12.5px;color:var(--qalam);flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + nom + '</span>' +
-      '<div style="flex:1;height:8px;border-radius:99px;background:var(--kirish-fon)">' +
+      '<div style="flex:1;height:8px;border-radius:99px;background:var(--band)">' +
         '<div style="height:100%;width:' + Math.round(MKB.sonQiymat(v) / maks * 100) + '%;border-radius:99px;background:' + (rang || 'var(--siyoh)') + '"></div></div>' +
-      '<b style="font:700 12px var(--shrift-mono);min-width:44px;text-align:right">' + v + '</b></div>').join("");
+      '<b style="font:500 12.5px var(--shrift-mono);min-width:44px;text-align:right">' + v + '</b></div>').join("");
 }
 function ustunBar(joy, yorliqlar, qiymatlar){
   const maks = Math.max(...qiymatlar);
@@ -65,10 +65,10 @@ function ustunBar(joy, yorliqlar, qiymatlar){
     '<div style="display:flex;align-items:flex-end;gap:12px;height:160px">' +
     qiymatlar.map((v, i) =>
       '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">' +
-        '<span style="font:700 11.5px var(--shrift-mono);color:var(--qalam)">' + String(v).replace(".", ",") + '</span>' +
-        '<div style="width:100%;max-width:38px;height:' + Math.round(v / maks * 112) + 'px;border-radius:8px 8px 3px 3px;background:' +
+        '<span style="font:500 12.5px var(--shrift-mono);color:var(--qalam)">' + String(v).replace(".", ",") + '</span>' +
+        '<div style="width:100%;max-width:38px;height:' + Math.round(v / maks * 112) + 'px;border-radius:14px 14px 4px 4px;background:' +
         (i === qiymatlar.length - 1 ? 'var(--brend)' : 'var(--siyoh)') + '"></div>' +
-        '<span style="font-size:11px;color:var(--iz)">' + yorliqlar[i] + '</span></div>').join("") + '</div>';
+        '<span style="font-size:12.5px;color:var(--matn-3)">' + yorliqlar[i] + '</span></div>').join("") + '</div>';
 }
 document.addEventListener("mkb:tayyor", async () => {
   const sotuv = await MKBapi.royxat("SOTUV");
