@@ -56,12 +56,18 @@ document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
   const x = yoz.find(y => y.id === id) || yoz[0];
   if (!x){ location.replace("xato-404.html"); return; }
-  document.getElementById("hs-meta").textContent = x.mijoz.raqam;
-  document.getElementById("m-belgi").textContent = x.mijoz.belgi;
-  document.getElementById("m-nom").textContent = x.mijoz.nom;
-  document.getElementById("m-chip").innerHTML = '<span class="chip ' + (x.mijoz.yur ? 'chip-info">Yuridik shaxs' : 'chip-brend">Jismoniy shaxs') + '</span>';
-  document.getElementById("m-sub").textContent = x.mijoz.tur + " · " + x.filial + " · " + (x.mijoz.tel || "");
-  document.getElementById("m-obyekt-havola").href = "obyekt.html?id=" + encodeURIComponent(x.id);
+  const qoy = (kalit, matn, html) => {
+    const el = document.getElementById(kalit);
+    if (!el) return;
+    if (html) el.innerHTML = matn; else el.textContent = matn;
+  };
+  qoy("hs-meta", x.mijoz.raqam);
+  qoy("m-belgi", x.mijoz.belgi);
+  qoy("m-nom", x.mijoz.nom);
+  qoy("m-chip", '<span class="chip ' + (x.mijoz.yur ? 'chip-info">Yuridik shaxs' : 'chip-brend">Jismoniy shaxs') + '</span>', true);
+  qoy("m-sub", x.mijoz.tur + " · " + x.filial + " · " + (x.mijoz.tel || ""));
+  const oh = document.getElementById("m-obyekt-havola");
+  if (oh) oh.href = "obyekt.html?id=" + encodeURIComponent(x.id);
   document.querySelectorAll(".bolim-tablar a").forEach(a => { if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(x.id); });
 
   const OYLAR = ["Sen","Okt","Noy","Dek","Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg"];

@@ -30,7 +30,7 @@ Jami: **127 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | Fayl | Ekran | Izoh |
 |---|---|---|
 | `qarzdorlar.html` | Qarzdor mijozlar | Qarzdorlar reyestri |
-| `qarzdor.html` | Qarzdor kartochkasi | Mijoz profili |
+| `qarzdor.html` | Qarzdor kartochkasi | Mijoz profili (TopProducer uslubi) |
 | `qarzdor-muloqot.html` | Muloqot jurnali | Aloqa tarixi + qayd qo'shish |
 | `qarzdor-tolovlar.html` | To'lov intizomi | 12 oylik grafik va jadval |
 | `shartnomalar.html` | Kredit shartnomalari | Shartnomalar reyestri |

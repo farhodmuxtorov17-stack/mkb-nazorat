@@ -6,6 +6,29 @@
 <title>MKB — Qarzdor kartochkasi</title>
 <link rel="stylesheet" href="yadro/app.css?v=26082621">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<style>
+.mijoz-hero{position:relative;border-radius:var(--r-karta);box-shadow:var(--soya);overflow:hidden;
+  padding:30px 32px;background:var(--oq)}
+.mijoz-hero::before{content:"";position:absolute;inset:0;z-index:0;
+  background:linear-gradient(112deg,var(--fon-issiq) 0%,var(--fon-sovuq) 52%,var(--fon-mint) 100%)}
+.mh-ichi{position:relative;z-index:1;display:grid;grid-template-columns:172px minmax(0,1fr);gap:28px;align-items:start}
+.mh-avatar{width:172px;height:172px;border-radius:var(--r-karta);background:var(--oq);
+  display:grid;place-items:center;box-shadow:var(--soya-past);overflow:hidden}
+.mh-avatar b{font:500 54px var(--shrift-displey);letter-spacing:-.04em;color:var(--siyoh)}
+.mh-bosh{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.mh-bosh .yorliq{font-size:13px;color:var(--matn-3)}
+.mh-bosh h2{font:500 32px/1.1 var(--shrift-displey);letter-spacing:-.04em;margin-top:3px}
+.mh-bosh .kichik{font-size:13.5px;color:var(--matn-3);margin-top:4px}
+.mh-masul{margin-left:auto;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.75);
+  backdrop-filter:blur(8px);border-radius:999px;padding:8px 20px 8px 8px}
+.mh-masul .yuz{width:40px;height:40px;border-radius:999px;background:var(--siyoh);color:var(--oq);
+  display:grid;place-items:center;font:500 14px var(--shrift)}
+.mh-masul span{display:block;font-size:12.5px;color:var(--matn-3)}
+.mh-masul b{font-size:14.5px;font-weight:500}
+.mh-amallar{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+@media (max-width:900px){.mh-ichi{grid-template-columns:minmax(0,1fr)}
+  .mh-avatar{width:120px;height:120px}.mh-bosh h2{font-size:26px}}
+</style>
 </head>
 <body data-sahifa="portfel">
 <div class="qobiq">
@@ -18,12 +41,25 @@
     <div class="hs-qator"><h1>Qarzdor kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
   <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="qarzdor.html" class="faol">Umumiy</a><a href="qarzdor-muloqot.html">Muloqot jurnali</a><a href="qarzdor-tolovlar.html">To'lov intizomi</a></nav>
-  <section class="karta" style="display:flex;align-items:center;gap:16px">
-    <span id="m-belgi" style="width:56px;height:56px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 18px var(--shrift);flex:none">—</span>
-    <div style="flex:1;min-width:0"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b id="m-nom" style="font:500 19px var(--shrift-displey)">—</b><span id="m-chip"></span></div>
-    <span style="font-size:12.5px;color:var(--iz)" id="m-sub">—</span></div>
-    <a class="tugma tugma-oq" id="m-obyekt-havola" href="#"><svg class="ic"><use href="#i-aktivlar"/></svg>Obyekt kartochkasi</a>
-  </section>
+  <section class="mijoz-hero"><div class="mh-ichi">
+    <div class="mh-avatar"><b id="mh-belgi">&#8212;</b></div>
+    <div>
+      <div class="mh-bosh"><div>
+        <span class="yorliq">Qarzdor mijoz</span>
+        <h2 id="mh-nom">&#8212;</h2>
+        <span class="kichik" id="mh-sub">&#8212;</span>
+      </div>
+      <div class="mh-masul"><span class="yuz" id="mh-masul-bosh">&#8212;</span><span><span>Mas&#39;ul xodim</span><b id="mh-masul">&#8212;</b></span></div></div>
+      <div class="plitkalar" id="mh-plitkalar"></div>
+      <div class="mh-amallar">
+        <button type="button" class="tugma tugma-asosiy" id="mh-qongiroq"><svg class="ic"><use href="#i-tel"/></svg>Telefon qilish</button>
+        <button type="button" class="tugma tugma-oq" id="mh-xabar"><svg class="ic"><use href="#i-chat"/></svg>Xabar yuborish</button>
+        <a class="tugma tugma-oq" id="mh-ish" href="undiruv.html"><svg class="ic"><use href="#i-yuridik"/></svg>Undiruv ishi</a>
+      </div>
+    </div>
+  </div></section>
+  <div class="seksiya-bosh" style="display:flex;align-items:center;gap:14px;padding:4px 2px"><h2 style="font:500 23px/1.2 var(--shrift-displey);letter-spacing:-.03em">Ta&#39;minot obyektlari</h2><span class="soni" id="mh-ob-soni" style="font-size:13.5px;color:var(--matn-3)"></span><a class="pill" href="obyektlar.html" style="margin-left:auto">Reyestr<svg class="ic"><use href="#i-ong"/></svg></a></div>
+  <div class="obyekt-tor" id="mh-obyektlar"></div>
   <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px" class="panel-tor">
     <section class="karta"><div class="karta-bosh"><h2>Shartnoma va qarz</h2></div><dl class="malumot-royxat">
   <dt><svg class="ic"><use href="#i-hujjat"/></svg>Kredit shartnomasi</dt>
@@ -40,10 +76,10 @@
   <dd id="q-kunlar">—</dd>
   <dt><svg class="ic"><use href="#i-yuridik"/></svg>Joriy bosqich</dt>
   <dd id="q-bosqich">—</dd>
-  <dt><svg class="ic"><use href="#i-foydalar"/></svg>Mas'ul xodim</dt>
-  <dd id="q-masul">—</dd>
+  <dt><svg class="ic"><use href="#i-bank"/></svg>Filial</dt>
+  <dd id="q-filial">—</dd>
 </dl></section>
-    <section class="karta"><div class="karta-bosh"><h2>Ta'minot obyekti</h2></div><div id="q-obyekt"></div><div class="karta-bosh" style="margin:18px 0 10px"><h2>So'nggi muloqot</h2><a class="karta-havola" href="qarzdor-muloqot.html" data-id-qoshib>Jurnal<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="q-muloqot"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>So'nggi muloqot</h2><a class="karta-havola" href="qarzdor-muloqot.html" data-id-qoshib>Jurnal<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="q-muloqot"></div><div class="karta-bosh" style="margin:20px 0 10px"><h2>To'lov intizomi</h2><a class="karta-havola" href="qarzdor-tolovlar.html" data-id-qoshib>Batafsil<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="q-tolov"></div></section>
   </div>
 </main>
 </div>
@@ -62,14 +98,76 @@ document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
   const x = yoz.find(y => y.id === id) || yoz[0];
   if (!x){ location.replace("xato-404.html"); return; }
-  document.getElementById("hs-meta").textContent = x.mijoz.raqam;
-  document.getElementById("m-belgi").textContent = x.mijoz.belgi;
-  document.getElementById("m-nom").textContent = x.mijoz.nom;
-  document.getElementById("m-chip").innerHTML = '<span class="chip ' + (x.mijoz.yur ? 'chip-info">Yuridik shaxs' : 'chip-brend">Jismoniy shaxs') + '</span>';
-  document.getElementById("m-sub").textContent = x.mijoz.tur + " · " + x.filial + " · " + (x.mijoz.tel || "");
-  document.getElementById("m-obyekt-havola").href = "obyekt.html?id=" + encodeURIComponent(x.id);
+  const qoy = (kalit, matn, html) => {
+    const el = document.getElementById(kalit);
+    if (!el) return;
+    if (html) el.innerHTML = matn; else el.textContent = matn;
+  };
+  qoy("hs-meta", x.mijoz.raqam);
+  qoy("m-belgi", x.mijoz.belgi);
+  qoy("m-nom", x.mijoz.nom);
+  qoy("m-chip", '<span class="chip ' + (x.mijoz.yur ? 'chip-info">Yuridik shaxs' : 'chip-brend">Jismoniy shaxs') + '</span>', true);
+  qoy("m-sub", x.mijoz.tur + " · " + x.filial + " · " + (x.mijoz.tel || ""));
+  const oh = document.getElementById("m-obyekt-havola");
+  if (oh) oh.href = "obyekt.html?id=" + encodeURIComponent(x.id);
   document.querySelectorAll(".bolim-tablar a").forEach(a => { if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(x.id); });
 
+  /* Hero */
+  document.getElementById("mh-belgi").textContent = x.mijoz.belgi;
+  document.getElementById("mh-nom").textContent = x.mijoz.nom;
+  document.getElementById("mh-sub").textContent =
+    x.mijoz.tur + " · " + x.mijoz.raqam + " · " + x.filial;
+  document.getElementById("mh-masul").textContent = x.ish.masul;
+  document.getElementById("mh-masul-bosh").textContent =
+    x.ish.masul.split(" ").map(v => v[0]).join("").slice(0, 2);
+  document.getElementById("mh-ish").href = "ish.html?id=" + encodeURIComponent(x.id);
+  document.getElementById("mh-plitkalar").innerHTML = [
+    ["pul", "Qoldiq qarz", x.qarzMatn, ""],
+    ["soat", "Kechikish", x.qarz.kunlar + " kun", ""],
+    ["yuridik", "Bosqich", x.bosqichNomi, ""],
+    ["tel", "Telefon", x.mijoz.tel || "—", "kok"],
+    ["hujjat", "Shartnoma", x.shartnoma.raqam, ""],
+  ].map(([ikon, yorliq, qiymat, kls]) =>
+    '<div class="plitka">' + ik(ikon) +
+    '<span class="yorliq">' + yorliq + '</span>' +
+    '<span class="qiymat ' + kls + '">' + qiymat + '</span></div>').join("");
+  document.getElementById("mh-qongiroq").addEventListener("click", () =>
+    MKB.toast("Telefon terilmoqda: " + (x.mijoz.tel || "raqam yo'q"), "tel"));
+  document.getElementById("mh-xabar").addEventListener("click", () =>
+    MKB.modal("Xabar yuborish — " + x.mijoz.nom,
+      '<div class="maydon"><label class="maydon-yorliq">Kanal</label>' +
+      '<div class="kirish"><select name="kanal"><option>SMS</option><option>Email</option>' +
+      '<option>Rasmiy xat</option></select></div></div>' +
+      '<div class="maydon" style="margin-top:14px"><label class="maydon-yorliq">Matn <b>*</b></label>' +
+      '<textarea class="kirish-matn" name="matn" placeholder="Qarzni to\'lash bo\'yicha eslatma"></textarea></div>',
+      {okMatn: "Yuborish", ok(modal){
+        const q = MKB.forma(modal, ["matn"]);
+        if (!q) return false;
+        const j = JSON.parse(localStorage.getItem("mkb4-muloqot-" + x.id) || "[]");
+        j.unshift([new Date().toLocaleDateString("uz"), q.kanal, q.matn]);
+        localStorage.setItem("mkb4-muloqot-" + x.id, JSON.stringify(j));
+        MKB.toast("Xabar yuborildi va jurnalga yozildi");
+      }}));
+
+  /* Ta'minot obyektlari — referensdagi Property objects */
+  const zona = x.qoplash >= 140 ? "beyj-mint" : x.qoplash >= 100 ? "beyj-sariq" : "beyj-pushti";
+  document.getElementById("mh-ob-soni").textContent = "1 ta obyekt garov ta'minotida";
+  document.getElementById("mh-obyektlar").innerHTML =
+    '<a class="obyekt-karta" href="obyekt.html?id=' + encodeURIComponent(x.id) + '">' +
+      '<div class="obyekt-media"><img src="' + x.mulk.rasm + '" alt="" loading="lazy">' +
+        '<span class="beyj ' + zona + '">' + x.bosqichNomi + '</span>' +
+        '<span class="amallar"><span class="amal-doira">' + ik("korish") + '</span>' +
+        '<span class="amal-doira">' + ik("strelka") + '</span></span></div>' +
+      '<div class="obyekt-tana"><h3>' + x.mulk.qisqa + '</h3>' +
+        '<span class="manzil">' + x.mulk.manzil + '</span>' +
+        '<span class="obyekt-narx">' + x.bahoMatn + '</span>' +
+        '<div class="obyekt-past">' +
+          '<span class="obyekt-xoss">' + ik("kub") + x.mulk.tur + '</span>' +
+          '<span class="obyekt-xoss">' + ik("qavat") + x.mulk.maydon + '</span>' +
+          '<span style="margin-left:auto">' + MKB.shtrix(x.qoplash, 12) + '</span>' +
+        '</div></div></a>';
+
+  /* Shartnoma paneli */
   document.getElementById("q-shartnoma").textContent = x.shartnoma.raqam;
   document.getElementById("q-sana").textContent = x.shartnoma.sana + " · " + x.shartnoma.berilgan;
   document.getElementById("q-asosiy").textContent = x.asosiyMatn;
@@ -77,19 +175,28 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("q-jami").textContent = x.qarzMatn;
   document.getElementById("q-kunlar").textContent = x.qarz.kunlar + " kun";
   document.getElementById("q-bosqich").textContent = x.bosqichNomi;
-  document.getElementById("q-masul").textContent = x.ish.masul;
-  document.getElementById("q-obyekt").innerHTML =
-    '<a href="obyekt.html?id=' + encodeURIComponent(x.id) + '" style="display:flex;gap:12px;align-items:center">' +
-    '<img class="foto" src="' + (x.mulk.rasmKichik || x.mulk.rasm) + '" style="width:86px;height:60px;border-radius:14px;object-fit:cover" alt="">' +
-    '<span style="flex:1;min-width:0"><b style="display:block;font-size:13.5px">' + x.mulk.qisqa + '</b>' +
-    '<span style="font-size:12.5px;color:var(--matn-3)">' + x.id + ' · ' + x.mulk.tur + ' · baho ' + x.bahoMatn + '</span></span>' +
-    MKB.halqa(x.qoplash, 44, 4.5) + '</a>';
+  document.getElementById("q-filial").textContent = x.filial;
+
+  /* Muloqot */
   const m = (MKB_DATA.MULOQOTLAR[x.id] || []).slice(0, 3);
   document.getElementById("q-muloqot").innerHTML = m.length ? m.map(v =>
-    '<div style="padding:8px 0;border-bottom:1px solid var(--chiziq-2);font-size:12.5px">' +
-    '<div style="display:flex;justify-content:space-between;color:var(--matn-3);font-size:12.5px"><span>' + v[1] + '</span><span>' + v[0] + '</span></div>' +
-    '<div style="margin-top:2px;color:var(--qalam)">' + v[2] + '</div></div>').join("")
-    : '<div class="bosh-holat" style="padding:22px">' + ik("chat") + '<b>Muloqot qayd etilmagan</b></div>';
+    '<div style="display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--chiziq-2)">' +
+    '<span style="width:36px;height:36px;border-radius:14px;background:var(--plitka);display:grid;place-items:center;color:var(--matn-2);flex:none">' + ik("chat") + '</span>' +
+    '<span style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px">' +
+    '<b style="font-size:13px;font-weight:500">' + v[1] + '</b>' +
+    '<span style="font-size:12.5px;color:var(--matn-3)">' + v[0] + '</span></div>' +
+    '<span style="font-size:13px;color:var(--matn-2)">' + v[2] + '</span></span></div>').join("")
+    : '<div class="bosh-holat" style="padding:24px">' + ik("chat") + '<b>Muloqot qayd etilmagan</b></div>';
+
+  /* To'lov intizomi — mini ustunlar */
+  const t = x.tolov || [];
+  const otk = t.filter(v => !v).length;
+  document.getElementById("q-tolov").innerHTML =
+    '<div style="display:flex;align-items:flex-end;gap:5px;height:56px;margin-bottom:10px">' +
+    t.map(v => '<div style="flex:1;border-radius:6px;height:' + (v ? 100 : 26) + '%;background:' +
+      (v ? "var(--siyoh)" : "var(--pushti)") + '"></div>').join("") + '</div>' +
+    '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--matn-3)">' +
+    '<span>' + (t.length - otk) + " ta to'lov o'z vaqtida</span><span>" + otk + " ta o'tkazib yuborilgan</span></div>";
 });
 </script>
 </body>

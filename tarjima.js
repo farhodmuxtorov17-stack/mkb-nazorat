@@ -5,6 +5,15 @@
    Xos ismlar, manzillar va hujjat raqamlari ataylab tarjima qilinmaydi.
    ============================================================ */
 window.MKB_LUGAT = {
+  "Telefon qilish": "Позвонить",
+  "Xabar yuborish": "Отправить сообщение",
+  "Xabar yuborildi va jurnalga yozildi": "Сообщение отправлено и записано в журнал",
+  "raqam yo'q": "нет номера",
+  "Qarzni to'lash bo'yicha eslatma": "Напоминание об оплате долга",
+  "Rasmiy xat": "Официальное письмо",
+  "Kanal": "Канал",
+  "Matn": "Текст",
+  "Yuborish": "Отправить",
   "Butun reyestr": "Весь реестр",
   "Diqqat markazida": "В фокусе внимания",
   "Eng past qoplashli aktiv": "Актив с наименьшим покрытием",
