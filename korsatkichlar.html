@@ -95,15 +95,8 @@ document.addEventListener("mkb:tayyor", () => {
   MKBchizma.maydon("u-grafik", {yorliqlar: s.yorliq, qiymatlar: s.qiymat,
     balandlik: 200, rang: "--brend", oqFormat: v => v.toFixed(0),
     tooltipFormat: v => String(v).replace(".", ",") + " mlrd so'm"});
-  const maks = Math.max(...D.HUDUDLAR.map(h => parseInt(String(h[1]).replace(/\s/g, ""), 10)));
-  document.getElementById("u-hudud").innerHTML = D.HUDUDLAR.slice(0, 8).map(h => {
-    const v = parseInt(String(h[1]).replace(/\s/g, ""), 10);
-    return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0">' +
-      '<span style="width:120px;font-size:12.5px;color:var(--qalam);flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + h[0] + '</span>' +
-      '<div style="flex:1;height:8px;border-radius:99px;background:var(--band)">' +
-        '<div style="height:100%;width:' + Math.round(v / maks * 100) + '%;border-radius:99px;background:var(--siyoh)"></div></div>' +
-      '<b style="font:500 12.5px var(--shrift-mono);width:44px;text-align:right">' + h[1] + '</b></div>';
-  }).join("");
+  MKB.barlar("u-hudud", D.HUDUDLAR.slice(0, 8).map(h => [h[0], MKB.sonQiymat(h[1])]),
+    {href: "xarita.html"});
 });
 </script>
 </body>

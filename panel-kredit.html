@@ -99,14 +99,8 @@ document.addEventListener("mkb:tayyor", async () => {
         '<span style="font-size:12.5px;color:var(--matn-3)">' + y.bosqichNomi + ' · ' + y.qarz.kunlar + ' kun</span></span>' +
         '<span class="pul">' + y.qarzMatn + '</span></a>').join("");
 
-  const bosqichlar = D.BOSQICHLAR.map(b => ({nom: b.nom, son: yoz.filter(y => y.ish.bosqich === b.kalit).length}));
-  const maks = Math.max(...bosqichlar.map(b => b.son), 1);
-  document.getElementById("k-bosqich").innerHTML = bosqichlar.map(b =>
-    '<div style="display:flex;align-items:center;gap:10px;padding:7px 0">' +
-      '<span style="width:120px;font-size:12.5px;color:var(--qalam);flex:none">' + b.nom + '</span>' +
-      '<div style="flex:1;height:8px;border-radius:99px;background:var(--band)">' +
-        '<div style="height:100%;width:' + Math.round(b.son / maks * 100) + '%;border-radius:99px;background:var(--siyoh)"></div></div>' +
-      '<b style="font:500 12.5px var(--shrift-mono);width:20px;text-align:right">' + b.son + '</b></div>').join("");
+  MKB.barlar("k-bosqich", D.BOSQICHLAR.map(b =>
+    [b.nom, yoz.filter(y => y.ish.bosqich === b.kalit).length, b.rang]));
 });
 </script>
 </body>

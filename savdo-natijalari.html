@@ -67,12 +67,7 @@ document.addEventListener("mkb:tayyor", async () => {
   const turlar = {};
   arxiv.forEach(a => turlar[a.tur] = (turlar[a.tur] || 0) + 1);
   const maks2 = Math.max(...Object.values(turlar));
-  document.getElementById("sn-tur").innerHTML = Object.entries(turlar).map(([nom, son]) =>
-    '<div style="display:flex;align-items:center;gap:10px;padding:7px 0">' +
-      '<span style="width:130px;font-size:12.5px;color:var(--qalam)">' + nom + '</span>' +
-      '<div style="flex:1;height:8px;border-radius:99px;background:var(--band)">' +
-        '<div style="height:100%;width:' + Math.round(son / maks2 * 100) + '%;border-radius:99px;background:var(--siyoh)"></div></div>' +
-      '<b style="font:500 12.5px var(--shrift-mono);width:20px;text-align:right">' + son + '</b></div>').join("");
+  MKB.barlar("sn-tur", Object.entries(turlar));
 });
 </script>
 </body>

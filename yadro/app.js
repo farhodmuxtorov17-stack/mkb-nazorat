@@ -336,6 +336,30 @@ const MKB = {
     return parda;
   },
 
+  /* Taqsimot barlari: [[nom, qiymat, rang?, izoh?], ...] */
+  barlar(joy, juftlar, opts){
+    const el = typeof joy === "string" ? document.getElementById(joy) : joy;
+    if (!el) return;
+    opts = opts || {};
+    const qiymat = j => MKB.sonQiymat(Array.isArray(j) ? j[1] : j.qiymat);
+    const maks = Math.max(...juftlar.map(qiymat), 1);
+    el.classList.add("bar-royxat");
+    el.innerHTML = juftlar.map((j, i) => {
+      const nom = Array.isArray(j) ? j[0] : j.nom;
+      const v = qiymat(j);
+      const rang = (Array.isArray(j) ? j[2] : j.rang) || "var(--siyoh)";
+      const izoh = (Array.isArray(j) ? j[3] : j.izoh) || "";
+      const matn = opts.format ? opts.format(v, j) : MKB.fmt(v);
+      return '<' + (opts.href ? 'a class="bar-qator" href="' + opts.href + '"' : 'div class="bar-qator"') + '>' +
+        '<span class="bar-nom"><i style="background:' + rang + '"></i>' + nom + "</span>" +
+        '<span class="bar-iz"><span style="width:' + Math.max(4, v / maks * 100) + "%;background:" + rang +
+        ";animation-delay:" + (i * 55) + 'ms"></span></span>' +
+        '<span class="bar-son">' + matn + (izoh ? "<em>" + izoh + "</em>" : "") + "</span>" +
+        "</" + (opts.href ? "a" : "div") + ">";
+    }).join("");
+    if (window.tarjimaQil) tarjimaQil(el);
+  },
+
   /* Shtrix-ko'rsatkich: foiz -> mos-bar (jadval qatorlari uchun) */
   shtrix(foiz, soni){
     soni = soni || 14;
