@@ -4,58 +4,69 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Boshqaruv paneli</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082610">
+<link rel="stylesheet" href="yadro/app.css?v=26082620">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
-.fl-tor{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px}
-.fl-hero{padding:22px 24px 14px;display:flex;flex-direction:column}
-.fl-hero .fh-bosh{display:flex;align-items:flex-start;gap:16px;margin-bottom:6px}
-.fl-yorliq{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--iz)}
-.fl-katta{font:700 40px/1.05 var(--shrift-displey);letter-spacing:-.03em;font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:8px}
-.fl-katta small{font:500 14px var(--shrift);color:var(--iz);letter-spacing:0}
-.fl-hero .ong-jam{margin-left:auto;text-align:right;font-size:11px;color:var(--iz);line-height:1.5;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
-.fl-hero .ong-jam b{display:block;font:600 15px var(--shrift-mono);color:var(--qalam);letter-spacing:0;text-transform:none}
-.fl-obyekt{position:relative;overflow:hidden;border-radius:var(--r-karta);min-height:308px;display:flex;color:#fff;border:1px solid var(--chiziq-2)}
-.fl-obyekt img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s cubic-bezier(.23,1,.32,1)}
-.fl-obyekt:hover img{transform:scale(1.045)}
-.fl-obyekt .tepa{position:absolute;z-index:1;top:14px;left:14px;right:14px;display:flex;gap:8px}
-.fl-obyekt .qatlam{position:relative;z-index:1;margin-top:auto;width:100%;padding:44px 18px 16px;background:linear-gradient(180deg,transparent,rgba(10,12,16,.86) 62%)}
-.fl-obyekt h3{font:700 19px/1.2 var(--shrift-displey);letter-spacing:-.015em;margin:2px 0 3px}
-.fl-obyekt .past-qator{display:flex;align-items:center;gap:16px;margin-top:10px}
-.fl-obyekt .past-qator b{display:block;font:600 15px var(--shrift-mono);font-variant-numeric:tabular-nums}
-.fl-obyekt .past-qator span{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55)}
-.fl-statlar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
-.fl-stat{padding:18px 20px 14px;display:flex;flex-direction:column;gap:10px}
-.fl-stat .qiymat{font:700 27px/1.05 var(--shrift-displey);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.fl-stat .qiymat small{font:500 12.5px var(--shrift);color:var(--iz)}
-.fl-stat .pastki{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;min-height:36px}
-.voronka{display:flex;flex-direction:column;gap:9px}
-.vr-qator{display:grid;grid-template-columns:152px minmax(0,1fr) 104px;align-items:center;gap:12px;
-  padding:5px 6px;margin:0 -6px;border-radius:10px;transition:background var(--tez)}
-.vr-qator:hover{background:var(--varaq-2)}
-.vr-nom{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:500;color:var(--qalam);white-space:nowrap}
+/* Hero: referensdagi "Contact" bloki */
+.hero-fokus{position:relative;border-radius:var(--r-karta);box-shadow:var(--soya);overflow:hidden;
+  padding:28px;display:grid;grid-template-columns:266px minmax(0,1fr);gap:28px;background:var(--oq)}
+.hero-fokus::before{content:"";position:absolute;inset:0;z-index:0;
+  background:linear-gradient(112deg,#FBEFE8 0%,#F7F2FC 48%,#EEF5F0 100%)}
+.hf-media{position:relative;z-index:1;border-radius:24px;overflow:hidden;min-height:248px;background:var(--persik)}
+.hf-media img{width:100%;height:100%;object-fit:cover}
+.hf-media .beyj{position:absolute;left:14px;top:14px}
+.hf-ong{position:relative;z-index:1;display:flex;flex-direction:column;gap:18px;min-width:0}
+.hf-bosh{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.hf-bosh .yorliq{font-size:13px;color:var(--matn-3)}
+.hf-bosh h2{font:500 29px/1.15 var(--shrift-displey);letter-spacing:-.035em;margin-top:2px}
+.hf-masul{margin-left:auto;display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.72);
+  backdrop-filter:blur(6px);border-radius:999px;padding:7px 18px 7px 7px}
+.hf-masul img,.hf-masul .yuz{width:38px;height:38px;border-radius:999px;object-fit:cover;
+  background:var(--siyoh);color:#fff;display:grid;place-items:center;font:500 13px var(--shrift)}
+.hf-masul .matn{line-height:1.25}
+.hf-masul .matn span{display:block;font-size:11.5px;color:var(--matn-3)}
+.hf-masul .matn b{font-size:14px;font-weight:500}
+.hf-amallar{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+/* Obyektlar seksiyasi */
+.seksiya-bosh{display:flex;align-items:center;gap:14px;padding:4px 2px}
+.seksiya-bosh h2{font:500 23px/1.2 var(--shrift-displey);letter-spacing:-.03em}
+.seksiya-bosh .soni{font-size:13.5px;color:var(--matn-3)}
+.seksiya-bosh .ong{margin-left:auto;display:flex;gap:10px;align-items:center}
+/* Analitika */
+.an-tor{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:20px}
+.an-hero .bosh{display:flex;align-items:flex-start;gap:16px;margin-bottom:8px}
+.an-katta{font:500 40px/1.05 var(--shrift-displey);letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+  display:flex;align-items:baseline;gap:9px}
+.an-katta small{font:400 14px var(--shrift);color:var(--matn-3);letter-spacing:0}
+.an-jam{margin-left:auto;text-align:right;font-size:12px;color:var(--matn-3);line-height:1.5}
+.an-jam b{display:block;font-size:15px;font-weight:500;color:var(--siyoh)}
+.voronka{display:flex;flex-direction:column;gap:10px}
+.vr-qator{display:grid;grid-template-columns:150px minmax(0,1fr) 108px;align-items:center;gap:14px;
+  padding:7px 10px;margin:0 -10px;border-radius:16px;transition:background var(--tez)}
+.vr-qator:hover{background:var(--plitka)}
+.vr-nom{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--matn-2);white-space:nowrap}
 .vr-nom i{width:9px;height:9px;border-radius:3px;flex:none}
-.vr-bar{height:22px;border-radius:7px;position:relative;background:var(--kirish-fon);overflow:hidden}
-.vr-bar span{position:absolute;top:0;bottom:0;left:0;border-radius:7px;
-  animation:vr-osish .7s cubic-bezier(.23,1,.32,1) both}
+.vr-bar{height:24px;border-radius:8px;position:relative;background:var(--band);overflow:hidden}
+.vr-bar span{position:absolute;top:0;bottom:0;left:0;border-radius:8px;
+  animation:vr-osish .8s cubic-bezier(.23,1,.32,1) both}
 @keyframes vr-osish{from{width:0 !important}}
-.vr-son{text-align:right;font:600 12.5px var(--shrift-mono);font-variant-numeric:tabular-nums;color:var(--siyoh)}
-.vr-son em{display:block;font:500 10.5px var(--shrift);font-style:normal;color:var(--iz)}
-.oqim-bar{display:flex;height:36px;border-radius:12px;overflow:hidden;gap:3px}
-.oqim-bar a{display:grid;place-items:center;font:700 12px var(--shrift-mono);color:#fff;min-width:36px;transition:filter var(--tez)}
-.oqim-bar a:hover{filter:brightness(1.12)}
-.oqim-afsona{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 18px;margin-top:14px}
-.oqim-afsona span{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--qalam)}
-.oqim-afsona i{width:9px;height:9px;border-radius:3px;flex:none}
-.oqim-afsona b{margin-left:auto;font:700 12px var(--shrift-mono)}
-.donut-orash{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
-@media (max-width:1240px){.fl-statlar{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:1100px){.fl-tor{grid-template-columns:minmax(0,1fr)}}
+.vr-son{text-align:right;font-weight:500;font-size:14px;font-variant-numeric:tabular-nums}
+.vr-son em{display:block;font:400 11.5px var(--shrift);font-style:normal;color:var(--matn-3)}
+.stat-tor{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.stat-karta{background:var(--oq);border-radius:var(--r-karta);box-shadow:var(--soya);padding:20px 22px;
+  display:flex;flex-direction:column;gap:10px}
+.stat-karta .yorliq{font-size:13px;color:var(--matn-3)}
+.stat-karta .past{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.stat-karta .qiymat{font:500 29px/1.05 var(--shrift-displey);letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.stat-karta .qiymat small{font:400 12.5px var(--shrift);color:var(--matn-3)}
+@media (max-width:1240px){.stat-tor{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:1100px){.an-tor{grid-template-columns:minmax(0,1fr)}
+  .hero-fokus{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body data-sahifa="panel">
 <div class="qobiq">
-<nav class="relsa" id="relsa" aria-label="Asosiy bo'limlar"></nav>
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
 <div class="sahna">
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
@@ -63,53 +74,58 @@
     <div class="hs-yorliq"><span>Boshqaruv paneli</span></div>
     <div class="hs-qator"><h1>Boshqaruv paneli</h1><span class="hs-meta" id="hs-meta">Bank bo'yicha umumiy holat</span><div class="hs-amallar"><a class="tugma tugma-oq" href="hisobotlar.html"><svg class="ic"><use href="#i-hisobot"/></svg>Hisobotlar</a><a class="tugma tugma-asosiy" href="korsatkichlar.html"><svg class="ic"><use href="#i-grafik"/></svg>Ko&#39;rsatkichlar</a></div></div>
   </div>
-  <div class="fl-tor">
-    <section class="karta fl-hero">
-      <div class="fh-bosh"><div>
-        <div class="fl-yorliq">Oylik undiruv</div>
-        <div class="fl-katta"><span id="fh-son">&#8212;</span><small>mlrd so&#39;m</small><span class="delta ijobiy" id="fh-delta" style="font-size:13px"></span></div>
+  <section class="hero-fokus">
+    <div class="hf-media"><img id="hf-rasm" src="" alt=""><span class="beyj beyj-pushti" id="hf-beyj">Diqqat markazida</span></div>
+    <div class="hf-ong">
+      <div class="hf-bosh"><div>
+        <span class="yorliq">Eng past qoplashli aktiv</span>
+        <h2 id="hf-nom">&#8212;</h2>
+        <span class="kod-mono" id="hf-id"></span>
       </div>
-      <div class="ong-jam"><b id="fh-yillik">&#8212;</b>7 oy jami<b id="fh-ortacha" style="margin-top:6px">&#8212;</b>oylik o&#39;rtacha</div></div>
-      <div id="fh-grafik" style="flex:1;min-height:200px"></div>
-    </section>
-    <a class="fl-obyekt" id="fo-karta" href="#">
-      <img id="fo-rasm" src="" alt="">
-      <div class="tepa"><span class="chip chip-brend">Diqqat markazida</span><span class="chip" id="fo-bosqich" style="background:rgba(255,255,255,.92)"></span></div>
-      <div class="qatlam">
-        <span class="fl-yorliq" style="color:rgba(255,255,255,.55)" id="fo-id"></span>
-        <h3 id="fo-nom">&#8212;</h3>
-        <div class="past-qator">
-          <div><b id="fo-qarz">&#8212;</b><span>Qoldiq qarz</span></div>
-          <div><b id="fo-qoplash" style="color:#FFB38A">&#8212;</b><span>Qoplash</span></div>
-          <div><b id="fo-kun">&#8212;</b><span>Kechikish</span></div>
-          <div style="margin-left:auto"><span class="tugma tugma-kichik tugma-brend" style="pointer-events:none">Kartochka</span></div>
-        </div>
+      <div class="hf-masul"><span class="yuz" id="hf-masul-bosh">&#8212;</span><span class="matn"><span>Mas&#39;ul xodim</span><b id="hf-masul">&#8212;</b></span></div></div>
+      <div class="plitkalar" id="hf-plitkalar"></div>
+      <div class="hf-amallar">
+        <a class="tugma tugma-asosiy" id="hf-kartochka" href="#"><svg class="ic"><use href="#i-aktivlar"/></svg>Obyekt kartochkasi</a>
+        <a class="tugma tugma-oq" id="hf-ish" href="undiruv.html"><svg class="ic"><use href="#i-yuridik"/></svg>Undiruv ishi</a>
+        <a class="tugma tugma-oq" href="obyektlar.html"><svg class="ic"><use href="#i-izlash"/></svg>Butun reyestr</a>
       </div>
-    </a>
+    </div>
+  </section>
+  <div class="seksiya-bosh"><h2>Ta&#39;minot obyektlari</h2><span class="soni" id="ob-soni"></span>
+    <div class="ong"><a class="pill" href="xarita.html"><svg class="ic"><use href="#i-xarita"/></svg>Xaritada</a><a class="pill" href="obyektlar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div>
   </div>
-  <div class="fl-statlar" id="fl-statlar"></div>
-  <div class="fl-tor">
+  <div class="obyekt-tor" id="obyekt-tor"></div>
+  <div class="stat-tor" id="stat-tor"></div>
+  <div class="an-tor">
+    <section class="karta an-hero">
+      <div class="bosh"><div>
+        <span class="yorliq" style="font-size:13px;color:var(--matn-3)">Oylik undiruv</span>
+        <div class="an-katta"><span id="an-son">&#8212;</span><small>mlrd so&#39;m</small><span class="delta ijobiy" id="an-delta"></span></div>
+      </div>
+      <div class="an-jam"><b id="an-yillik">&#8212;</b>7 oy jami<b id="an-ortacha" style="margin-top:8px">&#8212;</b>oylik o&#39;rtacha</div></div>
+      <div id="an-grafik" style="min-height:210px"></div>
+    </section>
+    <section class="karta"><div class="karta-bosh"><h2>Portfel holati</h2><span class="soni" id="dn-jami"></span></div>
+      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap"><div id="dn-donut" style="position:relative"></div><div id="dn-afsona" style="flex:1;min-width:160px"></div></div>
+    </section>
+  </div>
+  <div class="an-tor">
     <section class="karta"><div class="karta-bosh"><h2>Undiruv voronkasi</h2><span class="soni" id="vr-jami"></span><a class="karta-havola" href="undiruv.html">Doska<svg class="ic"><use href="#i-ong"/></svg></a></div>
       <div class="voronka" id="voronka"></div>
     </section>
-    <section class="karta"><div class="karta-bosh"><h2>Portfel holati</h2><span class="soni" id="dn-jami"></span></div>
-      <div class="donut-orash"><div id="dn-donut" style="position:relative"></div><div id="dn-afsona" style="flex:1;min-width:170px"></div></div>
-    </section>
-  </div>
-  <div class="fl-tor">
-    <section class="karta"><div class="karta-bosh"><h2>Diqqat talab obyektlar</h2><a class="karta-havola" href="obyektlar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="xavf-royxat"></div></section>
     <section class="karta"><div class="karta-bosh"><h2>Yaqin muddatlar</h2><a class="karta-havola" href="vazifalar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="muddatlar"></div></section>
   </div>
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082610"></script>
-<script src="malumot-qoshimcha.js?v=26082610"></script>
-<script src="tarjima.js?v=26082610"></script>
-<script src="yadro/ikonlar.js?v=26082610"></script>
-<script src="yadro/chizma.js?v=26082610"></script>
-<script src="yadro/api.js?v=26082610"></script>
-<script src="yadro/app.js?v=26082610"></script>
+<script src="malumot.js?v=26082620"></script>
+<script src="malumot-qoshimcha.js?v=26082620"></script>
+<script src="tarjima.js?v=26082620"></script>
+<script src="yadro/ikonlar.js?v=26082620"></script>
+<script src="yadro/daraxt.js?v=26082620"></script>
+<script src="yadro/chizma.js?v=26082620"></script>
+<script src="yadro/api.js?v=26082620"></script>
+<script src="yadro/app.js?v=26082620"></script>
 <script>
 
 function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
@@ -148,35 +164,60 @@ function seriya(oxirgi, oylikOsish, soni){
     r.unshift(r[0] / (1 + oylikOsish + Math.sin(i * 2.1) * oylikOsish * 0.55));
   return r.map(v => Math.round(v * 10) / 10);
 }
+function obyektKarta(y){
+  const zona = y.qoplash >= 140 ? "beyj-mint" : y.qoplash >= 100 ? "beyj-sariq" : "beyj-pushti";
+  return '<a class="obyekt-karta" href="obyekt.html?id=' + encodeURIComponent(y.id) + '">' +
+    '<div class="obyekt-media">' +
+      '<img src="' + y.mulk.rasm + '" alt="" loading="lazy">' +
+      '<span class="beyj ' + zona + '">' + y.bosqichNomi + '</span>' +
+      '<span class="amallar">' +
+        '<span class="amal-doira">' + ik("tahrir") + '</span>' +
+        '<span class="amal-doira">' + ik("bogliq") + '</span>' +
+        '<span class="amal-doira">' + ik("strelka") + '</span>' +
+      '</span>' +
+    '</div>' +
+    '<div class="obyekt-tana">' +
+      '<h3>' + y.mulk.qisqa + '</h3>' +
+      '<span class="manzil">' + y.mulk.manzil + '</span>' +
+      '<span class="obyekt-narx">' + y.bahoMatn + '</span>' +
+      '<div class="obyekt-past">' +
+        '<span class="obyekt-xoss">' + ik("kub") + y.mulk.tur + '</span>' +
+        '<span class="obyekt-xoss">' + ik("qavat") + y.mulk.maydon + '</span>' +
+        '<span style="margin-left:auto">' + MKB.shtrix(y.qoplash, 12) + '</span>' +
+      '</div>' +
+    '</div></a>';
+}
 document.addEventListener("mkb:tayyor", async () => {
   const D = MKB_DATA;
   const yoz = await MKBapi.royxat("YOZUVLAR");
-  const s = D.UNDIRUV_SERIYA.oylik;
+  const tartib = yoz.slice().sort((a, b) => a.qoplash - b.qoplash);
+  const f = tartib[0];
 
-  /* Hero: undiruv egri chizig'i */
-  const joriy = s.qiymat[s.qiymat.length - 1];
-  document.getElementById("fh-son").textContent = String(joriy).replace(".", ",");
-  document.getElementById("fh-delta").textContent = "↑ 6,1%";
-  const jami7 = s.qiymat.reduce((a, b) => a + b, 0);
-  document.getElementById("fh-yillik").textContent = jami7.toFixed(1).replace(".", ",") + " mlrd";
-  document.getElementById("fh-ortacha").textContent = (jami7 / s.qiymat.length).toFixed(1).replace(".", ",") + " mlrd";
-  MKBchizma.maydon("fh-grafik", {yorliqlar: s.yorliq, qiymatlar: s.qiymat,
-    balandlik: 210, rang: "--brend",
-    oqFormat: v => v.toFixed(0),
-    tooltipFormat: v => String(v).replace(".", ",") + " mlrd so'm"});
+  /* ---- Hero: fokusdagi aktiv ---- */
+  document.getElementById("hf-rasm").src = f.mulk.rasm;
+  document.getElementById("hf-nom").textContent = f.mulk.nom;
+  document.getElementById("hf-id").textContent = f.id + " · " + f.filial;
+  document.getElementById("hf-masul").textContent = f.ish.masul;
+  document.getElementById("hf-masul-bosh").textContent =
+    f.ish.masul.split(" ").map(v => v[0]).join("").slice(0, 2);
+  document.getElementById("hf-kartochka").href = "obyekt.html?id=" + encodeURIComponent(f.id);
+  document.getElementById("hf-ish").href = "ish.html?id=" + encodeURIComponent(f.id);
+  document.getElementById("hf-plitkalar").innerHTML = [
+    ["pul", "Qoldiq qarz", f.qarzMatn, ""],
+    ["grafik", "Baholangan qiymat", f.bahoMatn, ""],
+    ["diagramma", "Ta'minot bilan qoplash", f.qoplash + "%", "kok"],
+    ["soat", "Kechikish", f.qarz.kunlar + " kun", ""],
+    ["yuridik", "Bosqich", f.bosqichNomi, ""],
+  ].map(([ikon, yorliq, qiymat, kls]) =>
+    '<div class="plitka">' + ik(ikon) +
+    '<span class="yorliq">' + yorliq + '</span>' +
+    '<span class="qiymat ' + kls + '">' + qiymat + '</span></div>').join("");
 
-  /* Diqqat markazida: eng past qoplashli aktiv */
-  const f = yoz.slice().sort((a, b) => a.qoplash - b.qoplash)[0];
-  document.getElementById("fo-karta").href = "obyekt.html?id=" + encodeURIComponent(f.id);
-  document.getElementById("fo-rasm").src = f.mulk.rasm;
-  document.getElementById("fo-bosqich").textContent = f.bosqichNomi;
-  document.getElementById("fo-id").textContent = f.id + " · " + f.mulk.hudud;
-  document.getElementById("fo-nom").textContent = f.mulk.nom;
-  document.getElementById("fo-qarz").textContent = f.qarzMatn;
-  document.getElementById("fo-qoplash").textContent = f.qoplash + "%";
-  document.getElementById("fo-kun").textContent = f.qarz.kunlar + " kun";
+  /* ---- Obyekt kartalari ---- */
+  document.getElementById("ob-soni").textContent = MKB.fmt(D.PORTFEL.jami) + " ta obyekt nazoratda";
+  document.getElementById("obyekt-tor").innerHTML = tartib.slice(0, 6).map(obyektKarta).join("");
 
-  /* 4 stat-karta + uchqunlar */
+  /* ---- Stat kartalar ---- */
   const ortQoplash = Math.round(yoz.reduce((a, y) => a + y.qoplash, 0) / yoz.length);
   const statlar = [
     {yorliq: "Portfel hajmi", qiymat: MKB.fmt(D.PORTFEL.jami), birlik: "obyekt",
@@ -185,19 +226,41 @@ document.addEventListener("mkb:tayyor", async () => {
      delta: "↑ 6", ijobiy: true, seriya: seriya(426, 0.02)},
     {yorliq: "O'rtacha qoplash", qiymat: ortQoplash + "%", birlik: "",
      delta: "↑ 3,4%", ijobiy: true, seriya: seriya(ortQoplash, 0.008)},
-    {yorliq: "Hisoblangan zaxira", qiymat: (D.jamiZaxira() / 1000).toFixed(1).replace(".", ","), birlik: "mlrd so'm",
-     delta: "↓ 2,2%", ijobiy: true, seriya: seriya(D.jamiZaxira() / 1000, -0.01)},
+    {yorliq: "Hisoblangan zaxira", qiymat: (D.jamiZaxira() / 1000).toFixed(1).replace(".", ","),
+     birlik: "mlrd so'm", delta: "↓ 2,2%", ijobiy: true, seriya: seriya(D.jamiZaxira() / 1000, -0.01)},
   ];
-  document.getElementById("fl-statlar").innerHTML = statlar.map((t, i) =>
-    '<section class="karta fl-stat"><span class="fl-yorliq">' + t.yorliq + '</span>' +
-    '<div class="pastki"><div><div class="qiymat">' + t.qiymat +
+  document.getElementById("stat-tor").innerHTML = statlar.map((t, i) =>
+    '<div class="stat-karta"><span class="yorliq">' + t.yorliq + '</span>' +
+    '<div class="past"><div><div class="qiymat">' + t.qiymat +
     (t.birlik ? ' <small>' + t.birlik + '</small>' : '') + '</div>' +
-    '<span class="delta ' + (t.ijobiy ? 'ijobiy' : 'salbiy') + '" style="font-size:12px">' + t.delta + '</span></div>' +
-    '<span id="fl-uchqun-' + i + '"></span></div></section>').join("");
-  statlar.forEach((t, i) => MKBchizma.uchqun("fl-uchqun-" + i, t.seriya,
-    i === 3 ? "--yashil" : i === 2 ? "--sariq" : "--brend"));
+    '<span class="delta ' + (t.ijobiy ? 'ijobiy' : 'salbiy') + '">' + t.delta + '</span></div>' +
+    '<span id="st-uchqun-' + i + '"></span></div></div>').join("");
+  statlar.forEach((t, i) => MKBchizma.uchqun("st-uchqun-" + i, t.seriya));
 
-  /* Undiruv voronkasi: bosqichlar bo'yicha QARZ HAJMI (mln so'm) */
+  /* ---- Undiruv grafigi ---- */
+  const s = D.UNDIRUV_SERIYA.oylik;
+  const joriy = s.qiymat[s.qiymat.length - 1];
+  document.getElementById("an-son").textContent = String(joriy).replace(".", ",");
+  document.getElementById("an-delta").textContent = "↑ 6,1%";
+  const jami7 = s.qiymat.reduce((a, b) => a + b, 0);
+  document.getElementById("an-yillik").textContent = jami7.toFixed(1).replace(".", ",") + " mlrd";
+  document.getElementById("an-ortacha").textContent = (jami7 / s.qiymat.length).toFixed(1).replace(".", ",") + " mlrd";
+  MKBchizma.maydon("an-grafik", {yorliqlar: s.yorliq, qiymatlar: s.qiymat, balandlik: 215,
+    rang: "--siyoh", fonRang: "--mint", oqFormat: v => v.toFixed(0),
+    tooltipFormat: v => String(v).replace(".", ",") + " mlrd so'm"});
+
+  /* ---- Donut ---- */
+  const hol = D.PORTFEL.holatlar;
+  document.getElementById("dn-jami").textContent = MKB.fmt(D.PORTFEL.jami) + " ta obyekt";
+  MKBchizma.halqaDiag("dn-donut", {olcham: 172, qalinlik: 20,
+    segmentlar: hol.map(h => ({nom: h.nom, qiymat: h.son, rang: h.rang})),
+    markaz: MKB.fmt(D.PORTFEL.jami), markazIzoh: "obyekt"});
+  document.getElementById("dn-afsona").innerHTML = hol.map(h =>
+    '<span style="display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--matn-2);padding:6px 0">' +
+    '<i style="width:9px;height:9px;border-radius:3px;background:' + h.rang + ';flex:none"></i>' + h.nom +
+    '<b style="margin-left:auto;font-weight:500">' + h.foiz + '%</b></span>').join("");
+
+  /* ---- Voronka ---- */
   const voronka = D.BOSQICHLAR.map(b => {
     const r = yoz.filter(y => y.ish.bosqich === b.kalit);
     return {nom: b.nom, rang: b.rang, son: r.length,
@@ -205,29 +268,15 @@ document.addEventListener("mkb:tayyor", async () => {
   }).filter(b => b.son > 0);
   const vrMaks = Math.max(...voronka.map(b => b.summa));
   const vrJami = voronka.reduce((a, b) => a + b.summa, 0);
-  document.getElementById("vr-jami").textContent =
-    MKB.fmt(Math.round(vrJami)) + " mln so'm jarayonda";
+  document.getElementById("vr-jami").textContent = MKB.fmt(Math.round(vrJami)) + " mln so'm jarayonda";
   document.getElementById("voronka").innerHTML = voronka.map((b, i) =>
     '<a class="vr-qator" href="undiruv.html" title="' + b.son + ' ta ish">' +
       '<span class="vr-nom"><i style="background:' + b.rang + '"></i>' + b.nom + '</span>' +
-      '<span class="vr-bar"><span style="width:' + Math.max(4, b.summa / vrMaks * 100) + '%;background:' + b.rang +
-        ';animation-delay:' + (i * 60) + 'ms"></span></span>' +
+      '<span class="vr-bar"><span style="width:' + Math.max(5, b.summa / vrMaks * 100) + '%;background:' + b.rang +
+        ';animation-delay:' + (i * 70) + 'ms"></span></span>' +
       '<span class="vr-son">' + MKB.fmt(Math.round(b.summa)) + '<em>' + b.son + " ta ish</em></span></a>").join("");
 
-  /* Donut: portfel holatlari */
-  const hol = D.PORTFEL.holatlar;
-  document.getElementById("dn-jami").textContent = MKB.fmt(D.PORTFEL.jami) + " ta obyekt";
-  MKBchizma.halqaDiag("dn-donut", {olcham: 168, qalinlik: 18,
-    segmentlar: hol.map(h => ({nom: h.nom, qiymat: h.son, rang: h.rang})),
-    markaz: MKB.fmt(D.PORTFEL.jami), markazIzoh: "obyekt"});
-  document.getElementById("dn-afsona").innerHTML = hol.map(h =>
-    '<span style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--qalam);padding:5px 0">' +
-    '<i style="width:9px;height:9px;border-radius:3px;background:' + h.rang + ';flex:none"></i>' + h.nom +
-    '<b style="margin-left:auto;font:700 12px var(--shrift-mono)">' + h.foiz + '%</b></span>').join("");
-
-  /* Diqqat ro'yxati + muddatlar */
-  document.getElementById("xavf-royxat").innerHTML =
-    yoz.slice().sort((a, b) => a.qoplash - b.qoplash).slice(1, 6).map(obyektQatori).join("");
+  /* ---- Muddatlar ---- */
   const majlis = (D.SUD_MAJLISLAR || []).filter(m => m.holat === "rejada").slice(0, 3).map(m => ({
     nom: m.obyekt + " — sud majlisi", izoh: m.sud + " · " + m.zal,
     vaqt: m.sana + ", " + m.soat, ikonka: "sud", xavfli: false, href: "sud-kalendar.html"}));

@@ -5,6 +5,23 @@
    Xos ismlar, manzillar va hujjat raqamlari ataylab tarjima qilinmaydi.
    ============================================================ */
 window.MKB_LUGAT = {
+  "Butun reyestr": "Весь реестр",
+  "Diqqat markazida": "В фокусе внимания",
+  "Eng past qoplashli aktiv": "Актив с наименьшим покрытием",
+  "Nazoratdagi aktiv": "Актив на контроле",
+  "Ta'minot obyektlari": "Объекты обеспечения",
+  "Undiruv voronkasi": "Воронка взыскания",
+  "oylik o'rtacha": "в среднем за месяц",
+  "7 oy jami": "итого за 7 месяцев",
+  "to'lov yo'q": "нет платежа",
+  "Menyu": "Меню",
+  "Qabul: asos": "Приём: основание",
+  "Qabul: hujjatlar": "Приём: документы",
+  "Qabul: tasdiqlash": "Приём: подтверждение",
+  "Obyektlar reyestri": "Реестр объектов",
+  "Arxiv reyestri": "Реестр архива",
+  "Top yozuvlar": "Топ записей",
+  "KPI": "KPI",
   "Bosqich:": "Этап:",
   "Hudud:": "Регион:",
   "Turi:": "Тип:",
@@ -2223,6 +2240,11 @@ window.MKB_LUGAT = {
 
 /* Dinamik hisoblagich matnlari (raqam + birlik) */
 window.MKB_TARJIMA_QOIDALARI = [
+  [/^(\d+) ta obyekt nazoratda$/, "$1 объектов на контроле"],
+  [/^(\d+) mln so'm jarayonda$/, "$1 млн сум в процессе"],
+  [/^([\d\s]+) mln so'm jarayonda$/, "$1 млн сум в процессе"],
+  [/^(\d+) ta ish$/, "$1 дел"],
+
   [/^(\d+) ta yozuv$/, "$1 записей"],
   [/^(\d+) ta obyekt nazoratda$/, "$1 объектов на контроле"],
   [/^(\d+) ta qarzdor$/, "$1 должников"],

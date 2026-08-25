@@ -129,35 +129,65 @@ function ik(nom, klass){
 }
 
 /* ---------- Qobiq chizish ---------- */
-function relsaChiz(){
-  const el = document.getElementById("relsa");
+const LOGO_SVG =
+  '<svg width="20" height="20" viewBox="0 0 44 44" aria-hidden="true"><g transform="translate(0,-6)">' +
+  '<path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#fff"/>' +
+  '<path d="M2 24.239 17.776 35.755 41.798 20.342V8L17.776 23.413 2 11.897v12.342Z" fill="#fff"/>' +
+  '<path d="M29.518 35.935V48h12.28V28.056l-12.28 7.879Z" fill="#fff"/></g></svg>';
+
+function bolimNomi(kalit){
+  const b = BOLIMLAR.find(x => x.kalit === kalit);
+  if (b) return b.yorliq;
+  return kalit === "sozlama" ? "Sozlamalar" : "Tizim";
+}
+
+function yonChiz(){
+  const el = document.getElementById("yon");
   if (!el) return;
   const rol = joriyRolKalit();
-  const faol = document.body.dataset.sahifa;
+  const joriyBolim = document.body.dataset.sahifa;
+  const joriyFayl = faylNomi();
+  const daraxt = window.MKB_DARAXT || {};
   const bandlar = BOLIMLAR.filter(b => bolimRuxsatlimi(b.kalit, rol));
+
+  const guruhHTML = (kalit, yorliq, ikonka) => {
+    const sahifalar = (daraxt[kalit] || []).filter(s => sahifaRuxsatlimi(s.f));
+    const ochiq = kalit === joriyBolim;
+    const havola = sahifalar.length ? sahifalar[0].f : (BOLIMLAR.find(b => b.kalit === kalit) || {}).href;
+    if (!sahifalar.length)
+      return '<a class="yon-band' + (ochiq ? " faol" : "") + '" href="' + havola + '">' +
+        ik(ikonka) + yorliq + "</a>";
+    return '<div class="yon-guruh">' +
+      '<button type="button" class="yon-band' + (ochiq ? " faol" : "") + '" data-guruh="' + kalit +
+      '" aria-expanded="' + ochiq + '">' + ik(ikonka) + yorliq +
+      ik("past", "strelka") + "</button>" +
+      '<div class="yon-ichki' + (ochiq ? " ochiq" : "") + '" data-ichki="' + kalit + '">' +
+      sahifalar.map(s =>
+        '<a href="' + s.f + '"' + (s.f === joriyFayl ? ' class="faol"' : "") + ">" + s.n + "</a>").join("") +
+      "</div></div>";
+  };
+
   el.innerHTML =
-    '<a class="relsa-logo" href="' + rolBoshSahifasi(rol) + '" aria-label="Bosh sahifa">' +
-      '<svg viewBox="0 0 44 44" aria-hidden="true"><g transform="translate(0,-6)">' +
-      '<path d="M14.275 40.779 2 31.971V48h12.28l-.005-7.221Z" fill="#16170F"/>' +
-      '<path d="M2 24.239 17.776 35.755 41.798 20.342V8L17.776 23.413 2 11.897v12.342Z" fill="#16170F"/>' +
-      '<path d="M29.518 35.935V48h12.28V28.056l-12.28 7.879Z" fill="#16170F"/></g></svg></a>' +
-    '<div class="relsa-bosh">' +
-      bandlar.map(b =>
-        '<a class="relsa-band' + (b.kalit === faol ? " faol" : "") + '" href="' + b.href +
-        '" data-yorliq="' + b.yorliq + '" aria-label="' + b.yorliq + '"' +
-        (b.kalit === faol ? ' aria-current="page"' : "") + ">" + ik(b.ikonka) + "</a>"
-      ).join("") +
+    '<a class="yon-logo" href="' + rolBoshSahifasi(rol) + '">' +
+      '<span class="belgi">' + LOGO_SVG + "</span>" +
+      "<b>Mikrokreditbank</b></a>" +
+    '<div class="yon-sarlavha">' +
+      '<a class="yon-orqaga" href="' + rolBoshSahifasi(rol) + '" aria-label="Boshqaruv paneli">' + ik("chap") + "</a>" +
+      "<h2>" + bolimNomi(joriyBolim) + "</h2>" +
     "</div>" +
-    '<div class="relsa-past">' +
-      '<div class="relsa-ajratgich"></div>' +
-      '<a class="relsa-band' + (faol === "sozlama" ? " faol" : "") + '" href="sozlamalar.html" data-yorliq="Sozlamalar" aria-label="Sozlamalar">' + ik("sozlama") + "</a>" +
-      '<button type="button" class="relsa-band" id="chiqish-tugma" data-yorliq="Chiqish" aria-label="Tizimdan chiqish">' + ik("chiqish") + "</button>" +
+    bandlar.map(b => guruhHTML(b.kalit, b.yorliq, b.ikonka)).join("") +
+    '<div class="yon-past">' +
+      guruhHTML("sozlama", "Sozlamalar", "sozlama") +
+      '<button type="button" class="yon-band" id="chiqish-tugma">' + ik("chiqish") + "Tizimdan chiqish</button>" +
     "</div>";
+
+  el.querySelectorAll("[data-guruh]").forEach(b => b.addEventListener("click", () => {
+    const ichki = el.querySelector('[data-ichki="' + b.dataset.guruh + '"]');
+    const ochiq = ichki.classList.toggle("ochiq");
+    b.setAttribute("aria-expanded", ochiq);
+  }));
   const ch = document.getElementById("chiqish-tugma");
-  if (ch) ch.addEventListener("click", () => {
-    MKBapi.chiqish();
-    location.href = "kirish.html";
-  });
+  if (ch) ch.addEventListener("click", () => { MKBapi.chiqish(); location.href = "kirish.html"; });
 }
 
 function shapkaChiz(){
@@ -166,24 +196,35 @@ function shapkaChiz(){
   const s = joriySessiya() || {ism: "Mehmon", rol: "-", filial: ""};
   const bosh = (s.ism || "M").split(" ").map(x => x[0]).join("").slice(0, 2).toUpperCase();
   const til = joriyTil();
+  const rol = joriyRolKalit();
+  const joriyBolim = document.body.dataset.sahifa;
+  const tezkor = BOLIMLAR.filter(b => bolimRuxsatlimi(b.kalit, rol)).slice(0, 4);
+  const joriyBor = tezkor.some(b => b.kalit === joriyBolim);
+  const joriyObj = BOLIMLAR.find(b => b.kalit === joriyBolim);
+
   el.innerHTML =
-    '<div class="izlash" id="global-izlash-qutisi">' +
-      ik("izlash") +
-      '<input type="search" id="global-izlash" placeholder="Obyekt, shartnoma yoki mijoz bo\'yicha qidirish..." aria-label="Qidirish">' +
-      '<kbd aria-hidden="true">/</kbd>' +
-    "</div>" +
+    '<button type="button" class="doira-tugma menyu-tugma" id="menyu-tugma" aria-label="Menyu">' + ik("menyu") + "</button>" +
+    '<nav class="pill-nav" aria-label="Tezkor bo\'limlar">' +
+      tezkor.map(b =>
+        '<a class="pill' + (b.kalit === joriyBolim ? " faol" : "") + '" href="' + b.href + '">' + b.yorliq + "</a>").join("") +
+      (!joriyBor && joriyObj ? '<a class="pill faol" href="' + joriyObj.href + '">' + joriyObj.yorliq + "</a>" : "") +
+      (!joriyBor && !joriyObj && joriyBolim === "sozlama" ? '<a class="pill faol" href="sozlamalar.html">Sozlamalar</a>' : "") +
+    "</nav>" +
     '<div class="shapka-ong">' +
+      '<div class="izlash" id="global-izlash-qutisi">' + ik("izlash") +
+        '<input type="search" id="global-izlash" placeholder="Obyekt, shartnoma yoki mijoz bo\'yicha qidirish..." aria-label="Qidirish">' +
+        '<kbd aria-hidden="true">/</kbd></div>' +
       '<div class="til-almash" role="group" aria-label="Interfeys tili">' +
         '<button type="button" data-til="uz" class="' + (til === "uz" ? "faol" : "") + '">UZ</button>' +
         '<button type="button" data-til="ru" class="' + (til === "ru" ? "faol" : "") + '">RU</button>' +
       "</div>" +
-      '<a class="shapka-tugma" href="bildirishnomalar.html" aria-label="Bildirishnomalar">' +
+      '<a class="doira-tugma" href="bildirishnomalar.html" aria-label="Bildirishnomalar">' +
         ik("qongiroq") + '<span class="nuqta"></span></a>' +
       '<div class="profil" id="profil-tugma" role="button" tabindex="0" aria-haspopup="menu">' +
         '<span class="yuz">' + bosh + "</span>" +
         '<span class="kim"><b>' + (s.ism || "") + "</b><span>" + (s.rol || "") + "</span></span>" +
         ik("past") +
-        '<div class="menyu-popover" id="profil-menyu" style="top:calc(100% + 8px);right:0" role="menu">' +
+        '<div class="menyu-popover" id="profil-menyu" style="top:calc(100% + 10px);right:0" role="menu">' +
           '<a href="sozlamalar.html">' + ik("foyd") + "Profil sozlamalari</a>" +
           '<a href="amallar-tarixi.html">' + ik("soat") + "Amallar tarixi</a>" +
           '<div class="ajratgich"></div>' +
@@ -211,8 +252,7 @@ function shapkaChiz(){
   el.querySelectorAll(".til-almash button").forEach(b =>
     b.addEventListener("click", () => {
       localStorage.setItem("mkb-til", b.dataset.til);
-      el.querySelectorAll(".til-almash button").forEach(x =>
-        x.classList.toggle("faol", x === b));
+      el.querySelectorAll(".til-almash button").forEach(x => x.classList.toggle("faol", x === b));
       tarjimaQil();
       document.dispatchEvent(new CustomEvent("mkb:til", {detail: b.dataset.til}));
     }));
@@ -220,16 +260,32 @@ function shapkaChiz(){
   const pt = document.getElementById("profil-tugma");
   const pm = document.getElementById("profil-menyu");
   pt.addEventListener("click", e => {
-    if (e.target.closest("a,button") && !e.target.closest("#profil-tugma > .kim, #profil-tugma > .yuz")){
-      if (e.target.closest(".menyu-popover")) return;
-    }
+    if (e.target.closest(".menyu-popover")) return;
     pm.classList.toggle("ochiq");
   });
   document.addEventListener("click", e => {
     if (!e.target.closest("#profil-tugma")) pm.classList.remove("ochiq");
   });
   const pc = document.getElementById("profil-chiqish");
-  pc.addEventListener("click", () => { MKBapi.chiqish(); location.href = "kirish.html"; });
+  if (pc) pc.addEventListener("click", () => { MKBapi.chiqish(); location.href = "kirish.html"; });
+
+  /* Mobil menyu */
+  const mt = document.getElementById("menyu-tugma");
+  const yon = document.getElementById("yon");
+  if (mt && yon){
+    let parda = document.querySelector(".yon-parda");
+    if (!parda){
+      parda = document.createElement("div");
+      parda.className = "yon-parda";
+      document.body.appendChild(parda);
+    }
+    const almash = ochiq => {
+      yon.classList.toggle("ochiq", ochiq);
+      parda.classList.toggle("ochiq", ochiq);
+    };
+    mt.addEventListener("click", () => almash(!yon.classList.contains("ochiq")));
+    parda.addEventListener("click", () => almash(false));
+  }
 }
 
 /* ---------- UI dvijoklari ---------- */
@@ -279,7 +335,7 @@ const MKB = {
 
   /* Shtrix-ko'rsatkich: foiz -> mos-bar (jadval qatorlari uchun) */
   shtrix(foiz, soni){
-    soni = soni || 22;
+    soni = soni || 14;
     const toliq = Math.round(Math.max(0, Math.min(foiz, 200)) / 200 * soni);
     const zona = foiz >= 140 ? "z-yashil" : foiz >= 100 ? "z-sariq" : "z-xavf";
     let p = "";
@@ -370,7 +426,7 @@ const MKB = {
         '<div class="jadval-orash"><table class="jadval"><thead><tr>' +
         cfg.ustunlar.map(u =>
           "<th" + (u.saralash !== false ? ' class="saralanadi' + (holat.saralash === u.kalit ? " faol" : "") + '" data-kalit="' + u.kalit + '"' : "") +
-          (u.son ? ' style="text-align:right"' : "") + '><span class="yon">' + u.nom +
+          (u.son ? ' style="text-align:right"' : "") + '><span class="th-yon">' + u.nom +
           (u.saralash !== false ? ik(holat.saralash === u.kalit && holat.yonalish < 0 ? "yuqori" : "past") : "") +
           "</span></th>").join("") +
         "</tr></thead><tbody>" +
@@ -498,7 +554,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (!ochiq){
-    relsaChiz();
+    yonChiz();
     shapkaChiz();
   }
 
@@ -509,7 +565,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!b){
       b = document.createElement("div");
       b.className = "rejim-belgisi";
-      document.body.appendChild(b);
+      const joy = document.querySelector("#yon .yon-past") || document.body;
+      joy.appendChild(b);
     }
     const server = e.detail === "server";
     b.classList.toggle("snapshot", !server);

@@ -57,14 +57,15 @@ window.MKBchizma = (function(){
       const X = i => P.l + (W - P.l - P.r) * (q.length === 1 ? 0.5 : i / (q.length - 1));
       const Y = v => P.t + (H - P.t - P.b) * (1 - (v - min) / (maks - min));
       const nuqtalar = q.map((v, i) => [X(i), Y(v)]);
-      const asosiy = rang(cfg.rang || "--brend");
+      const asosiy = rang(cfg.rang || "--siyoh");
+      const toldirish = rang(cfg.fonRang || cfg.rang || "--mint");
       const gid = "cg" + (++idSanoq);
 
       const svg = el("svg", {width: "100%", height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true"});
       const defs = el("defs", {});
       const gr = el("linearGradient", {id: gid, x1: 0, y1: 0, x2: 0, y2: 1});
-      gr.appendChild(el("stop", {offset: "0%", "stop-color": asosiy, "stop-opacity": ".28"}));
-      gr.appendChild(el("stop", {offset: "100%", "stop-color": asosiy, "stop-opacity": "0"}));
+      gr.appendChild(el("stop", {offset: "0%", "stop-color": toldirish, "stop-opacity": ".85"}));
+      gr.appendChild(el("stop", {offset: "100%", "stop-color": toldirish, "stop-opacity": "0"}));
       defs.appendChild(gr);
       svg.appendChild(defs);
 
@@ -142,7 +143,7 @@ window.MKBchizma = (function(){
       const joy = (W - P.l - P.r) / q.length;
       const en = Math.min(cfg.en || 30, joy * 0.62);
       const asosiy = rang(cfg.rang || "--siyoh");
-      const urgu = rang(cfg.urguRang || "--brend");
+      const urgu = rang(cfg.urguRang || "--mint-matn");
       const svg = el("svg", {width: "100%", height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true"});
       for (let g = 0; g <= 3; g++){
         const gy = P.t + (H - P.t - P.b) * g / 3;
@@ -228,13 +229,13 @@ window.MKBchizma = (function(){
     const X = i => P + (W - P * 2) * i / (qiymatlar.length - 1);
     const Y = v => P + (H - P * 2) * (1 - (v - min) / ((maks - min) || 1));
     const n = qiymatlar.map((v, i) => [X(i), Y(v)]);
-    const asosiy = rang(rangNomi || "--brend");
+    const asosiy = rang(rangNomi || "--siyoh");
     const gid = "cu" + (++idSanoq);
     const svg = el("svg", {width: W, height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true"});
     const defs = el("defs", {});
     const gr = el("linearGradient", {id: gid, x1: 0, y1: 0, x2: 0, y2: 1});
-    gr.appendChild(el("stop", {offset: "0%", "stop-color": asosiy, "stop-opacity": ".3"}));
-    gr.appendChild(el("stop", {offset: "100%", "stop-color": asosiy, "stop-opacity": "0"}));
+    gr.appendChild(el("stop", {offset: "0%", "stop-color": rang("--mint"), "stop-opacity": ".9"}));
+    gr.appendChild(el("stop", {offset: "100%", "stop-color": rang("--mint"), "stop-opacity": "0"}));
     defs.appendChild(gr); svg.appendChild(defs);
     const yol = silliqYol(n);
     svg.appendChild(el("path", {d: yol + "L" + n[n.length - 1][0] + "," + (H - 1) + "L" + n[0][0] + "," + (H - 1) + "Z",
