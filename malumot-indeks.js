@@ -64,8 +64,9 @@
 
     /* 1. Ko'rik */
     const koriklar = (D.KORIKLAR || []).filter(k => k.obyektId === id);
+    const OTKAZILDI = ["otkazildi", "o'tkazildi", "bajarildi", "yakunlandi"];
     const otkazilgan = koriklar
-      .filter(k => k.holat !== "rejada")
+      .filter(k => OTKAZILDI.includes(String(k.holat).toLowerCase()))
       .map(k => sana(k.sana)).filter(Boolean).sort((a, b) => b - a);
     const meyorK = korikDavri(yoz.mulk.tur);
     const oxirgiKorik = otkazilgan[0] || null;
@@ -88,9 +89,12 @@
     const qolgan = tugash ? kunFarqi(BUGUN, tugash) : null;
     const qoplam = polis ? polis.summa : 0;
     const baho = yoz.mulk.baho || 0;
+    /* polis holati matn bilan emas, tugash sanasi bilan baholanadi */
+    const amalda = polis && qolgan != null && qolgan > 0 &&
+                   String(polis.holat).toLowerCase().indexOf("to'xtat") < 0;
     let ballS = 0;
-    if (polis && polis.holat === "amalda" && qolgan > 30) ballS = qoplam >= baho ? 1 : 0.65;
-    else if (polis && polis.holat === "amalda" && qolgan > 0) ballS = 0.5;
+    if (amalda && qolgan > 30) ballS = qoplam >= baho ? 1 : 0.65;
+    else if (amalda) ballS = 0.5;
     else if (polis) ballS = 0.1;
     tarkib.push({
       kalit: "sugurta", nom: "Sug'urta himoyasi", ogirlik: 25, ulush: ballS,

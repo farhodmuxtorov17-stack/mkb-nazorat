@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Chiqish tekshiruvi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082760">
+<link rel="stylesheet" href="yadro/app.css?v=26082780">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -48,19 +48,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082760"></script>
-<script src="malumot.js?v=26082760"></script>
-<script src="malumot-qoshimcha.js?v=26082760"></script>
-<script src="malumot-kengaytma.js?v=26082760"></script>
-<script src="malumot-kirish.js?v=26082760"></script>
-<script src="malumot-indeks.js?v=26082760"></script>
-<script src="tarjima.js?v=26082760"></script>
-<script src="yadro/ikonlar.js?v=26082760"></script>
-<script src="yadro/daraxt.js?v=26082760"></script>
-<script src="yadro/chizma.js?v=26082760"></script>
-<script src="yadro/qollanma.js?v=26082760"></script>
-<script src="yadro/api.js?v=26082760"></script>
-<script src="yadro/app.js?v=26082760"></script>
+<script src="yadro/bino.js?v=26082780"></script>
+<script src="malumot.js?v=26082780"></script>
+<script src="malumot-qoshimcha.js?v=26082780"></script>
+<script src="malumot-kengaytma.js?v=26082780"></script>
+<script src="malumot-kirish.js?v=26082780"></script>
+<script src="malumot-indeks.js?v=26082780"></script>
+<script src="tarjima.js?v=26082780"></script>
+<script src="yadro/ikonlar.js?v=26082780"></script>
+<script src="yadro/daraxt.js?v=26082780"></script>
+<script src="yadro/chizma.js?v=26082780"></script>
+<script src="yadro/qollanma.js?v=26082780"></script>
+<script src="yadro/api.js?v=26082780"></script>
+<script src="yadro/app.js?v=26082780"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -148,13 +148,21 @@ document.addEventListener("mkb:tayyor", () => {
       "<option>Hujjat joyida yo&#39;q</option></select></div></div>" +
       '<div class="maydon" style="margin-top:12px"><label class="maydon-yorliq">Tavsif <b>*</b></label>' +
       '<div class="kirish"><input id="ch-tavsif" placeholder="Nima aniqlandi"></div></div>',
-      {okMatn: "Hodisa ochish", ok: p => {
-        if (!p.querySelector("#ch-tavsif").value.trim()){
-          MKB.toast("Tavsif kiritilishi shart", "xavf");
-          return false;
-        }
+      {okMatn: "Hodisa ochish", ok: pd => {
+        const tavsif = pd.querySelector("#ch-tavsif").value.trim();
+        if (!tavsif){ MKB.toast("Tavsif kiritilishi shart", "xavf"); return false; }
+        const nuq2 = D.obyektNuqtalari(t.obyektId)[0];
+        D.XAVFSIZLIK_HODISALARI.unshift({
+          id: "XH-2026/" + (400 + D.XAVFSIZLIK_HODISALARI.length),
+          vaqt: t.sana + " " + (t.chiqish || t.kirish), sana: t.sana,
+          obyektId: t.obyektId, kirishNuqtaId: nuq2 ? nuq2.id : null,
+          hodisa: pd.querySelector("#ch-tur").value, jiddiylik: "yuqori",
+          holat: "ochiq", masul: t.hamroh || "Ko’rik inspektori", chora: "",
+        });
+        document.getElementById("ch-holat").innerHTML =
+          '<span class="chip chip-xavf">Nomuvofiqlik</span>';
+        document.getElementById("ch-yakun").disabled = true;
         MKB.toast("Hodisa ochildi va inspektorga yuborildi");
-        document.getElementById("ch-holat").innerHTML = '<span class="chip chip-xavf">Nomuvofiqlik</span>';
       }});
   });
 });

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Kirish nuqtasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082760">
+<link rel="stylesheet" href="yadro/app.css?v=26082780">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -48,19 +48,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082760"></script>
-<script src="malumot.js?v=26082760"></script>
-<script src="malumot-qoshimcha.js?v=26082760"></script>
-<script src="malumot-kengaytma.js?v=26082760"></script>
-<script src="malumot-kirish.js?v=26082760"></script>
-<script src="malumot-indeks.js?v=26082760"></script>
-<script src="tarjima.js?v=26082760"></script>
-<script src="yadro/ikonlar.js?v=26082760"></script>
-<script src="yadro/daraxt.js?v=26082760"></script>
-<script src="yadro/chizma.js?v=26082760"></script>
-<script src="yadro/qollanma.js?v=26082760"></script>
-<script src="yadro/api.js?v=26082760"></script>
-<script src="yadro/app.js?v=26082760"></script>
+<script src="yadro/bino.js?v=26082780"></script>
+<script src="malumot.js?v=26082780"></script>
+<script src="malumot-qoshimcha.js?v=26082780"></script>
+<script src="malumot-kengaytma.js?v=26082780"></script>
+<script src="malumot-kirish.js?v=26082780"></script>
+<script src="malumot-indeks.js?v=26082780"></script>
+<script src="tarjima.js?v=26082780"></script>
+<script src="yadro/ikonlar.js?v=26082780"></script>
+<script src="yadro/daraxt.js?v=26082780"></script>
+<script src="yadro/chizma.js?v=26082780"></script>
+<script src="yadro/qollanma.js?v=26082780"></script>
+<script src="yadro/api.js?v=26082780"></script>
+<script src="yadro/app.js?v=26082780"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -150,7 +150,23 @@ document.addEventListener("mkb:tayyor", () => {
       '<div class="kirish"><select id="mo-sabab"><option>Rejali ko&#39;rik</option>' +
       "<option>Texnik xizmat</option><option>Favqulodda holat</option>" +
       "<option>Hujjatlarni olib chiqish</option></select></div></div>",
-      {okMatn: "Ochish", ok: () => {
+      {okMatn: "Ochish", ok: pd => {
+        const sabab = pd.querySelector("#mo-sabab").value;
+        const vaqt = new Date();
+        const soat = String(vaqt.getHours()).padStart(2, "0") + ":" +
+                     String(vaqt.getMinutes()).padStart(2, "0");
+        const yozuv = {
+          id: "KV-" + (90000 + D.KIRISH_VOQEALARI.length), vaqt: D.KIRISH_BUGUN + " " + soat,
+          sana: D.KIRISH_BUGUN, soat: soat, obyektId: n.obyektId, kirishNuqtaId: n.id,
+          nuqtaNomi: n.nom, shaxsId: null, usul: "Masofadan ochish", natija: "ruxsat",
+          sabab: sabab, yonalish: "kirish",
+        };
+        D.KIRISH_VOQEALARI.unshift(yozuv);
+        n.kunlikOtish += 1;
+        n.oxirgiAloqa = D.KIRISH_BUGUN + " " + soat;
+        document.getElementById("n-aloqa").textContent = n.oxirgiAloqa;
+        const joy = document.getElementById("n-voqealar");
+        joy.insertAdjacentHTML("afterbegin", voqeaQatori(yozuv));
         MKB.toast("Eshik ochildi va jurnalga yozildi");
       }});
   });

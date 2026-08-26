@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Hodisalar doskasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082760">
+<link rel="stylesheet" href="yadro/app.css?v=26082780">
 <style>
 .doska{display:grid;grid-auto-flow:column;grid-auto-columns:300px;gap:18px;overflow-x:auto;padding:4px 2px 12px}
 .doska-ustun{display:flex;flex-direction:column;gap:12px;min-height:220px}
@@ -41,26 +41,26 @@
   </div>
   <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="kirish-nazorati.html">Post</a><a href="kuzatuv.html">Nazorat markazi</a><a href="kirish-nuqtalari.html">Nuqtalar</a><a href="kirish-voqealari.html">Voqealar</a><a href="tashriflar.html">Tashriflar</a><a href="ruxsatlar.html">Ruxsatlar</a><a href="qurilmalar.html">Qurilmalar</a><a href="hodisalar.html" class="faol">Hodisalar</a></nav>
   <section class="jadval-asbob" style="margin-bottom:16px">
-    <div class="tanlov"><select id="hd-jiddiy" aria-label="Jiddiylik bo&#39;yicha"><option value="">Barcha jiddiylik</option><option value="yuqori">Yuqori</option><option value="o&#39;rta">O&#39;rta</option><option value="past">Past</option></select></div>
+    <div class="tanlov"><select id="hd-jiddiy" aria-label="Jiddiylik bo&#39;yicha"><option value="">Barcha jiddiylik</option><option value="yuqori">Yuqori</option><option value="orta">O&#39;rta</option><option value="past">Past</option></select></div>
     <div class="tanlov"><select id="hd-manba" aria-label="Manba bo&#39;yicha"><option value="">Barcha manbalar</option><option value="kirish">Kirish nazorati</option><option value="obyekt">Obyekt holati</option></select></div>
   </section>
   <div class="doska" id="hd-doska"></div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082760"></script>
-<script src="malumot.js?v=26082760"></script>
-<script src="malumot-qoshimcha.js?v=26082760"></script>
-<script src="malumot-kengaytma.js?v=26082760"></script>
-<script src="malumot-kirish.js?v=26082760"></script>
-<script src="malumot-indeks.js?v=26082760"></script>
-<script src="tarjima.js?v=26082760"></script>
-<script src="yadro/ikonlar.js?v=26082760"></script>
-<script src="yadro/daraxt.js?v=26082760"></script>
-<script src="yadro/chizma.js?v=26082760"></script>
-<script src="yadro/qollanma.js?v=26082760"></script>
-<script src="yadro/api.js?v=26082760"></script>
-<script src="yadro/app.js?v=26082760"></script>
+<script src="yadro/bino.js?v=26082780"></script>
+<script src="malumot.js?v=26082780"></script>
+<script src="malumot-qoshimcha.js?v=26082780"></script>
+<script src="malumot-kengaytma.js?v=26082780"></script>
+<script src="malumot-kirish.js?v=26082780"></script>
+<script src="malumot-indeks.js?v=26082780"></script>
+<script src="tarjima.js?v=26082780"></script>
+<script src="yadro/ikonlar.js?v=26082780"></script>
+<script src="yadro/daraxt.js?v=26082780"></script>
+<script src="yadro/chizma.js?v=26082780"></script>
+<script src="yadro/qollanma.js?v=26082780"></script>
+<script src="yadro/api.js?v=26082780"></script>
+<script src="yadro/app.js?v=26082780"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -112,23 +112,27 @@ document.addEventListener("mkb:tayyor", () => {
     ["hal", "Hal qilindi", "#3E8E2F"],
     ["yopildi", "Yopildi", "#8A8378"],
   ];
-  const USTUN_MOS = {ochiq: "yangi", tekshiruvda: "tekshiruvda", yopildi: "yopildi"};
+  const USTUN_MOS = {ochiq: "yangi", yangi: "yangi", tekshiruvda: "tekshiruvda",
+                     tekshirilmoqda: "tekshiruvda", bartaraf: "bartaraf",
+                     hal: "hal", yopildi: "yopildi"};
+  const jiddiy = v => String(v || "").replace(/&#39;|’/g, "'");
 
   const bandlar = D.XAVFSIZLIK_HODISALARI.map(h => ({
-    id: h.id, obyektId: h.obyektId, nom: h.hodisa, jiddiylik: h.jiddiylik,
+    id: h.id, obyektId: h.obyektId, nom: h.hodisa, jiddiylik: jiddiy(h.jiddiylik),
     ustun: USTUN_MOS[h.holat] || "yangi", vaqt: h.vaqt, masul: h.masul, manba: "kirish",
     nuqta: (D.kirishNuqtasi(h.kirishNuqtaId) || {}).nom || "",
   })).concat(D.HODISALAR.map(h => ({
-    id: h.kod, obyektId: h.obyektId, nom: h.hodisa, jiddiylik: h.jiddiylik,
-    ustun: h.ustun === "hal" ? "hal" : h.ustun === "bartaraf" ? "bartaraf" :
-           h.ustun === "tekshiruvda" ? "tekshiruvda" : h.ustun === "yopildi" ? "yopildi" : "yangi",
+    id: h.kod, obyektId: h.obyektId, nom: h.hodisa, jiddiylik: jiddiy(h.jiddiylik),
+    ustun: USTUN_MOS[h.ustun] || "yangi",
     vaqt: h.vaqt, masul: h.masul || "—", manba: "obyekt", nuqta: "",
   })));
 
   function chiz(){
     const j = document.getElementById("hd-jiddiy").value;
     const m = document.getElementById("hd-manba").value;
-    const royxat = bandlar.filter(b => (!j || b.jiddiylik === j) && (!m || b.manba === m));
+    const royxat = bandlar.filter(b =>
+      (!j || (j === "orta" ? b.jiddiylik.indexOf("rta") >= 0 : b.jiddiylik === j)) &&
+      (!m || b.manba === m));
     document.getElementById("hs-meta").textContent =
       royxat.filter(b => b.ustun !== "yopildi").length + " ta ochiq hodisa";
     document.getElementById("hd-doska").innerHTML = USTUNLAR.map(([kalit, nom, rang]) => {

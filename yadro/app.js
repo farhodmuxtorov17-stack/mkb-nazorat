@@ -72,18 +72,32 @@ function faylNomi(href){
   const f = (href || location.pathname).split("/").pop().split("?")[0];
   return f || "panel.html";
 }
+/* Fayl -> bo'lim kaliti. Avval navigatsiya daraxti (barcha sahifalar),
+   so'ng bo'limlar reyestri (bosh sahifalar). Topilmasa null. */
+const FAYL_BOLIM = (function(){
+  const x = {};
+  const d = window.MKB_DARAXT || {};
+  Object.keys(d).forEach(k => (d[k] || []).forEach(sh => { x[sh.f] = k; }));
+  return x;
+})();
+function bolimTopish(fayl){
+  if (FAYL_BOLIM[fayl]) return FAYL_BOLIM[fayl];
+  const bol = BOLIMLAR.find(b => faylNomi(b.href) === fayl);
+  if (bol) return bol.kalit;
+  if (/^(sozlama|foydalanuvchi|rollar|filiallar|malumotnoma|amallar|integratsiya|til-|tizim-|qollanma)/.test(fayl))
+    return "sozlama";
+  return null;
+}
 function sahifaRuxsatlimi(href){
   const rol = joriyRolKalit();
   if (!rol) return false;
   const fayl = faylNomi(href);
   if (SAHIFA_MAXSUS[fayl] && !SAHIFA_MAXSUS[fayl].includes(rol)) return false;
-  const b = document.body;
   if (href){
-    /* boshqa sahifa: bo'limini reyestrdan taxmin qilamiz */
-    const bol = BOLIMLAR.find(x => faylNomi(x.href) === fayl);
-    return bol ? bolimRuxsatlimi(bol.kalit, rol) : true;
+    const kalit = bolimTopish(fayl);
+    return kalit ? bolimRuxsatlimi(kalit, rol) : true;
   }
-  const kalit = b.dataset.sahifa;
+  const kalit = document.body.dataset.sahifa;
   return kalit ? bolimRuxsatlimi(kalit, rol) : true;
 }
 function rolBoshSahifasi(rol){
@@ -219,8 +233,11 @@ function shapkaChiz(){
   el.innerHTML =
     '<button type="button" class="doira-tugma menyu-tugma" id="menyu-tugma" aria-label="Menyu">' + ik("menyu") + "</button>" +
     '<nav class="pill-nav" aria-label="Tezkor bo\'limlar">' +
-      tezkor.map(b =>
-        '<a class="pill' + (b.kalit === joriyBolim ? " faol" : "") + '" href="' + b.href + '">' + b.yorliq + "</a>").join("") +
+      tezkor.map(b => {
+        const manzil = b.kalit === "panel" ? rolBoshSahifasi(rol) : b.href;
+        return '<a class="pill' + (b.kalit === joriyBolim ? " faol" : "") +
+          '" href="' + manzil + '">' + b.yorliq + "</a>";
+      }).join("") +
       (!joriyBor && joriyObj ? '<a class="pill faol" href="' + joriyObj.href + '">' + joriyObj.yorliq + "</a>" : "") +
       (!joriyBor && !joriyObj && joriyBolim === "sozlama" ? '<a class="pill faol" href="sozlamalar.html">Sozlamalar</a>' : "") +
     "</nav>" +
@@ -246,7 +263,9 @@ function shapkaChiz(){
         ik("past") +
         '<div class="menyu-popover" id="profil-menyu" style="top:calc(100% + 10px);right:0" role="menu">' +
           '<a href="sozlamalar.html">' + ik("foyd") + "Profil sozlamalari</a>" +
-          '<a href="amallar-tarixi.html">' + ik("soat") + "Amallar tarixi</a>" +
+          '<a href="qollanma.html">' + ik("yordam") + "Ish qo&#39;llanmasi</a>" +
+          (sahifaRuxsatlimi("amallar-tarixi.html")
+            ? '<a href="amallar-tarixi.html">' + ik("soat") + "Amallar tarixi</a>" : "") +
           '<div class="ajratgich"></div>' +
           '<button type="button" id="profil-chiqish">' + ik("chiqish") + "Tizimdan chiqish</button>" +
         "</div>" +
@@ -663,6 +682,16 @@ document.addEventListener("DOMContentLoaded", () => {
     b.innerHTML = '<span class="nuqta"></span>' + (server ? "Server ulangan" : "Namoyish rejimi");
     tarjimaQil(b);
   });
+
+  /* Bo'lim ichidagi tab tasmasi: rolga yopiq bandlar olib tashlanadi */
+  if (!ochiq){
+    document.querySelectorAll(".bolim-tablar a").forEach(a => {
+      const manzil = a.getAttribute("href") || "";
+      if (manzil && !sahifaRuxsatlimi(manzil)) a.remove();
+    });
+    const tasma = document.querySelector(".bolim-tablar");
+    if (tasma && !tasma.children.length) tasma.remove();
+  }
 
   /* data-toast tugmalar */
   document.body.addEventListener("click", e => {

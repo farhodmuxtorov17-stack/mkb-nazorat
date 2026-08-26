@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Masofaviy ko'rik</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082760">
+<link rel="stylesheet" href="yadro/app.css?v=26082780">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -49,19 +49,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082760"></script>
-<script src="malumot.js?v=26082760"></script>
-<script src="malumot-qoshimcha.js?v=26082760"></script>
-<script src="malumot-kengaytma.js?v=26082760"></script>
-<script src="malumot-kirish.js?v=26082760"></script>
-<script src="malumot-indeks.js?v=26082760"></script>
-<script src="tarjima.js?v=26082760"></script>
-<script src="yadro/ikonlar.js?v=26082760"></script>
-<script src="yadro/daraxt.js?v=26082760"></script>
-<script src="yadro/chizma.js?v=26082760"></script>
-<script src="yadro/qollanma.js?v=26082760"></script>
-<script src="yadro/api.js?v=26082760"></script>
-<script src="yadro/app.js?v=26082760"></script>
+<script src="yadro/bino.js?v=26082780"></script>
+<script src="malumot.js?v=26082780"></script>
+<script src="malumot-qoshimcha.js?v=26082780"></script>
+<script src="malumot-kengaytma.js?v=26082780"></script>
+<script src="malumot-kirish.js?v=26082780"></script>
+<script src="malumot-indeks.js?v=26082780"></script>
+<script src="tarjima.js?v=26082780"></script>
+<script src="yadro/ikonlar.js?v=26082780"></script>
+<script src="yadro/daraxt.js?v=26082780"></script>
+<script src="yadro/chizma.js?v=26082780"></script>
+<script src="yadro/qollanma.js?v=26082780"></script>
+<script src="yadro/api.js?v=26082780"></script>
+<script src="yadro/app.js?v=26082780"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -135,8 +135,14 @@ document.addEventListener("mkb:tayyor", () => {
     chiz();
     MKB.toast("Bosqich yakunlandi: " + s.bosqichlar[bosqich - 1]);
   });
-  document.getElementById("ms-yopish").addEventListener("click", () =>
-    MKB.toast("Barcha vaqtinchalik ruxsatlar bekor qilindi, eshiklar qulflandi"));
+  document.getElementById("ms-yopish").addEventListener("click", () => {
+    nuq.forEach(n2 => { n2.sessiyaOchiq = false; });
+    document.querySelectorAll("#ms-nuqtalar .chip").forEach(c => {
+      c.className = "chip chip-kichik";
+      c.textContent = "qulflangan";
+    });
+    MKB.toast("Barcha vaqtinchalik ruxsatlar bekor qilindi, eshiklar qulflandi");
+  });
 
   const nuq = D.obyektNuqtalari(s.obyektId);
   document.getElementById("ms-nuqtalar").innerHTML = nuq.length ? nuq.map(n =>

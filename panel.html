@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Boshqaruv paneli</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082760">
+<link rel="stylesheet" href="yadro/app.css?v=26082780">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
 /* Hero: referensdagi "Contact" bloki */
@@ -118,19 +118,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082760"></script>
-<script src="malumot.js?v=26082760"></script>
-<script src="malumot-qoshimcha.js?v=26082760"></script>
-<script src="malumot-kengaytma.js?v=26082760"></script>
-<script src="malumot-kirish.js?v=26082760"></script>
-<script src="malumot-indeks.js?v=26082760"></script>
-<script src="tarjima.js?v=26082760"></script>
-<script src="yadro/ikonlar.js?v=26082760"></script>
-<script src="yadro/daraxt.js?v=26082760"></script>
-<script src="yadro/chizma.js?v=26082760"></script>
-<script src="yadro/qollanma.js?v=26082760"></script>
-<script src="yadro/api.js?v=26082760"></script>
-<script src="yadro/app.js?v=26082760"></script>
+<script src="yadro/bino.js?v=26082780"></script>
+<script src="malumot.js?v=26082780"></script>
+<script src="malumot-qoshimcha.js?v=26082780"></script>
+<script src="malumot-kengaytma.js?v=26082780"></script>
+<script src="malumot-kirish.js?v=26082780"></script>
+<script src="malumot-indeks.js?v=26082780"></script>
+<script src="tarjima.js?v=26082780"></script>
+<script src="yadro/ikonlar.js?v=26082780"></script>
+<script src="yadro/daraxt.js?v=26082780"></script>
+<script src="yadro/chizma.js?v=26082780"></script>
+<script src="yadro/qollanma.js?v=26082780"></script>
+<script src="yadro/api.js?v=26082780"></script>
+<script src="yadro/app.js?v=26082780"></script>
 <script>
 
 function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
@@ -224,15 +224,17 @@ document.addEventListener("mkb:tayyor", async () => {
 
   /* ---- Stat kartalar ---- */
   const ortQoplash = MKB_DATA.nazoratJamlama(yoz).ortacha;
+  const balansda = yoz.filter(y => ["musodara", "balans"].includes(y.ish.bosqich)).length;
+  const kirishJ = MKB_DATA.kirishJamlama();
   const statlar = [
-    {yorliq: "Portfel hajmi", qiymat: MKB.fmt(D.PORTFEL.jami), birlik: "obyekt",
-     delta: "↑ 8,2%", ijobiy: true, seriya: seriya(D.PORTFEL.jami, 0.014)},
-    {yorliq: "Bank balansida", qiymat: "426", birlik: "obyekt",
-     delta: "↑ 6", ijobiy: true, seriya: seriya(426, 0.02)},
+    {yorliq: "Reyestrdagi obyektlar", qiymat: MKB.fmt(yoz.length), birlik: "obyekt",
+     delta: "↑ 8,2%", ijobiy: true, seriya: seriya(yoz.length, 0.014)},
+    {yorliq: "Bank balansida", qiymat: MKB.fmt(balansda), birlik: "obyekt",
+     delta: "↑ 6", ijobiy: true, seriya: seriya(balansda, 0.02)},
     {yorliq: "O'rtacha nazorat indeksi", qiymat: ortQoplash + "%", birlik: "",
      delta: "↑ 3,4%", ijobiy: true, seriya: seriya(ortQoplash, 0.008)},
-    {yorliq: "Hisoblangan zaxira", qiymat: (D.jamiZaxira() / 1000).toFixed(1).replace(".", ","),
-     birlik: "mlrd so'm", delta: "↓ 2,2%", ijobiy: true, seriya: seriya(D.jamiZaxira() / 1000, -0.01)},
+    {yorliq: "Kirish nuqtalari onlayn", qiymat: kirishJ.onlayn + " / " + kirishJ.nuqta, birlik: "",
+     delta: "↑ 1,4%", ijobiy: true, seriya: seriya(kirishJ.onlayn, 0.004)},
   ];
   document.getElementById("stat-tor").innerHTML = statlar.map((t, i) =>
     '<div class="stat-karta"><span class="yorliq">' + t.yorliq + '</span>' +

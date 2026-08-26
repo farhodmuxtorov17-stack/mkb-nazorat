@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ruxsatlar reyestri</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082760">
+<link rel="stylesheet" href="yadro/app.css?v=26082780">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -22,19 +22,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082760"></script>
-<script src="malumot.js?v=26082760"></script>
-<script src="malumot-qoshimcha.js?v=26082760"></script>
-<script src="malumot-kengaytma.js?v=26082760"></script>
-<script src="malumot-kirish.js?v=26082760"></script>
-<script src="malumot-indeks.js?v=26082760"></script>
-<script src="tarjima.js?v=26082760"></script>
-<script src="yadro/ikonlar.js?v=26082760"></script>
-<script src="yadro/daraxt.js?v=26082760"></script>
-<script src="yadro/chizma.js?v=26082760"></script>
-<script src="yadro/qollanma.js?v=26082760"></script>
-<script src="yadro/api.js?v=26082760"></script>
-<script src="yadro/app.js?v=26082760"></script>
+<script src="yadro/bino.js?v=26082780"></script>
+<script src="malumot.js?v=26082780"></script>
+<script src="malumot-qoshimcha.js?v=26082780"></script>
+<script src="malumot-kengaytma.js?v=26082780"></script>
+<script src="malumot-kirish.js?v=26082780"></script>
+<script src="malumot-indeks.js?v=26082780"></script>
+<script src="tarjima.js?v=26082780"></script>
+<script src="yadro/ikonlar.js?v=26082780"></script>
+<script src="yadro/daraxt.js?v=26082780"></script>
+<script src="yadro/chizma.js?v=26082780"></script>
+<script src="yadro/qollanma.js?v=26082780"></script>
+<script src="yadro/api.js?v=26082780"></script>
+<script src="yadro/app.js?v=26082780"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -109,10 +109,28 @@ document.addEventListener("mkb:tayyor", () => {
         '<span class="chip ' + (q.holat === "amalda" ? "chip-yashil" : q.holat === "muddati tugagan" ? "chip-xavf" : "chip-sariq") +
         '">' + q.holat + "</span>"},
       {kalit: "amal", nom: "", saralash: false, chiz: q =>
-        '<span class="amal-tugmalar"><button type="button" class="amal-tugma" title="Ruxsatni to&#39;xtatish" ' +
-        'data-toast="Ruxsat to&#39;xtatildi: ' + q.id + '">' + ik("bloklash") + "</button></span>"},
+        q.holat === "amalda"
+          ? '<span class="amal-tugmalar"><button type="button" class="amal-tugma" ' +
+            'title="Ruxsatni to&#39;xtatish" data-toxtat="' + q.id + '">' + ik("bloklash") + "</button></span>"
+          : ""},
     ],
     saralash: "tugash",
+  });
+
+  document.addEventListener("click", e => {
+    const t = e.target.closest("[data-toxtat]");
+    if (!t) return;
+    const r = D.RUXSATLAR.find(x => x.id === t.dataset.toxtat);
+    if (!r) return;
+    MKB.modal("Ruxsatni to’xtatish",
+      '<p style="font-size:14px;line-height:1.6;color:var(--matn-2)">' +
+      D.shaxsNomi(r.shaxsId) + " uchun " + obyektNomi(r.obyektId) +
+      " bo’yicha ruxsat bekor qilinadi. Amal jurnalga yoziladi.</p>",
+      {okMatn: "To’xtatish", ok: () => {
+        r.holat = "to’xtatilgan";
+        MKB.toast("Ruxsat to’xtatildi");
+        setTimeout(() => location.reload(), 600);
+      }});
   });
 });
 </script>

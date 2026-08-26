@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Kirish voqeasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082760">
+<link rel="stylesheet" href="yadro/app.css?v=26082780">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -48,19 +48,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082760"></script>
-<script src="malumot.js?v=26082760"></script>
-<script src="malumot-qoshimcha.js?v=26082760"></script>
-<script src="malumot-kengaytma.js?v=26082760"></script>
-<script src="malumot-kirish.js?v=26082760"></script>
-<script src="malumot-indeks.js?v=26082760"></script>
-<script src="tarjima.js?v=26082760"></script>
-<script src="yadro/ikonlar.js?v=26082760"></script>
-<script src="yadro/daraxt.js?v=26082760"></script>
-<script src="yadro/chizma.js?v=26082760"></script>
-<script src="yadro/qollanma.js?v=26082760"></script>
-<script src="yadro/api.js?v=26082760"></script>
-<script src="yadro/app.js?v=26082760"></script>
+<script src="yadro/bino.js?v=26082780"></script>
+<script src="malumot.js?v=26082780"></script>
+<script src="malumot-qoshimcha.js?v=26082780"></script>
+<script src="malumot-kengaytma.js?v=26082780"></script>
+<script src="malumot-kirish.js?v=26082780"></script>
+<script src="malumot-indeks.js?v=26082780"></script>
+<script src="tarjima.js?v=26082780"></script>
+<script src="yadro/ikonlar.js?v=26082780"></script>
+<script src="yadro/daraxt.js?v=26082780"></script>
+<script src="yadro/chizma.js?v=26082780"></script>
+<script src="yadro/qollanma.js?v=26082780"></script>
+<script src="yadro/api.js?v=26082780"></script>
+<script src="yadro/app.js?v=26082780"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -150,8 +150,18 @@ document.addEventListener("mkb:tayyor", () => {
   document.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => {
     const izoh = document.getElementById("v-izoh").value.trim();
     if (!izoh){ MKB.toast("Qaror asosini kiriting", "xavf"); return; }
-    const nom = {ruxsat: "Ruxsat berildi", qol: "Qo&#39;lda tekshirishga yuborildi", rad: "Rad etildi"}[b.dataset.q];
-    MKB.toast(nom + " — jurnalga yozildi");
+    const yangi = {ruxsat: "ruxsat", qol: "ogohlantirish", rad: "rad"}[b.dataset.q];
+    v.natija = yangi;
+    v.sabab = izoh;
+    document.getElementById("v-natija").innerHTML = chip(KN_NATIJA, yangi);
+    document.querySelectorAll("[data-q]").forEach(x => { x.disabled = true; });
+    document.getElementById("v-izoh").disabled = true;
+    const j = document.createElement("div");
+    j.className = "qator";
+    j.innerHTML = '<span class="belgi mint">' + ik("tasdiq") + "</span>" +
+      '<span class="matn"><b>Operator qarori qabul qilindi</b><span>' + izoh + "</span></span>";
+    document.getElementById("v-qaror").appendChild(j);
+    MKB.toast("Qaror jurnalga yozildi");
   }));
 
   const tarix = D.KIRISH_VOQEALARI.filter(x => x.shaxsId && x.shaxsId === v.shaxsId && x.obyektId === v.obyektId);

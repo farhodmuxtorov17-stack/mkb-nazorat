@@ -87,15 +87,11 @@
     const tur = y.mulk.tur;
     let nuqtalar = [];
     if (window.MKBbino) {
-      const m = window.MKBbino.model(y.id, tur, y.mulk.qisqa);
+      const m = window.MKBbino.model(y.id, tur, y.mulk.qisqa, y.mulk.maydon);
       BINO_MODELLARI[y.id] = m;
       m.qavatlar.forEach(q => {
         q.kirishNuqtalari.forEach(k => nuqtalar.push({qavat: q.raqam, kn: k}));
       });
-    }
-    /* juda ko'p bo'lsa — asosiylari qoladi */
-    if (nuqtalar.length > 6) {
-      nuqtalar = nuqtalar.filter((x, i) => i < 2 || i % Math.ceil(nuqtalar.length / 6) === 0).slice(0, 6);
     }
     nuqtalar.forEach((x, i) => {
       const kn = x.kn;
@@ -113,7 +109,7 @@
         turNomi: NUQTA_TUR[nuqtaTur].nom,
         rejim: i === 0 ? "Face ID + karta" : tanla(REJIMLAR),
         holat: i === 0 ? "onlayn" : tanla(NUQTA_HOLAT),
-        kunlikOtish: oraliq(2, 74),
+        kunlikOtish: 0,
         oxirgiAloqa: vaqtMatn(kunQosh(0)) + " · bugun",
         ishVaqti: i === 0 ? "08:30 — 19:00" : tanla(["08:00 — 18:00", "09:00 — 18:00", "Sutka bo'yi", "08:30 — 19:00"]),
         geom: {x: kn.x, y: kn.y, en: kn.en, yonalish: kn.yonalish},
@@ -289,7 +285,8 @@
     const kun = oraliq(-30, 0);
     const vaqt = new Date(kunQosh(kun));
     vaqt.setHours(oraliq(0, 23), oraliq(0, 59));
-    const holat = kun < -7 ? tanla(["yopildi", "yopildi", "tekshiruvda"]) : tanla(["ochiq", "tekshiruvda", "yopildi"]);
+    const holat = kun < -7 ? tanla(["yopildi", "yopildi", "hal", "tekshiruvda"])
+                           : tanla(["ochiq", "ochiq", "tekshiruvda", "bartaraf", "hal"]);
     XAVFSIZLIK_HODISALARI.push({
       id: "XH-2026/" + String(300 + i),
       vaqt: sanaMatn(vaqt) + " " + vaqtMatn(vaqt),
@@ -300,7 +297,7 @@
       jiddiylik: t[1],
       holat: holat,
       masul: tanla(SHAXSLAR.filter(x => x.tur === "xodim")).ism,
-      chora: holat === "yopildi" ? tanla(["Qurilma qayta ishga tushirildi", "Muhr qayta o'rnatildi",
+      chora: (holat === "yopildi" || holat === "hal") ? tanla(["Qurilma qayta ishga tushirildi", "Muhr qayta o'rnatildi",
                                           "Ruxsat bekor qilindi", "Ta'mir topshirig'i berildi"]) : "",
     });
   }
@@ -358,6 +355,27 @@
   /* ---------- indekslar va yordamchilar ---------- */
   const NUQTA_INDEKS = {};
   KIRISH_NUQTALARI.forEach(k => NUQTA_INDEKS[k.id] = k);
+
+  /* kunlik o'tish soni voqealar jurnalidan hisoblanadi */
+  const BUGUN_S = sanaMatn(BUGUN);
+  KIRISH_VOQEALARI.forEach(v => {
+    if (v.sana === BUGUN_S && NUQTA_INDEKS[v.kirishNuqtaId]) {
+      NUQTA_INDEKS[v.kirishNuqtaId].kunlikOtish += 1;
+    }
+  });
+  KIRISH_NUQTALARI.forEach(k => {
+    const oxirgi = KIRISH_VOQEALARI.find(v => v.kirishNuqtaId === k.id);
+    k.oxirgiAloqa = oxirgi ? oxirgi.sana + " " + oxirgi.soat : "aloqa yo'q";
+  });
+
+  if (!MASOFAVIY_SESSIYALAR.some(x => x.holat === "jarayonda")) {
+    const s2 = MASOFAVIY_SESSIYALAR.find(x => x.holat === "yakunlandi") || MASOFAVIY_SESSIYALAR[0];
+    if (s2) { s2.holat = "jarayonda"; s2.bosqich = 2; s2.sana = sanaMatn(BUGUN); s2.davomiylik = "davom etmoqda"; }
+  }
+  if (!TASHRIFLAR.some(t => t.holat === "obyektda")) {
+    const t2 = TASHRIFLAR[0];
+    if (t2) { t2.holat = "obyektda"; t2.chiqish = null; t2.davomiylik = "davom etmoqda"; }
+  }
 
   D.SHAXSLAR = SHAXSLAR;
   D.SHAXS_INDEKS = SHAXS_INDEKS;

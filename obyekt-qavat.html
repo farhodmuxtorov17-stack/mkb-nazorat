@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Qavat rejasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082760">
+<link rel="stylesheet" href="yadro/app.css?v=26082780">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
 
@@ -43,7 +43,7 @@
 .reja-legend i{width:14px;height:14px;border-radius:4px;flex:none;border:1px solid rgba(0,0,0,.12)}
 @media (max-width:1100px){.reja-tor{grid-template-columns:minmax(0,1fr)}}
 </style>
-<script src="yadro/qavat.js?v=26082760"></script><script src="yadro/nav3d.js?v=26082760"></script></head>
+<script src="yadro/qavat.js?v=26082780"></script><script src="yadro/nav3d.js?v=26082780"></script></head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
 <nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
@@ -81,19 +81,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082760"></script>
-<script src="malumot.js?v=26082760"></script>
-<script src="malumot-qoshimcha.js?v=26082760"></script>
-<script src="malumot-kengaytma.js?v=26082760"></script>
-<script src="malumot-kirish.js?v=26082760"></script>
-<script src="malumot-indeks.js?v=26082760"></script>
-<script src="tarjima.js?v=26082760"></script>
-<script src="yadro/ikonlar.js?v=26082760"></script>
-<script src="yadro/daraxt.js?v=26082760"></script>
-<script src="yadro/chizma.js?v=26082760"></script>
-<script src="yadro/qollanma.js?v=26082760"></script>
-<script src="yadro/api.js?v=26082760"></script>
-<script src="yadro/app.js?v=26082760"></script>
+<script src="yadro/bino.js?v=26082780"></script>
+<script src="malumot.js?v=26082780"></script>
+<script src="malumot-qoshimcha.js?v=26082780"></script>
+<script src="malumot-kengaytma.js?v=26082780"></script>
+<script src="malumot-kirish.js?v=26082780"></script>
+<script src="malumot-indeks.js?v=26082780"></script>
+<script src="tarjima.js?v=26082780"></script>
+<script src="yadro/ikonlar.js?v=26082780"></script>
+<script src="yadro/daraxt.js?v=26082780"></script>
+<script src="yadro/chizma.js?v=26082780"></script>
+<script src="yadro/qollanma.js?v=26082780"></script>
+<script src="yadro/api.js?v=26082780"></script>
+<script src="yadro/app.js?v=26082780"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -116,7 +116,24 @@ document.addEventListener("mkb:tayyor", async () => {
   });
   document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
 
-  const model = MKBbino.model(x.id, x.mulk.tur, x.mulk.qisqa);
+  const model = MKBbino.model(x.id, x.mulk.tur, x.mulk.qisqa, x.mulk.maydon);
+  if (!model.binoli){
+    const q0 = document.getElementById("reja-qavatlar");
+    if (q0) q0.remove();
+    document.querySelector(".reja-tor").innerHTML =
+      '<div class="bosh-holat" style="padding:52px 24px;text-align:center">' +
+      '<b style="display:block;font:500 17px var(--shrift-displey);margin-bottom:6px">' +
+      "Bu obyekt turida bino tuzilmasi yuritilmaydi</b>" +
+      '<span style="font-size:13.5px;color:var(--matn-3)">' + x.mulk.tur +
+      " uchun qavat rejasi va uch o&#39;lchovli ko&#39;rinish o&#39;rniga hujjatlar, " +
+      "foto va ko&#39;rik dalolatnomalari yuritiladi.</span>" +
+      '<div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
+      '<a class="tugma tugma-oq" href="obyekt-galereya.html?id=' + encodeURIComponent(x.id) + '">' +
+      '<svg class="ic"><use href="#i-galereya"/></svg>Foto galereya</a>' +
+      '<a class="tugma tugma-oq" href="obyekt-hujjatlar.html?id=' + encodeURIComponent(x.id) + '">' +
+      '<svg class="ic"><use href="#i-hujjat"/></svg>Hujjatlar</a></div></div>';
+    return;
+  }
   const RANG = {foydalanishda: "#EAF6E4", bosh: "#EFF4F7", muhrlangan: "#FBE7E3", tamirda: "#E7EAFA"};
   const p2 = new URLSearchParams(location.search);
   let joriy = Math.min(model.qavatSoni, Math.max(1, +(p2.get("qavat") || 1)));

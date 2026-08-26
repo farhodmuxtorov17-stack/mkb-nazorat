@@ -157,6 +157,38 @@ sinov("jamlama hisoblangan qiymatlarni qaytaradi", () => {
           "ochiq hodisa soni mos emas");
 });
 
+sinov("model va reyestr kirish nuqtalari soni bir xil", () => {
+  const farq = [];
+  D.YOZUVLAR.forEach(y => {
+    const m = B.model(y.id, y.mulk.tur, y.mulk.qisqa, y.mulk.maydon);
+    const r = D.obyektNuqtalari(y.id).length;
+    if (m.kirishNuqtaSoni !== r) farq.push(y.id + ": model " + m.kirishNuqtaSoni + ", reyestr " + r);
+  });
+  tekshir(farq.length === 0, farq.slice(0, 4).join("; "));
+});
+
+sinov("bino maydoni reyestrdagi maydonga mos", () => {
+  const farq = [];
+  D.YOZUVLAR.forEach(y => {
+    const m = B.model(y.id, y.mulk.tur, y.mulk.qisqa, y.mulk.maydon);
+    if (!m.binoli) return;
+    const t = String(y.mulk.maydon || "").replace(/\s| /g, "").match(/(\d+([.,]\d+)?)/);
+    if (!t) return;
+    const talab = parseFloat(t[1].replace(",", "."));
+    const n = m.maydon / talab;
+    if (n < 0.75 || n > 1.35) farq.push(y.id + ": reyestr " + talab + ", model " + m.maydon);
+  });
+  tekshir(farq.length === 0, farq.slice(0, 4).join("; "));
+});
+
+sinov("bino tuzilmasi yuritilmaydigan turlar belgilangan", () => {
+  const yer = D.YOZUVLAR.find(y => y.mulk.tur === "Yer uchastkasi");
+  const bino = D.YOZUVLAR.find(y => y.mulk.tur === "Ishlab chiqarish" || y.mulk.tur === "Ombor");
+  if (yer) tekshir(!B.model(yer.id, yer.mulk.tur).binoli, "yer uchastkasi binoli deb belgilangan");
+  if (bino) tekshir(B.model(bino.id, bino.mulk.tur, bino.mulk.qisqa, bino.mulk.maydon).binoli,
+                    "bino turi binosiz deb belgilangan");
+});
+
 sinov("har bir obyektda kamida bitta kirish nuqtasi bor", () => {
   const yoq = D.YOZUVLAR.filter(y => !D.obyektNuqtalari(y.id).length);
   tekshir(yoq.length === 0, yoq.length + " ta obyektda kirish nuqtasi yo'q");

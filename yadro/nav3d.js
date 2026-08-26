@@ -80,7 +80,13 @@
     const derazaBal = 2.30, pastBal = 0.72;
     const rang = tomon === "shimol" || tomon === "janub" ? PALITRA.fasad : PALITRA.fasadYon;
 
-    const der = q.derazalar.filter(d => d.fasad === tomon);
+    const der = q.derazalar.filter(d => d.fasad === tomon).slice();
+    /* tashqi eshiklar ham fasadda ochiqlik qoldiradi */
+    q.eshiklar.filter(e => e.tur === "kirish").forEach(e => {
+      const yotiq2 = tomon === "shimol" || tomon === "janub";
+      if (e.yonalish === "x" && yotiq2 && tomon === "janub") der.push({x: e.x, en: e.en, yonalish: "x"});
+      if (e.yonalish === "y" && !yotiq2) der.push({y: e.y, en: e.en, yonalish: "y"});
+    });
     const yotiq = tomon === "shimol" || tomon === "janub";
     const uzunlik = yotiq ? g.en : g.chuq;
 
@@ -499,6 +505,10 @@
       }
     });
     kanvas.addEventListener("pointercancel", () => { sudrash = null; });
+    kanvas.addEventListener("pointerleave", () => {
+      sudrash = null;
+      if (holat.ustida){ holat.ustida = null; yangila(); }
+    });
     kanvas.addEventListener("wheel", e => {
       e.preventDefault();
       const eng = Math.max(g.en, g.chuq);
@@ -515,7 +525,18 @@
       const q = {ArrowLeft: () => holat.az -= 0.09, ArrowRight: () => holat.az += 0.09,
                  ArrowUp: () => holat.bal = Math.min(1.30, holat.bal + 0.06),
                  ArrowDown: () => holat.bal = Math.max(0.10, holat.bal - 0.06)}[e.key];
-      if (q) { e.preventDefault(); q(); yangila(); }
+      if (q) { e.preventDefault(); q(); yangila(); return; }
+      /* Tab/Enter bilan xonalarni ketma-ket ko'rib chiqish */
+      if (e.key === "Enter" || e.key === " " || e.key === "n" || e.key === "N") {
+        e.preventDefault();
+        const qav = model.qavatlar.find(x => x.raqam === holat.qavat);
+        if (!qav || !qav.xonalar.length) return;
+        const i = qav.xonalar.findIndex(x => x.id === holat.tanlangan);
+        const keyingi = qav.xonalar[(i + 1) % qav.xonalar.length];
+        holat.tanlangan = keyingi.id;
+        if (opt.tanlanganda) opt.tanlanganda(keyingi);
+        yangila();
+      }
     });
     kanvas.style.cursor = "grab";
 

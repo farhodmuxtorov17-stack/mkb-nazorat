@@ -3,6 +3,7 @@ const {spawn} = require("child_process");
 const path = require("path");
 
 const PORT = 8791;
+const PAROL = "sinov-parol-8791";
 const ASOS = "http://localhost:" + PORT;
 let otdi = 0, yiqildi = 0;
 
@@ -15,7 +16,7 @@ async function kut(ms){ return new Promise(r => setTimeout(r, ms)); }
 
 (async () => {
   const server = spawn(process.execPath, [path.join(__dirname, "..", "server", "server.js")], {
-    env: Object.assign({}, process.env, {PORT: String(PORT)}),
+    env: Object.assign({}, process.env, {PORT: String(PORT), MKB_PAROL: PAROL}),
     stdio: "ignore",
   });
   try{
@@ -37,14 +38,14 @@ async function kut(ms){ return new Promise(r => setTimeout(r, ms)); }
     /* kirish */
     const s = await fetch(ASOS + "/api/kirish", {
       method: "POST", headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({login: "sinov", parol: "x", rol: "Administrator"}),
+      body: JSON.stringify({login: "o.ismoilov", parol: PAROL}),
     }).then(r => r.json());
     tekshir("kirish token beradi", !!s.token && s.rol === "Administrator");
     const bosh = {"X-Sessiya": s.token, "Content-Type": "application/json"};
 
     /* ro'yxat */
     const yoz = await fetch(ASOS + "/api/yozuvlar", {headers: bosh}).then(r => r.json());
-    tekshir("yozuvlar ro'yxati keladi (8 ta)", Array.isArray(yoz) && yoz.length >= 8);
+    tekshir("reyestr to'liq keladi (60 dan ortiq)", Array.isArray(yoz) && yoz.length >= 60);
 
     /* bitta */
     const id = yoz[0].id;
@@ -66,10 +67,30 @@ async function kut(ms){ return new Promise(r => setTimeout(r, ms)); }
     /* amallar jurnali faqat administratorga */
     const s2 = await fetch(ASOS + "/api/kirish", {
       method: "POST", headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({login: "yurist-sinov", parol: "x", rol: "Yurist"}),
+      body: JSON.stringify({login: "u.sobirov", parol: PAROL}),
     }).then(r => r.json());
+    tekshir("yurist hisobi bilan kirish ishlaydi", !!s2.token && s2.rol === "Yurist");
     const taqiq = await fetch(ASOS + "/api/amallar", {headers: {"X-Sessiya": s2.token}});
     tekshir("amallar jurnali yuristga yopiq (403)", taqiq.status === 403);
+    const yopiqBolim = await fetch(ASOS + "/api/kirish_nuqtalari", {headers: {"X-Sessiya": s2.token}});
+    tekshir("yopiq bo'lim kolleksiyasi 403 qaytaradi", yopiqBolim.status === 403);
+    const ochiqBolim = await fetch(ASOS + "/api/sud_majlislar", {headers: {"X-Sessiya": s2.token}});
+    tekshir("ochiq bo'lim kolleksiyasi 200 qaytaradi", ochiqBolim.status === 200);
+    const yomonParol = await fetch(ASOS + "/api/kirish", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({login: "u.sobirov", parol: "noto'g'ri"}),
+    });
+    tekshir("noto'g'ri parol 401 qaytaradi", yomonParol.status === 401);
+    const yoqLogin = await fetch(ASOS + "/api/kirish", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({login: "mavjud-emas", parol: PAROL}),
+    });
+    tekshir("noma'lum login 401 qaytaradi", yoqLogin.status === 401);
+    const rolQalbaki = await fetch(ASOS + "/api/kirish", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({login: "u.sobirov", parol: PAROL, rol: "Administrator"}),
+    }).then(r => r.json());
+    tekshir("rol mijoz so'rovidan olinmaydi", rolQalbaki.rol === "Yurist");
     const ochiq = await fetch(ASOS + "/api/amallar", {headers: {"X-Sessiya": s.token}});
     tekshir("amallar jurnali administratorga ochiq", ochiq.status === 200);
 

@@ -335,7 +335,7 @@
       rang: jid === "yuqori" ? "#E2523A" : jid === "o'rta" ? "#E8A13C" : "#0E8D74",
       hodisa: matn, vaqt: tanla(["Bugun", "Kecha", "2 kun oldin"]) + ", " +
         oraliq(9, 18) + ":" + String(oraliq(0, 59)).padStart(2, "0"),
-      jiddiylik: jid, ustun: tanla(["yangi", "bartaraf", "yopildi"])});
+      jiddiylik: jid, ustun: tanla(["yangi", "tekshirilmoqda", "bartaraf", "hal", "yopildi"])});
   });
   D.HODISALAR = D.HODISALAR.concat(yangiHodisa);
 

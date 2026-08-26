@@ -166,7 +166,7 @@ const YOZUVLAR = [
     shartnoma: {raqam: "IP-2023/3308", tur: "Ipoteka krediti", sana: "28.06.2023", berilgan: 330.0},
     qarz: {asosiy: 276.0, foiz: 36.4, kunlar: 141},
     mulk: {
-      tur: "Turar-joy majmuasi", nom: "Nurafshon turar-joy majmuasi, 18-uy", qisqa: "Nurafshon turar-joy majmuasi",
+      tur: "Kvartira", nom: "Nurafshon turar-joy majmuasi, 18-uy, 24-xonadon", qisqa: "Nurafshon majmuasi, 24-xonadon",
       hudud: "Nurafshon sh.", hududToliq: "Toshkent vil., Nurafshon", manzil: "Istiqlol ko'chasi, 21",
       maydon: "96 m²", baho: 395.0, bahoSana: "30.01.2026", sugurta: "Amalda",
       rasm: "assets/bino_turar.webp", nazoratBall: 76
@@ -314,10 +314,16 @@ YOZUVLAR.forEach(y => {
 yozuvHosilalari();
 YOZUVLAR.forEach(kichikRasm);
 
+/* Kolleksiya ish vaqtida kengaytirilishi mumkin: hosila funksiyalar
+   har doim jonli ro'yxatdan o'qiydi, yopilgan massivdan emas. */
+function jonliYozuvlar(){
+  return (window.MKB_DATA && window.MKB_DATA.YOZUVLAR) || YOZUVLAR;
+}
+
 /* ---------- Tasnif kesimi: portfel bo'yicha zaxira yuki (Д-7) ---------- */
 function tasnifStatistikasi(){
   return TASNIF.map(t => {
-    const guruh = YOZUVLAR.filter(y => y.tasnif.kalit === t.kalit);
+    const guruh = jonliYozuvlar().filter(y => y.tasnif.kalit === t.kalit);
     return {
       kalit: t.kalit, nom: t.nom, rang: t.rang, chip: t.chip, foizStavka: t.zaxira,
       son: guruh.length,
@@ -326,12 +332,12 @@ function tasnifStatistikasi(){
     };
   });
 }
-const jamiZaxira = () => +YOZUVLAR.reduce((s, y) => s + y.zaxira, 0).toFixed(1);
+const jamiZaxira = () => +jonliYozuvlar().reduce((s, y) => s + y.zaxira, 0).toFixed(1);
 
 /* ---------- Umumlashmalar: raqamlar massivdan hisoblanadi (Д-7) ---------- */
 function bosqichStatistikasi(){
   return BOSQICHLAR.map(b => {
-    const guruh = YOZUVLAR.filter(y => y.ish.bosqich === b.kalit);
+    const guruh = jonliYozuvlar().filter(y => y.ish.bosqich === b.kalit);
     return {
       kalit: b.kalit, nom: b.nom, rang: b.rang,
       son: guruh.length,
@@ -341,18 +347,19 @@ function bosqichStatistikasi(){
 }
 function holatStatistikasi(){
   const xarita = {};
-  YOZUVLAR.forEach(y => {
+  const royxat = jonliYozuvlar();
+  royxat.forEach(y => {
     const h = y.holat.nom;
     xarita[h] = xarita[h] || {nom: h, rang: y.holat.rang, son: 0};
     xarita[h].son++;
   });
-  const jami = YOZUVLAR.length;
+  const jami = royxat.length;
   return Object.values(xarita).map(x => Object.assign(x, {
     foiz: Math.round(x.son / jami * 100)
   }));
 }
-const jamiQarz = () => +YOZUVLAR.reduce((s, y) => s + y.qarz.jami, 0).toFixed(1);
-const jamiBaho = () => +YOZUVLAR.reduce((s, y) => s + y.mulk.baho, 0).toFixed(1);
+const jamiQarz = () => +jonliYozuvlar().reduce((s, y) => s + y.qarz.jami, 0).toFixed(1);
+const jamiBaho = () => +jonliYozuvlar().reduce((s, y) => s + y.mulk.baho, 0).toFixed(1);
 
 
 /* ---------- Portfel darajasidagi agregatlar ----------
@@ -492,15 +499,15 @@ const HODISALAR = [
    tavsif:"Choraklik ko'rikda ta'minot ro'yxatidagi 2 ta to'quv dastgohi joyida yo'qligi aniqlandi. Qarzdordan yozma tushuntirish talab qilindi.",
    masul:"Sattorov J.", bolim:"Aktivlar nazorati bo'limi", fayl:"royxat_solishtirma.pdf", hajm:"640 KB"},
   {kod:"#GH-2026-00211", obyektId:"AK-2025/0934", rang:"#F2994A",
-   hodisa:"sug'urta polisi muddati o'tdi", vaqt:"Bugun, 13:48", jiddiylik:"orta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
+   hodisa:"sug'urta polisi muddati o'tdi", vaqt:"Bugun, 13:48", jiddiylik:"o'rta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
    tavsif:"PL-2025/08127 polisi 11-avgustda tugagan, uzaytirish rasmiylashtirilmagan. Balansdagi obyekt sug'urtasiz qolgan.",
    masul:"Qodirova N.", bolim:"Muammoli kreditlar boshqarmasi", fayl:"polis_nusxa.pdf", hajm:"920 KB"},
   {kod:"#GH-2026-00209", obyektId:"AK-2026/5512", rang:"#8B5CF6",
-   hodisa:"qiymatning jadal pasayishi", vaqt:"Bugun, 12:33", jiddiylik:"orta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
+   hodisa:"qiymatning jadal pasayishi", vaqt:"Bugun, 12:33", jiddiylik:"o'rta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
    tavsif:"Qayta baholashda qiymat 13% ga pasaygan (214 dan 186 mln gacha). Bozor tahlili so'raldi; zaxira stavkasiga ta'siri hisoblanmoqda.",
    masul:"Xolmatova Z.", bolim:"Tavakkalchiliklarni boshqarish departamenti", fayl:"baholash_hisobot.pdf", hajm:"480 KB"},
   {kod:"#GH-2026-00206", obyektId:"AK-2026/3308", rang:"#F2C230",
-   hodisa:"ruxsatsiz ijaraga berish holati", vaqt:"Bugun, 11:05", jiddiylik:"orta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
+   hodisa:"ruxsatsiz ijaraga berish holati", vaqt:"Bugun, 11:05", jiddiylik:"o'rta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
    tavsif:"Ko'rikda xonadonda ijarachi yashayotgani aniqlandi. Ta'minot shartnomasi bank roziligisiz ijaraga berishni taqiqlaydi. Yuristga yo'naltirildi.",
    masul:"Rahimov B.", bolim:"Yuridik departament", fayl:"korik_bayonnoma.pdf", hajm:"350 KB"},
   {kod:"#GH-2026-00204", obyektId:"AK-2026/4471", rang:"#F2C230",
@@ -612,7 +619,7 @@ const KORIKLAR = [
    sana: "28-avg, 2026", holat: "rejada", inspektor: "Sattorov Jasur",
    izoh: "Qaror ijrosi oldidan holatni qayd etish."},
   {id: "KO-2026/0398", obyektId: "AK-2026/0141", tur: "Navbatdan tashqari",
-   sana: "22-avg, 2026", holat: "muddati_otgan", inspektor: "Karimova Feruza",
+   sana: "22-avg, 2026", holat: "kechikkan", inspektor: "Karimova Feruza",
    izoh: "Suv bosishi hodisasidan keyingi nazorat ko'rigi. Chiqish amalga oshmadi."},
   {id: "KO-2026/0391", obyektId: "AK-2025/0934", tur: "Rejali",
    sana: "18-avg, 2026", holat: "otkazildi", inspektor: "Karimova Feruza",
@@ -669,7 +676,7 @@ const SUGURTALAR = [
   {obyektId: "AK-2026/2210", polis: "PL-2026/12073", kompaniya: "O'zbekinvest",
    summa: 340.0,  tugash: "03-mar, 2027", holat: "amalda"},
   {obyektId: "AK-2025/0934", polis: "PL-2025/08127", kompaniya: "Alfa Invest",
-   summa: 1480.0, tugash: "11-avg, 2026", holat: "muddati_otgan"},
+   summa: 1480.0, tugash: "11-avg, 2026", holat: "kechikkan"},
   {obyektId: "AK-2026/5512", polis: "PL-2026/13964", kompaniya: "Kafolat",
    summa: 186.0,  tugash: "27-may, 2027", holat: "amalda"},
   {obyektId: "AK-2026/3308", polis: "PL-2026/10578", kompaniya: "Gross Insurance",
@@ -1091,8 +1098,8 @@ function moslikTekshiruvi(){
   const bh = PORT.baholash;
   if (bh.dolzarb + bh.tugaydi90 + bh.eskirgan !== bh.jami) xato.push("baholash kesimi mos emas");
   ARX.forEach(a => {
-    if (!a.xaridor || !a.ish) xato.push(a.kod + ": arxiv yozuvida xaridor yoki ish raqami yo'q");
-    if (!(a.summa > 0)) xato.push(a.kod + ": sotuv summasi noto'g'ri");
+    if (!a.ish) xato.push(a.kod + ": arxiv yozuvida ish raqami yo'q");
+    if (!a.sana && !a.yil) xato.push(a.kod + ": arxivga o'tkazilgan sana yo'q");
   });
   SOTUV.forEach(l => { if (!(l.baho > 0)) xato.push(l.id + ": lot bahosi noto'g'ri"); });
   const foizJami = holatStatistikasi().reduce((s, h) => s + h.foiz, 0);
@@ -1171,7 +1178,7 @@ window.MKB_DATA = {
   pul, son, fmt,
   bosqichStatistikasi, holatStatistikasi,
   jamiQarz, jamiBaho, moslikTekshiruvi,
-  topish: id => YOZUVLAR.find(y => y.id === id),
-  ishBoyicha: raqam => YOZUVLAR.find(y => y.ish.raqam === raqam)
+  topish: id => jonliYozuvlar().find(y => y.id === id),
+  ishBoyicha: raqam => jonliYozuvlar().find(y => y.ish.raqam === raqam)
 };
 })();

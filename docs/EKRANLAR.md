@@ -124,7 +124,7 @@ Jami: **116 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 
 | Fayl | Ekran | Izoh |
 |---|---|---|
-| `arxiv.html` | Realizatsiya arxivi | Yakunlangan ishlar |
+| `arxiv.html` | Nazoratdan chiqarilgan obyektlar | Nazoratdan chiqarilgan yozuvlar |
 | `arxiv-obyekt.html` | Arxiv yozuvi | Yozuv tafsiloti |
 | `arxiv-yillik.html` | Yillik jamlanma | Yillar kesimi |
 

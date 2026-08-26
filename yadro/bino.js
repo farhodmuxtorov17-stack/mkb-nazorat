@@ -64,11 +64,28 @@
     "Ishlab chiqarish":   {qavat: [1, 2], en: [42, 58], chuq: [20, 26], asos: ["ishlab","ishlab","texnik","ombor"]},
     "Turar-joy majmuasi": {qavat: [4, 9], en: [30, 42], chuq: [14, 18], asos: ["ofis","ofis","ochiq"]},
     "Kvartira":           {qavat: [1, 1], en: [12, 16], chuq: [9, 12],  asos: ["ofis","ofis","ochiq"]},
+    "Ofis binosi":        {qavat: [3, 6], en: [34, 50], chuq: [15, 20], asos: ["ofis","ofis","yigilish","ochiq"]},
+    "Dala hovli":         {qavat: [1, 2], en: [13, 19], chuq: [10, 14], asos: ["ofis","ochiq","ombor"]},
     "Turar-joy":          {qavat: [1, 2], en: [14, 20], chuq: [10, 14], asos: ["ofis","ochiq","ombor"]},
     "Avtotransport":      {qavat: [1, 1], en: [18, 24], chuq: [12, 16], asos: ["texnik","ombor"]},
     "Yer uchastkasi":     {qavat: [1, 1], en: [16, 22], chuq: [10, 14], asos: ["texnik","ombor"]},
   };
   const ANIQLANMAGAN = {qavat: [2, 4], en: [34, 48], chuq: [16, 21], asos: ["ofis","ochiq","ombor"]};
+
+  /* Bino tuzilmasi yuritilmaydigan turlar: yer uchastkasi va transport.
+     Bunday obyektlarda qavat rejasi ham, uch o'lchovli navigator ham
+     ma'noga ega emas — ekran buni ochiq aytadi. */
+  const BINOSIZ = ["Yer uchastkasi", "Avtotransport", "Uchastka", "Transport"];
+
+  /* "9 400 m²" kabi matndan sonni ajratish */
+  function maydonSoni(matn) {
+    if (typeof matn === "number") return matn > 0 ? matn : null;
+    if (!matn) return null;
+    const m = String(matn).replace(/\u00a0|\s/g, "").match(/(\d+([.,]\d+)?)/);
+    if (!m) return null;
+    const v = parseFloat(m[1].replace(",", "."));
+    return v > 0 ? v : null;
+  }
 
   /* ---------- O'lchovlar (metr) ---------- */
   const TASH_DEVOR = 0.40;   /* tashqi devor qalinligi */
@@ -135,8 +152,11 @@
       /* yo'lakka chiqadigan eshik */
       const eshikX = x2 + (x3.en - ESHIK_ENI) / 2;
       const eshikY = tomon === "yuqori" ? y2 + d : y2;
+      /* y — to'siqning O'Q chizig'i: renderer teshikni shu o'q atrofida kesadi */
+      const oq = tomon === "yuqori" ? y2 + d + ICH_DEVOR / 2 : y2 - ICH_DEVOR / 2;
       eshiklar.push({
-        id: id + "-E", xonaId: id, x: Math.round(eshikX * 100) / 100, y: Math.round(eshikY * 100) / 100,
+        id: id + "-E", xonaId: id, x: Math.round(eshikX * 100) / 100,
+        y: Math.round(oq * 100) / 100,
         en: ESHIK_ENI, yonalish: "x", ochilish: tomon === "yuqori" ? -1 : 1,
         tur: t.nazorat ? "nazorat" : "ichki",
       });
@@ -188,20 +208,28 @@
     /* --- yo'lak --- */
     const yolak = {
       id: raqam + "-YL", nom: XONA_TUR.yolak.nom, tur: "yolak", rang: "kul", qavat: raqam,
+      holat: "foydalanishda", nazorat: false,
       x: TASH_DEVOR, y: Math.round(yolakY * 100) / 100, en: Math.round(ichEn * 100) / 100,
       chuq: YOLAK_ENI, maydon: Math.round(ichEn * YOLAK_ENI * 10) / 10, tomon: "yolak", nazorat: false,
     };
 
     /* --- derazalar: tashqi devordagi xonalar bo'yicha --- */
     const derazalar = [];
+    /* birinchi qavatda markaziy kirish egallaydigan oraliq */
+    const kirishOraligi = raqam === 1
+      ? {a: Math.round((en / 2 - 1.9) * 100) / 100, b: Math.round((en / 2 + 1.9) * 100) / 100}
+      : null;
     xonalar.forEach(x2 => {
       if (x2.tur === "zinapoya" || x2.tur === "lift" || x2.tur === "sanuzel") return;
       const soni = Math.max(1, Math.floor(x2.en / 3.1));
       const qadam = x2.en / soni;
       for (let i = 0; i < soni; i++) {
-        const cx = x2.x + qadam * (i + 0.5) - DERAZA_ENI / 2;
+        const cx = Math.round((x2.x + qadam * (i + 0.5) - DERAZA_ENI / 2) * 100) / 100;
+        /* janub fasadida markaziy kirish bilan to'qnashadigan deraza tashlanadi */
+        if (x2.tomon === "past" && kirishOraligi &&
+            cx + DERAZA_ENI > kirishOraligi.a && cx < kirishOraligi.b) continue;
         derazalar.push({
-          x: Math.round(cx * 100) / 100,
+          x: cx,
           y: x2.tomon === "yuqori" ? 0 : chuq - TASH_DEVOR,
           en: DERAZA_ENI, yonalish: "x", fasad: x2.tomon === "yuqori" ? "shimol" : "janub",
         });
@@ -228,14 +256,21 @@
         id: "KN-" + raqam + "-01", nom: "Markaziy kirish", qavat: raqam,
         x: markaz, y: chuq - TASH_DEVOR, en: 3.2, yonalish: "x", tur: "turniket",
       });
-      eshiklar.push({id: "KN-" + raqam + "-01-E", xonaId: null, x: markaz, y: chuq - TASH_DEVOR,
-                     en: 3.2, yonalish: "x", ochilish: 1, tur: "kirish"});
+      eshiklar.push({id: "KN-" + raqam + "-01-E", xonaId: null, x: markaz,
+                     y: Math.round((chuq - TASH_DEVOR / 2) * 100) / 100,
+                     en: 3.2, yonalish: "x", ochilish: -1, tur: "kirish"});
       nuqtalar.push({
         id: "KN-" + raqam + "-02", nom: "Xizmat kirishi", qavat: raqam,
         x: 0, y: Math.round((chuq / 2 - 0.6) * 100) / 100, en: 1.2, yonalish: "y", tur: "eshik",
       });
     }
-    xonalar.filter(x2 => x2.nazorat).forEach((x2, i) => {
+    /* Nazorat ostidagi xonalardan eng muhimlari: har qavatda ko'pi bilan uchtasi.
+       Reyestr aynan shu ro'yxatni oladi — 3D, reja va jadval bir xil sonni ko'rsatadi. */
+    const MUHIM = ["server", "kassa", "arxiv", "ombor", "texnik", "kirish", "ishlab", "kotarma"];
+    xonalar.filter(x2 => x2.nazorat)
+      .sort((a, b) => MUHIM.indexOf(a.tur) - MUHIM.indexOf(b.tur))
+      .slice(0, 3)
+      .forEach((x2, i) => {
       nuqtalar.push({
         id: "KN-" + raqam + "-" + String(i + 10).padStart(2, "0"),
         nom: x2.nom, qavat: raqam, xonaId: x2.id,
@@ -281,17 +316,38 @@
   /* ---------- Model ---------- */
   const KESH = {};
 
-  function model(obyektId, tur, nom) {
-    const kalit = obyektId + "|" + (tur || "");
+  function model(obyektId, tur, nom, maydon) {
+    const kalit = obyektId + "|" + (tur || "") + "|" + (maydon == null ? "" : maydon);
     if (KESH[kalit]) return KESH[kalit];
 
     const r = tasodif(urug(kalit));
     const tip = TIPOLOGIYA[tur] || ANIQLANMAGAN;
-    const qavatSoni = butun(r, tip.qavat[0], tip.qavat[1]);
-    const gab = {
+    let qavatSoni = butun(r, tip.qavat[0], tip.qavat[1]);
+    let gab = {
       en: Math.round(oraliq(r, tip.en[0], tip.en[1]) * 10) / 10,
       chuq: Math.round(oraliq(r, tip.chuq[0], tip.chuq[1]) * 10) / 10,
     };
+
+    /* Reyestrda maydon ko'rsatilgan bo'lsa — gabarit shunga moslanadi,
+       shunda obyekt kartochkasi va bino ko'rinishi bir xil raqamni beradi. */
+    const talab = maydonSoni(maydon);
+    if (talab) {
+      const eng = tip.qavat[1];
+      qavatSoni = Math.max(tip.qavat[0], Math.min(eng,
+        Math.round(talab / Math.max(120, gab.en * gab.chuq * 0.72))));
+      if (!qavatSoni || !isFinite(qavatSoni)) qavatSoni = tip.qavat[0];
+      /* juda katta maydon bir qavatga sig'masa — qavat sonini oshiramiz */
+      while (talab / qavatSoni > 7000 && qavatSoni < 12) qavatSoni += 1;
+      const qavatMaydoni = talab / qavatSoni;
+      /* nisbatni saqlagan holda gabaritni qayta hisoblaymiz */
+      const nisbat = gab.en / gab.chuq;
+      const yalpi = qavatMaydoni / 0.93;          /* devor va yo'lak ulushi */
+      let chuq = Math.sqrt(yalpi / nisbat);
+      let en = yalpi / chuq;
+      chuq = Math.max(8.5, Math.min(64, chuq));
+      en = Math.max(11, Math.min(190, yalpi / chuq));
+      gab = {en: Math.round(en * 10) / 10, chuq: Math.round(chuq * 10) / 10};
+    }
 
     const m = {
       obyektId: obyektId,
@@ -309,6 +365,8 @@
     m.xonaSoni = m.qavatlar.reduce((a, q) => a + q.xonalar.length, 0);
     m.kirishNuqtaSoni = m.qavatlar.reduce((a, q) => a + q.kirishNuqtalari.length, 0);
 
+    m.talabMaydon = talab || null;
+    m.binoli = BINOSIZ.indexOf(tur) < 0;
     KESH[kalit] = m;
     return m;
   }

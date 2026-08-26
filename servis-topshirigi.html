@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Servis topshirig'i</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082760">
+<link rel="stylesheet" href="yadro/app.css?v=26082780">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -52,19 +52,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082760"></script>
-<script src="malumot.js?v=26082760"></script>
-<script src="malumot-qoshimcha.js?v=26082760"></script>
-<script src="malumot-kengaytma.js?v=26082760"></script>
-<script src="malumot-kirish.js?v=26082760"></script>
-<script src="malumot-indeks.js?v=26082760"></script>
-<script src="tarjima.js?v=26082760"></script>
-<script src="yadro/ikonlar.js?v=26082760"></script>
-<script src="yadro/daraxt.js?v=26082760"></script>
-<script src="yadro/chizma.js?v=26082760"></script>
-<script src="yadro/qollanma.js?v=26082760"></script>
-<script src="yadro/api.js?v=26082760"></script>
-<script src="yadro/app.js?v=26082760"></script>
+<script src="yadro/bino.js?v=26082780"></script>
+<script src="malumot.js?v=26082780"></script>
+<script src="malumot-qoshimcha.js?v=26082780"></script>
+<script src="malumot-kengaytma.js?v=26082780"></script>
+<script src="malumot-kirish.js?v=26082780"></script>
+<script src="malumot-indeks.js?v=26082780"></script>
+<script src="tarjima.js?v=26082780"></script>
+<script src="yadro/ikonlar.js?v=26082780"></script>
+<script src="yadro/daraxt.js?v=26082780"></script>
+<script src="yadro/chizma.js?v=26082780"></script>
+<script src="yadro/qollanma.js?v=26082780"></script>
+<script src="yadro/api.js?v=26082780"></script>
+<script src="yadro/app.js?v=26082780"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -111,12 +111,27 @@ document.addEventListener("mkb:tayyor", () => {
   const D = MKB_DATA;
   const p = new URLSearchParams(location.search);
   let x = D.XIZMAT_ISHLARI.find(v => v.id === p.get("id"));
-  if (!x && p.get("qurilma")) x = D.XIZMAT_ISHLARI.find(v => v.qurilmaId === p.get("qurilma"));
+  let yangiTopshiriq = false;
+  const qurilmaId = p.get("qurilma");
+  if (!x && qurilmaId) x = D.XIZMAT_ISHLARI.find(v => v.qurilmaId === qurilmaId);
+  if (!x && qurilmaId){
+    /* qurilma uchun ochiq topshiriq yo&#39;q — yangisi shakllantiriladi */
+    const qr = D.QURILMALAR.find(v => v.id === qurilmaId);
+    if (qr){
+      yangiTopshiriq = true;
+      x = {id: "XI-2026/" + String(800 + D.XIZMAT_ISHLARI.length), qurilmaId: qr.id,
+           obyektId: qr.obyektId, kirishNuqtaId: qr.kirishNuqtaId,
+           tur: qr.holat === "nosoz" ? "Nosozlikni bartaraf etish" : "Profilaktika",
+           sana: D.KIRISH_BUGUN, usta: "Tayinlanmagan", holat: "rejada",
+           ehtiyotQismlar: [], izoh: ""};
+    }
+  }
   if (!x) x = D.XIZMAT_ISHLARI.find(v => v.holat !== "bajarildi") || D.XIZMAT_ISHLARI[0];
   if (!x){ location.replace("xato-404.html"); return; }
   const q = D.QURILMALAR.find(v => v.id === x.qurilmaId) || {};
 
-  document.getElementById("hs-meta").textContent = x.id;
+  document.getElementById("hs-meta").textContent =
+    yangiTopshiriq ? x.id + " · yangi topshiriq" : x.id;
   document.getElementById("sv-raqam").textContent = x.id;
   document.getElementById("sv-qurilma").innerHTML =
     '<a href="qurilma.html?id=' + encodeURIComponent(x.qurilmaId) + '">' + (q.model || x.qurilmaId) + "</a>";

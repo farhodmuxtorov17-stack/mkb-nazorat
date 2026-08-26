@@ -318,11 +318,15 @@
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tanla(g2.dataset.xona); }
       });
     });
+    function knIshlat(g2, e) {
+      if (e) e.stopPropagation();
+      const k = q.kirishNuqtalari.find(y => y.id === g2.dataset.kn);
+      if (k && opt.kirishNuqtaBosilganda) opt.kirishNuqtaBosilganda(k, q);
+    }
     svgEl.querySelectorAll(".kn-belgi").forEach(g2 => {
-      g2.addEventListener("click", e => {
-        e.stopPropagation();
-        const k = q.kirishNuqtalari.find(y => y.id === g2.dataset.kn);
-        if (k && opt.kirishNuqtaBosilganda) opt.kirishNuqtaBosilganda(k, q);
+      g2.addEventListener("click", e => knIshlat(g2, e));
+      g2.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); knIshlat(g2, e); }
       });
     });
     if (opt.boshlangichXona) tanla(opt.boshlangichXona);

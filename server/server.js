@@ -14,18 +14,58 @@ const crypto = require("crypto");
 const ILDIZ = path.join(__dirname, "..");
 const OMBOR = path.join(__dirname, "malumotlar");
 const PORT = process.env.PORT || 8790;
+/* Kirish paroli: muhit o'zgaruvchisidan olinadi. Berilmagan bo'lsa
+   ishga tushishda tasodifiy parol yaratiladi va konsolga bir marta chiqadi —
+   shu tariqa tizim hech qachon parolsiz ochiq qolmaydi. */
+const KIRISH_PAROL = process.env.MKB_PAROL || crypto.randomBytes(6).toString("hex");
+const PAROL_YARATILDI = !process.env.MKB_PAROL;
 
 /* ---------- Snapshotdan urug'lash ---------- */
-const KOLLEKSIYALAR = ["YOZUVLAR", "KORIKLAR", "ARXIV", "HUDUDLAR", "TASNIF",
+const KOLLEKSIYALAR = ["YOZUVLAR", "KORIKLAR", "ARXIV", "HUDUDLAR",
   "SUGURTALAR", "BAHOLASHLAR", "HODISALAR", "HUJJATLAR", "TASDIQLAR",
   "MENING_VAZIFALARIM", "BILDIRISHLAR", "FOYDLAR", "ADVOKATLAR",
-  "SUD_MAJLISLAR", "IJARA", "TAKLIFLAR", "XARIDORLAR", "XARAJATLAR",
-  "RESTRUKTURIZATSIYA", "SUGURTA_DAVOLARI", "SOTUV"];
+  "SUD_MAJLISLAR", "XARAJATLAR", "SUGURTA_DAVOLARI",
+  "SHAXSLAR", "KIRISH_NUQTALARI", "QURILMALAR", "KIRISH_VOQEALARI",
+  "RUXSATLAR", "KIRISH_SOROVLARI", "TASHRIFLAR", "XAVFSIZLIK_HODISALARI",
+  "MASOFAVIY_SESSIYALAR", "XIZMAT_ISHLARI"];
+
+/* Kolleksiya -> bo'lim kaliti (mijozdagi ROL_RUXSAT bilan bir xil nomlar) */
+const KOLLEKSIYA_BOLIM = {
+  yozuvlar: "aktivlar", hududlar: "aktivlar", xarajatlar: "aktivlar", hodisalar: "aktivlar",
+  koriklar: "korik", baholashlar: "baholash",
+  sugurtalar: "sugurta", sugurta_davolari: "sugurta",
+  sud_majlislar: "yuridik", advokatlar: "yuridik",
+  arxiv: "arxiv", hujjatlar: "hujjat",
+  mening_vazifalarim: "vazifa", tasdiqlar: "vazifa", bildirishlar: "vazifa",
+  foydlar: "sozlama",
+  shaxslar: "kn", kirish_nuqtalari: "kn", qurilmalar: "kn", kirish_voqealari: "kn",
+  ruxsatlar: "kn", kirish_sorovlari: "kn", tashriflar: "kn",
+  xavfsizlik_hodisalari: "kn", masofaviy_sessiyalar: "kn", xizmat_ishlari: "kn",
+};
+
+/* Rol -> ochiq bo'limlar (mijozdagi yadro/app.js ROL_RUXSAT nusxasi) */
+const ROL_BOLIMLAR = {
+  "Administrator": null,
+  "Filial rahbari": ["panel","aktivlar","kn","korik","baholash","sugurta","yuridik","arxiv",
+                     "xarita","hisobot","vazifa","hujjat","sozlama"],
+  "Obyekt menejeri": ["panel","aktivlar","kn","korik","arxiv","xarita","hisobot","vazifa","hujjat","sozlama"],
+  "Ko'rik inspektori": ["panel","aktivlar","kn","korik","sugurta","xarita","hisobot","vazifa","hujjat","sozlama"],
+  "Baholovchi mutaxassis": ["panel","aktivlar","baholash","hisobot","vazifa","hujjat","sozlama"],
+  "Yurist": ["panel","yuridik","aktivlar","arxiv","hisobot","vazifa","hujjat","sozlama"],
+};
+
+function bolimRuxsatlimi(rol, bolim){
+  const r = ROL_BOLIMLAR[rol];
+  if (r === null) return true;          /* administrator */
+  if (!r) return false;                 /* noma'lum rol — hech narsa */
+  return r.includes(bolim);
+}
 
 function snapshotOqi(){
   const qum = {window: {}, document: undefined, localStorage: undefined};
   qum.globalThis = qum;
-  for (const f of ["malumot.js", "malumot-qoshimcha.js"]){
+  for (const f of ["yadro/bino.js", "malumot.js", "malumot-qoshimcha.js",
+                   "malumot-kengaytma.js", "malumot-kirish.js", "malumot-indeks.js"]){
     const kod = fs.readFileSync(path.join(ILDIZ, f), "utf8");
     vm.runInNewContext(kod, qum, {filename: f});
   }
@@ -126,14 +166,22 @@ async function api(req, res, yol){
 
   if (resurs === "kirish" && req.method === "POST"){
     const t = await tanaOqi(req);
-    const rol = ROLLAR.includes(t.rol) ? t.rol : "Administrator";
-    const F = oqi("foydalanuvchilar") || [];
-    const f = F.find(x => x.login === t.login) || F.find(x => x.rol === rol) || {};
-    if (f.parol && t.parol && f.parol !== t.parol)
+    const F = oqi("foydlar") || [];
+    const login = String(t.login || "").trim().toLowerCase();
+    const f = F.find(x => String(x.login || "").toLowerCase() === login);
+    /* Noma'lum login, o'chirilgan hisob yoki noto'g'ri parol — bir xil javob:
+       hisob mavjudligini oshkor qilmaymiz. */
+    const kutilgan = (f && f.parol) || KIRISH_PAROL;
+    if (!f || f.faol === false || !t.parol || !kutilgan || String(t.parol) !== kutilgan){
+      amalYoz(null, "sessiya", login || "-", "kirish rad etildi");
       return jsonJavob(res, 401, {xato: "Login yoki parol noto'g'ri"});
+    }
+    if (!ROLLAR.includes(f.rol))
+      return jsonJavob(res, 403, {xato: "Rol tizimda ro'yxatdan o'tmagan"});
     const token = crypto.randomBytes(18).toString("hex");
-    const s = {token, ism: f.ism || t.login || "Foydalanuvchi",
-      rol: f.rol || rol, filial: f.filial || "Toshkent shahar filiali"};
+    /* Rol faqat hisob yozuvidan olinadi — mijoz tanlovi hisobga olinmaydi */
+    const s = {token, ism: f.nom || f.ism || login, rol: f.rol,
+               filial: f.bolim || f.filial || ""};
     SESSIYALAR.set(token, s);
     amalYoz(s, "sessiya", s.ism, "kirish");
     return jsonJavob(res, 200, s);
@@ -145,6 +193,14 @@ async function api(req, res, yol){
     if (sessiya.rol !== "Administrator") return jsonJavob(res, 403, {xato: "faqat administrator"});
     return jsonJavob(res, 200, oqi("amallar") || []);
   }
+
+  /* Kolleksiya darajasidagi ruxsat: sessiyadagi rol bo'yicha */
+  const bolim = KOLLEKSIYA_BOLIM[resurs];
+  if (bolim && !bolimRuxsatlimi(sessiya.rol, bolim))
+    return jsonJavob(res, 403, {xato: "bu bo'lim rolingizga yopiq"});
+  /* Foydalanuvchilar ro'yxatini faqat administrator o'zgartira oladi */
+  if (resurs === "foydlar" && req.method !== "GET" && sessiya.rol !== "Administrator")
+    return jsonJavob(res, 403, {xato: "faqat administrator"});
 
   const royxat = oqi(resurs);
   if (royxat === null) return jsonJavob(res, 404, {xato: "kolleksiya yo'q: " + resurs});
@@ -195,8 +251,10 @@ const server = http.createServer((req, res) => {
 if (require.main === module){
   const urug = urugla();
   server.listen(PORT, () => {
-    console.log("Aktivlar nazorati server: http://localhost:" + PORT +
+    console.log("Obyektlar nazorati server: http://localhost:" + PORT +
       (urug ? "  (omborga " + urug + " kolleksiya urug'landi)" : ""));
+    if (PAROL_YARATILDI)
+      console.log("Kirish paroli (shu ishga tushish uchun): " + KIRISH_PAROL);
   });
 }
 module.exports = {server, snapshotOqi, urugla};
