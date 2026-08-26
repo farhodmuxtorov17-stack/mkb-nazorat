@@ -94,6 +94,8 @@ function rolBoshSahifasi(rol){
 const TARJIMA_ATTR = ["placeholder", "title", "aria-label", "alt", "data-toast", "data-yorliq"];
 function joriyTil(){ return localStorage.getItem("mkb-til") === "ru" ? "ru" : "uz"; }
 function lugat(){ return window.MKB_LUGAT || {}; }
+/* Turli apostrof belgilarini yagona ko'rinishga keltirish */
+function birXilApostrof(m){ return m.replace(/[’ʼʻ`´]/g, "'"); }
 const ASL_MATN = new WeakMap();
 function tarjimaQil(ildiz){
   const ru = joriyTil() === "ru", L = lugat();
@@ -107,7 +109,7 @@ function tarjimaQil(ildiz){
     const k = asl.trim();
     if (!k) continue;
     if (ru){
-      let t = L[k];
+      let t = L[k] != null ? L[k] : L[birXilApostrof(k)];
       if (t == null){
         for (const [q, alm] of (window.MKB_TARJIMA_QOIDALARI || [])){
           if (q.test(k)){ t = k.replace(q, alm); break; }
@@ -123,7 +125,8 @@ function tarjimaQil(ildiz){
       const kalitAttr = "data-asl-" + a;
       if (!el.hasAttribute(kalitAttr)) el.setAttribute(kalitAttr, q);
       const asl = el.getAttribute(kalitAttr);
-      el.setAttribute(a, ru && L[asl] ? L[asl] : asl);
+      const tr = L[asl] != null ? L[asl] : L[birXilApostrof(asl)];
+      el.setAttribute(a, ru && tr != null ? tr : asl);
     });
   });
   /* sahifa sarlavhasi */
@@ -422,11 +425,11 @@ const MKB = {
   /* Shtrix-ko'rsatkich: foiz -> mos-bar (jadval qatorlari uchun) */
   shtrix(foiz, soni){
     soni = soni || 14;
-    const toliq = Math.round(Math.max(0, Math.min(foiz, 200)) / 200 * soni);
-    const zona = foiz >= 140 ? "z-yashil" : foiz >= 100 ? "z-sariq" : "z-xavf";
+    const toliq = Math.round(Math.max(0, Math.min(foiz, 100)) / 100 * soni);
+    const zona = foiz >= 85 ? "z-yashil" : foiz >= 70 ? "z-sariq" : "z-xavf";
     let p = "";
     for (let i = 0; i < soni; i++) p += '<i class="' + (i < toliq ? 'f' : '') + '"></i>';
-    return '<span class="shtrix ' + zona + '" role="img" aria-label="Qoplash ' + foiz + ' foiz">' +
+    return '<span class="shtrix ' + zona + '" role="img" aria-label="Nazorat indeksi ' + foiz + ' foiz">' +
       '<span class="panjara">' + p + "</span><b>" + foiz + "%</b></span>";
   },
 
@@ -435,9 +438,9 @@ const MKB = {
     olcham = olcham || 46; qalinlik = qalinlik || 4.5;
     const r = (olcham - qalinlik) / 2;
     const C = 2 * Math.PI * r;
-    const ulush = Math.max(0, Math.min(foiz, 200)) / 200;
-    const zona = foiz >= 140 ? "halqa-yashil" : foiz >= 100 ? "halqa-sariq" : "halqa-xavf";
-    return '<span class="halqa ' + zona + '" role="img" aria-label="Qoplash ' + foiz + ' foiz">' +
+    const ulush = Math.max(0, Math.min(foiz, 100)) / 100;
+    const zona = foiz >= 85 ? "halqa-yashil" : foiz >= 70 ? "halqa-sariq" : "halqa-xavf";
+    return '<span class="halqa ' + zona + '" role="img" aria-label="Nazorat indeksi ' + foiz + ' foiz">' +
       '<svg width="' + olcham + '" height="' + olcham + '">' +
       '<circle class="h-iz" cx="' + olcham/2 + '" cy="' + olcham/2 + '" r="' + r + '" stroke-width="' + qalinlik + '"/>' +
       '<circle class="h-qiymat" cx="' + olcham/2 + '" cy="' + olcham/2 + '" r="' + r + '" stroke-width="' + qalinlik +

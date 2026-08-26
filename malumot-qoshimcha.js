@@ -38,7 +38,7 @@
   /* ---------- Ijara (balansdagi ayrim obyektlar) ---------- */
   const IJARACHILAR = ["«Savdo Plyus» MChJ", "«Oq Tepa Servis» MChJ", "Norqulov Jamshid",
     "«Chust Textile» QK", "«Farovon Market» MChJ"];
-  const balansda = y => ["musodara", "auksion"].includes(y.ish.bosqich);
+  const balansda = y => ["musodara", "balans"].includes(y.ish.bosqich);
   D.IJARA = faol
     .filter((y, i) => balansda(y) && i % 2 === 1)
     .map((y, i) => ({

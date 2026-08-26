@@ -109,7 +109,7 @@
     const qoplashFoiz = oraliq(58, 260);
     const qarz = Math.max(24, Math.round(baho / (qoplashFoiz / 100)));
     const kunlar = oraliq(35, 720);
-    const bosqich = kunlar > 500 ? tanla(["ijro", "musodara", "auksion"])
+    const bosqich = kunlar > 500 ? tanla(["ijro", "musodara", "balans"])
                   : kunlar > 300 ? tanla(["qaror", "ijro", "sud"])
                   : kunlar > 150 ? tanla(["sud", "davo"]) : tanla(["ogohlantirish", "davo"]);
     const bIndeks = BOSQICHLAR.indexOf(bosqich);
@@ -163,6 +163,15 @@
       qoplash: Math.round(baho / qarz * 100),
     });
   }
+  /* balans bosqichidagi obyektda qabul sanasi majburiy (Д-2) */
+  yangiYozuvlar.forEach(y => {
+    if (["musodara", "balans"].includes(y.ish.bosqich) && !y.mulk.qabul){
+      y.mulk.qabul = uzSana(kunlar(-oraliq(40, 520)));
+    }
+    if (["musodara", "balans"].includes(y.ish.bosqich) && y.ish.ijro === "Hali berilmagan"){
+      y.ish.ijro = "IH-2026/" + oraliq(1000, 9999);
+    }
+  });
   D.YOZUVLAR = D.YOZUVLAR.concat(yangiYozuvlar);
   yangiYozuvlar.forEach(y => {
     D.OBYEKT_INDEKS[y.id] = {id: y.id, nom: y.mulk.nom, qisqa: y.mulk.qisqa, tur: y.mulk.tur,
@@ -212,7 +221,7 @@
   D.KORIKLAR = D.KORIKLAR.concat(yangiKorik);
 
   /* ---------- SOTUV (auksion lotlari) ---------- */
-  const auksionYozuv = D.YOZUVLAR.filter(y => ["musodara", "auksion"].includes(y.ish.bosqich));
+  const auksionYozuv = D.YOZUVLAR.filter(y => ["musodara", "balans"].includes(y.ish.bosqich));
   const yangiLot = [];
   auksionYozuv.forEach((y, i) => {
     if (D.SOTUV.some(l => l.id === y.id)) return;
@@ -406,7 +415,7 @@
   });
 
   /* ---------- Hosilaviy kolleksiyalarni qayta hisoblash ---------- */
-  const balansda = y => ["musodara", "auksion"].includes(y.ish.bosqich);
+  const balansda = y => ["musodara", "balans"].includes(y.ish.bosqich);
   /* xarajatlar */
   const XAR_TUR = [["Qo'riqlash xizmati", 4.2], ["Kommunal to'lovlar", 2.8],
                    ["Mulk solig'i", 6.5], ["Joriy ta'mirlash", 3.6]];
