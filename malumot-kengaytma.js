@@ -188,7 +188,7 @@
   /* ---------- KORIKLAR ---------- */
   const INSPEKTORLAR = ["Sattorov Jasur", "Karimova Feruza", "Yo'ldoshev Sardor", "Tosheva Barno",
     "Nazarov Aziz", "Ergashev Botir"];
-  const KORIK_TUR = ["Rejali", "Navbatdan tashqari", "Qabul ko'rigi", "Savdo oldi"];
+  const KORIK_TUR = ["Rejali", "Navbatdan tashqari", "Qabul ko'rigi", "Nazorat ko'rigi"];
   const KORIK_HOLAT = ["rejada", "otkazildi", "otkazildi", "kechikkan"];
   const yangiKorik = [];
   const KORIK_DAVR = t => /Avtotransport/.test(t) ? 30 : /Yer/.test(t) ? 180 : 90;

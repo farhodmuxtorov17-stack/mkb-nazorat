@@ -2709,6 +2709,15 @@ window.MKB_LUGAT = {
   "Zarur bo'lsa izoh qoldiring": "При необходимости оставьте комментарий",
   "Nima qilindi va natija qanday": "Что сделано и каков результат",
   "Nima aniqlandi": "Что обнаружено",
+  "Nazorat ko'rigi": "Контрольный осмотр",
+  "Balansga qabul uchun": "Для приёма на баланс",
+  "Sug'urta qoplamasi uchun": "Для страхового покрытия",
+  "Ijro bo'yicha tushumlar": "Поступления по исполнению",
+  "Davr ichida qabul qilingan": "Принято за период",
+  "Musodara va balans bosqichi": "Стадия изъятия и баланса",
+  "Kirish nuqtasi turlari": "Типы точек доступа",
+  "Kirish nazorati platformasi": "Платформа контроля доступа",
+  "Qurilmalar holati va voqealar oqimi": "Состояние устройств и поток событий",
 };
 
 /* Dinamik hisoblagich matnlari (raqam + birlik) */
