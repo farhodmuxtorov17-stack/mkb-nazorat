@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Filiallar</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082645">
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="sozlama">
@@ -22,15 +22,19 @@
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082645"></script>
-<script src="malumot-qoshimcha.js?v=26082645"></script>
-<script src="malumot-kengaytma.js?v=26082645"></script>
-<script src="tarjima.js?v=26082645"></script>
-<script src="yadro/ikonlar.js?v=26082645"></script>
-<script src="yadro/daraxt.js?v=26082645"></script>
-<script src="yadro/chizma.js?v=26082645"></script>
-<script src="yadro/api.js?v=26082645"></script>
-<script src="yadro/app.js?v=26082645"></script>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
@@ -40,7 +44,7 @@ document.addEventListener("mkb:tayyor", async () => {
     const r = yoz.filter(y => y.filial === nom);
     return {id: i, nom, obyektlar: r.length,
       qarz: Math.round(r.reduce((a, y) => a + MKB.sonQiymat(y.qarzSon), 0)),
-      qoplash: r.length ? Math.round(r.reduce((a, y) => a + y.qoplash, 0) / r.length) : 0,
+      qoplash: r.length ? MKB_DATA.nazoratJamlama(r).ortacha : 0,
       hodim: 4 + (i * 3) % 9};
   });
   document.getElementById("hs-meta").textContent = qatorlar.length + " ta filial tarmoqda";
@@ -52,7 +56,7 @@ document.addEventListener("mkb:tayyor", async () => {
       {kalit: "obyektlar", nom: "Muammoli obyektlar", son: true},
       {kalit: "qarz", nom: "Qoldiq qarz", son: true, chiz: q =>
         q.qarz ? '<span class="pul">' + MKB.fmt(q.qarz) + ' mln</span>' : "—"},
-      {kalit: "qoplash", nom: "O'rtacha qoplash", son: true, chiz: q =>
+      {kalit: "qoplash", nom: "O'rtacha nazorat indeksi", son: true, chiz: q =>
         q.qoplash ? MKB.shtrix(q.qoplash) : "—"},
     ],
   });

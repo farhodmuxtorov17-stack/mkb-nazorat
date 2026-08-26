@@ -4,14 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Tizimga kirish</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082645">
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
 <style>
 .kirish-sahna{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);min-height:100vh;
   background:
     radial-gradient(1000px 700px at 8% -6%, #FAEEE8 0%, transparent 60%),
     radial-gradient(900px 700px at 96% 12%, #EFEFF8 0%, transparent 58%),
     linear-gradient(150deg,#F8F1ED 0%,#F2F1F7 54%,#EFF4F1 100%)}
-.k-brend{display:flex;flex-direction:column;padding:44px 48px 18px;position:relative;gap:18px;overflow:hidden}
+.k-brend{display:flex;flex-direction:column;padding:44px 48px 0;position:relative;gap:18px;overflow:hidden}
+.k-brend::before{content:"";position:absolute;left:-8%;right:-4%;bottom:-6%;height:72%;pointer-events:none;
+  background:radial-gradient(58% 74% at 46% 82%, rgba(224,196,160,.34) 0%, rgba(224,196,160,0) 68%)}
 .k-logo{display:flex;align-items:center;gap:13px}
 .k-logo .belgi{width:52px;height:52px;border-radius:16px;background:var(--oq);
   display:grid;place-items:center;box-shadow:var(--soya-past)}
@@ -20,8 +22,10 @@
 .k-markaz{display:flex;flex-direction:column;gap:14px;max-width:620px}
 .k-markaz h2{font:500 40px/1.1 var(--shrift-displey);letter-spacing:-.045em}
 .k-markaz p{font-size:15.5px;line-height:1.6;color:var(--matn-2)}
-.k-ofis{flex:1 1 0;min-height:180px;position:relative;margin-top:-6px}
-.k-ofis img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;transform:scale(1.14);transform-origin:center bottom;filter:drop-shadow(0 30px 50px rgba(40,32,24,.18))}
+.k-ofis{flex:1 1 0;min-height:210px;position:relative;margin:-2px -46px 0 -74px}
+.k-ofis img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 24px 38px rgba(58,44,30,.20))}
+.k-ofis::after{content:"";position:absolute;left:16%;right:16%;bottom:4%;height:12px;border-radius:50%;
+  background:radial-gradient(50% 100% at 50% 50%, rgba(58,44,30,.20), transparent 72%);filter:blur(5px)}
 .k-forma{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 30px}
 .k-karta{width:min(470px,100%);background:var(--oq);border-radius:30px;box-shadow:var(--soya-suzuvchi);padding:34px 36px}
 .k-karta .yorliq{font-size:12.5px;color:var(--matn-3)}
@@ -54,9 +58,9 @@
     </div>
     <div class="k-markaz">
       <h2>Muammoli aktivlar &#8212; bitta reyestr, bitta tartib</h2>
-      <p>Obyektlarni hisobga olish, ko&#39;rik va sug&#39;urta nazorati, baholash, tasnif-zaxira va realizatsiya &#8212; bank bosh ofisi va filiallari uchun yagona ish maydoni.</p>
+      <p>Obyektlarni hisobga olish, ko&#39;rik va sug&#39;urta nazorati, elektron kirish nazorati, baholash va hujjat aylanmasi &#8212; bank bosh ofisi va filiallari uchun yagona ish maydoni.</p>
     </div>
-    <div class="k-ofis"><img src="assets/bosh_ofis.svg" alt="Mikrokreditbank bosh ofisi"></div>
+    <div class="k-ofis"><img src="assets/bosh_ofis.webp" srcset="assets/bosh_ofis_760.webp 760w, assets/bosh_ofis.webp 1200w" sizes="(min-width:1440px) 52vw, 46vw" width="1200" height="822" decoding="async" alt="Mikrokreditbank bosh ofisi binosi"></div>
   </aside>
   <main class="k-forma">
     <div class="k-karta">
@@ -86,15 +90,19 @@
     </div>
   </main>
 </div>
-<script src="malumot.js?v=26082645"></script>
-<script src="malumot-qoshimcha.js?v=26082645"></script>
-<script src="malumot-kengaytma.js?v=26082645"></script>
-<script src="tarjima.js?v=26082645"></script>
-<script src="yadro/ikonlar.js?v=26082645"></script>
-<script src="yadro/daraxt.js?v=26082645"></script>
-<script src="yadro/chizma.js?v=26082645"></script>
-<script src="yadro/api.js?v=26082645"></script>
-<script src="yadro/app.js?v=26082645"></script>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
 <script>
 document.addEventListener("mkb:tayyor", () => {
   const s0 = MKBapi.sessiya();

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Elektron nazorat markazi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<style>
+.kz-panjara{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:16px}
+.kz-karta{background:var(--oq);border-radius:24px;padding:16px 18px;box-shadow:var(--soya-past);
+  display:flex;flex-direction:column;gap:12px;transition:transform var(--tez),box-shadow var(--tez)}
+.kz-karta:hover{transform:translateY(-3px);box-shadow:var(--soya)}
+.kz-bosh{display:flex;align-items:center;gap:11px}
+.kz-bosh img{width:44px;height:44px;border-radius:14px;object-fit:cover;flex:none;background:var(--persik)}
+.kz-bosh b{display:block;font-size:14px;font-weight:500;line-height:1.3}
+.kz-bosh span{font-size:12px;color:var(--matn-3)}
+.kz-qator{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--matn-2)}
+.kz-qator b{font-weight:500;font-family:var(--shrift-mono)}
+.kz-past{display:flex;align-items:center;gap:8px;padding-top:11px;border-top:1px solid var(--chiziq-2)}
+</style>
+<style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="kn">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Kirish nazorati</span></div>
+    <div class="hs-qator"><h1>Elektron nazorat markazi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="kirish-nazorati.html">Post</a><a href="kuzatuv.html" class="faol">Nazorat markazi</a><a href="kirish-nuqtalari.html">Nuqtalar</a><a href="kirish-voqealari.html">Voqealar</a><a href="tashriflar.html">Tashriflar</a><a href="ruxsatlar.html">Ruxsatlar</a><a href="qurilmalar.html">Qurilmalar</a><a href="hodisalar.html">Hodisalar</a></nav>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Nazoratdagi obyektlar</span>
+      <span class="m-qiymat"><span id="kz-obyekt">—</span></span>
+      <span class="m-izoh">Kirish nuqtasi o'rnatilgan</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Onlayn nuqtalar</span>
+      <span class="m-qiymat"><span id="kz-onlayn">—</span></span>
+      <span class="m-izoh">Jami nuqtalarga nisbatan</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Bugungi rad etishlar</span>
+      <span class="m-qiymat"><span id="kz-rad">—</span></span>
+      <span class="m-izoh">Ruxsatsiz urinishlar</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Nosoz qurilmalar</span>
+      <span class="m-qiymat"><span id="kz-nosoz">—</span></span>
+      <span class="m-izoh">Servis talab qiladi</span>
+    </div>
+  </section>
+  <section class="jadval-asbob" style="margin-bottom:16px">
+    <div class="izlash" style="flex:1"><svg class="ic"><use href="#i-izlash"/></svg><input type="search" id="kz-qidiruv" placeholder="Obyekt nomi yoki kodi" aria-label="Qidirish"></div>
+    <div class="tanlov"><select id="kz-filtr" aria-label="Holat bo&#39;yicha"><option value="">Barcha obyektlar</option><option value="muammo">Muammo bor</option><option value="oflayn">Oflayn nuqtali</option><option value="hodisa">Ochiq hodisali</option></select></div>
+  </section>
+  <div class="kz-panjara" id="kz-panjara"></div>
+</main>
+</div>
+</div>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
+<script>
+
+const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
+                   ogohlantirish: ["Ogohlantirish", "chip-sariq"]};
+const KN_HOLAT = {onlayn: ["Onlayn", "chip-yashil"], oflayn: ["Oflayn", "chip-xavf"],
+                  xizmatda: ["Xizmatda", "chip-sariq"]};
+const QR_HOLAT = {ishlayapti: ["Ishlayapti", "chip-yashil"], ogohlantirish: ["Ogohlantirish", "chip-sariq"],
+                  nosoz: ["Nosoz", "chip-xavf"]};
+function chip(xarita, kalit){
+  const v = xarita[kalit] || [kalit, ""];
+  return '<span class="chip ' + v[1] + '">' + v[0] + "</span>";
+}
+function nuqtaIkonka(t){
+  return t === "turniket" ? "turniket" : t === "shlagbaum" ? "mashina" : t === "darvoza" ? "zavod" : "eshik";
+}
+function shaxsSurati(sh, olcham){
+  const o = olcham || 38;
+  return sh && sh.rasm
+    ? '<img class="shaxs-surat" src="' + sh.rasm + '" alt="" loading="lazy" style="width:' + o +
+      "px;height:" + o + 'px">'
+    : '<span class="belgi">' + (sh ? sh.belgi : "?") + "</span>";
+}
+function shaxsQatori(sh, ong){
+  if (!sh) return '<span class="matn"><b>Aniqlanmagan shaxs</b><span>Identifikatsiya o&#39;tmadi</span></span>';
+  return shaxsSurati(sh) +
+    '<span class="matn"><b>' + sh.ism + "</b><span><span>" + sh.lavozim + "</span> · <span>" + sh.tashkilot + "</span></span></span>" +
+    (ong || "");
+}
+function obyektNomi(id){
+  const o = MKB_DATA.OBYEKT_INDEKS[id];
+  return o ? o.qisqa : id;
+}
+function voqeaQatori(v){
+  const sh = MKB_DATA.shaxs(v.shaxsId);
+  return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
+    '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
+      ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
+    '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
+}
+
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_DATA, j = D.kirishJamlama();
+  document.getElementById("kz-obyekt").textContent =
+    new Set(D.KIRISH_NUQTALARI.map(n => n.obyektId)).size;
+  document.getElementById("kz-onlayn").innerHTML = j.onlayn + '<small> / ' + j.nuqta + "</small>";
+  document.getElementById("kz-rad").textContent =
+    D.KIRISH_VOQEALARI.filter(v => v.natija === "rad" && v.sana === D.KIRISH_BUGUN).length;
+  document.getElementById("kz-nosoz").textContent = j.nosoz;
+
+  const bandlar = D.YOZUVLAR.map(y => {
+    const nuq = D.obyektNuqtalari(y.id);
+    const onl = nuq.filter(n => n.holat === "onlayn").length;
+    const hod = D.XAVFSIZLIK_HODISALARI.filter(h => h.obyektId === y.id && h.holat !== "yopildi").length;
+    const bugun = D.KIRISH_VOQEALARI.filter(v => v.obyektId === y.id && v.sana === D.KIRISH_BUGUN).length;
+    return {y, nuq, onl, hod, bugun, indeks: D.nazoratIndeksi(y)};
+  }).filter(b => b.nuq.length);
+
+  function chiz(){
+    const q = (document.getElementById("kz-qidiruv").value || "").toLowerCase();
+    const f = document.getElementById("kz-filtr").value;
+    const royxat = bandlar.filter(b => {
+      if (q && (b.y.mulk.qisqa + " " + b.y.id).toLowerCase().indexOf(q) < 0) return false;
+      if (f === "oflayn" && b.onl === b.nuq.length) return false;
+      if (f === "hodisa" && !b.hod) return false;
+      if (f === "muammo" && b.onl === b.nuq.length && !b.hod) return false;
+      return true;
+    });
+    document.getElementById("hs-meta").textContent = royxat.length + " ta obyekt";
+    document.getElementById("kz-panjara").innerHTML = royxat.length ? royxat.map(b =>
+      '<article class="kz-karta">' +
+        '<div class="kz-bosh"><img src="' + (b.y.mulk.rasmKichik || b.y.mulk.rasm) + '" alt="" loading="lazy">' +
+        "<span><b>" + b.y.mulk.qisqa + "</b><span>" + b.y.id + " · " + b.y.mulk.hudud + "</span></span></div>" +
+        '<div class="kz-qator"><span>Kirish nuqtalari</span><b>' + b.onl + " / " + b.nuq.length + "</b></div>" +
+        '<div class="kz-qator"><span>Bugungi o&#39;tishlar</span><b>' + b.bugun + "</b></div>" +
+        '<div class="kz-qator"><span>Ochiq hodisalar</span><b>' + b.hod + "</b></div>" +
+        MKB.shtrix(b.indeks.ball, 8) +
+        '<div class="kz-past">' +
+          (b.onl < b.nuq.length ? '<span class="chip chip-xavf">Oflayn nuqta</span>' : '<span class="chip chip-yashil">Barchasi onlayn</span>') +
+          (b.hod ? '<span class="chip chip-sariq">' + b.hod + " hodisa</span>" : "") +
+          '<a class="karta-havola" style="margin-left:auto" href="kirish-nuqtalari.html?obyekt=' +
+            encodeURIComponent(b.y.id) + '">Ochish<svg class="ic"><use href="#i-ong"/></svg></a>' +
+        "</div></article>").join("")
+      : '<div class="bosh-holat">Shartga mos obyekt topilmadi</div>';
+  }
+  document.getElementById("kz-qidiruv").addEventListener("input", chiz);
+  document.getElementById("kz-filtr").addEventListener("change", chiz);
+  chiz();
+});
+</script>
+</body>
+</html>

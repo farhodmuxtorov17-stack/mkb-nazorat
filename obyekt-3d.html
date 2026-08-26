@@ -4,33 +4,37 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — 3D navigator</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082645">
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
-.sahna3d{position:relative;height:520px;border-radius:var(--r-hero);overflow:hidden;
-  background:linear-gradient(168deg,var(--fon-issiq) 0%,var(--fon-sovuq) 58%,var(--fon-mint) 100%);cursor:grab;user-select:none;touch-action:none}
-.sahna3d:active{cursor:grabbing}
-.sahna3d .zamin{position:absolute;left:50%;top:56%;width:460px;height:460px;translate:-50% -50%;
-  transform:rotateX(64deg) rotateZ(var(--burilish,45deg));transform-style:preserve-3d;transition:transform 80ms linear}
-.qavat3d{position:absolute;inset:80px;transform-style:preserve-3d;transition:transform var(--sekin),opacity var(--tez)}
-.qavat3d .plita{position:absolute;inset:0;border-radius:22px;background:var(--chiziq);
-  border:1.5px solid rgba(11,11,10,.22);box-shadow:inset 0 0 34px rgba(11,11,10,.04);transition:background var(--tez),border-color var(--tez)}
-.qavat3d:hover .plita{background:rgba(197,242,180,.55);border-color:var(--brend)}
-.qavat3d.faol .plita{background:rgba(37,101,26,.55);border-color:var(--brend);box-shadow:0 0 34px rgba(197,242,180,.5)}
-.qavat3d .yorliq{position:absolute;left:50%;top:50%;translate:-50% -50%;
-  transform:rotateZ(calc(var(--burilish,45deg) * -1)) rotateX(-64deg);
-  font:600 13px var(--shrift-mono);color:var(--siyoh);pointer-events:none}
-.nav3d-panel{position:absolute;right:18px;top:18px;bottom:18px;width:280px;background:rgba(255,255,255,.92);
-  backdrop-filter:blur(10px);border-radius:22px;padding:20px;color:var(--siyoh);overflow-y:auto;box-shadow:var(--soya)}
-.nav3d-panel h3{font:500 15px var(--shrift-displey);margin-bottom:2px}
-.nav3d-panel .sub{font-size:12.5px;color:var(--matn-3);margin-bottom:14px}
-.nav3d-xona{padding:11px 0;border-bottom:1px solid var(--chiziq-2);font-size:12.5px}
-.nav3d-xona b{display:block;font-size:12.5px}
-.nav3d-xona span{color:var(--matn-3);font-size:12px}
-.nav3d-korsatma{position:absolute;left:20px;bottom:16px;font-size:12.5px;color:var(--matn-3);background:rgba(255,255,255,.8);border-radius:999px;padding:8px 16px}
+
+.nav3d{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:18px}
+.nav3d-sahna{position:relative;height:560px;border-radius:var(--r-hero);overflow:hidden;
+  box-shadow:var(--soya);background:var(--oq)}
+.nav3d-kanvas{display:block;width:100%;height:100%;touch-action:none;outline:none}
+.nav3d-kanvas:focus-visible{outline:2px solid var(--brend);outline-offset:-2px}
+.nav3d-boshqaruv{position:absolute;left:16px;top:16px;display:flex;gap:6px;background:rgba(255,255,255,.9);
+  backdrop-filter:blur(8px);border-radius:999px;padding:5px;box-shadow:var(--soya-past)}
+.nav3d-boshqaruv button{height:34px;padding:0 15px;border-radius:999px;font-size:12.5px;font-weight:500;
+  color:var(--matn-2);transition:background var(--tez),color var(--tez)}
+.nav3d-boshqaruv button.faol{background:var(--siyoh);color:var(--oq)}
+.nav3d-qavatlar{position:absolute;right:16px;top:16px;display:flex;flex-direction:column;gap:5px;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-radius:20px;padding:6px;
+  box-shadow:var(--soya-past)}
+.nav3d-qavatlar button{width:44px;height:34px;border-radius:14px;font:500 13px var(--shrift-mono);
+  color:var(--matn-2)}
+.nav3d-qavatlar button.faol{background:var(--brend);color:var(--oq)}
+.nav3d-korsatma{position:absolute;left:16px;bottom:14px;font-size:12.5px;color:var(--matn-3);
+  background:rgba(255,255,255,.86);border-radius:999px;padding:7px 15px}
 .nav3d-korsatma b{color:var(--siyoh);font-weight:500}
+.nav3d-yon{display:flex;flex-direction:column;gap:14px;min-width:0}
+.nav3d-legend{display:flex;flex-direction:column;gap:9px}
+.nav3d-legend div{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--matn-2)}
+.nav3d-legend i{width:14px;height:14px;border-radius:5px;flex:none}
+.xona-tafsilot dt{color:var(--matn-3)}
+@media (max-width:1100px){.nav3d{grid-template-columns:minmax(0,1fr)}.nav3d-sahna{height:440px}}
 </style>
-</head>
+<script src="yadro/qavat.js?v=26082730"></script><script src="yadro/nav3d.js?v=26082730"></script></head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
 <nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
@@ -53,23 +57,43 @@
       <div id="fs-halqa"></div>
     </div>
   </section>
-  <section class="sahna3d" id="sahna3d" aria-label="Bino 3D ko'rinishi">
-    <div class="zamin" id="zamin3d"></div>
-    <aside class="nav3d-panel" id="nav3d-panel"></aside>
-    <div class="nav3d-korsatma"><b>Sudrab</b> aylantiring · <b>qavatni bosib</b> tanlang · <b>ikki bosish</b> — boshlang'ich holat</div>
-  </section>
+  <div class="nav3d">
+    <section class="nav3d-sahna" id="nav3d-sahna" aria-label="Bino uch o&#39;lchovli ko&#39;rinishi">
+      <div class="nav3d-boshqaruv" id="nav3d-rejim" role="group" aria-label="Ko&#39;rinish rejimi">
+        <button type="button" data-rejim="butun" class="faol">Butun bino</button>
+        <button type="button" data-rejim="ichki">Qavat ichi</button>
+        <button type="button" data-rejim="yoyilgan">Yoyilgan</button>
+      </div>
+      <div class="nav3d-qavatlar" id="nav3d-qavatlar" role="group" aria-label="Qavat tanlash"></div>
+      <div class="nav3d-korsatma"><b>Sudrab</b> aylantiring · <b>g&#39;ildirak</b> masshtab · <b>xonani bosing</b> · <b>ikki bosish</b> — boshlang&#39;ich holat</div>
+    </section>
+    <aside class="nav3d-yon">
+      <section class="karta"><div class="karta-bosh"><h2>Bino</h2></div>
+        <dl class="malumot-royxat xona-tafsilot" id="nav3d-bino"></dl></section>
+      <section class="karta"><div class="karta-bosh"><h2 id="nav3d-xona-nom">Xona tanlanmagan</h2></div>
+        <dl class="malumot-royxat xona-tafsilot" id="nav3d-xona"></dl>
+        <a class="tugma tugma-oq tugma-kichik" id="nav3d-rejaga" href="obyekt-qavat.html" style="margin-top:14px"><svg class="ic"><use href="#i-qavat"/></svg>Qavat rejasida ochish</a>
+      </section>
+      <section class="karta"><div class="karta-bosh"><h2>Shartli belgilar</h2></div>
+        <div class="nav3d-legend" id="nav3d-legend"></div></section>
+    </aside>
+  </div>
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082645"></script>
-<script src="malumot-qoshimcha.js?v=26082645"></script>
-<script src="malumot-kengaytma.js?v=26082645"></script>
-<script src="tarjima.js?v=26082645"></script>
-<script src="yadro/ikonlar.js?v=26082645"></script>
-<script src="yadro/daraxt.js?v=26082645"></script>
-<script src="yadro/chizma.js?v=26082645"></script>
-<script src="yadro/api.js?v=26082645"></script>
-<script src="yadro/app.js?v=26082645"></script>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -82,62 +106,65 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("fs-chiplar").innerHTML =
     "<span class=\"chip chip-brend\">" + x.bosqichNomi + "</span>" +
     "<span class=\"chip chip-siyoh\">" + x.mulk.tur + "</span>";
-  document.getElementById("fs-halqa").innerHTML = MKB.halqa(x.qoplash, 74, 6).replace('class="halqa', 'class="halqa katta');
+  const fsIndeks = MKB_DATA.nazoratIndeksi(x);
+  document.getElementById("fs-halqa").innerHTML = MKB.halqa(fsIndeks.ball, 74, 6)
+    .replace('class="halqa', 'class="halqa katta');
+  document.getElementById("fs-halqa").title = "Nazorat indeksi: " + fsIndeks.darajaNomi;
   /* tab havolalariga ?id= ulab qo'yamiz */
   document.querySelectorAll(".bolim-tablar a").forEach(a => {
     if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
   });
   document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
 
-  const xonalar = Object.values(MKB_DATA.XONALAR).filter(v => v.obyektId === x.id);
-  const qavatSoni = Math.max(3, ...xonalar.map(v => +v.qavat || 1),
-    x.mulk.tur === "Yer uchastkasi" || x.mulk.tur === "Dala hovli" ? 3 : 7);
-  const zamin = document.getElementById("zamin3d");
-  let faol = qavatSoni;
-  function chiz(){
-    zamin.innerHTML = Array.from({length: qavatSoni}, (_, i) => {
-      const q = i + 1;
-      return '<div class="qavat3d' + (q === faol ? ' faol' : '') + '" data-qavat="' + q +
-        '" style="transform:translateZ(' + (q * 26) + 'px)">' +
-        '<div class="plita"></div><span class="yorliq">' + q + '</span></div>';
-    }).join("");
-  }
-  function panel(){
-    const r = xonalar.filter(v => +v.qavat === faol);
-    document.getElementById("nav3d-panel").innerHTML =
-      '<h3>' + faol + '-qavat</h3><div class="sub">' + x.mulk.qisqa + '</div>' +
-      (r.length ? r.map(v =>
-        '<div class="nav3d-xona"><b>' + v.nom + '</b>' +
-        '<span>' + v.maydon + ' · ulush ' + (v.ulush || "—") + '%</span><br>' +
-        '<span>' + (v.holat || "") + '</span></div>').join("")
-      : '<div class="nav3d-xona"><b>Ta\'minot predmeti emas</b>' +
-        '<span>Bu qavat bo\'yicha bank ulushi yo\'q — umumiy foydalanish</span></div>') +
-      '<div style="margin-top:12px"><a class="tugma tugma-kichik tugma-brend" href="obyekt-qavat.html?id=' +
-        encodeURIComponent(x.id) + '">' + ik("qavat") + 'Qavat rejasi</a></div>';
-  }
-  chiz(); panel();
+  const model = MKBbino.model(x.id, x.mulk.tur, x.mulk.qisqa);
+  const RANG = {foydalanishda: "#BFE6AE", bosh: "#E7EDF1", muhrlangan: "#F2B3A6", tamirda: "#BAC3EE"};
 
-  const sahna = document.getElementById("sahna3d");
-  let burilish = 45, bosildi = null;
-  sahna.addEventListener("pointerdown", e => { bosildi = {x: e.clientX, b: burilish}; sahna.setPointerCapture(e.pointerId); });
-  sahna.addEventListener("pointermove", e => {
-    if (!bosildi) return;
-    burilish = bosildi.b + (e.clientX - bosildi.x) * 0.45;
-    zamin.style.setProperty("--burilish", burilish + "deg");
-    zamin.querySelectorAll(".yorliq").forEach(y => y.style.setProperty("--burilish", burilish + "deg"));
-  });
-  ["pointerup", "pointercancel"].forEach(t => sahna.addEventListener(t, () => bosildi = null));
-  sahna.addEventListener("dblclick", () => {
-    burilish = 45;
-    zamin.style.setProperty("--burilish", "45deg");
-    zamin.querySelectorAll(".yorliq").forEach(y => y.style.setProperty("--burilish", "45deg"));
-  });
-  zamin.addEventListener("click", e => {
-    const q = e.target.closest(".qavat3d");
-    if (!q) return;
-    faol = +q.dataset.qavat;
-    chiz(); panel();
-  });
+  document.getElementById("nav3d-bino").innerHTML =
+    "<dt>Qavatlar</dt><dd>" + model.qavatSoni + " ta</dd>" +
+    "<dt>Umumiy maydon</dt><dd>" + MKB.fmt(Math.round(model.maydon)) + " m&#178;</dd>" +
+    "<dt>Gabarit</dt><dd>" + model.gabarit.en + " × " + model.gabarit.chuq + " m</dd>" +
+    "<dt>Balandlik</dt><dd>" + model.gabarit.balandlik + " m</dd>" +
+    "<dt>Xonalar</dt><dd>" + model.xonaSoni + " ta</dd>" +
+    "<dt>Kirish nuqtalari</dt><dd>" + model.kirishNuqtaSoni + " ta</dd>";
+
+  const j = MKBbino.jamlama(model);
+  document.getElementById("nav3d-legend").innerHTML = MKBbino.HOLATLAR.map(h =>
+    '<div><i style="background:' + RANG[h.kalit] + '"></i>' + h.nom +
+    '<span style="margin-left:auto;color:var(--matn-3)">' + (j[h.kalit] || 0) + "</span></div>").join("");
+
+  const navQavat = document.getElementById("nav3d-qavatlar");
+  navQavat.innerHTML = model.qavatlar.slice().reverse().map(q =>
+    '<button type="button" data-q="' + q.raqam + '"' + (q.raqam === 1 ? ' class="faol"' : "") +
+    ' aria-label="' + q.raqam + '-qavat">' + q.raqam + "</button>").join("");
+
+  function xonaChiz(xona){
+    document.getElementById("nav3d-xona-nom").textContent = xona ? xona.nom : "Xona tanlanmagan";
+    document.getElementById("nav3d-xona").innerHTML = xona
+      ? "<dt>Kod</dt><dd>" + xona.id + "</dd>" +
+        "<dt>Qavat</dt><dd>" + xona.qavat + "-qavat</dd>" +
+        "<dt>Maydon</dt><dd>" + xona.maydon.toFixed(1).replace(".", ",") + " m&#178;</dd>" +
+        "<dt>O&#39;lcham</dt><dd>" + xona.en.toFixed(1).replace(".", ",") + " × " +
+          xona.chuq.toFixed(1).replace(".", ",") + " m</dd>" +
+        "<dt>Holat</dt><dd>" + MKBbino.holatNomi(xona.holat) + "</dd>" +
+        (xona.nazorat ? "<dt>Kirish</dt><dd>Nazorat ostida</dd>" : "")
+      : '<dd style="grid-column:1/-1;color:var(--matn-3)">Sahnada xonani bosing — tafsilot shu yerda chiqadi</dd>';
+  }
+  xonaChiz(null);
+
+  const nav = MKBnav3d.yarat("nav3d-sahna", model, {tanlanganda: xonaChiz});
+
+  navQavat.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    navQavat.querySelectorAll("button").forEach(y => y.classList.toggle("faol", y === b));
+    nav.qavatTanla(+b.dataset.q);
+    xonaChiz(null);
+    document.getElementById("nav3d-rejaga").href =
+      "obyekt-qavat.html?id=" + encodeURIComponent(x.id) + "&qavat=" + b.dataset.q;
+  }));
+  document.querySelectorAll("#nav3d-rejim button").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll("#nav3d-rejim button").forEach(y => y.classList.toggle("faol", y === b));
+    nav.rejimQoy(b.dataset.rejim);
+  }));
+  document.getElementById("nav3d-rejaga").href = "obyekt-qavat.html?id=" + encodeURIComponent(x.id) + "&qavat=1";
 
 });
 </script>

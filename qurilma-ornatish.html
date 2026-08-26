@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Qurilma o'rnatish</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="kn">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="kirish-nazorati.html">Kirish nazorati</a><span class="ajratgich">/</span><span>O'rnatish</span></div>
+    <div class="hs-qator"><h1>Qurilma o'rnatish</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="karta" style="max-width:840px">
+    <div id="or-zanjir" style="margin-bottom:22px"></div>
+    <form id="or-forma" class="forma-tor">
+      <div data-qadam="0">
+        <div class="maydon keng"><label class="maydon-yorliq">Obyekt <b>*</b></label>
+          <div class="kirish"><select name="obyektId" id="or-obyekt" required></select></div></div>
+        <div class="maydon keng"><label class="maydon-yorliq">Kirish nuqtasi <b>*</b></label>
+          <div class="kirish"><select name="nuqta" id="or-nuqta" required></select></div></div>
+      </div>
+      <div data-qadam="1" hidden>
+        <div class="maydon keng"><label class="maydon-yorliq">Qurilma turi <b>*</b></label>
+          <div class="kirish"><select name="tur" id="or-tur" required></select></div></div>
+        <div class="maydon keng"><label class="maydon-yorliq">Model <b>*</b></label>
+          <div class="kirish"><select name="model" id="or-model" required></select></div></div>
+      </div>
+      <div data-qadam="2" hidden>
+        <div class="maydon"><label class="maydon-yorliq">Seriya raqami <b>*</b></label>
+          <div class="kirish"><input name="seriya" id="or-seriya" placeholder="SN000000" required></div>
+          <span class="maydon-izoh">Reyestrda takrorlanmasligi tekshiriladi</span></div>
+        <div class="maydon"><label class="maydon-yorliq">Tarmoq manzili <b>*</b></label>
+          <div class="kirish"><input name="ip" id="or-ip" placeholder="10.0.0.1" required></div>
+          <span class="maydon-izoh">Format: 10.0.0.1</span></div>
+        <div class="maydon"><label class="maydon-yorliq">Ulanish kaliti</label>
+          <div class="kirish"><input name="kalit" value="Xavfsizlik omboridagi yozuv" readonly></div>
+          <span class="maydon-izoh">Kalit tizimda saqlanmaydi, faqat havola qilinadi</span></div>
+      </div>
+      <div data-qadam="3" hidden>
+        <div class="maydon"><label class="maydon-yorliq">Monitoring oralig&#39;i</label>
+          <div class="kirish"><select name="oraliq"><option>30 soniya</option><option selected>1 daqiqa</option><option>5 daqiqa</option></select></div></div>
+        <div class="maydon"><label class="maydon-yorliq">Mas&#39;ul xodim <b>*</b></label>
+          <div class="kirish"><select name="masul" id="or-masul" required></select></div></div>
+        <div class="keng" id="or-natija"></div>
+      </div>
+      <div class="keng" style="display:flex;justify-content:space-between;gap:10px">
+        <button type="button" class="tugma tugma-oq" id="or-orqaga">Orqaga</button>
+        <button type="button" class="tugma tugma-asosiy" id="or-oldinga">Keyingi qadam</button>
+      </div>
+    </form>
+  </section>
+</main>
+</div>
+</div>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
+<script>
+
+const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
+                   ogohlantirish: ["Ogohlantirish", "chip-sariq"]};
+const KN_HOLAT = {onlayn: ["Onlayn", "chip-yashil"], oflayn: ["Oflayn", "chip-xavf"],
+                  xizmatda: ["Xizmatda", "chip-sariq"]};
+const QR_HOLAT = {ishlayapti: ["Ishlayapti", "chip-yashil"], ogohlantirish: ["Ogohlantirish", "chip-sariq"],
+                  nosoz: ["Nosoz", "chip-xavf"]};
+function chip(xarita, kalit){
+  const v = xarita[kalit] || [kalit, ""];
+  return '<span class="chip ' + v[1] + '">' + v[0] + "</span>";
+}
+function nuqtaIkonka(t){
+  return t === "turniket" ? "turniket" : t === "shlagbaum" ? "mashina" : t === "darvoza" ? "zavod" : "eshik";
+}
+function shaxsSurati(sh, olcham){
+  const o = olcham || 38;
+  return sh && sh.rasm
+    ? '<img class="shaxs-surat" src="' + sh.rasm + '" alt="" loading="lazy" style="width:' + o +
+      "px;height:" + o + 'px">'
+    : '<span class="belgi">' + (sh ? sh.belgi : "?") + "</span>";
+}
+function shaxsQatori(sh, ong){
+  if (!sh) return '<span class="matn"><b>Aniqlanmagan shaxs</b><span>Identifikatsiya o&#39;tmadi</span></span>';
+  return shaxsSurati(sh) +
+    '<span class="matn"><b>' + sh.ism + "</b><span><span>" + sh.lavozim + "</span> · <span>" + sh.tashkilot + "</span></span></span>" +
+    (ong || "");
+}
+function obyektNomi(id){
+  const o = MKB_DATA.OBYEKT_INDEKS[id];
+  return o ? o.qisqa : id;
+}
+function voqeaQatori(v){
+  const sh = MKB_DATA.shaxs(v.shaxsId);
+  return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
+    '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
+      ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
+    '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
+}
+
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_DATA;
+  const QADAM = ["Joylashuv", "Qurilma", "Ulanish", "Faollashtirish"];
+  const MODELLAR = {
+    "Elektromagnit qulf": ["SecurLine ML-400", "SecurLine ML-600", "AccessPro EM-280"],
+    "Kartani o&#39;quvchi": ["AccessPro RD-12", "AccessPro RD-20", "SecurLine RF-9"],
+    "Yuzni aniqlash terminali": ["VisionGate F7", "VisionGate F9 Pro", "FaceLine T3"],
+    "Videokamera": ["OptiCam D4 2MP", "OptiCam D8 4MP", "OptiCam PTZ-12"],
+    "Kirish kontrolleri": ["AccessPro C-8", "AccessPro C-16", "SecurLine CTRL-4"],
+    "Eshik holati datchigi": ["SenseGuard DS-1", "SenseGuard DS-3"],
+  };
+  let qadam = 0;
+
+  const ob = document.getElementById("or-obyekt");
+  ob.innerHTML = D.YOZUVLAR.map(y => '<option value="' + y.id + '">' + y.mulk.qisqa + "</option>").join("");
+  document.getElementById("or-tur").innerHTML =
+    Object.keys(MODELLAR).map(t => "<option>" + t + "</option>").join("");
+  document.getElementById("or-masul").innerHTML =
+    D.SHAXSLAR.filter(s => s.tur === "xodim").map(s => "<option>" + s.ism + "</option>").join("");
+  function nuqtalar(){
+    const n = D.obyektNuqtalari(ob.value);
+    document.getElementById("or-nuqta").innerHTML = n.length
+      ? n.map(x => '<option value="' + x.id + '">' + x.nom + "</option>").join("")
+      : '<option value="">Nuqta yo&#39;q — avval kirish nuqtasi qo&#39;shing</option>';
+  }
+  function modellar(){
+    const t = document.getElementById("or-tur").value;
+    document.getElementById("or-model").innerHTML =
+      (MODELLAR[t] || []).map(m => "<option>" + m + "</option>").join("");
+  }
+  ob.addEventListener("change", nuqtalar);
+  document.getElementById("or-tur").addEventListener("change", modellar);
+  nuqtalar(); modellar();
+
+  function chiz(){
+    document.getElementById("or-zanjir").innerHTML = MKB.zanjir(
+      QADAM.map((n2, i) => ({nom: n2, sana: i < qadam ? "bajarildi" : ""})), qadam);
+    document.querySelectorAll("[data-qadam]").forEach(d => d.hidden = +d.dataset.qadam !== qadam);
+    document.getElementById("or-orqaga").disabled = qadam === 0;
+    document.getElementById("or-oldinga").textContent =
+      qadam === QADAM.length - 1 ? "Qurilmani faollashtirish" : "Keyingi qadam";
+    document.getElementById("hs-meta").textContent = (qadam + 1) + " / " + QADAM.length + " qadam";
+  }
+  function tekshir(){
+    if (qadam === 0 && !document.getElementById("or-nuqta").value){
+      MKB.toast("Kirish nuqtasi tanlanmagan", "xavf"); return false;
+    }
+    if (qadam === 2){
+      const s = document.getElementById("or-seriya").value.trim();
+      const ip = document.getElementById("or-ip").value.trim();
+      if (!/^SN\d{6}$/.test(s)){ MKB.toast("Seriya raqami SN va 6 ta raqamdan iborat bo&#39;lishi kerak", "xavf"); return false; }
+      if (D.QURILMALAR.some(q => q.seriya === s)){ MKB.toast("Bunday seriya raqami reyestrda bor", "xavf"); return false; }
+      if (!/^\d{1,3}(\.\d{1,3}){3}$/.test(ip)){ MKB.toast("Tarmoq manzili formati noto&#39;g&#39;ri", "xavf"); return false; }
+      document.getElementById("or-natija").innerHTML =
+        '<div class="qator"><span class="belgi mint">' + ik("tasdiq") + "</span>" +
+        '<span class="matn"><b>Ulanish testi</b><span>' + ip + " — javob 42 ms</span></span></div>";
+    }
+    return true;
+  }
+  document.getElementById("or-oldinga").addEventListener("click", () => {
+    if (!tekshir()) return;
+    if (qadam === QADAM.length - 1){
+      MKB.toast("Qurilma reyestrga qo&#39;shildi va monitoringga ulandi");
+      setTimeout(() => location.href = "qurilmalar.html", 900);
+      return;
+    }
+    qadam += 1; chiz();
+  });
+  document.getElementById("or-orqaga").addEventListener("click", () => { qadam = Math.max(0, qadam - 1); chiz(); });
+  chiz();
+});
+</script>
+</body>
+</html>

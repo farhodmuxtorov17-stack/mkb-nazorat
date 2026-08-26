@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyektlar xaritasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082645">
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 <script src="assets/vendor/leaflet/leaflet.js"></script>
 <style>
@@ -39,15 +39,19 @@
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082645"></script>
-<script src="malumot-qoshimcha.js?v=26082645"></script>
-<script src="malumot-kengaytma.js?v=26082645"></script>
-<script src="tarjima.js?v=26082645"></script>
-<script src="yadro/ikonlar.js?v=26082645"></script>
-<script src="yadro/daraxt.js?v=26082645"></script>
-<script src="yadro/chizma.js?v=26082645"></script>
-<script src="yadro/api.js?v=26082645"></script>
-<script src="yadro/app.js?v=26082645"></script>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
@@ -60,15 +64,15 @@ document.addEventListener("mkb:tayyor", async () => {
     const n = nuqtalar[i % nuqtalar.length];
     if (!n) return;
     const m = L.circleMarker([n.lat + (i * 0.004), n.lng + ((i % 3) * 0.005)], {radius: 8,
-      color: "#0B0B0A", weight: 2, fillColor: y.qoplash < 100 ? "#F9B6AC" : "#C5F2B4", fillOpacity: .95})
+      color: "#0B0B0A", weight: 2, fillColor: MKB_DATA.nazoratIndeksi(y).ball < 70 ? "#F9B6AC" : "#C5F2B4", fillOpacity: .95})
       .addTo(xarita)
-      .bindPopup('<b>' + y.mulk.qisqa + '</b><br>' + y.id + ' · qoplash ' + y.qoplash + '%<br>' +
+      .bindPopup('<b>' + y.mulk.qisqa + '</b><br>' + y.id + ' · nazorat indeksi ' + MKB_DATA.nazoratIndeksi(y).ball + '%<br>' +
         '<a href="obyekt.html?id=' + encodeURIComponent(y.id) + '">Kartochkani ochish</a>');
     markerlar[y.id] = m;
   });
   document.getElementById("xo-royxat").innerHTML = yoz.map(y =>
     '<button type="button" class="hudud-band" data-id="' + y.id + '">' +
-    '<span style="width:8px;height:8px;border-radius:99px;background:' + (y.qoplash < 100 ? 'var(--xavf)' : 'var(--brend)') + '"></span>' +
+    '<span style="width:8px;height:8px;border-radius:99px;background:' + (MKB_DATA.nazoratIndeksi(y).ball < 70 ? 'var(--xavf)' : 'var(--brend)') + '"></span>' +
     '<span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + y.mulk.qisqa + '</span></button>').join("");
   document.getElementById("xo-royxat").addEventListener("click", e => {
     const b = e.target.closest("[data-id]");

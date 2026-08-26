@@ -14,10 +14,6 @@ window.MKB_DARAXT = {
    "n": "Yuridik panel"
   },
   {
-   "f": "panel-tavakkal.html",
-   "n": "Tavakkalchilik paneli"
-  },
-  {
    "f": "korsatkichlar.html",
    "n": "Ko'rsatkichlar"
   },
@@ -32,10 +28,6 @@ window.MKB_DARAXT = {
   {
    "f": "panel-baholash.html",
    "n": "Baholash paneli"
-  },
-  {
-   "f": "panel-savdo.html",
-   "n": "Realizatsiya paneli"
   }
  ],
  "aktivlar": [
@@ -54,36 +46,6 @@ window.MKB_DARAXT = {
   {
    "f": "qabul-tasdiqlash.html",
    "n": "Qabul: tasdiqlash"
-  }
- ],
- "portfel": [
-  {
-   "f": "qarzdorlar.html",
-   "n": "Qarzdor mijozlar"
-  },
-  {
-   "f": "shartnomalar.html",
-   "n": "Kredit shartnomalari"
-  },
-  {
-   "f": "muddati-otganlar.html",
-   "n": "Muddati o'tgan qarzlar"
-  },
-  {
-   "f": "restrukturizatsiya.html",
-   "n": "Restrukturizatsiya"
-  },
-  {
-   "f": "restrukturizatsiya-arizasi.html",
-   "n": "Yangi ariza"
-  },
-  {
-   "f": "muloqot-jurnali.html",
-   "n": "Muloqot jurnali"
-  },
-  {
-   "f": "portfel-segmentlar.html",
-   "n": "Portfel segmentlari"
   }
  ],
  "yuridik": [
@@ -202,62 +164,6 @@ window.MKB_DARAXT = {
    "n": "Yangilash"
   }
  ],
- "zaxira": [
-  {
-   "f": "tasniflash.html",
-   "n": "Tasniflash"
-  },
-  {
-   "f": "zaxira-hisobi.html",
-   "n": "Zaxira hisobi"
-  },
-  {
-   "f": "tasnif-dinamika.html",
-   "n": "Dinamika"
-  },
-  {
-   "f": "tasnif-tasdiqlash.html",
-   "n": "Tasdiqlash"
-  },
-  {
-   "f": "tasnif-chop.html",
-   "n": "Chop shakli"
-  }
- ],
- "savdo": [
-  {
-   "f": "savdo.html",
-   "n": "Savdo doskasi"
-  },
-  {
-   "f": "auksion-jadvali.html",
-   "n": "Auksion jadvali"
-  },
-  {
-   "f": "auksion-takliflar.html",
-   "n": "Takliflar"
-  },
-  {
-   "f": "auksion-natija.html",
-   "n": "Natija kiritish"
-  },
-  {
-   "f": "tolov-nazorati.html",
-   "n": "To'lov nazorati"
-  },
-  {
-   "f": "ijara.html",
-   "n": "Ijara shartnomalari"
-  },
-  {
-   "f": "xaridorlar.html",
-   "n": "Xaridorlar"
-  },
-  {
-   "f": "savdo-natijalari.html",
-   "n": "Savdo natijalari"
-  }
- ],
  "arxiv": [
   {
    "f": "arxiv.html",
@@ -280,14 +186,6 @@ window.MKB_DARAXT = {
   {
    "f": "hisobot-undiruv.html",
    "n": "Undiruv"
-  },
-  {
-   "f": "hisobot-realizatsiya.html",
-   "n": "Realizatsiya"
-  },
-  {
-   "f": "hisobot-zaxira.html",
-   "n": "Zaxira"
   },
   {
    "f": "hisobot-hudud.html",
@@ -408,6 +306,60 @@ window.MKB_DARAXT = {
   {
    "f": "tizim-haqida.html",
    "n": "Tizim haqida"
+  },
+  {
+   "f": "qollanma.html",
+   "n": "Ish qo'llanmasi"
+  }
+ ],
+ "kn": [
+  {
+   "f": "kirish-nazorati.html",
+   "n": "Kirish nazorati posti"
+  },
+  {
+   "f": "kuzatuv.html",
+   "n": "Elektron nazorat markazi"
+  },
+  {
+   "f": "kirish-nuqtalari.html",
+   "n": "Kirish nuqtalari"
+  },
+  {
+   "f": "kirish-voqealari.html",
+   "n": "Kirish voqealari"
+  },
+  {
+   "f": "kirish-soravi.html",
+   "n": "Kirish ruxsatnomasi"
+  },
+  {
+   "f": "ruxsatlar.html",
+   "n": "Ruxsatlar reyestri"
+  },
+  {
+   "f": "tashriflar.html",
+   "n": "Tashriflar"
+  },
+  {
+   "f": "masofaviy-korik.html",
+   "n": "Masofaviy ko'rik"
+  },
+  {
+   "f": "qurilmalar.html",
+   "n": "Nazorat qurilmalari"
+  },
+  {
+   "f": "qurilma-ornatish.html",
+   "n": "Qurilma o'rnatish"
+  },
+  {
+   "f": "hodisalar.html",
+   "n": "Hodisalar doskasi"
+  },
+  {
+   "f": "kirish-hisoboti.html",
+   "n": "Kirish va nazorat hisoboti"
   }
  ]
 };

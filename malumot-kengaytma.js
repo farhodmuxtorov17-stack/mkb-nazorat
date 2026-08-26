@@ -1,8 +1,8 @@
 /* ============================================================
-   malumot-kengaytma.js — demo ma'lumot bazasini kengaytirish
+   malumot-kengaytma.js — ma'lumot bazasini kengaytirish
    malumot-qoshimcha.js dan KEYIN ulanadi.
-   Maqsad: tizim real ish hajmi bilan ko'rinsin (60+ obyekt, 40+ ko'rik,
-   auksion lotlari, arxiv, vazifalar) — barchasi deterministik hosil qilinadi.
+   Reyestr, ko'riklar, baholash, sug'urta va hujjatlar bo'yicha to'liq qamrov
+   deterministik tarzda shakllantiriladi.
    ============================================================ */
 (function(){
   const D = window.MKB_DATA;
@@ -14,6 +14,15 @@
   const rnd = () => { urug = (urug * 1103515245 + 12345) & 0x7fffffff; return urug / 0x7fffffff; };
   const tanla = a => a[Math.floor(rnd() * a.length)];
   const oraliq = (a, b) => a + Math.floor(rnd() * (b - a + 1));
+
+
+  /* ---------- sana yordamchilari ---------- */
+  const OY_QISQA = ["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"];
+  const BUGUN_S = new Date(2026, 7, 26);
+  const kunlar = k => { const d = new Date(BUGUN_S); d.setDate(d.getDate() + k); return d; };
+  const uzSana = d => d.getDate() + "-" + OY_QISQA[d.getMonth()] + ", " + d.getFullYear();
+  const nuqtaliSana = d => String(d.getDate()).padStart(2, "0") + "." +
+    String(d.getMonth() + 1).padStart(2, "0") + "." + d.getFullYear();
 
   const HUDUDLAR = [
     ["Toshkent sh.", "Toshkent sh., Yunusobod", "Toshkent shahar filiali"],
@@ -149,7 +158,8 @@
       holat: {nom: bosq.nom, rang: bosq.rang},
       qarzMatn: pulMatn(qarz), asosiyMatn: pulMatn(asosiy), foizMatn: pulMatn(foiz),
       bahoMatn: pulMatn(baho), qarzSon: son(qarz),
-      tasnif, zaxira, zaxiraMatn: pulMatn(zaxira), ochiqQoldiq: 0,
+      tasnif, zaxira, zaxiraMatn: pulMatn(zaxira),
+      ochiqQoldiq: Math.max(0, Math.round(qarz - baho)),
       qoplash: Math.round(baho / qarz * 100),
     });
   }
@@ -160,27 +170,44 @@
       rasmKichik: y.mulk.rasmKichik, maydon: y.mulk.maydon};
   });
 
+  /* asosiy yozuvlar uchun ham reyestrda baho va maydon bo'lsin */
+  D.YOZUVLAR.forEach(y => {
+    const r = D.OBYEKT_INDEKS[y.id];
+    if (r && r.baho == null){ r.baho = y.mulk.baho; r.maydon = y.mulk.maydon; }
+  });
+
   /* ---------- KORIKLAR ---------- */
   const INSPEKTORLAR = ["Sattorov Jasur", "Karimova Feruza", "Yo'ldoshev Sardor", "Tosheva Barno",
     "Nazarov Aziz", "Ergashev Botir"];
   const KORIK_TUR = ["Rejali", "Navbatdan tashqari", "Qabul ko'rigi", "Savdo oldi"];
   const KORIK_HOLAT = ["rejada", "otkazildi", "otkazildi", "kechikkan"];
   const yangiKorik = [];
-  yangiYozuvlar.forEach((y, i) => {
-    if (i % 2) return;
-    const holat = tanla(KORIK_HOLAT);
-    yangiKorik.push({
-      id: "KO-2026/" + String(500 + i).padStart(4, "0"),
-      obyektId: y.id, tur: tanla(KORIK_TUR),
-      sana: oraliq(1, 28) + "-" + tanla(["avg", "sen", "okt"]) + ", 2026",
-      holat, inspektor: tanla(INSPEKTORLAR),
-      baho: holat === "otkazildi" ? tanla(["A'lo", "Qoniqarli", "Nuqsonli"]) : "",
-      izoh: holat === "otkazildi"
-        ? tanla(["Obyekt saqlanish holati qoniqarli, muhrlar butun.",
-                 "Kommunikatsiyalarda kichik nuqsonlar aniqlandi.",
-                 "Tashqi konstruksiyalar butun, ruxsatsiz foydalanish belgilari yo'q."])
-        : "Rejaga muvofiq ko'rik o'tkaziladi.",
-    });
+  const KORIK_DAVR = t => /Avtotransport/.test(t) ? 30 : /Yer/.test(t) ? 180 : 90;
+  let korikRaqam = 500;
+  D.YOZUVLAR.forEach(y => {
+    if (D.KORIKLAR.some(k => k.obyektId === y.id && k.holat !== "rejada")) return;
+    const davr = KORIK_DAVR(y.mulk.tur);
+    const soni = oraliq(2, 4);
+    for (let j = soni; j >= 1; j--) {
+      const otgan = j > 1;
+      const kun = otgan ? -oraliq(Math.round(davr * (j - 1) * 0.7), Math.round(davr * j * 0.9))
+                        : oraliq(2, 34);
+      const holat = otgan ? "otkazildi" : (rnd() < 0.16 ? "kechikkan" : "rejada");
+      korikRaqam += 1;
+      yangiKorik.push({
+        id: "KO-2026/" + String(korikRaqam).padStart(4, "0"),
+        obyektId: y.id, tur: tanla(KORIK_TUR),
+        sana: uzSana(kunlar(holat === "kechikkan" ? -oraliq(3, 24) : kun)),
+        holat, inspektor: tanla(INSPEKTORLAR),
+        baho: holat === "otkazildi" ? tanla(["A'lo", "Qoniqarli", "Nuqsonli"]) : "",
+        izoh: holat === "otkazildi"
+          ? tanla(["Obyekt saqlanish holati qoniqarli, muhrlar butun.",
+                   "Kommunikatsiyalarda kichik nuqsonlar aniqlandi.",
+                   "Tashqi konstruksiyalar butun, ruxsatsiz foydalanish belgilari yo'q."])
+          : holat === "kechikkan" ? "Reja muddati o'tgan, ko'rik o'tkazilmagan."
+          : "Rejaga muvofiq ko'rik o'tkaziladi.",
+      });
+    }
   });
   D.KORIKLAR = D.KORIKLAR.concat(yangiKorik);
 
@@ -235,14 +262,22 @@
   /* ---------- SUGURTALAR ---------- */
   const KOMPANIYA = ["O'zbekinvest", "Kafolat sug'urta", "Gross Insurance", "Alskom", "Apex Insurance"];
   const yangiPolis = [];
-  yangiYozuvlar.forEach((y, i) => {
-    if (i % 3) return;
-    yangiPolis.push({id: "PL-2026/" + String(12000 + i).padStart(5, "0"),
-      obyektId: y.id, polis: "PL-2026/" + String(12000 + i).padStart(5, "0"),
-      kompaniya: tanla(KOMPANIYA), summa: y.mulk.baho,
-      tugash: oraliq(1, 28) + "-" + tanla(["sen", "okt", "noy", "dek", "yan"]) + ", " +
-        tanla(["2026", "2027"]),
-      holat: rnd() < 0.78 ? "amalda" : "muddati tugagan", obyekt: y.mulk.qisqa});
+  let polisRaqam = 12000;
+  D.YOZUVLAR.forEach(y => {
+    if (D.SUGURTALAR.some(x => x.obyektId === y.id)) return;
+    if (rnd() < 0.08) return;                       /* polisi yo'q obyektlar ham bo'ladi */
+    polisRaqam += 1;
+    const tugashKun = rnd() < 0.14 ? -oraliq(3, 120) : oraliq(8, 400);
+    const toliq = rnd() < 0.82;
+    yangiPolis.push({
+      id: "PL-2026/" + String(polisRaqam).padStart(5, "0"),
+      obyektId: y.id, polis: "PL-2026/" + String(polisRaqam).padStart(5, "0"),
+      kompaniya: tanla(KOMPANIYA),
+      summa: toliq ? y.mulk.baho : Math.round(y.mulk.baho * (0.6 + rnd() * 0.3)),
+      tugash: uzSana(kunlar(tugashKun)),
+      holat: tugashKun > 0 ? "amalda" : "muddati tugagan",
+      obyekt: y.mulk.qisqa,
+    });
   });
   D.SUGURTALAR = D.SUGURTALAR.concat(yangiPolis);
   D.POLISLAR = D.SUGURTALAR;
@@ -252,13 +287,26 @@
     "«Aniq Baho» MChJ"];
   const USUL = ["Qiyosiy yondashuv", "Daromad yondashuvi", "Xarajat yondashuvi"];
   const yangiBaho = [];
-  yangiYozuvlar.forEach((y, i) => {
-    if (i % 2) return;
-    const avvalgi = Math.round(y.mulk.baho * (0.86 + rnd() * 0.2));
-    yangiBaho.push({id: "BH-2026/" + String(300 + i).padStart(4, "0"),
-      obyektId: y.id, sana: oraliq(1, 28) + "." + String(oraliq(1, 8)).padStart(2, "0") + ".2026",
-      qiymat: y.mulk.baho, avvalgi, baholovchi: tanla(BAHOLOVCHI), usul: tanla(USUL),
-      keyingi: "12 oydan so'ng", holat: "yakunlangan"});
+  let bahoRaqam = 300;
+  D.YOZUVLAR.forEach(y => {
+    if (D.BAHOLASHLAR.some(b => b.obyektId === y.id)) return;
+    const soni = rnd() < 0.4 ? 2 : 1;
+    for (let j = soni; j >= 1; j--) {
+      bahoRaqam += 1;
+      const kun = j > 1 ? -oraliq(400, 900) : -oraliq(20, 400);
+      const d = kunlar(kun);
+      const keyingi = new Date(d); keyingi.setFullYear(keyingi.getFullYear() + 1);
+      const avvalgi = Math.round(y.mulk.baho * (0.84 + rnd() * 0.24));
+      yangiBaho.push({
+        id: "BH-2026/" + String(bahoRaqam).padStart(4, "0"),
+        obyektId: y.id, sana: nuqtaliSana(d),
+        qiymat: j > 1 ? avvalgi : y.mulk.baho, avvalgi,
+        baholovchi: tanla(BAHOLOVCHI), usul: tanla(USUL),
+        keyingi: nuqtaliSana(keyingi),
+        holat: j > 1 ? "eskirgan" : "dolzarb",
+      });
+      if (j === 1) y.mulk.bahoSana = nuqtaliSana(d);
+    }
   });
   D.BAHOLASHLAR = D.BAHOLASHLAR.concat(yangiBaho);
 
@@ -309,14 +357,28 @@
   /* ---------- HUJJATLAR ---------- */
   const HUJ_TUR = ["Texnik pasport", "Kadastr hujjati", "Sud hujjati", "Shartnoma", "Dalolatnoma",
     "Baholash hisoboti", "Sug'urta polisi"];
+  const MAJBURIY = ["Texnik pasport", "Kadastr hujjati", "Qabul dalolatnomasi"];
+  const QOSHIMCHA_HUJ = ["Baholash hisoboti", "Sug'urta polisi", "Sud qarori nusxasi",
+                         "Ko'rik dalolatnomasi", "Kommunal shartnoma"];
   const yangiHujjat = [];
-  yangiYozuvlar.slice(0, 26).forEach((y, i) => {
-    const tur = tanla(HUJ_TUR);
-    yangiHujjat.push({id: "HJ-" + (200 + i), nom: tur + " — " + y.mulk.qisqa,
-      ikon: "pdf", iturl: "i-hujjat", obyektId: y.id, tur, teg: "pdf",
-      sana: oraliq(1, 28) + "-avg, 2026",
-      holat: rnd() < 0.7 ? "Tasdiqlangan" : "Ko'rib chiqilmoqda",
-      hajm: oraliq(1, 6) + "," + oraliq(1, 9) + " MB"});
+  let hujRaqam = 200;
+  D.YOZUVLAR.forEach(y => {
+    const bor = D.HUJJATLAR.filter(h => h.obyektId === y.id).map(h => h.tur);
+    const kerak = MAJBURIY.filter(t => bor.indexOf(t) < 0);
+    /* ayrim obyektlarda hujjat to'liq bo'lmaydi — nazorat indeksi buni ko'rsatadi */
+    const tushirib = rnd() < 0.22 ? 1 : 0;
+    const royxat = kerak.slice(0, kerak.length - tushirib)
+      .concat(rnd() < 0.6 ? [tanla(QOSHIMCHA_HUJ)] : []);
+    royxat.forEach(tur => {
+      hujRaqam += 1;
+      yangiHujjat.push({
+        id: "HJ-" + hujRaqam, nom: tur + " — " + y.mulk.qisqa,
+        ikon: "pdf", iturl: "i-hujjat", obyektId: y.id, tur, teg: "pdf",
+        sana: uzSana(kunlar(-oraliq(5, 420))),
+        holat: rnd() < 0.82 ? "Tasdiqlangan" : "Ko'rib chiqilmoqda",
+        hajm: oraliq(1, 6) + "," + oraliq(1, 9) + " MB",
+      });
+    });
   });
   D.HUJJATLAR = D.HUJJATLAR.concat(yangiHujjat);
 

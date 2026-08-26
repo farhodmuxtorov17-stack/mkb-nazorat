@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Ish qo'llanmasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<style>
+.ql-tor{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px}
+.ql-rollar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.ql-rollar button{height:38px;padding:0 16px;border-radius:999px;background:var(--oq);
+  box-shadow:var(--soya-past);font-size:13.5px;font-weight:500;color:var(--matn-2)}
+.ql-rollar button.faol{background:var(--siyoh);color:var(--oq)}
+@media (max-width:1100px){.ql-tor{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><span>Ish qo'llanmasi</span></div>
+    <div class="hs-qator"><h1>Ish qo'llanmasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div class="ql-rollar" id="ql-rollar"></div>
+  <div class="ql-tor">
+    <section class="karta">
+      <div class="karta-bosh"><h2 id="ql-nom">—</h2></div>
+      <p class="qol-maqsad" id="ql-maqsad"></p>
+      <div class="qol-blok"><h4>Kunlik ish tartibi</h4><ol class="qol-qadamlar" id="ql-qadamlar"></ol></div>
+    </section>
+    <section class="karta">
+      <div class="karta-bosh"><h2>Javobgarlik va me&#39;yorlar</h2></div>
+      <div id="ql-ongi"></div>
+    </section>
+  </div>
+</main>
+</div>
+</div>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+  const Q = window.MKB_QOLLANMA || {};
+  const joriy = MKB.rol() || "admin";
+  const rollar = Object.keys(Q).filter(k => joriy === "admin" || k === joriy);
+  let tanlangan = Q[joriy] ? joriy : rollar[0];
+
+  function royxat(nom, bandlar, kls){
+    if (!bandlar || !bandlar.length) return "";
+    return '<div class="qol-blok' + (kls ? " " + kls : "") + '"><h4>' + nom + "</h4><ul>" +
+      bandlar.map(b => "<li>" + b + "</li>").join("") + "</ul></div>";
+  }
+  function chiz(){
+    const q = Q[tanlangan];
+    document.getElementById("hs-meta").textContent = q.nom;
+    document.getElementById("ql-nom").textContent = q.nom;
+    document.getElementById("ql-maqsad").textContent = q.maqsad;
+    document.getElementById("ql-qadamlar").innerHTML = q.qadamlar.map((x, i) =>
+      '<li class="qol-qadam"><span class="raqam">' + (i + 1) + "</span>" +
+      '<span class="matn"><b>' + x.nom + "</b><span>" + x.izoh + "</span>" +
+      (x.havola ? '<a href="' + x.havola + '">' + (x.havolaNomi || "Ochish") +
+        '<svg class="ic mitti"><use href="#i-ong"/></svg></a>' : "") + "</span></li>").join("");
+    document.getElementById("ql-ongi").innerHTML =
+      royxat("Sizning javobgarligingiz", q.javobgarlik) +
+      royxat("Muddat va me&#39;yorlar", q.meyor, "qol-meyor") +
+      royxat("Sizga yopiq bo&#39;limlar", q.yopiq, "qol-yopiq");
+    document.querySelectorAll("#ql-rollar button").forEach(b =>
+      b.classList.toggle("faol", b.dataset.rol === tanlangan));
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+  document.getElementById("ql-rollar").innerHTML = rollar.map(r =>
+    '<button type="button" data-rol="' + r + '">' + Q[r].nom + "</button>").join("");
+  document.querySelectorAll("#ql-rollar button").forEach(b =>
+    b.addEventListener("click", () => { tanlangan = b.dataset.rol; chiz(); }));
+  chiz();
+});
+</script>
+</body>
+</html>

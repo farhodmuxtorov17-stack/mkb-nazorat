@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Servis topshirig'i</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="kn">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="kirish-nazorati.html">Kirish nazorati</a><span class="ajratgich">/</span><span>Servis topshirig'i</span></div>
+    <div class="hs-qator"><h1>Servis topshirig'i</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="kn-tor">
+    <section class="karta">
+      <div class="karta-bosh"><h2>Tekshiruv vazifalari</h2><span class="soni" id="sv-holat"></span></div>
+      <div id="sv-royxat"></div>
+      <div class="karta-bosh" style="margin-top:20px"><h2>Texnik xulosa</h2></div>
+      <div class="maydon"><label class="maydon-yorliq">Bajarilgan ish tavsifi <b>*</b></label>
+        <div class="kirish"><input id="sv-xulosa" placeholder="Nima qilindi va natija qanday"></div></div>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+        <button type="button" class="tugma tugma-asosiy" id="sv-yakun"><svg class="ic"><use href="#i-tasdiq"/></svg>Topshiriqni yakunlash</button>
+        <button type="button" class="tugma tugma-oq" id="sv-qism"><svg class="ic"><use href="#i-qoshish"/></svg>Ehtiyot qism qo&#39;shish</button>
+      </div>
+    </section>
+    <section class="karta">
+      <div class="karta-bosh"><h2>Topshiriq</h2></div>
+<dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-hujjat"/></svg>Raqam</dt>
+  <dd id="sv-raqam">—</dd>
+  <dt><svg class="ic"><use href="#i-qurilma"/></svg>Qurilma</dt>
+  <dd><span id="sv-qurilma" class="">—</span></dd>
+  <dt><svg class="ic"><use href="#i-bino"/></svg>Obyekt</dt>
+  <dd id="sv-obyekt">—</dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Sana</dt>
+  <dd id="sv-sana">—</dd>
+  <dt><svg class="ic"><use href="#i-foyd"/></svg>Texnik xodim</dt>
+  <dd id="sv-usta">—</dd>
+  <dt><svg class="ic"><use href="#i-xavf"/></svg>Muhimlik</dt>
+  <dd id="sv-muhim">—</dd>
+</dl>
+      <div class="karta-bosh" style="margin-top:20px"><h2>Ehtiyot qismlar</h2></div>
+      <div id="sv-qismlar"></div>
+    </section>
+  </div>
+</main>
+</div>
+</div>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
+<script>
+
+const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
+                   ogohlantirish: ["Ogohlantirish", "chip-sariq"]};
+const KN_HOLAT = {onlayn: ["Onlayn", "chip-yashil"], oflayn: ["Oflayn", "chip-xavf"],
+                  xizmatda: ["Xizmatda", "chip-sariq"]};
+const QR_HOLAT = {ishlayapti: ["Ishlayapti", "chip-yashil"], ogohlantirish: ["Ogohlantirish", "chip-sariq"],
+                  nosoz: ["Nosoz", "chip-xavf"]};
+function chip(xarita, kalit){
+  const v = xarita[kalit] || [kalit, ""];
+  return '<span class="chip ' + v[1] + '">' + v[0] + "</span>";
+}
+function nuqtaIkonka(t){
+  return t === "turniket" ? "turniket" : t === "shlagbaum" ? "mashina" : t === "darvoza" ? "zavod" : "eshik";
+}
+function shaxsSurati(sh, olcham){
+  const o = olcham || 38;
+  return sh && sh.rasm
+    ? '<img class="shaxs-surat" src="' + sh.rasm + '" alt="" loading="lazy" style="width:' + o +
+      "px;height:" + o + 'px">'
+    : '<span class="belgi">' + (sh ? sh.belgi : "?") + "</span>";
+}
+function shaxsQatori(sh, ong){
+  if (!sh) return '<span class="matn"><b>Aniqlanmagan shaxs</b><span>Identifikatsiya o&#39;tmadi</span></span>';
+  return shaxsSurati(sh) +
+    '<span class="matn"><b>' + sh.ism + "</b><span><span>" + sh.lavozim + "</span> · <span>" + sh.tashkilot + "</span></span></span>" +
+    (ong || "");
+}
+function obyektNomi(id){
+  const o = MKB_DATA.OBYEKT_INDEKS[id];
+  return o ? o.qisqa : id;
+}
+function voqeaQatori(v){
+  const sh = MKB_DATA.shaxs(v.shaxsId);
+  return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
+    '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
+      ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
+    '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
+}
+
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_DATA;
+  const p = new URLSearchParams(location.search);
+  let x = D.XIZMAT_ISHLARI.find(v => v.id === p.get("id"));
+  if (!x && p.get("qurilma")) x = D.XIZMAT_ISHLARI.find(v => v.qurilmaId === p.get("qurilma"));
+  if (!x) x = D.XIZMAT_ISHLARI.find(v => v.holat !== "bajarildi") || D.XIZMAT_ISHLARI[0];
+  if (!x){ location.replace("xato-404.html"); return; }
+  const q = D.QURILMALAR.find(v => v.id === x.qurilmaId) || {};
+
+  document.getElementById("hs-meta").textContent = x.id;
+  document.getElementById("sv-raqam").textContent = x.id;
+  document.getElementById("sv-qurilma").innerHTML =
+    '<a href="qurilma.html?id=' + encodeURIComponent(x.qurilmaId) + '">' + (q.model || x.qurilmaId) + "</a>";
+  document.getElementById("sv-obyekt").textContent = obyektNomi(x.obyektId);
+  document.getElementById("sv-sana").textContent = x.sana;
+  document.getElementById("sv-usta").textContent = x.usta;
+  document.getElementById("sv-muhim").innerHTML = q.holat === "nosoz"
+    ? '<span class="chip chip-xavf">Yuqori</span>' : '<span class="chip chip-info">Odatiy</span>';
+  document.getElementById("sv-holat").innerHTML =
+    '<span class="chip ' + (x.holat === "bajarildi" ? "chip-yashil" : "chip-sariq") + '">' + x.holat + "</span>";
+
+  const VAZIFA = [
+    "Qurilmani tarmoqdan uzish va xavfsizlikni ta&#39;minlash",
+    "Korpus va kabellarni ko&#39;zdan kechirish",
+    "Diagnostika testini o&#39;tkazish",
+    "Nosoz komponentni almashtirish yoki sozlash",
+    "Qurilmani qayta ulash va sinovdan o&#39;tkazish",
+    "Kirish nuqtasi ishlashini tekshirish",
+  ];
+  document.getElementById("sv-royxat").innerHTML = VAZIFA.map((v, i) =>
+    '<label class="qator" style="cursor:pointer">' +
+      '<input type="checkbox" data-v="' + i + '" style="width:20px;height:20px;accent-color:var(--brend)"' +
+      (x.holat === "bajarildi" ? " checked" : "") + ">" +
+      '<span class="matn"><b>' + v + "</b></span></label>").join("");
+
+  const qismlar = x.ehtiyotQismlar.slice();
+  function qismChiz(){
+    document.getElementById("sv-qismlar").innerHTML = qismlar.length
+      ? qismlar.map(q2 => '<div class="qator"><span class="belgi">' + ik("qurilma") + "</span>" +
+          '<span class="matn"><b>' + q2 + "</b><span>Ombordan yechildi</span></span></div>").join("")
+      : '<div class="bosh-holat">Ehtiyot qism ishlatilmagan</div>';
+  }
+  qismChiz();
+  document.getElementById("sv-qism").addEventListener("click", () => {
+    MKB.modal("Ehtiyot qism qo&#39;shish",
+      '<div class="maydon"><label class="maydon-yorliq">Qism <b>*</b></label>' +
+      '<div class="kirish"><select id="sv-yangi"><option>Magnit qulf plastinasi</option>' +
+      "<option>Kartani o&#39;quvchi moduli</option><option>Quvvat bloki</option>" +
+      "<option>Aloqa kabeli</option><option>Datchik batareyasi</option>" +
+      "<option>Kamera obyektivi</option></select></div></div>",
+      {okMatn: "Ombordan yechish", ok: pd => {
+        qismlar.push(pd.querySelector("#sv-yangi").value);
+        qismChiz();
+        MKB.toast("Ehtiyot qism topshiriqqa biriktirildi");
+      }});
+  });
+
+  document.getElementById("sv-yakun").addEventListener("click", () => {
+    const bajarilgan = [...document.querySelectorAll("[data-v]")].filter(v => v.checked).length;
+    if (bajarilgan < VAZIFA.length){ MKB.toast("Barcha tekshiruv bandlari bajarilishi shart", "xavf"); return; }
+    if (!document.getElementById("sv-xulosa").value.trim()){
+      MKB.toast("Texnik xulosasiz topshiriq yopilmaydi", "xavf"); return;
+    }
+    document.getElementById("sv-holat").innerHTML = '<span class="chip chip-yashil">bajarildi</span>';
+    MKB.toast("Topshiriq yakunlandi va xarajat obyektga bog&#39;landi");
+  });
+});
+</script>
+</body>
+</html>

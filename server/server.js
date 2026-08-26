@@ -60,8 +60,8 @@ function yoz(kolleksiya, royxat){
 
 /* ---------- Sessiyalar ---------- */
 const SESSIYALAR = new Map(); /* token -> {ism, rol, filial, vaqt} */
-const ROLLAR = ["Administrator", "Filial rahbari", "Kredit menejeri",
-  "Aktivlar nazorati mutaxassisi", "Yurist", "Tavakkalchilik menejeri"];
+const ROLLAR = ["Administrator", "Filial rahbari", "Obyekt menejeri",
+  "Ko'rik inspektori", "Baholovchi mutaxassis", "Yurist"];
 
 function amalYoz(s, kolleksiya, obyektId, turi, tafsilot){
   const j = oqi("amallar") || [];

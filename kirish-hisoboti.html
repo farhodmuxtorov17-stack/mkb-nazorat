@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Kirish va nazorat hisoboti</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="kn">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="kirish-nazorati.html">Kirish nazorati</a><span class="ajratgich">/</span><span>Hisobot</span></div>
+    <div class="hs-qator"><h1>Kirish va nazorat hisoboti</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
+    <div class="metrika"><span class="m-yorliq">Davrdagi o'tishlar</span>
+      <span class="m-qiymat"><span id="kh-otish">—</span></span>
+      <span class="m-izoh">Kirish va chiqish</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Rad etishlar</span>
+      <span class="m-qiymat"><span id="kh-rad">—</span></span>
+      <span class="m-izoh">Ruxsatsiz urinishlar</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">O'rtacha javob vaqti</span>
+      <span class="m-qiymat"><span id="kh-javob">—</span></span>
+      <span class="m-izoh">So'rovdan ruxsatgacha</span>
+    </div>
+    <div class="metrika"><span class="m-yorliq">Me'yor buzilishi</span>
+      <span class="m-qiymat"><span id="kh-meyor">—</span></span>
+      <span class="m-izoh">3 daqiqadan oshgan</span>
+    </div>
+  </section>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px" class="kn-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Kunlar kesimida o'tishlar</h2></div><div id="kh-kunlar"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>Tekshiruv usullari</h2></div><div id="kh-usul"></div></section>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px" class="kn-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Obyektlar bo'yicha faollik</h2></div><div id="kh-obyekt"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>Rad etish sabablari</h2></div><div id="kh-sabab"></div></section>
+  </div>
+</main>
+</div>
+</div>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
+<script>
+
+const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
+                   ogohlantirish: ["Ogohlantirish", "chip-sariq"]};
+const KN_HOLAT = {onlayn: ["Onlayn", "chip-yashil"], oflayn: ["Oflayn", "chip-xavf"],
+                  xizmatda: ["Xizmatda", "chip-sariq"]};
+const QR_HOLAT = {ishlayapti: ["Ishlayapti", "chip-yashil"], ogohlantirish: ["Ogohlantirish", "chip-sariq"],
+                  nosoz: ["Nosoz", "chip-xavf"]};
+function chip(xarita, kalit){
+  const v = xarita[kalit] || [kalit, ""];
+  return '<span class="chip ' + v[1] + '">' + v[0] + "</span>";
+}
+function nuqtaIkonka(t){
+  return t === "turniket" ? "turniket" : t === "shlagbaum" ? "mashina" : t === "darvoza" ? "zavod" : "eshik";
+}
+function shaxsSurati(sh, olcham){
+  const o = olcham || 38;
+  return sh && sh.rasm
+    ? '<img class="shaxs-surat" src="' + sh.rasm + '" alt="" loading="lazy" style="width:' + o +
+      "px;height:" + o + 'px">'
+    : '<span class="belgi">' + (sh ? sh.belgi : "?") + "</span>";
+}
+function shaxsQatori(sh, ong){
+  if (!sh) return '<span class="matn"><b>Aniqlanmagan shaxs</b><span>Identifikatsiya o&#39;tmadi</span></span>';
+  return shaxsSurati(sh) +
+    '<span class="matn"><b>' + sh.ism + "</b><span><span>" + sh.lavozim + "</span> · <span>" + sh.tashkilot + "</span></span></span>" +
+    (ong || "");
+}
+function obyektNomi(id){
+  const o = MKB_DATA.OBYEKT_INDEKS[id];
+  return o ? o.qisqa : id;
+}
+function voqeaQatori(v){
+  const sh = MKB_DATA.shaxs(v.shaxsId);
+  return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
+    '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
+      ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
+    '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
+}
+
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_DATA, V = D.KIRISH_VOQEALARI;
+  document.getElementById("hs-meta").textContent = "20.08.2026 — 26.08.2026";
+  document.getElementById("kh-otish").textContent = MKB.fmt(V.length);
+  document.getElementById("kh-rad").textContent = V.filter(v => v.natija === "rad").length;
+  document.getElementById("kh-javob").innerHTML = "2,4<small> daq</small>";
+  document.getElementById("kh-meyor").textContent =
+    D.KIRISH_SOROVLARI.filter(s => s.holat === "rad etilgan").length;
+
+  const kunlar = {};
+  V.forEach(v => kunlar[v.sana] = (kunlar[v.sana] || 0) + 1);
+  MKB.barlar("kh-kunlar", Object.entries(kunlar).sort().map(([k, v]) => [k, v]));
+
+  const usul = {};
+  V.forEach(v => usul[v.usul] = (usul[v.usul] || 0) + 1);
+  MKB.barlar("kh-usul", Object.entries(usul).sort((a, b) => b[1] - a[1]));
+
+  const ob = {};
+  V.forEach(v => ob[v.obyektId] = (ob[v.obyektId] || 0) + 1);
+  MKB.barlar("kh-obyekt", Object.entries(ob).sort((a, b) => b[1] - a[1]).slice(0, 8)
+    .map(([k, v]) => [obyektNomi(k), v]));
+
+  const sabab = {};
+  V.filter(v => v.natija === "rad").forEach(v => sabab[v.sabab] = (sabab[v.sabab] || 0) + 1);
+  MKB.barlar("kh-sabab", Object.entries(sabab).sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => [k, v, "pushti"]));
+});
+</script>
+</body>
+</html>

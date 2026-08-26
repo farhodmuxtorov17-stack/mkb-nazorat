@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Filial kesimi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082645">
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
 </head>
 <body data-sahifa="hisobot">
 <div class="qobiq">
@@ -20,22 +20,26 @@
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082645"></script>
-<script src="malumot-qoshimcha.js?v=26082645"></script>
-<script src="malumot-kengaytma.js?v=26082645"></script>
-<script src="tarjima.js?v=26082645"></script>
-<script src="yadro/ikonlar.js?v=26082645"></script>
-<script src="yadro/daraxt.js?v=26082645"></script>
-<script src="yadro/chizma.js?v=26082645"></script>
-<script src="yadro/api.js?v=26082645"></script>
-<script src="yadro/app.js?v=26082645"></script>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
   const guruh = {};
   yoz.forEach(y => {
     const g = guruh[y.filial] = guruh[y.filial] || {filial: y.filial, soni: 0, qarz: 0, qoplash: 0};
-    g.soni++; g.qarz += MKB.sonQiymat(y.qarzSon); g.qoplash += y.qoplash;
+    g.soni++; g.qarz += MKB.sonQiymat(y.qarzSon); g.qoplash += MKB_DATA.nazoratIndeksi(y).ball;
   });
   const qatorlar = Object.values(guruh).map((g, i) =>
     Object.assign(g, {id: i, ortacha: Math.round(g.qoplash / g.soni)}));
@@ -46,7 +50,7 @@ document.addEventListener("mkb:tayyor", async () => {
       {kalit: "filial", nom: "Filial", chiz: q => '<b>' + q.filial + '</b>'},
       {kalit: "soni", nom: "Obyektlar", son: true},
       {kalit: "qarz", nom: "Qoldiq qarz", son: true, chiz: q => '<span class="pul">' + MKB.fmt(Math.round(q.qarz)) + ' mln</span>'},
-      {kalit: "ortacha", nom: "O'rtacha qoplash", son: true, chiz: q => MKB.shtrix(q.ortacha)},
+      {kalit: "ortacha", nom: "O'rtacha nazorat indeksi", son: true, chiz: q => MKB.shtrix(q.ortacha)},
     ],
   });
 });

@@ -4,20 +4,46 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Qavat rejasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082645">
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
-.reja-orash{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px}
-.reja-svg{background:var(--varaq);border:1px solid var(--chiziq-2);border-radius:var(--r-karta);padding:18px}
-.reja-svg svg{width:100%;height:auto;display:block}
-.reja-birlik{cursor:pointer;transition:opacity var(--tez)}
-.reja-birlik:hover rect{stroke:var(--siyoh);stroke-width:2}
-.reja-birlik.faol rect{stroke:var(--siyoh);stroke-width:2.5}
-.reja-birlik text{font:700 11px var(--shrift);fill:var(--siyoh);pointer-events:none}
-.reja-birlik .maydon-t{font:500 9.5px var(--shrift-mono);fill:var(--qalam)}
-@media (max-width:1100px){.reja-orash{grid-template-columns:minmax(0,1fr)}}
+
+.reja-tor{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:18px}
+.reja-varaq{background:var(--oq);border-radius:var(--r-karta);box-shadow:var(--soya);padding:18px;
+  overflow-x:auto}
+.qavat-reja{width:100%;min-width:640px;height:auto;display:block}
+.reja-toq line{stroke:#C9C2B7;stroke-width:.6;stroke-dasharray:6 4}
+.reja-toq circle{fill:#fff;stroke:#15150F;stroke-width:1}
+.reja-toq text{font:500 8px var(--shrift);fill:#15150F}
+.reja-devor rect{fill:#15150F}
+.reja-simvol line{stroke:#15150F;stroke-width:.9}
+.reja-simvol .qanot{stroke-width:1.4}
+.reja-simvol .yoy{fill:none;stroke:#8A8378;stroke-width:.7;stroke-dasharray:3 2}
+.reja-yozuv .nom{font:500 8.4px var(--shrift);fill:#15150F}
+.reja-yozuv .olcham{font:500 8px var(--shrift-mono);fill:#6F6A61}
+.reja-yozuv .kod{font:500 6.6px var(--shrift-mono);fill:#9A9288}
+.reja-yozuv .qisqa{font:500 7px var(--shrift-mono);fill:#6F6A61}
+.reja-olchov line{stroke:#6F6A61;stroke-width:.6}
+.reja-olchov text{font:500 7.4px var(--shrift-mono);fill:#3A362F}
+.reja-masshtab text{font:500 7.4px var(--shrift-mono);fill:#3A362F}
+.reja-shimol path{fill:#15150F}
+.reja-shimol text{font:500 8px var(--shrift);fill:#15150F}
+.reja-kn circle{fill:#25651A}
+.reja-kn path{fill:#fff}
+.reja-xona{cursor:pointer}
+.reja-xona:hover .reja-tanla{stroke:#25651A;stroke-width:2}
+.reja-xona:focus-visible .reja-tanla{stroke:#25651A;stroke-width:2.4}
+.reja-xona.tanlangan .reja-tanla{stroke:#15150F;stroke-width:2.6}
+.reja-qavatlar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.reja-qavatlar button{height:36px;padding:0 15px;border-radius:999px;background:var(--oq);
+  box-shadow:var(--soya-past);font-size:13px;font-weight:500;color:var(--matn-2)}
+.reja-qavatlar button.faol{background:var(--siyoh);color:var(--oq)}
+.reja-legend{display:flex;flex-direction:column;gap:9px}
+.reja-legend div{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--matn-2)}
+.reja-legend i{width:14px;height:14px;border-radius:4px;flex:none;border:1px solid rgba(0,0,0,.12)}
+@media (max-width:1100px){.reja-tor{grid-template-columns:minmax(0,1fr)}}
 </style>
-</head>
+<script src="yadro/qavat.js?v=26082730"></script><script src="yadro/nav3d.js?v=26082730"></script></head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
 <nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
@@ -40,22 +66,34 @@
       <div id="fs-halqa"></div>
     </div>
   </section>
-  <div class="reja-orash">
-    <section class="reja-svg"><div class="karta-bosh" style="margin-bottom:10px"><h2>Qavat rejasi</h2><div class="bolim-tablar" id="qavat-tanlov" style="margin-left:auto"></div></div><div id="reja-joy"></div><div style="display:flex;gap:16px;margin-top:12px;font-size:12.5px;color:var(--matn-3)"><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--brend);margin-right:5px"></i>Bank ta'minoti</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--band);border:1px solid var(--chiziq-3);margin-right:5px"></i>Umumiy foydalanish</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--sariq-fon);border:1px solid var(--sariq);margin-right:5px"></i>Ijarada</span></div></section>
-    <section class="karta"><div class="karta-bosh"><h2>Tanlangan birlik</h2></div><div id="birlik-panel"><div class="bosh-holat"><svg class="ic"><use href="#i-qavat"/></svg><b>Birlik tanlanmagan</b><span>Rejadan xonani bosing — kadastr va huquq ma'lumotlari shu yerda chiqadi</span></div></div></section>
+  <div class="reja-qavatlar" id="reja-qavatlar" role="group" aria-label="Qavat tanlash"></div>
+  <div class="reja-tor">
+    <section class="reja-varaq" id="reja-joy" aria-label="Qavat rejasi"></section>
+    <aside class="nav3d-yon">
+      <section class="karta"><div class="karta-bosh"><h2 id="rj-qavat">—</h2></div>
+        <dl class="malumot-royxat xona-tafsilot" id="rj-jamlama"></dl></section>
+      <section class="karta"><div class="karta-bosh"><h2 id="rj-xona-nom">Xona tanlanmagan</h2></div>
+        <dl class="malumot-royxat xona-tafsilot" id="rj-xona"></dl></section>
+      <section class="karta"><div class="karta-bosh"><h2>Shartli belgilar</h2></div>
+        <div class="reja-legend" id="rj-legend"></div></section>
+    </aside>
   </div>
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082645"></script>
-<script src="malumot-qoshimcha.js?v=26082645"></script>
-<script src="malumot-kengaytma.js?v=26082645"></script>
-<script src="tarjima.js?v=26082645"></script>
-<script src="yadro/ikonlar.js?v=26082645"></script>
-<script src="yadro/daraxt.js?v=26082645"></script>
-<script src="yadro/chizma.js?v=26082645"></script>
-<script src="yadro/api.js?v=26082645"></script>
-<script src="yadro/app.js?v=26082645"></script>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -68,81 +106,63 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("fs-chiplar").innerHTML =
     "<span class=\"chip chip-brend\">" + x.bosqichNomi + "</span>" +
     "<span class=\"chip chip-siyoh\">" + x.mulk.tur + "</span>";
-  document.getElementById("fs-halqa").innerHTML = MKB.halqa(x.qoplash, 74, 6).replace('class="halqa', 'class="halqa katta');
+  const fsIndeks = MKB_DATA.nazoratIndeksi(x);
+  document.getElementById("fs-halqa").innerHTML = MKB.halqa(fsIndeks.ball, 74, 6)
+    .replace('class="halqa', 'class="halqa katta');
+  document.getElementById("fs-halqa").title = "Nazorat indeksi: " + fsIndeks.darajaNomi;
   /* tab havolalariga ?id= ulab qo'yamiz */
   document.querySelectorAll(".bolim-tablar a").forEach(a => {
     if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
   });
   document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
 
-  const hamma = Object.values(MKB_DATA.XONALAR).filter(v => v.obyektId === x.id);
-  const qavatlar = [...new Set(hamma.map(v => +v.qavat || 1))].sort((a, b) => a - b);
-  if (!qavatlar.length) qavatlar.push(1);
-  let joriy = qavatlar[0], faolBirlik = null;
+  const model = MKBbino.model(x.id, x.mulk.tur, x.mulk.qisqa);
+  const RANG = {foydalanishda: "#EAF6E4", bosh: "#EFF4F7", muhrlangan: "#FBE7E3", tamirda: "#E7EAFA"};
+  const p2 = new URLSearchParams(location.search);
+  let joriy = Math.min(model.qavatSoni, Math.max(1, +(p2.get("qavat") || 1)));
 
-  function tanlovChiz(){
-    document.getElementById("qavat-tanlov").innerHTML = qavatlar.map(q =>
-      '<button type="button" class="' + (q === joriy ? 'faol' : '') + '" data-q="' + q + '">' + q + '-qavat</button>').join("");
+  document.getElementById("rj-legend").innerHTML = MKBbino.HOLATLAR.map(h =>
+    '<div><i style="background:' + RANG[h.kalit] + '"></i>' + h.nom + "</div>").join("") +
+    '<div><i style="background:#25651A;border-radius:99px"></i>Kirish nuqtasi</div>';
+
+  const qav = document.getElementById("reja-qavatlar");
+  qav.innerHTML = model.qavatlar.map(q =>
+    '<button type="button" data-q="' + q.raqam + '">' + q.nom + "</button>").join("");
+
+  function xonaChiz(xona){
+    document.getElementById("rj-xona-nom").textContent = xona ? xona.nom : "Xona tanlanmagan";
+    document.getElementById("rj-xona").innerHTML = xona
+      ? "<dt>Kod</dt><dd>" + xona.id + "</dd>" +
+        "<dt>Maydon</dt><dd>" + xona.maydon.toFixed(1).replace(".", ",") + " m&#178;</dd>" +
+        "<dt>O&#39;lcham</dt><dd>" + xona.en.toFixed(1).replace(".", ",") + " × " +
+          xona.chuq.toFixed(1).replace(".", ",") + " m</dd>" +
+        "<dt>Holat</dt><dd>" + MKBbino.holatNomi(xona.holat) + "</dd>"
+      : '<dd style="grid-column:1/-1;color:var(--matn-3)">Rejada xonani bosing</dd>';
   }
-  function birliklar(){
-    const r = hamma.filter(v => +v.qavat === joriy);
-    if (r.length) return r.map((v, i) => ({
-      nom: v.nom, maydon: v.maydon, rang: v.holat && v.holat.includes("jara") ? "var(--sariq-fon)" :
-        "var(--brend-fon)", chiziq: v.holat && v.holat.includes("jara") ? "var(--sariq)" : "var(--brend-quyuq)",
-      malumot: v}));
-    return [
-      {nom: "Umumiy zal", maydon: "—", rang: "var(--band)", chiziq: "var(--chiziq-3)", malumot: null},
-      {nom: "Yordamchi xona", maydon: "—", rang: "var(--band)", chiziq: "var(--chiziq-3)", malumot: null},
-      {nom: "Texnik blok", maydon: "—", rang: "var(--band)", chiziq: "var(--chiziq-3)", malumot: null},
-    ];
+
+  function chiz(){
+    const q = model.qavatlar.find(z => z.raqam === joriy);
+    MKBqavat.chiz("reja-joy", model, joriy, {
+      tanlanganda: xonaChiz,
+      kirishNuqtaBosilganda: kn => MKB.toast("Kirish nuqtasi: " + kn.nom),
+    });
+    qav.querySelectorAll("button").forEach(b => b.classList.toggle("faol", +b.dataset.q === joriy));
+    const jam = {};
+    q.xonalar.forEach(z => jam[z.holat] = (jam[z.holat] || 0) + 1);
+    document.getElementById("rj-qavat").textContent = q.nom;
+    document.getElementById("rj-jamlama").innerHTML =
+      "<dt>Xonalar</dt><dd>" + q.xonalar.length + " ta</dd>" +
+      "<dt>Qavat maydoni</dt><dd>" + MKB.fmt(Math.round(q.maydon)) + " m&#178;</dd>" +
+      "<dt>Yo&#39;lak</dt><dd>" + q.yolak.maydon.toFixed(1).replace(".", ",") + " m&#178;</dd>" +
+      "<dt>Kirish nuqtalari</dt><dd>" + q.kirishNuqtalari.length + " ta</dd>" +
+      MKBbino.HOLATLAR.map(h => "<dt>" + h.nom + "</dt><dd>" + (jam[h.kalit] || 0) + "</dd>").join("");
+    xonaChiz(null);
   }
-  function rejaChiz(){
-    const r = birliklar();
-    const EN = 640, BO = 380, PAD = 10;
-    const ustun = Math.ceil(Math.sqrt(r.length));
-    const qator = Math.ceil(r.length / ustun);
-    const kw = (EN - PAD * (ustun + 1)) / ustun, kh = (BO - PAD * (qator + 1)) / qator;
-    document.getElementById("reja-joy").innerHTML =
-      '<svg viewBox="0 0 ' + EN + ' ' + BO + '" role="img" aria-label="Qavat sxemasi">' +
-      '<rect x="2" y="2" width="' + (EN - 4) + '" height="' + (BO - 4) + '" rx="14" fill="none" stroke="var(--siyoh)" stroke-width="2.5"/>' +
-      r.map((v, i) => {
-        const cx = PAD + (i % ustun) * (kw + PAD), cy = PAD + Math.floor(i / ustun) * (kh + PAD);
-        return '<g class="reja-birlik' + (faolBirlik === i ? ' faol' : '') + '" data-i="' + i + '">' +
-          '<rect x="' + cx + '" y="' + cy + '" width="' + kw + '" height="' + kh + '" rx="9" fill="' + v.rang + '" stroke="' + v.chiziq + '" stroke-width="1.5"/>' +
-          '<text x="' + (cx + 13) + '" y="' + (cy + 26) + '">' + v.nom + '</text>' +
-          '<text class="maydon-t" x="' + (cx + 13) + '" y="' + (cy + 44) + '">' + v.maydon + '</text></g>';
-      }).join("") + '</svg>';
-  }
-  function panelChiz(){
-    const r = birliklar();
-    const v = faolBirlik == null ? null : r[faolBirlik];
-    if (!v){ return; }
-    const m = v.malumot;
-    document.getElementById("birlik-panel").innerHTML = m ?
-      '<dl class="malumot-royxat">' +
-        '<dt>' + ik("kub") + 'Nomi</dt><dd>' + m.nom + '</dd>' +
-        '<dt>' + ik("qavat") + 'Qavat / maydon</dt><dd>' + m.qavat + '-qavat · ' + m.maydon + '</dd>' +
-        '<dt>' + ik("diagramma") + 'Bank ulushi</dt><dd>' + (m.ulush || "—") + '%</dd>' +
-        '<dt>' + ik("hujjat") + 'Kadastr</dt><dd class="kod-mono">' + (m.kadastr || "—") + '</dd>' +
-        '<dt>' + ik("muhr") + 'Huquq</dt><dd style="white-space:normal;text-align:right">' + (m.huquq || "—") + '</dd>' +
-      '</dl>' +
-      (m.jihozlar ? '<p style="font-size:12.5px;color:var(--iz);line-height:1.6;margin-top:12px">' + m.jihozlar + '</p>' : "")
-      : '<dl class="malumot-royxat"><dt>' + ik("kub") + 'Nomi</dt><dd>' + v.nom + '</dd>' +
-        '<dt>' + ik("info") + 'Holat</dt><dd>Umumiy foydalanish — ta\'minotga kirmaydi</dd></dl>';
-  }
-  tanlovChiz(); rejaChiz();
-  document.getElementById("qavat-tanlov").addEventListener("click", e => {
-    const b = e.target.closest("[data-q]");
-    if (!b) return;
-    joriy = +b.dataset.q; faolBirlik = null;
-    tanlovChiz(); rejaChiz();
-  });
-  document.getElementById("reja-joy").addEventListener("click", e => {
-    const g = e.target.closest(".reja-birlik");
-    if (!g) return;
-    faolBirlik = +g.dataset.i;
-    rejaChiz(); panelChiz();
-  });
+  qav.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    joriy = +b.dataset.q;
+    chiz();
+  }));
+  chiz();
 
 });
 </script>

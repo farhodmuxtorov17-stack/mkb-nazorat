@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Masofaviy ko'rik</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="kn">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="kirish-nazorati.html">Kirish nazorati</a><span class="ajratgich">/</span><span>Masofaviy ko'rik</span></div>
+    <div class="hs-qator"><h1>Masofaviy ko'rik</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="kn-tor">
+    <section class="karta">
+      <div class="karta-bosh"><h2>Sessiya bosqichlari</h2><span class="soni" id="ms-holat"></span></div>
+      <div id="ms-zanjir"></div>
+      <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+        <button type="button" class="tugma tugma-asosiy" id="ms-keyingi">Keyingi bosqich</button>
+        <button type="button" class="tugma tugma-oq" id="ms-yopish"><svg class="ic"><use href="#i-qulf"/></svg>Eshiklarni qayta qulflash</button>
+      </div>
+    </section>
+    <section class="karta">
+      <div class="karta-bosh"><h2>Sessiya ma&#39;lumoti</h2></div>
+<dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-bino"/></svg>Obyekt</dt>
+  <dd><span id="ms-obyekt" class="">—</span></dd>
+  <dt><svg class="ic"><use href="#i-kalendar"/></svg>Sana</dt>
+  <dd id="ms-sana">—</dd>
+  <dt><svg class="ic"><use href="#i-foyd"/></svg>Inspektor</dt>
+  <dd id="ms-inspektor">—</dd>
+  <dt><svg class="ic"><use href="#i-kamera"/></svg>Ulangan kameralar</dt>
+  <dd id="ms-kamera">—</dd>
+  <dt><svg class="ic"><use href="#i-soat"/></svg>Davomiylik</dt>
+  <dd id="ms-davom">—</dd>
+</dl>
+    </section>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px" class="kn-tor">
+    <section class="karta"><div class="karta-bosh"><h2>Sessiya davomida ochilgan nuqtalar</h2></div><div id="ms-nuqtalar"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>Rejadagi sessiyalar</h2></div><div id="ms-royxat"></div></section>
+  </div>
+</main>
+</div>
+</div>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
+<script>
+
+const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
+                   ogohlantirish: ["Ogohlantirish", "chip-sariq"]};
+const KN_HOLAT = {onlayn: ["Onlayn", "chip-yashil"], oflayn: ["Oflayn", "chip-xavf"],
+                  xizmatda: ["Xizmatda", "chip-sariq"]};
+const QR_HOLAT = {ishlayapti: ["Ishlayapti", "chip-yashil"], ogohlantirish: ["Ogohlantirish", "chip-sariq"],
+                  nosoz: ["Nosoz", "chip-xavf"]};
+function chip(xarita, kalit){
+  const v = xarita[kalit] || [kalit, ""];
+  return '<span class="chip ' + v[1] + '">' + v[0] + "</span>";
+}
+function nuqtaIkonka(t){
+  return t === "turniket" ? "turniket" : t === "shlagbaum" ? "mashina" : t === "darvoza" ? "zavod" : "eshik";
+}
+function shaxsSurati(sh, olcham){
+  const o = olcham || 38;
+  return sh && sh.rasm
+    ? '<img class="shaxs-surat" src="' + sh.rasm + '" alt="" loading="lazy" style="width:' + o +
+      "px;height:" + o + 'px">'
+    : '<span class="belgi">' + (sh ? sh.belgi : "?") + "</span>";
+}
+function shaxsQatori(sh, ong){
+  if (!sh) return '<span class="matn"><b>Aniqlanmagan shaxs</b><span>Identifikatsiya o&#39;tmadi</span></span>';
+  return shaxsSurati(sh) +
+    '<span class="matn"><b>' + sh.ism + "</b><span><span>" + sh.lavozim + "</span> · <span>" + sh.tashkilot + "</span></span></span>" +
+    (ong || "");
+}
+function obyektNomi(id){
+  const o = MKB_DATA.OBYEKT_INDEKS[id];
+  return o ? o.qisqa : id;
+}
+function voqeaQatori(v){
+  const sh = MKB_DATA.shaxs(v.shaxsId);
+  return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
+    '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
+      ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
+    '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
+}
+
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_DATA;
+  const id = new URLSearchParams(location.search).get("id");
+  const s = D.MASOFAVIY_SESSIYALAR.find(x => x.id === id) ||
+            D.MASOFAVIY_SESSIYALAR.find(x => x.holat === "jarayonda") || D.MASOFAVIY_SESSIYALAR[0];
+  if (!s){ location.replace("xato-404.html"); return; }
+  document.getElementById("hs-meta").textContent = s.id;
+  document.getElementById("ms-obyekt").innerHTML =
+    '<a href="obyekt.html?id=' + encodeURIComponent(s.obyektId) + '">' + obyektNomi(s.obyektId) + "</a>";
+  document.getElementById("ms-sana").textContent = s.sana + " " + s.vaqt;
+  document.getElementById("ms-inspektor").textContent = s.inspektor;
+  document.getElementById("ms-kamera").textContent = s.kameralar + " ta";
+  document.getElementById("ms-davom").textContent = s.davomiylik;
+
+  let bosqich = s.bosqich;
+  function chiz(){
+    document.getElementById("ms-holat").innerHTML =
+      '<span class="chip ' + (s.holat === "yakunlandi" ? "chip-yashil" : s.holat === "jarayonda" ? "chip-sariq" : "chip-info") +
+      '">' + s.holat + "</span>";
+    document.getElementById("ms-zanjir").innerHTML = MKB.zanjir(
+      s.bosqichlar.map((b, i) => ({nom: b, sana: i < bosqich ? "bajarildi" : ""})), bosqich);
+  }
+  chiz();
+  document.getElementById("ms-keyingi").addEventListener("click", () => {
+    if (bosqich >= s.bosqichlar.length){ MKB.toast("Sessiya allaqachon yakunlangan"); return; }
+    bosqich += 1;
+    if (bosqich >= s.bosqichlar.length) s.holat = "yakunlandi";
+    else s.holat = "jarayonda";
+    chiz();
+    MKB.toast("Bosqich yakunlandi: " + s.bosqichlar[bosqich - 1]);
+  });
+  document.getElementById("ms-yopish").addEventListener("click", () =>
+    MKB.toast("Barcha vaqtinchalik ruxsatlar bekor qilindi, eshiklar qulflandi"));
+
+  const nuq = D.obyektNuqtalari(s.obyektId);
+  document.getElementById("ms-nuqtalar").innerHTML = nuq.length ? nuq.map(n =>
+    '<a class="qator" href="kirish-nuqtasi.html?id=' + encodeURIComponent(n.id) + '">' +
+      '<span class="belgi">' + ik(nuqtaIkonka(n.tur)) + "</span>" +
+      '<span class="matn"><b>' + n.nom + "</b><span>" + n.turNomi + " · " + n.rejim + "</span></span>" +
+      '<span class="ong">' + chip(KN_HOLAT, n.holat) + "</span></a>").join("")
+    : '<div class="bosh-holat">Kirish nuqtasi yo&#39;q</div>';
+
+  document.getElementById("ms-royxat").innerHTML = D.MASOFAVIY_SESSIYALAR
+    .filter(x => x.holat === "rejalashtirilgan").slice(0, 6).map(x =>
+      '<a class="qator" href="masofaviy-korik.html?id=' + encodeURIComponent(x.id) + '">' +
+        '<span class="belgi lavanda">' + ik("kamera") + "</span>" +
+        '<span class="matn"><b>' + obyektNomi(x.obyektId) + "</b><span>" + x.inspektor + "</span></span>" +
+        '<span class="chip chip-brend">' + x.sana + " " + x.vaqt + "</span></a>").join("") ||
+    '<div class="bosh-holat">Rejada sessiya yo&#39;q</div>';
+});
+</script>
+</body>
+</html>

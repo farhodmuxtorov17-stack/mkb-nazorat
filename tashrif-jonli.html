@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Jonli tashrif nazorati</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<style>
+.jt-tor{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px}
+.jt-sahna{position:relative;border-radius:24px;overflow:hidden;background:var(--siyoh);min-height:320px;
+  display:grid;place-items:center}
+.jt-sahna img{width:100%;height:100%;object-fit:cover;opacity:.94}
+.jt-belgi{position:absolute;left:16px;top:16px;display:flex;align-items:center;gap:8px;
+  background:rgba(11,11,10,.62);color:#fff;border-radius:999px;padding:7px 14px;font-size:12.5px}
+.jt-belgi .nuq{width:8px;height:8px;border-radius:99px;background:#E86A5A;animation:jt 1.4s infinite}
+@keyframes jt{0%,100%{opacity:1}50%{opacity:.25}}
+.jt-taymer{position:absolute;right:16px;top:16px;background:rgba(255,255,255,.92);border-radius:999px;
+  padding:7px 16px;font:500 14px var(--shrift-mono)}
+.jt-solish{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.jt-solish figure{background:var(--band);border-radius:18px;padding:12px;text-align:center}
+.jt-solish .yuz{width:100%;aspect-ratio:1;border-radius:14px;background:var(--persik);
+  display:grid;place-items:center;color:var(--matn-3)}
+.jt-solish figcaption{font-size:12px;color:var(--matn-3);margin-top:8px}
+@media (max-width:1100px){.jt-tor{grid-template-columns:minmax(0,1fr)}}
+</style>
+<style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="kn">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="kirish-nazorati.html">Kirish nazorati</a><span class="ajratgich">/</span><span>Jonli tashrif</span></div>
+    <div class="hs-qator"><h1>Jonli tashrif nazorati</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div class="jt-tor">
+    <section class="karta">
+      <div class="karta-bosh"><h2>Kirish nuqtasi kuzatuvi</h2><span class="soni" id="jt-holat"></span></div>
+      <div class="jt-sahna"><img id="jt-rasm" src="" alt="Kirish nuqtasi ko&#39;rinishi">
+        <span class="jt-belgi"><span class="nuq"></span><span id="jt-nuqta">—</span></span>
+        <span class="jt-taymer" id="jt-taymer">00:00</span>
+      </div>
+      <div class="jt-solish">
+        <figure><div class="yuz" id="jt-hujjat">Hujjat surati</div><figcaption>Oldindan yuborilgan hujjat</figcaption></figure>
+        <figure><div class="yuz" id="jt-jonli">Jonli kadr</div><figcaption>Kirish nuqtasidagi kadr</figcaption></figure>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+        <button type="button" class="tugma tugma-asosiy" id="jt-tasdiq"><svg class="ic"><use href="#i-yuz"/></svg>Shaxsni tasdiqlash</button>
+        <button type="button" class="tugma tugma-oq" id="jt-ochish" disabled><svg class="ic"><use href="#i-qulf"/></svg>Eshikni ochish</button>
+        <a class="tugma tugma-oq" id="jt-chiqish" href="tashrif-chiqish.html"><svg class="ic"><use href="#i-tasdiq"/></svg>Chiqishni rasmiylashtirish</a>
+      </div>
+    </section>
+    <section class="karta">
+      <div class="karta-bosh"><h2>Tashrifchi</h2></div>
+<dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-foyd"/></svg>F.I.Sh.</dt>
+  <dd id="jt-ism">—</dd>
+  <dt><svg class="ic"><use href="#i-hujjat"/></svg>Hujjat</dt>
+  <dd id="jt-hujjat-raqam">—</dd>
+  <dt><svg class="ic"><use href="#i-bank"/></svg>Tashkilot</dt>
+  <dd id="jt-tashkilot">—</dd>
+  <dt><svg class="ic"><use href="#i-bino"/></svg>Obyekt</dt>
+  <dd><span id="jt-obyekt" class="">—</span></dd>
+  <dt><svg class="ic"><use href="#i-vazifa"/></svg>Tashrif maqsadi</dt>
+  <dd id="jt-maqsad">—</dd>
+  <dt><svg class="ic"><use href="#i-foydalar"/></svg>Hamroh</dt>
+  <dd id="jt-hamroh">—</dd>
+  <dt><svg class="ic"><use href="#i-soat"/></svg>Kirish vaqti</dt>
+  <dd id="jt-kirish">—</dd>
+</dl>
+      <div class="karta-bosh" style="margin-top:20px"><h2>Faollik jurnali</h2></div>
+      <div id="jt-jurnal"></div>
+    </section>
+  </div>
+</main>
+</div>
+</div>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
+<script>
+
+const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
+                   ogohlantirish: ["Ogohlantirish", "chip-sariq"]};
+const KN_HOLAT = {onlayn: ["Onlayn", "chip-yashil"], oflayn: ["Oflayn", "chip-xavf"],
+                  xizmatda: ["Xizmatda", "chip-sariq"]};
+const QR_HOLAT = {ishlayapti: ["Ishlayapti", "chip-yashil"], ogohlantirish: ["Ogohlantirish", "chip-sariq"],
+                  nosoz: ["Nosoz", "chip-xavf"]};
+function chip(xarita, kalit){
+  const v = xarita[kalit] || [kalit, ""];
+  return '<span class="chip ' + v[1] + '">' + v[0] + "</span>";
+}
+function nuqtaIkonka(t){
+  return t === "turniket" ? "turniket" : t === "shlagbaum" ? "mashina" : t === "darvoza" ? "zavod" : "eshik";
+}
+function shaxsSurati(sh, olcham){
+  const o = olcham || 38;
+  return sh && sh.rasm
+    ? '<img class="shaxs-surat" src="' + sh.rasm + '" alt="" loading="lazy" style="width:' + o +
+      "px;height:" + o + 'px">'
+    : '<span class="belgi">' + (sh ? sh.belgi : "?") + "</span>";
+}
+function shaxsQatori(sh, ong){
+  if (!sh) return '<span class="matn"><b>Aniqlanmagan shaxs</b><span>Identifikatsiya o&#39;tmadi</span></span>';
+  return shaxsSurati(sh) +
+    '<span class="matn"><b>' + sh.ism + "</b><span><span>" + sh.lavozim + "</span> · <span>" + sh.tashkilot + "</span></span></span>" +
+    (ong || "");
+}
+function obyektNomi(id){
+  const o = MKB_DATA.OBYEKT_INDEKS[id];
+  return o ? o.qisqa : id;
+}
+function voqeaQatori(v){
+  const sh = MKB_DATA.shaxs(v.shaxsId);
+  return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
+    '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
+      ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
+    '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
+}
+
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_DATA;
+  const id = new URLSearchParams(location.search).get("id");
+  const t = D.TASHRIFLAR.find(x => x.id === id) ||
+            D.TASHRIFLAR.find(x => x.holat === "obyektda") || D.TASHRIFLAR[0];
+  if (!t){ location.replace("xato-404.html"); return; }
+  const sh = D.shaxs(t.shaxsId) || {};
+  const nuq = D.obyektNuqtalari(t.obyektId)[0];
+  const ob = D.OBYEKT_INDEKS[t.obyektId] || {};
+
+  document.getElementById("hs-meta").textContent = t.id;
+  document.getElementById("jt-holat").innerHTML =
+    '<span class="chip ' + (t.holat === "obyektda" ? "chip-yashil" : "chip-kichik") + '">' + t.holat + "</span>";
+  document.getElementById("jt-rasm").src = ob.rasm || "assets/kirish_eshigi.webp";
+  document.getElementById("jt-nuqta").textContent = nuq ? nuq.nom : "Kirish nuqtasi";
+  document.getElementById("jt-ism").textContent = sh.ism || "—";
+  document.getElementById("jt-hujjat-raqam").textContent = sh.hujjat || "—";
+  document.getElementById("jt-tashkilot").textContent = sh.tashkilot || "—";
+  document.getElementById("jt-obyekt").innerHTML =
+    '<a href="obyekt.html?id=' + encodeURIComponent(t.obyektId) + '">' + obyektNomi(t.obyektId) + "</a>";
+  document.getElementById("jt-maqsad").textContent = t.maqsad;
+  document.getElementById("jt-hamroh").textContent = t.hamroh || "Hamrohsiz";
+  document.getElementById("jt-kirish").textContent = t.sana + " " + t.kirish;
+  document.getElementById("jt-chiqish").href = "tashrif-chiqish.html?id=" + encodeURIComponent(t.id);
+
+  /* obyektda o&#39;tkazilgan vaqt */
+  const boshlangan = t.kirish.split(":");
+  let daqiqa = t.holat === "obyektda"
+    ? Math.max(1, (13 * 60 + 20) - (+boshlangan[0] * 60 + +boshlangan[1]))
+    : parseInt(t.davomiylik, 10) || 0;
+  const taymer = document.getElementById("jt-taymer");
+  function taymerChiz(){
+    taymer.textContent = String(Math.floor(daqiqa / 60)).padStart(2, "0") + ":" +
+                         String(daqiqa % 60).padStart(2, "0");
+  }
+  taymerChiz();
+  if (t.holat === "obyektda") setInterval(() => { daqiqa += 1; taymerChiz(); }, 60000);
+
+  const jurnal = [];
+  function jurnalChiz(){
+    document.getElementById("jt-jurnal").innerHTML = jurnal.length
+      ? jurnal.map(x =>
+          '<div class="qator"><span class="belgi ' + (x.rang || "") + '">' + ik(x.ik) + "</span>" +
+          '<span class="matn"><b>' + x.nom + "</b><span>" + x.izoh + "</span></span>" +
+          '<span class="vaqt">' + x.vaqt + "</span></div>").join("")
+      : '<div class="bosh-holat">Amal qayd etilmagan</div>';
+  }
+  function qayd(nom, izoh, ik2, rang){
+    const d = new Date(2026, 7, 26, 13, 20 + jurnal.length);
+    jurnal.unshift({nom, izoh, ik: ik2, rang,
+      vaqt: String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0")});
+    jurnalChiz();
+  }
+  qayd("Tashrif ochildi", t.maqsad + " · " + (nuq ? nuq.nom : ""), "tashrif", "mint");
+  if (t.holat !== "obyektda") qayd("Tashrif yakunlandi", "Davomiylik: " + t.davomiylik, "tasdiq");
+
+  let tasdiqlandi = false;
+  document.getElementById("jt-tasdiq").addEventListener("click", () => {
+    const foiz = 91 + (sh.id ? sh.id.charCodeAt(4) % 9 : 4);
+    document.getElementById("jt-hujjat").textContent = sh.hujjat || "Hujjat";
+    document.getElementById("jt-jonli").textContent = "Mos: " + foiz + "%";
+    tasdiqlandi = true;
+    document.getElementById("jt-ochish").disabled = false;
+    qayd("Shaxs tasdiqlandi", "Yuz o&#39;xshashligi " + foiz + "% · hujjat bilan mos", "yuz", "mint");
+    MKB.toast("Shaxs tasdiqlandi — eshikni ochish mumkin");
+  });
+  document.getElementById("jt-ochish").addEventListener("click", () => {
+    if (!tasdiqlandi){ MKB.toast("Avval shaxsni tasdiqlang", "xavf"); return; }
+    qayd("Eshik ochildi", (nuq ? nuq.nom : "Kirish nuqtasi") + " · 10 soniya", "qulf", "mint");
+    MKB.toast("Eshik ochildi va jurnalga yozildi");
+  });
+});
+</script>
+</body>
+</html>

@@ -138,12 +138,13 @@ window.MKBapi = (function(){
       localStorage.setItem(SESSIYA_KALIT, JSON.stringify(j));
       return j;
     }
-    /* snapshot: rol tanlovi bilan namoyish kirishi */
-    const F = (window.MKB_DATA && MKB_DATA.FOYDALANUVCHILAR) || [];
+    /* mahalliy rejim: rol tanlovi bo'yicha kirish */
+    const F = (window.MKB_DATA && MKB_DATA.FOYDLAR) || [];
     const f = F.find(x => x.login === login) ||
               F.find(x => x.rol === rol) ||
-              {ism: login || "Ismoilov Otabek", rol: rol || "Administrator", filial: "Toshkent shahar filiali"};
-    const s = {token: "demo-" + Date.now().toString(36), ism: f.ism, rol: rol || f.rol, filial: f.filial};
+              {nom: login || "Ismoilov Otabek", rol: rol || "Administrator", bolim: "Toshkent shahar filiali"};
+    const s = {token: "s" + Date.now().toString(36), ism: f.nom || f.ism,
+               rol: rol || f.rol, filial: f.bolim || f.filial || ""};
     localStorage.setItem(SESSIYA_KALIT, JSON.stringify(s));
     amalYoz("SESSIYA", s.ism, "kirish", null);
     return s;

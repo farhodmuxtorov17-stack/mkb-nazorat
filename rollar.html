@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Rollar matritsasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082645">
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="sozlama">
@@ -22,21 +22,25 @@
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082645"></script>
-<script src="malumot-qoshimcha.js?v=26082645"></script>
-<script src="malumot-kengaytma.js?v=26082645"></script>
-<script src="tarjima.js?v=26082645"></script>
-<script src="yadro/ikonlar.js?v=26082645"></script>
-<script src="yadro/daraxt.js?v=26082645"></script>
-<script src="yadro/chizma.js?v=26082645"></script>
-<script src="yadro/api.js?v=26082645"></script>
-<script src="yadro/app.js?v=26082645"></script>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
 <script>
 document.addEventListener("mkb:tayyor", () => {
   const bolimlar = BOLIMLAR.map(b => ({kalit: b.kalit, yorliq: b.yorliq})).concat([{kalit: "sozlama", yorliq: "Sozlamalar"}]);
   const rollar = Object.keys(ROL_RUXSAT);
-  const ROL_NOMI = {admin: "Administrator", filial: "Filial rahbari", kredit: "Kredit menejeri",
-    aktiv: "Aktivlar nazorati", yurist: "Yurist", tavakkal: "Tavakkalchilik"};
+  const ROL_NOMI = {};
+  Object.entries(ROL_KALIT).forEach(([nom, k]) => ROL_NOMI[k] = nom);
   document.getElementById("rollar-jadval").innerHTML =
     '<thead><tr><th>Bo\'lim</th>' + rollar.map(r => '<th style="text-align:center">' + ROL_NOMI[r] + '</th>').join("") + '</tr></thead><tbody>' +
     bolimlar.map(b => '<tr><td><b>' + b.yorliq + '</b></td>' +

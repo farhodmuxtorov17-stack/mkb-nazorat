@@ -6,46 +6,41 @@
 
 /* ---------- Bo'limlar reyestri (relsa tartibi) ---------- */
 const BOLIMLAR = [
-  {kalit: "panel",    yorliq: "Boshqaruv paneli",    ikonka: "panel",    href: "panel.html"},
-  {kalit: "portfel",  yorliq: "Qarzdorlar portfeli", ikonka: "portfel",  href: "qarzdorlar.html"},
-  {kalit: "aktivlar", yorliq: "Aktivlar reyestri",   ikonka: "aktivlar", href: "obyektlar.html"},
-  {kalit: "yuridik",  yorliq: "Undiruv va sud",      ikonka: "yuridik",  href: "undiruv.html"},
-  {kalit: "korik",    yorliq: "Ko'rik nazorati",     ikonka: "korik",    href: "korik-rejasi.html"},
-  {kalit: "baholash", yorliq: "Baholash",            ikonka: "baholash", href: "baholash.html"},
-  {kalit: "sugurta",  yorliq: "Sug'urta",            ikonka: "sugurta",  href: "sugurta.html"},
-  {kalit: "zaxira",   yorliq: "Tasnif va zaxira",    ikonka: "zaxira",   href: "tasniflash.html"},
-  {kalit: "savdo",    yorliq: "Realizatsiya",        ikonka: "savdo",    href: "savdo.html"},
-  {kalit: "arxiv",    yorliq: "Arxiv",               ikonka: "arxiv",    href: "arxiv.html"},
-  {kalit: "hisobot",  yorliq: "Hisobotlar",          ikonka: "hisobot",  href: "hisobotlar.html"},
-  {kalit: "xarita",   yorliq: "Hududiy xarita",      ikonka: "xarita",   href: "xarita.html"},
-  {kalit: "vazifa",   yorliq: "Vazifalar",           ikonka: "vazifa",   href: "vazifalar.html"},
-  {kalit: "hujjat",   yorliq: "Hujjatlar",           ikonka: "hujjat",   href: "hujjatlar.html"},
+  {kalit: "panel",    yorliq: "Boshqaruv paneli",  ikonka: "panel",    href: "panel.html"},
+  {kalit: "aktivlar", yorliq: "Obyektlar reyestri",ikonka: "aktivlar", href: "obyektlar.html"},
+  {kalit: "kn",       yorliq: "Kirish nazorati",   ikonka: "qulf",     href: "kirish-nazorati.html"},
+  {kalit: "korik",    yorliq: "Ko'rik nazorati",   ikonka: "korik",    href: "korik-rejasi.html"},
+  {kalit: "baholash", yorliq: "Baholash",          ikonka: "baholash", href: "baholash.html"},
+  {kalit: "sugurta",  yorliq: "Sug'urta",          ikonka: "sugurta",  href: "sugurta.html"},
+  {kalit: "yuridik",  yorliq: "Undiruv va sud",    ikonka: "yuridik",  href: "undiruv.html"},
+  {kalit: "arxiv",    yorliq: "Arxiv",             ikonka: "arxiv",    href: "arxiv.html"},
+  {kalit: "xarita",   yorliq: "Hududiy xarita",    ikonka: "xarita",   href: "xarita.html"},
+  {kalit: "hisobot",  yorliq: "Hisobotlar",        ikonka: "hisobot",  href: "hisobotlar.html"},
+  {kalit: "vazifa",   yorliq: "Vazifalar",         ikonka: "vazifa",   href: "vazifalar.html"},
+  {kalit: "hujjat",   yorliq: "Hujjatlar",         ikonka: "hujjat",   href: "hujjatlar.html"},
 ];
 
 /* ---------- Rollar ---------- */
 const ROL_KALIT = {
-  "Obyekt menejeri": "obyekt",                 /* obyektlar reyestri, balansga qabul */
-  "Ko'rik inspektori": "nazorat",              /* ko'rik, sug'urta, hodisalar */
-  "Baholovchi mutaxassis": "baholash",         /* baholash, qiymat dinamikasi */
-  "Realizatsiya menejeri": "savdo",            /* auksion, ijara, xaridorlar */
+  "Obyekt menejeri": "obyekt",                 /* reyestr, balansga qabul, hujjatlar */
+  "Ko'rik inspektori": "nazorat",              /* ko'rik, kirish nazorati, sug'urta, hodisalar */
+  "Baholovchi mutaxassis": "baholash",         /* qiymat va qayta baholash */
   "Yurist": "yurist",                          /* undiruv, sud, ijro */
-  "Tavakkalchilik menejeri": "tavakkal",       /* tasnif, zaxira */
   "Filial rahbari": "filial",
   "Administrator": "admin",
 };
 const ROL_RUXSAT = {
   admin:    null, /* hammasi */
-  filial:   ["panel","aktivlar","portfel","korik","zaxira","savdo","arxiv","hisobot","xarita","vazifa","hujjat","sozlama"],
-  /* Obyekt menejeri — aktivlar reyestri va balansga qabul markazda */
-  obyekt:   ["panel","aktivlar","portfel","korik","savdo","arxiv","xarita","hisobot","vazifa","hujjat","sozlama"],
-  /* Ko'rik inspektori — obyekt holati: ko'rik, sug'urta, hodisalar */
-  nazorat:  ["panel","aktivlar","korik","sugurta","xarita","vazifa","hujjat","hisobot","sozlama"],
+  filial:   ["panel","aktivlar","kn","korik","baholash","sugurta","yuridik","arxiv",
+             "xarita","hisobot","vazifa","hujjat","sozlama"],
+  /* Obyekt menejeri — reyestr, balansga qabul, kirish nuqtalari, hujjatlar */
+  obyekt:   ["panel","aktivlar","kn","korik","arxiv","xarita","hisobot","vazifa","hujjat","sozlama"],
+  /* Ko'rik inspektori — obyekt holati: ko'rik, kirish nazorati, sug'urta, hodisalar */
+  nazorat:  ["panel","aktivlar","kn","korik","sugurta","xarita","hisobot","vazifa","hujjat","sozlama"],
   /* Baholovchi — obyekt qiymati */
-  baholash: ["panel","aktivlar","baholash","zaxira","hisobot","vazifa","hujjat","sozlama"],
-  /* Realizatsiya — auksion, ijara, arxiv */
-  savdo:    ["panel","aktivlar","savdo","arxiv","xarita","hisobot","vazifa","hujjat","sozlama"],
-  yurist:   ["panel","portfel","yuridik","aktivlar","arxiv","hisobot","vazifa","hujjat","sozlama"],
-  tavakkal: ["panel","baholash","zaxira","aktivlar","hisobot","vazifa","hujjat","sozlama"],
+  baholash: ["panel","aktivlar","baholash","hisobot","vazifa","hujjat","sozlama"],
+  /* Yurist — undiruv va sud */
+  yurist:   ["panel","yuridik","aktivlar","arxiv","hisobot","vazifa","hujjat","sozlama"],
 };
 /* Fayl darajasidagi cheklovlar (sahifa ruxsatidan tashqari) */
 const SAHIFA_MAXSUS = {
@@ -53,9 +48,7 @@ const SAHIFA_MAXSUS = {
   "panel-obyekt.html":     ["admin", "obyekt"],
   "panel-nazorat.html":    ["admin", "nazorat"],
   "panel-baholash.html":   ["admin", "baholash"],
-  "panel-savdo.html":      ["admin", "savdo"],
   "panel-yurist.html":     ["admin", "yurist"],
-  "panel-tavakkal.html":   ["admin", "tavakkal"],
   "panel-filial.html":     ["admin", "filial"],
   "foydalanuvchilar.html": ["admin"],
   "foydalanuvchi.html":    ["admin"],
@@ -63,6 +56,7 @@ const SAHIFA_MAXSUS = {
   "amallar-tarixi.html":   ["admin"],
   "integratsiyalar.html":  ["admin"],
   "filiallar.html":        ["admin", "filial"],
+  "qurilma-ornatish.html": ["admin", "obyekt", "nazorat"],
 };
 
 function joriySessiya(){ return window.MKBapi ? MKBapi.sessiya() : null; }
@@ -211,6 +205,7 @@ function shapkaChiz(){
   if (!el) return;
   const s = joriySessiya() || {ism: "Mehmon", rol: "-", filial: ""};
   const bosh = (s.ism || "M").split(" ").map(x => x[0]).join("").slice(0, 2).toUpperCase();
+  const suratYol = xodimSurati(s.ism);
   const til = joriyTil();
   const rol = joriyRolKalit();
   const joriyBolim = document.body.dataset.sahifa;
@@ -228,16 +223,22 @@ function shapkaChiz(){
     "</nav>" +
     '<div class="shapka-ong">' +
       '<div class="izlash" id="global-izlash-qutisi">' + ik("izlash") +
-        '<input type="search" id="global-izlash" placeholder="Obyekt, shartnoma yoki mijoz bo\'yicha qidirish..." aria-label="Qidirish">' +
+        '<input type="search" id="global-izlash" placeholder="Obyekt, kirish nuqtasi yoki hujjat bo\'yicha qidirish..." aria-label="Qidirish">' +
         '<kbd aria-hidden="true">/</kbd></div>' +
       '<div class="til-almash" role="group" aria-label="Interfeys tili">' +
         '<button type="button" data-til="uz" class="' + (til === "uz" ? "faol" : "") + '">UZ</button>' +
         '<button type="button" data-til="ru" class="' + (til === "ru" ? "faol" : "") + '">RU</button>' +
       "</div>" +
+      '<button type="button" class="doira-tugma" id="yordam-tugma" '
+        + 'aria-label="Tizimda qanday ishlash kerak" title="Tizimda qanday ishlash kerak">'
+        + ik("yordam") + "</button>" +
       '<a class="doira-tugma" href="bildirishnomalar.html" aria-label="Bildirishnomalar">' +
         ik("qongiroq") + '<span class="nuqta"></span></a>' +
       '<div class="profil" id="profil-tugma" role="button" tabindex="0" aria-haspopup="menu">' +
-        '<span class="yuz">' + bosh + "</span>" +
+        '<span class="yuz">' + (suratYol
+          ? '<img src="' + suratYol + '" alt="" loading="lazy" '
+            + 'onerror="this.parentNode.textContent=this.dataset.bosh" data-bosh="' + bosh + '">'
+          : bosh) + "</span>" +
         '<span class="kim"><b>' + (s.ism || "") + "</b><span>" + (s.rol || "") + "</span></span>" +
         ik("past") +
         '<div class="menyu-popover" id="profil-menyu" style="top:calc(100% + 10px);right:0" role="menu">' +
@@ -272,6 +273,10 @@ function shapkaChiz(){
       tarjimaQil();
       document.dispatchEvent(new CustomEvent("mkb:til", {detail: b.dataset.til}));
     }));
+  /* Yordam paneli */
+  const yt = document.getElementById("yordam-tugma");
+  if (yt) yt.addEventListener("click", () => qollanmaOch(rol));
+
   /* Profil menyu */
   const pt = document.getElementById("profil-tugma");
   const pm = document.getElementById("profil-menyu");
@@ -350,6 +355,44 @@ const MKB = {
       if (e.key === "Escape"){ yop(); document.removeEventListener("keydown", esc); }
     });
     return parda;
+  },
+
+  /* O'ngdan suriladigan panel (qo'llanma, tafsilot, tarix) */
+  yonPanel(sarlavha, tanaHTML, opts){
+    opts = opts || {};
+    document.querySelectorAll(".yon-panel, .yon-panel-parda").forEach(x => x.remove());
+    const parda = document.createElement("div");
+    parda.className = "yon-panel-parda";
+    const panel = document.createElement("aside");
+    panel.className = "yon-panel";
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-modal", "true");
+    panel.innerHTML =
+      '<div class="yon-panel-bosh">' +
+        '<div class="yp-nom"><span class="yorliq"></span><h3></h3></div>' +
+        '<button type="button" class="modal-yop" aria-label="Yopish">' + ik("yopish") + "</button>" +
+      "</div>" +
+      '<div class="yon-panel-tana">' + tanaHTML + "</div>";
+    panel.querySelector("h3").textContent = sarlavha;
+    const yl = panel.querySelector(".yorliq");
+    if (opts.yorliq) yl.textContent = opts.yorliq; else yl.remove();
+    document.body.appendChild(parda);
+    document.body.appendChild(panel);
+    tarjimaQil(panel);
+    requestAnimationFrame(() => { parda.classList.add("ochiq"); panel.classList.add("ochiq"); });
+    const yop = () => {
+      panel.classList.remove("ochiq");
+      parda.classList.remove("ochiq");
+      setTimeout(() => { panel.remove(); parda.remove(); }, 280);
+    };
+    parda.addEventListener("click", yop);
+    panel.querySelector(".modal-yop").addEventListener("click", yop);
+    document.addEventListener("keydown", function esc(e){
+      if (e.key === "Escape"){ yop(); document.removeEventListener("keydown", esc); }
+    });
+    const birinchi = panel.querySelector("a, button");
+    if (birinchi) birinchi.focus();
+    return {panel, yop};
   },
 
   /* Taqsimot barlari: [[nom, qiymat, rang?, izoh?], ...] */
@@ -565,6 +608,7 @@ const MKB = {
     if (window.MKB_DATA && MKB_DATA.pul) return MKB_DATA.pul(son);
     return new Intl.NumberFormat("ru-RU").format(son) + " so\'m";
   },
+  rol(){ return joriyRolKalit(); },
   fmt(son){ return new Intl.NumberFormat("ru-RU").format(son); },
   /* "3 840,4" -> 3840.4 */
   sonQiymat(x){
@@ -629,3 +673,43 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(tarjimaQil, 250);
   setTimeout(tarjimaQil, 1000);
 });
+
+
+/* ---------- Xodim surati ---------- */
+function xodimSurati(ism){
+  if (!ism) return null;
+  const R = window.MKB_XODIM_RASMLARI || {};
+  if (R[ism]) return R[ism];
+  const F = (window.MKB_DATA && MKB_DATA.FOYDLAR) || [];
+  const f = F.find(x => x.nom === ism || x.ism === ism || x.login === ism);
+  return f && f.rasm ? f.rasm : null;
+}
+
+/* ---------- Rolga moslashgan qo'llanma ---------- */
+function qollanmaOch(rol){
+  const Q = (window.MKB_QOLLANMA || {})[rol] || (window.MKB_QOLLANMA || {}).admin;
+  if (!Q){
+    MKB.toast("Qo'llanma topilmadi");
+    return;
+  }
+  const qadam = (x, i) =>
+    '<li class="qol-qadam">' +
+      '<span class="raqam">' + (i + 1) + "</span>" +
+      '<span class="matn"><b>' + x.nom + "</b><span>" + x.izoh + "</span>" +
+      (x.havola ? '<a href="' + x.havola + '">' + (x.havolaNomi || "Ochish") + ik("ong", "mitti") + "</a>" : "") +
+      "</span></li>";
+  const royxat = (nom, bandlar, kls) => bandlar && bandlar.length
+    ? '<div class="qol-blok' + (kls ? " " + kls : "") + '"><h4>' + nom + "</h4><ul>" +
+      bandlar.map(b => "<li>" + b + "</li>").join("") + "</ul></div>"
+    : "";
+  const tana =
+    '<p class="qol-maqsad">' + Q.maqsad + "</p>" +
+    '<div class="qol-blok"><h4>Kunlik ish tartibi</h4><ol class="qol-qadamlar">' +
+      Q.qadamlar.map(qadam).join("") + "</ol></div>" +
+    royxat("Sizning javobgarligingiz", Q.javobgarlik) +
+    royxat("Muddat va me'yorlar", Q.meyor, "qol-meyor") +
+    royxat("Sizga yopiq bo'limlar", Q.yopiq, "qol-yopiq") +
+    '<a class="tugma tugma-oq qol-toliq" href="qollanma.html">' + ik("hujjat") +
+      "To'liq qo'llanmani ochish</a>";
+  MKB.yonPanel(Q.nom + " — qanday ishlash kerak", tana, {yorliq: "Ish tartibi"});
+}

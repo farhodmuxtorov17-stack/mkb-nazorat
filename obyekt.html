@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyekt kartochkasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082645">
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
 .ob-hero{position:relative;border-radius:var(--r-karta);box-shadow:var(--soya);overflow:hidden;
@@ -47,7 +47,7 @@
         <h2 id="oh-nom">&#8212;</h2>
         <span class="manzil" id="oh-manzil">&#8212;</span>
       </div>
-      <div class="ob-qoplash"><b id="oh-qoplash">&#8212;</b><span>Ta&#39;minot bilan qoplash</span></div></div>
+      <div class="ob-qoplash"><b id="oh-qoplash">&#8212;</b><span>Nazorat indeksi</span></div></div>
       <div class="plitkalar" id="oh-plitkalar"></div>
       <div class="ob-amallar">
         <a class="tugma tugma-asosiy" id="oh-tahrir" href="obyekt-tahrir.html" data-id-qoshib><svg class="ic"><use href="#i-tahrir"/></svg>Yozuvni tahrirlash</a>
@@ -92,15 +92,19 @@
 </main>
 </div>
 </div>
-<script src="malumot.js?v=26082645"></script>
-<script src="malumot-qoshimcha.js?v=26082645"></script>
-<script src="malumot-kengaytma.js?v=26082645"></script>
-<script src="tarjima.js?v=26082645"></script>
-<script src="yadro/ikonlar.js?v=26082645"></script>
-<script src="yadro/daraxt.js?v=26082645"></script>
-<script src="yadro/chizma.js?v=26082645"></script>
-<script src="yadro/api.js?v=26082645"></script>
-<script src="yadro/app.js?v=26082645"></script>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -113,16 +117,17 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
 
   /* Hero */
+  const nazorat = MKB_DATA.nazoratIndeksi(x);
   document.getElementById("oh-rasm").src = x.mulk.rasm;
   document.getElementById("oh-bosqich").textContent = x.bosqichNomi;
   document.getElementById("oh-nom").textContent = x.mulk.nom;
   document.getElementById("oh-manzil").textContent = x.mulk.manzil;
-  document.getElementById("oh-qoplash").textContent = x.qoplash + "%";
+  document.getElementById("oh-qoplash").textContent = nazorat.ball + "%";
   document.getElementById("oh-galereya").href = "obyekt-galereya.html?id=" + encodeURIComponent(x.id);
   document.getElementById("oh-3d").href = "obyekt-3d.html?id=" + encodeURIComponent(x.id);
   document.getElementById("oh-ish").href = "ish.html?id=" + encodeURIComponent(x.id);
   const qz = document.getElementById("oh-qoplash").parentElement;
-  qz.style.color = x.qoplash >= 140 ? "var(--mint-matn)" : x.qoplash >= 100 ? "var(--sariq-matn)" : "var(--pushti-matn)";
+  qz.style.color = nazorat.ball >= 85 ? "var(--mint-matn)" : nazorat.ball >= 70 ? "var(--sariq-matn)" : "var(--pushti-matn)";
   document.getElementById("oh-plitkalar").innerHTML = [
     ["kub", "Turi", x.mulk.tur],
     ["qavat", "Maydon", x.mulk.maydon],
@@ -137,8 +142,7 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("d-tur").textContent = x.mulk.tur;
   document.getElementById("d-hudud").textContent = x.mulk.hududToliq || x.mulk.hudud;
   document.getElementById("d-maydon").textContent = x.mulk.maydon;
-  document.getElementById("d-mijoz").innerHTML =
-    '<a href="qarzdor.html?id=' + encodeURIComponent(x.id) + '" style="color:var(--kok)">' + x.mijoz.nom + '</a>';
+  document.getElementById("d-mijoz").textContent = x.mijoz.nom;
   document.getElementById("d-filial").textContent = x.filial;
   document.getElementById("d-shartnoma").textContent = x.shartnoma.raqam;
   document.getElementById("d-masul").textContent = x.ish.masul;

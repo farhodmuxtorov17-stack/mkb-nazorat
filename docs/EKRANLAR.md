@@ -1,6 +1,6 @@
 # Ekranlar reyestri
 
-Jami: **129 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
+Jami: **116 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 
 ## Kirish va xatolar (6)
 
@@ -13,41 +13,23 @@ Jami: **129 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | `xato-404.html` | Sahifa topilmadi | Noto'g'ri manzil |
 | `index.html` | Aktivlar nazorati | Kirish nuqtasi (yo'naltirish) |
 
-## Boshqaruv paneli (9)
+## Boshqaruv paneli (7)
 
 | Fayl | Ekran | Izoh |
 |---|---|---|
 | `panel.html` | Boshqaruv paneli | Flagman dashbord (TopProducer uslubi) |
 | `panel-filial.html` | Filial paneli | Filial rahbari paneli |
 | `panel-yurist.html` | Yuridik panel | Yurist paneli |
-| `panel-tavakkal.html` | Tavakkalchilik paneli | Tavakkalchilik paneli |
 | `korsatkichlar.html` | Umumiy ko'rsatkichlar | KPI markazi |
 | `panel-obyekt.html` | Obyekt menejeri paneli | Obyekt menejeri paneli |
 | `panel-nazorat.html` | Ko&#39;rik inspektori paneli | Inspektor paneli |
 | `panel-baholash.html` | Baholash paneli | Baholovchi paneli |
-| `panel-savdo.html` | Realizatsiya paneli | Realizatsiya paneli |
 
-## Qarzdorlar portfeli (11)
-
-| Fayl | Ekran | Izoh |
-|---|---|---|
-| `qarzdorlar.html` | Qarzdor mijozlar | Qarzdorlar reyestri |
-| `qarzdor.html` | Qarzdor kartochkasi | Mijoz profili (TopProducer uslubi) |
-| `qarzdor-muloqot.html` | Muloqot jurnali | Aloqa tarixi + qayd qo'shish |
-| `qarzdor-tolovlar.html` | To'lov intizomi | 12 oylik grafik va jadval |
-| `shartnomalar.html` | Kredit shartnomalari | Shartnomalar reyestri |
-| `shartnoma.html` | Shartnoma kartochkasi | Shartnoma tafsiloti |
-| `muddati-otganlar.html` | Muddati o'tgan qarzlar | Kechikish darajalari |
-| `restrukturizatsiya.html` | Restrukturizatsiya arizalari | Arizalar reyestri |
-| `restrukturizatsiya-arizasi.html` | Restrukturizatsiya arizasi | Ariza formasi (saqlanadi) |
-| `muloqot-jurnali.html` | Umumiy muloqot jurnali | Barcha mijozlar aloqasi |
-| `portfel-segmentlar.html` | Portfel segmentlari | Kesimlar tahlili |
-
-## Aktivlar reyestri (15)
+## Obyektlar reyestri (15)
 
 | Fayl | Ekran | Izoh |
 |---|---|---|
-| `obyektlar.html` | Aktiv obyektlari reyestri | Markaziy reyestr: qidiruv, filtr, saralash |
+| `obyektlar.html` | Obyektlar reyestri | Markaziy reyestr: qidiruv, filtr, saralash |
 | `obyekt.html` | Obyekt kartochkasi | Umumiy ma'lumot + ish zanjiri (referens hero) |
 | `obyekt-moliya.html` | Obyekt moliyasi | Qarz, to'lovlar, baholash tarixi |
 | `obyekt-hujjatlar.html` | Obyekt hujjatlari | Hujjatlar + yuklash |
@@ -62,6 +44,30 @@ Jami: **129 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | `qabul-boshlash.html` | Balansga qabul — asos | Mastr 1: asos va obyekt |
 | `qabul-hujjatlar.html` | Balansga qabul — hujjatlar | Mastr 2: hujjatlar va komissiya |
 | `qabul-tasdiqlash.html` | Balansga qabul — tasdiqlash | Mastr 3: dalolatnoma va tasdiq |
+
+## Kirish nazorati (19)
+
+| Fayl | Ekran | Izoh |
+|---|---|---|
+| `kirish-nazorati.html` | Kirish nazorati posti | Operator posti: so'rovlar, sessiyalar, voqealar |
+| `kuzatuv.html` | Elektron nazorat markazi | Obyektlar kesimida nazorat holati |
+| `kirish-nuqtalari.html` | Kirish nuqtalari | Nuqtalar reyestri |
+| `kirish-nuqtasi.html` | Kirish nuqtasi | Nuqta kartochkasi va qurilmalari |
+| `kirish-voqealari.html` | Kirish voqealari | Voqealar jurnali |
+| `kirish-voqea.html` | Kirish voqeasi | Voqea tafsiloti va operator qarori |
+| `kirish-soravi.html` | Kirish ruxsatnomasi | So'rov navbati va yangi so'rov |
+| `ruxsatlar.html` | Ruxsatlar reyestri | Amaldagi kirish huquqlari |
+| `tashriflar.html` | Tashriflar | Tashriflar reyestri |
+| `tashrif-jonli.html` | Jonli tashrif nazorati | Identifikatsiya, taymer, eshik boshqaruvi |
+| `tashrif-chiqish.html` | Chiqish tekshiruvi | Inventar bo'yicha chiqish dalolatnomasi |
+| `masofaviy-korik.html` | Masofaviy ko'rik | Masofaviy sessiya bosqichlari |
+| `qurilmalar.html` | Nazorat qurilmalari | Qurilmalar reyestri |
+| `qurilma.html` | Qurilma kartochkasi | Diagnostika, jurnal, xizmat tarixi |
+| `qurilma-ornatish.html` | Qurilma o'rnatish | To'rt qadamli o'rnatish masteri |
+| `servis-topshirigi.html` | Servis topshirig'i | Texnik xizmat topshirig'i |
+| `hodisalar.html` | Hodisalar doskasi | Hodisalar kanban doskasi |
+| `hodisa.html` | Hodisa kartochkasi | Xulosa va dalil bilan yopish |
+| `kirish-hisoboti.html` | Kirish va nazorat hisoboti | Davr kesimida kirish tahlili |
 
 ## Undiruv va sud (11)
 
@@ -114,34 +120,6 @@ Jami: **129 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | `sugurta-davolar.html` | Sug'urta da'volari | Hodisalar bo'yicha da'volar |
 | `sugurta-yangilash.html` | Polisni yangilash | Yangilash formasi |
 
-## Tasnif va zaxira (5)
-
-| Fayl | Ekran | Izoh |
-|---|---|---|
-| `tasniflash.html` | Aktivlar tasnifi | Interaktiv qayta tasniflash |
-| `zaxira-hisobi.html` | Zaxira hisobi | Toifalar jamlanmasi |
-| `tasnif-dinamika.html` | Zaxira dinamikasi | Choraklar kesimi |
-| `tasnif-tasdiqlash.html` | Tasdiqlash navbati | So'rovlarni tasdiqlash |
-| `tasnif-chop.html` | Tasnif jadvali (chop) | Rasmiy chop shakli TZ-03 |
-
-## Realizatsiya (13)
-
-| Fayl | Ekran | Izoh |
-|---|---|---|
-| `savdo.html` | Savdo doskasi | Auksion bosqichlari doskasi |
-| `lot.html` | Lot kartochkasi | Lot + takliflar boshqaruvi |
-| `elon-tahriri.html` | Savdo e'loni | E'lon formasi |
-| `auksion-jadvali.html` | Auksion jadvali | Savdo sanalari |
-| `auksion-takliflar.html` | Takliflar reyestri | Barcha takliflar |
-| `auksion-natija.html` | Auksion natijasi | G'olibni rasmiylashtirish |
-| `auksion-bayonnoma.html` | Auksion bayonnomasi | Rasmiy chop shakli AB-04 |
-| `tolov-nazorati.html` | To'lov nazorati | Savdo to'lovlari kuzatuvi |
-| `ijara.html` | Ijara shartnomalari | Ijara reyestri + KPI |
-| `ijara-shartnoma.html` | Ijara shartnomasi | Shartnoma + to'lov qabul |
-| `xaridorlar.html` | Xaridorlar reyestri | Ishtirokchilar bazasi |
-| `xaridor.html` | Xaridor kartochkasi | Ishtirok tarixi |
-| `savdo-natijalari.html` | Savdo natijalari | Tushum tahlili |
-
 ## Arxiv (3)
 
 | Fayl | Ekran | Izoh |
@@ -150,15 +128,13 @@ Jami: **129 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | `arxiv-obyekt.html` | Arxiv yozuvi | Yozuv tafsiloti |
 | `arxiv-yillik.html` | Yillik jamlanma | Yillar kesimi |
 
-## Hisobotlar (12)
+## Hisobotlar (10)
 
 | Fayl | Ekran | Izoh |
 |---|---|---|
 | `hisobotlar.html` | Hisobotlar markazi | Tayyor hisobotlar + shakllantirish |
 | `hisobot-portfel.html` | Portfel hisoboti | Holat va tur kesimlari |
 | `hisobot-undiruv.html` | Undiruv hisoboti | Oylik dinamika |
-| `hisobot-realizatsiya.html` | Realizatsiya hisoboti | Savdo natijalari |
-| `hisobot-zaxira.html` | Zaxira hisoboti | Toifalar kesimi |
 | `hisobot-hudud.html` | Hududiy kesim | Hududlar taqsimoti |
 | `hisobot-filial.html` | Filial kesimi | Filiallar jadvali |
 | `hisobot-dinamika.html` | Dinamika | Oylik va yillik seriyalar |
@@ -195,7 +171,7 @@ Jami: **129 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | `hujjat-imzolash.html` | Imzolash navbati | Tasdiqlanmagan hujjatlar |
 | `hujjat.html` | Hujjat varaqasi | Hujjat tafsiloti + imzolash |
 
-## Sozlamalar (11)
+## Sozlamalar (12)
 
 | Fayl | Ekran | Izoh |
 |---|---|---|
@@ -210,3 +186,4 @@ Jami: **129 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | `integratsiyalar.html` | Integratsiyalar | Tashqi tizimlar |
 | `til-sozlamalari.html` | Til sozlamalari | UZ/RU tanlovi |
 | `tizim-haqida.html` | Tizim haqida | Versiya va litsenziyalar |
+| `qollanma.html` | Ish qo'llanmasi | Rolga moslashgan ish tartibi |

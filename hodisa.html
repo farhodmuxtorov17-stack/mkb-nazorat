@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Hodisa kartochkasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="kn">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="kirish-nazorati.html">Kirish nazorati</a><span class="ajratgich">/</span><span>Hodisa</span></div>
+    <div class="hs-qator"><h1>Hodisa kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="kn-tor">
+    <section class="karta">
+      <div class="karta-bosh"><h2 id="h-nom">—</h2><span class="soni" id="h-jiddiy"></span></div>
+<dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-hujjat"/></svg>Raqam</dt>
+  <dd id="h-raqam">—</dd>
+  <dt><svg class="ic"><use href="#i-bino"/></svg>Obyekt</dt>
+  <dd><span id="h-obyekt" class="">—</span></dd>
+  <dt><svg class="ic"><use href="#i-eshik"/></svg>Kirish nuqtasi</dt>
+  <dd><span id="h-nuqta" class="">—</span></dd>
+  <dt><svg class="ic"><use href="#i-soat"/></svg>Qayd etilgan</dt>
+  <dd id="h-vaqt">—</dd>
+  <dt><svg class="ic"><use href="#i-foyd"/></svg>Mas'ul</dt>
+  <dd id="h-masul">—</dd>
+  <dt><svg class="ic"><use href="#i-tasdiq"/></svg>Holat</dt>
+  <dd id="h-holat">—</dd>
+</dl>
+      <div class="karta-bosh" style="margin-top:20px"><h2>Texnik xulosa</h2></div>
+      <div class="maydon"><label class="maydon-yorliq">Xulosa <b>*</b></label>
+        <div class="kirish"><input id="h-xulosa" placeholder="Sabab va ko&#39;rilgan chora"></div></div>
+      <div class="maydon"><label class="maydon-yorliq">Dalil <b>*</b></label>
+        <div class="kirish"><select id="h-dalil"><option value="">Tanlang</option><option>Kirish voqealari jurnali</option><option>Kamera yozuvi</option><option>Ko&#39;rik dalolatnomasi</option><option>Servis akti</option></select></div></div>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+        <button type="button" class="tugma tugma-asosiy" id="h-hal">Hal qilindi deb belgilash</button>
+        <button type="button" class="tugma tugma-oq" id="h-yop">Yopish</button>
+      </div>
+    </section>
+    <section class="karta">
+      <div class="karta-bosh"><h2>Bog&#39;liq yozuvlar</h2></div>
+      <div id="h-bogliq"></div>
+    </section>
+  </div>
+</main>
+</div>
+</div>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
+<script>
+
+const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
+                   ogohlantirish: ["Ogohlantirish", "chip-sariq"]};
+const KN_HOLAT = {onlayn: ["Onlayn", "chip-yashil"], oflayn: ["Oflayn", "chip-xavf"],
+                  xizmatda: ["Xizmatda", "chip-sariq"]};
+const QR_HOLAT = {ishlayapti: ["Ishlayapti", "chip-yashil"], ogohlantirish: ["Ogohlantirish", "chip-sariq"],
+                  nosoz: ["Nosoz", "chip-xavf"]};
+function chip(xarita, kalit){
+  const v = xarita[kalit] || [kalit, ""];
+  return '<span class="chip ' + v[1] + '">' + v[0] + "</span>";
+}
+function nuqtaIkonka(t){
+  return t === "turniket" ? "turniket" : t === "shlagbaum" ? "mashina" : t === "darvoza" ? "zavod" : "eshik";
+}
+function shaxsSurati(sh, olcham){
+  const o = olcham || 38;
+  return sh && sh.rasm
+    ? '<img class="shaxs-surat" src="' + sh.rasm + '" alt="" loading="lazy" style="width:' + o +
+      "px;height:" + o + 'px">'
+    : '<span class="belgi">' + (sh ? sh.belgi : "?") + "</span>";
+}
+function shaxsQatori(sh, ong){
+  if (!sh) return '<span class="matn"><b>Aniqlanmagan shaxs</b><span>Identifikatsiya o&#39;tmadi</span></span>';
+  return shaxsSurati(sh) +
+    '<span class="matn"><b>' + sh.ism + "</b><span><span>" + sh.lavozim + "</span> · <span>" + sh.tashkilot + "</span></span></span>" +
+    (ong || "");
+}
+function obyektNomi(id){
+  const o = MKB_DATA.OBYEKT_INDEKS[id];
+  return o ? o.qisqa : id;
+}
+function voqeaQatori(v){
+  const sh = MKB_DATA.shaxs(v.shaxsId);
+  return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
+    '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
+      ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
+    '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
+}
+
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_DATA;
+  const id = new URLSearchParams(location.search).get("id");
+  let h = D.XAVFSIZLIK_HODISALARI.find(x => x.id === id);
+  let manba = "kirish";
+  if (!h){
+    const o = D.HODISALAR.find(x => x.kod === id);
+    if (o){ manba = "obyekt";
+      h = {id: o.kod, obyektId: o.obyektId, hodisa: o.hodisa, jiddiylik: o.jiddiylik,
+           holat: o.ustun === "yopildi" ? "yopildi" : "tekshiruvda", vaqt: o.vaqt,
+           masul: o.masul || "—", kirishNuqtaId: null, chora: ""};
+    }
+  }
+  if (!h) h = D.XAVFSIZLIK_HODISALARI[0];
+  if (!h){ location.replace("xato-404.html"); return; }
+  const n = h.kirishNuqtaId ? D.kirishNuqtasi(h.kirishNuqtaId) : null;
+
+  document.getElementById("hs-meta").textContent = h.id;
+  document.getElementById("h-nom").textContent = h.hodisa;
+  document.getElementById("h-jiddiy").innerHTML =
+    '<span class="chip ' + (h.jiddiylik === "yuqori" ? "chip-xavf" : h.jiddiylik === "past" ? "chip-info" : "chip-sariq") +
+    '">' + h.jiddiylik + "</span>";
+  document.getElementById("h-raqam").textContent = h.id;
+  document.getElementById("h-obyekt").innerHTML =
+    '<a href="obyekt.html?id=' + encodeURIComponent(h.obyektId) + '">' + obyektNomi(h.obyektId) + "</a>";
+  document.getElementById("h-nuqta").innerHTML = n
+    ? '<a href="kirish-nuqtasi.html?id=' + encodeURIComponent(n.id) + '">' + n.nom + "</a>" : "—";
+  document.getElementById("h-vaqt").textContent = h.vaqt;
+  document.getElementById("h-masul").textContent = h.masul;
+  const holatEl = document.getElementById("h-holat");
+  holatEl.innerHTML = '<span class="chip chip-kichik">' + h.holat + "</span>";
+  if (h.chora) document.getElementById("h-xulosa").value = h.chora;
+
+  const bogliq = [];
+  if (n) bogliq.push(["Kirish nuqtasi", n.nom, "kirish-nuqtasi.html?id=" + encodeURIComponent(n.id), "eshik"]);
+  const qur = D.QURILMALAR.filter(q => q.kirishNuqtaId === (h.kirishNuqtaId || ""));
+  qur.slice(0, 2).forEach(q =>
+    bogliq.push(["Qurilma", q.model, "qurilma.html?id=" + encodeURIComponent(q.id), "qurilma"]));
+  const korik = D.KORIKLAR.filter(k => k.obyektId === h.obyektId)[0];
+  if (korik) bogliq.push(["Ko&#39;rik", korik.tur + " · " + korik.sana,
+                          "korik-akti.html?id=" + encodeURIComponent(korik.id), "korik"]);
+  bogliq.push(["Obyekt", obyektNomi(h.obyektId),
+               "obyekt.html?id=" + encodeURIComponent(h.obyektId), "bino"]);
+  document.getElementById("h-bogliq").innerHTML = bogliq.map(b =>
+    '<a class="qator" href="' + b[2] + '"><span class="belgi">' + ik(b[3]) + "</span>" +
+    '<span class="matn"><b>' + b[1] + "</b><span>" + b[0] + "</span></span>" +
+    '<span class="ong">' + ik("ong", "mitti") + "</span></a>").join("");
+
+  function tekshir(){
+    if (!document.getElementById("h-xulosa").value.trim()){
+      MKB.toast("Texnik xulosa kiritilishi shart", "xavf"); return false;
+    }
+    if (!document.getElementById("h-dalil").value){
+      MKB.toast("Dalil ko&#39;rsatilishi shart", "xavf"); return false;
+    }
+    return true;
+  }
+  document.getElementById("h-hal").addEventListener("click", () => {
+    if (!tekshir()) return;
+    holatEl.innerHTML = '<span class="chip chip-yashil">hal qilindi</span>';
+    MKB.toast("Hodisa hal qilindi deb belgilandi");
+  });
+  document.getElementById("h-yop").addEventListener("click", () => {
+    if (MKB.rol() !== "admin"){
+      MKB.toast("Hodisani yopish faqat administrator huquqida", "xavf"); return;
+    }
+    if (!tekshir()) return;
+    holatEl.innerHTML = '<span class="chip chip-kichik">yopildi</span>';
+    MKB.toast("Hodisa yopildi");
+  });
+});
+</script>
+</body>
+</html>

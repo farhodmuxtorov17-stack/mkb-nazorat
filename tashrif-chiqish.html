@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Chiqish tekshiruvi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+</head>
+<body data-sahifa="kn">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="kirish-nazorati.html">Kirish nazorati</a><span class="ajratgich">/</span><span>Chiqish tekshiruvi</span></div>
+    <div class="hs-qator"><h1>Chiqish tekshiruvi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="kn-tor">
+    <section class="karta">
+      <div class="karta-bosh"><h2>Chiqish tekshiruvi</h2><span class="soni" id="ch-holat"></span></div>
+      <p style="font-size:13.5px;color:var(--matn-3);margin-bottom:16px">Tashrifchi obyektdan chiqishdan oldin quyidagi bandlar bandma-band tekshiriladi. Nomuvofiqlik topilsa hodisa avtomatik ochiladi va tashrif yopilmaydi.</p>
+      <div id="ch-royxat"></div>
+      <div class="maydon" style="margin-top:16px"><label class="maydon-yorliq">Tekshiruvchi izohi</label>
+        <div class="kirish"><input id="ch-izoh" placeholder="Zarur bo&#39;lsa izoh qoldiring"></div></div>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+        <button type="button" class="tugma tugma-asosiy" id="ch-yakun"><svg class="ic"><use href="#i-tasdiq"/></svg>Chiqishni rasmiylashtirish</button>
+        <button type="button" class="tugma tugma-xavf" id="ch-hodisa"><svg class="ic"><use href="#i-xavf"/></svg>Nomuvofiqlik qayd etish</button>
+      </div>
+    </section>
+    <section class="karta">
+      <div class="karta-bosh"><h2>Tashrif ma&#39;lumoti</h2></div>
+<dl class="malumot-royxat">
+  <dt><svg class="ic"><use href="#i-foyd"/></svg>Tashrifchi</dt>
+  <dd id="ch-ism">—</dd>
+  <dt><svg class="ic"><use href="#i-bino"/></svg>Obyekt</dt>
+  <dd id="ch-obyekt">—</dd>
+  <dt><svg class="ic"><use href="#i-soat"/></svg>Kirish</dt>
+  <dd id="ch-kirish">—</dd>
+  <dt><svg class="ic"><use href="#i-vazifa"/></svg>Maqsad</dt>
+  <dd id="ch-maqsad">—</dd>
+  <dt><svg class="ic"><use href="#i-foydalar"/></svg>Hamroh</dt>
+  <dd id="ch-hamroh">—</dd>
+</dl>
+    </section>
+  </div>
+</main>
+</div>
+</div>
+<script src="yadro/bino.js?v=26082730"></script>
+<script src="malumot.js?v=26082730"></script>
+<script src="malumot-qoshimcha.js?v=26082730"></script>
+<script src="malumot-kengaytma.js?v=26082730"></script>
+<script src="malumot-kirish.js?v=26082730"></script>
+<script src="malumot-indeks.js?v=26082730"></script>
+<script src="tarjima.js?v=26082730"></script>
+<script src="yadro/ikonlar.js?v=26082730"></script>
+<script src="yadro/daraxt.js?v=26082730"></script>
+<script src="yadro/chizma.js?v=26082730"></script>
+<script src="yadro/qollanma.js?v=26082730"></script>
+<script src="yadro/api.js?v=26082730"></script>
+<script src="yadro/app.js?v=26082730"></script>
+<script>
+
+const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
+                   ogohlantirish: ["Ogohlantirish", "chip-sariq"]};
+const KN_HOLAT = {onlayn: ["Onlayn", "chip-yashil"], oflayn: ["Oflayn", "chip-xavf"],
+                  xizmatda: ["Xizmatda", "chip-sariq"]};
+const QR_HOLAT = {ishlayapti: ["Ishlayapti", "chip-yashil"], ogohlantirish: ["Ogohlantirish", "chip-sariq"],
+                  nosoz: ["Nosoz", "chip-xavf"]};
+function chip(xarita, kalit){
+  const v = xarita[kalit] || [kalit, ""];
+  return '<span class="chip ' + v[1] + '">' + v[0] + "</span>";
+}
+function nuqtaIkonka(t){
+  return t === "turniket" ? "turniket" : t === "shlagbaum" ? "mashina" : t === "darvoza" ? "zavod" : "eshik";
+}
+function shaxsSurati(sh, olcham){
+  const o = olcham || 38;
+  return sh && sh.rasm
+    ? '<img class="shaxs-surat" src="' + sh.rasm + '" alt="" loading="lazy" style="width:' + o +
+      "px;height:" + o + 'px">'
+    : '<span class="belgi">' + (sh ? sh.belgi : "?") + "</span>";
+}
+function shaxsQatori(sh, ong){
+  if (!sh) return '<span class="matn"><b>Aniqlanmagan shaxs</b><span>Identifikatsiya o&#39;tmadi</span></span>';
+  return shaxsSurati(sh) +
+    '<span class="matn"><b>' + sh.ism + "</b><span><span>" + sh.lavozim + "</span> · <span>" + sh.tashkilot + "</span></span></span>" +
+    (ong || "");
+}
+function obyektNomi(id){
+  const o = MKB_DATA.OBYEKT_INDEKS[id];
+  return o ? o.qisqa : id;
+}
+function voqeaQatori(v){
+  const sh = MKB_DATA.shaxs(v.shaxsId);
+  return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
+    '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
+      ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
+    '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
+}
+
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_DATA;
+  const BANDLAR = [
+    ["Mebel va jihozlar", "Xonalardagi inventar ro&#39;yxat bo&#39;yicha joyida"],
+    ["Elektron qurilmalar", "Kompyuter, kamera va o&#39;lchov asboblari olib chiqilmagan"],
+    ["Hujjatlar", "Obyekt hujjatlari joyida yoki rasmiy ravishda olib chiqilgan"],
+    ["Muhrlar", "Muhrlangan xonalarning muhri butun"],
+    ["Eshik va derazalar", "Barcha ochiqliklar yopilgan va qulflangan"],
+    ["Kommunikatsiyalar", "Suv, gaz va elektr o&#39;chirilgan"],
+  ];
+  const id = new URLSearchParams(location.search).get("id");
+  const t = D.TASHRIFLAR.find(x => x.id === id) || D.TASHRIFLAR[0];
+  const sh = D.shaxs(t.shaxsId) || {};
+  document.getElementById("hs-meta").textContent = t.id;
+  document.getElementById("ch-holat").innerHTML = '<span class="chip chip-sariq">Tekshirilmoqda</span>';
+  document.getElementById("ch-ism").textContent = sh.ism || "—";
+  document.getElementById("ch-obyekt").textContent = obyektNomi(t.obyektId);
+  document.getElementById("ch-kirish").textContent = t.sana + " " + t.kirish;
+  document.getElementById("ch-maqsad").textContent = t.maqsad;
+  document.getElementById("ch-hamroh").textContent = t.hamroh || "Hamrohsiz";
+
+  document.getElementById("ch-royxat").innerHTML = BANDLAR.map((b, i) =>
+    '<label class="qator" style="cursor:pointer">' +
+      '<input type="checkbox" data-band="' + i + '" style="width:20px;height:20px;accent-color:var(--brend)">' +
+      '<span class="matn"><b>' + b[0] + "</b><span>" + b[1] + "</span></span></label>").join("");
+
+  function belgilangan(){
+    return [...document.querySelectorAll("[data-band]")].filter(x => x.checked).length;
+  }
+  document.getElementById("ch-yakun").addEventListener("click", () => {
+    if (belgilangan() < BANDLAR.length){
+      MKB.toast("Barcha bandlar tekshirilishi shart", "xavf");
+      return;
+    }
+    document.getElementById("ch-holat").innerHTML = '<span class="chip chip-yashil">Yakunlandi</span>';
+    MKB.toast("Chiqish rasmiylashtirildi, dalolatnoma saqlandi");
+  });
+  document.getElementById("ch-hodisa").addEventListener("click", () => {
+    MKB.modal("Nomuvofiqlik qayd etish",
+      '<div class="maydon"><label class="maydon-yorliq">Nomuvofiqlik turi <b>*</b></label>' +
+      '<div class="kirish"><select id="ch-tur"><option>Uskunalar ro&#39;yxatida kamomad</option>' +
+      "<option>Muhr buzilgan</option><option>Xona ochiq qoldirilgan</option>" +
+      "<option>Hujjat joyida yo&#39;q</option></select></div></div>" +
+      '<div class="maydon" style="margin-top:12px"><label class="maydon-yorliq">Tavsif <b>*</b></label>' +
+      '<div class="kirish"><input id="ch-tavsif" placeholder="Nima aniqlandi"></div></div>',
+      {okMatn: "Hodisa ochish", ok: p => {
+        if (!p.querySelector("#ch-tavsif").value.trim()){
+          MKB.toast("Tavsif kiritilishi shart", "xavf");
+          return false;
+        }
+        MKB.toast("Hodisa ochildi va inspektorga yuborildi");
+        document.getElementById("ch-holat").innerHTML = '<span class="chip chip-xavf">Nomuvofiqlik</span>';
+      }});
+  });
+});
+</script>
+</body>
+</html>

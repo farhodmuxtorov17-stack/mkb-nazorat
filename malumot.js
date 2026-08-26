@@ -899,11 +899,11 @@ const MENING_VAZIFALARIM = [
 /* ---------- Bildirishnomalar ---------- */
 const BILDIRISHLAR = [
   {ikon:"i-grafik", t:"Tasdiqlar", sarlavha:"Baholash buyurtmasi kelishuvda", matn:"AK-2026/5512 bo'yicha buyurtma (\u2116 BB-2026-0114) tavakkalchilik xulosasini kutmoqda.", vaqt:"14:30", yangi:true, havola:"vazifalar.html"},
-  {ikon:"i-ogoh", t:"Aktiv hodisasi", sarlavha:"Sug'urta polisi muddati o'tdi", matn:"Navruz Plaza (AK-2025/0934) auksion bosqichida qamrovsiz qoldi \u2014 talabnoma tayyorlanmoqda.", vaqt:"13:48", yangi:true, havola:"aktiv-hodisalari.html"},
+  {ikon:"i-ogoh", t:"Aktiv hodisasi", sarlavha:"Sug'urta polisi muddati o'tdi", matn:"Navruz Plaza (AK-2025/0934) auksion bosqichida qamrovsiz qoldi \u2014 talabnoma tayyorlanmoqda.", vaqt:"13:48", yangi:true, havola:"hodisalar.html"},
   {ikon:"i-tashrif", t:"Ko'rik rejasi", sarlavha:"Ko'rik muddati o'tdi", matn:"Chorvoq dala hovlisi bo'yicha navbatdan tashqari ko'rik (KO-2026/0398) o'tkazilmadi \u2014 qayta tayinlang.", vaqt:"12:05", yangi:true, havola:"korik-rejasi.html"},
   {ikon:"i-tarozi", t:"Yuridik ish", sarlavha:"Ijro hujjati muddati yaqinlashmoqda", matn:"AK-2026/4471 bo'yicha ijro hujjati muddatiga 4 kun qoldi.", vaqt:"11:20", yangi:false, havola:"undiruv.html"},
-  {ikon:"i-aktiv", t:"Tasnif", sarlavha:"Toifa migratsiyasi kutilmoqda", matn:"AK-2026/0141 haftaning oxirigacha Shubhali toifaga o'tadi \u2014 zaxira 9,7 dan 19,3 mln gacha ko'tariladi.", vaqt:"10:40", yangi:false, havola:"tasniflash.html"},
-  {ikon:"i-bolg", t:"Realizatsiya", sarlavha:"Savdo sanasi belgilandi", matn:"Sergeli logistika ombori \u2014 e'lon joylandi, savdo 09-sentabrga belgilandi.", vaqt:"09:15", yangi:false, havola:"auksion.html"}
+  {ikon:"i-aktiv", t:"Nazorat indeksi", sarlavha:"Indeks pasayish chegarasida", matn:"AK-2026/0141 bo'yicha nazorat indeksi 62% ga tushdi \u2014 hujjatlar to'liq emas va ko'rik muddati yaqinlashdi.", vaqt:"10:40", yangi:false, havola:"obyektlar.html"},
+  {ikon:"i-bolg", t:"Kirish nazorati", sarlavha:"Kirish nuqtasi aloqadan chiqdi", matn:"Sergeli logistika ombori \u2014 yuk darvozasi kontrolleri 40 daqiqadan beri javob bermayapti.", vaqt:"09:15", yangi:false, havola:"kirish-nazorati.html"}
 ];
 
 
@@ -930,14 +930,16 @@ const AMALLAR_JURNALI = [
 
 /* ---------- Foydalanuvchilar, hisobotlar, hududlar, auksion bosqichlari ---------- */
 const FOYDLAR = [
-  {nom:"Ismoilov Otabek", rol:"Administrator", teg:"admin", bolim:"Axborot texnologiyalari departamenti", faol:true, id:"U056789011", email:"o.ismoilov@mkbank.uz", lavozim:"Tizim ma'muri", tel:"+998 90 123 45 67", sana:"12-yan, 2021"},
-  {nom:"Yo'ldoshev Alisher", rol:"Filial rahbari", teg:"filial", bolim:"Yunusobod filiali", faol:true, id:"U056789012", email:"a.yoldoshev@mkbank.uz", lavozim:"Filial boshqaruvchisi", tel:"+998 93 345 67 89", sana:"20-avg, 2021"},
-  {nom:"Nilufar Ismoilova", rol:"Aktivlar nazorati mutaxassisi", teg:"aktiv", bolim:"Aktivlar nazorati bo'limi", faol:true, id:"U056789013", email:"n.ismoilova@mkbank.uz", lavozim:"Katta mutaxassis", tel:"+998 91 234 56 78", sana:"03-mar, 2022"},
-  {nom:"Qodirova Nilufar", rol:"Kredit menejeri", teg:"kredit", bolim:"Muammoli kreditlar boshqarmasi", faol:true, id:"U056789014", email:"n.qodirova@mkbank.uz", lavozim:"Yetakchi menejer", tel:"+998 99 456 78 90", sana:"17-okt, 2022"},
-  {nom:"Sattorov Jasur", rol:"Aktivlar nazorati mutaxassisi", teg:"aktiv", bolim:"Aktivlar nazorati bo'limi", faol:true, id:"U056789015", email:"j.sattorov@mkbank.uz", lavozim:"Inspektor", tel:"+998 94 890 11 22", sana:"11-noy, 2022"},
-  {nom:"Rahimov Bekzod", rol:"Yurist", teg:"yurist", bolim:"Yuridik departament", faol:true, id:"U056789016", email:"b.rahimov@mkbank.uz", lavozim:"Da'vo-ariza sektori yuristi", tel:"+998 97 567 89 01", sana:"05-fev, 2023"},
-  {nom:"Xolmatova Zulfiya", rol:"Tavakkalchilik menejeri", teg:"tavakkal", bolim:"Tavakkalchiliklarni boshqarish departamenti", faol:true, id:"U056789017", email:"z.xolmatova@mkbank.uz", lavozim:"Bosh mutaxassis", tel:"+998 88 678 90 12", sana:"14-iyl, 2023"},
-  {nom:"Jahongir Otajonov", rol:"Kredit menejeri", teg:"kredit", bolim:"Muammoli kreditlar boshqarmasi", faol:false, id:"U056789019", email:"j.otajonov@mkbank.uz", lavozim:"Menejer", tel:"+998 95 890 12 34", sana:"09-dek, 2023"}
+  {nom:"Ismoilov Otabek", rol:"Administrator", teg:"admin", login:"o.ismoilov", bolim:"Axborot texnologiyalari departamenti", faol:true, id:"U056789011", email:"o.ismoilov@mkbank.uz", lavozim:"Tizim ma'muri", tel:"+998 90 000 00 00", sana:"01-yan, 2021", rasm:"assets/xodim_1.webp"},
+  {nom:"Yo'ldoshev Alisher", rol:"Filial rahbari", teg:"filial", login:"a.yoldoshev", bolim:"Yunusobod filiali", faol:true, id:"U056789012", email:"a.yoldoshev@mkbank.uz", lavozim:"Filial boshqaruvchisi", tel:"+998 91 375 29 46", sana:"04-mar, 2022", rasm:"assets/xodim_2.webp"},
+  {nom:"Ismoilova Nilufar", rol:"Obyekt menejeri", teg:"obyekt", login:"n.ismoilova", bolim:"Muammoli aktivlar bo'limi", faol:true, id:"U056789013", email:"n.ismoilova@mkbank.uz", lavozim:"Katta mutaxassis", tel:"+998 92 640 48 82", sana:"07-may, 2023", rasm:"assets/xodim_3.webp"},
+  {nom:"Sattorov Javohir", rol:"Ko'rik inspektori", teg:"nazorat", login:"j.sattorov", bolim:"Aktivlar nazorati bo'limi", faol:true, id:"U056789014", email:"j.sattorov@mkbank.uz", lavozim:"Ko'rik inspektori", tel:"+998 93 915 67 28", sana:"10-iyl, 2024", rasm:"assets/xodim_4.webp"},
+  {nom:"Karimova Feruza", rol:"Ko'rik inspektori", teg:"nazorat", login:"f.karimova", bolim:"Aktivlar nazorati bo'limi", faol:true, id:"U056789015", email:"f.karimova@mkbank.uz", lavozim:"Yetakchi inspektor", tel:"+998 94 280 86 64", sana:"13-sen, 2025", rasm:"assets/xodim_5.webp"},
+  {nom:"Nazarov Aziz", rol:"Baholovchi mutaxassis", teg:"baholash", login:"a.nazarov", bolim:"Baholash bo'limi", faol:true, id:"U056789016", email:"a.nazarov@mkbank.uz", lavozim:"Baholovchi", tel:"+998 95 555 05 00", sana:"16-noy, 2021", rasm:"assets/xodim_6.webp"},
+  {nom:"Sobirov Ulug'bek", rol:"Yurist", teg:"yurist", login:"u.sobirov", bolim:"Yuridik departament", faol:true, id:"U056789017", email:"u.sobirov@mkbank.uz", lavozim:"Bosh yurist", tel:"+998 96 820 24 46", sana:"19-yan, 2022", rasm:"assets/xodim_7.webp"},
+  {nom:"Tosheva Barno", rol:"Obyekt menejeri", teg:"obyekt", login:"b.tosheva", bolim:"Muammoli aktivlar bo'limi", faol:true, id:"U056789018", email:"b.tosheva@mkbank.uz", lavozim:"Mutaxassis", tel:"+998 97 195 43 82", sana:"22-mar, 2023", rasm:"assets/xodim_8.webp"},
+  {nom:"Ergashev Botir", rol:"Filial rahbari", teg:"filial", login:"b.ergashev", bolim:"Chilonzor filiali", faol:true, id:"U056789019", email:"b.ergashev@mkbank.uz", lavozim:"Filial boshqaruvchisi", tel:"+998 98 460 62 28", sana:"25-may, 2024", rasm:"assets/xodim_9.webp"},
+  {nom:"Xolmatova Sevara", rol:"Baholovchi mutaxassis", teg:"baholash", login:"s.xolmatova", bolim:"Baholash bo'limi", faol:false, id:"U056789020", email:"s.xolmatova@mkbank.uz", lavozim:"Katta baholovchi", tel:"+998 99 735 81 64", sana:"28-iyl, 2025", rasm:"assets/xodim_10.webp"},
 ];
 
 const HISOBOTLAR = [
