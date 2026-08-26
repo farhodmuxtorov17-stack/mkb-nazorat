@@ -10,14 +10,6 @@ window.MKB_DARAXT = {
    "n": "Filial paneli"
   },
   {
-   "f": "panel-kredit.html",
-   "n": "Kredit paneli"
-  },
-  {
-   "f": "panel-aktiv.html",
-   "n": "Aktivlar paneli"
-  },
-  {
    "f": "panel-yurist.html",
    "n": "Yuridik panel"
   },
@@ -28,6 +20,22 @@ window.MKB_DARAXT = {
   {
    "f": "korsatkichlar.html",
    "n": "Ko'rsatkichlar"
+  },
+  {
+   "f": "panel-obyekt.html",
+   "n": "Obyekt menejeri paneli"
+  },
+  {
+   "f": "panel-nazorat.html",
+   "n": "Ko&#39;rik inspektori paneli"
+  },
+  {
+   "f": "panel-baholash.html",
+   "n": "Baholash paneli"
+  },
+  {
+   "f": "panel-savdo.html",
+   "n": "Realizatsiya paneli"
   }
  ],
  "aktivlar": [

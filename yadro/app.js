@@ -24,23 +24,39 @@ const BOLIMLAR = [
 
 /* ---------- Rollar ---------- */
 const ROL_KALIT = {
-  "Administrator": "admin",
+  "Obyekt menejeri": "obyekt",                 /* obyektlar reyestri, balansga qabul */
+  "Ko'rik inspektori": "nazorat",              /* ko'rik, sug'urta, hodisalar */
+  "Baholovchi mutaxassis": "baholash",         /* baholash, qiymat dinamikasi */
+  "Realizatsiya menejeri": "savdo",            /* auksion, ijara, xaridorlar */
+  "Yurist": "yurist",                          /* undiruv, sud, ijro */
+  "Tavakkalchilik menejeri": "tavakkal",       /* tasnif, zaxira */
   "Filial rahbari": "filial",
-  "Kredit menejeri": "kredit",
-  "Aktivlar nazorati mutaxassisi": "aktiv",
-  "Yurist": "yurist",
-  "Tavakkalchilik menejeri": "tavakkal",
+  "Administrator": "admin",
 };
 const ROL_RUXSAT = {
   admin:    null, /* hammasi */
-  filial:   ["panel","portfel","aktivlar","korik","zaxira","savdo","arxiv","hisobot","xarita","vazifa","hujjat","sozlama"],
-  kredit:   ["panel","portfel","hisobot","vazifa","hujjat","sozlama"],
-  aktiv:    ["panel","aktivlar","korik","baholash","sugurta","savdo","arxiv","xarita","hisobot","vazifa","hujjat","sozlama"],
-  yurist:   ["panel","portfel","yuridik","arxiv","hisobot","vazifa","hujjat","sozlama"],
-  tavakkal: ["panel","baholash","zaxira","hisobot","vazifa","hujjat","sozlama"],
+  filial:   ["panel","aktivlar","portfel","korik","zaxira","savdo","arxiv","hisobot","xarita","vazifa","hujjat","sozlama"],
+  /* Obyekt menejeri — aktivlar reyestri va balansga qabul markazda */
+  obyekt:   ["panel","aktivlar","portfel","korik","savdo","arxiv","xarita","hisobot","vazifa","hujjat","sozlama"],
+  /* Ko'rik inspektori — obyekt holati: ko'rik, sug'urta, hodisalar */
+  nazorat:  ["panel","aktivlar","korik","sugurta","xarita","vazifa","hujjat","hisobot","sozlama"],
+  /* Baholovchi — obyekt qiymati */
+  baholash: ["panel","aktivlar","baholash","zaxira","hisobot","vazifa","hujjat","sozlama"],
+  /* Realizatsiya — auksion, ijara, arxiv */
+  savdo:    ["panel","aktivlar","savdo","arxiv","xarita","hisobot","vazifa","hujjat","sozlama"],
+  yurist:   ["panel","portfel","yuridik","aktivlar","arxiv","hisobot","vazifa","hujjat","sozlama"],
+  tavakkal: ["panel","baholash","zaxira","aktivlar","hisobot","vazifa","hujjat","sozlama"],
 };
 /* Fayl darajasidagi cheklovlar (sahifa ruxsatidan tashqari) */
 const SAHIFA_MAXSUS = {
+  "panel.html":            ["admin", "filial"],
+  "panel-obyekt.html":     ["admin", "obyekt"],
+  "panel-nazorat.html":    ["admin", "nazorat"],
+  "panel-baholash.html":   ["admin", "baholash"],
+  "panel-savdo.html":      ["admin", "savdo"],
+  "panel-yurist.html":     ["admin", "yurist"],
+  "panel-tavakkal.html":   ["admin", "tavakkal"],
+  "panel-filial.html":     ["admin", "filial"],
   "foydalanuvchilar.html": ["admin"],
   "foydalanuvchi.html":    ["admin"],
   "rollar.html":           ["admin"],

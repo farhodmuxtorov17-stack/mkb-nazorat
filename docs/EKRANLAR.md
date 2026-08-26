@@ -1,6 +1,6 @@
 # Ekranlar reyestri
 
-Jami: **127 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
+Jami: **129 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 
 ## Kirish va xatolar (6)
 
@@ -13,17 +13,19 @@ Jami: **127 ekran**. Har biri alohida HTML fayl, RBAC bo'lim kaliti bilan.
 | `xato-404.html` | Sahifa topilmadi | Noto'g'ri manzil |
 | `index.html` | Aktivlar nazorati | Kirish nuqtasi (yo'naltirish) |
 
-## Boshqaruv paneli (7)
+## Boshqaruv paneli (9)
 
 | Fayl | Ekran | Izoh |
 |---|---|---|
 | `panel.html` | Boshqaruv paneli | Flagman dashbord (TopProducer uslubi) |
 | `panel-filial.html` | Filial paneli | Filial rahbari paneli |
-| `panel-kredit.html` | Kredit paneli | Kredit menejeri paneli |
-| `panel-aktiv.html` | Aktivlar paneli | Aktivlar mutaxassisi paneli |
 | `panel-yurist.html` | Yuridik panel | Yurist paneli |
 | `panel-tavakkal.html` | Tavakkalchilik paneli | Tavakkalchilik paneli |
 | `korsatkichlar.html` | Umumiy ko'rsatkichlar | KPI markazi |
+| `panel-obyekt.html` | Obyekt menejeri paneli | Obyekt menejeri paneli |
+| `panel-nazorat.html` | Ko&#39;rik inspektori paneli | Inspektor paneli |
+| `panel-baholash.html` | Baholash paneli | Baholovchi paneli |
+| `panel-savdo.html` | Realizatsiya paneli | Realizatsiya paneli |
 
 ## Qarzdorlar portfeli (11)
 

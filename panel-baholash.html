@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Filial paneli</title>
+<title>MKB — Baholash paneli</title>
 <link rel="stylesheet" href="yadro/app.css?v=26082645">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
@@ -15,29 +15,28 @@
 <main class="kontent">
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><span>Boshqaruv paneli</span></div>
-    <div class="hs-qator"><h1>Filial paneli</h1><span class="hs-meta" id="hs-meta">Filial kesimidagi holat</span><div class="hs-amallar"><a class="tugma tugma-oq" href="hisobotlar.html"><svg class="ic"><use href="#i-hisobot"/></svg>Hisobotlar</a><a class="tugma tugma-asosiy" href="korsatkichlar.html"><svg class="ic"><use href="#i-grafik"/></svg>Ko'rsatkichlar</a></div></div>
+    <div class="hs-qator"><h1>Baholash paneli</h1><span class="hs-meta" id="hs-meta">Qiymat va qayta baholash holati</span><div class="hs-amallar"><a class="tugma tugma-oq" href="hisobotlar.html"><svg class="ic"><use href="#i-hisobot"/></svg>Hisobotlar</a><a class="tugma tugma-asosiy" href="obyektlar.html"><svg class="ic"><use href="#i-aktivlar"/></svg>Obyektlar reyestri</a></div></div>
   </div>
   <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
-    <div class="metrika"><span class="m-yorliq">Filial obyektlari</span>
-      <span class="m-qiymat"><span id="m-soni">—</span></span>
-      <span class="m-izoh">Joriy filial bo'yicha</span>
+    <div class="metrika"><span class="m-yorliq">Baholashlar</span>
+      <span class="m-qiymat"><span id="b-jami">—</span></span>
+      <span class="m-izoh">Hisobotlar soni</span>
     </div>
-    <div class="metrika"><span class="m-yorliq">Filial qarzi</span>
-      <span class="m-qiymat"><span id="m-qarz">—</span></span>
-      <span class="m-izoh">Qoldiq qarz summasi</span>
+    <div class="metrika"><span class="m-yorliq">Joriy yilda</span>
+      <span class="m-qiymat"><span id="b-yil">—</span></span>
     </div>
-    <div class="metrika"><span class="m-yorliq">O'rtacha qoplash</span>
-      <span class="m-qiymat"><span id="m-qoplash">—</span></span>
-      <span class="m-izoh">Filial kesimida</span>
+    <div class="metrika"><span class="m-yorliq">O'rtacha o'zgarish</span>
+      <span class="m-qiymat"><span id="b-ozg">—</span></span>
+      <span class="m-izoh">Avvalgi bahoga nisbatan</span>
     </div>
-    <div class="metrika"><span class="m-yorliq">Rejadagi ko'riklar</span>
-      <span class="m-qiymat"><span id="m-korik">—</span></span>
-      <span class="m-izoh">Shu hafta ichida</span>
+    <div class="metrika"><span class="m-yorliq">Qayta baholash zarur</span>
+      <span class="m-qiymat"><span id="b-eski">—</span></span>
+      <span class="m-izoh">12 oydan oshgan</span>
     </div>
   </section>
   <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="panel-tor">
-    <section class="karta"><div class="karta-bosh"><h2>Filial obyektlari</h2><a class="karta-havola" href="obyektlar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="f-royxat"></div></section>
-    <section class="karta"><div class="karta-bosh"><h2>So'nggi hodisalar</h2><a class="karta-havola" href="vazifalar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="f-hodisalar"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>So'nggi baholashlar</h2><a class="karta-havola" href="baholash.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="b-royxat"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>Tur bo'yicha qiymat</h2></div><div id="b-turlar"></div></section>
   </div>
 </main>
 </div>
@@ -82,27 +81,26 @@ function muddatQatori(m){
 }
 
 document.addEventListener("mkb:tayyor", async () => {
-  const s = MKBapi.sessiya() || {};
+  const r = await MKBapi.royxat("BAHOLASHLAR");
   const yoz = await MKBapi.royxat("YOZUVLAR");
-  const meniki = yoz.filter(y => y.filial === s.filial);
-  const r = meniki.length ? meniki : yoz;
-
-  document.getElementById("m-soni").textContent = r.length;
-  const qarz = r.reduce((a, y) => a + MKB.sonQiymat(y.qarzSon), 0);
-  document.getElementById("m-qarz").innerHTML = MKB.fmt(Math.round(qarz)) + "<small>mln so'm</small>";
-  document.getElementById("m-qoplash").innerHTML =
-    Math.round(r.reduce((a, y) => a + y.qoplash, 0) / r.length) + "<small>%</small>";
-  const korik = MKB_DATA.KORIKLAR.filter(k => k.holat === "rejada").length;
-  document.getElementById("m-korik").textContent = korik;
-
-  document.getElementById("f-royxat").innerHTML =
-    r.slice().sort((a, b) => a.qoplash - b.qoplash).slice(0, 6).map(obyektQatori).join("");
-
-  document.getElementById("f-hodisalar").innerHTML = MKB_DATA.HODISALAR.slice(0, 5).map(h =>
-    '<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--chiziq-2)">' +
-      '<span style="width:8px;height:8px;border-radius:99px;background:' + h.rang + ';margin-top:5px;flex:none"></span>' +
-      '<span class="matn"><b>' + h.hodisa + '</b>' +
-      '<span style="font-size:12.5px;color:var(--matn-3)">' + h.obyektId + ' · ' + h.vaqt + '</span></span></div>').join("");
+  document.getElementById("b-jami").textContent = r.length;
+  document.getElementById("b-yil").textContent = r.filter(b => (b.sana || "").includes("2026")).length;
+  const delta = r.filter(b => b.avvalgi).map(b => (b.qiymat - b.avvalgi) / b.avvalgi * 100);
+  const ort = delta.reduce((a, b) => a + b, 0) / (delta.length || 1);
+  document.getElementById("b-ozg").innerHTML = (ort >= 0 ? "+" : "") + ort.toFixed(1).replace(".", ",") + "<small>%</small>";
+  document.getElementById("b-eski").textContent = r.filter(b => (b.sana || "").includes("2025")).length;
+  document.getElementById("b-royxat").innerHTML = r.slice(0, 6).map(b => {
+    const o = MKB_DATA.OBYEKT_INDEKS[b.obyektId] || {};
+    return '<a class="qator" href="baholash-hisobot.html?id=' + encodeURIComponent(b.id) + '">' +
+      '<span class="belgi lavanda">' + ik("baholash") + '</span>' +
+      '<span class="matn"><b>' + (o.qisqa || b.obyektId) + '</b>' +
+      '<span>' + b.baholovchi + ' · ' + b.usul + '</span></span>' +
+      '<span class="pul">' + MKB.fmt(b.qiymat) + ' mln</span></a>';
+  }).join("");
+  const turlar = {};
+  yoz.forEach(y => turlar[y.mulk.tur] = (turlar[y.mulk.tur] || 0) + y.mulk.baho);
+  MKB.barlar("b-turlar", Object.entries(turlar).sort((a, b) => b[1] - a[1]).slice(0, 7),
+    {format: v => MKB.fmt(Math.round(v))});
 });
 </script>
 </body>
