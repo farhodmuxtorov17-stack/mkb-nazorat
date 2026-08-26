@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Kirish nazorati posti</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082730">
+<link rel="stylesheet" href="yadro/app.css?v=26082745">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -47,19 +47,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082730"></script>
-<script src="malumot.js?v=26082730"></script>
-<script src="malumot-qoshimcha.js?v=26082730"></script>
-<script src="malumot-kengaytma.js?v=26082730"></script>
-<script src="malumot-kirish.js?v=26082730"></script>
-<script src="malumot-indeks.js?v=26082730"></script>
-<script src="tarjima.js?v=26082730"></script>
-<script src="yadro/ikonlar.js?v=26082730"></script>
-<script src="yadro/daraxt.js?v=26082730"></script>
-<script src="yadro/chizma.js?v=26082730"></script>
-<script src="yadro/qollanma.js?v=26082730"></script>
-<script src="yadro/api.js?v=26082730"></script>
-<script src="yadro/app.js?v=26082730"></script>
+<script src="yadro/bino.js?v=26082745"></script>
+<script src="malumot.js?v=26082745"></script>
+<script src="malumot-qoshimcha.js?v=26082745"></script>
+<script src="malumot-kengaytma.js?v=26082745"></script>
+<script src="malumot-kirish.js?v=26082745"></script>
+<script src="malumot-indeks.js?v=26082745"></script>
+<script src="tarjima.js?v=26082745"></script>
+<script src="yadro/ikonlar.js?v=26082745"></script>
+<script src="yadro/daraxt.js?v=26082745"></script>
+<script src="yadro/chizma.js?v=26082745"></script>
+<script src="yadro/qollanma.js?v=26082745"></script>
+<script src="yadro/api.js?v=26082745"></script>
+<script src="yadro/app.js?v=26082745"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -104,6 +104,9 @@ function voqeaQatori(v){
 
 document.addEventListener("mkb:tayyor", () => {
   const D = MKB_DATA, j = D.kirishJamlama();
+  document.getElementById("hs-meta").textContent =
+    new Set(D.KIRISH_NUQTALARI.map(n => n.obyektId)).size + " ta obyekt · " +
+    j.nuqta + " ta kirish nuqtasi";
   document.getElementById("kn-nuqta").innerHTML = j.onlayn + '<small> / ' + j.nuqta + "</small>";
   document.getElementById("kn-otish").textContent = MKB.fmt(j.bugungiVoqea);
   document.getElementById("kn-sorov").textContent = j.kutilayotganSorov;
