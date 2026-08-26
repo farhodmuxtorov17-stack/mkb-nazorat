@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Portfel hisoboti</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082780">
+<link rel="stylesheet" href="yadro/app.css?v=26082800">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="hisobot">
@@ -41,19 +41,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082780"></script>
-<script src="malumot.js?v=26082780"></script>
-<script src="malumot-qoshimcha.js?v=26082780"></script>
-<script src="malumot-kengaytma.js?v=26082780"></script>
-<script src="malumot-kirish.js?v=26082780"></script>
-<script src="malumot-indeks.js?v=26082780"></script>
-<script src="tarjima.js?v=26082780"></script>
-<script src="yadro/ikonlar.js?v=26082780"></script>
-<script src="yadro/daraxt.js?v=26082780"></script>
-<script src="yadro/chizma.js?v=26082780"></script>
-<script src="yadro/qollanma.js?v=26082780"></script>
-<script src="yadro/api.js?v=26082780"></script>
-<script src="yadro/app.js?v=26082780"></script>
+<script src="yadro/bino.js?v=26082800"></script>
+<script src="malumot.js?v=26082800"></script>
+<script src="malumot-qoshimcha.js?v=26082800"></script>
+<script src="malumot-kengaytma.js?v=26082800"></script>
+<script src="malumot-kirish.js?v=26082800"></script>
+<script src="malumot-indeks.js?v=26082800"></script>
+<script src="tarjima.js?v=26082800"></script>
+<script src="yadro/ikonlar.js?v=26082800"></script>
+<script src="yadro/daraxt.js?v=26082800"></script>
+<script src="yadro/chizma.js?v=26082800"></script>
+<script src="yadro/qollanma.js?v=26082800"></script>
+<script src="yadro/api.js?v=26082800"></script>
+<script src="yadro/app.js?v=26082800"></script>
 <script>
 
 function gorizontalBar(joy, juftlar, rang){
@@ -72,13 +72,16 @@ function ustunBar(joy, yorliqlar, qiymatlar){
 }
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
-  document.getElementById("hp-1").textContent = MKB.fmt(MKB_DATA.PORTFEL.jami);
+  document.getElementById("hp-1").textContent = MKB.fmt(yoz.length);
   document.getElementById("hp-2").innerHTML = MKB_DATA.PORTFEL.bahoTrln + "<small>trln so'm</small>";
   document.getElementById("hp-3").innerHTML =
     MKB.fmt(Math.round(yoz.reduce((a, y) => a + MKB.sonQiymat(y.qarzSon), 0))) + "<small>mln so'm</small>";
   document.getElementById("hp-4").innerHTML =
     MKB_DATA.nazoratJamlama(yoz).ortacha + "<small>%</small>";
-  gorizontalBar("hp-holat", MKB_DATA.PORTFEL.holatlar.map(h => [h.nom, MKB.fmt(h.son)]));
+  const holatlar = {};
+  yoz.forEach(y => holatlar[y.holat.nom] = (holatlar[y.holat.nom] || 0) + 1);
+  gorizontalBar("hp-holat", Object.entries(holatlar).sort((a, b) => b[1] - a[1])
+    .map(([n, v]) => [n, MKB.fmt(v)]));
   const turlar = {};
   yoz.forEach(y => turlar[y.mulk.tur] = (turlar[y.mulk.tur] || 0) + 1);
   gorizontalBar("hp-tur", Object.entries(turlar));

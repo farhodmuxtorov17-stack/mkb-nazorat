@@ -57,6 +57,10 @@ const SAHIFA_MAXSUS = {
   "integratsiyalar.html":  ["admin"],
   "filiallar.html":        ["admin", "filial"],
   "qurilma-ornatish.html": ["admin", "obyekt", "nazorat"],
+  "qabul-boshlash.html":   ["admin", "obyekt", "filial"],
+  "qabul-hujjatlar.html":  ["admin", "obyekt", "filial"],
+  "qabul-tasdiqlash.html": ["admin", "obyekt", "filial"],
+  "obyekt-tahrir.html":    ["admin", "obyekt"],
 };
 
 function joriySessiya(){ return window.MKBapi ? MKBapi.sessiya() : null; }
@@ -631,6 +635,7 @@ const MKB = {
     return new Intl.NumberFormat("ru-RU").format(son) + " so\'m";
   },
   rol(){ return joriyRolKalit(); },
+  ruxsat(href){ return sahifaRuxsatlimi(href); },
   fmt(son){ return new Intl.NumberFormat("ru-RU").format(son); },
   /* "3 840,4" -> 3840.4 */
   sonQiymat(x){
