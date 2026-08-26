@@ -2276,6 +2276,8 @@ window.MKB_LUGAT = {
   "Ijaradagi obyektlar": "Объекты в аренде",
   "Faol lotlar": "Активные лоты",
   "Bosqichlar": "Стадии",
+  "Ish o'rningizni tanlang — kirish huquqi lavozimingizga muvofiq beriladi": "Выберите своё рабочее место — права доступа выдаются по должности",
+  "Obyektlarni hisobga olish, ko'rik va sug'urta nazorati, baholash, tasnif-zaxira va realizatsiya — bank bosh ofisi va filiallari uchun yagona ish maydoni.": "Учёт объектов, контроль осмотров и страхования, оценка, классификация с резервами и реализация — единое рабочее пространство головного офиса и филиалов.",
 };
 
 /* Dinamik hisoblagich matnlari (raqam + birlik) */
