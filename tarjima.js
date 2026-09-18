@@ -3875,7 +3875,38 @@ window.MKB_LUGAT = {
   "Reyestrdagi obyekt raqami. Hodisa shu yerdan obyekt kartochkasiga tushadi.": "Номер объекта в реестре. Отсюда событие попадает в карточку объекта.",
   "Surat yoki video parcha bank serverida saqlanadi; saqlash muddati siyosat bilan belgilanadi.": "Снимок или видеофрагмент хранится на сервере банка; срок хранения определяется политикой.",
   "Har bir hodisa bilan birga batareya va signal keladi — alohida so'rov kerak emas.": "Вместе с каждым событием приходят заряд батареи и уровень сигнала — отдельный запрос не нужен.",
-  "Xom xabar o'zgartirilmasdan saqlanadi: kelishmovchilik bo'lsa asl yozuvga qaytish mumkin.": "Исходное сообщение сохраняется без изменений: при разногласиях можно вернуться к первичной записи."
+  "Xom xabar o'zgartirilmasdan saqlanadi: kelishmovchilik bo'lsa asl yozuvga qaytish mumkin.": "Исходное сообщение сохраняется без изменений: при разногласиях можно вернуться к первичной записи.",
+
+  /* ---------- Balans tarkibi bo'limi ---------- */
+  "Balans tarkibi": "Состав баланса",
+  "Balansda aynan nima turibdi": "Что именно числится на балансе",
+  "Ro'yxatdagi har uchinchi obyekt bino emas: avtomobil, stanok, yuk mashinasi va bitta ekskavator. Qolganlari ham bir-biriga o'xshamaydi — shahar markazidagi ma'muriy binodan tortib tarmoqdan o'n kilometr narida turgan fermagacha. Turni tanlang — nazoratni nima qiyinlashtirishi va unga qaysi yechim to'g'ri kelishi ochiladi.": "Каждый третий объект в перечне — не здание: автомобиль, станок, грузовик и один экскаватор. Остальные тоже не похожи друг на друга — от административного здания в центре города до фермы в десяти километрах от сети. Выберите тип — откроется, что затрудняет контроль и какое решение ему подходит.",
+  "Mos yechimlar": "Подходящие решения",
+  "obyektda bino umuman yo'q: transport, texnika va asbob-uskuna": "объектов вообще не имеют здания: транспорт, техника и оборудование",
+  "tur — har biriga o'z nazorat sxemasi kerak": "типов — каждому нужна своя схема контроля",
+  "Sonlar bank reyestridan olingan. Obyektlarning qiymati, manzili va egasi bu hujjatda ochilmaydi.": "Цифры взяты из реестра банка. Стоимость, адрес и владелец объектов в этом документе не раскрываются.",
+  "Chorvachilik fermasi": "Животноводческая ферма",
+  "Asbob-uskuna": "Оборудование и инструменты",
+  "Ishlab chiqarish sexi": "Производственный цех",
+  "Ko'p qavatli uydagi xonadon": "Квартира в многоэтажном доме",
+  "Savdo do'koni": "Торговый магазин",
+  "Omborxona": "Склад",
+  "Issiqxona": "Теплица",
+  "Yuk avtomobili": "Грузовой автомобиль",
+  "Maxsus texnika": "Спецтехника",
+  "Ko'pchiligi shahar va tuman markazida, elektr tarmog'i yonidan o'tadi. Hisoblagich olib qo'yilgan, lekin ustun joyida turibdi.": "Большинство — в центрах городов и районов, электросеть проходит рядом. Счётчик снят, но опора на месте.",
+  "Turgan joyi o'zgaradi, o'z quvvat manbai yo'q. Kamera bu yerda ish bermaydi — nazorat plomba va joylashuvga tayanadi.": "Место стоянки меняется, собственного питания нет. Камера здесь не работает — контроль опирается на пломбу и местоположение.",
+  "Aholi punktidan uzoqda, tarmoq tortish narxi obyekt qiymatiga yaqinlashadi. Hovlisi keng, perimetri uzun.": "Далеко от населённого пункта: стоимость прокладки сети приближается к стоимости объекта. Двор большой, периметр длинный.",
+  "Bino ichida turadi va o'zi alohida obyekt emas. Uni qamrab olish uchun xonaga kirishni nazorat qilish yetarli.": "Находится внутри здания и отдельным объектом не является. Для охвата достаточно контролировать вход в помещение.",
+  "Sanoat zonasida, ko'pida transformator uzeli saqlanib qolgan. Maydoni katta — bitta kamera ichkarini qamrab olmaydi.": "В промзоне, у многих сохранился трансформаторный узел. Площадь большая — одна камера не охватит внутреннее пространство.",
+  "Podyezd va hovli boshqa egalar bilan umumiy. Bankka faqat eshikning o'zi tegishli, perimetr emas.": "Подъезд и двор общие с другими собственниками. Банку принадлежит только дверь, а не периметр.",
+  "Ko'cha yuzida, vitrinasi katta va ko'rinib turadi. Elektr ulangan bo'lsa ham hisoblagich yopilgan.": "На красной линии, витрина большая и просматривается. Даже при подведённом электричестве счётчик закрыт.",
+  "Devor bilan o'ralgan hovli va bitta darvoza. Nazorat nuqtasi aniq, lekin elektr ko'pincha uzilgan.": "Огороженный двор и одни ворота. Точка контроля очевидна, но электричество чаще всего отключено.",
+  "Kirish kamdan-kam bo'ladi, shuning uchun uzluksiz video shart emas. Muhimi — eshik ochilganini bilish.": "Заходят редко, поэтому непрерывное видео не нужно. Важно другое — знать, что дверь открылась.",
+  "Konstruksiyasi yengil, qiymatning katta qismi plyonka va karkasda. Devorga jihoz o'rnatib bo'lmaydi.": "Конструкция лёгкая, основная часть стоимости — плёнка и каркас. Закрепить оборудование на стене невозможно.",
+  "Kuzov yopiladi va plombalanadi. Joylashuv bilan birga kuzov ochilgani ham qayd etilishi kerak.": "Кузов закрывается и пломбируется. Помимо местоположения нужно фиксировать и вскрытие кузова.",
+  "Yakka obyekt, lekin qiymati yuqori. Bitta obyekt uchun alohida yechim tanlash to'plamga qo'shishdan arzon.": "Объект единственный, но дорогой. Отдельное решение для одного объекта дешевле, чем включение его в общий комплект."
+
 };
 
 /* Qoida ichidagi nomni lug'atdan o'girish (topilmasa — asl holicha qoladi) */
