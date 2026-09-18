@@ -94,7 +94,8 @@ sinov("xonalar gabaritdan chiqmaydi va ustma-ust tushmaydi", () => {
       });
     });
   }
-  tekshir(xona > 3000, "tekshirilgan xona juda kam: " + xona);
+  /* Sikl haqiqatan aylanganini tasdiqlaydi: 120 model kamida shuncha xona beradi */
+  tekshir(xona > 2500, "tekshirilgan xona juda kam: " + xona);
 });
 
 sinov("har bir xonaning yo'lakka chiqadigan eshigi bor", () => {

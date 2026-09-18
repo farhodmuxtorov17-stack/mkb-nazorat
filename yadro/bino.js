@@ -67,6 +67,7 @@
     "Turar-joy majmuasi": {qavat: [4, 9], en: [30, 42], chuq: [14, 18], asos: ["ofis","ofis","ochiq"]},
     "Kvartira":           {qavat: [1, 1], en: [12, 16], chuq: [9, 12],  asos: ["ofis","ofis","ochiq"]},
     "Ofis binosi":        {qavat: [3, 6], en: [34, 50], chuq: [15, 20], asos: ["ofis","ofis","yigilish","ochiq"]},
+    "Ma'muriy bino":      {qavat: [2, 4], en: [28, 44], chuq: [14, 19], asos: ["ofis","ofis","yigilish","ochiq"]},
     "Dala hovli":         {qavat: [1, 2], en: [13, 19], chuq: [10, 14], asos: ["ofis","ochiq","ombor"]},
     "Turar-joy":          {qavat: [1, 2], en: [14, 20], chuq: [10, 14], asos: ["ofis","ochiq","ombor"]},
     "Avtotransport":      {qavat: [1, 1], en: [18, 24], chuq: [12, 16], asos: ["texnik","ombor"]},

@@ -42,7 +42,7 @@ const YOZUVLAR = [
       tur: "Kvartira", nom: "Yunusobod 12-kvartal, 45-uy, 23-xonadon", qisqa: "Yunusobod 12-kvartal, 45-uy",
       hudud: "Toshkent sh.", hududToliq: "Toshkent sh., Yunusobod", manzil: "Yunusobod 12-kvartal, 45-uy",
       maydon: "78 m²", baho: 520.0, bahoSana: "18.02.2026", sugurta: "Amalda",
-      rasm: "assets/bino_turar.webp", nazoratBall: 72
+      rasm: "assets/obyekt/kopqavat-1.svg", nazoratBall: 72
     },
     ish: {
       raqam: "UI-2026/0412", bosqich: "ijro", masul: "Sobirov Ulug'bek",
@@ -68,7 +68,7 @@ const YOZUVLAR = [
       tur: "Ishlab chiqarish", nom: "Zarafshon Tekstil ishlab chiqarish sexi", qisqa: "Zarafshon Tekstil sexi",
       hudud: "Samarqand", hududToliq: "Samarqand vil., Samarqand sh.", manzil: "Sanoat ko'chasi, 4",
       maydon: "9 400 m²", baho: 4150.0, bahoSana: "05.12.2025", sugurta: "Amalda",
-      rasm: "assets/bino_mall.webp", nazoratBall: 89, qabul: "21.11.2025"
+      rasm: "assets/obyekt/sex-1.svg", nazoratBall: 89, qabul: "21.11.2025"
     },
     ish: {
       raqam: "UI-2025/1187", bosqich: "musodara", masul: "Qodirova Nilufar",
@@ -94,7 +94,7 @@ const YOZUVLAR = [
       tur: "Kvartira", nom: "Chilonzor 9-kvartal, 12-uy, 56-xonadon", qisqa: "Chilonzor 9-kvartal, 12-uy",
       hudud: "Toshkent sh.", hududToliq: "Toshkent sh., Chilonzor", manzil: "Chilonzor 9-kvartal, 12-uy",
       maydon: "64 m²", baho: 340.0, bahoSana: "11.03.2026", sugurta: "Amalda",
-      rasm: "assets/bino_turar.webp", nazoratBall: 70
+      rasm: "assets/obyekt/kopqavat-2.svg", nazoratBall: 70
     },
     ish: {
       raqam: "UI-2026/2210", bosqich: "sud", masul: "Sobirov Ulug'bek",
@@ -119,7 +119,7 @@ const YOZUVLAR = [
       tur: "Savdo maydoni", nom: "Navruz Plaza, 3-qavat savdo maydoni", qisqa: "Navruz Plaza",
       hudud: "Toshkent sh.", hududToliq: "Toshkent sh., Shayxontohur", manzil: "Amir Temur ko'chasi, 88",
       maydon: "1 850 m²", baho: 1480.0, bahoSana: "22.04.2026", sugurta: "Amalda",
-      rasm: "assets/bino_mall.webp", nazoratBall: 92, qabul: "14.08.2025"
+      rasm: "assets/obyekt/dokon-1.svg", nazoratBall: 92, qabul: "14.08.2025"
     },
     ish: {
       raqam: "UI-2025/0934", bosqich: "balans", masul: "Qodirova Nilufar",
@@ -145,7 +145,7 @@ const YOZUVLAR = [
       tur: "Avtotransport", nom: "Chevrolet Malibu 2 (2023) · 01 A 887 KA", qisqa: "Chevrolet Malibu 2",
       hudud: "Toshkent sh.", hududToliq: "Toshkent sh., Mirobod", manzil: "Saqlash maydonchasi, Mirobod",
       maydon: "—", baho: 186.0, bahoSana: "02.04.2026", sugurta: "Amalda",
-      rasm: "assets/kam_avto.webp", nazoratBall: 64
+      rasm: "assets/obyekt/avto-1.svg", nazoratBall: 64
     },
     ish: {
       raqam: "UI-2026/5512", bosqich: "davo", masul: "Sobirov Ulug'bek",
@@ -169,7 +169,7 @@ const YOZUVLAR = [
       tur: "Kvartira", nom: "Nurafshon turar-joy majmuasi, 18-uy, 24-xonadon", qisqa: "Nurafshon majmuasi, 24-xonadon",
       hudud: "Toshkent vil.", hududToliq: "Toshkent vil., Nurafshon", manzil: "Istiqlol ko'chasi, 21",
       maydon: "96 m²", baho: 395.0, bahoSana: "30.01.2026", sugurta: "Amalda",
-      rasm: "assets/bino_turar.webp", nazoratBall: 76
+      rasm: "assets/obyekt/kopqavat-3.svg", nazoratBall: 76
     },
     ish: {
       raqam: "UI-2026/3308", bosqich: "qaror", masul: "Qodirova Nilufar",
@@ -194,7 +194,7 @@ const YOZUVLAR = [
       tur: "Yer uchastkasi", nom: "Qibray tumani, 2,4 ga yer uchastkasi", qisqa: "Qibray tumani",
       hudud: "Toshkent vil.", hududToliq: "Toshkent vil., Qibray", manzil: "Qibray tumani, Salor MFY",
       maydon: "24 000 m²", baho: 1020.0, bahoSana: "16.10.2025", sugurta: "Yo'q",
-      rasm: "assets/bino_9.webp", nazoratBall: 61
+      rasm: "assets/obyekt/ferma-1.svg", nazoratBall: 61
     },
     ish: {
       raqam: "UI-2025/0755", bosqich: "ijro", masul: "Sobirov Ulug'bek",
@@ -219,7 +219,7 @@ const YOZUVLAR = [
       tur: "Dala hovli", nom: "Chorvoq dala hovlisi", qisqa: "Chorvoq dala hovlisi",
       hudud: "Toshkent vil.", hududToliq: "Toshkent vil., Bo'stonliq", manzil: "Chorvoq qirg'og'i, 12",
       maydon: "850 m²", baho: 620.0, bahoSana: "02.03.2026", sugurta: "Amalda",
-      rasm: "assets/bino_dacha.webp", nazoratBall: 68
+      rasm: "assets/obyekt/uy-1.svg", nazoratBall: 68
     },
     ish: {
       raqam: "UI-2026/0141", bosqich: "ogohlantirish", masul: "Sobirov Ulug'bek",
@@ -283,12 +283,12 @@ function zaxiraHisobi(qarzJami, taminotBaho, foiz){
   return {zaxira, ochiq, qoplash};
 }
 
-/* Kichik tumba varianti: jadval katagi 44–64px uchun 1254px asl nusxa
-   dekodlanmasin. Fayl nomi _kichik qo'shimchasi bilan. */
+/* Jadval katagidagi 44–54 px uchun siqilgan variant: chizmaning o'zi,
+   lekin uchastka plitasi va hovli tafsilotlarisiz — shu o'lchovda ular
+   faqat shovqin beradi. Fayl nomi -k qo'shimchasi bilan. */
 function kichikRasm(y){
   const r = y.mulk.rasm || "";
-  const k = r.replace(/\.webp$/, "_kichik.webp");
-  y.mulk.rasmKichik = /bino_/.test(r) ? k : r;
+  y.mulk.rasmKichik = r.replace(/\.svg$/, "-k.svg");
 }
 function yozuvHosilalari(){
 YOZUVLAR.forEach(y => {
@@ -413,11 +413,11 @@ PORTFEL.balansda = PORTFEL.holatlar.filter(h => ["Nazoratda", "Balansda"].includ
 const SOTUV = [
   {id: "AK-2024/0286", nom: "Sergeli logistika ombori", tur: "Ombor",
    hudud: "Toshkent sh.", hududToliq: "Toshkent sh., Sergeli",
-   baho: 4200.0, rasm: "assets/bino_9.webp", ish: "UI-2024/0286", ijro: "IH-2024/0286",
+   baho: 4200.0, rasm: "assets/obyekt/ombor-1.svg", ish: "UI-2024/0286", ijro: "IH-2024/0286",
    bosqich: "elon", korik: 2},
   {id: "AK-2024/0512", nom: "Chorsu Savdo Markazi, B blok", qisqa: "Chorsu Savdo Markazi", tur: "Savdo maydoni",
    hudud: "Toshkent sh.", hududToliq: "Toshkent sh., Chilonzor",
-   baho: 2400.0, rasm: "assets/bino_mall.webp", ish: "UI-2024/0512", ijro: "IH-2024/0512",
+   baho: 2400.0, rasm: "assets/obyekt/dokon-2.svg", ish: "UI-2024/0512", ijro: "IH-2024/0512",
    bosqich: "rasmiylashtirish", korik: 0}
 ];
 
@@ -425,22 +425,22 @@ const SOTUV = [
 const ARXIV = [
   {kod: "AK-2023/0088", nom: "Yakkasaroy 2-xonali kvartirasi", tur: "Kvartira",
    sotilgan: "18-may, 2026", yil: "2026", xaridor: "Soliyev Umidjon",
-   summa: 640.0, ish: "UI-2023/0088", qabul: "12-yan, 2025", nazorat: "16 oy", rasm: "assets/bino_turar.webp"},
+   summa: 640.0, ish: "UI-2023/0088", qabul: "12-yan, 2025", nazorat: "16 oy", rasm: "assets/obyekt/kopqavat-4.svg"},
   {kod: "AK-2022/0034", nom: "Chimyon dala hovlisi", tur: "Dala hovli",
    sotilgan: "02-may, 2026", yil: "2026", xaridor: "Alimov Sardor",
-   summa: 980.0, ish: "UI-2022/0034", qabul: "20-avg, 2024", nazorat: "21 oy", rasm: "assets/bino_dacha.webp"},
+   summa: 980.0, ish: "UI-2022/0034", qabul: "20-avg, 2024", nazorat: "21 oy", rasm: "assets/obyekt/uy-2.svg"},
   {kod: "AK-2023/0156", nom: "Olmazor savdo do'koni", tur: "Savdo maydoni",
    sotilgan: "20-apr, 2026", yil: "2026", xaridor: "«Turon Retail» MChJ",
-   summa: 1150.0, ish: "UI-2023/0156", qabul: "03-iyl, 2025", nazorat: "9 oy", rasm: "assets/bino_mall.webp"},
+   summa: 1150.0, ish: "UI-2023/0156", qabul: "03-iyl, 2025", nazorat: "9 oy", rasm: "assets/obyekt/dokon-3.svg"},
   {kod: "AK-2022/0077", nom: "Bektemir ombori", tur: "Ombor",
    sotilgan: "11-dek, 2025", yil: "2025", xaridor: "«Sifat Qurilish» MChJ",
-   summa: 3350.0, ish: "UI-2022/0077", qabul: "28-fev, 2025", nazorat: "10 oy", rasm: "assets/bino_9.webp"},
+   summa: 3350.0, ish: "UI-2022/0077", qabul: "28-fev, 2025", nazorat: "10 oy", rasm: "assets/obyekt/ombor-2.svg"},
   {kod: "AK-2021/0203", nom: "Chilonzor ofis binosi", tur: "Ofis binosi",
    sotilgan: "30-okt, 2025", yil: "2025", xaridor: "«Humo Trade» MChJ",
-   summa: 2780.0, ish: "UI-2021/0203", qabul: "15-yan, 2025", nazorat: "9 oy", rasm: "assets/bino_humo.webp"},
+   summa: 2780.0, ish: "UI-2021/0203", qabul: "15-yan, 2025", nazorat: "9 oy", rasm: "assets/obyekt/mamuriy-1.svg"},
   {kod: "AK-2023/0119", nom: "Zangiota yer uchastkasi", tur: "Yer uchastkasi",
    sotilgan: "14-iyl, 2025", yil: "2025", xaridor: "«Agrotex Invest» MChJ",
-   summa: 760.0, ish: "UI-2023/0119", qabul: "09-sen, 2024", nazorat: "10 oy", rasm: "assets/bino_yer.webp"}
+   summa: 760.0, ish: "UI-2023/0119", qabul: "09-sen, 2024", nazorat: "10 oy", rasm: "assets/obyekt/ferma-2.svg"}
 ];
 
 
@@ -551,28 +551,28 @@ HODISALAR.forEach(h => {
 /* ---------- Hujjatlar (Ta'minot 1:N Hujjat, ТЗ 3.2) ---------- */
 const HUJJATLAR = [
   {nom:"Texnik pasport.pdf", ikon:"pdf", iturl:"i-hujjat", obyektId:"AK-2025/0934", tur:"Texnik pasport", teg:"pasport",
-   sana:"24-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-001", hajm:"12.4 MB", format:"PDF", rasm:"assets/bino_tower.webp",
+   sana:"24-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-001", hajm:"12.4 MB", format:"PDF", rasm:"assets/obyekt/ferma-3.svg",
    yuklagan:"Ismoilov Otabek", tavsif:"Bino bo'yicha texnik ma'lumotlar va umumiy tavsif."},
   {nom:"Kadastr reja.dwg", ikon:"dwg", iturl:"i-xarita", obyektId:"AK-2026/0141", tur:"Kadastr", teg:"kadastr",
-   sana:"21-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-014", hajm:"8.1 MB", format:"DWG", rasm:"assets/bino_dacha.webp",
+   sana:"21-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-014", hajm:"8.1 MB", format:"DWG", rasm:"assets/obyekt/ferma-4.svg",
    yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining kadastr chizmasi."},
   {nom:"Ijara shartnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyektId:"AK-2024/0512", tur:"Shartnoma", teg:"shartnoma",
-   sana:"18-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-022", hajm:"2.7 MB", format:"PDF", rasm:"assets/bino_mall.webp",
+   sana:"18-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-022", hajm:"2.7 MB", format:"PDF", rasm:"assets/obyekt/ferma-5.svg",
    yuklagan:"Karimova N.", tavsif:"«Turon Retail» MChJ bilan ijara shartnomasi."},
   {nom:"Fasad ko'rinishi.jpg", ikon:"img", iturl:"i-kamera", obyektId:"AK-2025/1187", tur:"Rasm", teg:"rasm",
-   sana:"16-avg, 2026", holat:"Yangi", hrang:"#059669", id:"DOC-2024-031", hajm:"5.4 MB", format:"JPG", rasm:"assets/bino_humo.webp",
+   sana:"16-avg, 2026", holat:"Yangi", hrang:"#059669", id:"DOC-2024-031", hajm:"5.4 MB", format:"JPG", rasm:"assets/obyekt/ferma-6.svg",
    yuklagan:"Soliev B.", tavsif:"Bino fasadining yangilangan surati."},
   {nom:"Baholash hisobot.pdf", ikon:"rep", iturl:"i-hisobot", obyektId:"AK-2026/3308", tur:"Hisobot", teg:"hisobot",
-   sana:"14-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-036", hajm:"4.2 MB", format:"PDF", rasm:"assets/bino_turar.webp",
+   sana:"14-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-036", hajm:"4.2 MB", format:"PDF", rasm:"assets/obyekt/ferma-1.svg",
    yuklagan:"Yusupova M.", tavsif:"Mustaqil baholovchi hisoboti."},
   {nom:"Yer uchastkasi rejasi.pdf", ikon:"pdf", iturl:"i-yer", obyektId:"AK-2025/0755", tur:"Kadastr", teg:"kadastr",
-   sana:"12-avg, 2026", holat:"Ko'rib chiqilmoqda", hrang:"#4A90F2", id:"DOC-2024-040", hajm:"3.3 MB", format:"PDF", rasm:"assets/bino_yer.webp",
+   sana:"12-avg, 2026", holat:"Ko'rib chiqilmoqda", hrang:"#4A90F2", id:"DOC-2024-040", hajm:"3.3 MB", format:"PDF", rasm:"assets/obyekt/ferma-2.svg",
    yuklagan:"Rahimov S.", tavsif:"Yer uchastkasining chegara rejasi."},
   {nom:"Qabul-topshirish dalolatnomasi.pdf", ikon:"doc", iturl:"i-shartnoma", obyektId:"AK-2025/0934", tur:"Shartnoma", teg:"shartnoma",
-   sana:"10-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-044", hajm:"1.6 MB", format:"PDF", rasm:"assets/bino_tower.webp",
+   sana:"10-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-044", hajm:"1.6 MB", format:"PDF", rasm:"assets/obyekt/ferma-3.svg",
    yuklagan:"Ismoilov Otabek", tavsif:"5-qavat ofis maydonini topshirish dalolatnomasi."},
   {nom:"Energiya audit hisobot.pdf", ikon:"pdf", iturl:"i-energiya", obyektId:"AK-2026/0141", tur:"Hisobot", teg:"hisobot",
-   sana:"07-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-051", hajm:"6.8 MB", format:"PDF", rasm:"assets/bino_dacha.webp",
+   sana:"07-avg, 2026", holat:"Tasdiqlangan", hrang:"#059669", id:"DOC-2024-051", hajm:"6.8 MB", format:"PDF", rasm:"assets/obyekt/ferma-4.svg",
    yuklagan:"Karimov I.", tavsif:"Yillik energiya samaradorligi auditi."}
 ];
 HUJJATLAR.forEach(h => {

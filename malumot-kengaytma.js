@@ -48,22 +48,29 @@
     ["Buxoro", "G'ijduvon tumani", "G'ijduvon BXM"],
   ];
 
-  /* [tur, rasmlar, maydon oralig'i, birlik, baho oralig'i (mln so'm)] — bank balansidagi mulk tarkibiga yaqin nisbatda */
+  /* [tur, chizma turi, maydon oralig'i, birlik, baho oralig'i (mln so'm), ulush]
+     Ulushlar bank balansidagi haqiqiy reyestr tarkibini takrorlaydi: ma'muriy bino
+     va transport eng ko'p, maxsus texnika yakka. Jami 267 ta. */
   const TURLAR = [
-    ["Kvartira", ["bino_turar.webp", "bino_qavatlar.webp"], [58, 124], "m²", 380, 980],
-    ["Turar-joy majmuasi", ["bino_qavatlar.webp", "bino_turar.webp"], [1200, 4600], "m²", 2600, 9200],
-    ["Savdo maydoni", ["bino_mall.webp"], [180, 1250], "m²", 900, 5400],
-    ["Savdo maydoni", ["bino_mall.webp"], [90, 640], "m²", 420, 2600],
-    ["Ofis binosi", ["bino_tower.webp", "bino_humo.webp"], [240, 1800], "m²", 1200, 7400],
-    ["Ishlab chiqarish", ["bino_mall.webp"], [800, 5200], "m²", 1800, 8600],
-    ["Ishlab chiqarish", ["bino_mall.webp"], [600, 2400], "m²", 1100, 4600],
-    ["Ombor", ["bino_mall.webp"], [600, 3400], "m²", 700, 4200],
-    ["Ombor", ["bino_mall.webp"], [400, 2600], "m²", 380, 2200],
-    ["Yer uchastkasi", ["bino_9.webp", "bino_yer.webp"], [1200, 24000], "m²", 300, 2400],
-    ["Yer uchastkasi", ["bino_9.webp"], [8000, 98000], "m²", 600, 3400],
-    ["Dala hovli", ["bino_dacha.webp"], [180, 640], "m²", 260, 1500],
-    ["Avtotransport", ["kam_avto.webp"], [1, 1], "dona", 120, 860],
+    ["Ma'muriy bino",   "mamuriy",   [240, 1800],  "m²",  1200, 7400, 44],
+    ["Ma'muriy bino",   "mamuriy",   [110, 620],   "m²",   460, 2400, 18],
+    ["Avtotransport",   "avto",      [1, 1],       "dona", 120,  860, 42],
+    ["Asbob-uskuna",    "uskuna",    [1, 1],       "dona",  60,  540, 30],
+    ["Avtotransport",   "yuk",       [1, 1],       "dona", 240, 1400,  6],
+    ["Maxsus texnika",  "texnika",   [1, 1],       "dona", 420, 2600,  1],
+    ["Ishlab chiqarish","ferma",     [800, 5200],  "m²",  1800, 8600, 32],
+    ["Ishlab chiqarish","sex",       [600, 2400],  "m²",  1100, 4600, 24],
+    ["Ishlab chiqarish","issiqxona", [1200, 9800], "m²",   640, 3200,  6],
+    ["Kvartira",        "kopqavat",  [58, 124],    "m²",   380,  980, 18],
+    ["Savdo maydoni",   "dokon",     [90, 640],    "m²",   420, 2600, 18],
+    ["Turar-joy",       "uy",        [180, 640],   "m²",   260, 1500, 16],
+    ["Ombor",           "ombor",     [600, 3400],  "m²",   700, 4200, 12],
   ];
+  /* Ulushga mos tanlov havzasi */
+  const TUR_HAVZA = TURLAR.reduce((a, t) => a.concat(Array(t[6]).fill(t)), []);
+  /* Obyekt chizmasi: bir xil urug' — bir xil rasm. Kichik variant jadval katagi uchun. */
+  const chizma = turi => "assets/obyekt/" + turi + "-" + (1 + Math.floor(rnd() * 6)) + ".svg";
+  const kichik = yol => yol.replace(/\.svg$/, "-k.svg");
 
   const NOM_BOSH = {
     "Kvartira": ["12-kvartal, 45-uy", "9-kvartal, 12-uy", "Bunyodkor ko'chasi, 8-uy",
@@ -72,15 +79,20 @@
                            "Baraka Residence", "Chinor Park majmuasi"],
     "Savdo maydoni": ["Savdo do'koni binosi", "Choyxona va do'kon binosi", "Xizmat ko'rsatish binosi",
                       "Dorixona binosi", "Savdo pavilyoni"],
-    "Ofis binosi": ["Biznes markaz, 3-qavat", "Ma'muriy bino", "Ofis bloki A",
-                    "Ish markazi, 5-qavat"],
+    "Ma'muriy bino": ["Ma'muriy bino", "Ma'muriy-xo'jalik binosi", "Boshqaruv binosi",
+                      "Ofis bloki A", "Ish markazi, 5-qavat"],
+    "Turar-joy": ["Turar joy binosi", "Bir qavatli turar joy", "Hovli-joy"],
+    "Asbob-uskuna": ["Tikuv stanogi", "Un tortish liniyasi", "Sovutish agregati",
+                     "Nonvoyxona pechi", "Qadoqlash liniyasi", "Payvandlash uskunasi"],
+    "Maxsus texnika": ["Ekskavator-yuklagich", "G'ildirakli yuklagich"],
     "Ishlab chiqarish": ["Tikuvchilik sexi", "Un tegirmoni binosi", "Parrandachilik binosi", "Paypoq ishlab chiqarish sexi",
                          "Oziq-ovqat ishlab chiqarish sexi", "Chorvachilik kompleksi"],
     "Ombor": ["Omborxona binosi", "Sovutkichli ombor", "Mineral o'g'itlar ombori", "Don saqlash ombori"],
     "Yer uchastkasi": ["Issiqxona majmuasi yeri", "Baliqchilik xo'jaligi yeri", "Sanoat yer uchastkasi", "Bog' va yer uchastkasi"],
     "Dala hovli": ["Dala hovlisi", "Bog' uyi", "Yozgi dala hovli"],
     "Avtotransport": ["Chevrolet Cobalt (2022)", "Isuzu yuk avtomobili (2021)",
-                      "Chevrolet Malibu (2023)", "MAN tortuvchi (2020)"],
+                      "Chevrolet Malibu (2023)", "MAN tortuvchi (2020)",
+                      "Chevrolet Damas (2021)", "Dongfeng yuk avtomobili (2019)"],
   };
 
   const MIJOZ_JIS = ["Karimov Javlon", "Ergasheva Dilnoza", "Yusupova Nodira", "To'xtasinov Sherzod",
@@ -136,10 +148,12 @@
       belgi: m.sobiqEga.replace(/[«»"“”]/g, "").split(" ").map(v => v[0]).join("").slice(0, 2).toUpperCase()});
     y.filial = m.filialNomi;
     y.qarz = {asosiy: Math.round(qarz * .82), foiz: Math.round(qarz * .18), kunlar: balansKun, jami: qarz};
+    /* Obyektning o'z surati bo'lmasa — turiga mos izometrik chizma */
+    const mahRasm = chizma(m.rasmTuri || "mamuriy");
     y.mulk = Object.assign({}, y.mulk, {tur: m.tur || MAH_TUR[m.rasmTuri] || "Noturar bino", nom: m.nom + " · " + m.manzil, qisqa: m.nom,
       hudud: m.hududNomi, hududToliq: m.hududNomi + ", " + m.tuman, manzil: m.manzil,
       maydon: !m.binoli ? "1 dona" : m.foydaliMaydon > 1 ? son(m.foydaliMaydon) + " m²" : m.yerMaydon > 1 ? son(m.yerMaydon) + " m²" : "—", baho, bahoSana: nuqtaliSana(sanaQ),
-      rasm: m.rasm || y.mulk.rasm, rasmKichik: m.rasm || y.mulk.rasmKichik, qabul: uzSana(sanaQ)});
+      rasm: m.rasm || mahRasm, rasmKichik: m.rasm || kichik(mahRasm), qabul: uzSana(sanaQ)});
     y.ish = Object.assign({}, y.ish, {bosqich: "balans", kun: balansKun, shoshilinch: false});
     if (y.ish.ijro === "—" || y.ish.ijro === "Hali berilmagan") y.ish.ijro = "IH-" + m.balansSana.slice(0, 4) + "/" + String(1000 + (m.urug % 8999));
     Object.assign(y, {bosqichNomi: bosq.nom, bosqichChip: bosq.chip, holat: m.holat === "Sotuvga tayyorlanmoqda" ? {nom: m.holat, rang: "#F2C230"} : {nom: "Balansda saqlanmoqda", rang: bosq.rang},
@@ -171,8 +185,8 @@
   const KERAK = MAH ? Math.max(bor, MAH.length) : 267;
   const yangiYozuvlar = [];
   for (let i = bor; i < KERAK; i++){
-    const t = tanla(TURLAR);
-    const [tur, rasmlar, mayd, birlik, bahoMin, bahoMaks] = t;
+    const t = tanla(TUR_HAVZA);
+    const [tur, chizmaTuri, mayd, birlik, bahoMin, bahoMaks] = t;
     const [hudud, manzilBosh, filial] = tanla(HUDUDLAR);
     const yur = rnd() < 0.42;
     const mijozNomi = yur ? tanla(MIJOZ_YUR) : tanla(MIJOZ_JIS);
@@ -188,12 +202,12 @@
     const bosq = D.BOSQICHLAR[bIndeks < 0 ? 0 : bIndeks];
     const yil = 2025 + (i % 2);
     const id = "AK-" + yil + "/" + String(1000 + i * 37 % 8999).padStart(4, "0");
-    const maydon = tur === "Avtotransport" ? "1 dona" : son(oraliq(mayd[0], mayd[1])) + " " + birlik;
+    const maydon = birlik === "dona" ? "1 dona" : son(oraliq(mayd[0], mayd[1])) + " " + birlik;
     const asosiy = Math.round(qarz * 0.82);
     const foiz = qarz - asosiy;
     const tasnif = D.tasnifla ? D.tasnifla(kunlar) : null;
     const zaxira = tasnif ? +(qarz * tasnif.zaxira / 100).toFixed(1) : 0;
-    const rasm = "assets/" + tanla(rasmlar);
+    const rasm = chizma(chizmaTuri);
     yangiYozuvlar.push({
       id,
       mijoz: {nom: mijozNomi, tur: yur ? "Yuridik shaxs" : "Jismoniy shaxs",
@@ -211,7 +225,7 @@
       mulk: {tur, nom: nomQisqa + " · " + manzilBosh, qisqa: nomQisqa, hudud,
         hududToliq: manzilBosh, manzil: manzilBosh + ", " + oraliq(1, 120) + "-uy",
         maydon, baho, bahoSana: oraliq(1, 28) + "." + String(oraliq(1, 12)).padStart(2, "0") + "." + yil,
-        sugurta: rnd() < 0.72 ? "Amalda" : "Muddati tugagan", rasm, rasmKichik: rasm,
+        sugurta: rnd() < 0.72 ? "Amalda" : "Muddati tugagan", rasm, rasmKichik: kichik(rasm),
         nazoratBall: oraliq(52, 96)},
       ish: {raqam: "UI-" + yil + "/" + String(100 + i).padStart(4, "0"), bosqich,
         masul: tanla(MASULLAR),
@@ -328,7 +342,7 @@
   /* ---------- ARXIV ---------- */
   const yangiArxiv = [];
   for (let i = 0; i < 14; i++){
-    const t = tanla(TURLAR);
+    const t = tanla(TUR_HAVZA);
     const nom = tanla(NOM_BOSH[t[0]]);
     const summa = oraliq(t[4], t[5]);
     const yil = tanla(["2024", "2025", "2026"]);
@@ -338,7 +352,7 @@
       yil, xaridor: tanla(XARIDOR_NOM), summa,
       ish: "UI-" + (parseInt(yil, 10) - 2) + "/" + oraliq(100, 999),
       qabul: oraliq(1, 28) + "-" + tanla(["fev", "apr", "iyn"]) + ", " + (parseInt(yil, 10) - 1),
-      nazorat: oraliq(6, 22) + " oy", rasm: "assets/" + tanla(t[1])});
+      nazorat: oraliq(6, 22) + " oy", rasm: chizma(t[1])});
   }
   D.ARXIV = D.ARXIV.concat(yangiArxiv);
 
