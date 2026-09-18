@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Sud majlislari kalendari</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091704">
+<link rel="stylesheet" href="yadro/app.css?v=26091807">
 </head>
 <body data-sahifa="yuridik">
 <div class="qobiq">
@@ -21,19 +21,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091704"></script>
-<script src="malumot.js?v=26091704"></script>
-<script src="malumot-qoshimcha.js?v=26091704"></script>
-<script src="malumot-kengaytma.js?v=26091704"></script>
-<script src="malumot-kirish.js?v=26091704"></script>
-<script src="malumot-indeks.js?v=26091704"></script>
-<script src="tarjima.js?v=26091704"></script>
-<script src="yadro/ikonlar.js?v=26091704"></script>
-<script src="yadro/daraxt.js?v=26091704"></script>
-<script src="yadro/chizma.js?v=26091704"></script>
-<script src="yadro/qollanma.js?v=26091704"></script>
-<script src="yadro/api.js?v=26091704"></script>
-<script src="yadro/app.js?v=26091704"></script>
+<script src="yadro/bino.js?v=26091807"></script>
+<script src="malumot.js?v=26091807"></script>
+<script src="malumot-qoshimcha.js?v=26091807"></script>
+<script src="malumot-kengaytma.js?v=26091807"></script>
+<script src="malumot-kirish.js?v=26091807"></script>
+<script src="malumot-indeks.js?v=26091807"></script>
+<script src="tarjima.js?v=26091807"></script>
+<script src="yadro/ikonlar.js?v=26091807"></script>
+<script src="yadro/daraxt.js?v=26091807"></script>
+<script src="yadro/chizma.js?v=26091807"></script>
+<script src="yadro/qollanma.js?v=26091807"></script>
+<script src="yadro/api.js?v=26091807"></script>
+<script src="yadro/app.js?v=26091807"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const r = await MKBapi.royxat("SUD_MAJLISLAR");
@@ -47,7 +47,12 @@ document.addEventListener("mkb:tayyor", async () => {
   }
   const kunlar = {};
   r.forEach(m => { (kunlar[m.sana] = kunlar[m.sana] || []).push(m); });
-  document.getElementById("kalendar").innerHTML = Object.entries(kunlar).map(([sana, royxat]) =>
+  /* kalendar sana bo'yicha o'sish tartibida chiziladi — massiv tartibi tasodifiy bo'lishi mumkin */
+  const kunTartib = Object.entries(kunlar).sort((a, b) => {
+    const d = n => MKB_DATA.sanaOqi(n) || new Date(8640000000000);
+    return d(a[0]) - d(b[0]);
+  });
+  document.getElementById("kalendar").innerHTML = kunTartib.map(([sana, royxat]) =>
     '<section class="karta"><div class="karta-bosh">' +
       '<span style="width:46px;text-align:center;border:1.5px solid var(--siyoh);border-radius:14px;padding:5px 0;flex:none">' +
         '<b style="display:block;font:500 16px var(--shrift-displey)">' + sana.split("-")[0] + '</b>' +

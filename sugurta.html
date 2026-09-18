@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Sug'urta polislari</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091704">
+<link rel="stylesheet" href="yadro/app.css?v=26091807">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="baholash">
@@ -37,40 +37,52 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091704"></script>
-<script src="malumot.js?v=26091704"></script>
-<script src="malumot-qoshimcha.js?v=26091704"></script>
-<script src="malumot-kengaytma.js?v=26091704"></script>
-<script src="malumot-kirish.js?v=26091704"></script>
-<script src="malumot-indeks.js?v=26091704"></script>
-<script src="tarjima.js?v=26091704"></script>
-<script src="yadro/ikonlar.js?v=26091704"></script>
-<script src="yadro/daraxt.js?v=26091704"></script>
-<script src="yadro/chizma.js?v=26091704"></script>
-<script src="yadro/qollanma.js?v=26091704"></script>
-<script src="yadro/api.js?v=26091704"></script>
-<script src="yadro/app.js?v=26091704"></script>
+<script src="yadro/bino.js?v=26091807"></script>
+<script src="malumot.js?v=26091807"></script>
+<script src="malumot-qoshimcha.js?v=26091807"></script>
+<script src="malumot-kengaytma.js?v=26091807"></script>
+<script src="malumot-kirish.js?v=26091807"></script>
+<script src="malumot-indeks.js?v=26091807"></script>
+<script src="tarjima.js?v=26091807"></script>
+<script src="yadro/ikonlar.js?v=26091807"></script>
+<script src="yadro/daraxt.js?v=26091807"></script>
+<script src="yadro/chizma.js?v=26091807"></script>
+<script src="yadro/qollanma.js?v=26091807"></script>
+<script src="yadro/api.js?v=26091807"></script>
+<script src="yadro/app.js?v=26091807"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const r = await MKBapi.royxat("SUGURTALAR");
   const davolar = await MKBapi.royxat("SUGURTA_DAVOLARI");
-  document.getElementById("s-amalda").textContent = r.filter(s => s.holat === "amalda").length;
+  /* "—" polisi bo'lgan yozuv "obyektda polis yo'q" belgisi — u reyestr qatori emas */
+  const polislar = r.filter(s => s.polis && s.polis !== "—");
+  const BUGUN = MKB_DATA.BUGUN;
+  const qolganKun = s => { const d = MKB_DATA.sanaOqi(s.tugash); return d ? Math.round((d - BUGUN) / 864e5) : null; };
+  document.getElementById("hs-meta").textContent = MKB.fmt(polislar.length) + " ta polis";
+  document.getElementById("s-amalda").textContent = polislar.filter(s => s.holat === "amalda").length;
   document.getElementById("s-summa").innerHTML =
-    MKB.fmt(r.reduce((a, s) => a + MKB.sonQiymat(s.summa), 0)) + "<small>mln so'm</small>";
-  document.getElementById("s-tugaydi").textContent = r.filter(s => (s.tugash || "").includes("okt") || (s.tugash || "").includes("sen")).length || 2;
+    MKB.fmt(polislar.reduce((a, s) => a + MKB.sonQiymat(s.summa), 0)) + "<small>mln so'm</small>";
+  /* muddat sanadan hisoblanadi — ilgari oy nomi qidirilardi va natija 0 bo'lsa 2 ko'rsatilardi */
+  document.getElementById("s-tugaydi").textContent =
+    polislar.filter(s => { const k = qolganKun(s); return k != null && k >= 0 && k <= 60; }).length;
   document.getElementById("s-davolar").textContent = davolar.filter(d => d.holat !== "tolangan").length;
   MKB.jadval("jadval-joy", {
-    qatorlar: r,
+    qatorlar: polislar,
     qidiruv: ["polis", "obyekt", "kompaniya"],
-    filtrlar: [{kalit: "kompaniya", nom: "Kompaniya", variantlar: [...new Set(r.map(s => s.kompaniya))]}],
+    filtrlar: [{kalit: "kompaniya", nom: "Kompaniya", variantlar: [...new Set(polislar.map(s => s.kompaniya))]}],
     ustunlar: [
       {kalit: "polis", nom: "Polis", chiz: s => '<span class="kod-mono">' + s.polis + '</span>'},
       {kalit: "obyekt", nom: "Obyekt"},
       {kalit: "kompaniya", nom: "Kompaniya"},
       {kalit: "summa", nom: "Summa", son: true, chiz: s => '<span class="pul">' + MKB.fmt(s.summa) + ' mln</span>'},
       {kalit: "tugash", nom: "Tugash sanasi"},
-      {kalit: "holat", nom: "Holat", chiz: s => s.holat === "amalda"
-        ? '<span class="chip chip-yashil">Amalda</span>' : '<span class="chip chip-xavf">' + s.holat + '</span>'},
+      {kalit: "holat", nom: "Holat", chiz: s => {
+        const NOM = {amalda: ["Amalda", "chip-yashil"], tugaydi: ["Muddati tugayapti", "chip-sariq"],
+          "muddati tugagan": ["Muddati tugagan", "chip-xavf"], kechikkan: ["To'lov kechikkan", "chip-xavf"],
+          "to'xtatilgan": ["To'xtatilgan", "chip-xavf"]};
+        const n = NOM[String(s.holat).toLowerCase()] || [s.holat, "chip-xavf"];
+        return '<span class="chip ' + n[1] + '">' + n[0] + '</span>';
+      }},
     ],
     bosilganda: s => location.href = "sugurta-polis.html?id=" + encodeURIComponent(s.id),
   });

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyekt kartochkasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091704">
+<link rel="stylesheet" href="yadro/app.css?v=26091807">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
 .ob-hero{position:relative;border-radius:var(--r-karta);box-shadow:var(--soya);overflow:hidden;
@@ -90,19 +90,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091704"></script>
-<script src="malumot.js?v=26091704"></script>
-<script src="malumot-qoshimcha.js?v=26091704"></script>
-<script src="malumot-kengaytma.js?v=26091704"></script>
-<script src="malumot-kirish.js?v=26091704"></script>
-<script src="malumot-indeks.js?v=26091704"></script>
-<script src="tarjima.js?v=26091704"></script>
-<script src="yadro/ikonlar.js?v=26091704"></script>
-<script src="yadro/daraxt.js?v=26091704"></script>
-<script src="yadro/chizma.js?v=26091704"></script>
-<script src="yadro/qollanma.js?v=26091704"></script>
-<script src="yadro/api.js?v=26091704"></script>
-<script src="yadro/app.js?v=26091704"></script>
+<script src="yadro/bino.js?v=26091807"></script>
+<script src="malumot.js?v=26091807"></script>
+<script src="malumot-qoshimcha.js?v=26091807"></script>
+<script src="malumot-kengaytma.js?v=26091807"></script>
+<script src="malumot-kirish.js?v=26091807"></script>
+<script src="malumot-indeks.js?v=26091807"></script>
+<script src="tarjima.js?v=26091807"></script>
+<script src="yadro/ikonlar.js?v=26091807"></script>
+<script src="yadro/daraxt.js?v=26091807"></script>
+<script src="yadro/chizma.js?v=26091807"></script>
+<script src="yadro/qollanma.js?v=26091807"></script>
+<script src="yadro/api.js?v=26091807"></script>
+<script src="yadro/app.js?v=26091807"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -127,21 +127,8 @@ document.addEventListener("mkb:tayyor", async () => {
   else ishHavola.remove();
   const qz = document.getElementById("oh-qoplash").parentElement;
   qz.style.color = nazorat.ball >= 85 ? "var(--mint-matn)" : nazorat.ball >= 70 ? "var(--sariq-matn)" : "var(--pushti-matn)";
-  /* Balansda turgan muddat qabul sanasidan hisoblanadi ("17-sen, 2026" yoki "21.11.2025");
-     sana o'qilmasa, yozuvdagi kunlar ko'rsatiladi */
-  function balansKunlari(y){
-    const OY = {yan: 0, fev: 1, mar: 2, apr: 3, may: 4, iyn: 5, iyl: 6, avg: 7, sen: 8, okt: 9, noy: 10, dek: 11};
-    const t = String(y.mulk.qabul || "").trim();
-    let m = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(t), d = null;
-    if (m) d = new Date(+m[3], +m[2] - 1, +m[1]);
-    else if ((m = /^(\d{1,2})-([a-z']+),?\s*(\d{4})$/i.exec(t)) && OY[m[2].toLowerCase()] !== undefined)
-      d = new Date(+m[3], OY[m[2].toLowerCase()], +m[1]);
-    if (!d) return y.qarz.kunlar;
-    /* ma'lumot bazasi sanasigacha qabul qilinganlar shu sanaga, keyingilari bugungi kunga nisbatan */
-    const baza = new Date(2026, 7, 26);
-    const nuqta = d > baza ? new Date() : baza;
-    return Math.max(0, Math.floor((nuqta - d) / 864e5));
-  }
+  /* Balansda turgan muddat qabul sanasidan hisoblanadi — hisob yagona manbada (malumot-indeks.js) */
+  const balansKunlari = y => MKB_DATA.balansKunlari(y);
   const balansdami = ["musodara", "balans"].includes(x.ish.bosqich);
   document.getElementById("oh-plitkalar").innerHTML = [
     ["kub", "Turi", x.mulk.tur],

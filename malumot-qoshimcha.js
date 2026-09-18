@@ -23,7 +23,9 @@
   const SOATLAR = ["09:30", "11:00", "14:30", "16:00"];
   D.SUD_MAJLISLAR = [];
   faol.forEach((y, i) => {
-    if (!y.ish || !y.ish.sud || y.ish.sud === "—") return;
+    /* majlis faqat sud jarayoni boshlangan ishlarda; "Hali murojaat qilinmagan" sud nomi emas */
+    if (!y.ish || !["sud", "qaror", "ijro"].includes(y.ish.bosqich)) return;
+    if (!y.ish.sud || y.ish.sud === "—" || /murojaat qilinmagan/i.test(y.ish.sud)) return;
     const asos = 2 + (i % 9);
     D.SUD_MAJLISLAR.push({
       id: "SM-2026/0" + (140 + i * 7),

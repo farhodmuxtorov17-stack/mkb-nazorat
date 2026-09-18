@@ -167,7 +167,7 @@ const YOZUVLAR = [
     qarz: {asosiy: 276.0, foiz: 36.4, kunlar: 141},
     mulk: {
       tur: "Kvartira", nom: "Nurafshon turar-joy majmuasi, 18-uy, 24-xonadon", qisqa: "Nurafshon majmuasi, 24-xonadon",
-      hudud: "Nurafshon sh.", hududToliq: "Toshkent vil., Nurafshon", manzil: "Istiqlol ko'chasi, 21",
+      hudud: "Toshkent vil.", hududToliq: "Toshkent vil., Nurafshon", manzil: "Istiqlol ko'chasi, 21",
       maydon: "96 m²", baho: 395.0, bahoSana: "30.01.2026", sugurta: "Amalda",
       rasm: "assets/bino_turar.webp", nazoratBall: 76
     },
@@ -217,7 +217,7 @@ const YOZUVLAR = [
     qarz: {asosiy: 35.8, foiz: 2.8, kunlar: 34},
     mulk: {
       tur: "Dala hovli", nom: "Chorvoq dala hovlisi", qisqa: "Chorvoq dala hovlisi",
-      hudud: "Bo'stonliq tum.", hududToliq: "Toshkent vil., Bo'stonliq", manzil: "Chorvoq qirg'og'i, 12",
+      hudud: "Toshkent vil.", hududToliq: "Toshkent vil., Bo'stonliq", manzil: "Chorvoq qirg'og'i, 12",
       maydon: "850 m²", baho: 620.0, bahoSana: "02.03.2026", sugurta: "Amalda",
       rasm: "assets/bino_dacha.webp", nazoratBall: 68
     },
@@ -399,7 +399,11 @@ const PORTFEL = {
     .slice(0, qoldi).forEach(([, i]) => butun[i]++);
   PORTFEL.holatlar.forEach((h, i) => { h.foiz = butun[i]; });
 })();
-PORTFEL.balansda = PORTFEL.holatlar.filter(h => ["Nazoratda","Balansda","Musodara qilingan"].includes(h.nom))
+/* Bank ixtiyorida turgan mulk = nazoratdagi + balansdagi. Yig'indi BALANS_DINAMIKA dagi
+   "olingan - sotilgan" qoldig'iga teng bo'lishi kerak (malumot-indeks.js).
+   Ilgari ro'yxatda "Musodara qilingan" ham bor edi, lekin bu nom holatlar ichida yo'q —
+   shart hech nimaga mos kelmasdi va yig'indi tasodifan to'g'ri chiqardi. */
+PORTFEL.balansda = PORTFEL.holatlar.filter(h => ["Nazoratda", "Balansda"].includes(h.nom))
   .reduce((s, h) => s + h.son, 0);
 
 
@@ -1120,7 +1124,7 @@ function moslikTekshiruvi(){
   }));
 
   /* --- Hududlar kesimi butun portfelni qoplashi kerak (Д-7) --- */
-  const hJami = HUDUDLAR.reduce((a, h) => a + (+h[1]), 0);
+  const hJami = ((D.HUDUDLAR || HUDUDLAR)).reduce((a, h) => a + (+h[1]), 0);
   if (hJami !== PORT.jami)
     xato.push("hududlar bo'yicha " + hJami + " obyekt, portfelda " + PORT.jami);
 
@@ -1174,7 +1178,7 @@ window.MKB_DATA = {
   HODISALAR, HUJJATLAR, XONALAR,
   KORIKLAR, SUGURTALAR, BAHOLASHLAR, TASDIQLAR, UCHASTKALAR,
   SAVDO_MIJOZLAR, MULOQOTLAR, NAVBAT, MENING_VAZIFALARIM, BILDIRISHLAR, AMALLAR_JURNALI,
-  FOYDLAR, HISOBOTLAR, HUDUDLAR, AUKSION_BOSQICH, AVTO, KPI_BAZA, UNDIRUV_SERIYA,
+  FOYDLAR, HISOBOTLAR, HUDUDLAR, AUKSION_BOSQICH, AVTO, KPI_BAZA, UNDIRUV_SERIYA, BOSQICH_HOLAT,
   pul, son, fmt,
   bosqichStatistikasi, holatStatistikasi,
   jamiQarz, jamiBaho, moslikTekshiruvi,

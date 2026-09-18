@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Samaradorlik (KPI)</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091704">
+<link rel="stylesheet" href="yadro/app.css?v=26091807">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="hisobot">
@@ -20,9 +20,10 @@
   <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Portfel</a><a href="hisobot-undiruv.html">Undiruv</a><a href="hisobot-hudud.html">Hudud</a><a href="hisobot-xarajat.html">Xarajat</a><a href="hisobot-kpi.html" class="faol">KPI</a><a href="kirish-hisoboti.html">Kirish nazorati</a></nav>
   <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
     <div class="metrika"><span class="m-yorliq">O&#39;rtacha nazorat indeksi</span><span class="m-qiymat" id="hk-1">—</span></div>
-    <div class="metrika"><span class="m-yorliq">Yuqori nazoratda</span><span class="m-qiymat" id="hk-2">—</span></div>
-    <div class="metrika"><span class="m-yorliq">E&#39;tibor talab qiladi</span><span class="m-qiymat" id="hk-3">—</span></div>
-    <div class="metrika"><span class="m-yorliq">Kritik holatda</span><span class="m-qiymat" id="hk-4">—</span></div>
+    <div class="metrika"><span class="m-yorliq">Yuqori nazorat</span><span class="m-qiymat" id="hk-2">—</span></div>
+    <div class="metrika"><span class="m-yorliq">Barqaror</span><span class="m-qiymat" id="hk-5">—</span></div>
+    <div class="metrika"><span class="m-yorliq">E&#39;tibor talab</span><span class="m-qiymat" id="hk-3">—</span></div>
+    <div class="metrika"><span class="m-yorliq">Kritik</span><span class="m-qiymat" id="hk-4">—</span></div>
   </section>
   <div class="panel-tor" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:20px;align-items:start">
     <section class="karta"><div class="karta-bosh"><h2>Indeks tarkibi</h2><span class="soni">talab bajarilishi, %</span></div><div id="hk-tarkib"></div></section>
@@ -33,19 +34,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091704"></script>
-<script src="malumot.js?v=26091704"></script>
-<script src="malumot-qoshimcha.js?v=26091704"></script>
-<script src="malumot-kengaytma.js?v=26091704"></script>
-<script src="malumot-kirish.js?v=26091704"></script>
-<script src="malumot-indeks.js?v=26091704"></script>
-<script src="tarjima.js?v=26091704"></script>
-<script src="yadro/ikonlar.js?v=26091704"></script>
-<script src="yadro/daraxt.js?v=26091704"></script>
-<script src="yadro/chizma.js?v=26091704"></script>
-<script src="yadro/qollanma.js?v=26091704"></script>
-<script src="yadro/api.js?v=26091704"></script>
-<script src="yadro/app.js?v=26091704"></script>
+<script src="yadro/bino.js?v=26091807"></script>
+<script src="malumot.js?v=26091807"></script>
+<script src="malumot-qoshimcha.js?v=26091807"></script>
+<script src="malumot-kengaytma.js?v=26091807"></script>
+<script src="malumot-kirish.js?v=26091807"></script>
+<script src="malumot-indeks.js?v=26091807"></script>
+<script src="tarjima.js?v=26091807"></script>
+<script src="yadro/ikonlar.js?v=26091807"></script>
+<script src="yadro/daraxt.js?v=26091807"></script>
+<script src="yadro/chizma.js?v=26091807"></script>
+<script src="yadro/qollanma.js?v=26091807"></script>
+<script src="yadro/api.js?v=26091807"></script>
+<script src="yadro/app.js?v=26091807"></script>
 <script>
 
 function gorizontalBar(joy, juftlar, rang){
@@ -69,7 +70,9 @@ document.addEventListener("mkb:tayyor", async () => {
   const j = D.nazoratJamlama(yoz);
   document.getElementById("hs-meta").textContent = MKB.fmt(j.jami) + " ta obyekt bo'yicha";
   document.getElementById("hk-1").innerHTML = j.ortacha + "<small>%</small>";
-  document.getElementById("hk-2").innerHTML = MKB.fmt(j.daraja.yuqori + j.daraja.barqaror) + "<small>ta obyekt</small>";
+  /* daraja nomlari reyestrdagi darajaNomi bilan bir xil bo'lishi kerak — aks holda sonlar mos kelmaydi */
+  document.getElementById("hk-2").innerHTML = MKB.fmt(j.daraja.yuqori) + "<small>ta obyekt</small>";
+  document.getElementById("hk-5").innerHTML = MKB.fmt(j.daraja.barqaror) + "<small>ta obyekt</small>";
   document.getElementById("hk-3").innerHTML = MKB.fmt(j.daraja.past) + "<small>ta obyekt</small>";
   document.getElementById("hk-4").innerHTML = MKB.fmt(j.daraja.kritik) + "<small>ta obyekt</small>";
 

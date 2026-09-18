@@ -177,10 +177,52 @@
   });
 
   /* Balansga olingan va sotilgan mulk (yillar kesimida, soni). Yig'ma qoldiq PORTFEL.balansda ga teng. */
-  D.BALANS_DINAMIKA = {
-    yillar: ["2021", "2022", "2023", "2024", "2025", "2026"],
-    olingan: [24, 62, 118, 146, 231, 172],
-    sotilgan: [18, 41, 77, 96, 158, 23],
+  /* Balansga olingan va sotilgan mulk — qabul sanasi va arxivdagi sotuv yili bo'yicha,
+     ikki rejimda ham reyestrdan hisoblanadi (ilgari qo'lda yozilgan qator edi). */
+  (function () {
+    const joriy = BUGUN.getFullYear();
+    const yillar = Array.from({length: 6}, (_, i) => String(joriy - 5 + i));
+    const yil = m => (String(m || "").match(/(\d{4})/) || [])[1];
+    const balansda = y => ["musodara", "balans"].includes(y.ish.bosqich);
+    const bal = (D.YOZUVLAR || []).filter(balansda);
+    const arx = D.ARXIV || [];
+    D.BALANS_DINAMIKA = {
+      yillar: yillar,
+      olingan: yillar.map(y => bal.filter(v => yil(v.mulk.qabul) === y).length),
+      sotilgan: yillar.map(y => arx.filter(a => String(a.yil || yil(a.sotilgan)) === y).length),
+    };
+  })();
+
+  /* Balansda turgan kun — qabul sanasidan hisoblanadi. qarz.kunlar kechikish kuni bo'lgani uchun
+     balans bosqichidagi obyektga u to'g'ri kelmaydi (sahifalarda ikki xil son chiqib ketardi). */
+  /* Portfel darajasidagi nazorat kesimlari indeks tarkibidan olinadi — panel va
+     KPI hisoboti bir xil manbadan foydalanadi (ilgari qo'lda yozilgan raqamlar edi). */
+  (function () {
+    const yoz = D.YOZUVLAR || [];
+    if (!yoz.length || !D.PORTFEL) return;
+    function kesim(kalit){
+      let yaxshi = 0, ogoh = 0;
+      yoz.forEach(y => {
+        const n = indeks(y);
+        const t = n && n.tarkib ? n.tarkib.find(x => x.kalit === kalit) : null;
+        if (!t) return;
+        if (t.holat === "yaxshi") yaxshi++; else if (t.holat === "ogohlantirish") ogoh++;
+      });
+      return {jami: yoz.length, yaxshi, ogoh, xavf: yoz.length - yaxshi - ogoh};
+    }
+    const k = kesim("korik"), sg = kesim("sugurta"), bh = kesim("baho");
+    D.PORTFEL.koriklar  = {jami: k.jami,  otkazilgan: k.yaxshi, rejada: k.ogoh, muddatiOtgan: k.xavf};
+    D.PORTFEL.sugurtali = {jami: sg.jami, amalda: sg.yaxshi, tugaydi30: sg.ogoh, muddatiOtgan: sg.xavf};
+    D.PORTFEL.baholash  = {jami: bh.jami, dolzarb: bh.yaxshi, tugaydi90: bh.ogoh, eskirgan: bh.xavf};
+  })();
+
+  D.sanaOqi = sana;
+  D.BUGUN = BUGUN;
+
+  D.balansKunlari = function (y) {
+    const d = y && y.mulk ? sana(y.mulk.qabul) : null;
+    if (!d) return y && y.qarz ? y.qarz.kunlar : 0;
+    return Math.max(1, kunFarqi(d, d > BUGUN ? new Date() : BUGUN));
   };
 
   D.nazoratKeshTozala = function(){ Object.keys(KESH).forEach(k => delete KESH[k]); };

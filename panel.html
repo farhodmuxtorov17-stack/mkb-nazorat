@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Boshqaruv paneli</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091704">
+<link rel="stylesheet" href="yadro/app.css?v=26091807">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
 /* Hero: referensdagi "Contact" bloki */
@@ -147,19 +147,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091704"></script>
-<script src="malumot.js?v=26091704"></script>
-<script src="malumot-qoshimcha.js?v=26091704"></script>
-<script src="malumot-kengaytma.js?v=26091704"></script>
-<script src="malumot-kirish.js?v=26091704"></script>
-<script src="malumot-indeks.js?v=26091704"></script>
-<script src="tarjima.js?v=26091704"></script>
-<script src="yadro/ikonlar.js?v=26091704"></script>
-<script src="yadro/daraxt.js?v=26091704"></script>
-<script src="yadro/chizma.js?v=26091704"></script>
-<script src="yadro/qollanma.js?v=26091704"></script>
-<script src="yadro/api.js?v=26091704"></script>
-<script src="yadro/app.js?v=26091704"></script>
+<script src="yadro/bino.js?v=26091807"></script>
+<script src="malumot.js?v=26091807"></script>
+<script src="malumot-qoshimcha.js?v=26091807"></script>
+<script src="malumot-kengaytma.js?v=26091807"></script>
+<script src="malumot-kirish.js?v=26091807"></script>
+<script src="malumot-indeks.js?v=26091807"></script>
+<script src="tarjima.js?v=26091807"></script>
+<script src="yadro/ikonlar.js?v=26091807"></script>
+<script src="yadro/daraxt.js?v=26091807"></script>
+<script src="yadro/chizma.js?v=26091807"></script>
+<script src="yadro/qollanma.js?v=26091807"></script>
+<script src="yadro/api.js?v=26091807"></script>
+<script src="yadro/app.js?v=26091807"></script>
 <script>
 
 function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
@@ -235,7 +235,7 @@ document.addEventListener("mkb:tayyor", async () => {
     ["pul", balansdami(f) ? "Balans qiymati" : "Qoldiq qarz", f.qarzMatn, ""],
     ["grafik", "Baholangan qiymat", f.bahoMatn, ""],
     ["diagramma", "Nazorat indeksi", MKB_DATA.nazoratIndeksi(f).ball + "%", "kok"],
-    ["soat", balansdami(f) ? "Balansda" : "Kechikish", f.qarz.kunlar + " kun", ""],
+    ["soat", balansdami(f) ? "Balansda" : "Kechikish", (balansdami(f) ? D.balansKunlari(f) : f.qarz.kunlar) + " kun", ""],
     ["yuridik", "Bosqich", f.bosqichNomi, ""],
   ].map(([ikon, yorliq, qiymat, kls]) =>
     '<div class="plitka">' + ik(ikon) +
@@ -250,27 +250,13 @@ document.addEventListener("mkb:tayyor", async () => {
 
   /* ---- Balansdagi mulk ---- */
   const balansdagilar = yoz.filter(y => ["musodara", "balans"].includes(y.ish.bosqich));
-  const ortachaBaho = balansdagilar.reduce((a, y) => a + y.mulk.baho, 0) / Math.max(1, balansdagilar.length);
-  /* mahalliy reyestrda — haqiqiy balans qiymatlari yig'indisi; namoyishda — o'rtacha baho bo'yicha hisob */
-  const bmQiymat = D.MANBA === "mahalliy" ? Math.round(balansdagilar.reduce((a, y) => a + y.qarz.jami, 0) / 1000)
-    : Math.round(ortachaBaho * D.PORTFEL.balansda / 1000);
-  const mahalliy = D.MANBA === "mahalliy";
-  const arxiv = await MKBapi.royxat("ARXIV");
-  let BD = D.BALANS_DINAMIKA;
-  if (mahalliy){
-    /* mahalliy reyestr: dinamika faqat jonli yozuvlardan — qabul sanasi va arxivdagi sotuv yili bo'yicha */
-    const joriyYil = new Date().getFullYear();
-    const yillar = Array.from({length: 6}, (_, i) => String(joriyYil - 5 + i));
-    const yil = m => (String(m || "").match(/(\d{4})/) || [])[1];
-    BD = {yillar,
-      olingan: yillar.map(y => balansdagilar.filter(v => yil(v.mulk.qabul) === y).length),
-      sotilgan: yillar.map(y => arxiv.filter(a => String(a.yil || yil(a.sotilgan)) === y).length)};
-  }
+  /* Balans qiymati — balansdagi obyektlarning haqiqiy balans qiymatlari yig'indisi.
+     Ikki rejimda ham bir xil hisoblanadi: ekstrapolyatsiya qilinmaydi. */
+  const bmQiymat = Math.round(balansdagilar.reduce((a, y) => a + y.qarz.jami, 0) / 1000);
+  const BD = D.BALANS_DINAMIKA;
   const oxir = BD.yillar.length - 1;
-  /* sarlavha: bank bo'yicha statistik son + reyestrdagi jonli son; mahalliy reyestrda — faqat jonli son */
-  document.getElementById("bm-soni").textContent = mahalliy
-    ? MKB.fmt(balansdagilar.length) + " ta obyekt bank balansida"
-    : MKB.fmt(D.PORTFEL.balansda) + " ta obyekt bank balansida · reyestrda ochilgan: " + MKB.fmt(balansdagilar.length);
+  document.getElementById("bm-soni").textContent =
+    MKB.fmt(balansdagilar.length) + " ta obyekt bank balansida";
   document.getElementById("bm-qiymat").textContent = MKB.fmt(bmQiymat);
   document.getElementById("bm-olingan").textContent = BD.olingan[oxir] + " ta";
   document.getElementById("bm-sotilgan").textContent = BD.sotilgan[oxir] + " ta";
@@ -279,31 +265,31 @@ document.addEventListener("mkb:tayyor", async () => {
       "<b>Dinamika uchun ma'lumot yetarli emas</b><span>Balansga qabul va sotuv yozuvlari paydo bo'lgach grafik chiziladi</span></div>";
   else MKBchizma.ustunGuruh("bm-grafik", {yorliqlar: BD.yillar, balandlik: 300, tooltipFormat: v => v + " ta",
     seriyalar: [{nom: "Balansga olingan", rang: "--siyoh", qiymatlar: BD.olingan}, {nom: "Sotilgan", rang: "--mint-matn", qiymatlar: BD.sotilgan}]});
-  const hududlar = D.HUDUDLAR.slice().sort((a, b) => MKB.sonQiymat(b[1]) - MKB.sonQiymat(a[1]));
+  /* karta "Balansdagi mulk" seksiyasi ichida — shuning uchun kesim ham balansdagi obyektlar bo'yicha */
+  const hSanoq = {};
+  balansdagilar.forEach(y => { hSanoq[y.mulk.hudud] = (hSanoq[y.mulk.hudud] || 0) + 1; });
+  const hududlar = Object.keys(hSanoq).sort((a, b) => hSanoq[b] - hSanoq[a]);
   document.getElementById("bm-hudud-soni").textContent = hududlar.length + " ta hudud";
-  MKB.barlar("bm-hududlar", hududlar.slice(0, 7).map(h => [h[0], h[1], "var(--siyoh)", h[2]]), {href: "hisobot-hudud.html"});
+  MKB.barlar("bm-hududlar", hududlar.slice(0, 7).map(n => [n, hSanoq[n], "var(--siyoh)"]), {href: "hisobot-hudud.html"});
   const kj = D.kirishJamlama(), P = D.PORTFEL;
   const foiz = (a, b) => Math.round(a / Math.max(1, b) * 100);
-  /* mahalliy reyestrda qamrov jonli yozuvlardan hisoblanadi: talab to'liq bajarilgan obyektlar ulushi */
+  /* Qamrov — nazorat indeksining tarkibiy qismlaridan: talab to'liq bajarilgan obyektlar ulushi.
+     KPI hisoboti ham shu manbadan foydalanadi, shuning uchun sonlar ikki ekranda bir xil. */
   const tarkib = yoz.map(y => (D.nazoratIndeksi(y) || {tarkib: []}).tarkib);
   const joyida = k => tarkib.filter(t => (t.find(x => x.kalit === k) || {}).holat === "yaxshi").length;
-  const qamrov = mahalliy ? [
+  const qamrov = [
     ["Ko'rik muddatida", foiz(joyida("korik"), yoz.length), (yoz.length - joyida("korik")) + " ta obyektda ko'rik kechikkan", "korik-kechikkan.html"],
     ["Sug'urta amalda", foiz(joyida("sugurta"), yoz.length), (yoz.length - joyida("sugurta")) + " ta obyektda himoya to'liq emas", "sugurta.html"],
     ["Baho dolzarb", foiz(joyida("baho"), yoz.length), (yoz.length - joyida("baho")) + " ta obyekt qayta baholanishi kerak", "baholash.html"],
-    ["Kirish nazorati onlayn", foiz(kj.onlayn, kj.nuqta), kj.ochiqHodisa + " ta ochiq hodisa", "hodisalar.html"],
-  ] : [
-    ["Ko'rik muddatida", foiz(P.koriklar.otkazilgan, P.koriklar.jami), P.koriklar.muddatiOtgan + " tasi muddati o'tgan", "korik-kechikkan.html"],
-    ["Sug'urta amalda", foiz(P.sugurtali.amalda, P.sugurtali.jami), P.sugurtali.tugaydi30 + " ta polis 30 kunda tugaydi", "sugurta.html"],
-    ["Baho dolzarb", foiz(P.baholash.dolzarb, P.baholash.jami), P.baholash.eskirgan + " ta hisobot eskirgan", "baholash.html"],
     ["Kirish nazorati onlayn", foiz(kj.onlayn, kj.nuqta), kj.ochiqHodisa + " ta ochiq hodisa", "hodisalar.html"],
   ];
   document.getElementById("bm-qamrov").innerHTML = qamrov.filter(q => MKB.ruxsat(q[3])).map(q =>
     '<a href="' + q[3] + '">' + MKB.halqa(q[1], 58, 6) + "<span><b>" + q[0] + "</b><span>" + q[2] + "</span></span></a>").join("");
 
   /* ---- Obyekt kartalari ---- */
-  document.getElementById("ob-soni").textContent = MKB.fmt(D.PORTFEL.jami) + " ta obyekt nazoratda";
-  document.getElementById("obyekt-tor").innerHTML = tartib.slice(0, 3).map(obyektKarta).join("");
+  document.getElementById("ob-soni").textContent = MKB.fmt(yoz.length) + " ta obyekt nazoratda";
+  /* birinchi obyekt yuqorida "Diqqat markazida" bloki sifatida turadi — kartalar keyingilaridan boshlanadi */
+  document.getElementById("obyekt-tor").innerHTML = tartib.slice(1, 4).map(obyektKarta).join("");
 
   /* ---- Undiruv grafigi ---- */
   const s = D.UNDIRUV_SERIYA.oylik;
@@ -352,11 +338,14 @@ document.addEventListener("mkb:tayyor", async () => {
   const koriklar = korikRoyxat.filter(k => k.holat === "rejada").slice(0, 2).map(k => ({
     nom: "Ko'rik · " + k.obyektId, izoh: k.inspektor,
     vaqt: k.sana, ikonka: "korik", xavfli: false, href: "korik-rejasi.html"}));
-  const kechikkan = yoz.filter(y => y.qarz.kunlar > 300).sort((a, b) => b.qarz.kunlar - a.qarz.kunlar).slice(0, 2).map(y => ({
-    nom: y.mulk.qisqa, izoh: balansdami(y) ? y.qarz.kunlar + " kundan beri balansda, sotuvga chiqarish kerak"
-      : y.qarz.kunlar + " kun kechikkan, ishni jadallashtirish kerak",
-    vaqt: y.qarz.kunlar + " kun", ikonka: "xavf", xavfli: true,
-    href: "obyekt.html?id=" + encodeURIComponent(y.id)}));
+  /* balansdagi obyekt uchun kun qabul sanasidan, undiruvdagi ish uchun kechikish kunidan olinadi */
+  const muddatKuni = y => balansdami(y) ? D.balansKunlari(y) : y.qarz.kunlar;
+  const kechikkan = yoz.map(y => [y, muddatKuni(y)]).filter(([, k]) => k > 300)
+    .sort((a, b) => b[1] - a[1]).slice(0, 2).map(([y, kun]) => ({
+      nom: y.mulk.qisqa, izoh: balansdami(y) ? kun + " kundan beri balansda, sotuvga chiqarish kerak"
+        : kun + " kun kechikkan, ishni jadallashtirish kerak",
+      vaqt: kun + " kun", ikonka: "xavf", xavfli: true,
+      href: "obyekt.html?id=" + encodeURIComponent(y.id)}));
   document.getElementById("muddatlar").innerHTML =
     kechikkan.concat(majlis, koriklar).slice(0, 6).map(muddatQatori).join("");
   /* undiruv voronkasi yashirilganda muddatlar kartasi butun qatorni egallaydi */

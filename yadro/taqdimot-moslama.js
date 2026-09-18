@@ -24,8 +24,8 @@
 
   /* Balansdagi mulk qiymati — boshqaruv panelidagi hisob bilan bir xil */
   const balansdagilar = (D.YOZUVLAR || []).filter(y => ["musodara", "balans"].includes(y.ish.bosqich));
-  const ortachaBaho = balansdagilar.reduce((a, y) => a + y.mulk.baho, 0) / Math.max(1, balansdagilar.length);
-  const balansQiymat = D.MANBA === "mahalliy" ? Math.round(balansdagilar.reduce((a, y) => a + y.qarz.jami, 0)) : Math.round(ortachaBaho * P.balansda);
+  /* ikki rejimda ham reyestrdagi balans qiymatlari yig'indisi — ekstrapolyatsiya qilinmaydi */
+  const balansQiymat = Math.round(balansdagilar.reduce((a, y) => a + y.qarz.jami, 0));
 
   /* Plitka-xarita: hudud nomi -> [belgi, x, y] */
   const JOY = {"Qoraqalpog'iston R.": ["QQR", 0, 0], "Xorazm viloyati": ["XOR", 1, 1], "Navoiy viloyati": ["NAV", 2, 0], "Buxoro viloyati": ["BUX", 2, 1],
@@ -38,12 +38,13 @@
   /* Himoya darajalari bo'yicha taqsimot: balansdagi obyektlar qiymat oralig'i bo'yicha */
   const ulush = {A: .08, B: .37, C: .25, S: .30};
   const daraja = [];
-  Object.keys(ulush).forEach(k => { for (let i = 0; i < Math.round(P.balansda * ulush[k]); i++) daraja.push({himoya: k}); });
+  const balansSoni = balansdagilar.length;
+  Object.keys(ulush).forEach(k => { for (let i = 0; i < Math.round(balansSoni * ulush[k]); i++) daraja.push({himoya: k}); });
 
   window.MKB_TAQDIMOT = {
     BUGUN: new Date(), HUDUDLAR: hududlar,
     HIMOYA_NOMI: {A: "To'liq himoya", B: "Standart himoya", C: "Asosiy himoya", S: "Saqlash maydonchasi"},
-    jamlanma(){ return {soni: P.balansda, qiymat: balansQiymat}; },
+    jamlanma(){ return {soni: balansdagilar.length, qiymat: balansQiymat}; },
     hududStatistikasi(){ return hududlar; },
     faolObyektlar(){ return daraja; },
     sana(d){ return String(d.getDate()).padStart(2, "0") + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + d.getFullYear(); },

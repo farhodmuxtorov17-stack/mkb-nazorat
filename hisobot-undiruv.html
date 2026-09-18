@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Undiruv hisoboti</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091704">
+<link rel="stylesheet" href="yadro/app.css?v=26091807">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="hisobot">
@@ -37,19 +37,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091704"></script>
-<script src="malumot.js?v=26091704"></script>
-<script src="malumot-qoshimcha.js?v=26091704"></script>
-<script src="malumot-kengaytma.js?v=26091704"></script>
-<script src="malumot-kirish.js?v=26091704"></script>
-<script src="malumot-indeks.js?v=26091704"></script>
-<script src="tarjima.js?v=26091704"></script>
-<script src="yadro/ikonlar.js?v=26091704"></script>
-<script src="yadro/daraxt.js?v=26091704"></script>
-<script src="yadro/chizma.js?v=26091704"></script>
-<script src="yadro/qollanma.js?v=26091704"></script>
-<script src="yadro/api.js?v=26091704"></script>
-<script src="yadro/app.js?v=26091704"></script>
+<script src="yadro/bino.js?v=26091807"></script>
+<script src="malumot.js?v=26091807"></script>
+<script src="malumot-qoshimcha.js?v=26091807"></script>
+<script src="malumot-kengaytma.js?v=26091807"></script>
+<script src="malumot-kirish.js?v=26091807"></script>
+<script src="malumot-indeks.js?v=26091807"></script>
+<script src="tarjima.js?v=26091807"></script>
+<script src="yadro/ikonlar.js?v=26091807"></script>
+<script src="yadro/daraxt.js?v=26091807"></script>
+<script src="yadro/chizma.js?v=26091807"></script>
+<script src="yadro/qollanma.js?v=26091807"></script>
+<script src="yadro/api.js?v=26091807"></script>
+<script src="yadro/app.js?v=26091807"></script>
 <script>
 
 function gorizontalBar(joy, juftlar, rang){
@@ -68,7 +68,8 @@ function ustunBar(joy, yorliqlar, qiymatlar){
 }
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
-  if (!yoz.some(y => !["musodara", "balans"].includes(y.ish.bosqich))){
+  const undiruvda = yoz.filter(y => !["musodara", "balans"].includes(y.ish.bosqich));
+  if (!undiruvda.length){
     /* reyestrda faqat balansdagi mulk: undiruv ko'rsatkichlari o'rniga izoh */
     document.querySelector(".metrika-qator").hidden = true;
     document.getElementById("hs-meta").textContent = "";
@@ -84,6 +85,7 @@ document.addEventListener("mkb:tayyor", async () => {
     s.qiymat.reduce((a, b) => a + b, 0).toFixed(1).replace(".", ",") + "<small>mlrd</small>";
   document.getElementById("hu-3").textContent = MKB.fmt(MKB_DATA.PORTFEL.undiruv.qarzdorlar);
   document.getElementById("hu-4").textContent = yoz.filter(y => ["davo", "sud"].includes(y.ish.bosqich)).length;
+  document.getElementById("hs-meta").textContent = MKB.fmt(undiruvda.length) + " ta ish undiruvda";
   MKBchizma.maydon("hu-grafik", {yorliqlar: s.yorliq, qiymatlar: s.qiymat, balandlik: 210,
     rang: "--brend", tooltipFormat: v => String(v).replace(".", ",") + " mlrd"});
 });

@@ -167,7 +167,8 @@
       if (typeof q[f] === "string" && nomAlmashuvi[q[f]]) q[f] = nomAlmashuvi[q[f]];
     }); });
   });
-  const KERAK = MAH ? Math.max(bor, MAH.length) : 64;
+  /* namoyish reyestri ham haqiqiy reyestr miqyosida; qiymatlar urug'li tasodifiy */
+  const KERAK = MAH ? Math.max(bor, MAH.length) : 267;
   const yangiYozuvlar = [];
   for (let i = bor; i < KERAK; i++){
     const t = tanla(TURLAR);
@@ -226,7 +227,8 @@
                     ["PDF", "Baholash hisoboti", oraliq(1, 2) + "," + oraliq(1, 9) + " MB"]]},
       tolov: Array.from({length: 12}, () => rnd() > 0.32),
       bosqichNomi: bosq.nom, bosqichChip: bosq.chip,
-      holat: {nom: bosq.nom, rang: bosq.rang},
+      /* Д-2: holat bosqichdan, bazadagi yozuvlar bilan bir xil jadval bo'yicha */
+      holat: D.BOSQICH_HOLAT[bosq.kalit] || {nom: bosq.nom, rang: bosq.rang},
       qarzMatn: pulMatn(qarz), asosiyMatn: pulMatn(asosiy), foizMatn: pulMatn(foiz),
       bahoMatn: pulMatn(baho), qarzSon: son(qarz),
       tasnif, zaxira, zaxiraMatn: pulMatn(zaxira),
@@ -478,20 +480,58 @@
   const jamiObyekt = D.YOZUVLAR.length;
   const jamiQarz = D.YOZUVLAR.reduce((a, y) => a + y.qarz.jami, 0);
   const jamiBaho = D.YOZUVLAR.reduce((a, y) => a + y.mulk.baho, 0);
-  D.PORTFEL.jami = MAH ? jamiObyekt : 1248;    /* bank bo'yicha umumiy (statistik); mahalliy reyestrda — haqiqiy son */
-  if (MAH){
-    D.PORTFEL.balansda = jamiObyekt;
-    const TOLIQ = {"Toshkent sh.": "Toshkent shahri", "Toshkent vil.": "Toshkent viloyati", "Qoraqalpog'iston": "Qoraqalpog'iston R."};
-    const sanoq = {};
-    D.YOZUVLAR.forEach(y => { const n = TOLIQ[y.mulk.hudud] || y.mulk.hudud + " viloyati"; sanoq[n] = (sanoq[n] || 0) + 1; });
-    D.HUDUDLAR = Object.keys(sanoq).sort((a, b) => sanoq[b] - sanoq[a]).map(n => [n, String(sanoq[n]), "", 1]);
-  }
-  D.PORTFEL.reyestrda = jamiObyekt;            /* tizimda ochilgan yozuvlar */
-  D.PORTFEL.bahoTrln = (jamiBaho / 1000000 * 8.4).toFixed(1).replace(".", ",");
-  D.PORTFEL.holatlar.forEach(h => {
-    const mos = D.YOZUVLAR.filter(y => y.bosqichNomi === h.nom || (y.holat && y.holat.nom === h.nom));
-    if (mos.length) h.son = Math.max(h.son, mos.length);
-  });
+  /* Barcha portfel ko'rsatkichi reyestrdagi yozuvlardan hisoblanadi: bir tushuncha uchun
+     barcha ekranda bir xil son chiqishi shart. Ilgari namoyish rejimida bank bo'yicha
+     statistik raqamlar (1248 / 340) ishlatilardi va reyestr sonlariga zid kelardi. */
+  const balansdaB = y => ["musodara", "balans"].includes(y.ish.bosqich);
+  D.PORTFEL.jami = jamiObyekt;
+  D.PORTFEL.balansda = D.YOZUVLAR.filter(balansdaB).length;
+  D.PORTFEL.reyestrda = jamiObyekt;
+  D.PORTFEL.bahoMlrd = Math.round(jamiBaho / 1000);
+  D.PORTFEL.qarzMlrd = Math.round(jamiQarz / 1000);
+
+  /* Holatlar taqsimoti — yozuvlarning haqiqiy holatidan; yig'indi doim jami ga teng */
+  const holatRang = {};
+  Object.keys(D.BOSQICH_HOLAT || {}).forEach(k => { holatRang[D.BOSQICH_HOLAT[k].nom] = D.BOSQICH_HOLAT[k].rang; });
+  const holatSanoq = {};
+  D.YOZUVLAR.forEach(y => { const n = (y.holat && y.holat.nom) || "Boshqa"; holatSanoq[n] = (holatSanoq[n] || 0) + 1; });
+  D.PORTFEL.holatlar = Object.keys(holatSanoq).sort((a, b) => holatSanoq[b] - holatSanoq[a])
+    .map(n => ({nom: n, rang: holatRang[n] || "#8A94A0", son: holatSanoq[n]}));
+  /* foizlar eng katta qoldiq usulida — yig'indi doim 100 */
+  (function () {
+    const ulush = D.PORTFEL.holatlar.map(h => h.son / Math.max(1, D.PORTFEL.jami) * 100);
+    const butun = ulush.map(Math.floor);
+    const qoldi = 100 - butun.reduce((a, b) => a + b, 0);
+    ulush.map((u, i) => [u - butun[i], i]).sort((a, b) => b[0] - a[0])
+      .slice(0, Math.max(0, qoldi)).forEach(([, i]) => butun[i]++);
+    D.PORTFEL.holatlar.forEach((h, i) => { h.foiz = butun[i]; });
+  })();
+
+  /* Undiruv kesimi — yozuvlardan */
+  const undiruvdaB = D.YOZUVLAR.filter(y => !balansdaB(y));
+  D.PORTFEL.undiruv = {
+    qarzdorlar: undiruvdaB.length,
+    muddatiOtganQarzMlrd: (undiruvdaB.reduce((a, y) => a + y.qarz.jami, 0) / 1000).toFixed(1).replace(".", ","),
+    sudJarayonida: D.YOZUVLAR.filter(y => ["sud", "qaror", "ijro"].includes(y.ish.bosqich)).length,
+    musodara: D.YOZUVLAR.filter(y => y.ish.bosqich === "musodara").length,
+  };
+
+  /* Shartnoma kesimi — yozuvlardagi shartnomalardan (bosqich bo'yicha) */
+  const shartnomali = D.YOZUVLAR.filter(y => y.shartnoma && y.shartnoma.raqam);
+  D.PORTFEL.shartnoma = {
+    jami: shartnomali.length,
+    faol: shartnomali.filter(y => ["ogohlantirish", "davo"].includes(y.ish.bosqich)).length,
+    kechikkan: shartnomali.filter(y => ["sud", "qaror"].includes(y.ish.bosqich)).length,
+    sudda: shartnomali.filter(y => y.ish.bosqich === "ijro").length,
+    yakunlangan: shartnomali.filter(balansdaB).length,
+  };
+
+  /* Hududlar kesimi — reyestrdagi jonli sanoq */
+  const TOLIQ = {"Toshkent sh.": "Toshkent shahri", "Toshkent vil.": "Toshkent viloyati", "Qoraqalpog'iston": "Qoraqalpog'iston R."};
+  const hSanoq = {};
+  D.YOZUVLAR.forEach(y => { const n = TOLIQ[y.mulk.hudud] || y.mulk.hudud + " viloyati"; hSanoq[n] = (hSanoq[n] || 0) + 1; });
+  D.HUDUDLAR = Object.keys(hSanoq).sort((a, b) => hSanoq[b] - hSanoq[a])
+    .map(n => [n, String(hSanoq[n]), "", hSanoq[n]]);
 
   /* ---------- Hosilaviy kolleksiyalarni qayta hisoblash ---------- */
   const balansda = y => ["musodara", "balans"].includes(y.ish.bosqich);
@@ -525,7 +565,11 @@
   const SOATLAR = ["09:30", "11:00", "14:30", "16:00"];
   const ADVOKAT = D.ADVOKATLAR.map(a => a.ism);
   D.YOZUVLAR.forEach((y, i) => {
-    if (!y.ish.sud || y.ish.sud === "—" || D.SUD_MAJLISLAR.some(m => m.obyektId === y.id)) return;
+    /* majlis faqat sud jarayoni boshlangan ishlarda bo'ladi; "—" va "Hali murojaat qilinmagan"
+       kabi belgilar sud nomi emas */
+    if (!["sud", "qaror", "ijro"].includes(y.ish.bosqich)) return;
+    if (!y.ish.sud || y.ish.sud === "—" || /murojaat qilinmagan/i.test(y.ish.sud)) return;
+    if (D.SUD_MAJLISLAR.some(m => m.obyektId === y.id)) return;
     D.SUD_MAJLISLAR.push({id: "SM-2026/" + String(300 + i).padStart(4, "0"),
       ishRaqam: y.ish.raqam, obyektId: y.id, obyekt: y.mulk.qisqa, sud: y.ish.sud,
       sana: String(oraliq(1, 28)).padStart(2, "0") + "-sen, 2026", soat: tanla(SOATLAR),

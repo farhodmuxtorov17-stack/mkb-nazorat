@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Hisobotlar markazi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091704">
+<link rel="stylesheet" href="yadro/app.css?v=26091807">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="hisobot">
@@ -22,25 +22,26 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091704"></script>
-<script src="malumot.js?v=26091704"></script>
-<script src="malumot-qoshimcha.js?v=26091704"></script>
-<script src="malumot-kengaytma.js?v=26091704"></script>
-<script src="malumot-kirish.js?v=26091704"></script>
-<script src="malumot-indeks.js?v=26091704"></script>
-<script src="tarjima.js?v=26091704"></script>
-<script src="yadro/ikonlar.js?v=26091704"></script>
-<script src="yadro/daraxt.js?v=26091704"></script>
-<script src="yadro/chizma.js?v=26091704"></script>
-<script src="yadro/qollanma.js?v=26091704"></script>
-<script src="yadro/api.js?v=26091704"></script>
-<script src="yadro/app.js?v=26091704"></script>
+<script src="yadro/bino.js?v=26091807"></script>
+<script src="malumot.js?v=26091807"></script>
+<script src="malumot-qoshimcha.js?v=26091807"></script>
+<script src="malumot-kengaytma.js?v=26091807"></script>
+<script src="malumot-kirish.js?v=26091807"></script>
+<script src="malumot-indeks.js?v=26091807"></script>
+<script src="tarjima.js?v=26091807"></script>
+<script src="yadro/ikonlar.js?v=26091807"></script>
+<script src="yadro/daraxt.js?v=26091807"></script>
+<script src="yadro/chizma.js?v=26091807"></script>
+<script src="yadro/qollanma.js?v=26091807"></script>
+<script src="yadro/api.js?v=26091807"></script>
+<script src="yadro/app.js?v=26091807"></script>
 <script>
 document.addEventListener("mkb:tayyor", () => {
   const saqlangan = () => { try{ return JSON.parse(localStorage.getItem("mkb4-hisobotlar") || "[]"); }catch(_){ return []; } };
   function chiz(){
     const r = saqlangan().concat(MKB_DATA.HISOBOTLAR);
-    document.getElementById("hm-soni").textContent = r.length + " ta";
+  document.getElementById("hs-meta").textContent = MKB.fmt(r.length) + " ta tayyor hisobot";
+  document.getElementById("hm-soni").textContent = r.length + " ta";
     document.getElementById("hm-royxat").innerHTML = r.map(h =>
       '<div class="qator">' +
         '<span style="width:40px;height:40px;border-radius:11px;background:var(--varaq-2);display:grid;place-items:center;font:700 10px var(--shrift);color:var(--qalam)">' + h.format + '</span>' +

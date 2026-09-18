@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Baholash paneli</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091704">
+<link rel="stylesheet" href="yadro/app.css?v=26091807">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="panel">
@@ -41,19 +41,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091704"></script>
-<script src="malumot.js?v=26091704"></script>
-<script src="malumot-qoshimcha.js?v=26091704"></script>
-<script src="malumot-kengaytma.js?v=26091704"></script>
-<script src="malumot-kirish.js?v=26091704"></script>
-<script src="malumot-indeks.js?v=26091704"></script>
-<script src="tarjima.js?v=26091704"></script>
-<script src="yadro/ikonlar.js?v=26091704"></script>
-<script src="yadro/daraxt.js?v=26091704"></script>
-<script src="yadro/chizma.js?v=26091704"></script>
-<script src="yadro/qollanma.js?v=26091704"></script>
-<script src="yadro/api.js?v=26091704"></script>
-<script src="yadro/app.js?v=26091704"></script>
+<script src="yadro/bino.js?v=26091807"></script>
+<script src="malumot.js?v=26091807"></script>
+<script src="malumot-qoshimcha.js?v=26091807"></script>
+<script src="malumot-kengaytma.js?v=26091807"></script>
+<script src="malumot-kirish.js?v=26091807"></script>
+<script src="malumot-indeks.js?v=26091807"></script>
+<script src="tarjima.js?v=26091807"></script>
+<script src="yadro/ikonlar.js?v=26091807"></script>
+<script src="yadro/daraxt.js?v=26091807"></script>
+<script src="yadro/chizma.js?v=26091807"></script>
+<script src="yadro/qollanma.js?v=26091807"></script>
+<script src="yadro/api.js?v=26091807"></script>
+<script src="yadro/app.js?v=26091807"></script>
 <script>
 
 function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
@@ -88,11 +88,15 @@ document.addEventListener("mkb:tayyor", async () => {
   const r = await MKBapi.royxat("BAHOLASHLAR");
   const yoz = await MKBapi.royxat("YOZUVLAR");
   document.getElementById("b-jami").textContent = r.length;
-  document.getElementById("b-yil").textContent = r.filter(b => (b.sana || "").includes("2026")).length;
+  /* yil satrini qidirish o'rniga sana solishtiriladi: aks holda 11 oylik hisobot "eskirgan" ga tushardi */
+  const BUGUN = MKB_DATA.BUGUN, joriyYil = BUGUN.getFullYear();
+  const oyFarqi = b => { const d = MKB_DATA.sanaOqi(b.sana); return d ? (BUGUN - d) / 2629800000 : null; };
+  document.getElementById("b-yil").textContent =
+    r.filter(b => { const d = MKB_DATA.sanaOqi(b.sana); return d && d.getFullYear() === joriyYil; }).length;
   const delta = r.filter(b => b.avvalgi).map(b => (b.qiymat - b.avvalgi) / b.avvalgi * 100);
   const ort = delta.reduce((a, b) => a + b, 0) / (delta.length || 1);
   document.getElementById("b-ozg").innerHTML = (ort >= 0 ? "+" : "") + ort.toFixed(1).replace(".", ",") + "<small>%</small>";
-  document.getElementById("b-eski").textContent = r.filter(b => (b.sana || "").includes("2025")).length;
+  document.getElementById("b-eski").textContent = r.filter(b => { const o = oyFarqi(b); return o != null && o > 12; }).length;
   document.getElementById("b-royxat").innerHTML = r.slice(0, 6).map(b => {
     const o = MKB_DATA.OBYEKT_INDEKS[b.obyektId] || {};
     return '<a class="qator" href="baholash-hisobot.html?id=' + encodeURIComponent(b.id) + '">' +

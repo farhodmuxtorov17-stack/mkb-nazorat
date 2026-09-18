@@ -119,6 +119,8 @@ function tarjimaQil(ildiz){
   while ((n = yur.nextNode())){
     const ota = n.parentElement;
     if (!ota || /^(SCRIPT|STYLE)$/.test(ota.tagName)) continue;
+    /* raqam, kod va o'lchov birligi tarjima qilinmaydi */
+    if (ota.closest && ota.closest("[data-tarjimasiz]")) continue;
     if (!ASL_MATN.has(n)) ASL_MATN.set(n, n.nodeValue);
     const asl = ASL_MATN.get(n);
     const k = asl.trim();
@@ -140,10 +142,19 @@ function tarjimaQil(ildiz){
       const kalitAttr = "data-asl-" + a;
       if (!el.hasAttribute(kalitAttr)) el.setAttribute(kalitAttr, q);
       const asl = el.getAttribute(kalitAttr);
-      const tr = L[asl] != null ? L[asl] : L[birXilApostrof(asl)];
+      let tr = L[asl] != null ? L[asl] : L[birXilApostrof(asl)];
+      if (ru && tr == null){
+        /* matn tugunlari kabi atributlar ham qoidalar bo'yicha tarjima qilinadi */
+        for (const [q, alm] of (window.MKB_TARJIMA_QOIDALARI || [])){
+          if (q.test(asl)){ tr = asl.replace(q, alm); break; }
+        }
+      }
       el.setAttribute(a, ru && tr != null ? tr : asl);
     });
   });
+  /* sahifa to'ldirmagan sarlavha izohi yolg'iz tire bo'lib qolmasin */
+  const izoh = (ildiz || document).querySelector ? (ildiz || document).querySelector("#hs-meta") : null;
+  if (izoh) izoh.hidden = izoh.textContent.trim() === "—";
   havolalarniTekshir(ildiz);
   /* sahifa sarlavhasi */
   if (!document.body.dataset.aslTitle) document.body.dataset.aslTitle = document.title;
