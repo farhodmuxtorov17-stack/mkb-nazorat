@@ -33,9 +33,9 @@ const KOLLEKSIYALAR = ["YOZUVLAR", "KORIKLAR", "ARXIV", "HUDUDLAR",
 const KOLLEKSIYA_BOLIM = {
   yozuvlar: "aktivlar", hududlar: "aktivlar", xarajatlar: "aktivlar", hodisalar: "aktivlar",
   koriklar: "korik", baholashlar: "baholash",
-  sugurtalar: "sugurta", sugurta_davolari: "sugurta",
+  sugurtalar: "baholash", sugurta_davolari: "baholash",
   sud_majlislar: "yuridik", advokatlar: "yuridik",
-  arxiv: "arxiv", hujjatlar: "hujjat",
+  arxiv: "aktivlar", hujjatlar: "aktivlar",
   mening_vazifalarim: "vazifa", tasdiqlar: "vazifa", bildirishlar: "vazifa",
   foydlar: "sozlama",
   shaxslar: "kn", kirish_nuqtalari: "kn", qurilmalar: "kn", kirish_voqealari: "kn",
@@ -46,12 +46,11 @@ const KOLLEKSIYA_BOLIM = {
 /* Rol -> ochiq bo'limlar (mijozdagi yadro/app.js ROL_RUXSAT nusxasi) */
 const ROL_BOLIMLAR = {
   "Administrator": null,
-  "Filial rahbari": ["panel","aktivlar","kn","korik","baholash","sugurta","yuridik","arxiv",
-                     "xarita","hisobot","vazifa","hujjat","sozlama"],
-  "Obyekt menejeri": ["panel","aktivlar","kn","korik","arxiv","xarita","hisobot","vazifa","hujjat","sozlama"],
-  "Ko'rik inspektori": ["panel","aktivlar","kn","korik","sugurta","xarita","hisobot","vazifa","hujjat","sozlama"],
-  "Baholovchi mutaxassis": ["panel","aktivlar","baholash","hisobot","vazifa","hujjat","sozlama"],
-  "Yurist": ["panel","yuridik","aktivlar","arxiv","hisobot","vazifa","hujjat","sozlama"],
+  "Filial rahbari": ["panel","aktivlar","kn","korik","baholash","yuridik","hisobot","vazifa","sozlama"],
+  "Obyekt menejeri": ["panel","aktivlar","kn","korik","hisobot","vazifa","sozlama"],
+  "Ko'rik inspektori": ["panel","aktivlar","kn","korik","baholash","hisobot","vazifa","sozlama"],
+  "Baholovchi mutaxassis": ["panel","aktivlar","baholash","hisobot","vazifa","sozlama"],
+  "Yurist": ["panel","yuridik","aktivlar","hisobot","vazifa","sozlama"],
 };
 
 function bolimRuxsatlimi(rol, bolim){

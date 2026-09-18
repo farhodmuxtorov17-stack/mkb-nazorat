@@ -35,14 +35,14 @@ const YOZUVLAR = [
   {
     id: "AK-2026/4471",
     mijoz: {nom: "Karimov Javlon Anvarovich", tur: "Jismoniy shaxs", raqam: "PINFL 3210 4471 8802", belgi: "KJ", yur: false, tel: "+998 90 123 44 71"},
-    filial: "Yunusobod filiali",
+    filial: "Yunusobod BXM",
     shartnoma: {raqam: "IP-2023/4471", tur: "Ipoteka krediti", sana: "12.04.2023", berilgan: 480.0},
     qarz: {asosiy: 412.0, foiz: 74.2, kunlar: 214},
     mulk: {
       tur: "Kvartira", nom: "Yunusobod 12-kvartal, 45-uy, 23-xonadon", qisqa: "Yunusobod 12-kvartal, 45-uy",
       hudud: "Toshkent sh.", hududToliq: "Toshkent sh., Yunusobod", manzil: "Yunusobod 12-kvartal, 45-uy",
       maydon: "78 m²", baho: 520.0, bahoSana: "18.02.2026", sugurta: "Amalda",
-      rasm: "assets/bino_9.webp", nazoratBall: 72
+      rasm: "assets/bino_turar.webp", nazoratBall: 72
     },
     ish: {
       raqam: "UI-2026/0412", bosqich: "ijro", masul: "Sobirov Ulug'bek",
@@ -61,7 +61,7 @@ const YOZUVLAR = [
   {
     id: "AK-2025/1187",
     mijoz: {nom: "«Zarafshon Tekstil» MChJ", tur: "Yuridik shaxs", raqam: "INN 302 481 776", belgi: "ZT", yur: true, tel: "+998 71 234 11 87"},
-    filial: "Samarqand filiali",
+    filial: "Samarqand BXO",
     shartnoma: {raqam: "IK-2022/1187", tur: "Investitsiya krediti", sana: "03.02.2022", berilgan: 4200.0},
     qarz: {asosiy: 3210.0, foiz: 630.4, kunlar: 402},
     mulk: {
@@ -87,14 +87,14 @@ const YOZUVLAR = [
   {
     id: "AK-2026/2210",
     mijoz: {nom: "Ergasheva Dilnoza Baxtiyorovna", tur: "Jismoniy shaxs", raqam: "PINFL 5102 2210 4417", belgi: "ED", yur: false, tel: "+998 93 452 22 10"},
-    filial: "Chilonzor filiali",
+    filial: "Chilonzor BXM",
     shartnoma: {raqam: "IS-2024/2210", tur: "Iste'mol krediti (ta'minot bilan)", sana: "26.07.2024", berilgan: 95.0},
     qarz: {asosiy: 81.4, foiz: 11.1, kunlar: 96},
     mulk: {
       tur: "Kvartira", nom: "Chilonzor 9-kvartal, 12-uy, 56-xonadon", qisqa: "Chilonzor 9-kvartal, 12-uy",
       hudud: "Toshkent sh.", hududToliq: "Toshkent sh., Chilonzor", manzil: "Chilonzor 9-kvartal, 12-uy",
       maydon: "64 m²", baho: 340.0, bahoSana: "11.03.2026", sugurta: "Amalda",
-      rasm: "assets/bino_qavatlar.webp", nazoratBall: 70
+      rasm: "assets/bino_turar.webp", nazoratBall: 70
     },
     ish: {
       raqam: "UI-2026/2210", bosqich: "sud", masul: "Sobirov Ulug'bek",
@@ -112,14 +112,14 @@ const YOZUVLAR = [
   {
     id: "AK-2025/0934",
     mijoz: {nom: "«Navruz Savdo» MChJ", tur: "Yuridik shaxs", raqam: "INN 205 118 934", belgi: "NS", yur: true, tel: "+998 71 209 09 34"},
-    filial: "Toshkent shahar filiali",
+    filial: "Toshkent shahar BXO",
     shartnoma: {raqam: "AM-2023/0934", tur: "Aylanma mablag' krediti", sana: "17.05.2023", berilgan: 1350.0},
     qarz: {asosiy: 1080.0, foiz: 180.6, kunlar: 268},
     mulk: {
       tur: "Savdo maydoni", nom: "Navruz Plaza, 3-qavat savdo maydoni", qisqa: "Navruz Plaza",
       hudud: "Toshkent sh.", hududToliq: "Toshkent sh., Shayxontohur", manzil: "Amir Temur ko'chasi, 88",
       maydon: "1 850 m²", baho: 1480.0, bahoSana: "22.04.2026", sugurta: "Amalda",
-      rasm: "assets/bino_tower.webp", nazoratBall: 92, qabul: "14.08.2025"
+      rasm: "assets/bino_mall.webp", nazoratBall: 92, qabul: "14.08.2025"
     },
     ish: {
       raqam: "UI-2025/0934", bosqich: "balans", masul: "Qodirova Nilufar",
@@ -138,7 +138,7 @@ const YOZUVLAR = [
   {
     id: "AK-2026/5512",
     mijoz: {nom: "To'xtasinov Sherzod Rustamovich", tur: "Jismoniy shaxs", raqam: "PINFL 4417 5512 9003", belgi: "TS", yur: false, tel: "+998 94 155 55 12"},
-    filial: "Toshkent shahar filiali",
+    filial: "Toshkent shahar BXO",
     shartnoma: {raqam: "AV-2024/5512", tur: "Avtokredit", sana: "09.09.2024", berilgan: 82.0},
     qarz: {asosiy: 68.2, foiz: 6.6, kunlar: 58},
     mulk: {
@@ -162,7 +162,7 @@ const YOZUVLAR = [
   {
     id: "AK-2026/3308",
     mijoz: {nom: "Yusupova Nodira Alisherovna", tur: "Jismoniy shaxs", raqam: "PINFL 6014 3308 1120", belgi: "YN", yur: false, tel: "+998 97 330 33 08"},
-    filial: "Chilonzor filiali",
+    filial: "Chilonzor BXM",
     shartnoma: {raqam: "IP-2023/3308", tur: "Ipoteka krediti", sana: "28.06.2023", berilgan: 330.0},
     qarz: {asosiy: 276.0, foiz: 36.4, kunlar: 141},
     mulk: {
@@ -187,14 +187,14 @@ const YOZUVLAR = [
   {
     id: "AK-2025/0755",
     mijoz: {nom: "«Bo'ston Agro» fermer xo'jaligi", tur: "Yuridik shaxs", raqam: "INN 411 020 755", belgi: "BA", yur: true, tel: "+998 95 707 07 55"},
-    filial: "Namangan filiali",
+    filial: "Namangan BXO",
     shartnoma: {raqam: "AG-2022/0755", tur: "Agrokredit", sana: "21.03.2022", berilgan: 950.0},
     qarz: {asosiy: 742.0, foiz: 148.0, kunlar: 335},
     mulk: {
       tur: "Yer uchastkasi", nom: "Qibray tumani, 2,4 ga yer uchastkasi", qisqa: "Qibray tumani",
       hudud: "Toshkent vil.", hududToliq: "Toshkent vil., Qibray", manzil: "Qibray tumani, Salor MFY",
       maydon: "24 000 m²", baho: 1020.0, bahoSana: "16.10.2025", sugurta: "Yo'q",
-      rasm: "assets/bino_yer.webp", nazoratBall: 61
+      rasm: "assets/bino_9.webp", nazoratBall: 61
     },
     ish: {
       raqam: "UI-2025/0755", bosqich: "ijro", masul: "Sobirov Ulug'bek",
@@ -212,7 +212,7 @@ const YOZUVLAR = [
   {
     id: "AK-2026/0141",
     mijoz: {nom: "Rasulov Otabek Farhodovich", tur: "Jismoniy shaxs", raqam: "PINFL 3308 0141 7724", belgi: "RO", yur: false, tel: "+998 99 014 01 41"},
-    filial: "Toshkent shahar filiali",
+    filial: "Toshkent shahar BXO",
     shartnoma: {raqam: "MQ-2025/0141", tur: "Mikroqarz (ta'minot bilan)", sana: "14.11.2025", berilgan: 40.0},
     qarz: {asosiy: 35.8, foiz: 2.8, kunlar: 34},
     mulk: {
@@ -491,43 +491,43 @@ function joyNomi(id, ichki, ajratgich){
    obyekt nomi o'zgarsa hamma sahifada bir vaqtda o'zgaradi. */
 const HODISALAR = [
   {kod:"#GH-2026-00214", obyektId:"AK-2026/0141", rang:"#E0442B",
-   hodisa:"yerto'lani suv bosishi — shikast", vaqt:"Bugun, 14:12", jiddiylik:"yuqori", ustun:"yangi", holat:"Yangi",
+   hodisa:"Yerto'lani suv bosgan, poydevor shikastlangan", vaqt:"Bugun, 14:12", jiddiylik:"yuqori", ustun:"yangi", holat:"Yangi",
    tavsif:"Nazorat ko'rigida yerto'lada suv sathi ko'tarilgani aniqlandi. Poydevorga ta'sir baholanmoqda; sug'urta kompaniyasiga xabarnoma tayyorlanmoqda.",
    masul:"Karimova F.", bolim:"Aktivlar nazorati bo'limi", fayl:"korik_dalolatnoma.pdf", hajm:"1.2 MB"},
   {kod:"#GH-2026-00213", obyektId:"AK-2025/1187", rang:"#4338CA",
-   hodisa:"uskunalar ro'yxatida kamomad", vaqt:"Bugun, 12:52", jiddiylik:"yuqori", ustun:"yangi", holat:"Yangi",
+   hodisa:"Uskunalar ro'yxatida kamomad", vaqt:"Bugun, 12:52", jiddiylik:"yuqori", ustun:"yangi", holat:"Yangi",
    tavsif:"Choraklik ko'rikda ta'minot ro'yxatidagi 2 ta to'quv dastgohi joyida yo'qligi aniqlandi. Qarzdordan yozma tushuntirish talab qilindi.",
    masul:"Sattorov J.", bolim:"Aktivlar nazorati bo'limi", fayl:"royxat_solishtirma.pdf", hajm:"640 KB"},
   {kod:"#GH-2026-00211", obyektId:"AK-2025/0934", rang:"#F2994A",
-   hodisa:"sug'urta polisi muddati o'tdi", vaqt:"Bugun, 13:48", jiddiylik:"o'rta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
+   hodisa:"Sug'urta polisining muddati o'tgan", vaqt:"Bugun, 13:48", jiddiylik:"o'rta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
    tavsif:"PL-2025/08127 polisi 11-avgustda tugagan, uzaytirish rasmiylashtirilmagan. Balansdagi obyekt sug'urtasiz qolgan.",
    masul:"Qodirova N.", bolim:"Muammoli kreditlar boshqarmasi", fayl:"polis_nusxa.pdf", hajm:"920 KB"},
   {kod:"#GH-2026-00209", obyektId:"AK-2026/5512", rang:"#8B5CF6",
-   hodisa:"qiymatning jadal pasayishi", vaqt:"Bugun, 12:33", jiddiylik:"o'rta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
+   hodisa:"Mulk qiymati keskin pasaygan", vaqt:"Bugun, 12:33", jiddiylik:"o'rta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
    tavsif:"Qayta baholashda qiymat 13% ga pasaygan (214 dan 186 mln gacha). Bozor tahlili so'raldi; zaxira stavkasiga ta'siri hisoblanmoqda.",
    masul:"Xolmatova Z.", bolim:"Tavakkalchiliklarni boshqarish departamenti", fayl:"baholash_hisobot.pdf", hajm:"480 KB"},
   {kod:"#GH-2026-00206", obyektId:"AK-2026/3308", rang:"#F2C230",
-   hodisa:"ruxsatsiz ijaraga berish holati", vaqt:"Bugun, 11:05", jiddiylik:"o'rta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
+   hodisa:"Obyekt ruxsatsiz ijaraga berilgan", vaqt:"Bugun, 11:05", jiddiylik:"o'rta", ustun:"tekshirilmoqda", holat:"Tekshirilmoqda",
    tavsif:"Ko'rikda xonadonda ijarachi yashayotgani aniqlandi. Ta'minot shartnomasi bank roziligisiz ijaraga berishni taqiqlaydi. Yuristga yo'naltirildi.",
    masul:"Rahimov B.", bolim:"Yuridik departament", fayl:"korik_bayonnoma.pdf", hajm:"350 KB"},
   {kod:"#GH-2026-00204", obyektId:"AK-2026/4471", rang:"#F2C230",
-   hodisa:"kommunal qarzdorlik aniqlandi", vaqt:"Bugun, 13:17", jiddiylik:"past", ustun:"bartaraf", holat:"Bartaraf etilmoqda",
+   hodisa:"Kommunal to'lovlardan qarz aniqlandi", vaqt:"Bugun, 13:17", jiddiylik:"past", ustun:"bartaraf", holat:"Bartaraf etilmoqda",
    tavsif:"Xonadon bo'yicha 4,2 mln so'm kommunal qarz to'plangan. Realizatsiyada xaridorga o'tmasligi uchun hujjatlar tartibga keltirilmoqda.",
    masul:"Qodirova N.", bolim:"Muammoli kreditlar boshqarmasi", fayl:"kommunal_malumotnoma.pdf", hajm:"1.1 MB"},
   {kod:"#GH-2026-00201", obyektId:"AK-2025/0755", rang:"#4338CA",
-   hodisa:"chegara belgisi buzilgan", vaqt:"Bugun, 10:11", jiddiylik:"past", ustun:"bartaraf", holat:"Bartaraf etilmoqda",
+   hodisa:"Yer chegarasi belgisi buzilgan", vaqt:"Bugun, 10:11", jiddiylik:"past", ustun:"bartaraf", holat:"Bartaraf etilmoqda",
    tavsif:"G'arbiy chegaradagi 2 ta belgi surilgan. Kadastr muhandisi chaqirildi, qo'shni uchastka egasi bilan dalolatnoma tuzilmoqda.",
    masul:"Sattorov J.", bolim:"Aktivlar nazorati bo'limi", fayl:"kadastr_akt.pdf", hajm:"210 KB"},
   {kod:"#GH-2026-00198", obyektId:"AK-2026/3308", rang:"#059669",
-   hodisa:"sug'urta polisi uzaytirildi", vaqt:"Kecha, 18:23", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
+   hodisa:"Sug'urta polisi uzaytirildi", vaqt:"Kecha, 18:23", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
    tavsif:"PL-2026/10578 polisi bo'yicha uzaytirish rasmiylashtirildi, yangi muddat 08.10.2027 gacha. Nusxa ishga biriktirildi.",
    masul:"Qodirova N.", bolim:"Muammoli kreditlar boshqarmasi", fayl:"polis_yangi.pdf", hajm:"380 KB"},
   {kod:"#GH-2026-00196", obyektId:"AK-2025/0934", rang:"#059669",
-   hodisa:"balansga qabul ko'rigi yakunlandi", vaqt:"Kecha, 17:42", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
+   hodisa:"Balansga qabul ko'rigi yakunlandi", vaqt:"Kecha, 17:42", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
    tavsif:"Holat qayd etildi, fotojamlanma va dalolatnoma savdo hujjatlariga kiritildi. E'lon matni uchun ma'lumotlar tayyor.",
    masul:"Karimova F.", bolim:"Aktivlar nazorati bo'limi", fayl:"fotojamlanma.zip", hajm:"290 KB"},
   {kod:"#GH-2026-00195", obyektId:"AK-2026/2210", rang:"#059669",
-   hodisa:"qarzdor bilan ko'rik o'tkazildi", vaqt:"Kecha, 16:08", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
+   hodisa:"Sobiq egasi ishtirokida ko'rik o'tkazildi", vaqt:"Kecha, 16:08", jiddiylik:"past", ustun:"yopildi", holat:"Yopildi",
    tavsif:"Rejali ko'rik qarzdor ishtirokida o'tdi, dalolatnoma ikki tomonlama imzolandi. Holat qoniqarli, keyingi ko'rik 3 oydan keyin.",
    masul:"Sattorov J.", bolim:"Aktivlar nazorati bo'limi", fayl:"dalolatnoma.pdf", hajm:"175 KB"}
 ];
@@ -938,14 +938,14 @@ const AMALLAR_JURNALI = [
 /* ---------- Foydalanuvchilar, hisobotlar, hududlar, auksion bosqichlari ---------- */
 const FOYDLAR = [
   {nom:"Ismoilov Otabek", rol:"Administrator", teg:"admin", login:"o.ismoilov", bolim:"Axborot texnologiyalari departamenti", faol:true, id:"U056789011", email:"o.ismoilov@mkbank.uz", lavozim:"Tizim ma'muri", tel:"+998 90 000 00 00", sana:"01-yan, 2021", rasm:"assets/xodim_1.webp"},
-  {nom:"Yo'ldoshev Alisher", rol:"Filial rahbari", teg:"filial", login:"a.yoldoshev", bolim:"Yunusobod filiali", faol:true, id:"U056789012", email:"a.yoldoshev@mkbank.uz", lavozim:"Filial boshqaruvchisi", tel:"+998 91 375 29 46", sana:"04-mar, 2022", rasm:"assets/xodim_2.webp"},
+  {nom:"Yo'ldoshev Alisher", rol:"Filial rahbari", teg:"filial", login:"a.yoldoshev", bolim:"Yunusobod BXM", faol:true, id:"U056789012", email:"a.yoldoshev@mkbank.uz", lavozim:"Filial boshqaruvchisi", tel:"+998 91 375 29 46", sana:"04-mar, 2022", rasm:"assets/xodim_2.webp"},
   {nom:"Ismoilova Nilufar", rol:"Obyekt menejeri", teg:"obyekt", login:"n.ismoilova", bolim:"Muammoli aktivlar bo'limi", faol:true, id:"U056789013", email:"n.ismoilova@mkbank.uz", lavozim:"Katta mutaxassis", tel:"+998 92 640 48 82", sana:"07-may, 2023", rasm:"assets/xodim_3.webp"},
   {nom:"Sattorov Javohir", rol:"Ko'rik inspektori", teg:"nazorat", login:"j.sattorov", bolim:"Aktivlar nazorati bo'limi", faol:true, id:"U056789014", email:"j.sattorov@mkbank.uz", lavozim:"Ko'rik inspektori", tel:"+998 93 915 67 28", sana:"10-iyl, 2024", rasm:"assets/xodim_4.webp"},
   {nom:"Karimova Feruza", rol:"Ko'rik inspektori", teg:"nazorat", login:"f.karimova", bolim:"Aktivlar nazorati bo'limi", faol:true, id:"U056789015", email:"f.karimova@mkbank.uz", lavozim:"Yetakchi inspektor", tel:"+998 94 280 86 64", sana:"13-sen, 2025", rasm:"assets/xodim_5.webp"},
   {nom:"Nazarov Aziz", rol:"Baholovchi mutaxassis", teg:"baholash", login:"a.nazarov", bolim:"Baholash bo'limi", faol:true, id:"U056789016", email:"a.nazarov@mkbank.uz", lavozim:"Baholovchi", tel:"+998 95 555 05 00", sana:"16-noy, 2021", rasm:"assets/xodim_6.webp"},
   {nom:"Sobirov Ulug'bek", rol:"Yurist", teg:"yurist", login:"u.sobirov", bolim:"Yuridik departament", faol:true, id:"U056789017", email:"u.sobirov@mkbank.uz", lavozim:"Bosh yurist", tel:"+998 96 820 24 46", sana:"19-yan, 2022", rasm:"assets/xodim_7.webp"},
   {nom:"Tosheva Barno", rol:"Obyekt menejeri", teg:"obyekt", login:"b.tosheva", bolim:"Muammoli aktivlar bo'limi", faol:true, id:"U056789018", email:"b.tosheva@mkbank.uz", lavozim:"Mutaxassis", tel:"+998 97 195 43 82", sana:"22-mar, 2023", rasm:"assets/xodim_8.webp"},
-  {nom:"Ergashev Botir", rol:"Filial rahbari", teg:"filial", login:"b.ergashev", bolim:"Chilonzor filiali", faol:true, id:"U056789019", email:"b.ergashev@mkbank.uz", lavozim:"Filial boshqaruvchisi", tel:"+998 98 460 62 28", sana:"25-may, 2024", rasm:"assets/xodim_9.webp"},
+  {nom:"Ergashev Botir", rol:"Filial rahbari", teg:"filial", login:"b.ergashev", bolim:"Chilonzor BXM", faol:true, id:"U056789019", email:"b.ergashev@mkbank.uz", lavozim:"Filial boshqaruvchisi", tel:"+998 98 460 62 28", sana:"25-may, 2024", rasm:"assets/xodim_9.webp"},
   {nom:"Xolmatova Sevara", rol:"Baholovchi mutaxassis", teg:"baholash", login:"s.xolmatova", bolim:"Baholash bo'limi", faol:false, id:"U056789020", email:"s.xolmatova@mkbank.uz", lavozim:"Katta baholovchi", tel:"+998 99 735 81 64", sana:"28-iyl, 2025", rasm:"assets/xodim_10.webp"},
 ];
 
@@ -965,13 +965,13 @@ const HISOBOTLAR = [
 ];
 
 const HUDUDLAR = [
-  ["Toshkent shahri","302","↑ 8,2%",1],["Toshkent viloyati","244","↑ 6,4%",1],
-  ["Samarqand viloyati","128","↑ 7,1%",1],["Farg'ona viloyati","96","↓ 2,3%",0],
-  ["Buxoro viloyati","78","↑ 4,8%",1],["Qashqadaryo viloyati","66","↑ 3,2%",1],
-  ["Navoiy viloyati","54","↑ 6,0%",1],["Andijon viloyati","62","↑ 1,7%",1],
-  ["Namangan viloyati","58","↑ 2,4%",1],["Xorazm viloyati","44","↑ 5,6%",1],
-  ["Jizzax viloyati","40","↑ 3,9%",1],["Surxondaryo viloyati","38","↑ 4,1%",1],
-  ["Qoraqalpog'iston R.","38","↑ 2,8%",1]
+  ["Toshkent shahri","268","",1],["Toshkent viloyati","244","",1],
+  ["Samarqand viloyati","128","",1],["Farg'ona viloyati","96","",0],
+  ["Buxoro viloyati","78","",1],["Qashqadaryo viloyati","66","",1],
+  ["Navoiy viloyati","54","",1],["Andijon viloyati","62","",1],
+  ["Namangan viloyati","58","",1],["Xorazm viloyati","44","",1],
+  ["Jizzax viloyati","40","",1],["Surxondaryo viloyati","38","",1],
+  ["Qoraqalpog'iston R.","38","",1],["Sirdaryo viloyati","34","",1]
 ];
 const AUKSION_BOSQICH = [
   ["tayyorlanmoqda","Sotuvga tayyorlanmoqda","#F2C230"],

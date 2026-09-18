@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ko'rik tayinlash</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="korik">
@@ -30,25 +30,25 @@
     <div class="maydon keng"><label class="maydon-yorliq">Izoh</label>
       <textarea class="kirish-matn" name="izoh" placeholder="Ko'rik maqsadi va e'tibor beriladigan jihatlar"></textarea></div>
     <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
-      <a class="tugma tugma-oq" href="korik-rejasi.html">Bekor qilish</a>
+      <a class="tugma tugma-oq" id="kt-bekor" href="korik-rejasi.html">Bekor qilish</a>
       <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-korik"/></svg>Rejaga qo'shish</button></div>
   </form></section>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
@@ -56,15 +56,22 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("kt-obyekt").innerHTML = yoz.map(y =>
     '<option value="' + y.id + '"' + (y.id === oldindan ? " selected" : "") + '>' +
     y.id + " — " + y.mulk.qisqa + '</option>').join("");
+  /* obyekt kartochkasidan kelingan bo'lsa, o'sha obyektning ko'riklar tabiga qaytiladi */
+  const qaytish = oldindan && yoz.some(y => y.id === oldindan)
+    ? "obyekt-koriklar.html?id=" + encodeURIComponent(oldindan) : "korik-rejasi.html";
+  document.getElementById("kt-bekor").href = qaytish;
   document.getElementById("kt-forma").addEventListener("submit", async e => {
     e.preventDefault();
     const q = MKB.forma(e.target, ["obyektId", "tur", "sana", "inspektor"]);
     if (!q) return;
-    const id = "KO-2026/0" + String(430 + Math.floor((Date.now() / 60000) % 500));
+    /* takrorlanmas raqam: mavjud eng katta tartib raqamidan keyingisi */
+    const bor = await MKBapi.royxat("KORIKLAR");
+    const maks = bor.reduce((m, k) => { const s = /\/(\d+)$/.exec(String(k.id || "")); return s ? Math.max(m, +s[1]) : m; }, 0);
+    const id = "KO-" + new Date().getFullYear() + "/" + String(maks + 1).padStart(4, "0");
     await MKBapi.yangi("KORIKLAR", {id, obyektId: q.obyektId, tur: q.tur,
       sana: q.sana, holat: "rejada", inspektor: q.inspektor, izoh: q.izoh || ""});
-    MKB.toast("Ko'rik rejaga kiritildi — " + id);
-    setTimeout(() => location.href = "korik-rejasi.html", 700);
+    MKB.toast(id + " raqamli ko'rik rejaga kiritildi");
+    setTimeout(() => location.href = q.obyektId === oldindan ? qaytish : "korik-rejasi.html", 700);
   });
 });
 </script>

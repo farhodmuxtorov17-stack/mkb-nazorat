@@ -10,14 +10,10 @@ const BOLIMLAR = [
   {kalit: "aktivlar", yorliq: "Obyektlar reyestri",ikonka: "aktivlar", href: "obyektlar.html"},
   {kalit: "kn",       yorliq: "Kirish nazorati",   ikonka: "qulf",     href: "kirish-nazorati.html"},
   {kalit: "korik",    yorliq: "Ko'rik nazorati",   ikonka: "korik",    href: "korik-rejasi.html"},
-  {kalit: "baholash", yorliq: "Baholash",          ikonka: "baholash", href: "baholash.html"},
-  {kalit: "sugurta",  yorliq: "Sug'urta",          ikonka: "sugurta",  href: "sugurta.html"},
+  {kalit: "baholash", yorliq: "Baholash va sug'urta", ikonka: "baholash", href: "baholash.html"},
   {kalit: "yuridik",  yorliq: "Undiruv va sud",    ikonka: "yuridik",  href: "undiruv.html"},
-  {kalit: "arxiv",    yorliq: "Arxiv",             ikonka: "arxiv",    href: "arxiv.html"},
-  {kalit: "xarita",   yorliq: "Hududiy xarita",    ikonka: "xarita",   href: "xarita.html"},
   {kalit: "hisobot",  yorliq: "Hisobotlar",        ikonka: "hisobot",  href: "hisobotlar.html"},
   {kalit: "vazifa",   yorliq: "Vazifalar",         ikonka: "vazifa",   href: "vazifalar.html"},
-  {kalit: "hujjat",   yorliq: "Hujjatlar",         ikonka: "hujjat",   href: "hujjatlar.html"},
 ];
 
 /* ---------- Rollar ---------- */
@@ -31,16 +27,15 @@ const ROL_KALIT = {
 };
 const ROL_RUXSAT = {
   admin:    null, /* hammasi */
-  filial:   ["panel","aktivlar","kn","korik","baholash","sugurta","yuridik","arxiv",
-             "xarita","hisobot","vazifa","hujjat","sozlama"],
+  filial:   ["panel","aktivlar","kn","korik","baholash","yuridik","hisobot","vazifa","sozlama"],
   /* Obyekt menejeri — reyestr, balansga qabul, kirish nuqtalari, hujjatlar */
-  obyekt:   ["panel","aktivlar","kn","korik","arxiv","xarita","hisobot","vazifa","hujjat","sozlama"],
+  obyekt:   ["panel","aktivlar","kn","korik","hisobot","vazifa","sozlama"],
   /* Ko'rik inspektori — obyekt holati: ko'rik, kirish nazorati, sug'urta, hodisalar */
-  nazorat:  ["panel","aktivlar","kn","korik","sugurta","xarita","hisobot","vazifa","hujjat","sozlama"],
+  nazorat:  ["panel","aktivlar","kn","korik","baholash","hisobot","vazifa","sozlama"],
   /* Baholovchi — obyekt qiymati */
-  baholash: ["panel","aktivlar","baholash","hisobot","vazifa","hujjat","sozlama"],
+  baholash: ["panel","aktivlar","baholash","hisobot","vazifa","sozlama"],
   /* Yurist — undiruv va sud */
-  yurist:   ["panel","yuridik","aktivlar","arxiv","hisobot","vazifa","hujjat","sozlama"],
+  yurist:   ["panel","yuridik","aktivlar","hisobot","vazifa","sozlama"],
 };
 /* Fayl darajasidagi cheklovlar (sahifa ruxsatidan tashqari) */
 const SAHIFA_MAXSUS = {
@@ -82,6 +77,8 @@ const FAYL_BOLIM = (function(){
   const x = {};
   const d = window.MKB_DARAXT || {};
   Object.keys(d).forEach(k => (d[k] || []).forEach(sh => { x[sh.f] = k; }));
+  const ichki = window.MKB_ICHKI || {};
+  Object.keys(ichki).forEach(k => (ichki[k] || []).forEach(f => { x[f] = k; }));
   return x;
 })();
 function bolimTopish(fayl){
@@ -147,11 +144,26 @@ function tarjimaQil(ildiz){
       el.setAttribute(a, ru && tr != null ? tr : asl);
     });
   });
+  havolalarniTekshir(ildiz);
   /* sahifa sarlavhasi */
   if (!document.body.dataset.aslTitle) document.body.dataset.aslTitle = document.title;
   const t = document.body.dataset.aslTitle;
   const [old, qism] = [t.split(" — ")[0], t.split(" — ").slice(1).join(" — ")];
   document.title = ru && qism && L[qism] ? old + " — " + L[qism] : t;
+}
+
+/* Rolga yopiq sahifaga olib boruvchi havola va tugmalar: tugma yashiriladi, matn ichidagi havola oddiy matnga aylanadi */
+function havolalarniTekshir(ildiz){
+  if (document.body.dataset.ochiq === "1" || !joriySessiya()) return;
+  const joy = ildiz && ildiz.querySelectorAll ? ildiz : document;
+  joy.querySelectorAll("main a[href], .yon-panel a[href]").forEach(a => {
+    const h = a.getAttribute("href");
+    if (!h || /^(#|https?:|mailto:|tel:)/.test(h) || !/\.html/.test(h)) return;
+    if (/^(kirish|taqdimot|index|xato-)/.test(faylNomi(h))) return;
+    if (sahifaRuxsatlimi(h)) return;
+    if (/\b(tugma|pill|karta-havola|amal-doira)\b/.test(a.className)) a.remove();
+    else { a.removeAttribute("href"); a.style.cursor = "default"; a.setAttribute("aria-disabled", "true"); }
+  });
 }
 
 /* ---------- Ikonka yordamchisi ---------- */
@@ -209,6 +221,7 @@ function yonChiz(){
     bandlar.map(b => guruhHTML(b.kalit, b.yorliq, b.ikonka)).join("") +
     '<div class="yon-past">' +
       guruhHTML("sozlama", "Sozlamalar", "sozlama") +
+      '<a class="yon-band" href="taqdimot.html">' + ik("grafik") + "Loyiha taqdimoti</a>" +
       '<button type="button" class="yon-band" id="chiqish-tugma">' + ik("chiqish") + "Tizimdan chiqish</button>" +
     "</div>";
 
@@ -525,7 +538,7 @@ const MKB = {
             '<input type="search" data-jadval-qidiruv placeholder="' + (cfg.qidiruvYozuvi || "Qidirish...") + '"></div>' : "") +
           (cfg.filtrlar || []).map(f =>
             '<div class="tanlov" data-jadval-filtr="' + f.kalit + '" role="button" tabindex="0" aria-expanded="false">' +
-              '<span class="t-old">' + f.nom + ':</span><span class="t-yorliq">' + (f.hamma || "Barchasi") + "</span>" + ik("past", "strelka") +
+              '<span class="t-old">' + f.nom + ':</span><span class="t-yorliq">' + (holat.filtrlar[f.kalit] || f.hamma || "Barchasi") + "</span>" + ik("past", "strelka") +
               '<div class="menyu-popover" style="top:calc(100% + 6px);left:0">' +
                 '<button type="button" data-qiymat="">' + (f.hamma || "Barchasi") + "</button>" +
                 f.variantlar.map(v => '<button type="button" data-qiymat="' + v + '">' + v + "</button>").join("") +
@@ -630,6 +643,17 @@ const MKB = {
     return q;
   },
 
+  /* CSV eksport (Excel uchun BOM va ";" ajratgich bilan) */
+  csv(faylNomi, sarlavhalar, qatorlar){
+    const e = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+    const matn = "\uFEFF" + [sarlavhalar.map(e).join(";")].concat(qatorlar.map(r => r.map(e).join(";"))).join("\r\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([matn], {type: "text/csv;charset=utf-8"}));
+    a.download = faylNomi;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  },
+
   pul(son){
     if (window.MKB_DATA && MKB_DATA.pul) return MKB_DATA.pul(son);
     return new Intl.NumberFormat("ru-RU").format(son) + " so\'m";
@@ -684,7 +708,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const server = e.detail === "server";
     b.classList.toggle("snapshot", !server);
-    b.innerHTML = '<span class="nuqta"></span>' + (server ? "Server ulangan" : "Namoyish rejimi");
+    const mahalliy = window.MKB_DATA && MKB_DATA.MANBA === "mahalliy";
+    b.innerHTML = '<span class="nuqta"></span>' + (server ? "Server ulangan" : mahalliy ? "Mahalliy reyestr" : "Namoyish rejimi");
+    /* haqiqiy reyestr faqat shu kompyuterda; belgi bosilsa shartli ma'lumotga o'tadi va aksincha */
+    const lokal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+    let shartliTanlangan = false;
+    try{ shartliTanlangan = localStorage.getItem("mkb-manba") === "shartli"; }catch(_){}
+    if (!server && lokal && (mahalliy || shartliTanlangan)){
+      b.style.cursor = "pointer";
+      b.title = mahalliy ? "Ma'lumot faqat shu kompyuterda saqlanadi. Namoyish ma'lumotiga o'tish uchun bosing" : "Mahalliy reyestrga qaytish uchun bosing";
+      b.onclick = () => {
+        try{ if (mahalliy) localStorage.setItem("mkb-manba", "shartli"); else { localStorage.removeItem("mkb-manba"); sessionStorage.removeItem("mkb-mahalliy-yoq"); } }catch(_){}
+        location.reload();
+      };
+    }
     tarjimaQil(b);
   });
 
@@ -697,6 +734,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const tasma = document.querySelector(".bolim-tablar");
     if (tasma && !tasma.children.length) tasma.remove();
   }
+
+  /* Jadval filtrlari: tashqariga bosish va Escape yopadi, Enter/bo'sh joy ochadi */
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".tanlov")) document.querySelectorAll(".tanlov .menyu-popover.ochiq").forEach(p => p.classList.remove("ochiq"));
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") document.querySelectorAll(".tanlov .menyu-popover.ochiq").forEach(p => p.classList.remove("ochiq"));
+    const t = e.target.closest && e.target.closest(".tanlov[role=button]");
+    if (t && e.target === t && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); t.click(); }
+  });
 
   /* data-toast tugmalar */
   document.body.addEventListener("click", e => {

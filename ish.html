@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ish varaqasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="yuridik">
@@ -43,19 +43,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -63,7 +63,16 @@ document.addEventListener("mkb:tayyor", async () => {
   if (!x){ location.replace("xato-404.html"); return; }
   document.getElementById("hs-meta").textContent = x.ish.raqam + " · " + x.bosqichNomi;
   document.getElementById("i-raqam").textContent = x.ish.raqam;
-  document.getElementById("i-qaror").href = "qaror-kiritish.html?id=" + encodeURIComponent(x.id);
+  /* qaror faqat da'vo yoki sud bosqichidagi ishga kiritiladi */
+  const qarorTugma = document.getElementById("i-qaror");
+  if (qarorTugma){
+    if (["davo", "sud"].includes(x.ish.bosqich)) qarorTugma.href = "qaror-kiritish.html?id=" + encodeURIComponent(x.id);
+    else if (x.ish.bosqich === "ogohlantirish"){
+      qarorTugma.href = "davo-tayyorlash.html?id=" + encodeURIComponent(x.id);
+      qarorTugma.innerHTML = ik("sud") + "Da'vo tayyorlash";
+    }
+    else qarorTugma.remove();
+  }
   document.getElementById("i-mijoz").textContent = x.mijoz.nom;
   document.getElementById("i-obyekt").innerHTML =
     '<a href="obyekt.html?id=' + encodeURIComponent(x.id) + '" style="font-weight:600;color:var(--brend-quyuq)">' + x.mulk.qisqa + '</a>';

@@ -25,34 +25,44 @@
     String(d.getMonth() + 1).padStart(2, "0") + "." + d.getFullYear();
 
   const HUDUDLAR = [
-    ["Toshkent sh.", "Toshkent sh., Yunusobod", "Toshkent shahar filiali"],
-    ["Toshkent sh.", "Toshkent sh., Chilonzor", "Chilonzor filiali"],
-    ["Toshkent sh.", "Toshkent sh., Mirzo Ulug'bek", "Toshkent shahar filiali"],
-    ["Toshkent vil.", "Toshkent vil., Qibray", "Toshkent viloyat filiali"],
-    ["Toshkent vil.", "Toshkent vil., Zangiota", "Toshkent viloyat filiali"],
-    ["Samarqand", "Samarqand sh., Registon", "Samarqand filiali"],
-    ["Samarqand", "Urgut tumani", "Samarqand filiali"],
-    ["Namangan", "Namangan sh., Davlatobod", "Namangan filiali"],
-    ["Farg'ona", "Farg'ona sh., Yangi bozor", "Farg'ona filiali"],
-    ["Andijon", "Andijon sh., Bog'ishamol", "Andijon filiali"],
-    ["Buxoro", "Buxoro sh., Kogon yo'li", "Buxoro filiali"],
-    ["Xorazm", "Urganch sh., Al-Xorazmiy", "Xorazm filiali"],
-    ["Qashqadaryo", "Qarshi sh., Mustaqillik", "Qashqadaryo filiali"],
-    ["Surxondaryo", "Termiz sh., Sharq", "Surxondaryo filiali"],
-    ["Jizzax", "Jizzax sh., Sharof Rashidov", "Jizzax filiali"],
-    ["Navoiy", "Navoiy sh., Galaba", "Navoiy filiali"],
+    ["Toshkent sh.", "Toshkent sh., Yunusobod", "Toshkent shahar BXO"],
+    ["Toshkent sh.", "Toshkent sh., Chilonzor", "Chilonzor BXM"],
+    ["Toshkent sh.", "Toshkent sh., Mirzo Ulug'bek", "Toshkent shahar BXO"],
+    ["Toshkent vil.", "Toshkent vil., Qibray", "Toshkent viloyat BXO"],
+    ["Toshkent vil.", "Toshkent vil., Zangiota", "Toshkent viloyat BXO"],
+    ["Samarqand", "Samarqand sh., Registon", "Samarqand BXO"],
+    ["Samarqand", "Urgut tumani", "Samarqand BXO"],
+    ["Namangan", "Namangan sh., Davlatobod", "Namangan BXO"],
+    ["Farg'ona", "Farg'ona sh., Yangi bozor", "Farg'ona BXO"],
+    ["Andijon", "Andijon sh., Bog'ishamol", "Andijon BXO"],
+    ["Buxoro", "Buxoro sh., Kogon yo'li", "Buxoro BXO"],
+    ["Xorazm", "Urganch sh., Al-Xorazmiy", "Urganch BXO"],
+    ["Qashqadaryo", "Qarshi sh., Mustaqillik", "Qarshi BXO"],
+    ["Surxondaryo", "Termiz sh., Sharq", "Termiz BXO"],
+    ["Jizzax", "Jizzax sh., Sharof Rashidov", "Jizzax BXO"],
+    ["Navoiy", "Navoiy sh., Galaba", "Navoiy BXO"],
+    ["Sirdaryo", "Guliston sh., Ahillik", "Guliston BXM"],
+    ["Qoraqalpog'iston", "Nukus sh., Do'stlik", "Nukus BXO"],
+    ["Surxondaryo", "Denov tumani", "Denov BXM"],
+    ["Jizzax", "Zarbdor tumani", "Zarbdor BXM"],
+    ["Buxoro", "G'ijduvon tumani", "G'ijduvon BXM"],
   ];
 
+  /* [tur, rasmlar, maydon oralig'i, birlik, baho oralig'i (mln so'm)] — bank balansidagi mulk tarkibiga yaqin nisbatda */
   const TURLAR = [
-    ["Kvartira", ["bino_turar.webp", "bino_9.webp"], [58, 124], "m²", 380, 980],
-    ["Turar-joy majmuasi", ["bino_9.webp", "bino_qavatlar.webp"], [1200, 4600], "m²", 2600, 9200],
-    ["Savdo maydoni", ["bino_mall.webp", "bino_humo.webp"], [180, 1250], "m²", 900, 5400],
+    ["Kvartira", ["bino_turar.webp", "bino_qavatlar.webp"], [58, 124], "m²", 380, 980],
+    ["Turar-joy majmuasi", ["bino_qavatlar.webp", "bino_turar.webp"], [1200, 4600], "m²", 2600, 9200],
+    ["Savdo maydoni", ["bino_mall.webp"], [180, 1250], "m²", 900, 5400],
+    ["Savdo maydoni", ["bino_mall.webp"], [90, 640], "m²", 420, 2600],
     ["Ofis binosi", ["bino_tower.webp", "bino_humo.webp"], [240, 1800], "m²", 1200, 7400],
-    ["Ishlab chiqarish", ["bino_qavatlar.webp", "bino_9.webp"], [800, 5200], "m²", 1800, 8600],
-    ["Ombor", ["bino_mall.webp", "bino_qavatlar.webp"], [600, 3400], "m²", 700, 4200],
-    ["Yer uchastkasi", ["bino_yer.webp"], [1200, 24000], "m²", 300, 2400],
-    ["Dala hovli", ["bino_dacha.webp", "bino_turar.webp"], [180, 640], "m²", 260, 1500],
-    ["Avtotransport", ["kam_avto.webp", "bino_yer.webp"], [1, 1], "dona", 120, 860],
+    ["Ishlab chiqarish", ["bino_mall.webp"], [800, 5200], "m²", 1800, 8600],
+    ["Ishlab chiqarish", ["bino_mall.webp"], [600, 2400], "m²", 1100, 4600],
+    ["Ombor", ["bino_mall.webp"], [600, 3400], "m²", 700, 4200],
+    ["Ombor", ["bino_mall.webp"], [400, 2600], "m²", 380, 2200],
+    ["Yer uchastkasi", ["bino_9.webp", "bino_yer.webp"], [1200, 24000], "m²", 300, 2400],
+    ["Yer uchastkasi", ["bino_9.webp"], [8000, 98000], "m²", 600, 3400],
+    ["Dala hovli", ["bino_dacha.webp"], [180, 640], "m²", 260, 1500],
+    ["Avtotransport", ["kam_avto.webp"], [1, 1], "dona", 120, 860],
   ];
 
   const NOM_BOSH = {
@@ -60,14 +70,14 @@
                  "Navoiy ko'chasi, 21-uy", "Chinor mavzesi, 3-uy"],
     "Turar-joy majmuasi": ["Nurafshon turar-joy majmuasi", "Yangi Hayot majmuasi",
                            "Baraka Residence", "Chinor Park majmuasi"],
-    "Savdo maydoni": ["Savdo markazi, 2-qavat", "Bozor rastasi bloki", "Savdo pavilyoni",
-                      "Do'kon maydoni, 1-qavat"],
+    "Savdo maydoni": ["Savdo do'koni binosi", "Choyxona va do'kon binosi", "Xizmat ko'rsatish binosi",
+                      "Dorixona binosi", "Savdo pavilyoni"],
     "Ofis binosi": ["Biznes markaz, 3-qavat", "Ma'muriy bino", "Ofis bloki A",
                     "Ish markazi, 5-qavat"],
-    "Ishlab chiqarish": ["Tekstil sexi", "Non zavodi bloki", "Metall konstruksiya sexi",
-                         "Oziq-ovqat ishlab chiqarish sexi"],
-    "Ombor": ["Logistika ombori", "Sovutkichli ombor", "Materiallar ombori", "Tranzit ombori"],
-    "Yer uchastkasi": ["Yer uchastkasi", "Sanoat yer uchastkasi", "Qurilish uchun yer uchastkasi"],
+    "Ishlab chiqarish": ["Tikuvchilik sexi", "Un tegirmoni binosi", "Parrandachilik binosi", "Paypoq ishlab chiqarish sexi",
+                         "Oziq-ovqat ishlab chiqarish sexi", "Chorvachilik kompleksi"],
+    "Ombor": ["Omborxona binosi", "Sovutkichli ombor", "Mineral o'g'itlar ombori", "Don saqlash ombori"],
+    "Yer uchastkasi": ["Issiqxona majmuasi yeri", "Baliqchilik xo'jaligi yeri", "Sanoat yer uchastkasi", "Bog' va yer uchastkasi"],
     "Dala hovli": ["Dala hovlisi", "Bog' uyi", "Yozgi dala hovli"],
     "Avtotransport": ["Chevrolet Cobalt (2022)", "Isuzu yuk avtomobili (2021)",
                       "Chevrolet Malibu (2023)", "MAN tortuvchi (2020)"],
@@ -94,9 +104,70 @@
   }
   function son(n){ return new Intl.NumberFormat("ru-RU").format(n); }
 
+
+  /* ---------- Mahalliy reyestr ----------
+     vositalar/import_taqdimot.py hosil qilgan fayl (mahalliy/obyektlar.json). Faqat shu kompyuterda,
+     localhost orqali ochilganda o'qiladi; ommaviy nusxada har doim shartli namoyish ma'lumoti ishlaydi. */
+  function mahalliyOqish(){
+    if (typeof location === "undefined" || typeof XMLHttpRequest === "undefined") return null;
+    if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return null;
+    try{
+      if (localStorage.getItem("mkb-manba") === "shartli" || sessionStorage.getItem("mkb-mahalliy-yoq")) return null;
+      const x = new XMLHttpRequest();
+      x.open("GET", "mahalliy/obyektlar.json", false);
+      x.send();
+      if (x.status === 200){ const j = JSON.parse(x.responseText); return j && j.obyektlar && j.obyektlar.length ? j.obyektlar : null; }
+      sessionStorage.setItem("mkb-mahalliy-yoq", "1");
+    }catch(_){ try{ sessionStorage.setItem("mkb-mahalliy-yoq", "1"); }catch(e){} }
+    return null;
+  }
+  const MAH = mahalliyOqish();
+  D.MANBA = MAH ? "mahalliy" : "shartli";
+  const MAH_TUR = {ombor: "Ombor", ferma: "Ishlab chiqarish", issiqxona: "Ishlab chiqarish", sex: "Ishlab chiqarish", dokon: "Savdo maydoni",
+    mamuriy: "Ma'muriy bino", uy: "Turar-joy", kopqavat: "Kvartira", avto: "Avtotransport", yuk: "Avtotransport", texnika: "Avtotransport", uskuna: "Avtotransport"};
+  /* Yozuvni haqiqiy obyekt ma'lumoti bilan to'ldirish: bog'lanishlar (id, ish, ko'riklar) o'zgarmaydi */
+  function mahalliyQolla(y, m){
+    const balansKun = Math.max(1, Math.round((BUGUN_S - new Date(m.balansSana + "T12:00:00")) / 864e5));
+    const qarz = m.balansQiymat, baho = m.sotishQiymat || Math.round(m.balansQiymat * 1.12 * 10) / 10;
+    const bosq = D.BOSQICHLAR.find(b => b.kalit === "balans");
+    const tasnif = D.tasnifla ? D.tasnifla(balansKun) : y.tasnif;
+    const sanaQ = new Date(m.balansSana + "T12:00:00");
+    y.mijoz = Object.assign({}, y.mijoz, {nom: m.sobiqEga, yur: !/^YaTT|^YATT/i.test(m.sobiqEga), tur: "Sobiq egasi",
+      belgi: m.sobiqEga.replace(/[«»"“”]/g, "").split(" ").map(v => v[0]).join("").slice(0, 2).toUpperCase()});
+    y.filial = m.filialNomi;
+    y.qarz = {asosiy: Math.round(qarz * .82), foiz: Math.round(qarz * .18), kunlar: balansKun, jami: qarz};
+    y.mulk = Object.assign({}, y.mulk, {tur: m.tur || MAH_TUR[m.rasmTuri] || "Noturar bino", nom: m.nom + " · " + m.manzil, qisqa: m.nom,
+      hudud: m.hududNomi, hududToliq: m.hududNomi + ", " + m.tuman, manzil: m.manzil,
+      maydon: !m.binoli ? "1 dona" : m.foydaliMaydon > 1 ? son(m.foydaliMaydon) + " m²" : m.yerMaydon > 1 ? son(m.yerMaydon) + " m²" : "—", baho, bahoSana: nuqtaliSana(sanaQ),
+      rasm: m.rasm || y.mulk.rasm, rasmKichik: m.rasm || y.mulk.rasmKichik, qabul: uzSana(sanaQ)});
+    y.ish = Object.assign({}, y.ish, {bosqich: "balans", kun: balansKun, shoshilinch: false});
+    if (y.ish.ijro === "—" || y.ish.ijro === "Hali berilmagan") y.ish.ijro = "IH-" + m.balansSana.slice(0, 4) + "/" + String(1000 + (m.urug % 8999));
+    Object.assign(y, {bosqichNomi: bosq.nom, bosqichChip: bosq.chip, holat: m.holat === "Sotuvga tayyorlanmoqda" ? {nom: m.holat, rang: "#F2C230"} : {nom: "Balansda saqlanmoqda", rang: bosq.rang},
+      qarzMatn: pulMatn(qarz), asosiyMatn: pulMatn(y.qarz.asosiy), foizMatn: pulMatn(y.qarz.foiz), bahoMatn: pulMatn(baho), qarzSon: son(qarz),
+      tasnif, zaxira: tasnif ? +(qarz * tasnif.zaxira / 100).toFixed(1) : 0, ochiqQoldiq: Math.max(0, Math.round(qarz - baho)), qoplash: Math.round(baho / qarz * 100)});
+    y.zaxiraMatn = pulMatn(y.zaxira);
+  }
+
   /* ---------- YOZUVLAR (asosiy reyestr) ---------- */
   const bor = D.YOZUVLAR.length;
-  const KERAK = 64;
+  /* Boshlang'ich yozuvlar haqiqiy obyektlar bilan almashtirilganda bog'liq to'plamlardagi nomlar ham yangilanadi */
+  const nomAlmashuvi = {};
+  if (MAH) D.YOZUVLAR.forEach((y, i) => {
+    if (!MAH[i]) return;
+    const eski = [y.mulk.qisqa, y.mulk.nom, y.mijoz.nom];
+    mahalliyQolla(y, MAH[i]);
+    nomAlmashuvi[eski[0]] = y.mulk.qisqa; nomAlmashuvi[eski[1]] = y.mulk.nom; nomAlmashuvi[eski[2]] = y.mijoz.nom;
+    const r = D.OBYEKT_INDEKS && D.OBYEKT_INDEKS[y.id];
+    if (r) Object.assign(r, {nom: y.mulk.nom, qisqa: y.mulk.qisqa, tur: y.mulk.tur, hudud: y.mulk.hudud, manzil: y.mulk.manzil,
+      baho: y.mulk.baho, rasm: y.mulk.rasm, rasmKichik: y.mulk.rasmKichik, maydon: y.mulk.maydon});
+  });
+  if (MAH) Object.keys(D).forEach(k => {
+    if (!Array.isArray(D[k]) || k === "YOZUVLAR") return;
+    D[k].forEach(q => { if (q && typeof q === "object" && !Array.isArray(q)) Object.keys(q).forEach(f => {
+      if (typeof q[f] === "string" && nomAlmashuvi[q[f]]) q[f] = nomAlmashuvi[q[f]];
+    }); });
+  });
+  const KERAK = MAH ? Math.max(bor, MAH.length) : 64;
   const yangiYozuvlar = [];
   for (let i = bor; i < KERAK; i++){
     const t = tanla(TURLAR);
@@ -120,7 +191,7 @@
     const asosiy = Math.round(qarz * 0.82);
     const foiz = qarz - asosiy;
     const tasnif = D.tasnifla ? D.tasnifla(kunlar) : null;
-    const zaxira = tasnif ? Math.round(qarz * tasnif.zaxira) / 100 : 0;
+    const zaxira = tasnif ? +(qarz * tasnif.zaxira / 100).toFixed(1) : 0;
     const rasm = "assets/" + tanla(rasmlar);
     yangiYozuvlar.push({
       id,
@@ -162,6 +233,7 @@
       ochiqQoldiq: Math.max(0, Math.round(qarz - baho)),
       qoplash: Math.round(baho / qarz * 100),
     });
+    if (MAH && MAH[i]) mahalliyQolla(yangiYozuvlar[yangiYozuvlar.length - 1], MAH[i]);
   }
   /* balans bosqichidagi obyektda qabul sanasi majburiy (Д-2) */
   yangiYozuvlar.forEach(y => {
@@ -321,11 +393,11 @@
 
   /* ---------- HODISALAR ---------- */
   const HODISA_MATN = [
-    ["yerto'lani suv bosishi — shikast", "yuqori"], ["uskunalar ro'yxatida kamomad", "o'rta"],
-    ["sug'urta polisi muddati o'tdi", "yuqori"], ["ruxsatsiz ijaraga berish holati", "yuqori"],
-    ["qiymatning jadal pasayishi", "o'rta"], ["muhr buzilgan holati aniqlandi", "yuqori"],
-    ["kommunal qarzdorlik yuzaga keldi", "o'rta"], ["tomda oqish aniqlandi", "past"],
-    ["hududda ruxsatsiz qurilish", "o'rta"], ["yong'in signalizatsiyasi ishlamayapti", "yuqori"],
+    ["Yerto'lani suv bosgan, poydevor shikastlangan", "yuqori"], ["Uskunalar ro'yxatida kamomad", "o'rta"],
+    ["Sug'urta polisining muddati o'tgan", "yuqori"], ["Obyekt ruxsatsiz ijaraga berilgan", "yuqori"],
+    ["Mulk qiymati keskin pasaygan", "o'rta"], ["Eshikdagi plomba buzilgan", "yuqori"],
+    ["Kommunal to'lovlardan qarz aniqlandi", "o'rta"], ["Tomdan suv o'tayotgani aniqlandi", "past"],
+    ["Hududda ruxsatsiz qurilish boshlangan", "o'rta"], ["Yong'in signalizatsiyasi ishlamayapti", "yuqori"],
   ];
   const yangiHodisa = [];
   yangiYozuvlar.slice(0, 18).forEach((y, i) => {
@@ -406,7 +478,14 @@
   const jamiObyekt = D.YOZUVLAR.length;
   const jamiQarz = D.YOZUVLAR.reduce((a, y) => a + y.qarz.jami, 0);
   const jamiBaho = D.YOZUVLAR.reduce((a, y) => a + y.mulk.baho, 0);
-  D.PORTFEL.jami = 1248;                       /* bank bo'yicha umumiy (statistik) */
+  D.PORTFEL.jami = MAH ? jamiObyekt : 1248;    /* bank bo'yicha umumiy (statistik); mahalliy reyestrda — haqiqiy son */
+  if (MAH){
+    D.PORTFEL.balansda = jamiObyekt;
+    const TOLIQ = {"Toshkent sh.": "Toshkent shahri", "Toshkent vil.": "Toshkent viloyati", "Qoraqalpog'iston": "Qoraqalpog'iston R."};
+    const sanoq = {};
+    D.YOZUVLAR.forEach(y => { const n = TOLIQ[y.mulk.hudud] || y.mulk.hudud + " viloyati"; sanoq[n] = (sanoq[n] || 0) + 1; });
+    D.HUDUDLAR = Object.keys(sanoq).sort((a, b) => sanoq[b] - sanoq[a]).map(n => [n, String(sanoq[n]), "", 1]);
+  }
   D.PORTFEL.reyestrda = jamiObyekt;            /* tizimda ochilgan yozuvlar */
   D.PORTFEL.bahoTrln = (jamiBaho / 1000000 * 8.4).toFixed(1).replace(".", ",");
   D.PORTFEL.holatlar.forEach(h => {
@@ -489,12 +568,18 @@
       holat: tanla(["korib chiqilmoqda", "topshirilgan", "tolangan"])});
   });
 
+  /* Mahalliy reyestrda barcha obyektlar balansda: sud majlisi, restrukturizatsiya va ijara yozuvlari
+     ularga tegishli emas — namoyish uchun tuzilgan bunday yozuvlar olib tashlanadi */
+  if (MAH) ["SUD_MAJLISLAR", "RESTRUKTURIZATSIYA", "IJARA"].forEach(k => { if (D[k]) D[k].length = 0; });
+
   /* ---------- HUDUDLAR statistikasini reyestrga moslash ---------- */
   const hududSoni = {};
   D.YOZUVLAR.forEach(y => { hududSoni[y.mulk.hudud] = (hududSoni[y.mulk.hudud] || 0) + 1; });
   D.HUDUDLAR.forEach(h => {
-    const qism = String(h[0]).split(" ")[0];
-    const mos = Object.keys(hududSoni).find(k => k.indexOf(qism) === 0);
+    /* "Toshkent shahri" va "Toshkent viloyati" bir xil so'z bilan boshlanadi — qisqa nom aniq moslanadi */
+    const QISQA = {"Toshkent shahri": "Toshkent sh.", "Toshkent viloyati": "Toshkent vil.", "Qoraqalpog'iston R.": "Qoraqalpog'iston"};
+    const qism = QISQA[h[0]] || String(h[0]).split(" ")[0];
+    const mos = Object.keys(hududSoni).find(k => k === qism);
     if (mos) h[3] = hududSoni[mos];
   });
 })();

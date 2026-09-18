@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Baholash buyurtmasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="baholash">
@@ -17,7 +17,7 @@
     <div class="hs-yorliq"><span>Baholash</span></div>
     <div class="hs-qator"><h1>Baholash buyurtmasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Reyestr</a><a href="baholash-buyurtma.html" class="faol">Buyurtma</a><a href="baholash-hisobot-kiritish.html">Hisobot kiritish</a><a href="baholovchilar.html">Baholovchilar</a><a href="baholash-dinamika.html">Dinamika</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Baholash</a><a href="baholash-buyurtma.html" class="faol">Buyurtma</a><a href="baholash-hisobot-kiritish.html">Hisobot kiritish</a><a href="sugurta.html">Sug&#39;urta polislari</a><a href="sugurta-yangilash.html">Polisni yangilash</a></nav>
   <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Baholash buyurtmasi</h2></div>
   <form id="bb-forma" class="forma-tor">
     <div class="maydon keng"><label class="maydon-yorliq">Obyekt <b>*</b></label>
@@ -35,19 +35,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
@@ -57,11 +57,14 @@ document.addEventListener("mkb:tayyor", async () => {
     e.preventDefault();
     const q = MKB.forma(e.target, ["obyektId", "baholovchi", "sabab"]);
     if (!q) return;
-    const id = "BH-2026/0" + String(200 + Math.floor((Date.now() / 60000) % 700));
+    /* takrorlanmas raqam: mavjud eng katta tartib raqamidan keyingisi */
+    const bor = await MKBapi.royxat("BAHOLASHLAR");
+    const maks = bor.reduce((m, b) => { const s = /\/(\d+)$/.exec(String(b.id || "")); return s ? Math.max(m, +s[1]) : m; }, 0);
+    const id = "BH-" + new Date().getFullYear() + "/" + String(maks + 1).padStart(4, "0");
     await MKBapi.yangi("BAHOLASHLAR", {id, obyektId: q.obyektId, sana: "buyurtma berildi",
       qiymat: 0, avvalgi: 0, baholovchi: q.baholovchi, usul: q.sabab,
       keyingi: q.muddat, holat: "jarayonda"});
-    MKB.toast("Buyurtma ro'yxatga olindi — " + id);
+    MKB.toast(id + " raqamli buyurtma ro'yxatga olindi");
     setTimeout(() => location.href = "baholash.html", 700);
   });
 });

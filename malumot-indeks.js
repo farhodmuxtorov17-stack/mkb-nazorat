@@ -176,6 +176,14 @@
     if (n) y.mulk.nazoratBall = n.ball;
   });
 
+  /* Balansga olingan va sotilgan mulk (yillar kesimida, soni). Yig'ma qoldiq PORTFEL.balansda ga teng. */
+  D.BALANS_DINAMIKA = {
+    yillar: ["2021", "2022", "2023", "2024", "2025", "2026"],
+    olingan: [24, 62, 118, 146, 231, 172],
+    sotilgan: [18, 41, 77, 96, 158, 23],
+  };
+
+  D.nazoratKeshTozala = function(){ Object.keys(KESH).forEach(k => delete KESH[k]); };
   D.nazoratIndeksi = indeks;
   D.nazoratJamlama = jamlama;
   D.NAZORAT_OGIRLIK = OGIRLIK;

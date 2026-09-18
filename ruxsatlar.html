@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ruxsatlar reyestri</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -17,24 +17,24 @@
     <div class="hs-yorliq"><span>Kirish nazorati</span></div>
     <div class="hs-qator"><h1>Ruxsatlar reyestri</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="kirish-nazorati.html">Post</a><a href="kuzatuv.html">Nazorat markazi</a><a href="kirish-nuqtalari.html">Nuqtalar</a><a href="kirish-voqealari.html">Voqealar</a><a href="tashriflar.html">Tashriflar</a><a href="ruxsatlar.html" class="faol">Ruxsatlar</a><a href="qurilmalar.html">Qurilmalar</a><a href="hodisalar.html">Hodisalar</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="kirish-nazorati.html">Post</a><a href="kirish-nuqtalari.html">Nuqtalar</a><a href="kirish-voqealari.html">Voqealar</a><a href="tashriflar.html">Tashriflar</a><a href="ruxsatlar.html" class="faol">Ruxsatlar</a><a href="qurilmalar.html">Qurilmalar</a><a href="hodisalar.html">Hodisalar</a></nav>
   <div id="jadval-joy"></div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -72,23 +72,80 @@ function voqeaQatori(v){
   return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
     '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
       ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
-    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : v.operator || "Aniqlanmagan shaxs") + "</b>" +
     "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
     '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
 }
 
-document.addEventListener("mkb:tayyor", () => {
-  const D = MKB_DATA;
-  const qatorlar = D.RUXSATLAR.map(r => {
-    const sh = D.shaxs(r.shaxsId) || {};
-    return {id: r.id, shaxs: sh.ism || "—", lavozim: sh.lavozim || "—", tur: sh.tur || "—",
-      obyekt: obyektNomi(r.obyektId), daraja: r.daraja, usul: r.usul,
-      boshlanish: r.boshlanish, tugash: r.tugash, holat: r.holat,
-      nuqta: r.nuqtalar.length, bergan: r.bergan};
+/* ---------- saqlash yordamchilari (yozuv faqat MKBapi orqali) ---------- */
+/* server rejimida kolleksiya xotiradagi nusxaga id bo'yicha qo'shib olinadi */
+async function knYukla(nomlar){
+  await MKBapi.tayyor;
+  if (MKBapi.rejim() !== "server") return;
+  for (const k of nomlar){
+    try{
+      const asl = MKB_DATA[k], r = await MKBapi.royxat(k);
+      if (!Array.isArray(asl) || !Array.isArray(r)) continue;
+      const ix = new Map(asl.map(x => [x.id, x]));
+      r.forEach(x => { const b = ix.get(x.id); if (b) Object.assign(b, x); else asl.push(x); });
+    }catch(_){ }
+  }
+}
+async function knYangila(k, id, patch){
+  await MKBapi.yangilash(k, id, patch);
+  const b = (MKB_DATA[k] || []).find(x => x.id === id);
+  if (b) Object.assign(b, patch);
+  return b;
+}
+async function knYangi(k, obyekt){
+  const j = await MKBapi.yangi(k, obyekt);
+  const y = j && j.id ? j : obyekt;
+  const a = MKB_DATA[k];
+  if (Array.isArray(a) && !a.some(x => x.id === y.id)) a.push(y);
+  return (Array.isArray(a) && a.find(x => x.id === y.id)) || y;
+}
+/* keyingi raqam: shu old qo'shimchali id'larning eng katta soni + 1 */
+async function knKeyingiId(k, old, uzunlik){
+  const r = await MKBapi.royxat(k);
+  let maks = 0;
+  r.forEach(x => {
+    const s = String(x.id || ""), m = /(\d+)$/.exec(s);
+    if (m && s.indexOf(old) === 0) maks = Math.max(maks, +m[1]);
   });
-  document.getElementById("hs-meta").textContent =
-    qatorlar.filter(q => q.holat === "amalda").length + " ta amaldagi ruxsat";
-  MKB.jadval("jadval-joy", {
+  return old + String(maks + 1).padStart(uzunlik || 0, "0");
+}
+async function knSaqla(ish){
+  try{ await ish(); return true; }
+  catch(_){ MKB.toast("Saqlab bo'lmadi, qayta urinib ko'ring", "xavf"); return false; }
+}
+function knKim(){ const s = MKBapi.sessiya(); return s && s.ism ? s.ism : "Operator"; }
+function knSoat(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+}
+/* "26.08.2026" + "14:05" -> saralash kaliti */
+function knVaqtKalit(sana, soat){ return String(sana || "").split(".").reverse().join("") + (soat || ""); }
+
+document.addEventListener("mkb:tayyor", async () => {
+  const D = MKB_DATA;
+  await knYukla(["RUXSATLAR"]);
+  function qatorYig(){
+    return D.RUXSATLAR.map(r => {
+      const sh = D.shaxs(r.shaxsId) || {};
+      return {id: r.id, shaxs: sh.ism || "—", lavozim: sh.lavozim || "—", tur: sh.tur || "—",
+        obyekt: obyektNomi(r.obyektId), daraja: r.daraja, usul: r.usul,
+        boshlanish: r.boshlanish, tugash: r.tugash, holat: r.holat,
+        nuqta: (r.nuqtalar || []).length, bergan: r.bergan};
+    });
+  }
+  function metaChiz(q){
+    const el = document.getElementById("hs-meta");
+    el.textContent = q.filter(x => x.holat === "amalda").length + " ta amaldagi ruxsat";
+    tarjimaQil(el);
+  }
+  const qatorlar = qatorYig();
+  metaChiz(qatorlar);
+  const jadval = MKB.jadval("jadval-joy", {
     qatorlar,
     qidiruv: ["shaxs", "obyekt", "id"],
     qidiruvYozuvi: "Shaxs yoki obyekt...",
@@ -122,14 +179,20 @@ document.addEventListener("mkb:tayyor", () => {
     if (!t) return;
     const r = D.RUXSATLAR.find(x => x.id === t.dataset.toxtat);
     if (!r) return;
-    MKB.modal("Ruxsatni to’xtatish",
+    MKB.modal("Ruxsatni to'xtatish",
       '<p style="font-size:14px;line-height:1.6;color:var(--matn-2)">' +
       D.shaxsNomi(r.shaxsId) + " uchun " + obyektNomi(r.obyektId) +
-      " bo’yicha ruxsat bekor qilinadi. Amal jurnalga yoziladi.</p>",
-      {okMatn: "To’xtatish", ok: () => {
-        r.holat = "to’xtatilgan";
-        MKB.toast("Ruxsat to’xtatildi");
-        setTimeout(() => location.reload(), 600);
+      " bo'yicha ruxsat bekor qilinadi. Amal jurnalga yoziladi.</p>",
+      {okMatn: "To'xtatish", ok: () => {
+        knSaqla(async () => {
+          /* holat matni reyestr va filtrdagi bilan bir xil (to'g'ri apostrof) */
+          await knYangila("RUXSATLAR", r.id, {holat: "to'xtatilgan",
+            toxtatgan: knKim(), toxtatilgan: D.KIRISH_BUGUN + " " + knSoat()});
+          const yangi = qatorYig();
+          jadval.yangila(yangi);
+          metaChiz(yangi);
+          MKB.toast("Ruxsat to'xtatildi");
+        });
       }});
   });
 });

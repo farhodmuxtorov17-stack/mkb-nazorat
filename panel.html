@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Boshqaruv paneli</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 <style>
 /* Hero: referensdagi "Contact" bloki */
@@ -59,6 +59,16 @@
 .stat-karta .past{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
 .stat-karta .qiymat{font:500 29px/1.05 var(--shrift-displey);letter-spacing:-.035em;font-variant-numeric:tabular-nums}
 .stat-karta .qiymat small{font:400 12.5px var(--shrift);color:var(--matn-3)}
+.bm-afsona{display:flex;gap:18px;font-size:12.5px;color:var(--matn-2);margin-top:8px}
+.bm-afsona span{display:inline-flex;align-items:center;gap:7px}
+.bm-afsona i{width:10px;height:10px;border-radius:3px}
+.bm-qamrov{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.bm-qamrov a{display:flex;align-items:center;gap:16px;padding:16px 18px;border-radius:var(--r-plitka);background:var(--plitka);transition:background var(--tez)}
+.bm-qamrov a:hover{background:var(--band-hover)}
+.bm-qamrov b{display:block;font:500 15px var(--shrift-displey);letter-spacing:-.015em}
+.bm-qamrov span span{display:block;font-size:12.5px;color:var(--matn-3);margin-top:2px}
+@media (max-width:1240px){.bm-qamrov{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.bm-qamrov{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:1240px){.stat-tor{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:1100px){.an-tor{grid-template-columns:minmax(0,1fr)}
   .hero-fokus{grid-template-columns:minmax(0,1fr)}}
@@ -72,8 +82,28 @@
 <main class="kontent">
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><span>Boshqaruv paneli</span></div>
-    <div class="hs-qator"><h1>Boshqaruv paneli</h1><span class="hs-meta" id="hs-meta">Bank bo'yicha umumiy holat</span><div class="hs-amallar"><a class="tugma tugma-oq" href="hisobotlar.html"><svg class="ic"><use href="#i-hisobot"/></svg>Hisobotlar</a><a class="tugma tugma-asosiy" href="korsatkichlar.html"><svg class="ic"><use href="#i-grafik"/></svg>Ko&#39;rsatkichlar</a></div></div>
+    <div class="hs-qator"><h1>Boshqaruv paneli</h1><span class="hs-meta" id="hs-meta">Bank bo'yicha umumiy holat</span><div class="hs-amallar"><a class="tugma tugma-oq" href="hisobotlar.html"><svg class="ic"><use href="#i-hisobot"/></svg>Hisobotlar</a><a class="tugma tugma-asosiy" href="hisobot-kpi.html"><svg class="ic"><use href="#i-grafik"/></svg>Ko&#39;rsatkichlar</a></div></div>
   </div>
+  <div class="seksiya-bosh"><h2>Balansdagi mulk</h2><span class="soni" id="bm-soni"></span>
+    <div class="ong"><a class="pill" href="hisobot-hudud.html"><svg class="ic"><use href="#i-xarita"/></svg>Hudud kesimi</a><a class="pill" href="taqdimot.html">Loyiha taqdimoti<svg class="ic"><use href="#i-ong"/></svg></a></div>
+  </div>
+  <div class="an-tor">
+    <section class="karta an-hero">
+      <div class="bosh"><div>
+        <span class="yorliq" style="font-size:13px;color:var(--matn-3)">Bank balansidagi mulk qiymati</span>
+        <div class="an-katta"><span id="bm-qiymat">&#8212;</span><small>mlrd so&#39;m</small></div>
+      </div>
+      <div class="an-jam"><b id="bm-olingan">&#8212;</b>joriy yilda balansga olingan<b id="bm-sotilgan" style="margin-top:8px">&#8212;</b>joriy yilda sotilgan</div></div>
+      <div id="bm-grafik" style="min-height:200px"></div>
+      <div class="bm-afsona"><span><i style="background:var(--siyoh)"></i>Balansga olingan</span><span><i style="background:var(--mint-matn)"></i>Sotilgan</span></div>
+    </section>
+    <section class="karta"><div class="karta-bosh"><h2>Hududlar kesimi</h2><span class="soni" id="bm-hudud-soni"></span><a class="karta-havola" href="hisobot-hudud.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div>
+      <div id="bm-hududlar"></div>
+    </section>
+  </div>
+  <section class="karta"><div class="karta-bosh"><h2>Nazorat qamrovi</h2><span class="soni">nazoratdagi barcha obyektlar bo&#39;yicha</span></div>
+    <div class="bm-qamrov" id="bm-qamrov"></div>
+  </section>
   <section class="hero-fokus">
     <div class="hf-media"><img id="hf-rasm" src="" alt=""><span class="beyj beyj-pushti" id="hf-beyj">Diqqat markazida</span></div>
     <div class="hf-ong">
@@ -91,16 +121,15 @@
       </div>
     </div>
   </section>
-  <div class="seksiya-bosh"><h2>Ta&#39;minot obyektlari</h2><span class="soni" id="ob-soni"></span>
+  <div class="seksiya-bosh"><h2>Nazoratdagi obyektlar</h2><span class="soni" id="ob-soni"></span>
     <div class="ong"><a class="pill" href="xarita.html"><svg class="ic"><use href="#i-xarita"/></svg>Xaritada</a><a class="pill" href="obyektlar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div>
   </div>
   <div class="obyekt-tor" id="obyekt-tor"></div>
-  <div class="stat-tor" id="stat-tor"></div>
-  <div class="an-tor">
+  <div class="an-tor" id="undiruv-qator">
     <section class="karta an-hero">
       <div class="bosh"><div>
         <span class="yorliq" style="font-size:13px;color:var(--matn-3)">Oylik undiruv</span>
-        <div class="an-katta"><span id="an-son">&#8212;</span><small>mlrd so&#39;m</small><span class="delta ijobiy" id="an-delta"></span></div>
+        <div class="an-katta"><span id="an-son">&#8212;</span><small>mlrd so&#39;m</small></div>
       </div>
       <div class="an-jam"><b id="an-yillik">&#8212;</b>7 oy jami<b id="an-ortacha" style="margin-top:8px">&#8212;</b>oylik o&#39;rtacha</div></div>
       <div id="an-grafik" style="min-height:210px"></div>
@@ -110,7 +139,7 @@
     </section>
   </div>
   <div class="an-tor">
-    <section class="karta"><div class="karta-bosh"><h2>Undiruv voronkasi</h2><span class="soni" id="vr-jami"></span><a class="karta-havola" href="undiruv.html">Doska<svg class="ic"><use href="#i-ong"/></svg></a></div>
+    <section class="karta" id="voronka-karta"><div class="karta-bosh"><h2>Undiruv voronkasi</h2><span class="soni" id="vr-jami"></span><a class="karta-havola" href="undiruv.html">Doska<svg class="ic"><use href="#i-ong"/></svg></a></div>
       <div class="voronka" id="voronka"></div>
     </section>
     <section class="karta"><div class="karta-bosh"><h2>Yaqin muddatlar</h2><a class="karta-havola" href="vazifalar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="muddatlar"></div></section>
@@ -118,19 +147,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 
 function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
@@ -161,12 +190,6 @@ function muddatQatori(m){
     '<span class="vaqt"' + (m.xavfli ? ' style="color:var(--pushti-matn)"' : '') + '>' + m.vaqt + '</span></a>';
 }
 
-function seriya(oxirgi, oylikOsish, soni){
-  const r = [oxirgi];
-  for (let i = 1; i < (soni || 8); i++)
-    r.unshift(r[0] / (1 + oylikOsish + Math.sin(i * 2.1) * oylikOsish * 0.55));
-  return r.map(v => Math.round(v * 10) / 10);
-}
 function obyektKarta(y){
   const yBall = MKB_DATA.nazoratIndeksi(y).ball;
   const zona = yBall >= 85 ? "beyj-mint" : yBall >= 70 ? "beyj-sariq" : "beyj-pushti";
@@ -207,48 +230,85 @@ document.addEventListener("mkb:tayyor", async () => {
     f.ish.masul.split(" ").map(v => v[0]).join("").slice(0, 2);
   document.getElementById("hf-kartochka").href = "obyekt.html?id=" + encodeURIComponent(f.id);
   document.getElementById("hf-ish").href = "ish.html?id=" + encodeURIComponent(f.id);
+  const balansdami = y => ["musodara", "balans"].includes(y.ish.bosqich);
   document.getElementById("hf-plitkalar").innerHTML = [
-    ["pul", "Qoldiq qarz", f.qarzMatn, ""],
+    ["pul", balansdami(f) ? "Balans qiymati" : "Qoldiq qarz", f.qarzMatn, ""],
     ["grafik", "Baholangan qiymat", f.bahoMatn, ""],
     ["diagramma", "Nazorat indeksi", MKB_DATA.nazoratIndeksi(f).ball + "%", "kok"],
-    ["soat", "Kechikish", f.qarz.kunlar + " kun", ""],
+    ["soat", balansdami(f) ? "Balansda" : "Kechikish", f.qarz.kunlar + " kun", ""],
     ["yuridik", "Bosqich", f.bosqichNomi, ""],
   ].map(([ikon, yorliq, qiymat, kls]) =>
     '<div class="plitka">' + ik(ikon) +
     '<span class="yorliq">' + yorliq + '</span>' +
     '<span class="qiymat ' + kls + '">' + qiymat + '</span></div>').join("");
 
+  if (["musodara", "balans"].includes(f.ish.bosqich)){ const ishTugma = document.getElementById("hf-ish"); if (ishTugma) ishTugma.remove(); }
+  if (!yoz.some(y => !["musodara", "balans"].includes(y.ish.bosqich))){
+    document.getElementById("undiruv-qator").hidden = true;
+    document.getElementById("voronka-karta").hidden = true;
+  }
+
+  /* ---- Balansdagi mulk ---- */
+  const balansdagilar = yoz.filter(y => ["musodara", "balans"].includes(y.ish.bosqich));
+  const ortachaBaho = balansdagilar.reduce((a, y) => a + y.mulk.baho, 0) / Math.max(1, balansdagilar.length);
+  /* mahalliy reyestrda — haqiqiy balans qiymatlari yig'indisi; namoyishda — o'rtacha baho bo'yicha hisob */
+  const bmQiymat = D.MANBA === "mahalliy" ? Math.round(balansdagilar.reduce((a, y) => a + y.qarz.jami, 0) / 1000)
+    : Math.round(ortachaBaho * D.PORTFEL.balansda / 1000);
+  const mahalliy = D.MANBA === "mahalliy";
+  const arxiv = await MKBapi.royxat("ARXIV");
+  let BD = D.BALANS_DINAMIKA;
+  if (mahalliy){
+    /* mahalliy reyestr: dinamika faqat jonli yozuvlardan — qabul sanasi va arxivdagi sotuv yili bo'yicha */
+    const joriyYil = new Date().getFullYear();
+    const yillar = Array.from({length: 6}, (_, i) => String(joriyYil - 5 + i));
+    const yil = m => (String(m || "").match(/(\d{4})/) || [])[1];
+    BD = {yillar,
+      olingan: yillar.map(y => balansdagilar.filter(v => yil(v.mulk.qabul) === y).length),
+      sotilgan: yillar.map(y => arxiv.filter(a => String(a.yil || yil(a.sotilgan)) === y).length)};
+  }
+  const oxir = BD.yillar.length - 1;
+  /* sarlavha: bank bo'yicha statistik son + reyestrdagi jonli son; mahalliy reyestrda — faqat jonli son */
+  document.getElementById("bm-soni").textContent = mahalliy
+    ? MKB.fmt(balansdagilar.length) + " ta obyekt bank balansida"
+    : MKB.fmt(D.PORTFEL.balansda) + " ta obyekt bank balansida · reyestrda ochilgan: " + MKB.fmt(balansdagilar.length);
+  document.getElementById("bm-qiymat").textContent = MKB.fmt(bmQiymat);
+  document.getElementById("bm-olingan").textContent = BD.olingan[oxir] + " ta";
+  document.getElementById("bm-sotilgan").textContent = BD.sotilgan[oxir] + " ta";
+  if (!BD.olingan.concat(BD.sotilgan).some(v => v > 0))
+    document.getElementById("bm-grafik").innerHTML = '<div class="bosh-holat">' + ik("grafik") +
+      "<b>Dinamika uchun ma'lumot yetarli emas</b><span>Balansga qabul va sotuv yozuvlari paydo bo'lgach grafik chiziladi</span></div>";
+  else MKBchizma.ustunGuruh("bm-grafik", {yorliqlar: BD.yillar, balandlik: 300, tooltipFormat: v => v + " ta",
+    seriyalar: [{nom: "Balansga olingan", rang: "--siyoh", qiymatlar: BD.olingan}, {nom: "Sotilgan", rang: "--mint-matn", qiymatlar: BD.sotilgan}]});
+  const hududlar = D.HUDUDLAR.slice().sort((a, b) => MKB.sonQiymat(b[1]) - MKB.sonQiymat(a[1]));
+  document.getElementById("bm-hudud-soni").textContent = hududlar.length + " ta hudud";
+  MKB.barlar("bm-hududlar", hududlar.slice(0, 7).map(h => [h[0], h[1], "var(--siyoh)", h[2]]), {href: "hisobot-hudud.html"});
+  const kj = D.kirishJamlama(), P = D.PORTFEL;
+  const foiz = (a, b) => Math.round(a / Math.max(1, b) * 100);
+  /* mahalliy reyestrda qamrov jonli yozuvlardan hisoblanadi: talab to'liq bajarilgan obyektlar ulushi */
+  const tarkib = yoz.map(y => (D.nazoratIndeksi(y) || {tarkib: []}).tarkib);
+  const joyida = k => tarkib.filter(t => (t.find(x => x.kalit === k) || {}).holat === "yaxshi").length;
+  const qamrov = mahalliy ? [
+    ["Ko'rik muddatida", foiz(joyida("korik"), yoz.length), (yoz.length - joyida("korik")) + " ta obyektda ko'rik kechikkan", "korik-kechikkan.html"],
+    ["Sug'urta amalda", foiz(joyida("sugurta"), yoz.length), (yoz.length - joyida("sugurta")) + " ta obyektda himoya to'liq emas", "sugurta.html"],
+    ["Baho dolzarb", foiz(joyida("baho"), yoz.length), (yoz.length - joyida("baho")) + " ta obyekt qayta baholanishi kerak", "baholash.html"],
+    ["Kirish nazorati onlayn", foiz(kj.onlayn, kj.nuqta), kj.ochiqHodisa + " ta ochiq hodisa", "hodisalar.html"],
+  ] : [
+    ["Ko'rik muddatida", foiz(P.koriklar.otkazilgan, P.koriklar.jami), P.koriklar.muddatiOtgan + " tasi muddati o'tgan", "korik-kechikkan.html"],
+    ["Sug'urta amalda", foiz(P.sugurtali.amalda, P.sugurtali.jami), P.sugurtali.tugaydi30 + " ta polis 30 kunda tugaydi", "sugurta.html"],
+    ["Baho dolzarb", foiz(P.baholash.dolzarb, P.baholash.jami), P.baholash.eskirgan + " ta hisobot eskirgan", "baholash.html"],
+    ["Kirish nazorati onlayn", foiz(kj.onlayn, kj.nuqta), kj.ochiqHodisa + " ta ochiq hodisa", "hodisalar.html"],
+  ];
+  document.getElementById("bm-qamrov").innerHTML = qamrov.filter(q => MKB.ruxsat(q[3])).map(q =>
+    '<a href="' + q[3] + '">' + MKB.halqa(q[1], 58, 6) + "<span><b>" + q[0] + "</b><span>" + q[2] + "</span></span></a>").join("");
+
   /* ---- Obyekt kartalari ---- */
   document.getElementById("ob-soni").textContent = MKB.fmt(D.PORTFEL.jami) + " ta obyekt nazoratda";
-  document.getElementById("obyekt-tor").innerHTML = tartib.slice(0, 6).map(obyektKarta).join("");
-
-  /* ---- Stat kartalar ---- */
-  const ortQoplash = MKB_DATA.nazoratJamlama(yoz).ortacha;
-  const balansda = yoz.filter(y => ["musodara", "balans"].includes(y.ish.bosqich)).length;
-  const kirishJ = MKB_DATA.kirishJamlama();
-  const statlar = [
-    {yorliq: "Reyestrdagi obyektlar", qiymat: MKB.fmt(yoz.length), birlik: "obyekt",
-     delta: "↑ 8,2%", ijobiy: true, seriya: seriya(yoz.length, 0.014)},
-    {yorliq: "Bank balansida", qiymat: MKB.fmt(balansda), birlik: "obyekt",
-     delta: "↑ 6", ijobiy: true, seriya: seriya(balansda, 0.02)},
-    {yorliq: "O'rtacha nazorat indeksi", qiymat: ortQoplash + "%", birlik: "",
-     delta: "↑ 3,4%", ijobiy: true, seriya: seriya(ortQoplash, 0.008)},
-    {yorliq: "Kirish nuqtalari onlayn", qiymat: kirishJ.onlayn + " / " + kirishJ.nuqta, birlik: "",
-     delta: "↑ 1,4%", ijobiy: true, seriya: seriya(kirishJ.onlayn, 0.004)},
-  ];
-  document.getElementById("stat-tor").innerHTML = statlar.map((t, i) =>
-    '<div class="stat-karta"><span class="yorliq">' + t.yorliq + '</span>' +
-    '<div class="past"><div><div class="qiymat">' + t.qiymat +
-    (t.birlik ? ' <small>' + t.birlik + '</small>' : '') + '</div>' +
-    '<span class="delta ' + (t.ijobiy ? 'ijobiy' : 'salbiy') + '">' + t.delta + '</span></div>' +
-    '<span id="st-uchqun-' + i + '"></span></div></div>').join("");
-  statlar.forEach((t, i) => MKBchizma.uchqun("st-uchqun-" + i, t.seriya));
+  document.getElementById("obyekt-tor").innerHTML = tartib.slice(0, 3).map(obyektKarta).join("");
 
   /* ---- Undiruv grafigi ---- */
   const s = D.UNDIRUV_SERIYA.oylik;
   const joriy = s.qiymat[s.qiymat.length - 1];
   document.getElementById("an-son").textContent = String(joriy).replace(".", ",");
-  document.getElementById("an-delta").textContent = "↑ 6,1%";
   const jami7 = s.qiymat.reduce((a, b) => a + b, 0);
   document.getElementById("an-yillik").textContent = jami7.toFixed(1).replace(".", ",") + " mlrd";
   document.getElementById("an-ortacha").textContent = (jami7 / s.qiymat.length).toFixed(1).replace(".", ",") + " mlrd";
@@ -284,18 +344,24 @@ document.addEventListener("mkb:tayyor", async () => {
       '<span class="vr-son">' + MKB.fmt(Math.round(b.summa)) + '<em>' + b.son + " ta ish</em></span></a>").join("");
 
   /* ---- Muddatlar ---- */
-  const majlis = (D.SUD_MAJLISLAR || []).filter(m => m.holat === "rejada").slice(0, 3).map(m => ({
-    nom: m.obyekt + " — sud majlisi", izoh: m.sud + " · " + m.zal,
+  const majlislar = await MKBapi.royxat("SUD_MAJLISLAR");
+  const korikRoyxat = await MKBapi.royxat("KORIKLAR");
+  const majlis = majlislar.filter(m => m.holat === "rejada").slice(0, 3).map(m => ({
+    nom: "Sud majlisi · " + m.obyekt, izoh: m.sud + " · " + m.zal,
     vaqt: m.sana + ", " + m.soat, ikonka: "sud", xavfli: false, href: "sud-kalendar.html"}));
-  const koriklar = D.KORIKLAR.filter(k => k.holat === "rejada").slice(0, 2).map(k => ({
-    nom: k.obyektId + " — ko'rik", izoh: k.inspektor,
+  const koriklar = korikRoyxat.filter(k => k.holat === "rejada").slice(0, 2).map(k => ({
+    nom: "Ko'rik · " + k.obyektId, izoh: k.inspektor,
     vaqt: k.sana, ikonka: "korik", xavfli: false, href: "korik-rejasi.html"}));
-  const kechikkan = yoz.filter(y => y.qarz.kunlar > 300).slice(0, 2).map(y => ({
-    nom: y.mulk.qisqa, izoh: "Kechikish " + y.qarz.kunlar + " kun — jadallashtirish talab",
+  const kechikkan = yoz.filter(y => y.qarz.kunlar > 300).sort((a, b) => b.qarz.kunlar - a.qarz.kunlar).slice(0, 2).map(y => ({
+    nom: y.mulk.qisqa, izoh: balansdami(y) ? y.qarz.kunlar + " kundan beri balansda, sotuvga chiqarish kerak"
+      : y.qarz.kunlar + " kun kechikkan, ishni jadallashtirish kerak",
     vaqt: y.qarz.kunlar + " kun", ikonka: "xavf", xavfli: true,
     href: "obyekt.html?id=" + encodeURIComponent(y.id)}));
   document.getElementById("muddatlar").innerHTML =
     kechikkan.concat(majlis, koriklar).slice(0, 6).map(muddatQatori).join("");
+  /* undiruv voronkasi yashirilganda muddatlar kartasi butun qatorni egallaydi */
+  const vk = document.getElementById("voronka-karta");
+  if (vk.hidden) vk.parentElement.style.gridTemplateColumns = "minmax(0,1fr)";
 });
 </script>
 </body>

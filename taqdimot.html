@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Loyiha taqdimoti</title>
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
+<style>
+:root{
+  --tez:140ms; --sekin:240ms; --egri:cubic-bezier(.23,1,.32,1);
+  --mkb:#0B0B0A; --mkb-quyuq:#0B0B0A; --mkb-fon:#EAF7E4; --mkb-och:#C5F2B4; --mkb-kok:#3E7BD6;
+  --tun:#0B0B0A; --tun-2:#1A1A18; --tun-chiziq:rgba(255,255,255,.10);
+  --chuqur:var(--band); --varaq-2:var(--plitka);
+  --ok:#25651A; --ok-fon:#EAF7E4; --ogoh:#7A5406; --ogoh-fon:#FBE7B0; --xavf-fon:#FCE3DF;
+  --soya-karta:var(--soya-past); --r:16px; --r-karta:28px; --r-katta:28px;
+}
+.himoya{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;font:600 12px/1 var(--shrift-displey);background:var(--siyoh);color:#fff;flex:none}
+.himoya[data-d="B"]{background:#3B3A37}.himoya[data-d="C"]{background:#6F6C67}
+.himoya[data-d="S"]{background:var(--oq);color:var(--matn-2);box-shadow:inset 0 0 0 1px var(--chiziq-3)}
+.plitka-xarita{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px}
+.px-plitka{aspect-ratio:1/1;border-radius:12px;padding:8px 9px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;text-align:left;
+  background:var(--px-fon,rgba(255,255,255,.06));color:#fff}
+.px-plitka .px-nom{font:600 11.5px/1.15 var(--shrift);letter-spacing:.04em;white-space:nowrap}
+.px-plitka b{font:500 19px/1 var(--shrift-displey);letter-spacing:-.02em}
+.px-bosh{visibility:hidden}
+.segment{display:inline-flex;padding:4px;border-radius:999px;background:var(--band);gap:2px}
+.segment button{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:500;color:var(--matn-3)}
+.segment button.faol{background:var(--siyoh);color:#fff}
+.tugma-tun{background:rgba(255,255,255,.1);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+.tugma-tun:hover{background:rgba(255,255,255,.18)}
+.tun .tugma-asosiy{background:var(--mkb-och);color:#0B0B0A}
+[hidden]{display:none!important}
+.t-shapka .tugma-asosiy{background:var(--mkb-och);color:#0B0B0A;box-shadow:0 0 0 1px rgba(11,11,10,.12)}
+</style>
+<style>
+html{scroll-behavior:smooth;scroll-snap-type:y proximity}
+body{background:var(--qogoz)}
+.sahna-t{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:84px max(40px,6vw) 72px;scroll-snap-align:start;position:relative}
+.sahna-t.tun{background:var(--tun);color:#fff}
+.sahna-t.tun::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(900px 520px at 8% 0%,rgba(140,198,63,.14),transparent 70%),radial-gradient(700px 520px at 100% 100%,rgba(46,155,214,.10),transparent 70%)}
+.sahna-t > *{position:relative;max-width:1320px;width:100%;margin-left:auto;margin-right:auto}
+.t-raqam{font:600 13px var(--shrift-mono);letter-spacing:.08em;color:var(--mkb);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.t-raqam::after{content:"";width:48px;height:1px;background:currentColor;opacity:.5}
+.tun .t-raqam{color:var(--mkb-och)}
+.sahna-t h2{font:600 clamp(30px,3.6vw,50px)/1.06 var(--shrift-displey);letter-spacing:-.035em;text-wrap:balance;padding-right:max(0px,calc(min(100%,1320px) - 17em))}
+.t-kirish{font-size:clamp(15px,1.25vw,18px);line-height:1.6;color:var(--matn-2);padding-right:max(0px,calc(min(100%,1320px) - 42em));margin-top:16px;text-wrap:pretty}
+.tun .t-kirish{color:rgba(255,255,255,.7)}
+.t-tana{margin-top:36px}
+
+/* Yuqori panel va navigatsiya */
+.t-shapka{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:12px;padding:14px max(24px,3vw);pointer-events:none}
+.t-shapka > *{pointer-events:auto}
+.t-logo{display:flex;align-items:center;gap:10px;font:600 14px var(--shrift-displey);padding:7px 12px 7px 8px;border-radius:10px;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);box-shadow:0 0 0 1px var(--chiziq)}
+.t-shapka .ong{margin-left:auto;display:flex;gap:8px;align-items:center}
+.t-shapka .tugma-oq,.t-shapka .til-almash{backdrop-filter:blur(10px)}
+.t-nuqtalar{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:4px}
+.t-nuqtalar a{width:26px;height:22px;display:grid;place-items:center}
+.t-nuqtalar a i{width:7px;height:7px;border-radius:50%;background:var(--matn-4);transition:all var(--sekin) var(--egri)}
+.t-nuqtalar a:hover i{background:var(--mkb)}
+.t-nuqtalar a.faol i{height:20px;border-radius:4px;background:var(--mkb)}
+.t-past{position:fixed;right:max(24px,3vw);bottom:16px;z-index:50;display:flex;align-items:center;gap:10px;font:600 12px var(--shrift-mono);color:var(--matn-3);
+  padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);box-shadow:0 0 0 1px var(--chiziq)}
+.t-past kbd{padding:1px 5px;border-radius:4px;background:var(--chuqur)}
+
+/* Muqova */
+.muqova h1{font:600 clamp(40px,5.6vw,84px)/1 var(--shrift-displey);letter-spacing:-.045em;max-width:14ch;text-wrap:balance}
+.muqova h1 em{font-style:normal;color:var(--mkb-och)}
+.muqova-tor{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:56px;align-items:end}
+.muqova .yorliq{font-size:14px;color:rgba(255,255,255,.62);margin-bottom:22px;display:flex;gap:10px;align-items:center}
+.muqova .amallar{display:flex;gap:10px;margin-top:34px;flex-wrap:wrap}
+.muqova .tugma{height:46px;padding:0 20px;font-size:14.5px}
+.m-raqamlar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--tun-chiziq);border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px var(--tun-chiziq);margin-top:18px}
+.m-raqamlar div{background:var(--tun);padding:18px 20px}
+.m-raqamlar b{display:block;font:600 30px/1.05 var(--shrift-displey);letter-spacing:-.03em}
+.m-raqamlar span{font-size:12.5px;color:rgba(255,255,255,.6)}
+
+/* Umumiy bloklar */
+.t-tor{display:grid;gap:16px}
+.t-tor.u2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.t-tor.u3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.t-tor.u4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.t-karta{background:var(--varaq);border-radius:14px;box-shadow:0 0 0 1px var(--chiziq),var(--soya-karta);padding:22px;min-width:0}
+.t-karta h3{font:600 17px/1.3 var(--shrift-displey);letter-spacing:-.015em}
+.t-karta p{font-size:14px;line-height:1.6;color:var(--matn-2);margin-top:8px}
+.t-belgi{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--xavf-fon);color:var(--xavf);margin-bottom:14px}
+.t-belgi.yashil{background:var(--mkb-fon);color:var(--mkb-quyuq)}
+.t-belgi .ic{width:21px;height:21px}
+.t-dalil{margin-top:14px;padding-top:12px;border-top:1px solid var(--chiziq-2);font-size:12.5px;color:var(--matn-3)}
+.t-dalil b{font:600 20px var(--shrift-displey);color:var(--siyoh);letter-spacing:-.02em;margin-right:6px}
+
+/* Arxitektura */
+.arx{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;position:relative}
+.arx-qatlam{position:relative;padding:0 14px}
+.arx-qatlam::after{content:"";position:absolute;right:-8px;top:50px;width:16px;height:16px;border-top:2px solid var(--mkb);border-right:2px solid var(--mkb);transform:rotate(45deg);z-index:2}
+.arx-qatlam:last-child::after{display:none}
+.arx-tugma{width:100%;text-align:left;background:var(--varaq);border-radius:14px;box-shadow:0 0 0 1px var(--chiziq);padding:18px;transition:box-shadow var(--tez),transform var(--sekin) var(--egri);display:block}
+.arx-tugma:hover{transform:translateY(-2px)}
+.arx-tugma.faol{box-shadow:0 0 0 2px var(--mkb),0 14px 30px -16px rgba(21,128,58,.5)}
+.arx-tugma .n{font:600 12px var(--shrift-mono);color:var(--mkb)}
+.arx-tugma b{display:block;font:600 17px var(--shrift-displey);margin:6px 0 10px}
+.arx-tugma ul{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--matn-2)}
+.arx-tugma li{display:flex;gap:8px;align-items:center}
+.arx-tugma li .ic{width:15px;height:15px;color:var(--matn-3)}
+.arx-izoh{margin-top:18px;border-radius:14px;background:var(--mkb-fon);padding:18px 22px;font-size:14.5px;line-height:1.6;color:#0B4A20;min-height:84px}
+.arx-izoh b{font-weight:700}
+
+/* Variantlar */
+.var-tor{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
+.var-royxat{display:flex;flex-direction:column;gap:6px}
+.var-tugma{display:flex;gap:12px;align-items:center;text-align:left;padding:12px 14px;border-radius:12px;background:var(--varaq);box-shadow:0 0 0 1px var(--chiziq);transition:box-shadow var(--tez),background var(--tez)}
+.var-tugma:hover{background:var(--varaq-2)}
+.var-tugma.faol{box-shadow:0 0 0 2px var(--mkb);background:var(--mkb-fon)}
+.var-tugma .harf{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:none;background:var(--siyoh);color:#fff;font:700 13px var(--shrift-displey)}
+.var-tugma.faol .harf{background:var(--mkb)}
+.var-tugma b{display:block;font-size:13.5px;font-weight:600;line-height:1.3}
+.var-tugma span span{display:block;font-size:12px;color:var(--matn-3)}
+.var-tana{background:var(--varaq);border-radius:16px;box-shadow:0 0 0 1px var(--chiziq);padding:26px;min-height:420px}
+.var-tana h3{font:600 24px/1.2 var(--shrift-displey);letter-spacing:-.02em}
+.var-tana .tavsif{font-size:14.5px;line-height:1.65;color:var(--matn-2);margin-top:10px;max-width:70ch}
+.var-ikki{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:20px}
+.var-ikki h4{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--matn-3);margin-bottom:8px}
+.var-ikki li{display:flex;gap:9px;font-size:13.5px;line-height:1.5;padding:4px 0;color:var(--matn-2)}
+.var-ikki li .ic{width:16px;height:16px;margin-top:2px}
+.var-ikki .plus .ic{color:var(--ok)} .var-ikki .minus .ic{color:var(--xavf)}
+.var-past{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--chiziq-2);border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px var(--chiziq);margin-top:22px}
+.var-past div{background:var(--varaq-2);padding:14px 16px}
+.var-past span{display:block;font-size:12px;color:var(--matn-3)}
+.var-past b{display:block;font:600 16px/1.3 var(--shrift-displey);letter-spacing:-.01em;margin-top:2px}
+.ball{display:flex;gap:3px;margin-top:6px}
+.ball i{width:16px;height:5px;border-radius:2px;background:var(--chuqur)}
+.ball i.t{background:var(--mkb)}
+
+/* Tavsiya */
+.tavsiya{margin-top:20px;background:var(--tun);color:#fff;border-radius:var(--r-katta);padding:24px 26px}
+.tavsiya-bosh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:24px;align-items:start}
+.tavsiya .himoya[data-d="A"]{background:#fff;color:#0B0B0A}
+.tavsiya h3{font:500 22px/1.2 var(--shrift-displey);letter-spacing:-.02em}
+.tavsiya p{font-size:14px;line-height:1.6;color:rgba(255,255,255,.7)}
+.tavsiya-tor{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--tun-chiziq);border-radius:16px;overflow:hidden;margin-top:18px;box-shadow:0 0 0 1px var(--tun-chiziq)}
+.tavsiya-tor > div{background:var(--tun);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.tavsiya-tor .ust{display:flex;align-items:center;gap:8px;font-size:12.5px;color:rgba(255,255,255,.62)}
+.tavsiya-tor b{font:500 14.5px/1.35 var(--shrift-displey)}
+.tavsiya-tor .narx{margin-top:auto;padding-top:10px;font-size:12.5px;color:rgba(255,255,255,.62)}
+.tavsiya-tor .narx strong{display:block;font:500 19px var(--shrift-displey);letter-spacing:-.02em;color:var(--mkb-och)}
+@media (max-width:1100px){.tavsiya-bosh{grid-template-columns:1fr}.tavsiya-tor{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:720px){.tavsiya-tor{grid-template-columns:1fr}}
+
+/* Kalkulyatorlar */
+.kalk{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start}
+.kalk-qator{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--chiziq-2);font-size:13.5px}
+.kalk-qator:first-child{border-top:0}
+.kalk-qator .vt{font-size:12.5px;color:var(--matn-3);white-space:nowrap}
+.qadam{display:inline-flex;align-items:center;border-radius:8px;background:var(--chuqur);padding:2px}
+.qadam button{width:28px;height:28px;border-radius:6px;font-size:16px;font-weight:600;color:var(--matn-2)}
+.qadam button:hover{background:var(--varaq)}
+.qadam output{min-width:30px;text-align:center;font-weight:700;font-size:13.5px}
+.natija{background:var(--tun);color:#fff;border-radius:16px;padding:24px;position:sticky;top:76px}
+.natija .n-yorliq{font-size:12.5px;color:rgba(255,255,255,.6)}
+.natija .n-katta{font:600 40px/1.05 var(--shrift-displey);letter-spacing:-.04em;margin:2px 0 2px}
+.natija .n-katta small{font:500 15px var(--shrift);letter-spacing:0;color:rgba(255,255,255,.6);margin-left:6px}
+.natija-tor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px;margin-top:20px;padding-top:18px;border-top:1px solid var(--tun-chiziq)}
+.natija-tor b{display:block;font:600 20px/1.2 var(--shrift-displey);letter-spacing:-.02em}
+.natija-tor > div > span{font-size:12px;color:rgba(255,255,255,.58)}
+.natija-tor b small{font:500 13px var(--shrift);letter-spacing:0;color:rgba(255,255,255,.62);margin-left:5px}
+.natija .yashil{color:var(--mkb-och)}
+.kun-tun{display:flex;height:34px;border-radius:8px;overflow:hidden;margin-top:18px;font:600 11px var(--shrift-mono)}
+.kun-tun div{display:grid;place-items:center;white-space:nowrap;overflow:hidden}
+.kun-tun .kun{background:#E8B04A;color:#2a1c00}.kun-tun .tun2{background:#1E3A55;color:#cfe3f5}
+.surgich{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:12px;align-items:center;padding:9px 0}
+.surgich label{font-size:13px;color:var(--matn-2);grid-column:1/-1;display:flex;justify-content:space-between;gap:10px}
+.surgich label b{font-weight:700;color:var(--siyoh);white-space:nowrap}
+.surgich input[type=range]{width:100%;accent-color:var(--mkb);grid-column:1/-1}
+.smeta-jadval{width:100%;font-size:13px}
+.smeta-jadval th{text-align:left;font-size:11.5px;font-weight:600;color:var(--matn-3);padding:6px 8px;border-bottom:1px solid var(--chiziq)}
+.smeta-jadval td{padding:7px 8px;border-bottom:1px solid var(--chiziq-2);vertical-align:middle}
+.smeta-jadval td.s,.smeta-jadval th.s{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.smeta-jadval input{width:74px;height:28px;border-radius:6px;border:0;background:var(--chuqur);text-align:right;padding:0 8px;font-weight:600;font-size:13px}
+.smeta-jadval input:focus{outline:2px solid var(--mkb);background:var(--varaq)}
+.smeta-jadval tfoot td{font-weight:700;border-bottom:0;border-top:1px solid var(--chiziq)}
+.daraja-tablar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.daraja-tablar button{display:flex;align-items:center;gap:8px;padding:7px 12px 7px 8px;border-radius:10px;background:var(--varaq);box-shadow:0 0 0 1px var(--chiziq);font-size:13px;font-weight:600}
+.daraja-tablar button.faol{box-shadow:0 0 0 2px var(--mkb);background:var(--mkb-fon)}
+.daraja-soni{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:6px}
+.daraja-soni label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--matn-3)}
+.daraja-soni .kirish{height:36px}
+.tco{display:flex;flex-direction:column;gap:10px;margin-top:20px;padding-top:18px;border-top:1px solid var(--tun-chiziq)}
+.tco-q{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:12.5px}
+.tco-q .iz{height:12px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}
+.tco-q .iz span{display:block;height:100%;border-radius:4px;transition:width .5s var(--egri)}
+.tco-q b{font-weight:700;white-space:nowrap}
+
+/* FaceID oqimi */
+.oqim{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:q}
+.oqim-q{background:var(--varaq);border-radius:14px;box-shadow:0 0 0 1px var(--chiziq);padding:20px;position:relative;transition:box-shadow var(--sekin),transform var(--sekin) var(--egri)}
+.oqim-q.faol{box-shadow:0 0 0 2px var(--mkb),0 16px 32px -18px rgba(21,128,58,.5);transform:translateY(-3px)}
+.oqim-q .n{font:600 12px var(--shrift-mono);color:var(--mkb)}
+.oqim-q h3{font:600 16px/1.3 var(--shrift-displey);margin:8px 0 6px}
+.oqim-q p{font-size:13.5px;line-height:1.55;color:var(--matn-2)}
+.oqim-q .t-belgi{margin-bottom:12px}
+
+/* Ekranlar */
+.ekran-tor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.ekran{display:block;border-radius:14px;overflow:hidden;background:var(--varaq);box-shadow:0 0 0 1px var(--chiziq);transition:transform var(--sekin) var(--egri),box-shadow var(--tez)}
+.ekran:hover{transform:translateY(-3px);box-shadow:0 0 0 1px var(--chiziq-3),0 22px 40px -22px rgba(15,31,24,.35)}
+.ekran img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top left;border-bottom:1px solid var(--chiziq-2);background:var(--chuqur)}
+.ekran div{padding:14px 18px 16px}
+.ekran b{font:600 15.5px var(--shrift-displey)}
+.ekran span{display:block;font-size:13px;color:var(--matn-3);margin-top:2px}
+
+/* Reja */
+.reja{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;position:relative}
+.reja::before{content:"";position:absolute;left:0;right:0;top:15px;height:2px;background:var(--chiziq)}
+.reja-b{position:relative;padding:0 24px 0 0}
+.reja-b .nuqta{width:32px;height:32px;border-radius:50%;background:var(--mkb);color:#fff;display:grid;place-items:center;font:700 13px var(--shrift-displey);position:relative;box-shadow:0 0 0 6px var(--qogoz)}
+.reja-b h3{font:600 19px var(--shrift-displey);margin:16px 0 2px}
+.reja-b .muddat{font:600 12.5px var(--shrift-mono);color:var(--mkb)}
+.reja-b ul{margin-top:12px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--matn-2)}
+.reja-b li{display:flex;gap:8px}
+.reja-b li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--matn-4);margin-top:8px;flex:none}
+.xatar{margin-top:32px}
+.xatar details{border-top:1px solid var(--chiziq);padding:12px 0}
+.xatar details:last-child{border-bottom:1px solid var(--chiziq)}
+.xatar summary{cursor:pointer;display:flex;gap:12px;align-items:center;font-size:14.5px;font-weight:600;list-style:none}
+.xatar summary::-webkit-details-marker{display:none}
+.xatar summary .ic{margin-left:auto;transition:transform var(--tez);color:var(--matn-3)}
+.xatar details[open] summary .ic{transform:rotate(180deg)}
+.xatar details p{font-size:14px;line-height:1.6;color:var(--matn-2);margin-top:8px;max-width:80ch}
+
+/* Qaror */
+.qaror-tor{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--tun-chiziq);border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px var(--tun-chiziq)}
+.qaror-tor div{background:var(--tun);padding:24px}
+.qaror-tor .n{font:600 12px var(--shrift-mono);color:var(--mkb-och)}
+.qaror-tor b{display:block;font:600 18px/1.25 var(--shrift-displey);margin:10px 0 8px}
+.qaror-tor p{font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.66)}
+
+.izoh-mayda{font-size:12px;color:var(--matn-3);line-height:1.55;margin-top:14px;padding-right:max(0px,calc(min(100%,1320px) - 84em))}
+.tun .izoh-mayda{color:rgba(255,255,255,.45)}
+
+@media (max-height:820px){
+  .sahna-t{padding:72px max(40px,6vw) 48px;justify-content:flex-start}
+  .t-tana{margin-top:20px}.sahna-t h2{font-size:clamp(26px,2.8vw,38px)}
+}
+@media (max-width:1100px){
+  .muqova-tor,.kalk,.var-tor{grid-template-columns:1fr}
+  .t-tor.u4,.oqim,.qaror-tor{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .arx{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 0}.arx-qatlam::after{display:none}
+  .var-royxat{flex-direction:row;overflow-x:auto}.var-tugma{flex:none}
+  .natija{position:static}
+}
+@media (max-width:720px){
+  .sahna-t{padding:76px 18px 56px}
+  .t-tor.u2,.t-tor.u3,.t-tor.u4,.oqim,.qaror-tor,.ekran-tor,.reja,.var-ikki,.var-past,.arx,.daraja-soni{grid-template-columns:1fr}
+  .reja::before{display:none}.reja-b{padding:0 0 22px}
+  .t-nuqtalar,.t-past,#toliq,.t-logo span{display:none}
+}
+@media print{
+  .t-shapka,.t-nuqtalar,.t-past{display:none!important}
+  .sahna-t{min-height:auto;page-break-after:always;padding:30px}
+}
+</style>
+</head>
+<body data-sahifa="taqdimot" data-ochiq="1">
+
+<div class="t-shapka chop-yoq">
+  <a class="t-logo" href="index.html"><svg width="20" height="20" viewBox="0 0 44 44" aria-hidden="true"><path d="M4 34V8l12 11v20Z" fill="#37A72E"/><path d="M16 19 28 8v26l-12 5Z" fill="#8CC63F"/><path d="m30 8 12 11v20l-12-5Z" fill="#2E9BD6"/></svg><span data-tarjimasiz>Mikrokreditbank</span></a>
+  <div class="ong">
+    <div class="til-almash" role="group" aria-label="Til" data-tarjimasiz><button type="button" data-til="uz">UZ</button><button type="button" data-til="ru">RU</button></div>
+    <button type="button" class="tugma tugma-oq tugma-kichik" id="toliq" style="height:36px"><svg class="ic"><use href="#i-tashqi"/></svg>To'liq ekran</button>
+    <a class="tugma tugma-asosiy tugma-kichik" href="kirish.html" style="height:36px">Tizimni ochish</a>
+  </div>
+</div>
+<nav class="t-nuqtalar chop-yoq" id="nuqtalar" aria-label="Taqdimot bo'limlari"></nav>
+<div class="t-past chop-yoq" aria-hidden="true"><span id="sanoq" data-tarjimasiz>01 / 10</span><span><kbd>↑</kbd> <kbd>↓</kbd></span></div>
+
+<!-- 1. Muqova -->
+<section class="sahna-t tun muqova" id="s1" data-nom="Muqova">
+  <div class="muqova-tor">
+    <div>
+      <div class="yorliq"><span>Loyiha taklifi</span><span>·</span><span id="m-sana" data-tarjimasiz></span></div>
+      <h1>Balansdagi mulk <em>masofadan nazoratda</em></h1>
+      <p class="t-kirish">Bank balansiga o'tgan har bir bino, texnika va uskuna yagona reyestrda. Elektr ta'minotisiz ishlaydigan qo'riqlash va sotuvgacha uzluksiz nazorat.</p>
+      <div class="amallar"><a class="tugma tugma-asosiy" href="#s2">Taqdimotni boshlash</a><a class="tugma tugma-tun" href="kirish.html">Tizimni ochish</a></div>
+    </div>
+    <div>
+      <div class="plitka-xarita" id="m-xarita" aria-hidden="true"></div>
+      <div class="m-raqamlar" id="m-raqamlar"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Muammo -->
+<section class="sahna-t" id="s2" data-nom="Bugungi holat">
+  <div class="t-raqam" data-tarjimasiz>01</div>
+  <h2 class="keng">Bugun balansdagi mulk qanday nazorat qilinmoqda</h2>
+  <p class="t-kirish">Mulk balansga olingan kundan sotilgunga qadar oylar, ba'zan yillar o'tadi. Bu vaqt ichida u bo'sh turadi, qiymatini yo'qotadi va xarajat talab qiladi. Ammo bu jarayonni bir joydan kuzatish imkoni yo'q.</p>
+  <div class="t-tor u4 t-tana">
+    <div class="t-karta"><span class="t-belgi"><svg class="ic"><use href="#i-hisobot"/></svg></span><h3>Hisobot qo'lda yig'iladi</h3><p>Har oy hududlardan surat va jadvallar yig'ilib, yuzlab slaydli taqdimot tuziladi. Tayyor bo'lgunicha ma'lumot eskirib ulguradi.</p></div>
+    <div class="t-karta"><span class="t-belgi"><svg class="ic"><use href="#i-ochiq-qulf"/></svg></span><h3>Obyektlar bo'sh va qarovsiz</h3><p>Balansga o'tayotganda hisoblagichlar nollanadi, elektr, gaz va suv uziladi. Bino qorovul yoki qulf ixtiyorida qoladi; kim kirib-chiqqani hech qayerda qayd etilmaydi.</p></div>
+    <div class="t-karta"><span class="t-belgi"><svg class="ic"><use href="#i-pul"/></svg></span><h3>Saqlash xarajati ko'rinmaydi</h3><p>Qo'riqlash, mol-mulk solig'i, sug'urta va ta'mirlash xarajatlari turli bo'linmalarda yuritiladi. Bitta obyektni saqlash bankka oyiga qanchaga tushishini bir joyda ko'rib bo'lmaydi.</p></div>
+    <div class="t-karta"><span class="t-belgi"><svg class="ic"><use href="#i-pasayish"/></svg></span><h3>Sotuvgacha qiymat yo'qoladi</h3><p>O'g'irlik, yong'in, tomdan suv o'tishi, begona shaxslarning joylashib olishi. Har bir hodisa mulk bahosini tushiradi va E-auksiondagi savdoni kechiktiradi.</p></div>
+  </div>
+  <p class="izoh-mayda">Taqdimotdagi raqamlar shartli namoyish ma'lumotlaridan olingan. Haqiqiy ko'rsatkichlarni 6-bo'limdagi kalkulyatorga kiritish mumkin — ular faqat shu kompyuterda saqlanadi.</p>
+</section>
+
+<!-- 3. Arxitektura -->
+<section class="sahna-t" id="s3" data-nom="Yechim">
+  <div class="t-raqam" data-tarjimasiz>02</div>
+  <h2 class="keng">Yechim: obyektdan rahbariyat ekranigacha — to'rt qatlam</h2>
+  <p class="t-kirish">Qatlamlar bir-biriga bog'lanib qolmagan: jihoz yetkazib beruvchi almashsa ham tizim va ma'lumotlar bankda qoladi. Tafsilotini ko'rish uchun qatlamni bosing.</p>
+  <div class="arx t-tana" id="arx"></div>
+  <div class="arx-izoh" id="arx-izoh" aria-live="polite"></div>
+</section>
+
+<!-- 4. Variantlar -->
+<section class="sahna-t" id="s4" data-nom="Elektr yo'q obyekt">
+  <div class="t-raqam" data-tarjimasiz>03</div>
+  <h2 class="keng">Asosiy savol: elektr yo'q obyektda kamera va datchiklar qanday ishlaydi</h2>
+  <p class="t-kirish">Beshta yo'l bor. Ular bir-birini istisno qilmaydi: obyektning qiymati va balansda turish muddatiga qarab birga qo'llanadi.</p>
+  <div class="var-tor t-tana">
+    <div class="var-royxat" id="var-royxat" role="tablist" aria-label="Yechim variantlari"></div>
+    <div class="var-tana" id="var-tana" role="tabpanel" aria-live="polite"></div>
+  </div>
+  <div class="tavsiya">
+    <div class="tavsiya-bosh"><h3>Tavsiya etiladigan yechim</h3><p>Obyektga elektr olib kirilmaydi. Jihoz quyosh energiyasida ishlaydi, aloqa 4G orqali, datchiklar o&#39;z batareyasida. Qimmat obyektga to&#39;liq to&#39;plam, arzoniga ixcham to&#39;plam qo&#39;yiladi.</p></div>
+    <div class="tavsiya-tor" id="tavsiya-tor"></div>
+  </div>
+</section>
+
+<!-- 5. Energiya -->
+<section class="sahna-t" id="s5" data-nom="Energiya hisobi">
+  <div class="t-raqam" data-tarjimasiz>04</div>
+  <h2 class="keng">Energiya hisobi: qancha panel va akkumulyator kerak</h2>
+  <p class="t-kirish">Obyektga qo'yiladigan jihozlarni tanlang. Hisob eng og'ir davr, ya'ni qish uchun, bulutli kunlar zaxirasi bilan bajariladi.</p>
+  <div class="kalk t-tana">
+    <div class="t-karta">
+      <div id="en-qurilmalar"></div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 24px;margin-top:12px;padding-top:8px;border-top:1px solid var(--chiziq)">
+        <div class="surgich"><label for="en-quyosh"><span>Quyoshli soatlar (kuniga)</span><b id="en-quyosh-q"></b></label><input type="range" id="en-quyosh" min="2" max="7" step="0.1" value="2.6"></div>
+        <div class="surgich"><label for="en-zaxira"><span>Quyoshsiz ishlash zaxirasi</span><b id="en-zaxira-q"></b></label><input type="range" id="en-zaxira" min="1" max="6" step="1" value="3"></div>
+      </div>
+      <div class="segment" role="group" aria-label="Mavsum" id="en-mavsum" style="margin-top:8px">
+        <button type="button" data-q="2.6">Qish</button><button type="button" data-q="4.6">Bahor va kuz</button><button type="button" data-q="6.8">Yoz</button>
+      </div>
+    </div>
+    <div class="natija">
+      <div class="n-yorliq">Kerakli quyosh paneli quvvati</div>
+      <div class="n-katta" id="en-panel"></div>
+      <div class="n-yorliq" id="en-panel-izoh"></div>
+      <div class="kun-tun" id="en-kuntun" aria-hidden="true"></div>
+      <div class="natija-tor">
+        <div><b id="en-yuk"></b><span>doimiy yuklama</span></div>
+        <div><b id="en-kun"></b><span>sutkalik iste'mol</span></div>
+        <div><b id="en-akb"></b><span>akkumulyator sig'imi (LiFePO4)</span></div>
+        <div><b class="yashil" id="en-narx" data-tarjimasiz></b><span>energiya ta'minoti qiymati</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="izoh-mayda">Hisob usuli: sutkalik iste'mol = yuklama × 24 soat; panel = iste'mol ÷ (quyoshli soatlar × 0,70 tizim samaradorligi); akkumulyator = iste'mol × zaxira kunlari ÷ 0,80 ruxsat etilgan razryad. O'zbekiston uchun dekabrda optimal qiyalikdagi panelda o'rtacha 2,5–3 quyoshli soat olinadi. Yakuniy loyiha obyektning aniq joylashuvi bo'yicha tekshiriladi.</p>
+</section>
+
+<!-- 6. FaceID -->
+<section class="sahna-t" id="s6" data-nom="FaceID va yong'in">
+  <div class="t-raqam" data-tarjimasiz>05</div>
+  <h2 class="keng">FaceID va yong'in nazorati — obyektda elektr talab qilmaydigan usulda</h2>
+  <p class="t-kirish">Yuz terminali doimiy quvvat talab qiladi. Shuning uchun u faqat quyosh stansiyasi bor A darajali obyektlarga qo'yiladi. Qolgan barcha obyektlarda yuzni tanish xodimning telefonida bajariladi.</p>
+  <div class="oqim t-tana" id="oqim">
+    <div class="oqim-q"><span class="t-belgi yashil"><svg class="ic"><use href="#i-yuz"/></svg></span><span class="n" data-tarjimasiz>1</span><h3>Yuzni tanish — telefonda</h3><p>Xodim mobil ilovada yuzini ko'rsatadi. Tiriklik tekshiruvi surat yoki video bilan aldashga yo'l qo'ymaydi.</p></div>
+    <div class="oqim-q"><span class="t-belgi yashil"><svg class="ic"><use href="#i-manzil"/></svg></span><span class="n" data-tarjimasiz>2</span><h3>Joylashuv tekshiruvi</h3><p>Ilova xodim haqiqatan obyekt hududida turganini tekshiradi. 100 metrdan uzoqda kirish qayd etilmaydi.</p></div>
+    <div class="oqim-q"><span class="t-belgi yashil"><svg class="ic"><use href="#i-nfc"/></svg></span><span class="n" data-tarjimasiz>3</span><h3>NFC plomba</h3><p>Eshikdagi passiv NFC plomba telefon bilan o'qiladi. Plomba quvvat talab qilmaydi; uzilsa yoki almashtirilsa, tizim buni darhol aniqlaydi.</p></div>
+    <div class="oqim-q"><span class="t-belgi yashil"><svg class="ic"><use href="#i-hujjat"/></svg></span><span class="n" data-tarjimasiz>4</span><h3>Kirish jurnali</h3><p>Kim, qachon, nima maqsadda va qancha vaqt bo'lgani avtomatik yoziladi. Ko'rik dalolatnomasi shu yerdan boshlanadi.</p></div>
+  </div>
+  <div class="t-tor u3" style="margin-top:16px">
+    <div class="t-karta"><span class="t-belgi yashil"><svg class="ic"><use href="#i-olov"/></svg></span><h3>Yong'in: batareyali datchiklar</h3><p>Tutun va issiqlik datchiklari o'z batareyasida 5–10 yil ishlaydi va signalni radio orqali markazga uzatadi. Kabel ham, elektr ham kerak emas.</p></div>
+    <div class="t-karta"><span class="t-belgi yashil"><svg class="ic"><use href="#i-signal"/></svg></span><h3>Markaz: 12 V va ikki SIM</h3><p>Simsiz markaz bor-yo'g'i 2–5 Vt iste'mol qiladi va kichik quyosh paneli yoki kamera akkumulyatoridan oziqlanadi. Ichki batareyasi 15 soatgacha zaxira beradi.</p></div>
+    <div class="t-karta"><span class="t-belgi yashil"><svg class="ic"><use href="#i-qulf"/></svg></span><h3>Qulf: doimiy tok talab qilmaydigan</h3><p>Elektromagnit qulf tinimsiz 5–6 Vt iste'mol qiladi va avtonom obyektga mos emas. Motorli yoki elektromexanik qulf faqat ochilish paytida quvvat oladi.</p></div>
+  </div>
+</section>
+
+<!-- 7. Smeta -->
+<section class="sahna-t" id="s7" data-nom="Smeta">
+  <div class="t-raqam" data-tarjimasiz>06</div>
+  <h2 class="keng">Himoya darajalari va smeta: qancha turadi, qachon o'zini oqlaydi</h2>
+  <p class="t-kirish">Har bir obyektga bir xil to'plam qo'yish shart emas. Qiymatga qarab to'rt daraja; narxlar va obyektlar sonini shu yerning o'zida o'zgartirishingiz mumkin.</p>
+  <div class="kalk t-tana">
+    <div class="t-karta">
+      <div class="daraja-soni" id="sm-soni"></div>
+      <div class="daraja-tablar" id="sm-tablar" role="tablist" aria-label="Himoya darajasi"></div>
+      <div style="overflow-x:auto"><table class="smeta-jadval" id="sm-jadval"></table></div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;margin-top:10px;padding-top:6px;border-top:1px solid var(--chiziq)">
+        <div class="surgich"><label for="sm-kurs"><span>AQSH dollari kursi, so'm</span><b id="sm-kurs-q" data-tarjimasiz></b></label><input type="range" id="sm-kurs" min="11000" max="14000" step="10"></div>
+        <div class="surgich"><label for="sm-ustama"><span>Logistika, boj va soliqlar</span><b id="sm-ustama-q" data-tarjimasiz></b></label><input type="range" id="sm-ustama" min="0" max="45" step="1"></div>
+        <div class="surgich"><label for="sm-qoriq"><span>Hozir qorovul bilan qo'riqlanadigan obyektlar</span><b id="sm-qoriq-q" data-tarjimasiz></b></label><input type="range" id="sm-qoriq" min="0" max="100" step="5"></div>
+        <div class="surgich"><label for="sm-post"><span>Bitta qorovul posti, oyiga mln so'm</span><b id="sm-post-q"></b></label><input type="range" id="sm-post" min="6" max="40" step="0.5"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px"><button type="button" class="tugma tugma-oq tugma-kichik" id="sm-tiklash"><svg class="ic"><use href="#i-yangilash"/></svg>Boshlang'ich qiymatlar</button>
+        <button type="button" class="tugma tugma-oq tugma-kichik" id="sm-csv"><svg class="ic"><use href="#i-yuklab"/></svg>Smetani CSV ga</button></div>
+    </div>
+    <div class="natija">
+      <div class="n-yorliq">Bir martalik sarmoya (jihoz va o'rnatish)</div>
+      <div class="n-katta" id="sm-capex"></div>
+      <div class="n-yorliq" id="sm-capex-izoh"></div>
+      <div class="natija-tor">
+        <div><b id="sm-opex" data-tarjimasiz></b><span>texnik himoya, oyiga</span></div>
+        <div><b id="sm-jismoniy" data-tarjimasiz></b><span>hozirgi qorovul xarajati, oyiga</span></div>
+        <div><b class="yashil" id="sm-tejash" data-tarjimasiz></b><span>oylik tejash</span></div>
+        <div><b class="yashil" id="sm-qoplash"></b><span>sarmoyaning qoplanish muddati</span></div>
+      </div>
+      <div class="tco">
+        <div class="n-yorliq">Uch yillik umumiy xarajat</div>
+        <div class="tco-q"><span>Hozirgi tartib</span><span class="iz"><span id="tco-1" style="background:#E8604F"></span></span><b id="tco-1q" data-tarjimasiz></b></div>
+        <div class="tco-q"><span>Texnik himoya</span><span class="iz"><span id="tco-2" style="background:var(--mkb-och)"></span></span><b id="tco-2q" data-tarjimasiz></b></div>
+      </div>
+    </div>
+  </div>
+  <p class="izoh-mayda">Narxlar — 2026-yil sentabr holatiga ochiq bozor manbalaridan olingan yo'naltiruvchi qiymatlar (AQSH dollarida, montajsiz); yakuniy smeta tanlov asosida aniqlanadi. Oylik xarajatga SIM-kartalar, platforma xizmati, rejali texnik xizmat va qo'riqlash xizmatining tezkor guruhi obunasi kiradi. «Hozirgi tartib» faqat qorovul qo'yilgan obyektlar bo'yicha hisoblanadi — qolgan obyektlar bugun umuman qo'riqlanmayapti.</p>
+</section>
+
+<!-- 8. Ekranlar -->
+<section class="sahna-t" id="s8" data-nom="Tizim ekranlari">
+  <div class="t-raqam" data-tarjimasiz>07</div>
+  <h2 class="keng">Tizim tayyor: asosiy ekranlar</h2>
+  <p class="t-kirish">Bu maket emas, ishlab turgan tizim. Har bir ekranni ochib, turli rollar nomidan sinab ko'rish mumkin.</p>
+  <div class="ekran-tor t-tana">
+    <a class="ekran" href="kirish.html"><img src="assets/ekran_panel.jpg" alt="Boshqaruv paneli ekrani" loading="lazy"><div><b>Boshqaruv paneli</b><span>Diqqat markazidagi obyekt, balansdagi mulk kesimi, hududlar va nazorat qamrovi — rahbariyat uchun bitta ekran</span></div></a>
+    <a class="ekran" href="kirish.html"><img src="assets/ekran_monitoring.jpg" alt="Kirish nazorati posti ekrani" loading="lazy"><div><b>Kirish nazorati posti</b><span>Kirish so'rovlari, hozir obyektda bo'lganlar, nuqtalar va qurilmalar holati, ochiq hodisalar</span></div></a>
+    <a class="ekran" href="kirish.html"><img src="assets/ekran_obyekt.jpg" alt="Obyekt kartochkasi ekrani" loading="lazy"><div><b>Obyekt kartochkasi</b><span>Nazorat indeksi, moliya, hujjatlar, ko'riklar, xarajatlar, qavat rejasi va 3D navigator</span></div></a>
+    <a class="ekran" href="kirish.html"><img src="assets/ekran_reyestr.jpg" alt="Mulk reyestri ekrani" loading="lazy"><div><b>Mulk reyestri</b><span>Barcha mulk yagona ro'yxatda: qidiruv, filtrlar, CSV eksport</span></div></a>
+  </div>
+</section>
+
+<!-- 9. Reja -->
+<section class="sahna-t" id="s9" data-nom="Joriy etish">
+  <div class="t-raqam" data-tarjimasiz>08</div>
+  <h2 class="keng">Joriy etish: avval pilot, keyin bosqichma-bosqich</h2>
+  <p class="t-kirish">Yirik xariddan oldin yechim ikki hududdagi 10 ta obyektda sinab ko'riladi. Pilot yakunida qaror aniq raqamlar asosida qabul qilinadi.</p>
+  <div class="reja t-tana">
+    <div class="reja-b"><span class="nuqta" data-tarjimasiz>1</span><h3>Pilot</h3><span class="muddat">6 hafta</span><ul><li>2 hudud, 10 obyekt: A, B va C darajadan</li><li>Reyestrga barcha mulk kiritiladi</li><li>Qishki rejimda avtonomlik sinovi</li><li>Natija: haqiqiy narx, aloqa sifati, hodisalar statistikasi</li></ul></div>
+    <div class="reja-b"><span class="nuqta" data-tarjimasiz>2</span><h3>Birinchi bosqich</h3><span class="muddat">3 oy</span><ul><li>Barcha A va B darajali obyektlar jihozlanadi</li><li>Kirish nazorati posti ishga tushadi</li><li>iABS va E-auksion bilan integratsiya</li><li>Mobil ilova: ko'rik, FaceID, NFC</li></ul></div>
+    <div class="reja-b"><span class="nuqta" data-tarjimasiz>3</span><h3>To'liq qamrov</h3><span class="muddat">6 oy</span><ul><li>C daraja va saqlash maydonchalari</li><li>Sotilgan obyektdan jihoz keyingisiga ko'chiriladi</li><li>Kadastr va soliq tizimlari bilan almashinuv</li><li>Rahbariyatga oylik avtomatik hisobot</li></ul></div>
+  </div>
+  <div class="xatar">
+    <h3 style="font:600 19px var(--shrift-displey);margin-bottom:12px">Ehtimoliy savollar va xatarlar</h3>
+    <details><summary><span>Hududda mobil aloqa sust bo'lsa-chi?</span><svg class="ic"><use href="#i-past"/></svg></summary><p>Marshrutizator va markazda ikki operatorning SIM-kartasi turadi, tashqi yo'naltirilgan antenna qo'yiladi. Aloqa uzilganda kamera yozuvni xotira kartasida saqlaydi va tiklangach uzatadi; uzilishning o'zi hodisa sifatida qayd etiladi.</p></details>
+    <details><summary><span>Jihozning o'zi o'g'irlansa yoki sindirilsa?</span><svg class="ic"><use href="#i-past"/></svg></summary><p>Kamera va panel 4–6 metr balandlikdagi ustunga, antivandal qutida o'rnatiladi. Korpus ochilsa yoki kamera burilsa, tizim darhol signal beradi. Jihoz sug'urtalanadi; yozuv bank serverida saqlangani uchun dalil yo'qolmaydi.</p></details>
+    <details><summary><span>Qishda quyosh kam bo'lganda tizim o'chib qolmaydimi?</span><svg class="ic"><use href="#i-past"/></svg></summary><p>Panel va akkumulyator dekabr sharoiti uchun, 3 kunlik quyoshsiz zaxira bilan hisoblanadi (4-bo'limdagi kalkulyator). Quvvat 30% dan tushganda kamera tejamkor rejimga o'tadi, nazorat posti esa oldindan ogohlantiriladi.</p></details>
+    <details><summary><span>Ma'lumotlar xavfsizligi qanday ta'minlanadi?</span><svg class="ic"><use href="#i-past"/></svg></summary><p>Tizim va video arxiv bankning o'z serverida joylashadi. Qurilmalar yopiq APN yoki VPN orqali ulanadi, internetga to'g'ridan-to'g'ri chiqmaydi. Har bir foydalanuvchi faqat o'z roliga tegishli bo'limlarni ko'radi, barcha amallar jurnalga yoziladi.</p></details>
+    <details><summary><span>Hodisa yuz berganda obyektga kim boradi?</span><svg class="ic"><use href="#i-past"/></svg></summary><p>Hududiy qo'riqlash xizmati bilan tezkor guruh chaqiruvi bo'yicha shartnoma tuziladi. Nazorat posti navbatchisi hodisani kamera orqali tasdiqlagach, chaqiruv bir tugma bilan yuboriladi va hodisa kartochkasida qayd etiladi.</p></details>
+  </div>
+</section>
+
+<!-- 10. Qaror -->
+<section class="sahna-t tun" id="s10" data-nom="Qaror">
+  <div class="t-raqam" data-tarjimasiz>09</div>
+  <h2 class="keng">Rahbariyatdan so'raladigan qaror</h2>
+  <p class="t-kirish">Pilotni boshlash uchun to'rtta qaror yetarli. Keyingi bosqichlar pilot natijasiga qarab alohida tasdiqlanadi.</p>
+  <div class="qaror-tor t-tana">
+    <div><span class="n" data-tarjimasiz>1</span><b>Pilotni tasdiqlash</b><p>2 hudud, 10 obyekt, 6 hafta. Mas'ul — Muammoli aktivlar bilan ishlash departamenti.</p></div>
+    <div><span class="n" data-tarjimasiz>2</span><b>Pilot budjeti</b><p><span>Jihoz va o'rnatish uchun taxminan</span> <b id="q-pilot" data-tarjimasiz style="display:inline;font-size:inherit;margin:0;color:var(--mkb-och)"></b>.</p></div>
+    <div><span class="n" data-tarjimasiz>3</span><b>Ishchi guruh</b><p>Muammoli aktivlar, Axborot texnologiyalari, Xavfsizlik va Buxgalteriya vakillari.</p></div>
+    <div><span class="n" data-tarjimasiz>4</span><b>Tizimni joylashtirish</b><p>Bank serverida muhit ajratish va iABS bilan almashinuv uchun ruxsat.</p></div>
+  </div>
+  <div class="muqova" style="margin-top:34px"><div class="amallar" style="margin-top:0"><a class="tugma tugma-asosiy" href="kirish.html">Tizimni ochish</a><button type="button" class="tugma tugma-tun" onclick="window.print()">Taqdimotni chop etish</button></div></div>
+</section>
+
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
+<script src="yadro/taqdimot-moslama.js?v=26091704"></script>
+<script>
+document.addEventListener("mkb:tayyor", () => {
+  const D = MKB_TAQDIMOT;
+  const son = (n, k) => D.son(n, k || 0);
+  const mlnSom = mln => D.pul(mln);
+
+  /* ---------- Navigatsiya ---------- */
+  const sahnalar = [...document.querySelectorAll(".sahna-t")];
+  const nuqtalar = document.getElementById("nuqtalar");
+  nuqtalar.innerHTML = sahnalar.map(s => '<a href="#' + s.id + '" title="' + s.dataset.nom + '" aria-label="' + s.dataset.nom + '"><i></i></a>').join("");
+  let joriy = 0;
+  const kuzatuvchi = new IntersectionObserver(yozuvlar => yozuvlar.forEach(y => {
+    if (!y.isIntersecting) return;
+    joriy = sahnalar.indexOf(y.target);
+    nuqtalar.querySelectorAll("a").forEach((a, i) => a.classList.toggle("faol", i === joriy));
+    document.getElementById("sanoq").textContent = String(joriy + 1).padStart(2, "0") + " / " + String(sahnalar.length).padStart(2, "0");
+  }), {threshold: .45});
+  sahnalar.forEach(s => kuzatuvchi.observe(s));
+  document.addEventListener("keydown", e => {
+    /* tugma, havola va maydonlardagi klavishlar o'z ishini qiladi; sahna ekranga sig'masa avval uning ichida aylantiriladi */
+    if (e.target.closest("input, textarea, select, button, a, summary, [role=tab]")) return;
+    const oldinga = ["ArrowDown", "PageDown", "ArrowRight", " "].includes(e.key), orqaga = ["ArrowUp", "PageUp", "ArrowLeft"].includes(e.key);
+    if (!oldinga && !orqaga) return;
+    e.preventDefault();
+    const r = sahnalar[joriy].getBoundingClientRect(), silliq = matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    if (oldinga && r.bottom > innerHeight + 8){ scrollBy({top: innerHeight * .8, behavior: silliq}); return; }
+    if (orqaga && r.top < -8){ scrollBy({top: -innerHeight * .8, behavior: silliq}); return; }
+    sahnalar[Math.max(0, Math.min(sahnalar.length - 1, joriy + (oldinga ? 1 : -1)))].scrollIntoView({behavior: silliq});
+  });
+  document.getElementById("toliq").addEventListener("click", () => {
+    if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {});
+  });
+  document.querySelectorAll(".t-shapka .til-almash button").forEach(b => {
+    b.classList.toggle("faol", b.dataset.til === joriyTil());
+    b.addEventListener("click", () => {
+      try{ localStorage.setItem("mkb-til", b.dataset.til); }catch(_){}
+      location.reload();      /* pul birliklari (malumot.js) sahifa yuklanganda tanlanadi */
+    });
+  });
+
+  /* ---------- Muqova ---------- */
+  const j = D.jamlanma(), H = D.hududStatistikasi(), maksH = Math.max(...H.map(h => h.soni));
+  document.getElementById("m-sana").textContent = D.sana(D.BUGUN);
+  let px = "";
+  for (let y = 0; y < 3; y++) for (let xx = 0; xx < 9; xx++){
+    const h = H.find(k => k.x === xx && k.y === y);
+    px += h ? '<div class="px-plitka" style="cursor:default;--px-fon:rgba(140,198,63,' + (.10 + .6 * h.soni / maksH).toFixed(2) + ')"><span class="px-nom" data-tarjimasiz>' + h.belgi + "</span><b data-tarjimasiz>" + h.soni + "</b></div>" : '<div class="px-plitka px-bosh"></div>';
+  }
+  document.getElementById("m-xarita").innerHTML = px;
+  document.getElementById("m-raqamlar").innerHTML =
+    "<div><b data-tarjimasiz>" + j.soni + "</b><span>obyekt balansda</span></div><div><b data-tarjimasiz>" + D.pulQisqa(j.qiymat) + "</b><span>so'm — balans qiymati</span></div><div><b data-tarjimasiz>" + D.HUDUDLAR.length + "</b><span>hudud</span></div>";
+
+  /* ---------- Arxitektura ---------- */
+  const ARX = [
+    {nom: "Obyekt", bandlar: [["quyosh", "Quyosh paneli va akkumulyator"], ["kamera", "Kamera, videoanalitika"], ["olov", "Tutun va eshik datchiklari"], ["nfc", "NFC plomba"]],
+      izoh: "<b>Obyektda hech qanday tashqi ta'minot talab qilinmaydi.</b> Kamera harakatni o'zi aniqlaydi va faqat kerakli video parchani uzatadi. Shu tufayli trafik ham, quvvat ham tejaladi. Datchiklar o'z batareyasida ishlaydi."},
+    {nom: "Aloqa", bandlar: [["signal", "4G, ikki operator SIM-kartasi"], ["qulf", "Yopiq APN yoki VPN tunnel"], ["yangilash", "Uzilishda xotiraga yozish"]],
+      izoh: "<b>Qurilmalar ochiq internetga chiqmaydi.</b> Ma'lumot mobil operatorning yopiq APN xizmati orqali to'g'ridan-to'g'ri bank tarmog'iga keladi. Bitta kamera oyiga o'rtacha 20–40 GB sarflaydi, buning uchun oddiy korporativ tarif yetarli."},
+    {nom: "Bank serveri", bandlar: [["aktivlar", "Mulk reyestri va nazorat indeksi"], ["kamera", "Video arxiv va hodisalar"], ["bogliq", "iABS, E-auksion, Kadastr"], ["hujjat", "Amallar jurnali"]],
+      izoh: "<b>Ma'lumot va video arxiv bankda qoladi.</b> Tizim iABS dan balans qiymatini oladi, E-auksionga lot ma'lumotini beradi. Jihoz yetkazib beruvchisi almashsa ham reyestr, tarix va hisobotlar saqlanadi."},
+    {nom: "Foydalanuvchilar", bandlar: [["diagramma", "Rahbariyat: panel va tasdiqlar"], ["korik", "Inspektor: mobil ilova"], ["foydalar", "Menejer, baholovchi, yurist"], ["bank", "Filial: o'z hududi"]],
+      izoh: "<b>Har kim faqat o'z ishini ko'radi.</b> Olti rol: filial rahbari holatni ko'radi va tasdiqlaydi, menejer reyestrni yuritadi, inspektor ko'rik o'tkazadi va hodisalarga javob beradi, baholovchi va yurist o'z yo'nalishini yuritadi. Hisobot endi yig'ilmaydi — u doim tayyor."},
+  ];
+  function arxChiz(faol){
+    document.getElementById("arx").innerHTML = ARX.map((a, i) => '<div class="arx-qatlam"><button type="button" class="arx-tugma' + (i === faol ? " faol" : "") + '" data-i="' + i + '" aria-pressed="' + (i === faol) + '">' +
+      '<span class="n" data-tarjimasiz>0' + (i + 1) + "</span><b>" + a.nom + "</b><ul>" + a.bandlar.map(b => "<li>" + ik(b[0]) + "<span>" + b[1] + "</span></li>").join("") + "</ul></button></div>").join("");
+    document.getElementById("arx-izoh").innerHTML = ARX[faol].izoh;
+    document.querySelectorAll("#arx .arx-tugma").forEach(b => b.addEventListener("click", () => arxChiz(+b.dataset.i)));
+    tarjimaQil(document.getElementById("arx")); tarjimaQil(document.getElementById("arx-izoh"));
+  }
+
+  /* ---------- Variantlar ---------- */
+  const VAR = [
+    {harf: "A", nom: "Avtonom quyosh-4G kamera", qisqa: "tayyor to'plam, 2–3 soatda",
+      tavsif: "Kamera, quyosh paneli va akkumulyator bitta to'plamda keladi. Ustun yoki fasadga o'rnatiladi, kabel va qurilish ishlari talab qilinmaydi. Video harakat bo'yicha yoziladi va 4G orqali bank serveriga uzatiladi.",
+      plus: ["Eng tez yo'l: bir obyekt — yarim kun", "Elektr, kabel va ruxsatnomalar kerak emas", "Obyekt sotilsa, to'plam keyingisiga ko'chiriladi"],
+      minus: ["Uzluksiz yozuv emas — harakat bo'yicha", "Bulutli kunlarda zaxira 4–5 sutka", "Har bir kamera uchun alohida SIM-karta"],
+      past: [["Bir nuqta narxi", "$600 – 1 600"], ["Aloqa xarajati, oyiga", "60 – 100 ming so'm"], ["O'rnatish", "2–3 soat"], ["Qayerga", "B va C daraja"]], ball: [5, 4, 5, 3, 4]},
+    {harf: "B", nom: "Quyosh stansiyasi va PoE tizim", qisqa: "24/7 yozuv, yuz terminali",
+      tavsif: "Bir-ikki panel (550 Vt), LiFePO4 akkumulyator va boshqaruv shkafi butun obyektni ta'minlaydi: to'rttagacha kamera, marshrutizator, yozuv qurilmasi, yuz terminali va elektromexanik qulf.",
+      plus: ["Uzluksiz 24/7 video yozuv", "Yuz terminali va qulf ishlaydi", "Kameralar soni oshirilishi mumkin"],
+      minus: ["Boshlang'ich narxi yuqoriroq", "O'rnatish 1–2 kun, ustun va shkaf kerak", "Panel o'g'irlanishiga qarshi chora talab etiladi"],
+      past: [["Obyekt uchun", "$5 500 – 8 500"], ["Aloqa va xizmat, oyiga", "0,3 – 0,8 mln so'm"], ["O'rnatish", "1–2 kun"], ["Qayerga", "A daraja"]], ball: [3, 2, 4, 5, 5]},
+    {harf: "C", nom: "Simsiz batareyali signalizatsiya", qisqa: "yong'in va kirish nazorati",
+      tavsif: "Tutun, eshik va harakat datchiklari o'z batareyasida 3–10 yil ishlaydi. Signal radio orqali markazga, undan ikki SIM orqali bankka uzatiladi. Foto-tasdiqli harakat datchigi xavf signali paytida suratlar yuboradi.",
+      plus: ["Yong'in nazorati elektrsiz", "Arzon, bir kunda o'rnatiladi", "Markaz atigi 2–5 Vt iste'mol qiladi"],
+      minus: ["Jonli video yo'q, faqat foto-tasdiq", "Batareyalar rejali almashtiriladi", "Yirik hududda radio qamrovi tekshiriladi"],
+      past: [["Obyekt uchun", "$700 – 1 300"], ["Aloqa xarajati, oyiga", "40 – 60 ming so'm"], ["O'rnatish", "3–5 soat"], ["Qayerga", "barcha binolarga qo'shimcha"]], ball: [5, 5, 5, 3, 4]},
+    {harf: "D", nom: "Elektr tarmog'iga qayta ulash", qisqa: "yangi shartnoma va hisoblagich",
+      tavsif: "Hududiy elektr tarmoqlari bilan bank nomiga yangi shartnoma tuziladi, hisoblagich o'rnatiladi. 50 kVt gacha ulanish yagona platforma orqali bir bosqichda rasmiylashtiriladi.",
+      plus: ["Quvvat cheklanmagan", "Standart kamera va yozuv qurilmalari"],
+      minus: ["2–8 hafta, har obyekt uchun alohida", "Sobiq egasining elektr uchun qarzi bo'lsa, ulanish cho'ziladi", "Bo'sh binoda tok qoldirish yong'in xavfini oshiradi", "Sotilganda shartnoma qayta rasmiylashtiriladi"],
+      past: [["Ulanish", "6 – 35 mln so'm"], ["Tarif", "1 100 so'm / kVt·soat"], ["Muddat", "2–8 hafta"], ["Qayerga", "uzoq saqlanadigan yirik obyekt"]], ball: [1, 3, 3, 5, 3]},
+    {harf: "E", nom: "Jismoniy qo'riqlash", qisqa: "taqqoslash uchun",
+      tavsif: "Kecha-kunduz ishlaydigan bitta post uchun 4–4,5 shtat birligi kerak. Amalda ko'pincha bir-ikki qorovul bilan cheklaniladi, natijada nazorat ham to'liq bo'lmaydi.",
+      plus: ["Joyida odam bor", "Texnika talab qilinmaydi"],
+      minus: ["Eng qimmat yo'l", "Inson omili: qorovulning o'zini hech kim nazorat qilmaydi", "Hodisa haqida bank kechikib biladi", "Yozuv va dalil qolmaydi"],
+      past: [["To'liq post", "25 – 35 mln so'm / oy"], ["Xususiy tashkilot", "30 – 45 mln so'm / oy"], ["Bitta qorovul", "4 – 6,5 mln so'm / oy"], ["Qayerga", "faqat alohida holatlarda"]], ball: [4, 1, 1, 2, 2]},
+  ];
+  const BALL_NOMI = ["Tezlik", "Boshlang'ich narx\u200B",      /* U+200B: auksiondagi "Boshlang'ich narx" dan alohida tarjima kaliti */
+    "Oylik xarajat", "Imkoniyatlar", "Ishonchlilik"];
+  function varChiz(faol){
+    document.getElementById("var-royxat").innerHTML = VAR.map((v, i) => '<button type="button" class="var-tugma' + (i === faol ? " faol" : "") + '" data-i="' + i + '" role="tab" aria-selected="' + (i === faol) + '">' +
+      '<span class="harf" data-tarjimasiz>' + v.harf + "</span><span><b>" + v.nom + "</b><span>" + v.qisqa + "</span></span></button>").join("");
+    const v = VAR[faol];
+    document.getElementById("var-tana").innerHTML = "<h3>" + v.nom + '</h3><p class="tavsif">' + v.tavsif + "</p>" +
+      '<div class="var-ikki"><div class="plus"><h4>Afzalligi</h4><ul>' + v.plus.map(p => "<li>" + ik("tasdiq") + "<span>" + p + "</span></li>").join("") + "</ul></div>" +
+      '<div class="minus"><h4>Cheklovi</h4><ul>' + v.minus.map(p => "<li>" + ik("rad") + "<span>" + p + "</span></li>").join("") + "</ul></div></div>" +
+      '<div class="var-past">' + v.past.map(p => "<div><span>" + p[0] + "</span><b>" + p[1] + "</b></div>").join("") + "</div>" +
+      '<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:20px">' + v.ball.map((b, i) =>
+        '<div><span style="font-size:12px;color:var(--matn-3)">' + BALL_NOMI[i] + '</span><div class="ball" role="img" aria-label="' + b + ' / 5">' + [1, 2, 3, 4, 5].map(k => '<i class="' + (k <= b ? "t" : "") + '"></i>').join("") + "</div></div>").join("") + "</div>";
+    document.querySelectorAll("#var-royxat .var-tugma").forEach(b => b.addEventListener("click", () => varChiz(+b.dataset.i)));
+    tarjimaQil(document.getElementById("var-royxat")); tarjimaQil(document.getElementById("var-tana"));
+  }
+
+  /* ---------- Energiya kalkulyatori ---------- */
+  const QURILMA = [["PoE kamera (5 MP, IQ yoritgich bilan)", 7, 4], ["4G marshrutizator", 5, 1], ["PoE kommutator", 4, 1], ["Yozuv qurilmasi (SSD)", 8, 1],
+    ["Yuz terminali", 8, 1], ["Simsiz signalizatsiya markazi", 3, 1], ["Elektromexanik qulf (o'rtacha)", 0.5, 1], ["Ovozli ogohlantirish karnayi (o'rtacha)", 1, 1]];
+  const enSon = QURILMA.map(q => q[2]);
+  function enChiz(){
+    document.getElementById("en-qurilmalar").innerHTML = QURILMA.map((q, i) => '<div class="kalk-qator"><span>' + q[0] + '</span><span class="vt">' + son(q[1], q[1] % 1 ? 1 : 0) + ' Vt</span>' +
+      '<span class="qadam"><button type="button" data-i="' + i + '" data-d="-1" aria-label="Kamaytirish">−</button><output data-tarjimasiz>' + enSon[i] + '</output><button type="button" data-i="' + i + '" data-d="1" aria-label="Ko\'paytirish">+</button></span></div>').join("");
+    document.querySelectorAll("#en-qurilmalar button").forEach(b => b.addEventListener("click", () => { const i = +b.dataset.i; enSon[i] = Math.max(0, Math.min(12, enSon[i] + (+b.dataset.d))); enChiz(); }));
+    const quyosh = +document.getElementById("en-quyosh").value, zaxira = +document.getElementById("en-zaxira").value;
+    const yuk = QURILMA.reduce((s, q, i) => s + q[1] * enSon[i], 0), kun = yuk * 24;
+    const panel = Math.ceil(kun / (quyosh * .7) / 10) * 10, akb = kun * zaxira / .8;
+    const panelSoni = Math.max(1, Math.ceil(panel / 550)), akbSoni = Math.max(1, Math.ceil(akb / 1280));
+    const narx = panelSoni * 550 * .2 + akbSoni * 1.28 * 330 + 120 + 350;
+    document.getElementById("en-quyosh-q").innerHTML = '<span data-tarjimasiz>' + son(quyosh, 1) + "</span> <span>soat</span>";
+    document.getElementById("en-zaxira-q").innerHTML = '<span data-tarjimasiz>' + zaxira + "</span> <span>kun</span>";
+    document.getElementById("en-panel").innerHTML = '<span data-tarjimasiz>' + son(panel) + "</span><small>Vt</small>";
+    document.getElementById("en-panel-izoh").innerHTML = "<span>" + panelSoni + " × 550 Vt panel · " + akbSoni + " × 12,8 V 100 A·soat akkumulyator</span>";
+    document.getElementById("en-yuk").innerHTML = '<span data-tarjimasiz>' + son(yuk, 1) + "</span><small>Vt</small>";
+    document.getElementById("en-kun").innerHTML = '<span data-tarjimasiz>' + son(kun / 1000, 2) + "</span><small>kVt·soat</small>";
+    document.getElementById("en-akb").innerHTML = '<span data-tarjimasiz>' + son(akb / 1000, 1) + "</span><small>kVt·soat</small>";
+    document.getElementById("en-narx").textContent = "≈ $" + son(Math.round(narx / 10) * 10);
+    const qamrov = Math.min(100, quyosh / 24 * 100 * 2.2);
+    document.getElementById("en-kuntun").innerHTML = '<div class="kun" style="width:' + qamrov + '%">' + son(quyosh, 1) + ' s</div><div class="tun2" style="flex:1">' + son(24 - quyosh, 1) + " s</div>";
+    document.querySelectorAll("#en-mavsum button").forEach(b => b.classList.toggle("faol", Math.abs(+b.dataset.q - quyosh) < .05));
+    ["en-qurilmalar", "en-quyosh-q", "en-zaxira-q", "en-panel", "en-panel-izoh", "en-kuntun", "en-yuk", "en-kun", "en-akb"].forEach(id => tarjimaQil(document.getElementById(id)));
+  }
+  ["en-quyosh", "en-zaxira"].forEach(id => document.getElementById(id).addEventListener("input", enChiz));
+  document.querySelectorAll("#en-mavsum button").forEach(b => b.addEventListener("click", () => { document.getElementById("en-quyosh").value = b.dataset.q; enChiz(); }));
+
+  /* ---------- Smeta kalkulyatori ---------- */
+  const NARX0 = {qkPro: 780, qkIxcham: 380, montaj: 220, markaz: 330, tutun: 85, eshik: 45, sirena: 140, nfc: 95, stansiya: 2800, router: 180, poe: 70, kamera: 120, nvr: 260, terminal: 420, qulf: 110, gps: 45};
+  const NOMI = {qkPro: "Quyosh-4G kamera, professional", qkIxcham: "Quyosh-4G kamera, ixcham", montaj: "Ustun, antivandal quti, montaj", markaz: "Simsiz markaz (4G, 12 V)", tutun: "Tutun va issiqlik datchigi",
+    eshik: "Eshik datchigi", sirena: "Ko'cha sirenasi", nfc: "NFC plomba", stansiya: "Quyosh elektr stansiyasi", router: "4G sanoat marshrutizatori", poe: "PoE kommutator", kamera: "PoE kamera, 5 MP",
+    nvr: "Yozuv qurilmasi", terminal: "Yuz terminali", qulf: "Elektromexanik qulf", gps: "GPS-treker"};
+  const TARKIB = {
+    A: {stansiya: 1, router: 1, poe: 1, kamera: 4, nvr: 1, terminal: 1, qulf: 1, markaz: 1, tutun: 6, eshik: 3, sirena: 1, nfc: 2, montaj: 2},
+    B: {qkPro: 2, montaj: 2, markaz: 1, tutun: 3, eshik: 2, sirena: 1, nfc: 1},
+    C: {qkIxcham: 1, montaj: 1, tutun: 1, nfc: 1},
+    S: {gps: 1},
+  };
+  const OPEX = {A: 4.0, B: 1.41, C: .81, S: .46};          /* mln so'm / oy */
+  const POST_K = {A: 1.7, B: 1, C: .58, S: .07};           /* post narxiga nisbatan */
+  const faol = D.faolObyektlar(), boshSoni = {A: 0, B: 0, C: 0, S: 0};
+  faol.forEach(o => { boshSoni[o.himoya]++; });
+  const BOSH = {narx: NARX0, soni: boshSoni, kurs: 11780, ustama: 25, qoriq: 35, post: 16.5};
+  let S;
+  try{ S = JSON.parse(localStorage.getItem("mkb-taqdimot") || "null"); }catch(_){ S = null; }
+  if (!S || !S.narx) S = JSON.parse(JSON.stringify(BOSH));
+  let smDaraja = "B";
+  const darajaUSD = d => Object.keys(TARKIB[d]).reduce((s, k) => s + TARKIB[d][k] * S.narx[k], 0);
+  const darajaMln = d => darajaUSD(d) * 1.12 * (1 + S.ustama / 100) * S.kurs / 1e6;      /* 12% — o'rnatish va sozlash */
+  function smChiz(){
+    try{ localStorage.setItem("mkb-taqdimot", JSON.stringify(S)); }catch(_){}
+    document.getElementById("sm-soni").innerHTML = ["A", "B", "C", "S"].map(d => '<label>' + MKB.himoya(d) + '<span>' + D.HIMOYA_NOMI[d] + '</span><span class="kirish"><input type="number" min="0" max="2000" data-d="' + d + '" value="' + S.soni[d] + '" aria-label="' + d + ' darajadagi obyektlar soni"></span></label>').join("");
+    document.getElementById("sm-tablar").innerHTML = ["A", "B", "C", "S"].map(d => '<button type="button" role="tab" aria-selected="' + (d === smDaraja) + '" class="' + (d === smDaraja ? "faol" : "") + '" data-d="' + d + '">' + MKB.himoya(d) +
+      '<span data-tarjimasiz>' + mlnSom(darajaMln(d)) + "</span></button>").join("");
+    const T = TARKIB[smDaraja];
+    document.getElementById("sm-jadval").innerHTML = '<thead><tr><th>Jihoz</th><th class="s">Soni</th><th class="s">Narxi, $</th><th class="s">Jami, $</th></tr></thead><tbody>' +
+      Object.keys(T).map(k => "<tr><td>" + NOMI[k] + '</td><td class="s" data-tarjimasiz>' + T[k] + '</td><td class="s"><input type="number" min="0" step="5" data-k="' + k + '" value="' + S.narx[k] + '" aria-label="' + NOMI[k] + ' narxi"></td><td class="s" data-tarjimasiz>' + son(T[k] * S.narx[k]) + "</td></tr>").join("") +
+      '</tbody><tfoot><tr><td colspan="3">Jihozlar jami</td><td class="s" data-tarjimasiz>$' + son(darajaUSD(smDaraja)) + '</td></tr><tr><td colspan="3"><span>O\'rnatish (12%), logistika va soliqlar bilan — bitta obyekt</span></td><td class="s" data-tarjimasiz>' + mlnSom(darajaMln(smDaraja)) + "</td></tr></tfoot>";
+    [["kurs", son(S.kurs)], ["ustama", "+" + S.ustama + "%"], ["qoriq", S.qoriq + "%"], ["post", son(S.post, 1) + " mln"]].forEach(q => {
+      document.getElementById("sm-" + q[0]).value = S[q[0]]; document.getElementById("sm-" + q[0] + "-q").textContent = q[1];
+    });
+    const jamiSoni = ["A", "B", "C", "S"].reduce((s, d) => s + S.soni[d], 0);
+    const capex = ["A", "B", "C", "S"].reduce((s, d) => s + S.soni[d] * darajaMln(d), 0);
+    const opex = ["A", "B", "C", "S"].reduce((s, d) => s + S.soni[d] * OPEX[d], 0);
+    const jismoniy = ["A", "B", "C", "S"].reduce((s, d) => s + S.soni[d] * S.post * POST_K[d], 0) * S.qoriq / 100;
+    const tejash = jismoniy - opex, tco1 = jismoniy * 36, tco2 = capex + opex * 36, maks = Math.max(tco1, tco2, 1);
+    document.getElementById("sm-capex").innerHTML = '<span data-tarjimasiz>' + D.pul(capex).replace(/ (so'm|сум)$/, "") + "</span><small>so'm</small>";
+    document.getElementById("sm-capex-izoh").innerHTML = '<span data-tarjimasiz>' + son(jamiSoni) + "</span> <span>obyekt</span> · <span>o'rtacha</span> <span data-tarjimasiz>" + mlnSom(capex / Math.max(1, jamiSoni)) + "</span>";
+    document.getElementById("sm-opex").textContent = mlnSom(opex);
+    document.getElementById("sm-jismoniy").textContent = mlnSom(jismoniy);
+    document.getElementById("sm-tejash").textContent = tejash > 0 ? mlnSom(tejash) : "—";
+    document.getElementById("sm-qoplash").innerHTML = tejash > 0 ? '<span data-tarjimasiz>' + son(capex / tejash, 1) + "</span> <span>oy</span>" : "<span>hisoblanmaydi</span>";
+    document.getElementById("tco-1").style.width = tco1 / maks * 100 + "%"; document.getElementById("tco-2").style.width = tco2 / maks * 100 + "%";
+    document.getElementById("tco-1q").textContent = mlnSom(tco1); document.getElementById("tco-2q").textContent = mlnSom(tco2);
+    const TAVSIYA = {A: ["Qiymati 5 mlrd so'mdan yuqori", "Quyosh elektr stansiyasi, 4 ta kamera, yuz terminali, yong'in va qo'riqlash signalizatsiyasi"],
+      B: ["Qiymati 1–5 mlrd so'm", "2 ta avtonom quyosh-4G kamera va simsiz signalizatsiya"],
+      C: ["Qiymati 1 mlrd so'mgacha", "1 ta avtonom kamera, tutun datchigi va NFC plomba"],
+      S: ["Transport, texnika va uskuna", "Saqlash maydonchasi va GPS-treker"]};
+    document.getElementById("tavsiya-tor").innerHTML = ["A", "B", "C", "S"].map(d =>
+      '<div><span class="ust">' + MKB.himoya(d) + "<span>" + TAVSIYA[d][0] + "</span></span><b>" + TAVSIYA[d][1] + "</b>" +
+      '<span class="narx"><strong data-tarjimasiz>' + mlnSom(darajaMln(d)) + '</strong><span>bir obyekt uchun, o\'rnatish bilan</span> · <span data-tarjimasiz>' + mlnSom(OPEX[d]) + "</span> <span>oyiga</span></span></div>").join("");
+    tarjimaQil(document.getElementById("tavsiya-tor"));
+    document.getElementById("q-pilot").textContent = mlnSom(2 * darajaMln("A") + 5 * darajaMln("B") + 3 * darajaMln("C"));
+    document.querySelectorAll("#sm-soni input").forEach(i => i.addEventListener("change", () => { S.soni[i.dataset.d] = Math.max(0, Math.min(2000, Math.round(+i.value || 0))); smChiz(); }));
+    document.querySelectorAll("#sm-tablar button").forEach(b => b.addEventListener("click", () => { smDaraja = b.dataset.d; smChiz(); }));
+    document.querySelectorAll("#sm-jadval input").forEach(i => i.addEventListener("change", () => { S.narx[i.dataset.k] = Math.max(0, +i.value || 0); smChiz(); }));
+    ["sm-soni", "sm-tablar", "sm-jadval", "sm-post-q", "sm-capex", "sm-capex-izoh", "sm-qoplash"].forEach(id => tarjimaQil(document.getElementById(id)));
+  }
+  ["kurs", "ustama", "qoriq", "post"].forEach(k => document.getElementById("sm-" + k).addEventListener("input", e => { S[k] = +e.target.value; smChiz(); }));
+  document.getElementById("sm-tiklash").addEventListener("click", () => { S = JSON.parse(JSON.stringify(BOSH)); smChiz(); MKB.toast("Boshlang'ich qiymatlar tiklandi"); });
+  document.getElementById("sm-csv").addEventListener("click", () => {
+    const q = [];
+    ["A", "B", "C", "S"].forEach(d => { Object.keys(TARKIB[d]).forEach(k => q.push([d, NOMI[k], TARKIB[d][k], S.narx[k], TARKIB[d][k] * S.narx[k]]));
+      q.push([d, "Bitta obyekt, mln so'm (o'rnatish va soliqlar bilan)", "", "", darajaMln(d).toFixed(2)]); q.push([d, "Obyektlar soni", S.soni[d], "", ""]); });
+    MKB.csv("himoya-smetasi.csv", ["Daraja", "Jihoz", "Soni", "Narxi, $", "Jami, $"], q);
+  });
+
+  function hammasi(){ arxChiz(0); varChiz(0); enChiz(); smChiz(); }
+  hammasi();
+  tarjimaQil();
+  /* ?sahna=7 — taqdimotni kerakli bo'limdan ochish */
+  const faqat = +new URLSearchParams(location.search).get("faqat");      /* ?faqat=7 — bitta bo'limni alohida ko'rsatish */
+  if (faqat && sahnalar[faqat - 1]) sahnalar.forEach((s, i) => { s.hidden = i !== faqat - 1; });
+  const boshSahna = +new URLSearchParams(location.search).get("sahna");
+  if (boshSahna && sahnalar[boshSahna - 1]){
+    document.documentElement.style.scrollBehavior = "auto";
+    sahnalar[boshSahna - 1].scrollIntoView();
+    document.documentElement.style.scrollBehavior = "";
+  }
+});
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Tasdiqlar</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="vazifa">
@@ -17,48 +17,84 @@
     <div class="hs-yorliq"><span>Vazifalar</span></div>
     <div class="hs-qator"><h1>Tasdiqlar</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html">Vazifalar</a><a href="tasdiqlar.html" class="faol">Tasdiqlar</a><a href="bildirishnomalar.html">Bildirishnomalar</a><a href="taqvim.html">Taqvim</a><a href="eslatmalar.html">Eslatmalar</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html">Vazifalar</a><a href="tasdiqlar.html" class="faol">Tasdiqlar</a><a href="bildirishnomalar.html">Bildirishnomalar</a></nav>
   <section class="karta"><div id="t-royxat"></div></section>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
+/* tasdiqlash va rad etish — faqat administrator va filial rahbari; qolgan rollar ro'yxatni faqat ko'radi */
 const TASDIQLAY_OLADI = ["admin", "filial"].includes(MKB.rol());
 document.addEventListener("mkb:tayyor", async () => {
+  const matn = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"})[c]);
+  const hozir = () => new Date().toISOString().slice(0, 16).replace("T", " ");
+  const kim = () => (MKBapi.sessiya() || {}).ism || "";
+
   async function chiz(){
     const r = await MKBapi.royxat("TASDIQLAR");
+    const joy = document.getElementById("t-royxat");
     document.getElementById("hs-meta").textContent =
       r.filter(t => !t.hal).length + " ta kutilmoqda · " + r.length + " ta jami";
-    document.getElementById("t-royxat").innerHTML = r.map(t =>
+    joy.innerHTML =
+      (TASDIQLAY_OLADI ? "" :
+        '<div style="display:flex;align-items:center;gap:9px;padding:4px 0 12px;font-size:12.5px;color:var(--matn-3)">' + ik("info") +
+        "<span>Ro'yxat faqat ko'rish uchun ochiq. Tasdiqlash va rad etish huquqi administrator va filial rahbariga berilgan.</span></div>") +
+      r.map(t =>
       '<div class="qator">' +
         '<span style="width:38px;height:38px;border-radius:14px;background:var(--' + (t.tile === "yashil" ? 'yashil-fon' : 'brend-fon') +
         ');display:grid;place-items:center;color:var(--brend-quyuq)">' + ik("muhr") + '</span>' +
         '<span class="matn"><b>' + t.sarlavha + '</b>' +
-        '<span style="font-size:12.5px;color:var(--matn-3)">' + [t.org, t.sub, t.vaqt].filter(Boolean).join(" · ") + '</span></span>' +
+        '<span style="font-size:12.5px;color:var(--matn-3)">' + [t.org, t.sub, t.vaqt].filter(Boolean).join(" · ") + '</span>' +
+        (t.hal === "rad" && t.radSabab
+          ? '<span style="font-size:12.5px;color:var(--xavf-matn)">Rad sababi: ' + matn(t.radSabab) + '</span>' : '') +
+        '</span>' +
         (t.hal ? '<span class="chip ' + (t.hal === "tasdiqlandi" ? 'chip-yashil">Tasdiqlangan' : 'chip-xavf">Rad etilgan') + '</span>'
-          : '<button type="button" class="tugma tugma-kichik tugma-oq" data-rad="' + t.id + '">Rad</button>' +
-            (TASDIQLAY_OLADI
-              ? '<button type="button" class="tugma tugma-kichik tugma-asosiy" data-ok="' + t.id + '">Tasdiqlash</button>'
-              : '<span class="chip chip-kichik">Tasdiqlash huquqi yo&#39;q</span>')) +
+          : TASDIQLAY_OLADI
+            ? '<button type="button" class="tugma tugma-kichik tugma-oq" data-rad="' + t.id + '">Rad</button>' +
+              '<button type="button" class="tugma tugma-kichik tugma-asosiy" data-ok="' + t.id + '">Tasdiqlash</button>'
+            : '<span class="chip chip-kichik">Kutilmoqda</span>') +
       '</div>').join("");
-    document.querySelectorAll("[data-ok]").forEach(b => b.addEventListener("click", async () => {
-      await MKBapi.yangilash("TASDIQLAR", b.dataset.ok, {hal: "tasdiqlandi"}); MKB.toast("Tasdiqlandi"); chiz();
+    tarjimaQil(joy);
+    if (!TASDIQLAY_OLADI) return;
+    joy.querySelectorAll("[data-ok]").forEach(b => b.addEventListener("click", async () => {
+      b.disabled = true;
+      await MKBapi.yangilash("TASDIQLAR", b.dataset.ok, {hal: "tasdiqlandi", halKim: kim(), halVaqt: hozir()});
+      MKB.toast("Tasdiqlandi"); chiz();
     }));
-    document.querySelectorAll("[data-rad]").forEach(b => b.addEventListener("click", async () => {
-      await MKBapi.yangilash("TASDIQLAR", b.dataset.rad, {hal: "rad"}); MKB.toast("Rad etildi"); chiz();
+    joy.querySelectorAll("[data-rad]").forEach(b => b.addEventListener("click", () => {
+      const t = r.find(v => v.id === b.dataset.rad);
+      MKB.modal("So'rovni rad etish",
+        '<p style="font-size:13px;color:var(--matn-2);margin-bottom:12px">' + (t ? t.sarlavha : "") + '</p>' +
+        '<div class="maydon"><label class="maydon-yorliq">Rad etish sababi <b>*</b></label>' +
+        '<textarea class="kirish-matn" name="sabab" placeholder="So\'rov nima uchun rad etilmoqda"></textarea>' +
+        '<span class="maydon-izoh" data-izoh>Sabab so\'rovchiga ko\'rsatiladi</span></div>',
+        {okMatn: "Rad etish", ok(parda){
+          const q = MKB.forma(parda.querySelector(".modal-tana"), ["sabab"]);
+          if (!q){
+            const maydon = parda.querySelector('[name="sabab"]');
+            maydon.style.borderColor = "var(--xavf)";
+            const izoh = parda.querySelector("[data-izoh]");
+            izoh.classList.add("xato");
+            izoh.textContent = "Rad etish sababi kiritilishi shart";
+            tarjimaQil(izoh);
+            return false;
+          }
+          MKBapi.yangilash("TASDIQLAR", b.dataset.rad, {hal: "rad", radSabab: q.sabab, halKim: kim(), halVaqt: hozir()})
+            .then(() => { MKB.toast("Rad etildi"); chiz(); });
+        }});
     }));
   }
   chiz();

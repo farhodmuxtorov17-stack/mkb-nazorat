@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Sud majlisi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 </head>
 <body data-sahifa="yuridik">
 <div class="qobiq">
@@ -31,8 +31,9 @@
   <dd id="sm-mavzu">—</dd>
   <dt><svg class="ic"><use href="#i-tasdiq"/></svg>Holat</dt>
   <dd id="sm-holat">—</dd>
-</dl>  <div class="maydon" style="margin-top:16px"><label class="maydon-yorliq">Majlis bayonnomasi</label>
-    <textarea class="kirish-matn" id="sm-bayon" placeholder="Majlis natijasi va qarorlar"></textarea></div>
+</dl>  <div class="maydon" id="sm-forma" style="margin-top:16px"><label class="maydon-yorliq">Majlis bayonnomasi <b>*</b></label>
+    <textarea class="kirish-matn" id="sm-bayon" name="bayon" placeholder="Majlis natijasi va qarorlar"></textarea>
+    <span class="maydon-izoh" id="sm-izoh">Bayonnomasiz majlisni yakunlab bo&#39;lmaydi</span></div>
   <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px">
     <a class="tugma tugma-oq" href="sud-kalendar.html">Kalendarga qaytish</a>
     <button class="tugma tugma-asosiy" id="sm-saqla"><svg class="ic"><use href="#i-tasdiq"/></svg>O'tkazildi deb belgilash</button></div>
@@ -40,19 +41,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -70,10 +71,22 @@ document.addEventListener("mkb:tayyor", async () => {
   document.getElementById("sm-holat").innerHTML = m.holat === "rejada"
     ? '<span class="chip chip-brend">Rejada</span>' : '<span class="chip chip-yashil">O\'tkazildi</span>';
   if (m.bayon) document.getElementById("sm-bayon").value = m.bayon;
-  document.getElementById("sm-saqla").addEventListener("click", async () => {
-    await MKBapi.yangilash("SUD_MAJLISLAR", m.id, {
-      holat: "otkazildi", bayon: document.getElementById("sm-bayon").value.trim()});
-    MKB.toast("Majlis yakunlandi — bayonnoma saqlandi");
+  const bayon = document.getElementById("sm-bayon");
+  const saqla = document.getElementById("sm-saqla");
+  if (m.holat !== "rejada") saqla.innerHTML = ik("tasdiq") + "Bayonnomani saqlash";
+  const izoh = document.getElementById("sm-izoh");
+  const xatoBelgi = bor => { izoh.classList.toggle("xato", bor); bayon.style.borderColor = bor ? "var(--xavf)" : ""; };
+  bayon.addEventListener("input", () => xatoBelgi(false));
+  saqla.addEventListener("click", async () => {
+    const q = MKB.forma(document.getElementById("sm-forma"), ["bayon"]);
+    if (!q){
+      xatoBelgi(true);
+      MKB.toast("Majlis bayonnomasi kiritilishi shart", "xavf");
+      return;
+    }
+    saqla.disabled = true;
+    await MKBapi.yangilash("SUD_MAJLISLAR", m.id, {holat: "otkazildi", bayon: q.bayon});
+    MKB.toast("Majlis yakunlandi, bayonnoma saqlandi");
     setTimeout(() => location.href = "sud-kalendar.html", 700);
   });
 });

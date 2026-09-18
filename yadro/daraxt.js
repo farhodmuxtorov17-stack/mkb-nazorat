@@ -1,4 +1,4 @@
-/* Bo'lim -> sahifalar daraxti (yon panel uchun; generator yig'adi) */
+/* Bo'lim -> sahifalar daraxti. MKB_DARAXT — yon paneldagi bandlar; MKB_ICHKI — bo'limga tegishli ichki sahifalar. */
 window.MKB_DARAXT = {
  "panel": [
   {
@@ -12,10 +12,6 @@ window.MKB_DARAXT = {
   {
    "f": "panel-yurist.html",
    "n": "Yuridik panel"
-  },
-  {
-   "f": "korsatkichlar.html",
-   "n": "Ko'rsatkichlar"
   },
   {
    "f": "panel-obyekt.html",
@@ -36,16 +32,74 @@ window.MKB_DARAXT = {
    "n": "Obyektlar reyestri"
   },
   {
+   "f": "xarita.html",
+   "n": "Xaritada"
+  },
+  {
+   "f": "arxiv.html",
+   "n": "Arxiv"
+  },
+  {
    "f": "qabul-boshlash.html",
-   "n": "Qabul: asos"
+   "n": "Balansga qabul"
+  }
+ ],
+ "kn": [
+  {
+   "f": "kirish-nazorati.html",
+   "n": "Nazorat posti"
   },
   {
-   "f": "qabul-hujjatlar.html",
-   "n": "Qabul: hujjatlar"
+   "f": "kirish-voqealari.html",
+   "n": "Voqealar"
   },
   {
-   "f": "qabul-tasdiqlash.html",
-   "n": "Qabul: tasdiqlash"
+   "f": "tashriflar.html",
+   "n": "Tashriflar"
+  },
+  {
+   "f": "ruxsatlar.html",
+   "n": "Ruxsatlar"
+  },
+  {
+   "f": "qurilmalar.html",
+   "n": "Qurilmalar"
+  },
+  {
+   "f": "hodisalar.html",
+   "n": "Hodisalar"
+  }
+ ],
+ "korik": [
+  {
+   "f": "korik-rejasi.html",
+   "n": "Ko&#39;rik rejasi"
+  },
+  {
+   "f": "korik-kechikkan.html",
+   "n": "Kechikkanlar"
+  },
+  {
+   "f": "korik-tarixi.html",
+   "n": "Tarix"
+  },
+  {
+   "f": "korik-tayinlash.html",
+   "n": "Ko&#39;rik tayinlash"
+  }
+ ],
+ "baholash": [
+  {
+   "f": "baholash.html",
+   "n": "Baholash"
+  },
+  {
+   "f": "baholash-buyurtma.html",
+   "n": "Buyurtma"
+  },
+  {
+   "f": "sugurta.html",
+   "n": "Sug&#39;urta polislari"
   }
  ],
  "yuridik": [
@@ -54,154 +108,22 @@ window.MKB_DARAXT = {
    "n": "Undiruv doskasi"
   },
   {
-   "f": "davo-tayyorlash.html",
-   "n": "Da'vo tayyorlash"
-  },
-  {
    "f": "sud-kalendar.html",
    "n": "Sud kalendari"
   },
   {
-   "f": "qaror-kiritish.html",
-   "n": "Qaror kiritish"
-  },
-  {
-   "f": "ijro-hujjatlari.html",
-   "n": "Ijro hujjatlari"
-  },
-  {
-   "f": "ijro-nazorati.html",
-   "n": "Ijro nazorati"
-  },
-  {
-   "f": "advokatlar.html",
-   "n": "Advokatlar"
-  },
-  {
-   "f": "dalolatnomalar.html",
-   "n": "Ish hujjatlari"
-  },
-  {
-   "f": "yuridik-hisobot.html",
-   "n": "Ko'rsatkichlar"
-  }
- ],
- "korik": [
-  {
-   "f": "korik-rejasi.html",
-   "n": "Ko'rik rejasi"
-  },
-  {
-   "f": "korik-kalendar.html",
-   "n": "Ko'rik kalendari"
-  },
-  {
-   "f": "korik-tarixi.html",
-   "n": "Ko'riklar tarixi"
-  },
-  {
-   "f": "korik-kechikkan.html",
-   "n": "Kechikkan ko'riklar"
-  },
-  {
-   "f": "korik-marshrut.html",
-   "n": "Marshrutlar"
-  },
-  {
-   "f": "korik-tayinlash.html",
-   "n": "Ko'rik tayinlash"
-  },
-  {
-   "f": "korik-otkazish.html",
-   "n": "Ko'rik o'tkazish"
-  },
-  {
-   "f": "korik-akti.html",
-   "n": "Dalolatnoma"
-  },
-  {
-   "f": "korik-akti-chop.html",
-   "n": "Dalolatnoma (chop)"
-  }
- ],
- "baholash": [
-  {
-   "f": "baholash.html",
-   "n": "Reyestr"
-  },
-  {
-   "f": "baholash-buyurtma.html",
-   "n": "Buyurtma"
-  },
-  {
-   "f": "baholash-hisobot-kiritish.html",
-   "n": "Hisobot kiritish"
-  },
-  {
-   "f": "baholovchilar.html",
-   "n": "Baholovchilar"
-  },
-  {
-   "f": "baholash-dinamika.html",
-   "n": "Dinamika"
-  }
- ],
- "sugurta": [
-  {
-   "f": "sugurta.html",
-   "n": "Polislar"
-  },
-  {
-   "f": "sugurta-tugayotgan.html",
-   "n": "Tugayotganlar"
-  },
-  {
-   "f": "sugurta-davolar.html",
-   "n": "Da'volar"
-  },
-  {
-   "f": "sugurta-yangilash.html",
-   "n": "Yangilash"
-  }
- ],
- "arxiv": [
-  {
-   "f": "arxiv.html",
-   "n": "Arxiv reyestri"
-  },
-  {
-   "f": "arxiv-yillik.html",
-   "n": "Yillik jamlanma"
+   "f": "davo-tayyorlash.html",
+   "n": "Da&#39;vo tayyorlash"
   }
  ],
  "hisobot": [
   {
    "f": "hisobotlar.html",
-   "n": "Markaz"
+   "n": "Hisobotlar markazi"
   },
   {
    "f": "hisobot-portfel.html",
    "n": "Portfel"
-  },
-  {
-   "f": "hisobot-undiruv.html",
-   "n": "Undiruv"
-  },
-  {
-   "f": "hisobot-hudud.html",
-   "n": "Hudud"
-  },
-  {
-   "f": "hisobot-filial.html",
-   "n": "Filial"
-  },
-  {
-   "f": "hisobot-dinamika.html",
-   "n": "Dinamika"
-  },
-  {
-   "f": "hisobot-top.html",
-   "n": "Top yozuvlar"
   },
   {
    "f": "hisobot-xarajat.html",
@@ -210,20 +132,6 @@ window.MKB_DARAXT = {
   {
    "f": "hisobot-kpi.html",
    "n": "KPI"
-  },
-  {
-   "f": "hisobot-eksport.html",
-   "n": "Eksport"
-  }
- ],
- "xarita": [
-  {
-   "f": "xarita.html",
-   "n": "Hududiy"
-  },
-  {
-   "f": "xarita-obyektlar.html",
-   "n": "Obyektlar"
   }
  ],
  "vazifa": [
@@ -238,42 +146,12 @@ window.MKB_DARAXT = {
   {
    "f": "bildirishnomalar.html",
    "n": "Bildirishnomalar"
-  },
-  {
-   "f": "taqvim.html",
-   "n": "Taqvim"
-  },
-  {
-   "f": "eslatmalar.html",
-   "n": "Eslatmalar"
-  }
- ],
- "hujjat": [
-  {
-   "f": "hujjatlar.html",
-   "n": "Markaz"
-  },
-  {
-   "f": "hujjat-shablonlar.html",
-   "n": "Shablonlar"
-  },
-  {
-   "f": "hujjat-yuklash.html",
-   "n": "Yuklash"
-  },
-  {
-   "f": "hujjat-imzolash.html",
-   "n": "Imzolash"
   }
  ],
  "sozlama": [
   {
    "f": "sozlamalar.html",
-   "n": "Sozlamalar"
-  },
-  {
-   "f": "sozlama-xavfsizlik.html",
-   "n": "Xavfsizlik"
+   "n": "Profil"
   },
   {
    "f": "foydalanuvchilar.html",
@@ -288,78 +166,70 @@ window.MKB_DARAXT = {
    "n": "Filiallar"
   },
   {
-   "f": "malumotnomalar.html",
-   "n": "Ma'lumotnomalar"
+   "f": "integratsiyalar.html",
+   "n": "Integratsiyalar"
   },
   {
    "f": "amallar-tarixi.html",
    "n": "Amallar tarixi"
   },
   {
-   "f": "integratsiyalar.html",
-   "n": "Integratsiyalar"
-  },
-  {
-   "f": "til-sozlamalari.html",
-   "n": "Til"
-  },
-  {
-   "f": "tizim-haqida.html",
-   "n": "Tizim haqida"
-  },
-  {
    "f": "qollanma.html",
-   "n": "Ish qo'llanmasi"
+   "n": "Qo&#39;llanma"
   }
+ ]
+};
+window.MKB_ICHKI = {
+ "aktivlar": [
+  "obyekt.html",
+  "obyekt-moliya.html",
+  "obyekt-hujjatlar.html",
+  "obyekt-koriklar.html",
+  "obyekt-xarajatlar.html",
+  "obyekt-3d.html",
+  "obyekt-qavat.html",
+  "obyekt-tarix.html",
+  "obyekt-pasport.html",
+  "obyekt-tahrir.html",
+  "qabul-hujjatlar.html",
+  "qabul-tasdiqlash.html",
+  "arxiv-obyekt.html"
  ],
  "kn": [
-  {
-   "f": "kirish-nazorati.html",
-   "n": "Kirish nazorati posti"
-  },
-  {
-   "f": "kuzatuv.html",
-   "n": "Elektron nazorat markazi"
-  },
-  {
-   "f": "kirish-nuqtalari.html",
-   "n": "Kirish nuqtalari"
-  },
-  {
-   "f": "kirish-voqealari.html",
-   "n": "Kirish voqealari"
-  },
-  {
-   "f": "kirish-soravi.html",
-   "n": "Kirish ruxsatnomasi"
-  },
-  {
-   "f": "ruxsatlar.html",
-   "n": "Ruxsatlar reyestri"
-  },
-  {
-   "f": "tashriflar.html",
-   "n": "Tashriflar"
-  },
-  {
-   "f": "masofaviy-korik.html",
-   "n": "Masofaviy ko'rik"
-  },
-  {
-   "f": "qurilmalar.html",
-   "n": "Nazorat qurilmalari"
-  },
-  {
-   "f": "qurilma-ornatish.html",
-   "n": "Qurilma o'rnatish"
-  },
-  {
-   "f": "hodisalar.html",
-   "n": "Hodisalar doskasi"
-  },
-  {
-   "f": "kirish-hisoboti.html",
-   "n": "Kirish va nazorat hisoboti"
-  }
+  "kirish-nuqtalari.html",
+  "kirish-nuqtasi.html",
+  "kirish-voqea.html",
+  "kirish-soravi.html",
+  "tashrif-jonli.html",
+  "tashrif-chiqish.html",
+  "masofaviy-korik.html",
+  "qurilma.html",
+  "qurilma-ornatish.html",
+  "servis-topshirigi.html",
+  "hodisa.html"
+ ],
+ "korik": [
+  "korik-otkazish.html",
+  "korik-akti.html"
+ ],
+ "baholash": [
+  "baholash-hisobot-kiritish.html",
+  "baholash-hisobot.html",
+  "sugurta-polis.html",
+  "sugurta-yangilash.html"
+ ],
+ "yuridik": [
+  "ish.html",
+  "sud-majlis.html",
+  "qaror-kiritish.html"
+ ],
+ "hisobot": [
+  "hisobot-undiruv.html",
+  "hisobot-hudud.html",
+  "hisobot-eksport.html",
+  "kirish-hisoboti.html"
+ ],
+ "sozlama": [
+  "foydalanuvchi.html"
  ]
 };

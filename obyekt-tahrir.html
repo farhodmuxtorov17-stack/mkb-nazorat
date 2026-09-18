@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Yozuvni tahrirlash</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="aktivlar">
@@ -47,19 +47,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -77,7 +77,7 @@ document.addEventListener("mkb:tayyor", async () => {
     .replace('class="halqa', 'class="halqa katta');
   document.getElementById("fs-halqa").title = "Nazorat indeksi: " + fsIndeks.darajaNomi;
   /* tab havolalariga ?id= ulab qo'yamiz */
-  document.querySelectorAll(".bolim-tablar a").forEach(a => {
+  document.querySelectorAll(".bolim-tablar a, [data-id-qoshib]").forEach(a => {
     if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
   });
   document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
@@ -94,12 +94,26 @@ document.addEventListener("mkb:tayyor", async () => {
     const b = MKB_DATA.BOSQICHLAR.find(v => v.kalit === q.bosqich);
     const tarix = (x.ish.tarix || []).concat(q.izoh
       ? [[new Date().toLocaleDateString("uz"), "Yozuv yangilandi", q.izoh]] : []);
-    await MKBapi.yangilash("YOZUVLAR", x.id, {
+    /* bosqichdan kelib chiqadigan maydonlar (chip, holat, qabul sanasi) birga yangilanadi */
+    const HOLAT = {
+      ogohlantirish: {nom: "Ta'minotda", rang: "#7BAEFC"}, davo: {nom: "Ta'minotda", rang: "#7BAEFC"},
+      sud: {nom: "Ta'minotda", rang: "#7BAEFC"},
+      qaror: {nom: "Musodara jarayonida", rang: "#E8763C"}, ijro: {nom: "Musodara jarayonida", rang: "#E8763C"},
+      musodara: {nom: "Musodara qilingan", rang: "#0E9F6E"}, balans: {nom: "Balansda saqlanmoqda", rang: "#059669"},
+    };
+    const patch = {
       ish: Object.assign({}, x.ish, {bosqich: q.bosqich, masul: q.masul,
         muddat: q.muddat, shoshilinch: !!q.shoshilinch, tarix}),
       bosqichNomi: b ? b.nom : x.bosqichNomi,
-    });
-    MKB.toast("Yozuv saqlandi — " + x.id);
+      bosqichChip: b ? b.chip : x.bosqichChip,
+      holat: HOLAT[q.bosqich] || x.holat,
+    };
+    if (["musodara", "balans"].includes(q.bosqich) && !x.mulk.qabul){
+      const d = new Date(), OY = ["yan", "fev", "mar", "apr", "may", "iyn", "iyl", "avg", "sen", "okt", "noy", "dek"];
+      patch.mulk = Object.assign({}, x.mulk, {qabul: d.getDate() + "-" + OY[d.getMonth()] + ", " + d.getFullYear()});
+    }
+    await MKBapi.yangilash("YOZUVLAR", x.id, patch);
+    MKB.toast(x.id + " raqamli yozuv saqlandi");
     setTimeout(() => location.href = "obyekt.html?id=" + encodeURIComponent(x.id), 600);
   });
 

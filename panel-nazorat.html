@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ko&#39;rik inspektori paneli</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="panel">
@@ -34,24 +34,24 @@
   </section>
   <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="panel-tor">
     <section class="karta"><div class="karta-bosh"><h2>Ko'rik rejasi</h2><a class="karta-havola" href="korik-rejasi.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="n-koriklar"></div></section>
-    <section class="karta"><div class="karta-bosh"><h2>So'nggi hodisalar</h2></div><div id="n-hodisalar"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2>So'nggi hodisalar</h2><a class="karta-havola" href="hodisalar.html">Barchasi<svg class="ic"><use href="#i-ong"/></svg></a></div><div id="n-hodisalar"></div></section>
   </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 
 function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
@@ -86,9 +86,10 @@ document.addEventListener("mkb:tayyor", async () => {
   const D = MKB_DATA;
   const k = await MKBapi.royxat("KORIKLAR");
   const s = await MKBapi.royxat("SUGURTALAR");
+  const hodisalar = await MKBapi.royxat("HODISALAR");
   document.getElementById("n-reja").textContent = k.filter(x => x.holat === "rejada").length;
   document.getElementById("n-kech").textContent = k.filter(x => x.holat === "kechikkan").length;
-  document.getElementById("n-hodisa").textContent = D.HODISALAR.filter(h => h.ustun !== "yopildi").length;
+  document.getElementById("n-hodisa").textContent = hodisalar.filter(h => h.ustun !== "yopildi").length;
   document.getElementById("n-sugurta").textContent = s.filter(v => v.holat !== "amalda").length;
   document.getElementById("n-koriklar").innerHTML = k.filter(x => x.holat === "rejada").slice(0, 6).map(x => {
     const o = D.OBYEKT_INDEKS[x.obyektId] || {};
@@ -98,9 +99,9 @@ document.addEventListener("mkb:tayyor", async () => {
       '<span>' + x.id + ' · ' + (x.tur || "Rejali") + ' · ' + x.inspektor + '</span></span>' +
       '<span class="chip chip-brend">' + x.sana + '</span></a>';
   }).join("");
-  document.getElementById("n-hodisalar").innerHTML = D.HODISALAR.slice(0, 6).map(h =>
+  document.getElementById("n-hodisalar").innerHTML = hodisalar.slice(0, 6).map(h =>
     '<div class="qator"><span class="belgi ' +
-    (h.jiddiylik === "yuqori" ? "pushti" : h.jiddiylik === "o&#39;rta" ? "lavanda" : "") + '">' + ik("xavf") + '</span>' +
+    (h.jiddiylik === "yuqori" ? "pushti" : h.jiddiylik === "o'rta" ? "lavanda" : "") + '">' + ik("xavf") + '</span>' +
     '<span class="matn"><b>' + h.hodisa + '</b><span>' + h.obyektId + ' · ' + h.vaqt + '</span></span></div>').join("");
 });
 </script>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Undiruv hisoboti</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="hisobot">
@@ -15,9 +15,9 @@
 <main class="kontent">
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><span>Hisobotlar</span></div>
-    <div class="hs-qator"><h1>Undiruv hisoboti</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar"><button type="button" class="tugma tugma-oq" onclick="window.print()"><svg class="ic"><use href="#i-chop"/></svg>Chop</button><a class="tugma tugma-asosiy" href="hisobot-eksport.html"><svg class="ic"><use href="#i-yuklab"/></svg>Eksport</a></div></div>
+    <div class="hs-qator"><h1>Undiruv hisoboti</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar"><button type="button" class="tugma tugma-oq" onclick="window.print()"><svg class="ic"><use href="#i-chop"/></svg>Chop</button><a class="tugma tugma-asosiy" href="hisobot-eksport.html?tur=undiruv"><svg class="ic"><use href="#i-yuklab"/></svg>Eksport</a></div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Portfel</a><a href="hisobot-undiruv.html" class="faol">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-hudud.html">Hudud</a><a href="hisobot-kpi.html">KPI</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Portfel</a><a href="hisobot-undiruv.html" class="faol">Undiruv</a><a href="hisobot-hudud.html">Hudud</a><a href="hisobot-xarajat.html">Xarajat</a><a href="hisobot-kpi.html">KPI</a><a href="kirish-hisoboti.html">Kirish nazorati</a></nav>
   <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
     <div class="metrika"><span class="m-yorliq">Oylik undiruv</span>
       <span class="m-qiymat"><span id="hu-1">—</span></span>
@@ -37,19 +37,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 
 function gorizontalBar(joy, juftlar, rang){
@@ -68,6 +68,16 @@ function ustunBar(joy, yorliqlar, qiymatlar){
 }
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
+  if (!yoz.some(y => !["musodara", "balans"].includes(y.ish.bosqich))){
+    /* reyestrda faqat balansdagi mulk: undiruv ko'rsatkichlari o'rniga izoh */
+    document.querySelector(".metrika-qator").hidden = true;
+    document.getElementById("hs-meta").textContent = "";
+    const karta = document.getElementById("hu-grafik").closest(".karta");
+    karta.innerHTML = '<div class="bosh-holat"><svg class="ic"><use href="#i-yuridik"/></svg>' +
+      "<b>Undiruv bosqichida ish yo'q</b><span>Reyestrdagi barcha obyektlar bank balansiga qabul qilingan. Ular bo'yicha ma'lumot Portfel va KPI hisobotlarida.</span></div>";
+    tarjimaQil(karta);
+    return;
+  }
   const s = MKB_DATA.UNDIRUV_SERIYA.oylik;
   document.getElementById("hu-1").innerHTML = MKB_DATA.PORTFEL.oylikUndiruvMlrd + "<small>mlrd</small>";
   document.getElementById("hu-2").innerHTML =

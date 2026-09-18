@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Hisobot kiritish</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="baholash">
@@ -17,13 +17,14 @@
     <div class="hs-yorliq"><span>Baholash</span></div>
     <div class="hs-qator"><h1>Hisobot kiritish</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Reyestr</a><a href="baholash-buyurtma.html">Buyurtma</a><a href="baholash-hisobot-kiritish.html" class="faol">Hisobot kiritish</a><a href="baholovchilar.html">Baholovchilar</a><a href="baholash-dinamika.html">Dinamika</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Baholash</a><a href="baholash-buyurtma.html">Buyurtma</a><a href="baholash-hisobot-kiritish.html" class="faol">Hisobot kiritish</a><a href="sugurta.html">Sug&#39;urta polislari</a><a href="sugurta-yangilash.html">Polisni yangilash</a></nav>
   <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Hisobot natijasini kiritish</h2></div>
   <form id="bk-forma" class="forma-tor">
     <div class="maydon keng"><label class="maydon-yorliq">Buyurtma / hisobot <b>*</b></label>
       <div class="kirish"><select name="id" id="bk-buyurtma"></select></div></div>
     <div class="maydon"><label class="maydon-yorliq">Yangi qiymat, mln so'm <b>*</b></label>
-      <div class="kirish"><input name="qiymat" type="number" step="1" placeholder="0"></div></div>
+      <div class="kirish"><input name="qiymat" type="number" step="1" min="1" placeholder="0"></div>
+      <span class="maydon-izoh" id="bk-avvalgi"></span></div>
     <div class="maydon"><label class="maydon-yorliq">Hisobot sanasi <b>*</b></label>
       <div class="kirish"><input name="sana" placeholder="kk.oo.yyyy"></div></div>
     <div class="maydon keng"><label class="maydon-yorliq">Usul</label>
@@ -35,34 +36,96 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const r = await MKBapi.royxat("BAHOLASHLAR");
-  document.getElementById("bk-buyurtma").innerHTML = r.map(b => {
-    const y = MKB_DATA.OBYEKT_INDEKS[b.obyektId] || {};
-    return '<option value="' + b.id + '">' + b.id + " — " + (y.qisqa || b.obyektId) + '</option>';
+  const yoz = await MKBapi.royxat("YOZUVLAR");
+  const forma = document.getElementById("bk-forma");
+  /* hisobot faqat ochiq buyurtmaga kiritiladi */
+  const ochiq = r.filter(b => b.holat === "jarayonda" || !b.qiymat);
+  const obyekt = b => yoz.find(y => y.id === b.obyektId) || null;
+  if (!ochiq.length){
+    forma.innerHTML = '<div class="bosh-holat keng">' + ik("baholash") + "<b>Ochiq buyurtma yo'q</b>" +
+      "<span>Hisobot kiritish uchun avval baholash buyurtmasini yarating</span>" +
+      '<a class="tugma tugma-asosiy" href="baholash-buyurtma.html" style="margin-top:12px">Buyurtma berish</a></div>';
+    tarjimaQil(forma);
+    return;
+  }
+  const oldindan = new URLSearchParams(location.search).get("id");
+  const tanlov = document.getElementById("bk-buyurtma");
+  tanlov.innerHTML = ochiq.map(b => {
+    const y = obyekt(b);
+    return '<option value="' + b.id + '"' + (b.id === oldindan ? " selected" : "") + '>' +
+      b.id + " — " + (y ? y.mulk.qisqa : b.obyektId) + " · " + b.baholovchi + '</option>';
   }).join("");
-  document.getElementById("bk-forma").addEventListener("submit", async e => {
+  const bugun = new Date();
+  forma.elements.sana.value = String(bugun.getDate()).padStart(2, "0") + "." +
+    String(bugun.getMonth() + 1).padStart(2, "0") + "." + bugun.getFullYear();
+
+  /* avvalgi qiymat buyurtmadan emas, obyektning joriy bahosidan olinadi */
+  const izoh = document.getElementById("bk-avvalgi");
+  function avvalgiKorsat(){
+    const b = ochiq.find(v => v.id === tanlov.value);
+    const y = b ? obyekt(b) : null;
+    izoh.textContent = y && y.mulk.baho
+      ? "Avvalgi qiymat: " + MKB.fmt(y.mulk.baho) + " mln so'm (" + (y.mulk.bahoSana || "—") + ")"
+      : "Avvalgi qiymat: baholanmagan";
+    tarjimaQil(izoh);
+  }
+  tanlov.addEventListener("change", avvalgiKorsat);
+  avvalgiKorsat();
+
+  forma.addEventListener("submit", async e => {
     e.preventDefault();
     const q = MKB.forma(e.target, ["id", "qiymat", "sana"]);
     if (!q) return;
-    const eski = r.find(b => b.id === q.id);
+    const xato = (nom, matn) => {
+      const m = forma.elements[nom];
+      (m.closest(".kirish") || m).classList.add("xato"); m.focus();
+      MKB.toast(matn, "xavf");
+    };
+    const qiymat = +q.qiymat;
+    if (!(qiymat > 0)){ xato("qiymat", "Qiymat musbat son bo'lishi kerak"); return; }
+    const s = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(q.sana);
+    const sanaD = s ? new Date(+s[3], +s[2] - 1, +s[1]) : null;
+    if (!sanaD || sanaD.getMonth() !== +s[2] - 1 || sanaD > new Date()){
+      xato("sana", "Sana kk.oo.yyyy ko'rinishida va bugundan kech bo'lmasligi kerak"); return;
+    }
+    const eski = ochiq.find(b => b.id === q.id);
+    const y = obyekt(eski);
+    const avvalgi = y ? +y.mulk.baho || 0 : 0;
+    const keyingi = s[1] + "." + s[2] + "." + (+s[3] + 1);
+    /* obyektning oldingi hisobotlari eskirgan deb belgilanadi */
+    for (const b of r.filter(v => v.obyektId === eski.obyektId && v.id !== eski.id && ["dolzarb", "tugaydi"].includes(v.holat)))
+      await MKBapi.yangilash("BAHOLASHLAR", b.id, {holat: "eskirgan"});
     await MKBapi.yangilash("BAHOLASHLAR", q.id, {
-      avvalgi: eski.qiymat || eski.avvalgi, qiymat: +q.qiymat,
-      sana: q.sana, usul: q.usul, holat: "yakunlangan"});
+      avvalgi, qiymat, sana: q.sana, usul: q.usul, sabab: eski.sabab || eski.usul,
+      keyingi, holat: "dolzarb"});
+    /* yangi baho obyekt yozuviga ham yoziladi: kartochka, reyestr va nazorat indeksi shu qiymatdan o'qiydi */
+    if (y){
+      const qarz = +y.qarz.jami || 0;
+      await MKBapi.yangilash("YOZUVLAR", y.id, {
+        mulk: Object.assign({}, y.mulk, {baho: qiymat, bahoSana: q.sana}),
+        bahoMatn: MKB.pul(qiymat),
+        qoplash: qarz > 0 ? Math.round(qiymat / qarz * 100) : 0,
+        ochiqQoldiq: +Math.max(0, qarz - qiymat).toFixed(1),
+      });
+      const ind = MKB_DATA.OBYEKT_INDEKS[y.id];
+      if (ind) ind.baho = qiymat;
+    }
     MKB.toast("Hisobot saqlandi");
     setTimeout(() => location.href = "baholash-hisobot.html?id=" + encodeURIComponent(q.id), 700);
   });

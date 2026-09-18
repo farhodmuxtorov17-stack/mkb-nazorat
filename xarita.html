@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Hududiy xarita</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 <script src="assets/vendor/leaflet/leaflet.js"></script>
 <style>
@@ -21,7 +21,7 @@
 </style>
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
-<body data-sahifa="xarita">
+<body data-sahifa="aktivlar">
 <div class="qobiq">
 <nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
 <div class="sahna">
@@ -31,7 +31,7 @@
     <div class="hs-yorliq"><span>Hududiy xarita</span></div>
     <div class="hs-qator"><h1>Hududiy xarita</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar"><a class="tugma tugma-oq" href="hisobot-hudud.html"><svg class="ic"><use href="#i-hisobot"/></svg>Hududiy hisobot</a></div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="xarita.html" class="faol">Hududiy</a><a href="xarita-obyektlar.html">Obyektlar</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="obyektlar.html">Reyestr</a><a href="xarita.html" class="faol">Xaritada</a><a href="arxiv.html">Arxiv</a></nav>
   <div class="xarita-karta">
     <div id="leaflet-joy"></div>
     <aside class="xarita-yon"><h3>Hududlar</h3><div id="hudud-royxat"></div>
@@ -41,50 +41,133 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
-document.addEventListener("mkb:tayyor", () => {
-  const HUDUD_MARKAZ = {"Toshkent shahri": [41.31, 69.28], "Toshkent viloyati": [41.0, 69.6],
-    "Samarqand": [39.65, 66.96], "Namangan": [41.0, 71.67], "Buxoro": [39.77, 64.42],
-    "Farg'ona": [40.38, 71.78], "Andijon": [40.78, 72.34], "Xorazm": [41.55, 60.63]};
+document.addEventListener("mkb:tayyor", async () => {
+  /* Hudud kaliti -> markaz. Kalit nomning har qanday yozilishidan olinadi:
+     "Samarqand viloyati" / "Samarqand", "Toshkent sh." / "Toshkent shahri", "Qoraqalpog'iston R." */
+  const HUDUD_MARKAZ = {
+    "toshkent-sh": [41.31, 69.28, 11], "toshkent-vil": [41.05, 69.65, 9],
+    "samarqand": [39.65, 66.96, 9], "fargona": [40.38, 71.78, 9], "buxoro": [39.77, 64.42, 9],
+    "qashqadaryo": [38.86, 65.79, 9], "navoiy": [40.10, 65.37, 9], "andijon": [40.78, 72.34, 9],
+    "namangan": [41.00, 71.67, 9], "xorazm": [41.55, 60.63, 9], "jizzax": [40.12, 67.84, 9],
+    "surxondaryo": [37.94, 67.57, 9], "qoraqalpogiston": [42.46, 59.61, 8], "sirdaryo": [40.49, 68.78, 9]};
+  const TOSHKENT_VIL = /^(nurafshon|bo.?stonliq|chirchiq|angren|olmaliq|bekobod|parkent|qibray|zangiota|yangiyo.?l)/;
+  const TOSHKENT_SH = /^(yunusobod|chilonzor|mirobod|yakkasaroy|shayxontohur|sergeli|yashnobod|olmazor|mirzo|uchtepa|bektemir|yangihayot)/;
+  function hududKalit(nom){
+    const s = String(nom || "").toLowerCase().replace(/[’ʼʻ`´]/g, "'").trim();
+    if (/^toshkent/.test(s)) return /vil/.test(s) ? "toshkent-vil" : "toshkent-sh";
+    if (TOSHKENT_VIL.test(s)) return "toshkent-vil";
+    if (TOSHKENT_SH.test(s)) return "toshkent-sh";
+    const k = s.split(/[\s,.]/)[0].replace(/'/g, "");
+    return HUDUD_MARKAZ[k] ? k : null;
+  }
+  function engYaqin(lat, lng){
+    let eng = null, m = Infinity;
+    Object.keys(HUDUD_MARKAZ).forEach(k => {
+      const d = Math.pow(HUDUD_MARKAZ[k][0] - lat, 2) + Math.pow(HUDUD_MARKAZ[k][1] - lng, 2);
+      if (d < m){ m = d; eng = k; }
+    });
+    return eng;
+  }
+  /* koordinatasi yo'q obyekt hudud markazi atrofida, kodiga bog'liq doimiy siljish bilan joylashadi */
+  function taxminiyJoy(id, kalit){
+    let h = 0;
+    for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+    const m = HUDUD_MARKAZ[kalit], yoyilma = kalit === "toshkent-sh" ? 0.07 : 0.28;
+    const burchak = (h % 360) * Math.PI / 180, masofa = (0.25 + ((h >>> 9) % 75) / 100) * yoyilma;
+    return [m[0] + Math.sin(burchak) * masofa, m[1] + Math.cos(burchak) * masofa * 1.3];
+  }
+
   const xarita = L.map("leaflet-joy", {zoomControl: true, attributionControl: true}).setView([41.2, 66.9], 6);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(xarita);
-  const guruhlar = {};
+
+  const yozuvlar = await MKBapi.royxat("YOZUVLAR");
+  const yozuvIndeks = {};
+  yozuvlar.forEach(y => { yozuvIndeks[y.id] = y; });
+  const mahalliy = MKB_DATA.MANBA === "mahalliy";
+
+  /* nuqtalar: geo-namoyish nuqtalari + reyestrdagi qolgan obyektlar */
+  const nuqtalar = [];
+  const xaritada = {};
   (MKB_DATA.XARITA_NUQTALARI || []).forEach(n => {
-    (guruhlar[n.guruh] = guruhlar[n.guruh] || []).push(n);
-    L.circleMarker([n.lat, n.lng], {radius: 7, color: "#0B0B0A", weight: 2,
-      fillColor: "#C5F2B4", fillOpacity: .95})
-      .addTo(xarita)
-      .bindPopup("<b>" + n.nom + "</b><br>" + n.tur + " · " + n.holat);
+    const y = n.kod ? yozuvIndeks[n.kod] : null;
+    if (mahalliy && !y) return;
+    if (n.kod) xaritada[n.kod] = true;
+    nuqtalar.push({nom: n.nom, tur: n.tur, holat: n.holat || (y && y.holat && y.holat.nom) || "", lat: n.lat, lng: n.lng,
+      id: y ? y.id : null,
+      hudud: (y && hududKalit(y.mulk.hudud)) || hududKalit(n.guruh) || engYaqin(n.lat, n.lng)});
   });
-  const maks = Math.max(...MKB_DATA.HUDUDLAR.map(h => MKB.sonQiymat(h[1])));
-  document.getElementById("hudud-royxat").innerHTML = MKB_DATA.HUDUDLAR.map(h =>
-    '<button type="button" class="hudud-band" data-hudud="' + h[0] + '">' +
+  yozuvlar.forEach(y => {
+    if (xaritada[y.id]) return;
+    const kalit = hududKalit(y.mulk.hudud) || hududKalit(y.mulk.hududToliq);
+    if (!kalit) return;
+    const joy = taxminiyJoy(y.id, kalit);
+    nuqtalar.push({nom: y.mulk.qisqa || y.mulk.nom, tur: y.mulk.tur, holat: (y.holat && y.holat.nom) || "",
+      lat: joy[0], lng: joy[1], id: y.id, hudud: kalit, taxminiy: true});
+  });
+
+  const matn = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"})[c]);
+  const qatlam = L.layerGroup().addTo(xarita);
+  nuqtalar.forEach(n => {
+    n.belgi = L.circleMarker([n.lat, n.lng], {radius: 7, color: "#0B0B0A", weight: 2,
+      fillColor: n.id ? "#C5F2B4" : "#FFFFFF", fillOpacity: .95})
+      .bindPopup("<b>" + matn(n.nom) + "</b><br>" + matn([n.tur, n.holat].filter(Boolean).join(" · ")) +
+        (n.id ? '<br><span class="kod-mono">' + matn(n.id) + "</span>" +
+          (n.taxminiy ? " · joylashuv taxminiy" : "") +
+          '<br><a href="obyekt.html?id=' + encodeURIComponent(n.id) + '" style="font-weight:600;color:var(--brend-quyuq)">Obyekt kartasini ochish</a>' : ""));
+  });
+
+  function korsat(kalit){
+    qatlam.clearLayers();
+    const tanlangan = nuqtalar.filter(n => !kalit || n.hudud === kalit);
+    tanlangan.forEach(n => qatlam.addLayer(n.belgi));
+    document.getElementById("hs-meta").textContent = "Xaritada " + tanlangan.length + " ta obyekt";
+    tarjimaQil(document.getElementById("hs-meta"));
+    const m = kalit ? HUDUD_MARKAZ[kalit] : null;
+    if (m) xarita.flyTo([m[0], m[1]], m[2], {duration: .6});
+    else xarita.flyTo([41.2, 66.9], 6, {duration: .6});
+  }
+
+  const royxat = document.getElementById("hudud-royxat");
+  const maks = Math.max(...MKB_DATA.HUDUDLAR.map(h => MKB.sonQiymat(h[1])), 1);
+  royxat.innerHTML =
+    '<button type="button" class="hudud-band faol" data-hudud="">' +
+    '<span style="width:8px;height:8px;border-radius:99px;background:var(--siyoh)"></span>Barcha hududlar</button>' +
+    MKB_DATA.HUDUDLAR.map(h =>
+    '<button type="button" class="hudud-band" data-hudud="' + (hududKalit(h[0]) || "") + '" data-nom="' + matn(h[0]) + '">' +
     '<span style="width:8px;height:8px;border-radius:99px;background:var(--siyoh);opacity:' + (0.3 + MKB.sonQiymat(h[1]) / maks * 0.7) + '"></span>' +
     h[0] + "<b>" + h[1] + "</b></button>").join("");
-  document.getElementById("hudud-royxat").addEventListener("click", e => {
+  tarjimaQil(royxat);
+  royxat.addEventListener("click", e => {
     const b = e.target.closest("[data-hudud]");
     if (!b) return;
-    document.querySelectorAll(".hudud-band").forEach(x => x.classList.toggle("faol", x === b));
-    const m = HUDUD_MARKAZ[b.dataset.hudud];
-    if (m) xarita.flyTo(m, 9, {duration: .6});
+    /* faol hudud qayta bosilsa — umumiy ko'rinishga qaytadi */
+    const nishon = b.classList.contains("faol") && b.dataset.hudud ? royxat.querySelector('[data-hudud=""]') : b;
+    royxat.querySelectorAll(".hudud-band").forEach(x => x.classList.toggle("faol", x === nishon));
+    xarita.closePopup();
+    korsat(nishon.dataset.hudud || null);
   });
+  qatlam.clearLayers();
+  nuqtalar.forEach(n => qatlam.addLayer(n.belgi));
+  document.getElementById("hs-meta").textContent = "Xaritada " + nuqtalar.length + " ta obyekt";
+
   document.getElementById("xj-jami").textContent =
     MKB.fmt(MKB_DATA.HUDUDLAR.reduce((a, h) => a + MKB.sonQiymat(h[1]), 0));
-  document.getElementById("xj-delta").textContent = MKB_DATA.PORTFEL.delta && MKB_DATA.PORTFEL.delta.hudud || "↑ 5,4%";
+  document.getElementById("xj-delta").textContent = mahalliy ? "" : (MKB_DATA.PORTFEL.delta && MKB_DATA.PORTFEL.delta.hudud || "↑ 5,4%");
 });
 </script>
 </body>

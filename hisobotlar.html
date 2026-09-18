@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Hisobotlar markazi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="hisobot">
@@ -17,37 +17,41 @@
     <div class="hs-yorliq"><span>Hisobotlar</span></div>
     <div class="hs-qator"><h1>Hisobotlar markazi</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html" class="faol">Markaz</a><a href="hisobot-portfel.html">Portfel</a><a href="hisobot-undiruv.html">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-hudud.html">Hudud</a><a href="hisobot-kpi.html">KPI</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html" class="faol">Markaz</a><a href="hisobot-portfel.html">Portfel</a><a href="hisobot-undiruv.html">Undiruv</a><a href="hisobot-hudud.html">Hudud</a><a href="hisobot-xarajat.html">Xarajat</a><a href="hisobot-kpi.html">KPI</a><a href="kirish-hisoboti.html">Kirish nazorati</a></nav>
   <section class="karta"><div class="karta-bosh"><h2>Tayyor hisobotlar</h2><span class="soni" id="hm-soni"></span><button type="button" class="tugma tugma-kichik tugma-asosiy" id="hm-yangi" style="margin-left:auto"><svg class="ic"><use href="#i-qoshish"/></svg>Hisobot shakllantirish</button></div><div id="hm-royxat"></div></section>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", () => {
-  const qoshimcha = JSON.parse(localStorage.getItem("mkb4-hisobotlar") || "[]");
-  const r = qoshimcha.concat(MKB_DATA.HISOBOTLAR);
-  document.getElementById("hm-soni").textContent = r.length + " ta";
-  document.getElementById("hm-royxat").innerHTML = r.map(h =>
-    '<div class="qator">' +
-      '<span style="width:40px;height:40px;border-radius:11px;background:var(--varaq-2);display:grid;place-items:center;font:700 10px var(--shrift);color:var(--qalam)">' + h.format + '</span>' +
-      '<span style="flex:1;min-width:0"><b style="display:block;font-size:13.5px">' + h.nom + '</b>' +
-      '<span style="font-size:12.5px;color:var(--matn-3)">' + h.sub + '</span></span>' +
-      '<span style="font-size:12.5px;color:var(--matn-3);text-align:right">' + h.sana + '<br>' + (h.hajm || "") + '</span>' +
-      '<button type="button" class="tugma tugma-kichik tugma-oq" data-toast="Hisobot yuklab olinmoqda: ' + h.nom + '">' + ik("yuklab") + 'Yuklab olish</button>' +
-    '</div>').join("");
+  const saqlangan = () => { try{ return JSON.parse(localStorage.getItem("mkb4-hisobotlar") || "[]"); }catch(_){ return []; } };
+  function chiz(){
+    const r = saqlangan().concat(MKB_DATA.HISOBOTLAR);
+    document.getElementById("hm-soni").textContent = r.length + " ta";
+    document.getElementById("hm-royxat").innerHTML = r.map(h =>
+      '<div class="qator">' +
+        '<span style="width:40px;height:40px;border-radius:11px;background:var(--varaq-2);display:grid;place-items:center;font:700 10px var(--shrift);color:var(--qalam)">' + h.format + '</span>' +
+        '<span style="flex:1;min-width:0"><b style="display:block;font-size:13.5px">' + h.nom + '</b>' +
+        '<span style="font-size:12.5px;color:var(--matn-3)">' + h.sub + '</span></span>' +
+        '<span style="font-size:12.5px;color:var(--matn-3);text-align:right">' + h.sana + '<br>' + (h.hajm || "") + '</span>' +
+        '<button type="button" class="tugma tugma-kichik tugma-oq" data-toast="Hisobot yuklab olinmoqda: ' + h.nom + '">' + ik("yuklab") + 'Yuklab olish</button>' +
+      '</div>').join("");
+    tarjimaQil(document.getElementById("hm-royxat"));
+  }
+  chiz();
   document.getElementById("hm-yangi").addEventListener("click", () => {
     MKB.modal("Hisobot shakllantirish",
       '<div class="forma-tor">' +
@@ -61,12 +65,13 @@ document.addEventListener("mkb:tayyor", () => {
       {okMatn: "Shakllantirish", ok(modal){
         const q = MKB.forma(modal, ["tur"]);
         if (!q) return false;
-        const j = JSON.parse(localStorage.getItem("mkb4-hisobotlar") || "[]");
+        const j = saqlangan();
         j.unshift({nom: q.tur, sub: q.davr + " · so'rov bo'yicha shakllantirildi",
           format: q.format, sana: new Date().toLocaleDateString("uz"), hajm: "1,1 MB"});
         localStorage.setItem("mkb4-hisobotlar", JSON.stringify(j.slice(0, 20)));
-        MKB.toast("Hisobot tayyor — ro'yxatga qo'shildi");
-        location.reload();
+        /* sahifa qayta yuklanmaydi — ro'yxat joyida yangilanadi, xabar ko'rinib turadi */
+        chiz();
+        MKB.toast("Hisobot tayyorlandi va ro'yxatga qo'shildi");
       }});
   });
 });

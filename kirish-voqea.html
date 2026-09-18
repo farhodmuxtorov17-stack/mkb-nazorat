@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Kirish voqeasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -48,19 +48,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -98,21 +98,71 @@ function voqeaQatori(v){
   return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
     '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
       ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
-    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : v.operator || "Aniqlanmagan shaxs") + "</b>" +
     "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
     '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
 }
 
-document.addEventListener("mkb:tayyor", () => {
+/* ---------- saqlash yordamchilari (yozuv faqat MKBapi orqali) ---------- */
+/* server rejimida kolleksiya xotiradagi nusxaga id bo'yicha qo'shib olinadi */
+async function knYukla(nomlar){
+  await MKBapi.tayyor;
+  if (MKBapi.rejim() !== "server") return;
+  for (const k of nomlar){
+    try{
+      const asl = MKB_DATA[k], r = await MKBapi.royxat(k);
+      if (!Array.isArray(asl) || !Array.isArray(r)) continue;
+      const ix = new Map(asl.map(x => [x.id, x]));
+      r.forEach(x => { const b = ix.get(x.id); if (b) Object.assign(b, x); else asl.push(x); });
+    }catch(_){ }
+  }
+}
+async function knYangila(k, id, patch){
+  await MKBapi.yangilash(k, id, patch);
+  const b = (MKB_DATA[k] || []).find(x => x.id === id);
+  if (b) Object.assign(b, patch);
+  return b;
+}
+async function knYangi(k, obyekt){
+  const j = await MKBapi.yangi(k, obyekt);
+  const y = j && j.id ? j : obyekt;
+  const a = MKB_DATA[k];
+  if (Array.isArray(a) && !a.some(x => x.id === y.id)) a.push(y);
+  return (Array.isArray(a) && a.find(x => x.id === y.id)) || y;
+}
+/* keyingi raqam: shu old qo'shimchali id'larning eng katta soni + 1 */
+async function knKeyingiId(k, old, uzunlik){
+  const r = await MKBapi.royxat(k);
+  let maks = 0;
+  r.forEach(x => {
+    const s = String(x.id || ""), m = /(\d+)$/.exec(s);
+    if (m && s.indexOf(old) === 0) maks = Math.max(maks, +m[1]);
+  });
+  return old + String(maks + 1).padStart(uzunlik || 0, "0");
+}
+async function knSaqla(ish){
+  try{ await ish(); return true; }
+  catch(_){ MKB.toast("Saqlab bo'lmadi, qayta urinib ko'ring", "xavf"); return false; }
+}
+function knKim(){ const s = MKBapi.sessiya(); return s && s.ism ? s.ism : "Operator"; }
+function knSoat(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+}
+/* "26.08.2026" + "14:05" -> saralash kaliti */
+function knVaqtKalit(sana, soat){ return String(sana || "").split(".").reverse().join("") + (soat || ""); }
+
+document.addEventListener("mkb:tayyor", async () => {
   const D = MKB_DATA;
+  await knYukla(["KIRISH_VOQEALARI", "RUXSATLAR"]);
   const id = new URLSearchParams(location.search).get("id");
   const v = D.KIRISH_VOQEALARI.find(x => x.id === id) || D.KIRISH_VOQEALARI[0];
   if (!v){ location.replace("xato-404.html"); return; }
   const sh = D.shaxs(v.shaxsId);
   document.getElementById("hs-meta").textContent = v.id;
-  document.getElementById("v-natija").innerHTML = chip(KN_NATIJA, v.natija);
   document.getElementById("v-vaqt").textContent = v.vaqt;
-  document.getElementById("v-shaxs").textContent = sh ? sh.ism + " · " + sh.lavozim : "Aniqlanmagan shaxs";
+  document.getElementById("v-shaxs").textContent = sh ? sh.ism + " · " + sh.lavozim
+    : v.operator ? v.operator + " · operator" : "Aniqlanmagan shaxs";
   document.getElementById("v-obyekt").innerHTML =
     '<a href="obyekt.html?id=' + encodeURIComponent(v.obyektId) + '">' + obyektNomi(v.obyektId) + "</a>";
   document.getElementById("v-nuqta").innerHTML =
@@ -127,47 +177,83 @@ document.addEventListener("mkb:tayyor", () => {
 
   const oxshashlik = v.usul.indexOf("Face ID") >= 0
     ? (v.natija === "rad" ? 41 + (v.id.charCodeAt(4) % 20) : 92 + (v.id.charCodeAt(4) % 8)) : null;
-  document.getElementById("v-idlar").innerHTML =
-    '<div class="plitkalar">' +
-      '<div class="plitka"><span class="yorliq">Hujjat</span><b>' + (sh ? sh.hujjat : "—") + "</b></div>" +
-      '<div class="plitka"><span class="yorliq">Tashkilot</span><b>' + (sh ? sh.tashkilot : "—") + "</b></div>" +
-      (oxshashlik != null
-        ? '<div class="plitka"><span class="yorliq">Yuz o&#39;xshashligi</span><b>' + oxshashlik + "%</b></div>"
-        : '<div class="plitka"><span class="yorliq">Karta raqami</span><b>K-' +
-          (v.id.slice(-5)) + "</b></div>") +
-      '<div class="plitka"><span class="yorliq">Natija</span><b>' +
-        (KN_NATIJA[v.natija] ? KN_NATIJA[v.natija][0] : v.natija) + "</b></div>" +
-    "</div>" + (v.sabab ? '<p style="margin-top:12px;font-size:13.5px;color:var(--pushti-matn)">' + v.sabab + "</p>" : "");
+  /* natija va sabab saqlangan qarordan keyin qayta chiziladi */
+  function natijaChiz(){
+    document.getElementById("v-natija").innerHTML = chip(KN_NATIJA, v.natija);
+    document.getElementById("v-idlar").innerHTML =
+      '<div class="plitkalar">' +
+        '<div class="plitka"><span class="yorliq">Hujjat</span><b>' + (sh ? sh.hujjat : "—") + "</b></div>" +
+        '<div class="plitka"><span class="yorliq">Tashkilot</span><b>' + (sh ? sh.tashkilot : "—") + "</b></div>" +
+        (oxshashlik != null
+          ? '<div class="plitka"><span class="yorliq">Yuz o&#39;xshashligi</span><b>' + oxshashlik + "%</b></div>"
+          : '<div class="plitka"><span class="yorliq">Karta raqami</span><b>K-' +
+            (v.id.slice(-5)) + "</b></div>") +
+        '<div class="plitka"><span class="yorliq">Natija</span><b>' +
+          (KN_NATIJA[v.natija] ? KN_NATIJA[v.natija][0] : v.natija) + "</b></div>" +
+      "</div>" + (v.sabab ? '<p style="margin-top:12px;font-size:13.5px;color:var(--pushti-matn)"></p>' : "");
+    const p = document.querySelector("#v-idlar p");
+    if (p) p.textContent = v.sabab;
+    tarjimaQil(document.getElementById("v-natija"));
+    tarjimaQil(document.getElementById("v-idlar"));
+  }
+  natijaChiz();
 
-  document.getElementById("v-qaror").innerHTML =
+  const qarorEl = document.getElementById("v-qaror");
+  qarorEl.innerHTML =
     '<div class="maydon"><label class="maydon-yorliq">Izoh</label>' +
-    '<div class="kirish"><input id="v-izoh" placeholder="Qaror asosini kiriting"></div></div>' +
+    '<div class="kirish"><input id="v-izoh" placeholder="Qaror asosini kiriting" maxlength="200"></div></div>' +
     '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">' +
       '<button type="button" class="tugma tugma-asosiy" data-q="ruxsat">Ruxsat berish</button>' +
       '<button type="button" class="tugma tugma-oq" data-q="qol">Qo&#39;lda tekshirish</button>' +
       '<button type="button" class="tugma tugma-xavf" data-q="rad">Rad etish</button>' +
-    "</div>";
+    '</div><div id="v-qaror-qayd"></div>';
+  /* saqlangan qaror: kim, qachon, asos — qayta yuklanganda ham ko'rinadi */
+  function qarorChiz(){
+    const bor = !!v.qarorOperator;
+    document.querySelectorAll("[data-q]").forEach(x => { x.disabled = bor; });
+    const izohEl = document.getElementById("v-izoh");
+    izohEl.disabled = bor;
+    if (bor) izohEl.value = v.qarorIzoh || "";
+    const joy = document.getElementById("v-qaror-qayd");
+    joy.innerHTML = bor
+      ? '<div class="qator"><span class="belgi mint">' + ik("tasdiq") + "</span>" +
+        '<span class="matn"><b>Operator qarori qabul qilindi</b><span></span></span>' +
+        '<span class="vaqt"></span></div>'
+      : "";
+    if (bor){
+      joy.querySelector(".matn span").textContent = v.qarorOperator + " · " + (v.qarorIzoh || "");
+      joy.querySelector(".vaqt").textContent = v.qarorVaqti || "";
+    }
+    tarjimaQil(joy);
+  }
+  qarorChiz();
+  let band = false;
   document.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => {
     const izoh = document.getElementById("v-izoh").value.trim();
-    if (!izoh){ MKB.toast("Qaror asosini kiriting", "xavf"); return; }
+    if (!izoh){ MKB.toast("Qaror asosini kiriting", "xavf"); document.getElementById("v-izoh").focus(); return; }
+    if (band || v.qarorOperator) return;
+    band = true;
     const yangi = {ruxsat: "ruxsat", qol: "ogohlantirish", rad: "rad"}[b.dataset.q];
-    v.natija = yangi;
-    v.sabab = izoh;
-    document.getElementById("v-natija").innerHTML = chip(KN_NATIJA, yangi);
-    document.querySelectorAll("[data-q]").forEach(x => { x.disabled = true; });
-    document.getElementById("v-izoh").disabled = true;
-    const j = document.createElement("div");
-    j.className = "qator";
-    j.innerHTML = '<span class="belgi mint">' + ik("tasdiq") + "</span>" +
-      '<span class="matn"><b>Operator qarori qabul qilindi</b><span>' + izoh + "</span></span>";
-    document.getElementById("v-qaror").appendChild(j);
-    MKB.toast("Qaror jurnalga yozildi");
+    knSaqla(async () => {
+      await knYangila("KIRISH_VOQEALARI", v.id, {natija: yangi, sabab: izoh, qarorIzoh: izoh,
+        qarorOperator: knKim(), qarorVaqti: D.KIRISH_BUGUN + " " + knSoat()});
+      natijaChiz();
+      qarorChiz();
+      tarixChiz();
+      MKB.toast("Qaror jurnalga yozildi");
+    }).then(() => { band = false; });
   }));
 
-  const tarix = D.KIRISH_VOQEALARI.filter(x => x.shaxsId && x.shaxsId === v.shaxsId && x.obyektId === v.obyektId);
-  document.getElementById("v-tarix").innerHTML = tarix.length > 1
-    ? tarix.slice(0, 8).map(voqeaQatori).join("")
-    : '<div class="bosh-holat">Boshqa yozuv yo&#39;q</div>';
+  function tarixChiz(){
+    const tarix = D.KIRISH_VOQEALARI.filter(x => x.shaxsId && x.shaxsId === v.shaxsId && x.obyektId === v.obyektId)
+      .sort((a, b) => knVaqtKalit(b.sana, b.soat).localeCompare(knVaqtKalit(a.sana, a.soat)));
+    const joy = document.getElementById("v-tarix");
+    joy.innerHTML = tarix.length > 1
+      ? tarix.slice(0, 8).map(voqeaQatori).join("")
+      : '<div class="bosh-holat">Boshqa yozuv yo&#39;q</div>';
+    tarjimaQil(joy);
+  }
+  tarixChiz();
 });
 </script>
 </body>

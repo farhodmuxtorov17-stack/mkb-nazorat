@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Yuridik panel</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="panel">
@@ -15,24 +15,24 @@
 <main class="kontent">
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><span>Boshqaruv paneli</span></div>
-    <div class="hs-qator"><h1>Yuridik panel</h1><span class="hs-meta" id="hs-meta">Ishlar va sud jadvali</span><div class="hs-amallar"><a class="tugma tugma-oq" href="hisobotlar.html"><svg class="ic"><use href="#i-hisobot"/></svg>Hisobotlar</a><a class="tugma tugma-asosiy" href="korsatkichlar.html"><svg class="ic"><use href="#i-grafik"/></svg>Ko'rsatkichlar</a></div></div>
+    <div class="hs-qator"><h1>Yuridik panel</h1><span class="hs-meta" id="hs-meta">Ishlar va sud jadvali</span><div class="hs-amallar"><a class="tugma tugma-oq" href="hisobotlar.html"><svg class="ic"><use href="#i-hisobot"/></svg>Hisobotlar</a><a class="tugma tugma-asosiy" href="hisobot-kpi.html"><svg class="ic"><use href="#i-grafik"/></svg>Ko'rsatkichlar</a></div></div>
   </div>
   <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
     <div class="metrika"><span class="m-yorliq">Ochiq ishlar</span>
       <span class="m-qiymat"><span id="m-ishlar">—</span></span>
-      <span class="m-izoh">Undiruv jarayonida</span>
+      <span class="m-izoh">undiruv bosqichlarida</span>
     </div>
-    <div class="metrika"><span class="m-yorliq">Shu hafta majlislar</span>
+    <div class="metrika"><span class="m-yorliq">Rejadagi majlislar</span>
       <span class="m-qiymat"><span id="m-majlis">—</span></span>
-      <span class="m-izoh">Sud jadvali bo'yicha</span>
+      <span class="m-izoh">sud jadvali bo'yicha</span>
     </div>
     <div class="metrika"><span class="m-yorliq">Ijro hujjatlari</span>
       <span class="m-qiymat"><span id="m-ijro">—</span></span>
-      <span class="m-izoh">Ijroga yuborilgan</span>
+      <span class="m-izoh">ijroga yuborilgan</span>
     </div>
     <div class="metrika"><span class="m-yorliq">Shoshilinch</span>
       <span class="m-qiymat"><span id="m-shoshilinch">—</span></span>
-      <span class="m-izoh">Muddati yaqin ishlar</span>
+      <span class="m-izoh">muddati yaqin ishlar</span>
     </div>
   </section>
   <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="panel-tor">
@@ -42,19 +42,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 
 function ustunlarChiz(joy, yorliqlar, qiymatlar, brendIdx){
@@ -89,13 +89,14 @@ document.addEventListener("mkb:tayyor", async () => {
   const D = MKB_DATA;
   const yoz = await MKBapi.royxat("YOZUVLAR");
   const majlis = await MKBapi.royxat("SUD_MAJLISLAR");
-  document.getElementById("m-ishlar").textContent = yoz.length;
+  const undiruvda = yoz.filter(y => !["musodara", "balans"].includes(y.ish.bosqich));
+  document.getElementById("m-ishlar").textContent = undiruvda.length;
   document.getElementById("m-majlis").textContent = majlis.filter(m => m.holat === "rejada").length;
-  document.getElementById("m-ijro").textContent = yoz.filter(y => y.ish.ijro && y.ish.ijro !== "—").length;
-  document.getElementById("m-shoshilinch").textContent = yoz.filter(y => y.ish.shoshilinch).length;
+  document.getElementById("m-ijro").textContent = undiruvda.filter(y => y.ish.ijro && y.ish.ijro !== "—" && y.ish.ijro !== "Hali berilmagan").length;
+  document.getElementById("m-shoshilinch").textContent = undiruvda.filter(y => y.ish.shoshilinch).length;
 
-  document.getElementById("y-majlislar").innerHTML = majlis.slice(0, 6).map(m =>
-    '<a href="sud-kalendar.html" class="qator">' +
+  document.getElementById("y-majlislar").innerHTML = majlis.filter(m => m.holat === "rejada").concat(majlis.filter(m => m.holat !== "rejada")).slice(0, 6).map(m =>
+    '<a href="sud-majlis.html?id=' + encodeURIComponent(m.id) + '" class="qator">' +
       '<span style="width:44px;text-align:center;flex:none;border:1px solid var(--chiziq);border-radius:14px;padding:4px 0">' +
         '<b style="display:block;font:500 14px var(--shrift-displey)">' + m.sana.split("-")[0] + '</b>' +
         '<span style="font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--iz)">' + m.sana.split("-")[1].split(",")[0] + '</span></span>' +
@@ -103,6 +104,12 @@ document.addEventListener("mkb:tayyor", async () => {
       '<span style="font-size:12.5px;color:var(--matn-3)">' + m.sud + ' · ' + m.zal + ' · ' + m.mavzu + '</span></span>' +
       '<span class="chip ' + (m.holat === "rejada" ? "chip-brend" : "chip-yashil") + '">' + m.soat + '</span></a>').join("");
 
+  if (!majlis.length){
+    const joy = document.getElementById("y-majlislar");
+    joy.innerHTML = '<div class="bosh-holat"><svg class="ic"><use href="#i-kalendar"/></svg>' + "<b>Rejada sud majlisi yo'q</b>" +
+      "<span>Majlis tayinlanganda shu yerda ko'rinadi</span></div>";
+    tarjimaQil(joy);
+  }
   MKB.barlar("y-bosqich", D.BOSQICHLAR.slice(0, 5).map(b =>
     [b.nom, yoz.filter(y => y.ish.bosqich === b.kalit).length, b.rang]));
 });

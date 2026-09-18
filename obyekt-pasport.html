@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyekt pasporti</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 </head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
@@ -36,19 +36,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const id = new URLSearchParams(location.search).get("id");
@@ -66,10 +66,11 @@ document.addEventListener("mkb:tayyor", async () => {
     q("Obyekt raqami", '<span class="kod-mono">' + x.id + "</span>") +
     q("Nomi", x.mulk.nom) + q("Turi", x.mulk.tur) +
     q("Manzil", x.mulk.manzil) + q("Maydon", x.mulk.maydon) + "</dl>";
+  const balansdami = ["musodara", "balans"].includes(x.ish.bosqich);
   document.getElementById("p-dl2").innerHTML = '<dl class="malumot-royxat" style="font-size:12.5px">' +
     q("Qarzdor", x.mijoz.nom + " (" + x.mijoz.raqam + ")") +
     q("Kredit shartnomasi", x.shartnoma.raqam + " · " + x.shartnoma.sana) +
-    q("Qoldiq qarz", x.qarzMatn) + q("Baholangan qiymat", x.bahoMatn + " (" + x.mulk.bahoSana + ")") +
+    q(balansdami ? "Balans qiymati" : "Qoldiq qarz", x.qarzMatn) + q("Baholangan qiymat", x.bahoMatn + " (" + x.mulk.bahoSana + ")") +
     q("Nazorat indeksi", MKB_DATA.nazoratIndeksi(x).ball + "% · " +
         MKB_DATA.nazoratIndeksi(x).darajaNomi) +
     q("Joriy bosqich", x.bosqichNomi) + q("Ish raqami", x.ish.raqam) + "</dl>";

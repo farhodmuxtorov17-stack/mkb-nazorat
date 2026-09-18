@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Xarajatlar hisoboti</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="hisobot">
@@ -17,10 +17,11 @@
     <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>Xarajatlar</span></div>
     <div class="hs-qator"><h1>Xarajatlar hisoboti</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Portfel</a><a href="hisobot-undiruv.html">Undiruv</a><a href="hisobot-hudud.html">Hudud</a><a href="hisobot-xarajat.html" class="faol">Xarajat</a><a href="hisobot-kpi.html">KPI</a><a href="kirish-hisoboti.html">Kirish nazorati</a></nav>
   <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
     <div class="metrika"><span class="m-yorliq">Jami xarajat</span>
       <span class="m-qiymat"><span id="hx-1">—</span></span>
-      <span class="m-izoh">saqlash davri uchun</span>
+      <span class="m-izoh">obyektlar balansda turgan davr uchun</span>
     </div>
     <div class="metrika"><span class="m-yorliq">To'langan</span>
       <span class="m-qiymat"><span id="hx-2">—</span></span>
@@ -29,23 +30,23 @@
       <span class="m-qiymat"><span id="hx-3">—</span></span>
     </div>
   </section>
-  <section class="karta"><div class="karta-bosh"><h2>Turlar kesimi, mln</h2></div><div id="hx-bar"></div></section>
+  <section class="karta"><div class="karta-bosh"><h2>Xarajat turlari</h2><span class="soni">mln so&#39;m</span></div><div id="hx-bar"></div></section>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 
 function gorizontalBar(joy, juftlar, rang){
@@ -66,12 +67,17 @@ document.addEventListener("mkb:tayyor", async () => {
   const r = await MKBapi.royxat("XARAJATLAR");
   const jami = r.reduce((a, v) => a + MKB.sonQiymat(v.summa), 0);
   const tol = r.filter(v => v.holat === "tolangan").reduce((a, v) => a + MKB.sonQiymat(v.summa), 0);
-  document.getElementById("hx-1").innerHTML = jami.toFixed(1).replace(".", ",") + "<small>mln so'm</small>";
-  document.getElementById("hx-2").innerHTML = tol.toFixed(1).replace(".", ",") + "<small>mln so'm</small>";
-  document.getElementById("hx-3").innerHTML = (jami - tol).toFixed(1).replace(".", ",") + "<small>mln so'm</small>";
+  /* summalar mln so'mda saqlanadi; 1 mlrd dan oshsa mlrd so'mda ko'rsatiladi */
+  const pul = v => v >= 1000 ? (v / 1000).toFixed(1).replace(".", ",") + "<small>mlrd so'm</small>"
+    : MKB.fmt(Math.round(v)) + "<small>mln so'm</small>";
+  document.getElementById("hs-meta").textContent = MKB.fmt(r.length) + " ta yozuv";
+  document.getElementById("hx-1").innerHTML = pul(jami);
+  document.getElementById("hx-2").innerHTML = pul(tol);
+  document.getElementById("hx-3").innerHTML = pul(jami - tol);
   const turlar = {};
   r.forEach(v => turlar[v.tur] = (turlar[v.tur] || 0) + MKB.sonQiymat(v.summa));
-  gorizontalBar("hx-bar", Object.entries(turlar).map(([n, v]) => [n, v.toFixed(1).replace(".", ",")]));
+  MKB.barlar("hx-bar", Object.entries(turlar).sort((a, b) => b[1] - a[1]).map(([n, v]) => [n, Math.round(v)]),
+    {format: v => MKB.fmt(v)});
 });
 </script>
 </body>

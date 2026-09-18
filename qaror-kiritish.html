@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Sud qarorini kiritish</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 </head>
 <body data-sahifa="yuridik">
 <div class="qobiq">
@@ -33,38 +33,56 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
   const oldindan = new URLSearchParams(location.search).get("id");
-  const nomzod = yoz.filter(y => ["sud", "davo"].includes(y.ish.bosqich));
-  const royxat = nomzod.length ? nomzod : yoz;
-  document.getElementById("qr-yozuv").innerHTML = royxat.map(y =>
+  const tartib = MKB_DATA.BOSQICHLAR.map(b => b.kalit);
+  const tanlangan = oldindan ? yoz.find(y => y.id === oldindan) : null;
+  /* ro'yxat: da'vo/sud bosqichidagi ishlar + havola orqali kelgan ish (bosqichidan qat'i nazar) */
+  const royxat = yoz.filter(y => ["sud", "davo"].includes(y.ish.bosqich));
+  if (tanlangan && !royxat.includes(tanlangan)) royxat.unshift(tanlangan);
+  const sel = document.getElementById("qr-yozuv");
+  sel.innerHTML = (tanlangan ? "" : '<option value="">Ishni tanlang</option>') + royxat.map(y =>
     '<option value="' + y.id + '"' + (y.id === oldindan ? ' selected' : '') + '>' +
-    y.ish.raqam + " — " + y.mijoz.nom + '</option>').join("");
+    y.ish.raqam + " — " + y.mijoz.nom + " · " + y.bosqichNomi + '</option>').join("");
+  const meta = () => {
+    const y = yoz.find(v => v.id === sel.value);
+    document.getElementById("hs-meta").textContent = y ? y.ish.raqam + " · " + y.bosqichNomi : "—";
+  };
+  sel.addEventListener("change", meta); meta();
+  tarjimaQil(sel);
   document.getElementById("qr-forma").addEventListener("submit", async e => {
     e.preventDefault();
     const q = MKB.forma(e.target, ["obyektId", "raqam", "sana", "xulosa"]);
     if (!q) return;
     const y = yoz.find(v => v.id === q.obyektId);
+    if (!y) return;
+    const joriy = tartib.indexOf(y.ish.bosqich);
+    if (joriy < tartib.indexOf("davo")){
+      MKB.toast("Avval da'vo arizasi ro'yxatga olinishi kerak", "xavf");
+      return;
+    }
     const tarix = (y.ish.tarix || []).concat([[q.sana, "Sud qarori qabul qilindi", q.raqam + ": " + q.xulosa.slice(0, 90)]]);
-    await MKBapi.yangilash("YOZUVLAR", y.id, {
-      ish: Object.assign({}, y.ish, {bosqich: "qaror", qaror: q.raqam, tarix}),
-      bosqichNomi: "Sud qarori"});
-    MKB.toast("Qaror kiritildi — " + q.raqam);
+    /* qarordan keyingi bosqichdagi ish orqaga qaytarilmaydi — faqat qaror rekvizitlari yoziladi */
+    const oldinga = joriy < tartib.indexOf("qaror");
+    await MKBapi.yangilash("YOZUVLAR", y.id, Object.assign({
+      ish: Object.assign({}, y.ish, {qaror: q.raqam, tarix}, oldinga ? {bosqich: "qaror"} : {})},
+      oldinga ? {bosqichNomi: "Sud qarori"} : {}));
+    MKB.toast(q.raqam + " raqamli qaror kiritildi");
     setTimeout(() => location.href = "ish.html?id=" + encodeURIComponent(y.id), 700);
   });
 });

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Sud majlislari kalendari</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 </head>
 <body data-sahifa="yuridik">
 <div class="qobiq">
@@ -16,27 +16,35 @@
     <div class="hs-yorliq"><span>Undiruv va sud</span></div>
     <div class="hs-qator"><h1>Sud majlislari kalendari</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="undiruv.html">Undiruv doskasi</a><a href="sud-kalendar.html" class="faol">Sud kalendari</a><a href="davo-tayyorlash.html">Da&#39;vo tayyorlash</a></nav>
   <div id="kalendar" style="display:flex;flex-direction:column;gap:14px"></div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const r = await MKBapi.royxat("SUD_MAJLISLAR");
   document.getElementById("hs-meta").textContent = r.length + " ta majlis";
+  if (!r.length){
+    const joy = document.getElementById("kalendar");
+    joy.innerHTML = '<section class="karta"><div class="bosh-holat"><svg class="ic"><use href="#i-kalendar"/></svg>' +
+      "<b>Rejada sud majlisi yo'q</b><span>Majlis tayinlanganda shu yerda ko'rinadi</span></div></section>";
+    tarjimaQil(joy);
+    return;
+  }
   const kunlar = {};
   r.forEach(m => { (kunlar[m.sana] = kunlar[m.sana] || []).push(m); });
   document.getElementById("kalendar").innerHTML = Object.entries(kunlar).map(([sana, royxat]) =>

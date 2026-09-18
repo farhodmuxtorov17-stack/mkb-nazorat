@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Balansga qabul — tasdiqlash</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 </head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
@@ -26,19 +26,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
 
@@ -47,8 +47,19 @@ document.addEventListener("mkb:tayyor", async () => {
 
   const h = JSON.parse(sessionStorage.getItem("mkb4-qabul") || "{}");
   if (!h.obyektId){ location.replace("qabul-boshlash.html"); return; }
+  if (!h.rais || !h.azo){ location.replace("qabul-hujjatlar.html"); return; }
   const x = await MKBapi.bitta("YOZUVLAR", h.obyektId);
-  const raqam = "QD-2026/" + String(1000 + Math.floor((Date.now() / 60000) % 9000));
+  /* yozuv topilmasa yoki allaqachon balansda bo'lsa, jarayon boshidan boshlanadi */
+  if (!x || ["musodara", "balans"].includes(x.ish.bosqich)){
+    sessionStorage.removeItem("mkb4-qabul");
+    location.replace("qabul-boshlash.html"); return;
+  }
+  /* dalolatnoma raqami sahifa qayta ochilganda o'zgarmasligi uchun sessiyada saqlanadi */
+  if (!h.raqam){
+    h.raqam = "QD-" + new Date().getFullYear() + "/" + String(1000 + Math.floor((Date.now() / 60000) % 9000));
+    sessionStorage.setItem("mkb4-qabul", JSON.stringify(h));
+  }
+  const raqam = h.raqam;
   document.getElementById("q3-raqam").textContent = raqam;
   document.getElementById("q3-xulosa").innerHTML = '<dl class="malumot-royxat">' +
     '<dt>' + ik("aktivlar") + 'Obyekt</dt><dd>' + x.mulk.qisqa + ' <span class="kod-mono">' + x.id + '</span></dd>' +
@@ -56,19 +67,31 @@ document.addEventListener("mkb:tayyor", async () => {
     '<dt>' + ik("hujjat") + 'Asos hujjat</dt><dd class="kod-mono">' + h.asos + '</dd>' +
     '<dt>' + ik("foydalar") + 'Komissiya</dt><dd>' + h.rais + ", " + h.azo + '</dd>' +
     '<dt>' + ik("pul") + 'Qoldiq qarz</dt><dd class="pul">' + x.qarzMatn + '</dd>' +
-    '<dt>' + ik("grafik") + 'Balans qiymati</dt><dd class="pul">' + x.bahoMatn + '</dd></dl>' +
+    '<dt>' + ik("grafik") + 'Baholangan qiymat</dt><dd class="pul">' + x.bahoMatn + '</dd></dl>' +
     '<p style="font-size:12.5px;color:var(--iz);line-height:1.6;margin-top:14px">Tasdiqlangach obyekt '
-    + '«Musodara qilingan» bosqichiga o\'tadi, dalolatnoma raqami ish tarixiga yoziladi va saqlash '
-    + 'xarajatlari hisobi ochiladi.</p>';
-  document.getElementById("q3-tasdiq").addEventListener("click", async () => {
-    const tarix = (x.ish.tarix || []).concat([[new Date().toLocaleDateString("uz"),
-      "Balansga qabul qilindi", "Dalolatnoma " + raqam + " · " + h.turi + " · komissiya: " + h.rais]]);
+    + '«Balansda» bosqichiga o\'tadi, qoldiq qarz summasi balans qiymati sifatida qayd etiladi, dalolatnoma raqami '
+    + 'ish tarixiga yoziladi va saqlash xarajatlari hisobi ochiladi.</p>';
+  const tugma = document.getElementById("q3-tasdiq");
+  tugma.addEventListener("click", async () => {
+    tugma.disabled = true;
+    const bugun = new Date();
+    const OY = ["yan", "fev", "mar", "apr", "may", "iyn", "iyl", "avg", "sen", "okt", "noy", "dek"];
+    const nuqtali = String(bugun.getDate()).padStart(2, "0") + "." + String(bugun.getMonth() + 1).padStart(2, "0") + "." + bugun.getFullYear();
+    const tarix = (x.ish.tarix || []).concat([[nuqtali,
+      "Balansga qabul qilindi", "Dalolatnoma " + raqam + " · " + h.turi + " · komissiya: " + h.rais + ", " + h.azo]]);
+    /* bosqichga bog'liq barcha hosila maydonlar birga yangilanadi:
+       reyestr, kartochka va boshqaruv paneli obyektni balansda deb ko'rsatadi */
+    const bosq = MKB_DATA.BOSQICHLAR.find(b => b.kalit === "balans");
+    const ijroBosh = !x.ish.ijro || x.ish.ijro === "—" || x.ish.ijro === "Hali berilmagan";
     await MKBapi.yangilash("YOZUVLAR", x.id, {
-      ish: Object.assign({}, x.ish, {bosqich: "musodara", tarix}),
-      bosqichNomi: "Musodara qilingan",
+      ish: Object.assign({}, x.ish, {bosqich: "balans", tarix, kun: 0, shoshilinch: false,
+        ijro: ijroBosh ? h.asos : x.ish.ijro}),
+      mulk: Object.assign({}, x.mulk, {qabul: bugun.getDate() + "-" + OY[bugun.getMonth()] + ", " + bugun.getFullYear()}),
+      bosqichNomi: bosq.nom, bosqichChip: bosq.chip,
+      holat: {nom: "Balansda saqlanmoqda", rang: bosq.rang},
     });
     sessionStorage.removeItem("mkb4-qabul");
-    MKB.toast("Obyekt balansga qabul qilindi — " + raqam);
+    MKB.toast("Obyekt balansga qabul qilindi. Reyestr raqami: " + raqam);
     setTimeout(() => location.href = "obyekt.html?id=" + encodeURIComponent(x.id), 800);
   });
 });

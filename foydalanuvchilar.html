@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Foydalanuvchilar</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="sozlama">
@@ -17,59 +17,70 @@
     <div class="hs-yorliq"><span>Sozlamalar</span></div>
     <div class="hs-qator"><h1>Foydalanuvchilar</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="sozlama-xavfsizlik.html">Xavfsizlik</a><a href="foydalanuvchilar.html" class="faol">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="malumotnomalar.html">Ma'lumotnomalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="integratsiyalar.html">Integratsiyalar</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="foydalanuvchilar.html" class="faol">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a></nav>
   <div id="jadval-joy"></div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
-  async function chiz(){
-    const r = await MKBapi.royxat("FOYDLAR");
+  let r = await MKBapi.royxat("FOYDLAR");
+  const meta = () => {
     document.getElementById("hs-meta").textContent = r.filter(f => f.faol).length + " ta faol / " + r.length;
-    MKB.jadval("jadval-joy", {
-      qatorlar: r,
-      qidiruv: ["nom", "rol", "bolim"],
-      filtrlar: [{kalit: "rol", nom: "Rol", variantlar: [...new Set(r.map(f => f.rol))]}],
-      ustunlar: [
-        {kalit: "nom", nom: "Xodim", chiz: f =>
-          '<span class="obyekt-katak"><span style="width:36px;height:36px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:500 13px var(--shrift)">' +
-          f.nom.split(" ").map(v => v[0]).join("").slice(0, 2) + '</span>' +
-          '<span><span class="nom">' + f.nom + '</span><br><span class="sub">' + (f.email || "") + '</span></span></span>'},
-        {kalit: "rol", nom: "Rol", chiz: f => '<span class="chip chip-info">' + f.rol + '</span>'},
-        {kalit: "bolim", nom: "Bo'lim"},
-        {kalit: "faol", nom: "Holat", chiz: f => f.faol
-          ? '<span class="chip chip-yashil">Faol</span>' : '<span class="chip">O\'chirilgan</span>'},
-        {kalit: "id", nom: "", saralash: false, chiz: f =>
-          '<button type="button" class="tugma tugma-kichik tugma-oq" data-almash="' + f.id + '">' +
-          (f.faol ? "O'chirish" : "Yoqish") + '</button>'},
-      ],
-      bosilganda: f => location.href = "foydalanuvchi.html?id=" + encodeURIComponent(f.id),
-      chizilganda(bolak, el){
-        el.querySelectorAll("[data-almash]").forEach(b => b.addEventListener("click", async ev => {
-          ev.stopPropagation();
-          const f = r.find(x => x.id === b.dataset.almash);
-          await MKBapi.yangilash("FOYDLAR", f.id, {faol: !f.faol});
-          MKB.toast(f.faol ? "Hisob o'chirildi" : "Hisob faollashtirildi");
-          chiz();
-        }));
-      },
-    });
-  }
-  chiz();
+  };
+  meta();
+  /* jadval bir marta quriladi; holat almashganda faqat qatorlar yangilanadi — qidiruv, filtr va sahifa saqlanadi */
+  const jadval = MKB.jadval("jadval-joy", {
+    qatorlar: r,
+    qidiruv: ["nom", "rol", "bolim"],
+    filtrlar: [{kalit: "rol", nom: "Rol", variantlar: [...new Set(r.map(f => f.rol))]}],
+    ustunlar: [
+      {kalit: "nom", nom: "Xodim", chiz: f =>
+        '<span class="obyekt-katak"><span style="width:36px;height:36px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:500 13px var(--shrift)">' +
+        f.nom.split(" ").map(v => v[0]).join("").slice(0, 2) + '</span>' +
+        '<span><span class="nom">' + f.nom + '</span><br><span class="sub">' + (f.email || "") + '</span></span></span>'},
+      {kalit: "rol", nom: "Rol", chiz: f => '<span class="chip chip-info">' + f.rol + '</span>'},
+      {kalit: "bolim", nom: "Bo'lim"},
+      {kalit: "faol", nom: "Holat", chiz: f => f.faol
+        ? '<span class="chip chip-yashil">Faol</span>' : '<span class="chip">O\'chirilgan</span>'},
+      {kalit: "id", nom: "", saralash: false, chiz: f =>
+        '<button type="button" class="tugma tugma-kichik tugma-oq" data-almash="' + f.id + '">' +
+        (f.faol ? "O'chirish" : "Yoqish") + '</button>'},
+    ],
+    bosilganda: f => location.href = "foydalanuvchi.html?id=" + encodeURIComponent(f.id),
+    chizilganda(bolak, el){
+      el.querySelectorAll("[data-almash]").forEach(b => b.addEventListener("click", async ev => {
+        ev.stopPropagation();
+        const f = r.find(x => x.id === b.dataset.almash);
+        if (!f) return;
+        const edi = !!f.faol;
+        const s = MKBapi.sessiya();
+        if (edi && s && s.ism === f.nom){
+          MKB.toast("O'z hisobingizni o'chirib bo'lmaydi", "xavf");
+          return;
+        }
+        b.disabled = true;
+        await MKBapi.yangilash("FOYDLAR", f.id, {faol: !edi});
+        r = await MKBapi.royxat("FOYDLAR");
+        MKB.toast(edi ? "Hisob o'chirildi" : "Hisob faollashtirildi");
+        meta();
+        jadval.yangila(r);
+      }));
+    },
+  });
 });
 </script>
 </body>

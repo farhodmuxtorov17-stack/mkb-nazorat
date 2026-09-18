@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Kechikkan ko'riklar</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="korik">
@@ -17,24 +17,24 @@
     <div class="hs-yorliq"><span>Ko'rik nazorati</span></div>
     <div class="hs-qator"><h1>Kechikkan ko'riklar</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="korik-rejasi.html">Reja</a><a href="korik-kalendar.html">Kalendar</a><a href="korik-tarixi.html">Tarix</a><a href="korik-kechikkan.html" class="faol">Kechikkanlar</a><a href="korik-marshrut.html">Marshrutlar</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="korik-rejasi.html">Reja</a><a href="korik-kechikkan.html" class="faol">Kechikkanlar</a><a href="korik-tarixi.html">Tarix</a></nav>
   <section class="karta"><div class="karta-bosh"><h2>Muddati o'tgan ko'riklar</h2><span class="soni" id="kk-soni"></span></div><div id="kk-royxat"></div></section>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 function korikQatori(k){
   return '<a class="qator" href="korik-akti.html?id=' + encodeURIComponent(k.id) + '">' +
@@ -48,10 +48,25 @@ function obyektNomi(id){
   const o = MKB_DATA.OBYEKT_INDEKS[id];
   return o ? (o.qisqa || o.nom) : id;
 }
+/* Kechikkan ko'rik — yagona ta'rif (reja va kechikkanlar sahifalarida bir xil):
+   holati "kechikkan" yoki rejadagi sanasi hisobot kunidan (ma'lumot bazasi sanasi) o'tgan */
+const HISOBOT_KUNI = new Date(2026, 7, 26);
+const OYLAR = {yan: 0, fev: 1, mar: 2, apr: 3, may: 4, iyn: 5, iyl: 6, avg: 7, sen: 8, okt: 9, noy: 10, dek: 11};
+function korikSanasi(matn){
+  const t = String(matn || "").trim();
+  let m = /^(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{4})$/.exec(t);
+  if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+  m = /^(\d{1,2})-([a-z']+),?\s*(\d{4})$/i.exec(t);
+  return m && OYLAR[m[2].toLowerCase()] !== undefined ? new Date(+m[3], OYLAR[m[2].toLowerCase()], +m[1]) : null;
+}
+function kechikkanmi(k){
+  if (k.holat === "kechikkan") return true;
+  const s = k.holat === "rejada" ? korikSanasi(k.sana) : null;
+  return !!s && s < HISOBOT_KUNI;
+}
 document.addEventListener("mkb:tayyor", async () => {
   const r = await MKBapi.royxat("KORIKLAR");
-  const kechikkan = r.filter(k => k.holat === "kechikkan")
-    .concat(r.filter((k, i) => k.holat === "rejada" && i % 4 === 1).map(k => Object.assign({}, k, {holat: "kechikkan"})));
+  const kechikkan = r.filter(kechikkanmi).map(k => Object.assign({}, k, {holat: "kechikkan"}));
   kechikkan.forEach(k => k.obyektNomi = obyektNomi(k.obyektId));
   document.getElementById("kk-soni").textContent = kechikkan.length + " ta";
   document.getElementById("kk-royxat").innerHTML = kechikkan.length

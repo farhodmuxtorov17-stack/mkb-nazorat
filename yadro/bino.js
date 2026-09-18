@@ -58,6 +58,8 @@
   /* ---------- Bino turlari bo'yicha tipologiya ---------- */
   const TIPOLOGIYA = {
     "Ma'muriy bino":      {qavat: [3, 6], en: [38, 54], chuq: [15, 20], asos: ["ofis","ofis","yigilish","ochiq"]},
+    "Noturar bino":       {qavat: [1, 2], en: [36, 52], chuq: [16, 24], asos: ["ombor","ishlab","ofis","texnik"]},
+    "Turar joy":          {qavat: [1, 2], en: [14, 20], chuq: [10, 14], asos: ["ofis","ochiq","ombor"]},
     "Savdo majmuasi":     {qavat: [2, 4], en: [46, 62], chuq: [20, 26], asos: ["savdo","savdo","ochiq","ombor"]},
     "Savdo maydoni":      {qavat: [1, 2], en: [30, 44], chuq: [16, 22], asos: ["savdo","ombor","ochiq"]},
     "Ombor":              {qavat: [1, 2], en: [44, 60], chuq: [20, 28], asos: ["ombor","ombor","kotarma","texnik"]},
@@ -75,7 +77,7 @@
   /* Bino tuzilmasi yuritilmaydigan turlar: yer uchastkasi va transport.
      Bunday obyektlarda qavat rejasi ham, uch o'lchovli navigator ham
      ma'noga ega emas — ekran buni ochiq aytadi. */
-  const BINOSIZ = ["Yer uchastkasi", "Avtotransport", "Uchastka", "Transport"];
+  const BINOSIZ = ["Yer uchastkasi", "Avtotransport", "Uchastka", "Transport", "Transport vositasi", "Maxsus texnika", "Asbob-uskuna"];
 
   /* "9 400 m²" kabi matndan sonni ajratish */
   function maydonSoni(matn) {

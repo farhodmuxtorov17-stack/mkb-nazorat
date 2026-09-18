@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Da'vo tayyorlash</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 </head>
 <body data-sahifa="yuridik">
 <div class="qobiq">
@@ -16,11 +16,12 @@
     <div class="hs-yorliq"><a href="undiruv.html">Undiruv va sud</a><span class="ajratgich">/</span><span>Da'vo</span></div>
     <div class="hs-qator"><h1>Da'vo tayyorlash</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="undiruv.html">Undiruv doskasi</a><a href="sud-kalendar.html">Sud kalendari</a><a href="davo-tayyorlash.html" class="faol">Da&#39;vo tayyorlash</a></nav>
   <section class="karta" style="max-width:760px"><div class="karta-bosh"><h2>Da'vo arizasi tayyorlash</h2></div>
   <form id="d-forma" class="forma-tor">
     <div class="maydon keng"><label class="maydon-yorliq">Yozuv <b>*</b></label>
       <div class="kirish"><select name="obyektId" id="d-yozuv"></select></div>
-      <span class="maydon-izoh">Ogohlantirish bosqichidagi ishlar birinchi ko'rsatiladi</span></div>
+      <span class="maydon-izoh">Faqat ogohlantirish bosqichidagi ishlar ko'rsatiladi</span></div>
     <div class="maydon"><label class="maydon-yorliq">Sud <b>*</b></label>
       <div class="kirish"><select name="sud"><option>Toshkent shahar sudi</option><option>Toshkent viloyat sudi</option><option>Samarqand sudi</option><option>Namangan sudi</option><option>Buxoro sudi</option></select></div></div>
     <div class="maydon"><label class="maydon-yorliq">Da'vo summasi</label>
@@ -34,27 +35,40 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const yoz = await MKBapi.royxat("YOZUVLAR");
-  const tartib = yoz.slice().sort((a, b) =>
-    (a.ish.bosqich === "ogohlantirish" ? 0 : 1) - (b.ish.bosqich === "ogohlantirish" ? 0 : 1));
+  /* da'vo faqat ogohlantirish bosqichidagi ish bo'yicha tayyorlanadi */
+  const oldindan = new URLSearchParams(location.search).get("id");
+  const nomzod = yoz.filter(y => y.ish.bosqich === "ogohlantirish");
   const sel = document.getElementById("d-yozuv");
-  sel.innerHTML = tartib.map(y =>
-    '<option value="' + y.id + '">' + y.ish.raqam + " — " + y.mijoz.nom + '</option>').join("");
+  const forma = document.getElementById("d-forma");
+  const tanlangan = oldindan ? yoz.find(y => y.id === oldindan) : null;
+  document.getElementById("hs-meta").textContent = nomzod.length + " ta ish";
+  if (tanlangan && tanlangan.ish.bosqich !== "ogohlantirish")
+    MKB.toast(tanlangan.ish.raqam + " raqamli ish " + tanlangan.bosqichNomi + " bosqichida, da'vo qayta tayyorlanmaydi", "xavf");
+  if (!nomzod.length){
+    sel.innerHTML = "<option value=''>Ogohlantirish bosqichida ish yo'q</option>";
+    forma.querySelector('[type="submit"]').disabled = true;
+  } else {
+    sel.innerHTML = nomzod.map(y =>
+      '<option value="' + y.id + '"' + (y.id === oldindan ? ' selected' : '') + '>' +
+      y.ish.raqam + " — " + y.mijoz.nom + '</option>').join("");
+  }
+  tarjimaQil(forma);
   const summa = () => {
     const y = yoz.find(v => v.id === sel.value);
     document.getElementById("d-summa").value = y ? y.qarzMatn : "";
@@ -64,13 +78,14 @@ document.addEventListener("mkb:tayyor", async () => {
     e.preventDefault();
     const q = MKB.forma(e.target, ["obyektId", "sud", "asos"]);
     if (!q) return;
-    const y = yoz.find(v => v.id === q.obyektId);
+    const y = nomzod.find(v => v.id === q.obyektId);
+    if (!y || y.ish.bosqich !== "ogohlantirish") return;
     const tarix = (y.ish.tarix || []).concat([[new Date().toLocaleDateString("uz"),
       "Da'vo arizasi tayyorlandi", q.sud + "ga taqdim etish uchun. " + q.asos.slice(0, 80)]]);
     await MKBapi.yangilash("YOZUVLAR", y.id, {
       ish: Object.assign({}, y.ish, {bosqich: "davo", sud: q.sud, tarix}),
       bosqichNomi: "Da'vo arizasi"});
-    MKB.toast("Da'vo ro'yxatga olindi — " + y.ish.raqam);
+    MKB.toast(y.ish.raqam + " raqamli ish bo'yicha da'vo ro'yxatga olindi");
     setTimeout(() => location.href = "ish.html?id=" + encodeURIComponent(y.id), 700);
   });
 });

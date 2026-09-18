@@ -247,5 +247,47 @@ window.MKBchizma = (function(){
     orin.appendChild(svg);
   }
 
-  return {maydon, ustun, halqaDiag, uchqun};
+  /* ---------- GURUHLANGAN USTUNLAR (bir nechta seriya yonma-yon) ---------- */
+  function ustunGuruh(orin, cfg){
+    orin = typeof orin === "string" ? document.getElementById(orin) : orin;
+    if (!orin) return;
+    const chiz = () => {
+      orin.innerHTML = "";
+      const W = Math.max(orin.clientWidth, 280), H = cfg.balandlik || 200;
+      const P = {t: 14, r: 6, b: 26, l: 40};
+      const y = cfg.yorliqlar, S = cfg.seriyalar, N = S[0].qiymatlar.length;
+      const maks = Math.max(1, ...S.map(s => Math.max(...s.qiymatlar))) * 1.12;
+      const joy = (W - P.l - P.r) / N, en = Math.min(cfg.en || 22, joy * .7 / S.length), oraliq = 4;
+      const svg = el("svg", {width: "100%", height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true"});
+      for (let g = 0; g <= 3; g++){
+        const gy = P.t + (H - P.t - P.b) * g / 3;
+        svg.appendChild(el("line", {x1: P.l, x2: W - P.r, y1: gy, y2: gy, stroke: rang("--chiziq-2")}));
+        svg.appendChild(el("text", {x: P.l - 8, y: gy + 3.5, "text-anchor": "end", "font-size": 10, fill: rang("--iz")}, Math.round(maks * (1 - g / 3))));
+      }
+      orin.style.position = "relative";
+      const tt = tooltipYarat(orin);
+      for (let i = 0; i < N; i++){
+        const guruhEni = en * S.length + oraliq * (S.length - 1), x0 = P.l + joy * i + (joy - guruhEni) / 2;
+        S.forEach((s, k) => {
+          const v = s.qiymatlar[i], h = Math.max(4, (H - P.t - P.b) * v / maks), x = x0 + k * (en + oraliq), yy = H - P.b - h;
+          const r = el("rect", {x, y: yy, width: en, height: h, rx: Math.min(7, en / 2.4), fill: rang(s.rang), style: "transition:opacity .14s"});
+          r.addEventListener("pointerenter", () => {
+            r.setAttribute("opacity", .78);
+            tt.removeAttribute("hidden");
+            tt.innerHTML = "<b>" + (cfg.tooltipFormat ? cfg.tooltipFormat(v) : v) + "</b><span>" + s.nom + " · " + y[i] + "</span>";
+            tt.style.left = ((x + en / 2) / W * 100) + "%"; tt.style.top = (yy / H * 100) + "%";
+          });
+          r.addEventListener("pointerleave", () => { r.setAttribute("opacity", 1); tt.setAttribute("hidden", ""); });
+          svg.appendChild(r);
+        });
+        svg.appendChild(el("text", {x: P.l + joy * i + joy / 2, y: H - 8, "text-anchor": "middle", "font-size": 10.5, fill: rang("--iz")}, y[i]));
+      }
+      orin.appendChild(svg);
+    };
+    chiz();
+    let eni = orin.clientWidth;
+    new ResizeObserver(() => { if (Math.abs(orin.clientWidth - eni) > 2){ eni = orin.clientWidth; chiz(); } }).observe(orin);
+  }
+
+  return {maydon, ustun, ustunGuruh, halqaDiag, uchqun};
 })();

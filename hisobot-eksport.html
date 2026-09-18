@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ma'lumot eksporti</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 </head>
 <body data-sahifa="hisobot">
 <div class="qobiq">
@@ -19,13 +19,14 @@
   <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Ma'lumot eksporti</h2></div>
   <form id="ex-forma" class="forma-tor">
     <div class="maydon"><label class="maydon-yorliq">Bo'lim <b>*</b></label>
-      <div class="kirish"><select name="bolim"><option>Aktivlar reyestri</option><option>Qarzdorlar</option><option>Undiruv ishlari</option><option>Ko'riklar</option><option>Savdolar</option><option>Arxiv</option></select></div></div>
+      <div class="kirish"><select name="bolim"></select></div></div>
     <div class="maydon"><label class="maydon-yorliq">Format <b>*</b></label>
-      <div class="kirish"><select name="format"><option>XLSX</option><option>CSV</option><option>PDF</option></select></div></div>
+      <div class="kirish"><select name="format"><option value="csv">CSV (Excel)</option><option value="json">JSON</option></select></div></div>
     <div class="maydon"><label class="maydon-yorliq">Davr</label>
-      <div class="kirish"><select name="davr"><option>Barcha davr</option><option>Joriy oy</option><option>Joriy chorak</option></select></div></div>
+      <div class="kirish"><select name="davr"><option value="hammasi">Barcha davr</option><option value="oy">Joriy oy</option><option value="chorak">Joriy chorak</option><option value="yil">Joriy yil</option></select></div>
+      <span class="maydon-izoh" id="ex-davr-izoh"></span></div>
     <div class="maydon"><label class="maydon-yorliq">Maydonlar</label>
-      <div class="kirish"><select name="maydon"><option>Standart to'plam</option><option>Kengaytirilgan</option></select></div></div>
+      <div class="kirish"><select name="maydon"><option value="standart">Standart to'plam</option><option value="keng">Kengaytirilgan</option></select></div></div>
     <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
       <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-yuklab"/></svg>Eksport qilish</button></div>
   </form>
@@ -33,37 +34,207 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
-document.addEventListener("mkb:tayyor", () => {
+document.addEventListener("mkb:tayyor", async () => {
+  const D = window.MKB_DATA || {};
+  const OYLAR = ["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"];
+
+  /* "26-avg, 2026" | "26.08.2026 21:57" | "2026-08-26" -> Date yoki null */
+  function sanaOqi(m){
+    const s = String(m == null ? "" : m).trim().toLowerCase();
+    let t = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+    if (t) return new Date(+t[3], +t[2] - 1, +t[1]);
+    t = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (t) return new Date(+t[1], +t[2] - 1, +t[3]);
+    t = s.match(/^(\d{1,2})-([a-z]{3})[a-z]*,?\s*(\d{4})/);
+    if (t && OYLAR.indexOf(t[2]) >= 0) return new Date(+t[3], OYLAR.indexOf(t[2]), +t[1]);
+    return null;
+  }
+  /* hisobot sanasi: namoyish ma'lumotida — ma'lumot to'plamining joriy kuni */
+  const bugun = (D.MANBA !== "mahalliy" && sanaOqi(D.KIRISH_BUGUN)) || new Date();
+  function davrda(sana, davr){
+    if (davr === "hammasi") return true;
+    if (!sana || sana.getFullYear() !== bugun.getFullYear()) return false;
+    if (davr === "yil") return true;
+    if (davr === "chorak") return Math.floor(sana.getMonth() / 3) === Math.floor(bugun.getMonth() / 3);
+    return sana.getMonth() === bugun.getMonth();
+  }
+  const son = v => v == null || v === "" ? "" : String(v).replace(".", ",");
+  const oxirgi = y => { const t = (y.ish && y.ish.tarix) || []; return t.length ? t[t.length - 1][0] : ""; };
+  const indeks = y => { try{ return D.nazoratIndeksi ? D.nazoratIndeksi(y) : null; }catch(_){ return null; } };
+  const obyektNomi = id => (D.obyektNomi ? D.obyektNomi(id) : "") || id || "";
+  const TARKIB = [["korik", "Ko'rik"], ["sugurta", "Sug'urta"], ["baho", "Baho"], ["hujjat", "Hujjatlar"], ["kirish", "Kirish nazorati"]];
+
+  /* To'plam: manba kolleksiya, davr maydoni, ruxsat sahifasi, ustunlar [nom, qiymat(x), kengaytirilgan?] */
+  const TOPLAMLAR = {
+    reyestr: {nom: "Obyektlar reyestri", kol: "YOZUVLAR", fayl: "obyektlar-reyestri", sahifa: "obyektlar.html",
+      sana: oxirgi, davrIzoh: "oxirgi harakat sanasi bo'yicha",
+      ustunlar: [
+        ["Obyekt kodi", y => y.id], ["Nomi", y => y.mulk.nom], ["Turi", y => y.mulk.tur], ["Hudud", y => y.mulk.hudud],
+        ["Filial", y => y.filial], ["Holat", y => y.holat && y.holat.nom], ["Baho, mln so'm", y => son(y.mulk.baho)],
+        ["Baholash sanasi", y => y.mulk.bahoSana], ["Sug'urta", y => y.mulk.sugurta],
+        ["Nazorat indeksi", y => { const n = indeks(y); return n ? n.ball : ""; }],
+        ["Manzil", y => y.mulk.hududToliq || y.mulk.manzil, 1], ["Maydon", y => y.mulk.maydon, 1],
+        ["Qarzdor", y => y.mijoz.nom, 1], ["Shartnoma", y => y.shartnoma.raqam, 1],
+        ["Qoplash, %", y => son(y.qoplash), 1], ["Oxirgi harakat", oxirgi, 1]]},
+    nazorat: {nom: "Nazorat indeksi (KPI)", kol: "YOZUVLAR", fayl: "nazorat-indeksi", sahifa: "obyektlar.html",
+      sana: oxirgi, davrIzoh: "oxirgi harakat sanasi bo'yicha",
+      ustunlar: [
+        ["Obyekt kodi", y => y.id], ["Nomi", y => y.mulk.qisqa || y.mulk.nom], ["Hudud", y => y.mulk.hudud], ["Filial", y => y.filial],
+        ["Nazorat indeksi", y => { const n = indeks(y); return n ? n.ball : ""; }],
+        ["Daraja", y => { const n = indeks(y); return n ? n.darajaNomi : ""; }]]
+        .concat(TARKIB.map(([k, nom]) =>
+          [nom, y => { const n = indeks(y); const t = n && (n.tarkib || []).find(v => v.kalit === k); return t ? t.qiymat : ""; }, 1]))},
+    hudud: {nom: "Hududlar kesimi", kol: "YOZUVLAR", fayl: "hududlar-kesimi", sahifa: "obyektlar.html",
+      sana: oxirgi, davrIzoh: "oxirgi harakat sanasi bo'yicha",
+      guruhla(qatorlar){
+        const g = {};
+        qatorlar.forEach(y => {
+          const h = g[y.mulk.hudud] || (g[y.mulk.hudud] = {hudud: y.mulk.hudud, soni: 0, baho: 0, qarz: 0, balans: 0, ball: 0});
+          const n = indeks(y);
+          h.soni++; h.baho += y.mulk.baho || 0; h.qarz += (y.qarz && y.qarz.jami) || 0;
+          if (y.ish.bosqich === "balans") h.balans++;
+          h.ball += n ? n.ball : 0;
+        });
+        return Object.keys(g).map(k => g[k]).sort((a, b) => b.soni - a.soni);
+      },
+      ustunlar: [
+        ["Hudud", h => h.hudud], ["Obyektlar soni", h => h.soni], ["Jami baho, mln so'm", h => son(Math.round(h.baho * 10) / 10)],
+        ["Balansda", h => h.balans], ["O'rtacha nazorat indeksi", h => h.soni ? Math.round(h.ball / h.soni) : ""],
+        ["Jami qarz, mln so'm", h => son(Math.round(h.qarz * 10) / 10), 1]]},
+    korik: {nom: "Ko'riklar", kol: "KORIKLAR", fayl: "koriklar", sahifa: "korik-rejasi.html", sana: k => k.sana,
+      ustunlar: [
+        ["Ko'rik raqami", k => k.id], ["Obyekt kodi", k => k.obyektId], ["Obyekt", k => k.obyekt], ["Hudud", k => k.hudud],
+        ["Turi", k => k.tur], ["Sana", k => k.sana], ["Holat", k => k.holat], ["Inspektor", k => k.inspektor],
+        ["Ball", k => k.ball, 1], ["Xulosa", k => k.xulosa, 1], ["Izoh", k => k.izoh, 1]]},
+    baholash: {nom: "Baholashlar", kol: "BAHOLASHLAR", fayl: "baholashlar", sahifa: "baholash.html", sana: b => b.sana,
+      ustunlar: [
+        ["Raqam", b => b.id], ["Obyekt kodi", b => b.obyektId], ["Obyekt", b => b.obyekt], ["Sana", b => b.sana],
+        ["Qiymat, mln so'm", b => son(b.qiymat)], ["Avvalgi qiymat, mln so'm", b => son(b.avvalgi)], ["Holat", b => b.holat],
+        ["Baholovchi", b => b.baholovchi, 1], ["Usul", b => b.usul, 1], ["Keyingi baholash", b => b.keyingi, 1]]},
+    polis: {nom: "Sug'urta polislari", kol: "POLISLAR", fayl: "sugurta-polislari", sahifa: "sugurta.html",
+      sana: p => p.tugash, davrIzoh: "polis tugash sanasi bo'yicha",
+      ustunlar: [
+        ["Polis", p => p.polis || p.id], ["Obyekt kodi", p => p.obyektId], ["Obyekt", p => p.obyekt],
+        ["Kompaniya", p => p.kompaniya], ["Sug'urta summasi, mln so'm", p => son(p.summa)],
+        ["Tugash sanasi", p => p.tugash], ["Holat", p => p.holat]]},
+    undiruv: {nom: "Undiruv va sud ishlari", kol: "YOZUVLAR", fayl: "undiruv-ishlari", sahifa: "undiruv.html",
+      sana: oxirgi, davrIzoh: "oxirgi harakat sanasi bo'yicha",
+      ustunlar: [
+        ["Ish raqami", y => y.ish.raqam], ["Obyekt kodi", y => y.id], ["Qarzdor", y => y.mijoz.nom], ["Obyekt", y => y.mulk.qisqa || y.mulk.nom],
+        ["Bosqich", y => y.bosqichNomi], ["Da'vo summasi, mln so'm", y => son(y.qarz && y.qarz.jami)], ["Sud", y => y.ish.sud],
+        ["Sud qarori", y => y.ish.qaror], ["Ijro hujjati", y => y.ish.ijro], ["Mas'ul", y => y.ish.masul],
+        ["Kechikish, kun", y => y.qarz && y.qarz.kunlar, 1], ["Tasnif", y => y.tasnif && y.tasnif.nom, 1],
+        ["Nazorat muddati", y => y.ish.muddat, 1], ["Oxirgi harakat", oxirgi, 1]]},
+    majlis: {nom: "Sud majlislari", kol: "SUD_MAJLISLAR", fayl: "sud-majlislari", sahifa: "sud-kalendar.html", sana: m => m.sana,
+      ustunlar: [
+        ["Majlis", m => m.id], ["Ish raqami", m => m.ishRaqam], ["Obyekt", m => m.obyekt], ["Sud", m => m.sud],
+        ["Sana", m => m.sana], ["Vaqt", m => m.soat], ["Holat", m => m.holat],
+        ["Zal", m => m.zal, 1], ["Advokat", m => m.advokat, 1], ["Mavzu", m => m.mavzu, 1], ["Bayonnoma", m => m.bayon, 1]]},
+    kirish: {nom: "Kirish voqealari", kol: "KIRISH_VOQEALARI", fayl: "kirish-voqealari", sahifa: "kirish-voqealari.html", sana: v => v.sana,
+      ustunlar: [
+        ["Voqea", v => v.id], ["Vaqt", v => v.vaqt], ["Obyekt kodi", v => v.obyektId], ["Obyekt", v => obyektNomi(v.obyektId)],
+        ["Kirish nuqtasi", v => v.nuqtaNomi], ["Shaxs", v => D.shaxsNomi ? D.shaxsNomi(v.shaxsId) : v.shaxsId],
+        ["Natija", v => v.natija], ["Yo'nalish", v => v.yonalish],
+        ["Usul", v => v.usul, 1], ["Sabab", v => v.sabab, 1]]},
+    xarajat: {nom: "Saqlash xarajatlari", kol: "XARAJATLAR", fayl: "saqlash-xarajatlari", sahifa: "hisobot-xarajat.html", sana: x => x.sana,
+      ustunlar: [
+        ["Raqam", x => x.id], ["Obyekt kodi", x => x.obyektId], ["Obyekt", x => x.obyekt], ["Xarajat turi", x => x.tur],
+        ["Summa, mln so'm", x => son(x.summa)], ["Sana", x => x.sana], ["Holat", x => x.holat]]},
+    arxiv: {nom: "Arxiv", kol: "ARXIV", fayl: "arxiv", sahifa: "arxiv.html", sana: a => a.sotilgan,
+      ustunlar: [
+        ["Obyekt kodi", a => a.kod || a.id], ["Nomi", a => a.nom], ["Turi", a => a.tur], ["Sotilgan sana", a => a.sotilgan],
+        ["Summa, mln so'm", a => son(a.summa)], ["Xaridor", a => a.xaridor],
+        ["Ish raqami", a => a.ish, 1], ["Balansga qabul", a => a.qabul, 1], ["Nazorat muddati", a => a.nazorat, 1]]},
+  };
+  const TUR_MOS = {portfel: "reyestr", kpi: "nazorat"};
+
+  const forma = document.getElementById("ex-forma");
+  const bolim = forma.elements.bolim;
+  const ochiq = Object.keys(TOPLAMLAR).filter(k => Array.isArray(D[TOPLAMLAR[k].kol]) && MKB.ruxsat(TOPLAMLAR[k].sahifa));
+  bolim.innerHTML = ochiq.map(k => '<option value="' + k + '">' + TOPLAMLAR[k].nom + "</option>").join("");
+  const tur = new URLSearchParams(location.search).get("tur") || "";
+  const boshlangich = TUR_MOS[tur] || tur;
+  if (ochiq.includes(boshlangich)) bolim.value = boshlangich;
+  tarjimaQil(forma);
+
+  async function tayyorla(){
+    const t = TOPLAMLAR[bolim.value];
+    if (!t) return null;
+    const kengaytirilgan = forma.elements.maydon.value === "keng";
+    const davr = forma.elements.davr.value;
+    let qatorlar = (await MKBapi.royxat(t.kol)).filter(x => davrda(sanaOqi(t.sana(x)), davr));
+    if (t.guruhla) qatorlar = t.guruhla(qatorlar);
+    const ustunlar = t.ustunlar.filter(u => kengaytirilgan || !u[2]);
+    return {t, qatorlar, ustunlar, davr};
+  }
+  async function meta(){
+    const r = await tayyorla();
+    document.getElementById("hs-meta").textContent = r ? r.qatorlar.length + " ta yozuv · " + r.ustunlar.length + " ta ustun" : "—";
+    const izoh = document.getElementById("ex-davr-izoh");
+    izoh.textContent = r && r.t.davrIzoh ? "Davr " + r.t.davrIzoh + " olinadi" : "";
+    tarjimaQil(izoh);
+  }
+  ["bolim", "davr", "maydon"].forEach(n => forma.elements[n].addEventListener("change", meta));
+  meta();
+
+  function jurnalOqi(){
+    try{ return JSON.parse(localStorage.getItem("mkb4-eksport") || "[]"); }catch(_){ return []; }
+  }
   function jurnal(){
-    const j = JSON.parse(localStorage.getItem("mkb4-eksport") || "[]");
-    document.getElementById("ex-jurnal").innerHTML = j.length ?
+    const j = jurnalOqi();
+    const el = document.getElementById("ex-jurnal");
+    el.innerHTML = j.length ?
       '<div class="karta-bosh"><h2 style="font-size:14px">So\'nggi eksportlar</h2></div>' +
       j.map(v => '<div style="display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--chiziq-2);font-size:12.5px">' +
-        '<span>' + v.bolim + ' · ' + v.format + '</span><span style="color:var(--iz)">' + v.vaqt + '</span></div>').join("") : "";
+        '<span>' + v.bolim + ' · ' + v.format + (v.soni != null ? ' · ' + v.soni + ' ta yozuv' : '') + '</span><span style="color:var(--iz)">' + v.vaqt + '</span></div>').join("") : "";
+    tarjimaQil(el);
   }
   jurnal();
-  document.getElementById("ex-forma").addEventListener("submit", e => {
+
+  function jsonYukla(nom, obyektlar){
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(obyektlar, null, 2)], {type: "application/json;charset=utf-8"}));
+    a.download = nom;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  forma.addEventListener("submit", async e => {
     e.preventDefault();
-    const q = MKB.forma(e.target, ["bolim", "format"]);
+    const q = MKB.forma(forma, ["bolim", "format"]);
     if (!q) return;
-    const j = JSON.parse(localStorage.getItem("mkb4-eksport") || "[]");
-    j.unshift({bolim: q.bolim, format: q.format, vaqt: new Date().toLocaleString("uz")});
-    localStorage.setItem("mkb4-eksport", JSON.stringify(j.slice(0, 10)));
-    MKB.toast(q.bolim + " " + q.format + " shaklida tayyorlanmoqda");
+    const r = await tayyorla();
+    if (!r) return;
+    if (!r.qatorlar.length){
+      MKB.toast("Tanlangan davrda yozuv topilmadi, fayl shakllantirilmadi", "xavf");
+      return;
+    }
+    const sarlavhalar = r.ustunlar.map(u => u[0]);
+    const jadval = r.qatorlar.map(x => r.ustunlar.map(u => { const v = u[1](x); return v == null ? "" : v; }));
+    const kun = new Date();
+    const belgi = kun.getFullYear() + String(kun.getMonth() + 1).padStart(2, "0") + String(kun.getDate()).padStart(2, "0");
+    const nom = "mkb-" + r.t.fayl + (r.davr === "hammasi" ? "" : "-" + r.davr) + "-" + belgi;
+    if (q.format === "json")
+      jsonYukla(nom + ".json", jadval.map(qt => Object.fromEntries(qt.map((v, i) => [sarlavhalar[i], v]))));
+    else MKB.csv(nom + ".csv", sarlavhalar, jadval);
+    const j = jurnalOqi();
+    j.unshift({bolim: r.t.nom, format: q.format.toUpperCase(), soni: jadval.length, vaqt: kun.toLocaleString("uz")});
+    try{ localStorage.setItem("mkb4-eksport", JSON.stringify(j.slice(0, 10))); }catch(_){}
+    MKB.toast(r.t.nom + ": " + jadval.length + " ta yozuv yuklab olindi");
     jurnal();
   });
 });

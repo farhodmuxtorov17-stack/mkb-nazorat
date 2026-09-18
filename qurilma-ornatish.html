@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Qurilma o'rnatish</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="kn">
@@ -59,19 +59,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 
 const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
@@ -109,44 +109,99 @@ function voqeaQatori(v){
   return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
     '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
       ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
-    '<span class="matn"><b>' + (sh ? sh.ism : "Aniqlanmagan shaxs") + "</b>" +
+    '<span class="matn"><b>' + (sh ? sh.ism : v.operator || "Aniqlanmagan shaxs") + "</b>" +
     "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
     '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
 }
 
+/* ---------- saqlash yordamchilari (yozuv faqat MKBapi orqali) ---------- */
+/* server rejimida kolleksiya xotiradagi nusxaga id bo'yicha qo'shib olinadi */
+async function knYukla(nomlar){
+  await MKBapi.tayyor;
+  if (MKBapi.rejim() !== "server") return;
+  for (const k of nomlar){
+    try{
+      const asl = MKB_DATA[k], r = await MKBapi.royxat(k);
+      if (!Array.isArray(asl) || !Array.isArray(r)) continue;
+      const ix = new Map(asl.map(x => [x.id, x]));
+      r.forEach(x => { const b = ix.get(x.id); if (b) Object.assign(b, x); else asl.push(x); });
+    }catch(_){ }
+  }
+}
+async function knYangila(k, id, patch){
+  await MKBapi.yangilash(k, id, patch);
+  const b = (MKB_DATA[k] || []).find(x => x.id === id);
+  if (b) Object.assign(b, patch);
+  return b;
+}
+async function knYangi(k, obyekt){
+  const j = await MKBapi.yangi(k, obyekt);
+  const y = j && j.id ? j : obyekt;
+  const a = MKB_DATA[k];
+  if (Array.isArray(a) && !a.some(x => x.id === y.id)) a.push(y);
+  return (Array.isArray(a) && a.find(x => x.id === y.id)) || y;
+}
+/* keyingi raqam: shu old qo'shimchali id'larning eng katta soni + 1 */
+async function knKeyingiId(k, old, uzunlik){
+  const r = await MKBapi.royxat(k);
+  let maks = 0;
+  r.forEach(x => {
+    const s = String(x.id || ""), m = /(\d+)$/.exec(s);
+    if (m && s.indexOf(old) === 0) maks = Math.max(maks, +m[1]);
+  });
+  return old + String(maks + 1).padStart(uzunlik || 0, "0");
+}
+async function knSaqla(ish){
+  try{ await ish(); return true; }
+  catch(_){ MKB.toast("Saqlab bo'lmadi, qayta urinib ko'ring", "xavf"); return false; }
+}
+function knKim(){ const s = MKBapi.sessiya(); return s && s.ism ? s.ism : "Operator"; }
+function knSoat(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+}
+/* "26.08.2026" + "14:05" -> saralash kaliti */
+function knVaqtKalit(sana, soat){ return String(sana || "").split(".").reverse().join("") + (soat || ""); }
+
 document.addEventListener("mkb:tayyor", () => {
   const D = MKB_DATA;
   const QADAM = ["Joylashuv", "Qurilma", "Ulanish", "Faollashtirish"];
+  /* tur nomi reyestrdagi yozilish bilan bir xil; ikkinchi element — tur kodi */
   const MODELLAR = {
-    "Elektromagnit qulf": ["SecurLine ML-400", "SecurLine ML-600", "AccessPro EM-280"],
-    "Kartani o’quvchi": ["AccessPro RD-12", "AccessPro RD-20", "SecurLine RF-9"],
-    "Yuzni aniqlash terminali": ["VisionGate F7", "VisionGate F9 Pro", "FaceLine T3"],
-    "Videokamera": ["OptiCam D4 2MP", "OptiCam D8 4MP", "OptiCam PTZ-12"],
-    "Kirish kontrolleri": ["AccessPro C-8", "AccessPro C-16", "SecurLine CTRL-4"],
-    "Eshik holati datchigi": ["SenseGuard DS-1", "SenseGuard DS-3"],
+    "Elektromagnit qulf": ["qulf", ["SecurLine ML-400", "SecurLine ML-600", "AccessPro EM-280"]],
+    "Kartani o'quvchi": ["oquvchi", ["AccessPro RD-12", "AccessPro RD-20", "SecurLine RF-9"]],
+    "Yuzni aniqlash terminali": ["yuz", ["VisionGate F7", "VisionGate F9 Pro", "FaceLine T3"]],
+    "Videokamera": ["kamera", ["OptiCam D4 2MP", "OptiCam D8 4MP", "OptiCam PTZ-12"]],
+    "Kirish kontrolleri": ["kontroller", ["AccessPro C-8", "AccessPro C-16", "SecurLine CTRL-4"]],
+    "Videointerkom": ["interkom", ["TalkLine IP-2", "TalkLine IP-5"]],
+    "Eshik holati datchigi": ["datchik", ["SenseGuard DS-1", "SenseGuard DS-3"]],
   };
   let qadam = 0;
 
   const ob = document.getElementById("or-obyekt");
   ob.innerHTML = D.YOZUVLAR.map(y => '<option value="' + y.id + '">' + y.mulk.qisqa + "</option>").join("");
   document.getElementById("or-tur").innerHTML =
-    Object.keys(MODELLAR).map(t => '<option value="' + t + '">' + t + "</option>").join("");
+    Object.keys(MODELLAR).map(t => '<option value="' + t.replace(/'/g, "&#39;") + '">' + t + "</option>").join("");
   document.getElementById("or-masul").innerHTML =
     D.SHAXSLAR.filter(s => s.tur === "xodim").map(s => "<option>" + s.ism + "</option>").join("");
   function nuqtalar(){
     const n = D.obyektNuqtalari(ob.value);
     document.getElementById("or-nuqta").innerHTML = n.length
       ? n.map(x => '<option value="' + x.id + '">' + x.nom + "</option>").join("")
-      : '<option value="">Nuqta yo&#39;q — avval kirish nuqtasi qo&#39;shing</option>';
+      : '<option value="">Avval kirish nuqtasini qo&#39;shing</option>';
   }
   function modellar(){
     const t = document.getElementById("or-tur").value;
     document.getElementById("or-model").innerHTML =
-      (MODELLAR[t] || []).map(m => "<option>" + m + "</option>").join("");
+      ((MODELLAR[t] || [])[1] || []).map(m => "<option>" + m + "</option>").join("");
   }
   ob.addEventListener("change", nuqtalar);
   document.getElementById("or-tur").addEventListener("change", modellar);
+  /* kirish nuqtasi kartochkasidan kelganda joylashuv oldindan tanlanadi */
+  const oldindan = D.kirishNuqtasi(new URLSearchParams(location.search).get("nuqta"));
+  if (oldindan) ob.value = oldindan.obyektId;
   nuqtalar(); modellar();
+  if (oldindan) document.getElementById("or-nuqta").value = oldindan.id;
 
   function chiz(){
     document.getElementById("or-zanjir").innerHTML = MKB.zanjir(
@@ -156,31 +211,75 @@ document.addEventListener("mkb:tayyor", () => {
     document.getElementById("or-oldinga").textContent =
       qadam === QADAM.length - 1 ? "Qurilmani faollashtirish" : "Keyingi qadam";
     document.getElementById("hs-meta").textContent = (qadam + 1) + " / " + QADAM.length + " qadam";
+    ["or-zanjir", "or-oldinga", "hs-meta"].forEach(k => tarjimaQil(document.getElementById(k)));
   }
-  function tekshir(){
+  /* seriya raqami saqlangan reyestr bo'yicha tekshiriladi */
+  async function seriyaBand(s){
+    const royxat = await MKBapi.royxat("QURILMALAR");
+    return royxat.some(q => String(q.seriya).toUpperCase() === s);
+  }
+  async function tekshir(){
     if (qadam === 0 && !document.getElementById("or-nuqta").value){
       MKB.toast("Kirish nuqtasi tanlanmagan", "xavf"); return false;
     }
-    if (qadam === 2){
-      const s = document.getElementById("or-seriya").value.trim();
+    if (qadam === 1 && !document.getElementById("or-model").value){
+      MKB.toast("Qurilma modeli tanlanmagan", "xavf"); return false;
+    }
+    if (qadam >= 2){
+      const s = document.getElementById("or-seriya").value.trim().toUpperCase();
       const ip = document.getElementById("or-ip").value.trim();
-      if (!/^SN\d{6}$/.test(s)){ MKB.toast("Seriya raqami SN va 6 ta raqamdan iborat bo’lishi kerak", "xavf"); return false; }
-      if (D.QURILMALAR.some(q => q.seriya === s)){ MKB.toast("Bunday seriya raqami reyestrda bor", "xavf"); return false; }
-      if (!/^\d{1,3}(\.\d{1,3}){3}$/.test(ip)){ MKB.toast("Tarmoq manzili formati noto’g’ri", "xavf"); return false; }
-      document.getElementById("or-natija").innerHTML =
-        '<div class="qator"><span class="belgi mint">' + ik("tasdiq") + "</span>" +
-        '<span class="matn"><b>Ulanish testi</b><span>' + ip + " — javob 42 ms</span></span></div>";
+      if (!/^SN\d{6}$/.test(s)){ MKB.toast("Seriya raqami SN va 6 ta raqamdan iborat bo'lishi kerak", "xavf"); return false; }
+      if (await seriyaBand(s)){ MKB.toast("Bunday seriya raqami reyestrda bor", "xavf"); return false; }
+      if (!/^\d{1,3}(\.\d{1,3}){3}$/.test(ip) || ip.split(".").some(b => +b > 255)){
+        MKB.toast("Tarmoq manzili formati noto'g'ri", "xavf"); return false;
+      }
+      if (qadam === 2){
+        document.getElementById("or-natija").innerHTML =
+          '<div class="qator"><span class="belgi mint">' + ik("tasdiq") + "</span>" +
+          '<span class="matn"><b>Ulanish testi</b><span>' + ip + " · javob vaqti 42 ms</span></span></div>";
+        tarjimaQil(document.getElementById("or-natija"));
+      }
     }
     return true;
   }
-  document.getElementById("or-oldinga").addEventListener("click", () => {
-    if (!tekshir()) return;
-    if (qadam === QADAM.length - 1){
-      MKB.toast("Qurilma reyestrga qo’shildi va monitoringga ulandi");
-      setTimeout(() => location.href = "qurilmalar.html", 900);
-      return;
+  async function yarat(){
+    const f = MKB.forma(document.getElementById("or-forma"),
+      ["obyektId", "nuqta", "tur", "model", "seriya", "ip", "masul"]);
+    if (!f){ MKB.toast("Majburiy maydonlarni to'ldiring", "xavf"); return null; }
+    const n = D.kirishNuqtasi(f.nuqta);
+    const xizmat = new Date(2026, 7, 26 + 180);
+    const kod = (MODELLAR[f.tur] || [])[0] || "qurilma";
+    return knYangi("QURILMALAR", {
+      id: await knKeyingiId("QURILMALAR", "QR-", 4),
+      obyektId: n ? n.obyektId : f.obyektId, kirishNuqtaId: f.nuqta,
+      tur: kod, turNomi: f.tur, model: f.model, seriya: f.seriya.toUpperCase(),
+      ornatilgan: D.KIRISH_BUGUN, proshivka: "v1.0.0", holat: "ishlayapti",
+      oxirgiAloqa: "bugun " + knSoat(), batareya: kod === "datchik" ? 100 : null,
+      keyingiXizmat: String(xizmat.getDate()).padStart(2, "0") + "." +
+        String(xizmat.getMonth() + 1).padStart(2, "0") + "." + xizmat.getFullYear(),
+      ip: f.ip, monitoring: f.oraliq, masul: f.masul, ornatgan: knKim(),
+    });
+  }
+  let band = false, yaratildi = false;
+  document.getElementById("or-oldinga").addEventListener("click", async () => {
+    if (band || yaratildi) return;
+    band = true;
+    try{
+      if (!(await tekshir())) return;
+      if (qadam === QADAM.length - 1){
+        const q = await yarat();
+        if (!q) return;
+        yaratildi = true;
+        MKB.toast("Qurilma reyestrga qo'shildi va monitoringga ulandi");
+        setTimeout(() => location.href = "qurilma.html?id=" + encodeURIComponent(q.id), 900);
+        return;
+      }
+      qadam += 1; chiz();
+    }catch(_){
+      MKB.toast("Saqlab bo'lmadi, qayta urinib ko'ring", "xavf");
+    }finally{
+      band = false;
     }
-    qadam += 1; chiz();
   });
   document.getElementById("or-orqaga").addEventListener("click", () => { qadam = Math.max(0, qadam - 1); chiz(); });
   chiz();

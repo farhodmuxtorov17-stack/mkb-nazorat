@@ -5,7 +5,8 @@
    Sahifalar to'g'ridan-to'g'ri fetch chaqirmaydi — faqat MKBapi.
    ============================================================ */
 window.MKBapi = (function(){
-  const OMBOR_KALIT = "mkb4-ozgarishlar";      /* {kolleksiya:{id:{...patch}|{__yangi:obyekt}}} */
+  /* har bir ma'lumot manbai (shartli / mahalliy reyestr) o'z o'zgarishlar qatlamiga ega */
+  const OMBOR_KALIT = "mkb4-ozgarishlar" + (window.MKB_DATA && MKB_DATA.MANBA === "mahalliy" ? "-mahalliy" : "");      /* {kolleksiya:{id:{...patch}|{__yangi:obyekt}}} */
   const SESSIYA_KALIT = "mkb4-sessiya";        /* {token, rol, ism, filial} */
   let rejim = "snapshot";
   let tayyorHal;
@@ -31,16 +32,26 @@ window.MKBapi = (function(){
   }
   function ustqatlamSaqla(u){ localStorage.setItem(OMBOR_KALIT, JSON.stringify(u)); }
 
+  /* Saqlangan o'zgarishlar xotiradagi MKB_DATA ga qo'llanadi: ma'lumotni to'g'ridan-to'g'ri
+     o'qiydigan sahifalar va hosilaviy ko'rsatkichlar (nazorat indeksi) ham ularni ko'radi. */
+  function xotiradaQolla(kolleksiya, id, p){
+    const D = window.MKB_DATA || {};
+    const asl = D[kolleksiya];
+    if (!Array.isArray(asl)) return;
+    const bor = asl.find(x => x.id === id);
+    if (p.__yangi){ if (!bor) asl.push(p.__yangi); else Object.assign(bor, p.__yangi); }
+    else if (bor) Object.assign(bor, p);
+    if (D.nazoratKeshTozala) D.nazoratKeshTozala();
+  }
+  (function ustqatlamniQolla(){
+    const u = ustqatlam();
+    Object.keys(u).forEach(k => Object.keys(u[k]).forEach(id => xotiradaQolla(k, id, u[k][id])));
+  })();
+
   function xomRoyxat(kolleksiya){
     const D = window.MKB_DATA || {};
-    const asl = Array.isArray(D[kolleksiya]) ? D[kolleksiya] : [];
     const u = (ustqatlam()[kolleksiya]) || {};
-    const royxat = asl.map(x => {
-      const p = u[x.id];
-      return p && !p.__yangi ? Object.assign({}, x, p) : x;
-    }).filter(x => !(u[x.id] && u[x.id].__ochirilgan));
-    Object.values(u).forEach(p => { if (p.__yangi) royxat.push(p.__yangi); });
-    return royxat;
+    return (Array.isArray(D[kolleksiya]) ? D[kolleksiya] : []).filter(x => !(u[x.id] && u[x.id].__ochirilgan));
   }
 
   /* ---------- Server so'rovi ---------- */
@@ -52,7 +63,7 @@ window.MKBapi = (function(){
         s ? {"X-Sessiya": s.token} : {}),
       body: tana ? JSON.stringify(tana) : undefined,
     });
-    if (r.status === 401){ chiqish(); location.href = "kirish.html"; throw new Error("sessiya tugadi"); }
+    if (r.status === 401 && yol !== "kirish"){ chiqish(); location.href = "kirish.html"; throw new Error("sessiya tugadi"); }
     if (!r.ok) throw new Error("API xatosi: " + r.status);
     return r.json();
   }
@@ -89,6 +100,7 @@ window.MKBapi = (function(){
       u[kolleksiya][id] = Object.assign({}, u[kolleksiya][id], patch);
     }
     ustqatlamSaqla(u);
+    xotiradaQolla(kolleksiya, id, patch);
     amalYoz(kolleksiya, id, "yangilash", patch);
     return Object.assign({id}, patch);
   }
@@ -100,6 +112,7 @@ window.MKBapi = (function(){
     u[kolleksiya] = u[kolleksiya] || {};
     u[kolleksiya][obyekt.id] = {__yangi: obyekt};
     ustqatlamSaqla(u);
+    xotiradaQolla(kolleksiya, obyekt.id, {__yangi: obyekt});
     amalYoz(kolleksiya, obyekt.id, "yaratish", null);
     return obyekt;
   }
@@ -142,7 +155,7 @@ window.MKBapi = (function(){
     const F = (window.MKB_DATA && MKB_DATA.FOYDLAR) || [];
     const f = F.find(x => x.login === login) ||
               F.find(x => x.rol === rol) ||
-              {nom: login || "Ismoilov Otabek", rol: rol || "Administrator", bolim: "Toshkent shahar filiali"};
+              {nom: login || "Ismoilov Otabek", rol: rol || "Administrator", bolim: "Toshkent shahar BXO"};
     const s = {token: "s" + Date.now().toString(36), ism: f.nom || f.ism,
                rol: rol || f.rol, filial: f.bolim || f.filial || ""};
     localStorage.setItem(SESSIYA_KALIT, JSON.stringify(s));

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Baholash reyestri</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 <style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
 </head>
 <body data-sahifa="baholash">
@@ -17,7 +17,7 @@
     <div class="hs-yorliq"><span>Baholash</span></div>
     <div class="hs-qator"><h1>Baholash reyestri</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html" class="faol">Reyestr</a><a href="baholash-buyurtma.html">Buyurtma</a><a href="baholash-hisobot-kiritish.html">Hisobot kiritish</a><a href="baholovchilar.html">Baholovchilar</a><a href="baholash-dinamika.html">Dinamika</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html" class="faol">Baholash</a><a href="baholash-buyurtma.html">Buyurtma</a><a href="baholash-hisobot-kiritish.html">Hisobot kiritish</a><a href="sugurta.html">Sug&#39;urta polislari</a><a href="sugurta-yangilash.html">Polisni yangilash</a></nav>
   <section class="metrika-qator" aria-label="Asosiy ko'rsatkichlar">
     <div class="metrika"><span class="m-yorliq">Jami baholashlar</span>
       <span class="m-qiymat"><span id="b-jami">—</span></span>
@@ -39,31 +39,33 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", async () => {
   const r = await MKBapi.royxat("BAHOLASHLAR");
   const qatorlar = r.map(b => {
     const y = MKB_DATA.OBYEKT_INDEKS[b.obyektId] || {};
-    const delta = b.avvalgi ? Math.round((b.qiymat - b.avvalgi) / b.avvalgi * 1000) / 10 : 0;
+    const delta = b.avvalgi && b.qiymat ? Math.round((b.qiymat - b.avvalgi) / b.avvalgi * 1000) / 10 : 0;
     return Object.assign({}, b, {obyekt: y.qisqa || b.obyektId, delta});
   });
   document.getElementById("b-jami").textContent = qatorlar.length;
   document.getElementById("b-yil").textContent = qatorlar.filter(b => (b.sana || "").includes("2026")).length;
   document.getElementById("b-eski").textContent = qatorlar.filter(b => (b.sana || "").includes("2025")).length;
-  const ortacha = qatorlar.reduce((a, b) => a + b.delta, 0) / (qatorlar.length || 1);
+  /* o'rtacha o'zgarish faqat yakunlangan (qiymati va avvalgi bahosi bor) hisobotlardan */
+  const yakunlangan = qatorlar.filter(b => b.avvalgi && b.qiymat);
+  const ortacha = yakunlangan.reduce((a, b) => a + b.delta, 0) / (yakunlangan.length || 1);
   document.getElementById("b-ozgarish").innerHTML =
     (ortacha >= 0 ? "+" : "") + ortacha.toFixed(1).replace(".", ",") + "<small>%</small>";
   MKB.jadval("jadval-joy", {
@@ -76,8 +78,9 @@ document.addEventListener("mkb:tayyor", async () => {
       {kalit: "sana", nom: "Sana"},
       {kalit: "baholovchi", nom: "Baholovchi"},
       {kalit: "usul", nom: "Usul"},
-      {kalit: "qiymat", nom: "Qiymat", son: true, chiz: b => '<span class="pul">' + MKB.fmt(b.qiymat) + ' mln</span>'},
-      {kalit: "delta", nom: "O'zgarish", son: true, chiz: b =>
+      {kalit: "qiymat", nom: "Qiymat", son: true, chiz: b => b.qiymat
+        ? '<span class="pul">' + MKB.fmt(b.qiymat) + ' mln</span>' : '<span class="chip chip-sariq">kutilmoqda</span>'},
+      {kalit: "delta", nom: "O'zgarish", son: true, chiz: b => !(b.avvalgi && b.qiymat) ? "—" :
         '<span class="delta ' + (b.delta >= 0 ? 'ijobiy">↑ ' : 'salbiy">↓ ') + Math.abs(b.delta).toFixed(1).replace(".", ",") + '%</span>'},
     ],
     bosilganda: b => location.href = "baholash-hisobot.html?id=" + encodeURIComponent(b.id),

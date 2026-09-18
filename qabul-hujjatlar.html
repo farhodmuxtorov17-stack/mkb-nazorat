@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Balansga qabul — hujjatlar</title>
-<link rel="stylesheet" href="yadro/app.css?v=26082800">
+<link rel="stylesheet" href="yadro/app.css?v=26091704">
 </head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
@@ -33,19 +33,19 @@
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26082800"></script>
-<script src="malumot.js?v=26082800"></script>
-<script src="malumot-qoshimcha.js?v=26082800"></script>
-<script src="malumot-kengaytma.js?v=26082800"></script>
-<script src="malumot-kirish.js?v=26082800"></script>
-<script src="malumot-indeks.js?v=26082800"></script>
-<script src="tarjima.js?v=26082800"></script>
-<script src="yadro/ikonlar.js?v=26082800"></script>
-<script src="yadro/daraxt.js?v=26082800"></script>
-<script src="yadro/chizma.js?v=26082800"></script>
-<script src="yadro/qollanma.js?v=26082800"></script>
-<script src="yadro/api.js?v=26082800"></script>
-<script src="yadro/app.js?v=26082800"></script>
+<script src="yadro/bino.js?v=26091704"></script>
+<script src="malumot.js?v=26091704"></script>
+<script src="malumot-qoshimcha.js?v=26091704"></script>
+<script src="malumot-kengaytma.js?v=26091704"></script>
+<script src="malumot-kirish.js?v=26091704"></script>
+<script src="malumot-indeks.js?v=26091704"></script>
+<script src="tarjima.js?v=26091704"></script>
+<script src="yadro/ikonlar.js?v=26091704"></script>
+<script src="yadro/daraxt.js?v=26091704"></script>
+<script src="yadro/chizma.js?v=26091704"></script>
+<script src="yadro/qollanma.js?v=26091704"></script>
+<script src="yadro/api.js?v=26091704"></script>
+<script src="yadro/app.js?v=26091704"></script>
 <script>
 document.addEventListener("mkb:tayyor", () => {
 
@@ -62,11 +62,22 @@ document.addEventListener("mkb:tayyor", () => {
       '<input type="checkbox" data-hujjat style="width:16px;height:16px;accent-color:var(--siyoh)"' +
       ((h.hujjatlar || [])[i] ? " checked" : "") + '><span style="flex:1">' + nom + '</span>' +
       '<span class="chip">' + (i < 2 ? "asl nusxa" : "nusxa") + '</span></label>').join("");
+  const forma = document.getElementById("q2-forma");
+  if (h.rais) forma.elements.rais.value = h.rais;
+  if (h.azo) forma.elements.azo.value = h.azo;
+  /* joriy holat tekshiruvsiz saqlanadi — "Orqaga" bosilganda kiritilganlar yo'qolmaydi */
+  function holatniSaqla(){
+    Object.assign(h, {rais: forma.elements.rais.value.trim(), azo: forma.elements.azo.value.trim(),
+      hujjatlar: [...document.querySelectorAll("[data-hujjat]")].map(c => c.checked)});
+    sessionStorage.setItem("mkb4-qabul", JSON.stringify(h));
+  }
+  forma.querySelector('a[href="qabul-boshlash.html"]').addEventListener("click", holatniSaqla);
   document.getElementById("q2-forma").addEventListener("submit", e => {
     e.preventDefault();
     const q = MKB.forma(e.target, ["rais", "azo"]);
     if (!q) return;
     const belgilar = [...document.querySelectorAll("[data-hujjat]")].map(c => c.checked);
+    holatniSaqla();
     if (belgilar.some(b => !b)){ MKB.toast("Barcha hujjatlar belgilangan bo'lishi shart", "xavf"); return; }
     Object.assign(h, q, {hujjatlar: belgilar});
     sessionStorage.setItem("mkb4-qabul", JSON.stringify(h));
