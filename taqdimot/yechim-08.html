@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yechim 08 — Metanolli EFOY yoqilg'i elementi</title>
+<meta name="description" content="Metanolli yoqilg'i elementi bilan chekkadagi obyektni nazorat qilish: qishki ish tartibi, yoqilg'i hisobi, Modbus orqali telemetriya, montaj, smeta va uchta nosozlik.">
+<link rel="icon" href="../favicon.ico">
+<link rel="stylesheet" href="../assets/shriftlar-v6.css">
+<link rel="stylesheet" href="../yadro/taqdimot.css?v=26092410">
+<link rel="stylesheet" href="chuqur.css?v=26092410">
+<link rel="stylesheet" href="yechim.css?v=26092410">
+</head>
+<body class="chuqur" data-sahifa="taqdimot" data-ochiq="1" data-slayd="s-y08"
+      data-title-uz="Yechim 08 — Metanolli EFOY yoqilg'i elementi"
+      data-title-ru="Решение 08 — метанольный топливный элемент EFOY">
+
+<header class="c-bosh">
+  <div class="c-bosh-ich">
+    <a class="c-nishon" href="../taqdimot.html" data-orqa aria-label="MKBANK">
+      <svg class="belgi" viewBox="0 0 440 96" role="img" aria-label="MKBANK" data-tarjimasiz>
+        <polygon fill="#13A33A" points="0,9.6 40.2,36.7 100,0 100,26.7 40.2,65.3 0,40.6"/>
+        <polygon fill="#0A4A9C" points="0,57.4 31.1,76.5 31.1,96 0,96"/>
+        <polygon fill="#0A4A9C" points="68.9,67.9 100,47.8 100,96 68.9,96"/>
+        <text x="133" y="69.5" font-family="Manrope, sans-serif" font-weight="800" font-size="58" textLength="305" lengthAdjust="spacingAndGlyphs" fill="#0A4A9C">MKBANK</text>
+      </svg>
+      <b data-tarjimasiz>Yechim 08</b>
+    </a>
+    <div class="c-bosh-ong">
+      <a class="c-orqa" href="../taqdimot.html?dan=s-y08" data-orqa="s-y08">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        <span>Slaydga qaytish · <b class="c-orqa-raqam" data-tarjimasiz>15</b></span>
+      </a>
+      <div class="c-til" role="group" aria-label="Til">
+        <button type="button" data-til="uz" data-tarjimasiz>UZ</button>
+        <button type="button" data-til="ru" data-tarjimasiz>RU</button>
+      </div>
+      <button type="button" class="c-chop" data-chop aria-label="Chop etish">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V4h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="6" rx="1"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="c-yoq" aria-label="Bo'limlar">
+  <div class="c-yoq-ich">
+    <a href="#komplekt">Komplekt</a>
+    <a href="#sutka">Qishki sutka</a>
+    <a href="#quvvat">Yoqilg'i hisobi</a>
+    <a href="#yol">Ma'lumot yo'li</a>
+    <a href="#operator">Operator</a>
+    <a href="#montaj">O'rnatish</a>
+    <a href="#narx">Narx</a>
+    <a href="#bozor">Metanol va huquq</a>
+    <a href="#servis">Besh yil</a>
+    <a href="#nosozlik">Nosozlik</a>
+    <a href="#qayerga">Qaysi obyektga</a>
+    <a href="#savol">Savollar</a>
+    <a href="#solishtirish">Solishtirish</a>
+  </div>
+</nav>
+
+<main class="c-tana">
+
+  <div class="c-kirish">
+    <div>
+      <span class="yorliq">Yechim 08 · Chekka va qimmat obyekt</span>
+      <h1>Quyoshga bog'liq bo'lmagan yagona avtonom manba</h1>
+      <p class="c-lid">Yoqilg'i elementi akkumulyatorni oylab zaryadlab turadi va dekabr bulutiga ham, qorli haftaga ham qaramaydi. Buning evaziga obyektda xavfli yuk paydo bo'ladi va yillik xarajat boshqa har qanday yechimdan o'n barobar katta chiqadi.</p>
+      <div class="c-raqamlar">
+        <div data-batafsil="y08.yuk"><b data-tarjimasiz>30 Vt</b><span>maqsadli o'rtacha yuk</span></div>
+        <div data-batafsil="y08.yoqilgi"><b data-tarjimasiz>43 kun</b><span>bitta M28 kartrij</span></div>
+        <div data-batafsil="y08.narx"><b data-tarjimasiz>80–170 mln</b><span>bir obyektga</span></div>
+        <div data-batafsil="y08.gibrid"><b data-tarjimasiz>11–14 mln</b><span>yillik yoqilg'i, gibrid</span></div>
+      </div>
+    </div>
+    <figure class="c-kirish-foto">
+      <img src="../assets/taqdimot/y08-efoy.webp" alt="Shkafda EFOY yoqilg'i elementi, LiFePO4 akkumulyator, router va kommutator">
+      <figcaption>Shkafda: yoqilg'i elementi, metanol kartriji, LiFePO4 akkumulyator, router va kommutator</figcaption>
+    </figure>
+  </div>
+
+  <!-- ================================================== 01 · Komplekt -->
+  <section class="c-bob" id="komplekt">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>01</span><h2>Shkafda nima turadi</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Yoqilg'i elementi quvvat manbai emas, zaryadlagich. U doimiy quvvat beradi va akkumulyatorni to'ldirib turadi; qurilmalar esa har doim akkumulyatordan oziqlanadi. Bu farqni tushunmaslik noto'g'ri model tanlashga olib keladi.</p>
+    <div class="c-bob-ich">
+      <table class="c-jadval">
+        <thead><tr><th>Qism</th><th>Nima qiladi</th><th>Talab</th><th class="n">Dona</th></tr></thead>
+        <tbody>
+          <tr data-batafsil="y08.element"><td>EFOY Pro yoqilg'i elementi</td><td>Akkumulyator kuchlanishi tushganda o'zi yonadi va to'lganda o'chadi<span class="kichik">Nominal quvvat o'rtacha yukdan kamida 1,5 barobar katta olinadi</span></td><td>Pro 900 — 42 Vt, Pro 1800 — 82 Vt, Pro 2800 — 125 Vt</td><td class="n" data-tarjimasiz>1</td></tr>
+          <tr data-batafsil="y08.kartrij"><td>Metanol kartriji M28</td><td>Yoqilg'i zaxirasi<span class="kichik">28 litr, 23,4 kg, 31,1 kVt·soat</span></td><td>Fuel Manager bilan 8 tagacha kartrij ulanadi</td><td class="n" data-tarjimasiz>1–4</td></tr>
+          <tr data-batafsil="y08.akb"><td>LiFePO4 akkumulyator</td><td>Kunlik tebranishni va PTZ cho'qqilarini ko'taradi</td><td>Past harorat himoyali BMS yoki isitgichli blok</td><td class="n" data-tarjimasiz>1</td></tr>
+          <tr><td>Korporativ IP kamera va PTZ</td><td>Perimetr va kirish nazorati</td><td>ONVIF Profile S va T, tungi rejim</td><td class="n" data-tarjimasiz>3–5</td></tr>
+          <tr><td>NVR, SSD bilan</td><td>Aloqa uzilsa ham yozuv joyida qoladi</td><td>Disk emas SSD: kam quvvat, sovuqqa chidamli</td><td class="n" data-tarjimasiz>1</td></tr>
+          <tr data-batafsil="y08.shkaf"><td>Izolyatsiyali shkaf va egzoz quvuri</td><td>Element issiqligini ushlab qoladi, suv bug'i va CO₂ ni tashqariga chiqaradi</td><td>Filtrli havo kirishi, pastga qiyalik bilan chiqish quvuri</td><td class="n" data-tarjimasiz>1</td></tr>
+        </tbody>
+      </table>
+      <div class="c-ogoh" data-batafsil="y08.qachon" style="margin-top:18px"><span>Bu yechim ro'yxatdagi oxirgi variant. Undan oldin ikkita savol yopiladi: obyektni elektrga qayta ulash mumkinmi (texnik shart 39 600 so'm va uch ish kuni) va quyosh paneliga joy topiladimi.</span></div>
+    </div>
+  </section>
+
+  <!-- ================================================== 02 · Qishki sutka -->
+  <section class="c-bob" id="sutka">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>02</span><h2>Qishki sutka: chekkadagi sex, −15 °C</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Element sutkada bir necha marta yonadi va o'chadi. Uning ishlash mantig'i quyosh panelidan butunlay boshqacha: bu yerda energiya jadval bo'yicha emas, akkumulyator kuchlanishi bo'yicha ishlab chiqariladi.</p>
+    <div class="c-bob-ich">
+      <ul class="y-sutka">
+        <li>
+          <span class="v"><span data-tarjimasiz>01:20</span><small>tun</small></span>
+          <div>
+            <h3>Element o'zi yonadi</h3>
+            <p>Akkumulyator kuchlanishi belgilangan quyi chegaraga tushadi va element ishga tushadi. Sovuqda ishga tushish bir necha daqiqa oladi: avval ichki kontur isiydi. Shundan keyin u nominal quvvatda ishlay boshlaydi va akkumulyatorni to'ldiradi.</p>
+            <span class="y-sarf">Shu sikl: taxminan 0,9 litr metanol har kVt·soatga</span>
+          </div>
+        </li>
+        <li data-batafsil="y08.sovuq">
+          <span class="v"><span data-tarjimasiz>04:00</span><small>sovuq</small></span>
+          <div>
+            <h3>Muzlashdan himoya yoqiladi</h3>
+            <p>Tashqarida −15 °C. Element ichida suv bor, shuning uchun u muzlashdan himoya rejimiga o'tadi va o'zini isitish uchun yoqilg'i sarflaydi. Bu rejim akkumulyatorni zaryadlamaydi — u faqat qurilmaning o'zini saqlaydi. Yillik yoqilg'i hisobiga shu sarf ham qo'shiladi va u ko'pincha e'tibordan chetda qoladi.</p>
+          </div>
+        </li>
+        <li>
+          <span class="v"><span data-tarjimasiz>07:45</span><small>hodisa</small></span>
+          <div>
+            <h3>PTZ chegarani kesib o'tgan odamga buriladi</h3>
+            <p>Kamera analitikasi chiziq kesilganini aniqlaydi, PTZ presetga buriladi va 25 vattlik cho'qqi paydo bo'ladi. Elementning nominal quvvati bunga yetmaydi va yetishi ham shart emas: cho'qqini akkumulyator ko'taradi. Element esa keyinroq, o'z tartibida uni qaytadan to'ldiradi.</p>
+            <span class="y-sarf">Cho'qqi 25 Vt · davomiyligi 40 soniya</span>
+          </div>
+        </li>
+        <li data-batafsil="y08.modbus">
+          <span class="v"><span data-tarjimasiz>09:00</span><small>telemetriya</small></span>
+          <div>
+            <h3>Adapter kartrijdagi yoqilg'ini o'qiydi</h3>
+            <p>Har 60 soniyada RS-232 porti orqali Modbus so'rovi ketadi: akkumulyator kuchlanishi, ish holati, kartrijdagi yoqilg'i, xato kodi va ishlagan soatlar. Yoqilg'i 30 foizga tushganda buyurtma vazifasi ochiladi — 20 emas, 30 foizda: yetkazish muddati import va ADR tashuvi bilan uch haftagacha cho'ziladi.</p>
+          </div>
+        </li>
+        <li>
+          <span class="v"><span data-tarjimasiz>13:30</span><small>kunduz</small></span>
+          <div>
+            <h3>Quyosh paneli elementni to'xtatadi</h3>
+            <p>Gibrid sxemada panel akkumulyatorni zaryadlaydi va kuchlanish yuqori chegaraga chiqadi. Element o'chadi va yoqilg'i sarflamaydi. Dekabrda panel kunlik ehtiyojning uchdan bir qismini beradi — shu bilan yillik yoqilg'i uch barobarga kamayadi.</p>
+          </div>
+        </li>
+        <li>
+          <span class="v"><span data-tarjimasiz>23:00</span><small>yakun</small></span>
+          <div>
+            <h3>Sutkalik hisob</h3>
+            <p>Yuk o'rtacha 30 Vt, sutkasiga 0,72 kVt·soat. Bundan paneldan 0,25 kVt·soat, elementdan 0,47 kVt·soat. Ya'ni sutkada taxminan 0,42 litr metanol: M28 kartrij shu tartibda 66 kun ishlaydi.</p>
+            <span class="y-sarf">Kartrij hisobi platformada avtomatik yuritiladi</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================================================== 03 · Yoqilg'i hisobi -->
+  <section class="c-bob" id="quvvat">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>03</span><h2>Yoqilg'i hisobi: har vatt uchun pul</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Boshqa yechimlarda ortiqcha vatt akkumulyator sig'imini yeydi. Bu yerda u to'g'ridan-to'g'ri pulga aylanadi: nominal sarf har kVt·soatga 0,9 litr metanol, M28 kartrij esa taxminan 4 mln so'm turadi.</p>
+    <div class="c-bob-ich">
+      <figure class="c-sxema">
+        <svg viewBox="0 0 1000 300" role="img" aria-label="Bitta M28 kartrij necha kun yetadi">
+          <g font-family="Manrope,sans-serif">
+            <text x="0" y="22" font-size="13.5" font-weight="800" fill="#6E7891">BITTA M28 KARTRIJ (31,1 kVt·soat) NECHA KUN YETADI</text>
+
+            <text x="0" y="74" font-size="14.5" font-weight="700" fill="#0A1B45">55 Vt</text>
+            <text x="0" y="92" font-size="12" font-weight="600" fill="#6E7891">PTZ, 4 kamera, NVR</text>
+            <rect x="150" y="58" width="168" height="24" rx="4" fill="#C8423A" opacity=".8"/>
+            <text x="330" y="76" font-size="15" font-weight="800" fill="#C8423A">24 kun</text>
+
+            <text x="0" y="146" font-size="14.5" font-weight="700" fill="#0A1B45">40 Vt</text>
+            <text x="0" y="164" font-size="12" font-weight="600" fill="#6E7891">Optimallashtirilgan</text>
+            <rect x="150" y="130" width="231" height="24" rx="4" fill="#C77A00" opacity=".8"/>
+            <text x="393" y="148" font-size="15" font-weight="800" fill="#C77A00">33 kun</text>
+
+            <text x="0" y="218" font-size="14.5" font-weight="700" fill="#0A1B45">30 Vt</text>
+            <text x="0" y="236" font-size="12" font-weight="600" fill="#6E7891">Maqsadli yuk</text>
+            <rect x="150" y="202" width="301" height="24" rx="4" fill="#13A33A" opacity=".85"/>
+            <text x="463" y="220" font-size="15" font-weight="800" fill="#0B7D2B">43 kun</text>
+
+            <rect x="150" y="202" width="462" height="24" rx="4" fill="none" stroke="#13A33A" stroke-width="2" stroke-dasharray="6 4"/>
+            <text x="624" y="220" font-size="15" font-weight="800" fill="#0B7D2B">66 kun</text>
+            <text x="624" y="238" font-size="12" font-weight="700" fill="#6E7891">quyosh paneli bilan gibrid</text>
+
+            <line x1="150" y1="266" x2="960" y2="266" stroke="#0A1B45" stroke-opacity=".18" stroke-width="1.5"/>
+            <g font-size="12.5" font-weight="700" fill="#6E7891">
+              <text x="150" y="288">0</text><text x="290" y="288">20</text><text x="430" y="288">40</text>
+              <text x="570" y="288">60</text><text x="710" y="288">80</text><text x="850" y="288">100 kun</text>
+            </g>
+          </g>
+        </svg>
+        <figcaption>Nominal sarf: 1 kVt·soatga 0,9 litr metanol. Muzlashdan himoya rejimining sarfi bu jadvalga kirmaydi va qish oylarida u yana 5–10 foiz qo'shadi.</figcaption>
+      </figure>
+      <div class="c-varaq c-ikki" style="margin-top:18px">
+        <div class="c-band" data-batafsil="y08.yuk">
+          <b>Yukni kamaytirish</b>
+          <p>PTZ kechasi bitta nuqtada turadi va faqat hodisada aylanadi. NVR disk emas, SSD bilan yig'iladi. IR yoritgich faqat hovli chirog'i yetmaydigan kamerada yoqiladi. Shu uchta qaror 55 vattni 30 vattga tushiradi va yillik yoqilg'ini qariyb ikki barobar kamaytiradi.</p>
+        </div>
+        <div class="c-band" data-batafsil="y08.gibrid">
+          <b>Gibrid sxema</b>
+          <span class="c-qiymat" data-tarjimasiz>11–14 <small>mln so'm/yil</small></span>
+          <p>Panel yozda elementni deyarli butunlay to'xtatadi, dekabrda esa kunlik ehtiyojning uchdan bir qismini beradi. Element asosan noyabr–fevralda ishlaydi. Panelning o'zi 3–5 mln so'm turadi va birinchi yildayoq o'zini qoplaydi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== 04 · Ma'lumot yo'li -->
+  <section class="c-bob" id="yol">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>04</span><h2>Seriya portidan hodisalar doskasigacha</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Yoqilg'i elementida IP interfeysi yo'q: u sanoat qurilmasi va RS-232 seriya porti orqali gaplashadi. Shuning uchun yo'lning birinchi bo'lagida bitta qo'shimcha qurilma paydo bo'ladi. Yashil halqali bo'g'inni bosing.</p>
+    <div class="c-bob-ich">
+      <figure class="c-sxema">
+        <svg viewBox="0 0 1120 620" role="img" aria-label="Yoqilg'i elementidan platformagacha bo'lgan yo'l">
+          <line x1="40" y1="26" x2="40" y2="596" stroke="#0A1B45" stroke-opacity=".16" stroke-width="2"/>
+
+          <g class="nuqta" data-batafsil="y08.element" tabindex="0">
+            <circle cx="40" cy="60" r="9" fill="#13A33A"/>
+            <rect class="quti" x="80" y="22" width="1000" height="76" rx="14" fill="#F4F6FA" stroke="#0A1B45" stroke-opacity=".12"/>
+            <text x="104" y="52" font-size="16" font-weight="800" fill="#0A1B45">Yoqilg'i elementi</text>
+            <text x="104" y="76" font-size="13.5" fill="#43506E">Akkumulyator kuchlanishi bo'yicha o'zi yonadi va o'chadi, tarmoqqa ulanmaydi</text>
+            <text x="1056" y="52" font-size="13" font-weight="800" fill="#0A4A9C" text-anchor="end" data-tarjimasiz>RS-232</text>
+            <text x="1056" y="74" font-size="12" fill="#6E7891" text-anchor="end" data-tarjimasiz>Modbus RTU yoki SIO</text>
+          </g>
+
+          <g class="nuqta" data-batafsil="y08.modbus" tabindex="0">
+            <circle cx="40" cy="152" r="9" fill="#0A4A9C"/>
+            <rect class="quti" x="80" y="114" width="1000" height="76" rx="14" fill="#F4F6FA" stroke="#0A1B45" stroke-opacity=".12"/>
+            <text x="104" y="144" font-size="16" font-weight="800" fill="#0A1B45">Seriya shlyuzi</text>
+            <text x="104" y="168" font-size="13.5" fill="#43506E">RS-232 ni Ethernetga chiqaradi, registrlar xaritasi dastur versiyasiga bog'langan</text>
+            <text x="1056" y="144" font-size="13" font-weight="800" fill="#0A4A9C" text-anchor="end" data-tarjimasiz>Modbus RTU → Modbus TCP</text>
+            <text x="1056" y="166" font-size="12" fill="#6E7891" text-anchor="end">So'rov har 60 soniyada</text>
+          </g>
+
+          <g class="nuqta" data-batafsil="y08.video" tabindex="0">
+            <circle cx="40" cy="244" r="9" fill="#0A4A9C"/>
+            <rect class="quti" x="80" y="206" width="1000" height="76" rx="14" fill="#F4F6FA" stroke="#0A1B45" stroke-opacity=".12"/>
+            <text x="104" y="236" font-size="16" font-weight="800" fill="#0A1B45">Kameralar va NVR</text>
+            <text x="104" y="260" font-size="13.5" fill="#43506E">Chiziq kesish va hudud hodisalari kameraning o'zida hisoblanadi, yozuv SSD'da qoladi</text>
+            <text x="1056" y="236" font-size="13" font-weight="800" fill="#0A4A9C" text-anchor="end" data-tarjimasiz>ONVIF Profile S va T · RTSP</text>
+            <text x="1056" y="258" font-size="12" fill="#6E7891" text-anchor="end" data-tarjimasiz>PTZ boshqaruvi — ONVIF PTZ</text>
+          </g>
+
+          <g class="nuqta" data-batafsil="y08.tarmoq" tabindex="0">
+            <circle cx="40" cy="336" r="9" fill="#0A4A9C"/>
+            <rect class="quti" x="80" y="298" width="1000" height="76" rx="14" fill="#F4F6FA" stroke="#0A1B45" stroke-opacity=".12"/>
+            <text x="104" y="328" font-size="16" font-weight="800" fill="#0A1B45">Router va tunnel</text>
+            <text x="104" y="352" font-size="13.5" fill="#43506E">Modbus porti internetga chiqmaydi va faqat tunnel ichida ochiladi</text>
+            <text x="1056" y="328" font-size="13" font-weight="800" fill="#0A4A9C" text-anchor="end" data-tarjimasiz>VPN · SNMP v3</text>
+            <text x="1056" y="350" font-size="12" fill="#6E7891" text-anchor="end">Ikki SIM, tashqi antenna</text>
+          </g>
+
+          <g class="nuqta" data-batafsil="y08.qoida" tabindex="0">
+            <circle cx="40" cy="428" r="9" fill="#0A4A9C"/>
+            <rect class="quti" x="80" y="390" width="1000" height="76" rx="14" fill="#F4F6FA" stroke="#0A1B45" stroke-opacity=".12"/>
+            <text x="104" y="420" font-size="16" font-weight="800" fill="#0A1B45">Adapter va qoidalar</text>
+            <text x="104" y="444" font-size="13.5" fill="#43506E">Yoqilg'i 30 foizda buyurtma, xato kodida servis, kuchlanish tushsa shoshilinch</text>
+            <text x="1056" y="420" font-size="13" font-weight="800" fill="#0A4A9C" text-anchor="end">Bank serverida</text>
+            <text x="1056" y="442" font-size="12" fill="#6E7891" text-anchor="end" data-tarjimasiz>mkb/v1/{obyekt}/{device_id}/quvvat</text>
+          </g>
+
+          <g class="nuqta" data-batafsil="y08.operator" tabindex="0">
+            <circle cx="40" cy="520" r="9" fill="#13A33A"/>
+            <rect class="quti" x="80" y="482" width="1000" height="76" rx="14" fill="#F4F6FA" stroke="#0A1B45" stroke-opacity=".12"/>
+            <text x="104" y="512" font-size="16" font-weight="800" fill="#0A1B45">Yadro va ekranlar</text>
+            <text x="104" y="536" font-size="13.5" fill="#43506E">Kartrij qoldig'i kunlarda ko'rsatiladi, buyurtma muddati yetkazish vaqtidan hisoblanadi</text>
+            <text x="1056" y="512" font-size="13" font-weight="800" fill="#0A4A9C" text-anchor="end">Obyekt kartochkasi</text>
+            <text x="1056" y="534" font-size="12" fill="#6E7891" text-anchor="end">Yoqilg'i · xato · ish soatlari</text>
+          </g>
+
+          <text x="80" y="590" font-size="12.5" font-weight="700" fill="#6E7891">EFOY Cloud xizmati ham bor, lekin u bulut va alohida modem talab qiladi. Bank sxemasida telemetriya bank tunnelidan chiqmaydi.</text>
+        </svg>
+        <figcaption>Registrlar xaritasi dasturiy ta'minot versiyasiga bog'liq. Yetkazuvchidan aynan yetkaziladigan versiyaning xaritasi hujjat bilan talab qilinadi.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ================================================== 05 · Operator -->
+  <section class="c-bob" id="operator">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>05</span><h2>Operator nima ko'radi va nima qila oladi</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Bu yechimda obyekt kartochkasida video bilan bir qatorda yoqilg'i ustuni turadi. Operator uchun asosiy savol bitta: kartrij necha kunga yetadi va buyurtma berilganmi.</p>
+    <div class="c-bob-ich">
+      <table class="c-jadval">
+        <thead><tr><th>Ko'rsatkich</th><th>Manbasi</th><th>Yangilanishi</th></tr></thead>
+        <tbody>
+          <tr data-batafsil="y08.operator"><td>Kartrijdagi yoqilg'i va qolgan kun</td><td>Modbus registri, sarf bo'yicha hisoblanadi</td><td class="n">60 s</td></tr>
+          <tr><td>Element holati: ishlayapti, kutmoqda, xato</td><td>Modbus registri</td><td class="n">60 s</td></tr>
+          <tr><td>Xato kodi</td><td>Modbus registri</td><td class="n">60 s</td></tr>
+          <tr><td>Ishlagan soatlar</td><td>Modbus registri, servis muddati uchun</td><td class="n">60 s</td></tr>
+          <tr><td>Akkumulyator kuchlanishi va zaryadi</td><td>BMS yoki kontroller</td><td class="n">60 s</td></tr>
+          <tr><td>Jonli video va PTZ boshqaruvi</td><td>Kamera RTSP va ONVIF PTZ</td><td class="n">Talab bo'yicha</td></tr>
+          <tr><td>Chiziq kesish hodisalari</td><td>Kamera analitikasi</td><td class="n">Darhol</td></tr>
+        </tbody>
+      </table>
+      <div class="c-varaq c-ikki" style="margin-top:18px">
+        <div class="c-band">
+          <b>Masofadan qilinadi</b>
+          <p>PTZ ni burish va presetga qaytarish, jonli oqim va arxivni ochish, karnaydan ogohlantirish berish. Kartrij buyurtmasini tasdiqlash va yetkazish sanasini belgilash. Servis vazifasini integratorga yuborish.</p>
+        </div>
+        <div class="c-band">
+          <b>Qilib bo'lmaydi</b>
+          <p>Elementni masofadan yoqish yoki o'chirish: u kuchlanish bo'yicha o'zi qaror qiladi va bu mantiqqa aralashilmaydi. Kartrijni almashtirish ham faqat joyida, qo'lda bajariladi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== 06 · O'rnatish -->
+  <section class="c-bob" id="montaj">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>06</span><h2>O'rnatish va ishga tushirish</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Montajni CCTV integratori bajaradi, elementni esa distribyutor ishga tushiradi va kafolatni shu dalolatnoma bilan ochadi. Ikkala ish bir kunga rejalashtiriladi.</p>
+    <div class="c-bob-ich">
+      <table class="c-jadval" data-batafsil="y08.montaj">
+        <thead><tr><th>Bosqich</th><th>Kim</th><th class="n">Vaqt</th></tr></thead>
+        <tbody>
+          <tr><td>Shkaf, egzoz quvuri, havo kirishi</td><td>Integrator, 2 kishi</td><td class="n">1 ish kuni</td></tr>
+          <tr><td>Kameralar, NVR, router, kabel</td><td>Integrator, 2 kishi</td><td class="n">1–2 ish kuni</td></tr>
+          <tr><td>Elementni ishga tushirish va sozlash</td><td>Distribyutor mutaxassisi</td><td class="n">3–4 soat</td></tr>
+          <tr><td>Telemetriya va adapter sinovi</td><td>Jamoa rahbari masofadan</td><td class="n">2 soat</td></tr>
+        </tbody>
+      </table>
+      <ol class="c-royxat belgili" style="margin-top:18px">
+        <li data-batafsil="y08.shkaf"><i data-tarjimasiz>1</i><span>Egzoz quvuri tashqariga pastga qiyalik bilan chiqariladi va uchi shamolga qarshi emas, yon tomonga qaratiladi. Quvurda suv bug'i kondensatga aylanadi va qiyalik bo'lmasa u ichkariga qaytadi.</span></li>
+        <li><i data-tarjimasiz>2</i><span>Havo kirishi filtr bilan qilinadi. Chang ko'p hududda filtr servis jadvaliga kiritiladi: to'lgan filtr elementni quvvatdan tushiradi.</span></li>
+        <li><i data-tarjimasiz>3</i><span>Kartrij element yonida emas, alohida bo'limda, qulf ostida turadi. Bo'lim ochilishiga datchik qo'yiladi va u platformaga hodisa bo'lib tushadi.</span></li>
+        <li><i data-tarjimasiz>4</i><span>Akkumulyator past harorat himoyali BMS bilan olinadi. Isitgich elementning o'z issiqligidan yoki paneldan oziqlanadi, akkumulyatordan emas.</span></li>
+        <li><i data-tarjimasiz>5</i><span>Ishga tushirish dalolatnomasiga ishlagan soatlar hisoblagichining boshlang'ich qiymati va registrlar xaritasining versiyasi yoziladi. Ikkalasi ham keyingi servis uchun kerak bo'ladi.</span></li>
+      </ol>
+      <div class="c-eslatma" style="margin-top:18px"><span>Birinchi haftada haqiqiy iste'mol Modbus orqali o'lchanadi va kartrij jadvali shunga qarab tuzatiladi. Loyihadagi hisob va joydagi o'lchov o'rtasidagi farq odatda 10–20 foiz bo'ladi.</span></div>
+    </div>
+  </section>
+
+  <!-- ================================================== 07 · Narx -->
+  <section class="c-bob" id="narx">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>07</span><h2>Narx: 80–170 mln so'm bir obyektga</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Ochiq narxlar bo'yicha hisob, yevro kursi taxminan 13 600 so'm. Bu ro'yxatdagi eng qimmat yechim va uning har qatori tekshiriladi.</p>
+    <div class="c-bob-ich">
+      <table class="c-jadval" data-batafsil="y08.narx">
+        <thead><tr><th>Qator</th><th class="n">mln so'm</th></tr></thead>
+        <tbody>
+          <tr><td>EFOY Pro 2800, Yevropa chakana narxi ≈ 9 800 yevro</td><td class="n" data-tarjimasiz>≈133</td></tr>
+          <tr><td>Yoki ulgurji mo'ljal: 180 dona buyurtmada ≈ 5 600 yevro dona</td><td class="n" data-tarjimasiz>≈76</td></tr>
+          <tr><td>Import QQS 12% va bojxona rasmiylashtiruvi</td><td class="n">+9–16</td></tr>
+          <tr><td>Akkumulyator, shkaf, kameralar, NVR, router</td><td class="n">12–25</td></tr>
+          <tr class="jami"><td>Bir obyektga, jihoz tarkibiga qarab</td><td class="n">80–170</td></tr>
+        </tbody>
+      </table>
+      <p class="c-jadval-izoh">Kichik model (Pro 900) arzonroq, lekin uning rasmiy chakana narxi e'lon qilinmagan: tijorat taklifi so'raladi. Yoqilg'i bu jadvalga kirmaydi va u alohida yillik xarajat.</p>
+      <div class="c-varaq" style="margin-top:18px">
+        <div class="c-band" data-batafsil="y08.qachon">
+          <b>Qachon o'zini oqlaydi</b>
+          <p>To'rt shart bir vaqtda bajarilganda: obyektni elektrga qayta ulab bo'lmaydi, quyosh qishda yetmaydi, obyekt uzoqda va servis qatnovi qimmat, aktiv qiymati yuqori. Bittasi ham bajarilmasa, arzonroq yechim bor.</p>
+        </div>
+        <div class="c-band" data-batafsil="y08.gibrid">
+          <b>Yillik yoqilg'i</b>
+          <p>30 vatt yil bo'yi faqat element bilan ishlasa, oyiga taxminan 2,8 mln so'mlik metanol ketadi. Quyosh bilan gibrid sxemada bu 11–14 mln so'mgacha tushadi. Farq beshinchi yilda 100 mln so'mdan oshadi.</p>
+        </div>
+        <div class="c-band">
+          <b>Ijara va lizing</b>
+          <p>Distribyutordan ijara yoki lizing taklifi alohida so'raladi. Lizingda to'lov oylarga bo'linadi, lekin qarz balansda qoladi va aktivning bir yillik sotuv muddati bilan solishtiriladi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== 08 · Metanol va huquq -->
+  <section class="c-bob" id="bozor">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>08</span><h2>Metanol: tashish, saqlash va javobgarlik</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Metanol UN 1230 raqamli xavfli yuk: 3-sinf yonuvchan suyuqlik, qo'shimcha xavfi zaharli. EFOY kartrijlari tashish uchun tasdiqqa ega, lekin bu bankni saqlash qoidalaridan ozod qilmaydi.</p>
+    <div class="c-bob-ich">
+      <ol class="c-royxat belgili" data-batafsil="y08.huquq">
+        <li><i data-tarjimasiz>1</i><span>Kartrijni obyektga yetkazuvchi o'zi olib boradi. Bank omborida zaxira saqlanmaydi yoki alohida shamollatiladigan joyda, cheklangan miqdorda saqlanadi.</span></li>
+        <li><i data-tarjimasiz>2</i><span>Tashishni ADR ruxsati bor tashuvchi bajaradi. Yo'lda va almashtirishda javobgarlik yetkazuvchida bo'lishi shartnomada aniq yoziladi.</span></li>
+        <li><i data-tarjimasiz>3</i><span>Bo'sh kartrij yetkazuvchiga qaytariladi. Uni oddiy chiqindi sifatida tashlab yuborish mumkin emas.</span></li>
+        <li><i data-tarjimasiz>4</i><span>Xavfsizlik ma'lumotlari varaqasi rus yoki o'zbek tilida beriladi va obyekt hujjatlari papkasida saqlanadi.</span></li>
+        <li><i data-tarjimasiz>5</i><span>Yong'in xavfsizligi talablari VMQ-649 qoidalari bo'yicha aniqlanadi. Shkaf yonida yonuvchi material saqlanmaydi, ogohlantirish belgisi qo'yiladi.</span></li>
+      </ol>
+      <div class="c-ogoh" style="margin-top:18px"><span>Metanol ichilsa o'limga olib keladi. Kartrij qulflangan bo'limda turadi, bo'lim ochilishi datchik orqali platformaga tushadi. Bank yuristi va yong'in xavfsizligi mas'uli shartnomani imzolashdan oldin ko'rib chiqadi.</span></div>
+      <div class="c-varaq c-ikki" style="margin-top:18px">
+        <div class="c-band">
+          <b>Kim yetkazadi</b>
+          <p>SFC Energy distribyutori orqali import. Element va kartrijlar alohida keladi: element odatiy yuk, kartrij xavfli yuk. Yetkazish muddati import va ADR tashuvi bilan uch haftagacha cho'ziladi va buyurtma jadvali shu muddatdan hisoblanadi.</p>
+        </div>
+        <div class="c-band">
+          <b>Kim ishga tushiradi</b>
+          <p>Elementni distribyutor mutaxassisi ishga tushiradi va kafolat shu dalolatnoma bilan ochiladi. Montaj, kabel, kamera va shkaf CCTV integratorida. Servisni ham distribyutor bajaradi: bu jihozni mahalliy usta ta'mirlamaydi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== 09 · Besh yil -->
+  <section class="c-bob" id="servis">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>09</span><h2>Besh yil ichida nima sarflanadi</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Bu yechimda xarid narxi boshlanish, yoqilg'i esa davomi. Besh yillik yoqilg'i xarajati jihoz narxiga teng yoki undan ko'p bo'lishi mumkin — qaror shu raqam bilan qabul qilinadi.</p>
+    <div class="c-bob-ich">
+      <table class="c-jadval" data-batafsil="y08.servis">
+        <thead><tr><th>Modda</th><th>Qachon</th><th class="n">Besh yilda</th></tr></thead>
+        <tbody>
+          <tr><td>Metanol, faqat element bilan</td><td>30 Vt yil bo'yi: 1 314 kVt·soat, 42 ta M28</td><td class="n">≈170 mln so'm</td></tr>
+          <tr><td>Metanol, quyosh bilan gibrid</td><td>Taxminan 14 ta M28</td><td class="n">≈55 mln so'm</td></tr>
+          <tr><td>Element servisi</td><td>Ishlagan soat bo'yicha, distribyutor tomonidan</td><td class="n">Shartnomada</td></tr>
+          <tr><td>Havo filtri</td><td>Yiliga 1–2 marta, changli hududda ko'proq</td><td class="n">0,5–1,0 mln so'm</td></tr>
+          <tr><td>SIM va trafik</td><td>Oyma-oy</td><td class="n">3–6 mln so'm</td></tr>
+          <tr><td>Akkumulyator</td><td>LiFePO4 besh yilda almashtirilmaydi</td><td class="n">0</td></tr>
+        </tbody>
+      </table>
+      <p class="c-jadval-izoh">Bo'sh kartrijlarni qaytarish va yangi partiyani yetkazish xarajati ham qo'shiladi: chekkadagi obyektga bir marta borish 300–600 ming so'mga tushadi.</p>
+    </div>
+  </section>
+
+  <!-- ================================================== 10 · Nosozlik -->
+  <section class="c-bob" id="nosozlik">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>10</span><h2>Uchta nosozlik va ularning oldini olish</h2><span class="c-bob-hisob"></span></div>
+    <p class="c-bob-lid">Element o'zi ishonchli qurilma. Uchala nosozlik ham uning atrofidagi narsalarda: quvur, logistika va xavfsizlik.</p>
+    <div class="c-bob-ich">
+      <div class="c-buzilish">
+        <article data-batafsil="y08.n1">
+          <span class="belgi-matn">Nosozlik 1</span>
+          <h3>Egzoz quvuri muzlab qoldi va element to'xtadi</h3>
+          <p>Element chiqargan suv bug'i quvurda kondensatga aylanadi. Quvur gorizontal yotqizilgan yoki uchi yuqoriga qaragan bo'lsa, kondensat yig'iladi va −15 °C da muzlab qoladi. Element chiqishi yopilganini aniqlaydi va o'zini o'chiradi.</p>
+          <p class="yechim"><b>Oldini olish</b>Quvur tashqariga pastga qiyalik bilan chiqariladi, uchi qiya kesiladi va yon tomonga qaratiladi. Qor to'planadigan joyga chiqarilmaydi. Har servisda quvur tekshiriladi.</p>
+        </article>
+        <article data-batafsil="y08.n2">
+          <span class="belgi-matn">Nosozlik 2</span>
+          <h3>Kartrij vaqtida yetib kelmadi</h3>
+          <p>Yoqilg'i tugadi, element to'xtadi, akkumulyator ikki kunda bo'shadi va obyekt nazoratdan chiqdi. Sababi texnik emas: buyurtma kech berilgan yoki ADR tashuvi kechikkan.</p>
+          <p class="yechim"><b>Oldini olish</b>Buyurtma vazifasi 20 emas, 30 foizda ochiladi — bu uch haftalik yetkazishni qoplaydi. Shartnomaga yetkazish muddati va uning buzilishi uchun javobgarlik yoziladi. Har obyektga bitta zaxira kartrij rejalashtiriladi.</p>
+        </article>
+        <article data-batafsil="y08.n3">
+          <span class="belgi-matn">Nosozlik 3</span>
+          <h3>Kartrij o'g'irlandi yoki bo'lim ochildi</h3>
+          <p>Metanol suyuq yoqilg'i sifatida qiziqish uyg'otadi va uni ichgan odam o'ladi. Bo'sh obyektdagi qulflanmagan kartrij bank uchun huquqiy va insoniy javobgarlik masalasi.</p>
+          <p class="yechim"><b>Oldini olish</b>Kartrij qulflangan alohida bo'limda, ogohlantirish belgisi bilan turadi. Bo'limda ochilish datchigi, unga kamera qaratilgan. Zaxira kartrij obyektda emas, yetkazuvchida saqlanadi.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== 11 · Qaysi obyektga -->
+  <section class="c-bob" id="qayerga">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>11</span><h2>Qaysi obyektga mos, qaysi biriga emas</h2></div>
+    <div class="c-bob-ich" style="margin-top:24px">
+      <div class="c-mos">
+        <section class="ha">
+          <h3>Mos keladi</h3>
+          <ul>
+            <li>Chekkadagi ishlab chiqarish sexi: ichida qimmat uskuna qolgan, elektr uzilgan va qayta ulash imkoni yo'q.</li>
+            <li>Tog' oralig'idagi yoki soyadagi obyekt: quyosh paneli dekabrda kunlik ehtiyojning yarmini ham bermaydi.</li>
+            <li>Servisga kam boriladigan uzoq obyekt: element oylab ishlaydi va qatnov talab qilmaydi.</li>
+            <li>Qiymati yuqori aktiv, undagi yo'qotish xatari real va sug'urta ham uni to'liq qoplamaydi.</li>
+          </ul>
+        </section>
+        <section class="yoq">
+          <h3>Mos emas</h3>
+          <ul>
+            <li>Ma'muriy bino, xonadon va do'kon: bu yechim ular uchun ortiqcha va asossiz qimmat.</li>
+            <li>Elektrga qayta ulash mumkin bo'lgan obyekt: texnik shart 39 600 so'm va uch ish kuni turadi.</li>
+            <li>Bir yildan kam nazoratda turadigan obyekt: xarid narxi shu muddatda qoplanmaydi.</li>
+            <li>Yong'in xavfi yuqori yoki odam yashaydigan bino yonidagi obyekt: metanol saqlash sharti bajarilmaydi.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== 12 · Savollar -->
+  <section class="c-bob" id="savol">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>12</span><h2>Yetkazib beruvchidan so'raladigan savollar</h2></div>
+    <p class="c-bob-lid">Tijorat taklifi olinishidan oldin yoziladi. Javoblar shartnomaga ilova qilinadi.</p>
+    <div class="c-bob-ich">
+      <ol class="c-savol">
+        <li><b>Aynan yetkaziladigan dastur versiyasi uchun Modbus registrlari xaritasi beriladimi?</b><span>Xarita versiyaga bog'liq. Boshqa versiyaning xaritasi bilan adapter noto'g'ri qiymat o'qiydi.</span></li>
+        <li><b>Servis to'plami necha ish soatida almashtiriladi va uning narxi qancha?</b><span>Bu besh yillik xarajatning hisobga olinmagan qatori.</span></li>
+        <li><b>Muzlashdan himoya rejimi qancha yoqilg'i sarflaydi?</b><span>Qish oylarida u yillik hisobga 5–10 foiz qo'shadi.</span></li>
+        <li><b>Kartrijning yetkazish muddati qancha va ADR tashuvchisi kim?</b><span>Buyurtma chegarasi ayni shu muddatdan kelib chiqib belgilanadi.</span></li>
+        <li><b>Bo'sh kartrijlar qanday qaytariladi va bu xizmat narxga kiradimi?</b><span>Ularni oddiy chiqindi sifatida tashlab bo'lmaydi.</span></li>
+        <li><b>Xavfsizlik ma'lumotlari varaqasi rus yoki o'zbek tilida beriladimi?</b><span>Yong'in xavfsizligi mas'uli shu hujjatga tayanadi.</span></li>
+        <li><b>Elementni O'zbekistonda kim ishga tushiradi va servis qiladi?</b><span>Javob «Yevropadan mutaxassis keladi» bo'lsa, har servis qo'shimcha muddat va pul degani.</span></li>
+        <li><b>Quyosh paneli bilan gibrid ishlash qo'llab-quvvatlanadimi va kontroller qanday ulanadi?</b><span>Gibrid sxema yillik yoqilg'ini uch barobar kamaytiradi.</span></li>
+        <li><b>Element ishlaganda shovqin darajasi qanday?</b><span>Qo'shni bino yaqin bo'lsa, bu shikoyat sababi bo'lishi mumkin.</span></li>
+        <li><b>Kafolat muddati qancha va u isitilmaydigan shkafda saqlanadimi?</b><span>Ko'p jihozda kafolat sharti ish sharoitiga bog'langan.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================================================== 13 · Solishtirish -->
+  <section class="c-bob" id="solishtirish">
+    <div class="c-bob-bosh"><span class="c-bob-raqam" data-tarjimasiz>13</span><h2>O'nta yechim orasida</h2></div>
+    <div class="c-bob-ich" style="margin-top:24px">
+      <div class="c-sol">
+        <a href="../taqdimot.html?dan=s-y01"><span class="r" data-tarjimasiz>01</span><b data-tarjimasiz>Reolink va Home Hub</b><span>Uy va kichik ofis</span><strong data-tarjimasiz>8–12 mln</strong></a>
+        <a href="../taqdimot.html?dan=s-y02"><span class="r" data-tarjimasiz>02</span><b data-tarjimasiz>Hikvision quyosh-4G</b><span>Tashqi perimetr</span><strong data-tarjimasiz>5–9 mln</strong></a>
+        <a href="../taqdimot.html?dan=s-y03"><span class="r" data-tarjimasiz>03</span><b data-tarjimasiz>Dahua quyosh-4G</b><span>Tashqi perimetr, PTZ</span><strong data-tarjimasiz>7–12 mln</strong></a>
+        <a href="../taqdimot.html?dan=s-y04"><span class="r" data-tarjimasiz>04</span><b data-tarjimasiz>LiFePO4 shkafi</b><span>Ko'p qurilmali obyekt</span><strong data-tarjimasiz>12–20 mln</strong></a>
+        <a href="../taqdimot.html?dan=s-y05"><span class="r" data-tarjimasiz>05</span><b data-tarjimasiz>Ajax datchiklari</b><span>Ofis va qimmat obyekt</span><strong data-tarjimasiz>7–10 mln</strong></a>
+        <a href="yechim-06.html"><span class="r" data-tarjimasiz>06</span><b data-tarjimasiz>Milesight LoRaWAN</b><span>Katta ombor, texnik xona</span><strong data-tarjimasiz>3–8 mln</strong></a>
+        <a href="yechim-07.html"><span class="r" data-tarjimasiz>07</span><b>Ko'chma stansiya</b><span>Qisqa muddatli aktiv</span><strong data-tarjimasiz>7–16 mln</strong></a>
+        <a class="joriy" href="yechim-08.html"><span class="r" data-tarjimasiz>08</span><b data-tarjimasiz>EFOY yoqilg'i elementi</b><span>Chekka va qimmat obyekt</span><strong data-tarjimasiz>80–170 mln</strong></a>
+        <a href="yechim-09.html"><span class="r" data-tarjimasiz>09</span><b>Mobil minora</b><span>Katta maydon</span><strong data-tarjimasiz>40–120 mln</strong></a>
+        <a href="yechim-10.html"><span class="r" data-tarjimasiz>10</span><b>Klaster shkafi</b><span>Bir hududdagi obyektlar</span><strong data-tarjimasiz>20–40 mln</strong></a>
+      </div>
+      <div class="c-manba">
+        <b>Manba</b>
+        <span data-tarjimasiz style="display:contents">
+        <a href="https://www.efoy-pro.com/en/efoy/efoy-efoypro/" target="_blank" rel="noopener">EFOY Pro modellari</a>
+        <a href="https://www.efoy-pro.com/en/efoy/fuel-cartridges/" target="_blank" rel="noopener">EFOY kartrijlari</a>
+        <a href="https://www.seashop.com/en/efoy-pro-2800-fuel-cell" target="_blank" rel="noopener">Seashop: EFOY Pro 2800</a>
+        <a href="https://www.sfc.com/news/sfc-energy-receives-another-order-from-linc-polska-of-180-efoy-pro-2800-fuel-cells-worth-more-than-eur-1-million/" target="_blank" rel="noopener">SFC Energy</a></span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="c-oyoq">
+  <div class="c-oyoq-ich">
+    <span class="shior">Ishonchli texnologiyalar. Barqaror rivojlanish.</span>
+    <span>Ichki foydalanish uchun · Sentabr 2026</span>
+    <a class="c-orqa" href="../taqdimot.html?dan=s-y08" data-orqa="s-y08">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      <span>Taqdimotga qaytish · <b class="c-orqa-raqam" data-tarjimasiz>15</b></span>
+    </a>
+  </div>
+</footer>
+
+<script src="../tarjima.js?v=26092120"></script>
+<script src="../yadro/taqdimot-lugat.js?v=26092410"></script>
+<script src="chuqur-lugat.js?v=26092410"></script>
+<script src="chuqur-batafsil-08.js?v=26092410"></script>
+<script src="chuqur.js?v=26092410"></script>
+</body>
+</html>

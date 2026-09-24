@@ -1,0 +1,49 @@
+/* ==========================================================================
+   Tizim sahifalari (tizim-ishlashi.html, tizim-boshqaruv.html) uchun
+   qo'shimcha bloklar. Umumiy qoidalar chuqur.css da: bu yerda faqat
+   hodisaning vaqt chizig'i va ikkita kichik tuzatish.
+   ========================================================================== */
+
+/* ---------- Hodisaning yo'li: vaqt ustuni va qadamlar ---------- */
+.t-yol{position:relative;display:flex;flex-direction:column;gap:2px;padding-left:132px}
+.t-yol::before{content:"";position:absolute;left:104px;top:22px;bottom:22px;width:2px;
+  background:linear-gradient(180deg,var(--yashil),rgba(10,74,156,.3) 60%,var(--chiziq))}
+.t-yol > li{position:relative;list-style:none;padding:18px 22px;border-radius:14px;background:var(--oq);
+  box-shadow:inset 0 0 0 1px var(--chiziq)}
+.t-yol > li.bor-batafsil{padding-right:54px}
+.t-yol > li::after{content:"";position:absolute;left:-35px;top:26px;width:12px;height:12px;border-radius:50%;
+  background:var(--oq);box-shadow:0 0 0 3px var(--yashil),0 0 0 6px var(--fon)}
+.t-vaqt{position:absolute;left:-132px;top:18px;width:96px;text-align:right}
+.t-vaqt b{display:block;font-size:17px;font-weight:800;color:var(--siyoh);font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;line-height:1.2}
+.t-vaqt span{display:block;margin-top:3px;font-size:12.5px;font-weight:700;color:var(--yashil-toq);
+  font-variant-numeric:tabular-nums}
+.t-vaqt em{display:block;margin-top:7px;font-size:11px;font-weight:800;font-style:normal;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--matn-4)}
+.t-yol h3{font-size:18px;font-weight:800;color:var(--siyoh);line-height:1.3;letter-spacing:-.02em}
+.t-yol p{margin-top:8px;font-size:15.5px;line-height:1.56;color:var(--matn-2)}
+.t-qiy{display:flex;flex-wrap:wrap;gap:7px 9px;margin-top:12px}
+.t-qiy span{padding:4px 10px;border-radius:8px;background:var(--fon);font-size:13.5px;font-weight:700;color:var(--matn-2)}
+.t-qiy span b{color:var(--siyoh);font-variant-numeric:tabular-nums}
+
+@media (max-width:900px){
+  .t-yol{padding-left:0}
+  .t-yol::before{display:none}
+  .t-yol > li::after{display:none}
+  .t-vaqt{position:static;width:auto;text-align:left;display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+  .t-vaqt em{margin-top:0}
+}
+@media print{
+  .t-yol{padding-left:110px}
+  .t-yol::before{left:88px}
+  .t-yol > li{break-inside:avoid}
+  .t-vaqt{left:-110px;width:84px}
+}
+
+/* ---------- Ikki ustunli setka (ekranlar, kartalar) ---------- */
+.t-ikki{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.t-ikki{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Sxemadagi bosiladigan ustun ---------- */
+.c-sxema .nuqta:hover .sx-fon,.c-sxema .nuqta:focus-visible .sx-fon{fill:var(--yashil-och);stroke:var(--yashil)}
+.c-sxema .nuqta.tanlangan .sx-fon{fill:var(--yashil-och);stroke:var(--yashil);stroke-width:2}

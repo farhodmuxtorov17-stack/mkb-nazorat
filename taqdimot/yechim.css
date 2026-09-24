@@ -1,0 +1,42 @@
+/* ==========================================================================
+   Yechim sahifalari (yechim-06 … yechim-10) uchun qo'shimcha bandlar.
+   chuqur.css dan keyin ulanadi va faqat uning tarkibida yo'q ikki blokni
+   qo'shadi: qishki sutka lentasi va quvvat byudjeti ustuni.
+   Barcha selektor "y-" bilan boshlanadi.
+   ========================================================================== */
+
+/* ---------- Qishki sutka lentasi ---------- */
+.y-sutka{display:flex;flex-direction:column;gap:2px}
+.y-sutka > li{position:relative;list-style:none;display:grid;grid-template-columns:96px minmax(0,1fr);
+  gap:22px;padding:17px 20px;border-radius:14px;background:var(--oq);box-shadow:inset 0 0 0 1px var(--chiziq)}
+.y-sutka > li.bor-batafsil{padding-right:54px}
+.y-sutka .v{font-size:19px;font-weight:800;color:var(--kok);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.y-sutka .v small{display:block;margin-top:4px;font-size:11.5px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--matn-4)}
+.y-sutka h3{font-size:17px;font-weight:800;color:var(--siyoh);line-height:1.28;letter-spacing:-.02em}
+.y-sutka p{margin-top:6px;font-size:15.5px;line-height:1.55;color:var(--matn-2)}
+.y-sutka .y-sarf{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:5px 12px;border-radius:20px;
+  background:var(--fon);font-size:13px;font-weight:700;color:var(--matn-3)}
+.y-sutka .y-sarf::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--yashil)}
+
+/* ---------- Quvvat byudjeti ustuni ---------- */
+.y-quvvat{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.y-quvvat > div{position:relative;padding:20px 22px;border-radius:16px;background:var(--oq);
+  box-shadow:inset 0 0 0 1px var(--chiziq)}
+.y-quvvat > div.bor-batafsil{padding-right:54px}
+.y-quvvat b{display:block;font-size:12.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--yashil-toq)}
+.y-quvvat .son{display:block;margin-top:10px;font-size:32px;font-weight:800;letter-spacing:-.035em;
+  color:var(--siyoh);font-variant-numeric:tabular-nums;line-height:1.05}
+.y-quvvat .son small{font-size:16px;font-weight:700;color:var(--matn-2);letter-spacing:-.01em}
+.y-quvvat p{margin-top:9px;font-size:15.5px;line-height:1.55;color:var(--matn-2)}
+
+@media (max-width:760px){
+  .y-sutka > li{grid-template-columns:minmax(0,1fr);gap:8px}
+  .y-sutka .v small{display:inline;margin:0 0 0 10px}
+}
+@media print{
+  .y-sutka > li,.y-quvvat > div{break-inside:avoid;box-shadow:inset 0 0 0 1px rgba(10,27,69,.18)}
+  .y-quvvat .son{font-size:18pt}
+  .y-sutka p,.y-quvvat p{font-size:10.5pt}
+}
