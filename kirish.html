@@ -4,143 +4,231 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Tizimga kirish</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
-.kirish-sahna{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);min-height:100vh;
+body{background:var(--fon-sovuq)}
+.kirish-sahna{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);min-height:100vh;
   background:
-    radial-gradient(1000px 700px at 8% -6%, #FAEEE8 0%, transparent 60%),
-    radial-gradient(900px 700px at 96% 12%, #EFEFF8 0%, transparent 58%),
-    linear-gradient(150deg,#F8F1ED 0%,#F2F1F7 54%,#EFF4F1 100%)}
-.k-brend{display:flex;flex-direction:column;padding:44px 48px 0;position:relative;gap:18px;overflow:hidden}
-.k-brend::before{content:"";position:absolute;left:-8%;right:-4%;bottom:-6%;height:72%;pointer-events:none;
-  background:radial-gradient(58% 74% at 46% 82%, rgba(224,196,160,.34) 0%, rgba(224,196,160,0) 68%)}
+    radial-gradient(1000px 700px at 8% -6%, var(--fon-issiq) 0%, transparent 60%),
+    radial-gradient(900px 700px at 96% 12%, var(--fon-sovuq) 0%, transparent 58%),
+    linear-gradient(150deg,var(--fon-issiq) 0%,var(--fon-sovuq) 54%,var(--fon-mint) 100%)}
+.k-brend{display:flex;flex-direction:column;justify-content:space-between;gap:40px;padding:44px 56px 48px;min-width:0}
 .k-logo{display:flex;align-items:center;gap:13px}
-.k-logo .belgi{width:52px;height:52px;border-radius:16px;background:var(--oq);
-  display:grid;place-items:center;box-shadow:var(--soya-past)}
+.k-logo .belgi{width:52px;height:52px;border-radius:16px;background:var(--oq);display:grid;place-items:center;box-shadow:var(--soya-past)}
 .k-logo b{font:500 22px var(--shrift-displey);letter-spacing:-.03em;display:block;line-height:1.1}
-.k-logo span{display:block;font-size:12.5px;color:var(--matn-3)}
-.k-markaz{display:flex;flex-direction:column;gap:14px;max-width:620px}
-.k-markaz h2{font:500 40px/1.1 var(--shrift-displey);letter-spacing:-.045em}
-.k-markaz p{font-size:15.5px;line-height:1.6;color:var(--matn-2)}
-.k-ofis{flex:1 1 0;min-height:210px;position:relative;margin:-2px -46px 0 -74px}
-.k-ofis img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 24px 38px rgba(58,44,30,.20))}
-.k-ofis::after{content:"";position:absolute;left:16%;right:16%;bottom:4%;height:12px;border-radius:50%;
-  background:radial-gradient(50% 100% at 50% 50%, rgba(58,44,30,.20), transparent 72%);filter:blur(5px)}
-.k-forma{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 30px}
-.k-karta{width:min(470px,100%);background:var(--oq);border-radius:30px;box-shadow:var(--soya-suzuvchi);padding:34px 36px}
+.k-logo span span{display:block;font-size:12.5px;color:var(--matn-3)}
+.k-markaz{display:flex;flex-direction:column;gap:16px;max-width:560px}
+.k-markaz h2{font:500 42px/1.08 var(--shrift-displey);letter-spacing:-.045em}
+.k-markaz p{font-size:15.5px;line-height:1.6;color:var(--matn-2);max-width:500px}
+.k-zanjir{list-style:none;display:flex;flex-direction:column;gap:0;max-width:430px;counter-reset:q}
+.k-zanjir li{display:flex;align-items:center;gap:14px;padding:9px 0;position:relative;font-size:14.5px;color:var(--matn-2)}
+.k-zanjir li::before{counter-increment:q;content:counter(q);flex:none;width:30px;height:30px;border-radius:999px;
+  display:grid;place-items:center;background:var(--oq);box-shadow:var(--soya-past);font:500 13px var(--shrift);color:var(--siyoh)}
+.k-zanjir li:not(:last-child)::after{content:"";position:absolute;left:14.5px;top:39px;height:calc(100% - 30px);width:1px;background:var(--chiziq-3)}
+.k-zanjir li:last-child::before{background:var(--siyoh);color:var(--mint)}
+.k-zanjir small{margin-left:auto;font-size:12.5px;color:var(--matn-3);white-space:nowrap}
+.k-pastki{font-size:12.5px;color:var(--matn-3)}
+.k-forma{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 30px;min-width:0}
+.k-karta{width:min(460px,100%);background:var(--oq);border-radius:30px;box-shadow:var(--soya-suzuvchi);padding:36px 38px}
 .k-karta .yorliq{font-size:12.5px;color:var(--matn-3)}
-.k-karta h1{font:500 30px/1.15 var(--shrift-displey);letter-spacing:-.04em;margin:6px 0 6px}
-.k-karta .izoh{font-size:14px;color:var(--matn-3);margin-bottom:24px}
-.rol-panjara{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:22px}
-.rol-katak{display:flex;align-items:center;gap:10px;border-radius:16px;background:var(--plitka);
-  padding:13px 15px;font-size:13.5px;text-align:left;transition:background var(--tez),color var(--tez)}
-.rol-katak .ic{width:17px;height:17px;color:var(--matn-3)}
-.rol-katak:hover{background:var(--band-hover)}
-.rol-katak.faol{background:var(--siyoh);color:#fff}
-.rol-katak.faol .ic{color:var(--mint)}
+.k-karta h1{font:500 31px/1.15 var(--shrift-displey);letter-spacing:-.04em;margin:6px 0 8px}
+.k-karta .izoh{font-size:14px;line-height:1.55;color:var(--matn-3);margin-bottom:24px}
 .k-karta form{display:flex;flex-direction:column;gap:16px}
-.k-karta .tugma{width:100%;height:54px;font-size:15px}
-.k-past{margin-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:13.5px;color:var(--matn-3)}
+.k-karta .tugma[type=submit]{width:100%;height:54px;font-size:15px;justify-content:center}
+.koz{flex:none;width:40px;height:40px;margin-right:-8px;border-radius:999px;display:grid;place-items:center;color:var(--matn-3)}
+.koz:hover{background:var(--band);color:var(--siyoh)}
+.koz:focus-visible{outline:2px solid var(--siyoh);outline-offset:1px}
+.k-xato{display:flex;gap:9px;align-items:flex-start;background:var(--xavf-fon);color:var(--xavf-matn);border-radius:14px;padding:11px 14px;font-size:13.5px;line-height:1.45}
+.k-xato .ic{width:17px;height:17px;flex:none;margin-top:1px}
+.caps-izoh{display:flex;align-items:flex-start;gap:6px;font-size:13px;line-height:1.4;color:var(--sariq-matn)}
+.caps-izoh[hidden]{display:none}
+.caps-izoh .ic{width:15px;height:15px;flex:none;margin-top:1px}
+.k-past{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;color:var(--matn-3)}
 .k-past a{color:var(--siyoh);text-decoration:underline;text-underline-offset:3px}
-@media (max-width:1080px){.kirish-sahna{grid-template-columns:1fr}.k-brend{display:none}}
+.namoyish{margin-top:22px;border-top:1px solid var(--chiziq);padding-top:18px}
+.namoyish summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;min-height:40px}
+.namoyish summary::-webkit-details-marker{display:none}
+.namoyish summary .ic{width:17px;height:17px;color:var(--matn-3)}
+.namoyish summary .strelka{margin-left:auto;transition:transform var(--tez)}
+.namoyish[open] summary .strelka{transform:rotate(180deg)}
+.namoyish .n-izoh{font-size:13px;color:var(--matn-3);line-height:1.5;margin:6px 0 12px}
+.namoyish .n-izoh code{font:500 12.5px var(--shrift-mono);background:var(--plitka);border-radius:8px;padding:2px 7px;color:var(--siyoh)}
+.hisoblar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hisoblar button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;min-height:48px;
+  padding:8px 12px;border-radius:14px;background:var(--plitka);transition:background var(--tez)}
+.hisoblar button:hover{background:var(--band-hover)}
+.hisoblar button:focus-visible{outline:2px solid var(--siyoh);outline-offset:1px}
+.hisoblar button b{font-size:13px;font-weight:500;line-height:1.3}
+.hisoblar button span{font:400 12px var(--shrift-mono);color:var(--matn-3)}
+@media (max-width:1080px){.kirish-sahna{grid-template-columns:minmax(0,1fr)}.k-brend{display:none}}
+@media (max-width:480px){.k-forma{padding:20px 16px}.k-karta{padding:28px 22px;border-radius:26px}.k-karta h1{font-size:27px}
+  .hisoblar{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body data-sahifa="kirish" data-ochiq="1">
 <div class="kirish-sahna">
-  <aside class="k-brend" aria-label="Mikrokreditbank bosh ofisi">
+  <aside class="k-brend" aria-label="Tizim haqida">
     <div class="k-logo">
       <span class="belgi"><svg width="30" height="30" viewBox="0 0 44 44" aria-hidden="true">
         <path d="M4 34 L4 8 L16 19 L16 39 Z" fill="#37A72E"/>
         <path d="M16 19 L28 8 L28 34 L16 39 Z" fill="#8CC63F"/>
         <path d="M30 8 L42 19 L42 39 L30 34 Z" fill="#2E9BD6"/>
       </svg></span>
-      <span><b>Mikrokreditbank</b><span>Aktivlar nazorati tizimi</span></span>
+      <span><b>Mikrokreditbank</b><span>Balans aktivlarini boshqarish tizimi</span></span>
     </div>
     <div class="k-markaz">
-      <h2>Muammoli aktivlar &#8212; bitta reyestr, bitta tartib</h2>
-      <p>Obyektlarni hisobga olish, ko&#39;rik va sug&#39;urta nazorati, elektron kirish nazorati, baholash va hujjat aylanmasi &#8212; bank bosh ofisi va filiallari uchun yagona ish maydoni.</p>
+      <h2>Balansdagi har bir aktiv qabul qilingan kundan sotilguncha nazoratda</h2>
+      <p>Bank undiruv natijasida olgan ko&#39;chmas mulk, transport va uskunalar bitta reyestrda yuritiladi. Muddat, zaxira, qo&#39;riqlash va sotuv har bir aktiv bo&#39;yicha kunma-kun ko&#39;rinadi.</p>
     </div>
-    <div class="k-ofis"><img src="assets/bosh_ofis.webp" srcset="assets/bosh_ofis_760.webp 760w, assets/bosh_ofis.webp 1200w" sizes="(min-width:1440px) 52vw, 46vw" width="1200" height="822" decoding="async" alt="Mikrokreditbank bosh ofisi binosi"></div>
+    <ol class="k-zanjir" aria-label="Aktivning hayot sikli">
+      <li><span>Balansga qabul</span><small>dalolatnoma</small></li>
+      <li><span>Huquqni rasmiylashtirish</span><small>kadastr, YHXX</small></li>
+      <li><span>Baholash</span><small>bozor qiymati</small></li>
+      <li><span>Sotuvga tayyorlash</span><small>qaror</small></li>
+      <li><span>Lot va shartnoma</span><small>E-auksion</small></li>
+      <li><span>Balansdan chiqarish</span><small>arxiv</small></li>
+    </ol>
+    <span class="k-pastki">Ichki foydalanish uchun. Kirish va barcha o&#39;zgarishlar amallar tarixiga yoziladi.</span>
   </aside>
   <main class="k-forma">
     <div class="k-karta">
-      <span class="yorliq">Mikrokreditbank &#183; ichki tizim</span>
+      <span class="yorliq">Mikrokreditbank · ichki tizim</span>
       <h1>Tizimga kirish</h1>
-      <p class="izoh">Ish o&#39;rningizni tanlang &#8212; kirish huquqi lavozimingizga muvofiq beriladi</p>
-      <div class="rol-panjara" role="radiogroup" aria-label="Ish o'rni" id="rol-panjara"></div>
-      <form id="kirish-forma" novalidate>
+      <p class="izoh">Login va parolingizni kiriting. Huquqlar hisobingizdagi lavozimga qarab beriladi.</p>
+      <form id="kirish-forma" novalidate data-sayohat="forma">
         <div class="maydon">
-          <label class="maydon-yorliq" for="login">Foydalanuvchi nomi yoki email</label>
-          <div class="kirish"><svg class="ic"><use href="#i-foyd"/></svg>
-            <input id="login" name="login" type="text" placeholder="Foydalanuvchi nomi" autocomplete="username"></div>
+          <label class="maydon-yorliq" for="login">Login</label>
+          <div class="kirish"><svg class="ic"><use href="#ik-foyd"/></svg>
+            <input id="login" name="login" type="text" placeholder="ism.familiya" autocomplete="username" autocapitalize="none" spellcheck="false" required data-xato="Loginni kiriting"></div>
         </div>
         <div class="maydon">
           <label class="maydon-yorliq" for="parol">Parol</label>
-          <div class="kirish"><svg class="ic"><use href="#i-qulf"/></svg>
-            <input id="parol" name="parol" type="password" placeholder="Parolni kiriting" autocomplete="current-password">
-            <button type="button" id="parol-koz" aria-label="Parolni ko'rsatish" style="display:grid;place-items:center;color:var(--matn-3)"><svg class="ic"><use href="#i-korish"/></svg></button></div>
-          <span class="maydon-izoh xato" id="kirish-xato" hidden>Login va parolni kiriting</span>
+          <div class="kirish"><svg class="ic"><use href="#ik-qulf"/></svg>
+            <input id="parol" name="parol" type="password" placeholder="Parolni kiriting" autocomplete="current-password" required data-xato="Parolni kiriting" aria-describedby="caps-izoh">
+            <button type="button" class="koz" id="parol-koz" aria-label="Parolni ko'rsatish" aria-pressed="false"><svg class="ic"><use href="#ik-korish"/></svg></button></div>
+          <span class="caps-izoh" id="caps-izoh" aria-live="polite" hidden><svg class="ic"><use href="#ik-ogoh"/></svg><span>Caps Lock yoqilgan: parol katta harflar bilan yozilmoqda</span></span>
         </div>
-        <button class="tugma tugma-asosiy" type="submit">Tizimga kirish<svg class="ic"><use href="#i-ong"/></svg></button>
+        <div class="k-xato" id="kirish-xato" role="alert" hidden><svg class="ic"><use href="#ik-xavf"/></svg><span id="kirish-xato-matn"></span></div>
+        <button class="tugma tugma-asosiy" type="submit" id="kirish-tugma" data-sayohat="kirish"><span>Kirish</span><svg class="ic"><use href="#ik-ong"/></svg></button>
       </form>
       <div class="k-past">
-        <span>Hisob bo&#39;limi orqali ochiladi</span>
+        <span>Hisobni administrator ochadi</span>
         <a href="parol-tiklash.html">Parolni unutdingizmi?</a>
       </div>
+      <details class="namoyish" id="namoyish" data-sayohat="namoyish" hidden>
+        <summary><svg class="ic"><use href="#ik-info"/></svg><span>Namoyish hisoblari</span><svg class="ic strelka"><use href="#ik-past"/></svg></summary>
+        <p class="n-izoh"><span>Namoyish rejimida hamma hisob bitta parol bilan kiradi:</span> <code data-tarjimasiz id="namoyish-parol">—</code>. <span>Hisobni tanlang, maydonlar to&#39;ldiriladi.</span></p>
+        <div class="hisoblar" id="hisoblar"></div>
+      </details>
     </div>
   </main>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", () => {
-  const s0 = MKBapi.sessiya();
-  if (s0){ location.replace(rolBoshSahifasi(ROL_KALIT[s0.rol] || "admin")); return; }
+(async () => {
+  const rejim = await MKBapi.tayyor;
+  /* Kirgandan keyin: sessiya yopilgan sahifaga qaytish (?qaytish=, faqat shu tizimning sahifasi va rolga ochiq bo'lsa), aks holda rol bosh sahifasi */
+  const qaytish = new URLSearchParams(location.search).get("qaytish");
+  const xavfsiz = q => (window.MKB_UX_SOF && MKB_UX_SOF.xavfsizQaytish) ? MKB_UX_SOF.xavfsizQaytish(q)
+    : /^[a-z0-9-]+\.html(\?[^#\s<>"']*)?$/i.test(String(q || "")) && !/^(kirish|index|xato-)/.test(String(q));
+  const manzil = rol => (qaytish && xavfsiz(qaytish) && sahifaRuxsatlimi(qaytish)) ? qaytish : rolBoshSahifasi(rol);
+  if (MKBapi.sessiya() && MKB.rol()){ location.replace(manzil(MKB.rol())); return; }
 
-  /* Rol tugmalari — ROL_KALIT dan (obyekt boshqaruvi rollari) */
-  const IKON = {admin: "sozlama", filial: "bank", obyekt: "aktivlar", nazorat: "korik",
-    baholash: "baholash", yurist: "yuridik"};
-  let rol = "Obyekt menejeri";
-  const panjara = document.getElementById("rol-panjara");
-  panjara.innerHTML = Object.keys(ROL_KALIT).map((nom, i) =>
-    '<button type="button" class="rol-katak' + (nom === rol ? " faol" : "") + '" data-rol="' + nom + '">' +
-    ik(IKON[ROL_KALIT[nom]] || "foyd") + nom + "</button>").join("");
-  panjara.querySelectorAll(".rol-katak").forEach(b => b.addEventListener("click", () => {
-    rol = b.dataset.rol;
-    panjara.querySelectorAll(".rol-katak").forEach(x => x.classList.toggle("faol", x === b));
-  }));
-
+  const forma = document.getElementById("kirish-forma");
+  const login = document.getElementById("login");
   const parol = document.getElementById("parol");
-  document.getElementById("parol-koz").addEventListener("click", () => {
-    parol.type = parol.type === "password" ? "text" : "password";
-  });
+  const xato = document.getElementById("kirish-xato");
+  const xatoMatn = document.getElementById("kirish-xato-matn");
+  const tugma = document.getElementById("kirish-tugma");
+  const caps = document.getElementById("caps-izoh");
+  /* Maydon ostidagi xato (yadro/ux.js); u hali yuklanmagan bo'lsa — umumiy xato qatori */
+  const maydonXato = (el, m) => {
+    if (MKB.maydonXato){ MKB.maydonXato(el, m); return; }
+    el.closest(".kirish").classList.toggle("xato", !!m);
+    if (m){ xatoMatn.textContent = m; xato.hidden = false; tarjimaQil(xato); }
+  };
+  const umumiyXato = m => { xatoMatn.textContent = m; xato.hidden = !m; if (m) tarjimaQil(xato); };
 
-  document.getElementById("kirish-forma").addEventListener("submit", async e => {
-    e.preventDefault();
-    const login = document.getElementById("login").value.trim();
-    const xato = document.getElementById("kirish-xato");
-    if (!login || !parol.value){ xato.hidden = false; return; }
-    xato.hidden = true;
-    try{
-      const s = await MKBapi.kirish(login, parol.value, rol);
-      location.href = rolBoshSahifasi(ROL_KALIT[s.rol] || "admin");
-    }catch(_){
-      xato.textContent = "Login yoki parol noto'g'ri";
-      xato.hidden = false;
-    }
+  const koz = document.getElementById("parol-koz");
+  koz.addEventListener("click", () => {
+    const ochiq = parol.type === "password";
+    parol.type = ochiq ? "text" : "password";
+    koz.setAttribute("aria-pressed", String(ochiq));
+    koz.setAttribute("aria-label", ochiq ? "Parolni yashirish" : "Parolni ko'rsatish");
+    tarjimaQil(koz.parentNode);
   });
-});
+  /* Caps Lock: parol maydonida tugma bosilganda holati tekshiriladi */
+  const capsTekshir = e => {
+    if (!e || typeof e.getModifierState !== "function") return;
+    const yoqilgan = e.getModifierState("CapsLock");
+    if (caps.hidden === !yoqilgan) return;
+    caps.hidden = !yoqilgan;
+    if (yoqilgan) tarjimaQil(caps);
+  };
+  parol.addEventListener("keydown", capsTekshir);
+  parol.addEventListener("keyup", capsTekshir);
+  parol.addEventListener("mousedown", capsTekshir);
+  parol.addEventListener("blur", () => { caps.hidden = true; });
+  [login, parol].forEach(m => m.addEventListener("input", () => { umumiyXato(""); if (m.getAttribute("aria-invalid") === "true" && m.value) maydonXato(m, null); }));
+
+  /* Namoyish rejimi: hisoblar FOYDLAR dan, faqat faol hisoblar */
+  if (rejim === "snapshot"){
+    const F = (await MKBapi.royxat("FOYDLAR")).filter(f => f.faol !== false && f.login);
+    const tartib = Object.keys(ROL_KALIT);
+    const birinchi = {};
+    F.sort((a, b) => tartib.indexOf(a.rol) - tartib.indexOf(b.rol)).forEach(f => { if (!birinchi[f.rol]) birinchi[f.rol] = f; });
+    const royxat = Object.values(birinchi);
+    if (royxat.length){
+      document.getElementById("namoyish-parol").textContent = MKBapi.NAMOYISH_PAROL;
+      document.getElementById("hisoblar").innerHTML = royxat.map(f =>
+        '<button type="button" data-login="' + MKB.esc(f.login) + '"><b>' + MKB.esc(f.rol) + '</b>' +
+        '<span data-tarjimasiz>' + MKB.esc(f.login) + '</span></button>').join("");
+      document.getElementById("hisoblar").addEventListener("click", e => {
+        const b = e.target.closest("[data-login]");
+        if (!b) return;
+        login.value = b.dataset.login;
+        parol.value = MKBapi.NAMOYISH_PAROL;
+        [login, parol].forEach(m => maydonXato(m, null));
+        umumiyXato("");
+        tugma.focus();
+      });
+      document.getElementById("namoyish").hidden = false;
+      tarjimaQil(document.getElementById("namoyish"));
+    }
+  }
+
+  forma.addEventListener("submit", async e => {
+    e.preventDefault();
+    const l = login.value.trim();
+    umumiyXato("");
+    maydonXato(login, l ? null : "Loginni kiriting");
+    maydonXato(parol, parol.value ? null : "Parolni kiriting");
+    if (!l || !parol.value){ (!l ? login : parol).focus(); return; }
+    try{
+      await MKB.band(tugma, () => MKBapi.kirish(l, parol.value));
+    }catch(err){
+      /* Login yoki parol noto'g'ri: xato parol maydoni ostida, parol qayta yozish uchun belgilanadi */
+      maydonXato(parol, err && err.message ? err.message : "Login yoki parol noto'g'ri");
+      parol.focus(); parol.select();
+      return;
+    }
+    const rol = MKB.rol();
+    if (!rol){ MKBapi.chiqish(true); umumiyXato("Hisobingizga rol biriktirilmagan. Administratorga murojaat qiling"); return; }
+    location.replace(manzil(rol));
+  });
+})();
 </script>
 </body>
 </html>

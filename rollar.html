@@ -3,9 +3,39 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Rollar matritsasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
-<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<title>MKB — Rollar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.karta-izoh{font-size:13.5px;line-height:1.55;color:var(--matn-3);margin:-6px 0 16px;max-width:760px}
+.belgilar{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--matn-2);margin-bottom:14px}
+.belgilar > span{display:inline-flex;align-items:center;gap:7px}
+.hq{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;font:500 12px var(--shrift);flex:none}
+.hq.o{background:var(--plitka);color:var(--matn-2)}
+.hq.y{background:var(--lavanda);color:var(--lavanda-matn)}
+.hq.t{background:var(--siyoh);color:var(--mint)}
+.hq.y.qisman{background:transparent;box-shadow:inset 0 0 0 1.5px var(--lavanda-matn)}
+.matritsa-izoh{font-size:12.5px;line-height:1.5;color:var(--matn-3);margin:10px 0 0}
+.matritsa{border-collapse:separate;border-spacing:0;width:100%;min-width:880px;font-size:13.5px}
+.matritsa th,.matritsa td{padding:11px 4px;border-bottom:1px solid var(--chiziq-2);text-align:center;vertical-align:middle}
+.matritsa .hq{width:22px;height:22px;border-radius:7px;font-size:11.5px}
+.matritsa thead th{font-weight:500;font-size:12.5px;color:var(--matn-3);white-space:nowrap}
+.matritsa th:first-child,.matritsa td:first-child{text-align:left;padding-left:0;position:sticky;left:0;background:var(--oq);z-index:1}
+.matritsa tbody th{font-weight:500;min-width:160px;max-width:200px}
+.matritsa tbody th a{color:inherit}
+.matritsa tbody th a:hover{text-decoration:underline;text-underline-offset:3px}
+.matritsa tbody th > span{display:block;font-size:12px;font-weight:400;color:var(--matn-3);margin-top:2px}
+.matritsa .yig{display:inline-flex;gap:2px}
+.matritsa .yoq{color:var(--matn-4)}
+.matritsa tr.joriy th:first-child,.matritsa tr.joriy td{background:var(--plitka)}
+.orash{overflow-x:auto;margin:0 -4px;padding:0 4px}
+.rol-kartalar{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.rol-karta{display:flex;flex-direction:column;gap:8px;background:var(--plitka);border-radius:20px;padding:16px 18px;min-width:0}
+.rol-karta b{font-weight:500;font-size:14.5px}
+.rol-karta p{font-size:13px;line-height:1.5;color:var(--matn-3)}
+.rol-karta .past{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:auto;font-size:12.5px}
+.rol-karta .past a.chip:hover{background:var(--chiziq-2)}
+@media (max-width:480px){.rol-karta .past a.chip{height:36px;padding:0 14px;font-size:12.5px}.matritsa tbody th a{display:inline-block;padding:7px 0}}
+</style>
 </head>
 <body data-sahifa="sozlama">
 <div class="qobiq">
@@ -14,43 +44,111 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><span>Sozlamalar</span></div>
-    <div class="hs-qator"><h1>Rollar matritsasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><span>Rollar</span></div>
+    <div class="hs-qator"><h1>Rollar va huquqlar</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html" class="faol">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a></nav>
-  <section class="karta"><div class="karta-bosh"><h2>Rol — bo'lim matritsasi</h2><span class="soni">tizim bo'ylab amal qiladi</span></div><div class="jadval-orash"><table class="jadval" id="rollar-jadval"></table></div></section>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html" class="faol" aria-current="page">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
+
+  <div class="ustun">
+    <section class="karta" data-sayohat="matritsa">
+      <div class="karta-bosh"><h2>Huquqlar matritsasi</h2></div>
+      <p class="karta-izoh">Jadvalda har bir rol qaysi bo&#39;limda nima qila olishi ko&#39;rsatilgan. Ayrim amallar boshqa bo&#39;lim yozuvini ham o&#39;zgartiradi: rahbariyat taklifni tasdiqlasa, lot holati yangilanadi. Xodimga boshqa huquq kerak bo&#39;lsa, unga mos rol beriladi. Filial rahbari faqat o&#39;z filiali yozuvlarini ko&#39;radi va o&#39;zgartiradi.</p>
+      <div class="belgilar" data-sayohat="belgilar">
+        <span><span class="hq o" aria-hidden="true">K</span><span>Ko&#39;radi</span></span>
+        <span><span class="hq y" aria-hidden="true">Y</span><span>Yozadi</span></span>
+        <span><span class="hq t" aria-hidden="true">T</span><span>Tasdiqlaydi</span></span>
+        <span><span class="hq y qisman" aria-hidden="true">Y</span><span>Bo&#39;limning bir qismida yozadi</span></span>
+        <span><span class="yoq" aria-hidden="true">—</span><span>Bo&#39;lim yopiq</span></span>
+      </div>
+      <div class="orash" id="matritsa-joy"></div>
+      <p class="matritsa-izoh">Buxgalteriya va risk Sozlamalarda faqat me&#39;yoriy parametrlarni o&#39;zgartiradi.</p>
+    </section>
+
+    <section class="karta" data-sayohat="rollar">
+      <div class="karta-bosh"><h2>Rollar</h2></div>
+      <div class="rol-kartalar" id="rol-kartalar"></div>
+    </section>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", () => {
-  const bolimlar = BOLIMLAR.map(b => ({kalit: b.kalit, yorliq: b.yorliq})).concat([{kalit: "sozlama", yorliq: "Sozlamalar"}]);
-  const rollar = Object.keys(ROL_RUXSAT);
-  const ROL_NOMI = {};
-  Object.entries(ROL_KALIT).forEach(([nom, k]) => ROL_NOMI[k] = nom);
-  document.getElementById("rollar-jadval").innerHTML =
-    '<thead><tr><th>Bo\'lim</th>' + rollar.map(r => '<th style="text-align:center">' + ROL_NOMI[r] + '</th>').join("") + '</tr></thead><tbody>' +
-    bolimlar.map(b => '<tr><td><b>' + b.yorliq + '</b></td>' +
-      rollar.map(r => {
-        const bor = !ROL_RUXSAT[r] || ROL_RUXSAT[r].includes(b.kalit);
-        return '<td style="text-align:center">' + (bor
-          ? '<span style="display:inline-grid;place-items:center;width:22px;height:22px;border-radius:99px;background:var(--brend-fon);color:var(--brend-quyuq)">' + ik("tasdiq") + '</span>'
-          : '<span style="color:var(--xira)">—</span>') + '</td>';
-      }).join("") + '</tr>').join("") + '</tbody>';
-});
+(async () => {
+  const esc = MKB.esc;
+  const $ = id => document.getElementById(id);
+  MKB.sahifaYukla({
+    joylar: {"matritsa-joy": ["jadval", 10], "rol-kartalar": ["karta", 6]},
+    xato: "Rollar va huquqlarni yuklab bo'lmadi",
+    ish: chiz,
+  });
+
+  async function chiz(){
+    const F = await MKBapi.royxat("FOYDLAR");
+    const joriy = MKB.rol();
+    const ROLLAR = Object.entries(ROL_KALIT);                     /* [nom, kalit] */
+    const BOL = BOLIMLAR.map(b => ({kalit: b.kalit, nom: b.qisqa || b.yorliq, toliq: b.yorliq}))
+      .concat([{kalit: "sozlama", nom: "Sozlamalar", toliq: "Sozlamalar"}]);
+    const NOM = {o: "Ko'radi", y: "Yozadi", t: "Tasdiqlaydi"};
+    /* Bo'lim huquqidan tashqari qisman yozish: sozlamalar.html dagi PARAM_YOZADI va server PARAMETR_YOZUVCHI */
+    const QISMAN = {buxgalteriya: {sozlama: {harf: "y", matn: "Yozadi: faqat me'yoriy parametrlar"}},
+      /* yadro/app.js va server YARATISH_ISTISNO.KORIKLAR */
+      xavfsizlik: {korik: {harf: "y", matn: "Yozadi: faqat masofaviy ko'rik natijasi"}}};
+    const HARF = {o: "K", y: "Y", t: "T"};
+    const soni = nom => F.filter(f => f.rol === nom && f.faol !== false).length;
+    /* Navigatsiya daraxtidagi nom (matn yadro faylidan, HTML ko'rinishida) */
+    const sahifaNomi = fayl => {
+      const d = window.MKB_DARAXT || {};
+      for (const k of Object.keys(d)){ const x = (d[k] || []).find(s => s.f === fayl); if (x) return x.n; }
+      return esc(fayl);
+    };
+
+    $("hs-meta").innerHTML = '<b data-tarjimasiz>' + ROLLAR.length + '</b> <span>ta rol,</span> <b data-tarjimasiz>' + BOL.length + '</b> <span>ta bo&#39;lim</span>';
+
+    $("matritsa-joy").innerHTML = '<table class="matritsa" id="matritsa">' +
+      '<thead><tr><th scope="col">Rol</th>' + BOL.map(b => '<th scope="col" title="' + esc(b.toliq) + '">' + esc(b.nom) + "</th>").join("") + "</tr></thead>" +
+      "<tbody>" + ROLLAR.map(([nom, k]) => {
+        const r = ROL_RUXSAT[k];
+        const n = soni(nom);
+        return '<tr class="' + (k === joriy ? "joriy" : "") + '"><th scope="row"><a href="foydalanuvchilar.html?rol=' + encodeURIComponent(nom) + '">' + esc(nom) + "</a>" +
+          "<span><span data-tarjimasiz>" + n + "</span> <span>ta faol xodim</span></span></th>" +
+          BOL.map(b => {
+            const h = r === null ? "oyt" : ((r || {})[b.kalit] || "");
+            if (!h) return '<td><span class="yoq" aria-label="Yopiq">—</span></td>';
+            const q = ((QISMAN[k] || {})[b.kalit]) || null;
+            const qism = q && !h.includes(q.harf) ? q : null;
+            const harflar = ["o", "y", "t"].filter(x => h.includes(x) || (qism && qism.harf === x));
+            const matn = harflar.map(x => qism && qism.harf === x ? qism.matn : NOM[x]).join(", ");
+            return '<td><span class="yig" role="img" aria-label="' + esc(matn) + '" title="' + esc(matn) + '">' +
+              harflar.map(x => '<span class="hq ' + x + (qism && qism.harf === x ? " qisman" : "") + '" data-tarjimasiz>' + HARF[x] + "</span>").join("") + "</span></td>";
+          }).join("") + "</tr>";
+      }).join("") + "</tbody></table>";
+
+    /* Rol kartasi: vazifasi, bosh sahifasi va qo'llanmasi (xodimlar soni matritsada) */
+    const Q = window.MKB_QOLLANMA || {};
+    $("rol-kartalar").innerHTML = ROLLAR.map(([nom, k]) => {
+      const q = Q[k];
+      const qisqa = q && q.maqsad ? q.maqsad.split(/(?<=\.)\s/)[0] : "";
+      return '<div class="rol-karta"><b>' + esc(nom) + "</b>" +
+        (qisqa ? "<p>" + esc(qisqa) + "</p>" : "") +
+        '<div class="past"><a class="chip chip-kichik chip-kul" href="' + rolBoshSahifasi(k) + '">' + sahifaNomi(rolBoshSahifasi(k)) + "</a>" +
+        '<a class="chip chip-kichik chip-kul" href="qollanma.html?rol=' + k + '">Qo&#39;llanma</a></div></div>';
+    }).join("");
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+})();
 </script>
 </body>
 </html>

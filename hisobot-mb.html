@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — MB oylik hisoboti</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.mb-taymer{display:flex;flex-direction:column;gap:6px}
+.mb-taymer .mt-son{font:500 56px/1 var(--shrift-displey);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.mb-taymer .mt-son small{font:400 16px var(--shrift);color:var(--matn-3);letter-spacing:0;margin-left:6px}
+.mb-taymer.xavf .mt-son{color:var(--pushti-matn)}
+.mb-taymer .mt-izoh{font-size:13px;color:var(--matn-3);line-height:1.5}
+.mb-limit{margin-top:18px;display:flex;flex-direction:column;gap:8px}
+.mb-limit .ml-iz{height:14px;border-radius:var(--r-pilyula);background:var(--band);overflow:hidden;position:relative}
+.mb-limit .ml-iz span{display:block;height:100%;border-radius:inherit;background:var(--siyoh)}
+.mb-limit .ml-iz span.xavf{background:var(--xavf)}
+.mb-limit .ml-matn{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--matn-3)}
+.mb-kpi{margin-top:18px}
+.mb-kpi .metrika{box-shadow:none;background:var(--plitka)}
+.mb-amallar{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.mb-ogoh{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:var(--plitka);font-size:13px;color:var(--matn-2);margin-top:14px}
+.mb-ogoh .ic{width:18px;height:18px;flex:none;margin-top:1px}
+.mb-topshir{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;margin:4px 0 18px}
+.mb-topshir .maydon{margin:0;min-width:200px}
+.mb-qoshimcha{margin-top:12px;display:flex;flex-wrap:wrap;gap:10px}
+@page{size:A4;margin:12mm}
+/* tor ekranda davr tanlagichi sarlavha ostiga tushadi, holat chipi yonida qoladi */
+@media (max-width:480px){.mb-davr-bosh{flex-wrap:wrap}.mb-davr-bosh h2{flex:1 1 100%}.mb-davr-bosh > :last-child:not(:first-child){margin-left:0}}
+</style>
+</head>
+<body data-sahifa="hisobot">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>MB oylik hisoboti</span></div>
+    <div class="hs-qator"><h1>MB oylik hisoboti</h1><span class="hs-meta" id="hs-meta">MB 3441-son nizom, 16-band</span>
+      <div class="hs-amallar">
+        <button type="button" class="tugma tugma-oq" id="mb-chop" data-sayohat="chop"><svg class="ic"><use href="#ik-chop"/></svg>Chop etish</button>
+        <button type="button" class="tugma tugma-oq" id="mb-csv" data-sayohat="csv"><svg class="ic"><use href="#ik-csv"/></svg>Ilovani yuklab olish</button>
+      </div></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html" class="faol">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">KPI</a><a href="hisobot-hudud.html">Hududlar</a><a href="hisobot-undiruv.html">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-eksport.html">Eksport</a></nav>
+
+  <div class="tor-2">
+    <section class="karta" id="mb-tanlangan" aria-label="Tanlangan davr" data-sayohat="hisobot"></section>
+    <div class="ustun">
+      <section class="karta" id="mb-muddat" aria-label="Topshirish muddati" data-sayohat="muddat"></section>
+      <section class="karta"><div class="karta-bosh"><h2>Balans qiymati dinamikasi</h2><span class="soni" id="mb-birlik">mlrd so'm</span></div><div id="mb-dinamika"></div></section>
+    </div>
+  </div>
+  <section id="mb-tarix" aria-label="Hisobotlar tarixi" data-sayohat="tarix"></section>
+  <section class="chop-varaq" id="chop" aria-hidden="true"></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  $("mb-tanlangan").innerHTML = MKB.skelet(4);
+  MKB.sahifaYukla({
+    joylar: {"mb-tanlangan": ["karta", 4], "mb-muddat": ["qator", 3], "mb-dinamika": ["qator", 3], "mb-tarix": ["jadval", 6]},
+    xato: "MB hisobotini yuklab bo'lmadi",
+    ish: boshla,
+  });
+
+async function boshla(){
+  if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
+  await MKB.kolYukla(["MB_HISOBOTLAR", "ZAXIRA_TARIX", "PARAMETRLAR"]);
+  const D = MKB_DATA, esc = MKB.esc;
+  /* Hisobot tamg'asi: qachon va kim tayyorlagan (chop etish sarlavhasida) */
+  const tayyorlandi = () => { const s = MKBapi.sessiya() || {}; return D.sanaYoz(D.bugun()) + " " + MKB.soat() + " · " + (s.ism || MKB.kim()) + (s.rol ? ", " + s.rol : ""); };
+  const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const kapitalParam = () => (D.PARAMETRLAR || []).find(p => p && p.id === "kapital1DarajaMlrd") || {};
+
+  const OYLAR = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+  const oyNomi = davr => { const [y, m] = String(davr).split("-").map(Number); return OYLAR[m - 1] ? OYLAR[m - 1] + " " + y : davr; };
+  const oyKalit = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+  const oyOxiri = davr => { const [y, m] = davr.split("-").map(Number); return new Date(y, m, 0); };
+  const son = n => n == null || n === "" ? "" : String(D.yaxlit(Number(n), 2)).replace(".", ",");
+  const bugunKun = () => { const b = D.bugun(); return new Date(b.getFullYear(), b.getMonth(), b.getDate()); };
+  const muddatHisobla = davr => { const o = oyOxiri(davr); return D.ishKuniQosh(new Date(o.getFullYear(), o.getMonth() + 1, D.param("mbHisobotKuni") || 10), 0); };
+  /* "379,10 mlrd so'm" -> raqam va birlik alohida */
+  const pulHTML = mln => { const m = /^(.*?)\s*(mlrd so'm|mln so'm)$/.exec(MKB.pul(mln)); return m ? '<span data-tarjimasiz>' + esc(m[1]) + "</span><small>" + m[2] + "</small>" : esc(MKB.pul(mln)); };
+  const yozaOladi = () => MKB.huquq("hisobot", "yoz");
+  const kapitalniKiritaOladi = () => ["admin", "buxgalteriya"].indexOf(MKB.rol()) >= 0;
+  const joriyDavr = () => oyKalit(bugunKun());
+
+  /* Hisobot holati: saqlangan holat va muddat bo'yicha */
+  function holatInfo(x){
+    if (x.dastlabki) return {nom: "Davr davom etmoqda", chip: "chip-kul"};
+    if (x.holat === "topshirilgan"){
+      const kech = x.topshirilganSana && D.sanaOqi(x.topshirilganSana) > D.sanaOqi(x.muddat);
+      return kech ? {nom: "Kechikib topshirilgan", chip: "chip-sariq"} : {nom: "Topshirilgan", chip: "chip-yashil"};
+    }
+    return D.sanaOqi(x.muddat) < bugunKun() ? {nom: "Muddati o'tgan", chip: "chip-xavf"} : {nom: "Tayyorlanmoqda", chip: "chip-info"};
+  }
+  const chip = x => { const h = holatInfo(x); return '<span class="chip chip-kichik ' + h.chip + '">' + esc(h.nom) + "</span>"; };
+
+  /* Filial rahbari: hisobot bank bo'yicha topshiriladi, lekin raqamlar MKB.doira orqali faqat o'z filiali aktivlaridan
+     hisoblanadi. Kapitalga nisbat bank kapitaliga bog'liq, filial kesimida hisoblanmaydi. */
+  const filialKesim = MKB.rol() === "filial" && !!MKB.filialKod();
+  function kesim(x){
+    if (!filialKesim || !D.mbHisobotHisobla) return x;
+    const y = D.mbHisobotHisobla(x.davr, a => MKB.doira(a));
+    return Object.assign({}, x, {obyektlarSoni: y.obyektlarSoni, jamiBalansQiymat: y.jamiBalansQiymat, umidsizSoni: y.umidsizSoni,
+      kapital1Daraja: null, kapitalgaNisbat: null});
+  }
+  /* Ro'yxat: saqlangan hisobotlar + joriy oy (dastlabki, saqlanmaydi) */
+  function royxat(){
+    const r = (D.MB_HISOBOTLAR || []).slice().sort((a, b) => String(b.davr).localeCompare(String(a.davr)));
+    const j = joriyDavr();
+    if (!r.some(x => x.davr === j) && D.mbHisobotHisobla){
+      try{ const p = D.mbHisobotHisobla(j); p.dastlabki = true; r.unshift(p); }catch(_){ }
+    }
+    return r.map(kesim);
+  }
+  const url = new URLSearchParams(location.search);
+  let tanlangan = url.get("davr");
+
+  /* ---------- Tanlangan hisobot ---------- */
+  function ilovaQatorlari(x){
+    let r = (D.ZAXIRA_TARIX || []).filter(z => z.davr === x.davr);
+    if (!r.length && D.zaxiraTarixHisobla) try{ r = D.zaxiraTarixHisobla(x.davr); }catch(_){ r = []; }
+    r = MKB.doira(r);
+    const toifa = k => ((D.ZAXIRA_TOIFALARI || []).find(t => t.kalit === k) || {}).nom || (k === "standart" ? "Standart" : k || "");
+    return r.map(z => {
+      const y = D.topish(z.obyektId), a = y ? null : (D.ARXIV || []).find(v => v.id === z.obyektId);
+      const m = y || a || {};
+      return {id: z.obyektId, nom: m.nom || z.obyektId, tur: m.tur || "", hudud: m.hudud || "", filial: m.filial || "",
+        balansSana: y ? (y.balans || {}).sana : (a ? a.balansSana : ""), balansQiymat: y ? (y.balans || {}).qiymat : (a ? a.balansQiymat : null),
+        toifa: toifa(z.toifa), foiz: z.foiz, summa: z.summa, sotilgan: a ? a.sotuvSana : ""};
+    });
+  }
+  const ILOVA_USTUN = [["Obyekt kodi", q => q.id], ["Nomi", q => q.nom], ["Turi", q => q.tur], ["Hudud", q => q.hudud], ["Filial", q => q.filial],
+    ["Balansga olingan", q => q.balansSana], ["Balans qiymati, mln so'm", q => son(q.balansQiymat)], ["Tasnif toifasi", q => q.toifa],
+    ["Zaxira, %", q => son(q.foiz)], ["Zaxira, mln so'm", q => son(q.summa)], ["Keyin sotilgan", q => q.sotilgan || ""]];
+
+  function tanlanganChiz(){
+    const r = royxat();
+    const x = r.find(v => v.davr === tanlangan) || r.find(v => !v.dastlabki && v.holat !== "topshirilgan") || r.find(v => !v.dastlabki) || r[0];
+    const el = $("mb-tanlangan");
+    if (!x){
+      el.innerHTML = MKB.boshHolat("bank", "Hisobot hali tuzilmagan", "Balansda aktiv paydo bo'lgach, hisobot har oy avtomatik tuziladi");
+      tarjimaQil(el); return null;
+    }
+    tanlangan = x.davr;
+    const kapital = filialKesim ? null : x.dastlabki ? D.param("kapital1DarajaMlrd") : x.kapital1Daraja;
+    const nisbat = x.dastlabki ? (kapital ? D.yaxlit(x.jamiBalansQiymat / 1000 / kapital, 3) : null) : x.kapitalgaNisbat;
+    const chegara = D.param("kapitalLimitKoeff") || 1;
+    const foiz = nisbat != null ? D.yaxlit(nisbat * 100, 1) : null;
+    const h = holatInfo(x);
+    const variant = r.map(v => '<option value="' + esc(v.davr) + '"' + (v.davr === x.davr ? " selected" : "") + ">" + esc(oyNomi(v.davr)) + (v.dastlabki ? " · dastlabki" : "") + "</option>").join("");
+    el.innerHTML =
+      '<div class="karta-bosh mb-davr-bosh"><h2>Hisobot davri</h2>' +
+        '<label class="tanlov"><span class="t-old">Oy:</span><select id="mb-davr" aria-label="Hisobot davri">' + variant + "</select></label>" +
+        '<span class="chip ' + h.chip + '">' + esc(h.nom) + "</span></div>" +
+      (!x.dastlabki && x.holat !== "topshirilgan" && yozaOladi()
+        ? '<div class="mb-topshir">' +
+            '<div class="maydon"><label class="maydon-yorliq" for="mb-sana">Topshirilgan sana</label>' +
+              '<div class="kirish"><input type="date" id="mb-sana" name="sana" value="' + iso(bugunKun()) + '" min="' + iso(D.kunQosh(oyOxiri(x.davr), 1)) + '" max="' + iso(bugunKun()) + '"></div></div>' +
+            '<button type="button" class="tugma tugma-asosiy" id="mb-topshir" data-yozadi data-sayohat="topshirish">' + ik("tasdiq") + "Topshirildi deb belgilash</button>" +
+          "</div>" : "") +
+      (filialKesim ? '<div class="mb-ogoh">' + ik("info") + "<span>Raqamlar faqat filialingiz aktivlari bo'yicha. Bank Markaziy bankka hisobotni butun portfel bo'yicha topshiradi.</span></div>" : "") +
+      (x.dastlabki ? '<div class="mb-ogoh">' + ik("info") + '<span><span class="chip chip-kichik chip-sariq">Taxminiy</span> <span>Davr hali tugamagan. Raqamlar bugungi reyestrdan hisoblangan, umidsiz toifa esa oy oxiriga ko\'ra.</span></span></div>' : "") +
+      '<section class="metrika-qator ikki mb-kpi">' +
+        '<div class="metrika"><span class="m-yorliq">Obyektlar soni</span><span class="m-qiymat" data-tarjimasiz>' + MKB.fmt(x.obyektlarSoni) + "</span>" +
+          '<span class="m-izoh">oy oxirida balansda</span></div>' +
+        '<div class="metrika"><span class="m-yorliq">Jami balans qiymati</span><span class="m-qiymat">' + pulHTML(x.jamiBalansQiymat) + "</span>" +
+          '<span class="m-izoh">16701 hisobvarag\'i</span></div>' +
+        '<div class="metrika"><span class="m-yorliq">1-darajali kapitalga nisbati</span><span class="m-qiymat">' +
+          (foiz != null ? "<span data-tarjimasiz>" + String(foiz).replace(".", ",") + "</span><small>%</small>" : "<span>—</span>") + "</span>" +
+          '<span class="m-izoh">' + (filialKesim ? "<span>bank bo'yicha hisoblanadi</span>" : kapital ? "<span>kapital</span> <b data-tarjimasiz>" + esc(MKB.pul(kapital * 1000)) + "</b>" : "<span>kapital kiritilmagan</span>") + "</span></div>" +
+        '<div class="metrika"><span class="m-yorliq">Umidsiz toifada</span><span class="m-qiymat" data-tarjimasiz>' + MKB.fmt(x.umidsizSoni) + "</span>" +
+          '<span class="m-izoh">100% zaxira talab qilinadi</span></div>' +
+      "</section>" +
+      (filialKesim ? "" : '<div class="mb-limit">' +
+        (foiz != null
+          ? '<div class="ml-matn"><span>Me\'yor: balansdagi mol-mulk 1-darajali kapitaldan oshmasin (MB 3441, 3-band)</span><b data-tarjimasiz>' + String(foiz).replace(".", ",") + "% / " + Math.round(chegara * 100) + "%</b></div>" +
+            '<div class="ml-iz" role="img" aria-label="Kapitalga nisbat ' + foiz + ' foiz"><span class="' + (nisbat > chegara ? "xavf" : "") + '" style="width:' + Math.min(100, foiz / (chegara * 100) * 100) + '%"></span></div>'
+          : '<div class="mb-ogoh">' + ik("ogoh") + (x.holat === "topshirilgan" && D.param("kapital1DarajaMlrd")
+            ? "<span>Hisobot topshirilgan paytda 1-darajali kapital kiritilmagan edi. Nisbat bu hisobotda bo'sh.</span>"
+            : "<span>1-darajali kapital kiritilmagan. Nisbat hisoblanmaydi va hisobotda bo'sh qoladi.</span>") + "</div>") +
+      "</div>") +
+      '<dl class="malumot-royxat" style="margin-top:12px">' +
+        "<dt>Hisobot sanasi</dt><dd data-tarjimasiz>" + D.sanaYoz(oyOxiri(x.davr)) + "</dd>" +
+        "<dt>Topshirish muddati</dt><dd data-tarjimasiz>" + esc(x.muddat || D.sanaYoz(muddatHisobla(x.davr))) + "</dd>" +
+        "<dt>Topshirilgan sana</dt><dd" + (x.topshirilganSana ? " data-tarjimasiz>" + esc(x.topshirilganSana) : ">—") + "</dd>" +
+        (x.izoh ? "<dt>Izoh</dt><dd>" + esc(x.izoh) + "</dd>" : "") +
+      "</dl>" +
+      '<div class="mb-qoshimcha">' +
+        (!x.dastlabki && x.holat !== "topshirilgan" && yozaOladi() ? '<button type="button" class="tugma tugma-oq" id="mb-qayta" data-yozadi>' + ik("yangilash") + "Raqamlarni yangilash</button>" : "") +
+        (!x.dastlabki && x.holat === "topshirilgan" && MKB.rol() === "admin" ? '<button type="button" class="tugma tugma-oq" id="mb-bekor" data-yozadi>' + ik("rad") + "Belgini bekor qilish</button>" : "") +
+        (kapitalniKiritaOladi() ? '<button type="button" class="tugma tugma-oq" id="mb-kapital" data-yozadi data-sayohat="kapital">' + (D.param("kapital1DarajaMlrd") ? ik("tahrir") + "Kapitalni o'zgartirish" : ik("bank") + "Kapitalni kiritish") + "</button>" : "") +
+      "</div>";
+    $("mb-davr").setAttribute("data-sayohat", "davr");
+    $("mb-davr").addEventListener("change", e => { tanlangan = e.target.value; history.replaceState(null, "", "?davr=" + tanlangan); chizish(); });
+    const bog = (id, fn) => { const b = $(id); if (b) b.addEventListener("click", () => fn(x, b)); };
+    bog("mb-topshir", topshir); bog("mb-qayta", qaytaHisobla); bog("mb-bekor", bekorQil); bog("mb-kapital", kapitalKirit);
+    tarjimaQil(el);
+    return x;
+  }
+
+  /* ---------- Muddat taymeri ---------- */
+  function muddatChiz(){
+    const r = royxat().filter(x => !x.dastlabki);
+    const kutilgan = r.filter(x => x.holat !== "topshirilgan").sort((a, b) => String(a.davr).localeCompare(String(b.davr)))[0];
+    const davr = kutilgan ? kutilgan.davr : joriyDavr();
+    const muddat = kutilgan ? D.sanaOqi(kutilgan.muddat) : muddatHisobla(davr);
+    const qolgan = D.kunFarqi(bugunKun(), muddat);
+    let ish = 0;
+    for (let d = bugunKun(); d < muddat; d = D.kunQosh(d, 1)) if (D.ishKunimi(d)) ish++;
+    const topshirilgan = r.filter(x => x.holat === "topshirilgan");
+    const vaqtida = topshirilgan.filter(x => x.topshirilganSana && D.sanaOqi(x.topshirilganSana) <= D.sanaOqi(x.muddat)).length;
+    const el = $("mb-muddat");
+    el.innerHTML = '<div class="karta-bosh"><h2>' + (kutilgan ? "Topshirilmagan hisobot" : "Keyingi hisobot") + '</h2><span class="soni">' + esc(oyNomi(davr)) + "</span></div>" +
+      '<div class="mb-taymer' + (qolgan < 0 ? " xavf" : "") + '">' +
+        '<span class="mt-son"><span data-tarjimasiz>' + Math.abs(qolgan) + "</span><small>" + (qolgan < 0 ? "kun kechikdi" : "kun qoldi") + "</small></span>" +
+        '<span class="mt-izoh"><span>Muddat</span> <b data-tarjimasiz>' + D.sanaYoz(muddat) + "</b>" + (qolgan >= 0 ? " · <b data-tarjimasiz>" + ish + "</b> <span>ish kuni</span>" : "") + "</span>" +
+        '<span class="mt-izoh">Har oyning 10-sanasigacha. Dam olish yoki bayram kuniga to\'g\'ri kelsa, keyingi ish kuni.</span>' +
+      "</div>" +
+      '<dl class="malumot-royxat" style="margin-top:14px"><dt>O\'z vaqtida topshirilgan</dt><dd data-tarjimasiz>' + vaqtida + " / " + topshirilgan.length + "</dd></dl>" +
+      (kutilgan && kutilgan.davr !== tanlangan ? '<div class="mb-amallar"><button type="button" class="tugma tugma-oq" id="mb-ochish">' + ik("ong") + "Hisobotni ochish</button></div>" : "");
+    const b = $("mb-ochish");
+    if (b) b.addEventListener("click", () => { tanlangan = kutilgan.davr; history.replaceState(null, "", "?davr=" + tanlangan); chizish(); });
+    tarjimaQil(el);
+  }
+
+  /* ---------- Dinamika ---------- */
+  function dinamikaChiz(){
+    const r = royxat().slice().reverse().slice(-13);
+    const joy = $("mb-dinamika");
+    if (r.length < 2){ joy.innerHTML = MKB.boshHolat("grafik", "Dinamika uchun kamida ikki oy kerak"); tarjimaQil(joy); return; }
+    joy.innerHTML = "<div></div>";
+    const qisqa = D.OY_QISQA || [];
+    /* filial kesimida summa kichik: 10 mlrd so'mdan past bo'lsa mln so'mda chiziladi */
+    const mln = Math.max(...r.map(x => x.jamiBalansQiymat || 0)) < 10000;
+    const birlik = mln ? "mln so'm" : "mlrd so'm";
+    $("mb-birlik").textContent = birlik;
+    tarjimaQil($("mb-birlik").parentNode);
+    MKBchizma.maydon(joy.firstChild, {qiymatlar: r.map(x => mln ? Math.round(x.jamiBalansQiymat || 0) : D.yaxlit(x.jamiBalansQiymat / 1000, 1)),
+      yorliqlar: r.map(x => { const m = Number(x.davr.slice(5)); return qisqa[m - 1] || x.davr.slice(5); }),
+      balandlik: 180, oqFormat: v => String(Math.round(v)), tooltipFormat: v => String(v).replace(".", ",") + " " + birlik});
+  }
+
+  /* ---------- Tarix jadvali ---------- */
+  let jadval = null;
+  function tarixChiz(){
+    const r = royxat();
+    const qatorlar = r.map(x => Object.assign({}, x, {id: x.davr, davrNom: oyNomi(x.davr), holatNom: holatInfo(x).nom}));
+    const cfg = {
+      qatorlar, csvNomi: "mb-hisobotlari",
+      ustunlar: [
+        {kalit: "davrNom", nom: "Davr", chiz: x => "<b>" + esc(x.davrNom) + "</b>" + (x.dastlabki ? ' <span class="chip chip-kichik chip-sariq">Taxminiy</span>' : ""), csv: x => x.davrNom + (x.dastlabki ? " (taxminiy)" : "")},
+        {kalit: "muddat", nom: "Muddat", tur: "sana"},
+        {kalit: "topshirilganSana", nom: "Topshirilgan", tur: "sana", chiz: x => x.topshirilganSana ? esc(x.topshirilganSana) : "—"},
+        {kalit: "obyektlarSoni", nom: "Obyektlar", son: true, chiz: x => MKB.fmt(x.obyektlarSoni)},
+        {kalit: "jamiBalansQiymat", nom: "Balans qiymati", son: true, chiz: x => '<span class="pul">' + esc(MKB.pul(x.jamiBalansQiymat)) + "</span>", csv: x => son(x.jamiBalansQiymat)},
+        {kalit: "kapitalgaNisbat", nom: "Kapitalga nisbati", son: true, chiz: x => x.kapitalgaNisbat != null ? String(D.yaxlit(x.kapitalgaNisbat * 100, 1)).replace(".", ",") + "%" : "—",
+          csv: x => x.kapitalgaNisbat != null ? son(x.kapitalgaNisbat * 100) : ""},
+        {kalit: "umidsizSoni", nom: "Umidsiz", son: true},
+        {kalit: "holatNom", nom: "Holat", chiz: x => chip(x)},
+      ],
+      filtrlar: [{kalit: "holatNom", nom: "Holat", variantlar: ["Topshirilgan", "Kechikib topshirilgan", "Tayyorlanmoqda", "Muddati o'tgan", "Davr davom etmoqda"]}],
+      bosh: {sarlavha: "Hisobotlar hali yo'q", izoh: "O'tgan oy uchun hisobot oy boshida avtomatik tuziladi"},
+      bosilganda(x){ tanlangan = x.davr; history.replaceState(null, "", "?davr=" + tanlangan); chizish(); window.scrollTo({top: 0, behavior: "smooth"}); },
+    };
+    if (jadval) jadval.yangila(qatorlar);
+    else {
+      $("mb-tarix").innerHTML = '<div class="seksiya-bosh" style="margin-bottom:14px"><h2>Hisobotlar tarixi</h2></div><div id="mb-jadval"></div>';
+      jadval = MKB.jadval("mb-jadval", cfg);
+    }
+  }
+
+  function chizish(){ tanlanganChiz(); muddatChiz(); dinamikaChiz(); tarixChiz(); }
+
+  /* ---------- Amallar ---------- */
+  const foizMatn = v => v != null ? String(D.yaxlit(v * 100, 1)).replace(".", ",") + "%" : "—";
+  /* Topshirildi: sahifadagi sana (standart: bugun) bilan, davr va asosiy raqamlar ko'rsatilgan tasdiqlash oynasi */
+  async function topshir(x, tugma){
+    const inp = $("mb-sana");
+    const bugun = bugunKun(), eng = D.kunQosh(oyOxiri(x.davr), 1);
+    const d0 = inp && inp.value ? new Date(inp.value + "T00:00:00") : (inp ? null : bugun);
+    const d = d0 && !isNaN(d0) ? d0 : null;
+    if (!d || d < eng || d > bugun){
+      if (inp){ MKB.maydonXato(inp, d && d > bugun ? "Sana bugundan keyin bo'lishi mumkin emas" : "Sana davr tugagandan keyin bo'lishi kerak"); inp.focus(); }
+      return;
+    }
+    if (inp) MKB.maydonXato(inp, null);
+    const sana = D.sanaYoz(d);
+    const kech = D.sanaOqi(x.muddat) && d > D.sanaOqi(x.muddat);
+    const res = await MKB.tasdiqla({
+      sarlavha: "MB hisobotini topshirilgan deb belgilash",
+      matn: oyNomi(x.davr) + " hisoboti Markaziy bankka topshirilgan deb qayd etiladi. Raqamlar shu holatda qotadi va keyin qayta hisoblanmaydi.",
+      tafsilot: [["Davr", oyNomi(x.davr)], ["Topshirilgan sana", {matn: sana, tarjimasiz: true}], ["Topshirish muddati", {matn: x.muddat || "—", tarjimasiz: true}],
+        ["Obyektlar soni", {matn: MKB.fmt(x.obyektlarSoni), tarjimasiz: true}], ["Jami balans qiymati", {matn: MKB.pul(x.jamiBalansQiymat), tarjimasiz: true}],
+        ["Kapitalga nisbati", {matn: foizMatn(x.kapitalgaNisbat), tarjimasiz: true}], ["Umidsiz toifada", {matn: MKB.fmt(x.umidsizSoni), tarjimasiz: true}]],
+      oqibat: kech ? ["Muddat o'tgan: hisobot kechikib topshirilgan deb belgilanadi"] : [],
+      sabab: {yorliq: "Xat raqami yoki izoh", maks: 160, namuna: "Masalan, 04-12/3381"},
+      okMatn: "Topshirildi deb belgilash",
+      bajar: ({sabab}) => MKBapi.yangilash("MB_HISOBOTLAR", x.id, Object.assign({holat: "topshirilgan", topshirilganSana: sana}, sabab ? {izoh: sabab} : {})),
+    });
+    if (!res) return;
+    MKB.toast("MB hisoboti " + oyNomi(x.davr) + " topshirilgan deb belgilandi", "tasdiq");
+    chizish();
+  }
+  /* Raqamlarni yangilash: saqlangan raqamlar reyestr bo'yicha qayta hisoblanadi, eski va yangi qiymat ko'rsatiladi */
+  async function qaytaHisobla(x){
+    if (!D.mbHisobotHisobla) return;
+    const y = D.mbHisobotHisobla(x.davr);
+    const patch = {muddat: y.muddat, obyektlarSoni: y.obyektlarSoni, jamiBalansQiymat: y.jamiBalansQiymat,
+      kapital1Daraja: y.kapital1Daraja, kapitalgaNisbat: y.kapitalgaNisbat, umidsizSoni: y.umidsizSoni};
+    const qatorlar = [["Obyektlar soni", MKB.fmt(x.obyektlarSoni), MKB.fmt(y.obyektlarSoni)], ["Jami balans qiymati", MKB.pul(x.jamiBalansQiymat), MKB.pul(y.jamiBalansQiymat)],
+      ["Kapitalga nisbati", foizMatn(x.kapitalgaNisbat), foizMatn(y.kapitalgaNisbat)], ["Umidsiz toifada", MKB.fmt(x.umidsizSoni), MKB.fmt(y.umidsizSoni)],
+      ["Topshirish muddati", x.muddat || "—", y.muddat || "—"]].filter(q => q[1] !== q[2]);
+    if (!qatorlar.length){ MKB.toast("Raqamlar reyestr bilan mos, o'zgarish yo'q", "info"); return; }
+    const res = await MKB.tasdiqla({
+      sarlavha: "Hisobot raqamlarini yangilash",
+      matn: oyNomi(x.davr) + " hisobotidagi raqamlar bugungi reyestr bo'yicha qayta hisoblanadi.",
+      tafsilot: qatorlar.map(q => [q[0], {matn: q[1] + " → " + q[2], tarjimasiz: true}]),
+      okMatn: "Raqamlarni yangilash",
+      bajar: () => MKBapi.yangilash("MB_HISOBOTLAR", x.id, patch),
+    });
+    if (!res) return;
+    MKB.toast("MB hisoboti " + oyNomi(x.davr) + " raqamlari yangilandi", "tasdiq");
+    chizish();
+  }
+  /* Belgini bekor qilish: faqat administrator, sabab majburiy (izohga yoziladi) */
+  async function bekorQil(x){
+    const res = await MKB.tasdiqla({
+      sarlavha: "Topshirish belgisini bekor qilish",
+      matn: oyNomi(x.davr) + " hisoboti yana topshirilmagan holatga qaytadi va muddat nazoratiga tushadi.",
+      tafsilot: [["Davr", oyNomi(x.davr)], ["Topshirilgan sana", {matn: x.topshirilganSana || "—", tarjimasiz: true}]],
+      ton: "xavfli",
+      sabab: {majburiy: true, min: 5, maks: 300, yorliq: "Bekor qilish sababi", izoh: "Sabab hisobot izohiga yoziladi", namuna: "Masalan, sana xato kiritilgan"},
+      okMatn: "Belgini bekor qilish", bekorMatn: "Orqaga",
+      bajar: ({sabab}) => MKBapi.yangilash("MB_HISOBOTLAR", x.id, {holat: "tayyorlanmoqda", topshirilganSana: null, izoh: "Topshirish belgisi bekor qilindi: " + sabab}),
+    });
+    if (!res) return;
+    MKB.toast("MB hisoboti " + oyNomi(x.davr) + " belgisi bekor qilindi", "info");
+    chizish();
+  }
+  /* 1-darajali kapital: forma o'zi tasdiqlash, eski va yangi qiymat hamda qayta hisoblanadigan hisobotlar ko'rsatiladi */
+  function kapitalKirit(){
+    const joriy = D.param("kapital1DarajaMlrd");
+    const ochiq = (D.MB_HISOBOTLAR || []).filter(m => m.holat !== "topshirilgan");
+    const kf = v => v == null ? "—" : MKB.fmt(v).replace(".", ",") + " mlrd so'm";
+    const p = MKB.modal(joriy != null ? "1-darajali kapitalni o'zgartirish" : "1-darajali kapitalni kiritish",
+      '<form novalidate><div class="maydon"><label class="maydon-yorliq" for="mb-kap">Bankning 1-darajali kapitali, mlrd so\'m <b>*</b></label>' +
+        '<div class="kirish"><input id="mb-kap" name="kapital" type="text" data-format="kasr" required min="0.1" data-xato="Kapital qiymatini kiriting" value="' + (joriy != null ? String(joriy).replace(".", ",") : "") + '" placeholder="Masalan, 1 250"></div>' +
+        '<span class="maydon-izoh" id="mb-kap-farq" data-tarjimasiz></span>' +
+        '<span class="maydon-izoh"><span>Buxgalteriya ma\'lumoti.</span> <span data-tarjimasiz>' + ochiq.length + "</span> <span>ta topshirilmagan hisobot shu qiymat bilan qayta hisoblanadi.</span></span></div></form>",
+      {okMatn: "Saqlash", async ok(pr){
+        const forma = pr.querySelector("form");
+        const r = MKB.formaTekshir(forma);
+        if (!r) return false;
+        const v = Number(r.qiymatlar.kapital);
+        if (!(v > 0)){ MKB.maydonXato(pr.querySelector("#mb-kap"), "Kapital musbat son bo'lishi kerak"); return false; }
+        try{
+          await MKBapi.yangilash("PARAMETRLAR", "kapital1DarajaMlrd", {qiymat: v});
+          for (const x of ochiq) await MKBapi.yangilash("MB_HISOBOTLAR", x.id, {kapital1Daraja: v, kapitalgaNisbat: D.yaxlit(x.jamiBalansQiymat / 1000 / v, 3)});
+        }catch(e){ MKB.formaXato(forma, "Kapital saqlanmadi: " + (e && e.message ? e.message : "xato"), "kapital"); return false; }
+        MKB.toast("1-darajali kapital saqlandi: " + kf(v), "tasdiq");
+        chizish();
+      }});
+    MKB.formaUla(p);
+    const inp = p.querySelector("#mb-kap"), farq = p.querySelector("#mb-kap-farq");
+    const farqYoz = () => { const v = MKB.sonQiymat(inp.value); farq.textContent = Number.isFinite(v) && v > 0 && v !== joriy ? kf(joriy) + " → " + kf(v) : ""; };
+    inp.addEventListener("input", farqYoz);
+  }
+
+  /* ---------- Ilova CSV va chop etish ---------- */
+  function joriy(){ return royxat().find(v => v.davr === tanlangan) || royxat()[0]; }
+  /* Ilova CSV: tanlangan davrdagi har bir obyekt, niqoblash kerak bo'lgan ustun yo'q */
+  $("mb-csv").onclick = e => MKB.band(e.currentTarget, () => {
+    const x = joriy();
+    if (!x){ MKB.toast("Hisobot yo'q", "xavf"); return; }
+    const r = ilovaQatorlari(x);
+    if (!r.length){ MKB.toast("Bu davrda balansda aktiv bo'lmagan. Fayl tuzilmadi", "xavf"); return; }
+    MKB.csv("mkb-mb-hisobot-" + x.davr + ".csv", ILOVA_USTUN.map(u => u[0]), r.map(q => ILOVA_USTUN.map(u => u[1](q))));
+    MKB.toast("MB hisoboti ilovasi " + oyNomi(x.davr) + ": " + r.length + " ta obyekt yuklab olindi", "yuklab");
+  });
+  $("mb-chop").onclick = e => MKB.band(e.currentTarget, () => {
+    const x = joriy();
+    if (!x){ MKB.toast("Hisobot yo'q", "xavf"); return; }
+    const r = ilovaQatorlari(x);
+    const kapital = filialKesim ? null : x.dastlabki ? D.param("kapital1DarajaMlrd") : x.kapital1Daraja;
+    const nisbat = x.dastlabki ? (kapital ? x.jamiBalansQiymat / 1000 / kapital : null) : x.kapitalgaNisbat;
+    const ch = $("chop");
+    ch.innerHTML = '<div class="cv-meta"><span>Mikrokreditbank</span> · <span>Markaziy bankka oylik hisobot</span> · <span>MB 3441-son nizom, 16-band</span></div>' +
+      (filialKesim ? '<div class="cv-meta"><span>Filial kesimi:</span> <span data-tarjimasiz>' + esc((MKBapi.sessiya() || {}).filial || MKB.filialKod()) + "</span></div>" : "") +
+      "<h1><span>Bank faoliyati uchun zarur bo'lmagan mol-mulk</span></h1>" +
+      '<div class="cv-meta"><span>Hisobot sanasi:</span> <span data-tarjimasiz>' + D.sanaYoz(oyOxiri(x.davr)) + "</span> · <span>Topshirish muddati:</span> <span data-tarjimasiz>" + esc(x.muddat) + "</span>" +
+        (x.dastlabki ? " · <span>Taxminiy: davr hali tugamagan</span>" : "") + "</div>" +
+      '<div class="cv-meta"><span>Tayyorlandi:</span> <span data-tarjimasiz>' + esc(tayyorlandi()) + "</span></div>" +
+      "<dl><dt>Obyektlar soni</dt><dd data-tarjimasiz>" + x.obyektlarSoni + "</dd><dt>Jami balans qiymati</dt><dd data-tarjimasiz>" + esc(MKB.pul(x.jamiBalansQiymat)) + "</dd>" +
+      "<dt>1-darajali kapital</dt><dd" + (kapital ? " data-tarjimasiz>" + esc(MKB.pul(kapital * 1000)) : ">kiritilmagan") + "</dd>" +
+      "<dt>Kapitalga nisbati</dt><dd" + (nisbat != null ? " data-tarjimasiz>" + String(D.yaxlit(nisbat * 100, 1)).replace(".", ",") + "%" : ">—") + "</dd>" +
+      "<dt>Umidsiz toifada</dt><dd data-tarjimasiz>" + x.umidsizSoni + "</dd></dl>" +
+      "<table><thead><tr>" + ILOVA_USTUN.map(u => "<th>" + esc(u[0]) + "</th>").join("") + "</tr></thead><tbody>" +
+      r.map(q => "<tr>" + ILOVA_USTUN.map(u => "<td data-tarjimasiz>" + esc(String(u[1](q))) + "</td>").join("") + "</tr>").join("") + "</tbody></table>" +
+      '<div class="cv-imzo"><span>Tuzdi: ____________ <span data-tarjimasiz>' + esc(MKB.kim()) + "</span></span><span>Bosh buxgalter: ____________</span></div>";
+    tarjimaQil(ch);
+    document.body.classList.add("chop-faol");
+    const tozala = () => { document.body.classList.remove("chop-faol"); window.removeEventListener("afterprint", tozala); };
+    window.addEventListener("afterprint", tozala);
+    window.print();
+  });
+
+  document.addEventListener("mkb:qoidalar", chizish);
+  chizish();
+}
+})();
+</script>
+</body>
+</html>

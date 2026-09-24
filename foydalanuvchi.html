@@ -3,9 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Foydalanuvchi kartochkasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
-<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<title>MKB — Foydalanuvchi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.profil-bosh{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.profil-bosh .yuz{width:68px;height:68px;border-radius:999px;background:var(--siyoh);color:var(--mint);display:grid;place-items:center;
+  font:500 21px var(--shrift-displey);overflow:hidden;flex:none}
+.profil-bosh .yuz img{width:100%;height:100%;object-fit:cover}
+.profil-bosh .yuz.bloklangan{filter:grayscale(1);opacity:.55}
+.profil-bosh .pb-matn{display:flex;flex-direction:column;gap:8px;min-width:0}
+.profil-bosh .chiplar{display:flex;gap:6px;flex-wrap:wrap}
+.profil-bosh .pb-meta{font-size:13px;color:var(--matn-3);overflow-wrap:anywhere}
+.forma-oyoq{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+.forma-oyoq .izoh{margin-right:auto;font-size:13px;color:var(--matn-3)}
+.karta-izoh{font-size:13.5px;line-height:1.55;color:var(--matn-3);margin:-6px 0 16px}
+.huquq-royxat{list-style:none;display:flex;flex-direction:column}
+.huquq-royxat li{display:flex;align-items:center;gap:12px;padding:10px 0;font-size:14px}
+.huquq-royxat li + li{border-top:1px solid var(--chiziq-2)}
+.huquq-royxat li > span:first-child{flex:1;min-width:0}
+.huquq-royxat .chiplar{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.huquq-royxat li.yopiq{color:var(--matn-3)}
+.amal-royxat{list-style:none;display:flex;flex-direction:column}
+.amal-royxat li{display:flex;gap:12px;align-items:baseline;padding:10px 0;font-size:13.5px}
+.amal-royxat li + li{border-top:1px solid var(--chiziq-2)}
+.amal-royxat .vaqt{font:400 12.5px var(--shrift-mono);color:var(--matn-3);white-space:nowrap;flex:none}
+.amal-royxat .m{min-width:0}
+.amal-royxat .m span{display:block;font-size:12.5px;color:var(--matn-3);overflow-wrap:anywhere}
+.info-qator{display:flex;gap:12px;align-items:flex-start;background:var(--plitka);border-radius:18px;padding:14px 16px;font-size:13.5px;line-height:1.55;color:var(--matn-2)}
+.info-qator .ic{width:18px;height:18px;flex:none;margin-top:2px;color:var(--matn-3)}
+.info-qator.ogoh{background:var(--sariq-fon);color:var(--sariq-matn);margin-bottom:18px}
+.info-qator.ogoh .ic{color:var(--sariq-matn)}
+.talablar{list-style:none;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--matn-3);margin-top:6px}
+.talablar li{display:inline-flex;align-items:center;gap:5px}
+.talablar .ic{width:14px;height:14px;opacity:.35}
+.talablar li.bajarildi{color:var(--yashil)}
+.talablar li.bajarildi .ic{opacity:1}
+.parol-qator{align-items:flex-end}
+.parol-qator .maydon{margin-top:10px}
+.xavfsizlik-qator{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 0}
+.xavfsizlik-qator + .info-qator.ogoh{background:var(--sariq-fon);color:var(--sariq-matn);margin-bottom:18px}
+.info-qator.ogoh .ic{color:var(--sariq-matn)}
+.talablar{list-style:none;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--matn-3);margin-top:6px}
+.talablar li{display:inline-flex;align-items:center;gap:5px}
+.talablar .ic{width:14px;height:14px;opacity:.35}
+.talablar li.bajarildi{color:var(--yashil)}
+.talablar li.bajarildi .ic{opacity:1}
+.parol-qator{align-items:flex-end}
+.parol-qator .maydon{margin-top:10px}
+.xavfsizlik-qator{border-top:1px solid var(--chiziq-2)}
+.xavfsizlik-qator .matn{flex:1 1 220px;min-width:0}
+.xavfsizlik-qator .matn b{display:block;font-weight:500}
+.xavfsizlik-qator .matn span{display:block;font-size:13px;color:var(--matn-3);line-height:1.5}
+</style>
 </head>
 <body data-sahifa="sozlama">
 <div class="qobiq">
@@ -14,65 +63,324 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="foydalanuvchilar.html">Foydalanuvchilar</a><span class="ajratgich">/</span><span>Kartochka</span></div>
-    <div class="hs-qator"><h1>Foydalanuvchi kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><a href="foydalanuvchilar.html">Foydalanuvchilar</a><span class="ajratgich">/</span><span id="yorliq-nom" data-tarjimasiz>—</span></div>
+    <div class="hs-qator"><h1 id="sarlavha" data-tarjimasiz>—</h1></div>
   </div>
-  <section class="karta" style="max-width:680px"><div class="karta-bosh"><span id="fk-belgi" style="width:50px;height:50px;border-radius:99px;background:var(--siyoh);color:var(--brend);display:grid;place-items:center;font:700 16px var(--shrift)">—</span><div><h2 id="fk-nom" style="font:500 18px var(--shrift-displey)">—</h2><span style="font-size:12px;color:var(--iz)" id="fk-sub">—</span></div></div><dl class="malumot-royxat">
-  <dt><svg class="ic"><use href="#i-foyd"/></svg>Login / ID</dt>
-  <dd><span id="fk-id" class="kod-mono">—</span></dd>
-  <dt><svg class="ic"><use href="#i-xat"/></svg>Email</dt>
-  <dd id="fk-email">—</dd>
-  <dt><svg class="ic"><use href="#i-bank"/></svg>Bo'lim</dt>
-  <dd id="fk-bolim">—</dd>
-  <dt><svg class="ic"><use href="#i-qulf"/></svg>Rol</dt>
-  <dd id="fk-rol">—</dd>
-  <dt><svg class="ic"><use href="#i-tasdiq"/></svg>Holat</dt>
-  <dd id="fk-holat">—</dd>
-</dl>  <div class="maydon" style="margin-top:16px"><label class="maydon-yorliq">Rolni o'zgartirish</label>
-    <div class="kirish"><select id="fk-rol-tanlov"></select></div></div>
-  <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px">
-    <button type="button" class="tugma tugma-asosiy" id="fk-saqla">Saqlash</button></div>
-  </section>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html" class="faol">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
+
+  <div class="tor-2">
+    <div class="ustun">
+      <form class="karta" id="fk-forma" novalidate data-sayohat="forma">
+        <div class="profil-bosh" data-sayohat="holat">
+          <span class="yuz" id="fk-yuz" aria-hidden="true"></span>
+          <div class="pb-matn"><div class="chiplar" id="fk-chiplar"></div><span class="pb-meta" id="fk-meta"></span></div>
+        </div>
+        <div id="fk-blok-izoh"></div>
+        <div class="forma-tor">
+          <div class="maydon"><label class="maydon-yorliq" for="fk-rol">Rol <b>*</b></label>
+            <div class="kirish"><select id="fk-rol" name="rol" required data-xato="Rolni tanlang"></select></div>
+            <span class="maydon-izoh" id="fk-rol-izoh"></span></div>
+          <div class="maydon"><label class="maydon-yorliq" for="fk-filial">Filial</label>
+            <div class="kirish"><select id="fk-filial" name="filialKod"></select></div>
+            <span class="maydon-izoh" id="fk-filial-izoh"></span></div>
+          <div class="maydon"><label class="maydon-yorliq" for="fk-bolim">Bo&#39;lim <b>*</b></label>
+            <div class="kirish"><input id="fk-bolim" name="bolim" maxlength="80" required data-xato="Bo'limni kiriting"></div></div>
+          <div class="maydon"><label class="maydon-yorliq" for="fk-lavozim">Lavozim</label>
+            <div class="kirish"><input id="fk-lavozim" name="lavozim" maxlength="80"></div></div>
+          <div class="maydon"><label class="maydon-yorliq" for="fk-tel">Telefon</label>
+            <div class="kirish"><svg class="ic"><use href="#ik-tel"/></svg><input id="fk-tel" name="tel" type="text" data-format="tel" placeholder="+998 90 123 45 67"></div></div>
+          <div class="maydon"><label class="maydon-yorliq" for="fk-email">Elektron pochta</label>
+            <div class="kirish"><svg class="ic"><use href="#ik-xat"/></svg><input id="fk-email" name="email" type="email"></div></div>
+          <div class="keng forma-oyoq"><span class="izoh" id="fk-izoh"></span>
+            <button type="submit" class="tugma tugma-asosiy" id="fk-saqla" data-huquq="sozlama:yoz" data-saqla data-yozadi data-sayohat="saqla">O&#39;zgarishlarni saqlash</button></div>
+        </div>
+      </form>
+    </div>
+
+    <div class="ustun">
+      <section class="karta" data-sayohat="xavfsizlik">
+        <div class="karta-bosh"><h2>Hisob xavfsizligi</h2></div>
+        <div id="fk-xavfsizlik"></div>
+      </section>
+      <section class="karta" data-sayohat="huquqlar">
+        <div class="karta-bosh"><h2 id="fk-huquq-sarlavha">Rol huquqlari</h2><a class="karta-havola" href="rollar.html">Matritsa</a></div>
+        <ul class="huquq-royxat" id="fk-huquq"></ul>
+      </section>
+      <section class="karta" data-sayohat="amallar">
+        <div class="karta-bosh"><h2>Oxirgi amallar</h2><a class="karta-havola" id="fk-tarix-havola" href="amallar-tarixi.html">Barchasi</a></div>
+        <div id="fk-amallar"></div>
+      </section>
+    </div>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
+(async () => {
+  const esc = MKB.esc;
+  const $ = id => document.getElementById(id);
   const id = new URLSearchParams(location.search).get("id");
-  const f = id ? await MKBapi.bitta("FOYDLAR", id) : null;
-  if (!f){ location.replace("foydalanuvchilar.html"); return; }
-  document.getElementById("hs-meta").textContent = f.nom;
-  document.getElementById("fk-belgi").textContent = f.nom.split(" ").map(v => v[0]).join("").slice(0, 2);
-  document.getElementById("fk-nom").textContent = f.nom;
-  document.getElementById("fk-sub").textContent = f.bolim;
-  document.getElementById("fk-id").textContent = f.id;
-  document.getElementById("fk-email").textContent = f.email || "—";
-  document.getElementById("fk-bolim").textContent = f.bolim;
-  document.getElementById("fk-rol").textContent = f.rol;
-  document.getElementById("fk-holat").innerHTML = f.faol
-    ? '<span class="chip chip-yashil">Faol</span>' : '<span class="chip">O\'chirilgan</span>';
-  const ROLLAR = Object.keys(ROL_KALIT);
-  document.getElementById("fk-rol-tanlov").innerHTML = ROLLAR.map(r =>
-    '<option' + (r === f.rol ? " selected" : "") + '>' + r + '</option>').join("");
-  document.getElementById("fk-saqla").addEventListener("click", async () => {
-    await MKBapi.yangilash("FOYDLAR", f.id, {rol: document.getElementById("fk-rol-tanlov").value});
-    MKB.toast("Rol yangilandi");
-    setTimeout(() => location.reload(), 600);
+  let rejim, D, s, ADMIN, ROLLAR, f, qoriq = null;
+  MKB.sahifaYukla({
+    joylar: {"fk-xavfsizlik": ["qator", 2], "fk-huquq": ["qator", 6], "fk-amallar": ["qator", 5]},
+    xato: "Foydalanuvchi ma'lumotini yuklab bo'lmadi",
+    ish: async () => {
+      rejim = MKBapi.rejim();
+      D = MKB_DATA;
+      s = MKBapi.sessiya() || {};
+      ADMIN = MKB.huquq("sozlama", "yoz");
+      ROLLAR = Object.keys(ROL_KALIT);
+      f = id ? await MKBapi.bitta("FOYDLAR", id) : null;
+      if (!f){ location.replace("xato-404.html"); return; }
+      chiz();
+      qoriq = MKB.formaQoriqla($("fk-forma"), {nom: "Hisob ma'lumotlari"});
+      await amallarChiz();
+    },
   });
-});
+
+  const oz = () => f.id === s.id || (f.login && f.login === s.login);
+  const filialNomi = kod => { const x = kod ? D.filial(kod) : null; return x ? x.nom : (kod || "Bosh ofis"); };
+  const BLOK_OLD = "Bloklash sababi: ";
+  const HARF = [["o", "Ko'radi", "chip-kul"], ["y", "Yozadi", "chip-kok"], ["t", "Tasdiqlaydi", "chip-binafsha"]];
+  const sahifaNomi = fayl => {
+    const d = window.MKB_DARAXT || {};
+    for (const k of Object.keys(d)){ const x = (d[k] || []).find(s => s.f === fayl); if (x) return x.n; }
+    return esc(fayl);
+  };
+  const telSaqlash = v => { const r = String(v || "").replace(/\D/g, ""); const t = r.length === 9 ? "998" + r : r;
+    return /^998\d{9}$/.test(t) ? "+998 " + t.slice(3, 5) + " " + t.slice(5, 8) + " " + t.slice(8, 10) + " " + t.slice(10, 12) : null; };
+
+  function chiz(){
+    $("sarlavha").textContent = f.nom;
+    $("yorliq-nom").textContent = f.nom;
+    const bosh = String(f.nom || "").split(" ").map(x => x[0] || "").join("").slice(0, 2).toUpperCase();
+    const blok = f.faol === false;
+    $("fk-yuz").className = "yuz" + (blok ? " bloklangan" : "");
+    $("fk-yuz").innerHTML = f.rasm ? '<img src="' + esc(f.rasm) + '" alt="">' : esc(bosh);
+    $("fk-chiplar").innerHTML = '<span class="chip chip-siyoh">' + esc(f.rol || "Rol yo'q") + "</span>" +
+      (blok ? '<span class="chip chip-kul">Bloklangan</span>' : '<span class="chip chip-yashil">Faol</span>') +
+      (oz() ? '<span class="chip chip-brend">Siz</span>' : "");
+    $("fk-meta").innerHTML = '<span class="kod-mono" data-tarjimasiz>' + esc(f.login || "—") + "</span>" +
+      (f.sana ? " · <span>hisob ochilgan</span> <span data-tarjimasiz>" + esc(f.sana) + "</span>" : "") +
+      ' · <span class="kod-mono" data-tarjimasiz>' + esc(f.id) + "</span>";
+    const sabab = blok && typeof f.izoh === "string" && f.izoh.indexOf(BLOK_OLD) === 0 ? f.izoh.slice(BLOK_OLD.length) : "";
+    $("fk-blok-izoh").innerHTML = blok ? '<div class="info-qator ogoh">' + ik("bloklash") + "<span><b>Hisob bloklangan.</b> " +
+      (sabab ? "<span>Sabab:</span> <span data-tarjimasiz>" + esc(sabab) + "</span>" : "<span>Xodim tizimga kira olmaydi.</span>") + "</span></div>" : "";
+
+    /* Forma */
+    $("fk-rol").innerHTML = (ROLLAR.includes(f.rol) ? "" : '<option value="" selected>Tanlang</option>') +
+      ROLLAR.map(r => '<option value="' + esc(r) + '"' + (r === f.rol ? " selected" : "") + ">" + esc(r) + "</option>").join("");
+    $("fk-filial").innerHTML = '<option value="">Bosh ofis</option>' +
+      D.FILIALLAR.slice().sort((a, b) => String(a.nom).localeCompare(String(b.nom), "uz")).map(x =>
+        '<option value="' + esc(x.id) + '"' + (x.id === f.filialKod ? " selected" : "") + ">" + esc(x.nom) + " (" + esc(x.id) + ")</option>").join("");
+    $("fk-bolim").value = f.bolim || "";
+    $("fk-lavozim").value = f.lavozim || "";
+    $("fk-tel").value = f.tel || "";
+    $("fk-email").value = f.email || "";
+    const forma = $("fk-forma");
+    forma.querySelectorAll("input, select").forEach(el => { el.disabled = !ADMIN; });
+    if (ADMIN && oz()) $("fk-rol").disabled = true;
+    $("fk-saqla").hidden = !ADMIN;
+    $("fk-izoh").textContent = !ADMIN ? "Ma'lumotni administrator o'zgartiradi." : "";
+    $("fk-rol-izoh").textContent = ADMIN && oz() ? "O'z rolingizni o'zgartira olmaysiz." : "Rol o'zgarsa, saqlashdan oldin tasdiq so'raladi.";
+    filialIzoh();
+    huquqChiz($("fk-rol").value || f.rol);
+    xavfsizlikChiz();
+    if (qoriq) qoriq.asos();
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+  function filialIzoh(){
+    const filialRol = ROL_KALIT[$("fk-rol").value] === "filial";
+    $("fk-filial").required = filialRol;
+    $("fk-filial").setAttribute("data-xato", "Filial rahbariga filial biriktiring");
+    $("fk-filial-izoh").textContent = filialRol ? "Filial rahbari faqat shu filial yozuvlarini ko'radi" : "Bosh ofis xodimi uchun bo'sh qoldiring";
+    tarjimaQil($("fk-filial-izoh"));
+  }
+
+  function huquqChiz(rolNom){
+    const k = ROL_KALIT[rolNom];
+    const r = k ? ROL_RUXSAT[k] : undefined;
+    const BOLIM_NOMI = {sozlama: "Sozlamalar"};
+    BOLIMLAR.forEach(b => { BOLIM_NOMI[b.kalit] = b.yorliq; });
+    const kalitlar = BOLIMLAR.map(b => b.kalit).concat(["sozlama"]);
+    const oldindan = rolNom && rolNom !== f.rol;
+    $("fk-huquq-sarlavha").innerHTML = oldindan ? "<span>Yangi rol huquqlari</span>" : "<span>Rol huquqlari</span>";
+    if (!k){ $("fk-huquq").innerHTML = "<li><span>Rol biriktirilmagan. Hisob hech qaysi bo&#39;limni ko&#39;rmaydi.</span></li>"; tarjimaQil($("fk-huquq").closest(".karta")); return; }
+    $("fk-huquq").innerHTML = kalitlar.map(b => {
+      const h = r === null ? "oyt" : (r[b] || "");
+      return '<li class="' + (h ? "" : "yopiq") + '"><span>' + esc(BOLIM_NOMI[b] || b) + '</span><span class="chiplar">' +
+        (h ? HARF.filter(x => h.includes(x[0])).map(x => '<span class="chip chip-kichik ' + x[2] + '">' + x[1] + "</span>").join("")
+           : "<span>Yopiq</span>") + "</span></li>";
+    }).join("") +
+    '<li><span>Bosh sahifa</span><a class="karta-havola" href="' + rolBoshSahifasi(k) + '">' + sahifaNomi(rolBoshSahifasi(k)) + "</a></li>";
+    tarjimaQil($("fk-huquq").closest(".karta"));
+  }
+  $("fk-rol").addEventListener("change", e => { huquqChiz(e.target.value); filialIzoh(); });
+
+  const PAROL_TALAB = [["kamida 8 belgi", p => p.length >= 8], ["harf", p => /[A-Za-z]/.test(p)], ["raqam", p => /\d/.test(p)]];
+  function xavfsizlikChiz(){
+    const joy = $("fk-xavfsizlik");
+    const blok = f.faol === false;
+    let h = '<div class="xavfsizlik-qator"><div class="matn"><b>' + (blok ? "Hisob bloklangan" : "Hisob faol") + "</b><span>" +
+      (blok ? "Faollashtirilsa, xodim o&#39;z logini bilan yana kiradi." : "Bloklansa, xodim tizimga kira olmaydi, amallar tarixi saqlanadi.") + "</span></div>" +
+      (ADMIN && !oz() ? '<button type="button" class="tugma tugma-kichik ' + (blok ? "tugma-oq" : "tugma-xavf") + '" id="fk-blok" data-yozadi>' +
+        ik(blok ? "ochiq-qulf" : "bloklash") + (blok ? "Faollashtirish" : "Hisobni bloklash") + "</button>" : "") + "</div>";
+    if (rejim === "server" && ADMIN){
+      h += '<form class="xavfsizlik-qator parol-qator" id="fk-parol-forma" novalidate><div class="matn"><b>Vaqtinchalik parol</b>' +
+        "<span>Parolni unutgan xodimga yangi parol o&#39;rnating va unga shaxsan bering. Xodim kirgach uni almashtiradi.</span>" +
+        '<div class="maydon"><label class="sr-only" for="fk-parol">Vaqtinchalik parol</label>' +
+          '<div class="kirish"><svg class="ic"><use href="#ik-qulf"/></svg><input id="fk-parol" name="parol" type="text" autocomplete="off" spellcheck="false" required data-xato="Parolni kiriting" aria-describedby="fk-parol-talab"></div>' +
+          '<ul class="talablar" id="fk-parol-talab" aria-live="polite">' + PAROL_TALAB.map((t, i) => '<li data-t="' + i + '">' + ik("tasdiq") + "<span>" + (i === 0 ? "Kamida 8 belgi" : i === 1 ? "Kamida bitta harf" : "Kamida bitta raqam") + "</span></li>").join("") + "</ul></div></div>" +
+        '<button type="submit" class="tugma tugma-kichik tugma-oq" id="fk-parol-tugma" data-yozadi>' + ik("qulf") + "Parol o&#39;rnatish</button></form>";
+    } else if (rejim !== "server"){
+      h += '<div class="info-qator">' + ik("info") + "<span>Namoyish rejimida hamma hisob bitta namoyish paroli bilan kiradi. Vaqtinchalik parol server rejimida o&#39;rnatiladi.</span></div>";
+    }
+    joy.innerHTML = h;
+    const b = $("fk-blok");
+    if (b) b.addEventListener("click", blokla);
+    const pf = $("fk-parol-forma");
+    if (pf){
+      const inp = $("fk-parol");
+      inp.addEventListener("input", () => PAROL_TALAB.forEach(([, t], i) => pf.querySelector('[data-t="' + i + '"]').classList.toggle("bajarildi", t(inp.value))));
+      pf.addEventListener("submit", e => { e.preventDefault(); parolOrnat(); });
+    }
+    tarjimaQil(joy);
+  }
+
+  /* Bloklash: xavfli, sabab majburiy. Faollashtirish: oddiy tasdiq */
+  async function blokla(){
+    const bloklash = f.faol !== false;
+    const r = await MKB.tasdiqla(bloklash ? {
+      sarlavha: "Hisobni bloklash",
+      matn: f.nom + " tizimga kira olmaydi. Hisob va uning amallar tarixi saqlanib qoladi.",
+      tafsilot: [["Xodim", {matn: f.nom, tarjimasiz: true}], ["Login", {matn: f.login || "—", tarjimasiz: true}], ["Rol", f.rol || "—"]],
+      oqibat: ["Xodimning ochiq sessiyalari yopiladi", "Sabab hisob kartochkasida va amallar tarixida ko'rinadi"],
+      ton: "xavfli",
+      sabab: {majburiy: true, min: 5, yorliq: "Bloklash sababi", namuna: "Masalan, xodim bankdan bo'shadi"},
+      okMatn: "Hisobni bloklash",
+      bekorMatn: "Orqaga",
+      bajar: ({sabab}) => MKBapi.yangilash("FOYDLAR", f.id, {faol: false, izoh: BLOK_OLD + sabab}),
+    } : {
+      sarlavha: "Hisobni faollashtirish",
+      matn: f.nom + " o'z logini bilan yana tizimga kira oladi.",
+      tafsilot: [["Xodim", {matn: f.nom, tarjimasiz: true}], ["Login", {matn: f.login || "—", tarjimasiz: true}], ["Rol", f.rol || "—"]],
+      okMatn: "Faollashtirish",
+      bajar: () => MKBapi.yangilash("FOYDLAR", f.id, {faol: true}),
+    });
+    if (!r) return;
+    MKB.toast(bloklash ? "Hisob bloklandi: " + f.nom : "Hisob faollashtirildi: " + f.nom);
+    await qaytaYukla();
+  }
+
+  /* Vaqtinchalik parol (server rejimi): talablar maydon ostida, o'rnatishdan oldin xavfli tasdiq */
+  async function parolOrnat(){
+    const pf = $("fk-parol-forma");
+    const r = MKB.formaTekshir(pf, {parol: v => PAROL_TALAB.every(([, t]) => t(v)) || "Parol kamida 8 belgi bo'lsin, unda harf va raqam bo'lsin"});
+    if (!r) return;
+    const t = await MKB.tasdiqla({
+      sarlavha: "Vaqtinchalik parol o'rnatish",
+      matn: f.nom + " uchun yangi parol o'rnatiladi. Eski parol bilan kirib bo'lmaydi.",
+      tafsilot: [["Xodim", {matn: f.nom, tarjimasiz: true}], ["Login", {matn: f.login || "—", tarjimasiz: true}]],
+      oqibat: ["Xodimning ochiq sessiyalari yopiladi", "Parolni xodimga shaxsan bering; tizim uni pochta yoki SMS orqali yubormaydi"],
+      ton: "xavfli",
+      okMatn: "Parol o'rnatish",
+      bekorMatn: "Orqaga",
+      bajar: () => MKBapi.yangilash("FOYDLAR", f.id, {parol: r.qiymatlar.parol}),
+    });
+    if (!t) return;
+    pf.reset();
+    pf.querySelectorAll(".bajarildi").forEach(x => x.classList.remove("bajarildi"));
+    MKB.toast("Vaqtinchalik parol o'rnatildi: " + f.nom);
+  }
+
+  /* Saqlash: rol yoki filial o'zgarsa — xavfli tasdiq; boshqa maydonlar tasdiqsiz saqlanadi */
+  $("fk-forma").addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!ADMIN) return;
+    const forma = $("fk-forma");
+    const r = MKB.formaTekshir(forma, {
+      tel: v => !v || telSaqlash(v) !== null || "Telefonni +998 90 123 45 67 ko'rinishida kiriting",
+    });
+    if (!r) return;
+    const q = r.qiymatlar;
+    const rol = oz() ? f.rol : (q.rol || f.rol);
+    const yangi = {rol, teg: ROL_KALIT[rol], filialKod: q.filialKod || null, bolim: q.bolim, lavozim: q.lavozim || "",
+      tel: q.tel ? telSaqlash(q.tel) : "", email: q.email || ""};
+    const patch = {};
+    Object.keys(yangi).forEach(k => { if ((f[k] == null ? "" : f[k]) !== (yangi[k] == null ? "" : yangi[k])) patch[k] = yangi[k]; });
+    if (!Object.keys(patch).length){ MKB.toast("O'zgarish yo'q", "info"); return; }
+    const yoz = () => MKBapi.yangilash("FOYDLAR", f.id, patch);
+    if ("rol" in patch || "filialKod" in patch){
+      const tafsilot = [["Xodim", {matn: f.nom, tarjimasiz: true}]];
+      if ("rol" in patch) tafsilot.push(["Rol", (f.rol || "—") + " → " + rol]);
+      if ("filialKod" in patch) tafsilot.push(["Filial", filialNomi(f.filialKod) + " → " + filialNomi(yangi.filialKod)]);
+      const oqibat = ["Xodim keyingi kirishda yangi huquqlar bilan ishlaydi"];
+      if (ROL_KALIT[rol] === "filial") oqibat.push("Faqat " + filialNomi(yangi.filialKod) + " yozuvlarini ko'radi");
+      oqibat.push("Bosh sahifa: " + String(sahifaNomi(rolBoshSahifasi(ROL_KALIT[rol]))).replace(/&#39;/g, "'"));
+      const t = await MKB.tasdiqla({
+        sarlavha: "rol" in patch ? "Rolni o'zgartirish" : "Filialni o'zgartirish",
+        matn: "rol" in patch ? "Rol o'zgaradi: " + (f.rol || "—") + " → " + rol + "." : "Filial o'zgaradi: " + filialNomi(f.filialKod) + " → " + filialNomi(yangi.filialKod) + ".",
+        tafsilot, oqibat,
+        ton: "xavfli",
+        okMatn: "rol" in patch ? "Rolni o'zgartirish" : "Filialni o'zgartirish",
+        bekorMatn: "Orqaga",
+        bajar: yoz,
+      });
+      if (!t) return;
+    } else {
+      try{ await MKB.band($("fk-saqla"), yoz); }
+      catch(err){ MKB.formaXato(forma, err && err.message ? err.message : "Saqlanmadi"); return; }
+    }
+    MKB.toast("Hisob ma'lumotlari saqlandi: " + f.nom);
+    if (qoriq) qoriq.toza();
+    await qaytaYukla();
+  });
+
+  /* Oxirgi amallar: xodim bajargan va uning hisobiga tegishli yozuvlar */
+  const TURI = {yangilash: "O'zgartirdi", yaratish: "Yaratdi", "o'chirish": "O'chirdi", tiklash: "Tikladi", kirish: "Tizimga kirdi",
+    chiqish: "Tizimdan chiqdi", "kirish rad etildi": "Kirish rad etildi", "parol almashtirildi": "Parolni almashtirdi",
+    "parol o'rnatildi": "Parol o'rnatildi", "fayl yuklash": "Fayl yukladi"};
+  async function amallarChiz(){
+    const joy = $("fk-amallar");
+    let r;
+    try{ r = await MKBapi.royxat("amallar"); }
+    catch(e){ MKB.xatoHolat(joy, "Amallar tarixini yuklab bo'lmadi", amallarChiz); return; }
+    r = (r || []).filter(a => a.kim === f.nom || (a.kolleksiya === "FOYDLAR" && a.obyektId === f.id)).slice(0, 8);
+    $("fk-tarix-havola").href = "amallar-tarixi.html?q=" + encodeURIComponent(f.nom);
+    if (!r.length){
+      joy.innerHTML = MKB.boshHolat("soat", "Amallar yozilmagan", rejim === "server"
+        ? "Bu hisob bo'yicha hali amal qayd etilmagan."
+        : "Namoyish rejimida amallar tarixi shu brauzerda yuritiladi.");
+      tarjimaQil(joy);
+      return;
+    }
+    joy.innerHTML = '<ul class="amal-royxat">' + r.map(a => {
+      const maydon = a.ozgarish ? Object.keys(a.ozgarish).join(", ") : "";
+      return '<li><span class="vaqt" data-tarjimasiz>' + esc(a.vaqt || "") + '</span><span class="m"><b>' + esc(TURI[a.turi] || a.turi || "—") + "</b>" +
+        '<span data-tarjimasiz>' + esc([a.kim !== f.nom ? a.kim : "", a.obyektId && a.kolleksiya !== "SESSIYA" ? a.obyektId : "", maydon].filter(Boolean).join(" · ")) + "</span></span></li>";
+    }).join("") + "</ul>";
+    tarjimaQil(joy);
+  }
+
+  async function qaytaYukla(){
+    f = await MKBapi.bitta("FOYDLAR", f.id) || f;
+    chiz();
+    amallarChiz();
+  }
+})();
 </script>
 </body>
 </html>

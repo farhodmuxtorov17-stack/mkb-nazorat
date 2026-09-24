@@ -3,9 +3,50 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Tasdiqlar</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
-<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<title>MKB — Qarorlar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.ts-korinish{align-self:flex-start;justify-self:start;width:fit-content;max-width:100%}
+.ts-korinish button b{font-weight:500;font-variant-numeric:tabular-nums;opacity:.75}
+.ts-asbob{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.ts-asbob .izlash{flex:1 1 240px;max-width:340px;background:var(--oq);box-shadow:var(--soya-past)}
+.ts-qator{cursor:pointer}
+.ts-qator .matn > b{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ts-qator .ong{flex-wrap:wrap;justify-content:flex-end}
+.ts-qator .ong .pul{min-width:88px;text-align:right}
+.ts-qator-amal{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.ts-qator.tanlangan{background:var(--band)}
+.ts-tanla{width:40px;height:40px;flex:none;display:grid;place-items:center;border-radius:14px;cursor:pointer}
+.ts-tanla:hover{background:var(--plitka)}
+.ts-tanla input{width:20px;height:20px;accent-color:var(--siyoh);cursor:pointer;margin:0}
+.ts-tanla.ochirilgan{cursor:not-allowed}
+.ts-tanla.ochirilgan input{cursor:not-allowed;opacity:.35}
+.ts-tanla-joy{width:40px;flex:none}
+.ts-tanlov{position:sticky;top:8px;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 14px;padding:10px 12px 10px 18px;border-radius:var(--r-pilyula);background:var(--band)}
+.ts-tanlov .tt-soni{font-size:16px;font-weight:500}
+.ts-tanlov .tt-summa{font-size:13.5px;color:var(--matn-2)}
+.ts-tanlov .tt-amal{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.ts-tanlov .tugma-oq{background:var(--oq)}
+.ts-natija{margin:0 0 16px;padding:14px 16px;border-radius:16px;background:var(--plitka);font-size:14px;line-height:1.5}
+.ts-natija .tn-bosh{display:flex;align-items:flex-start;gap:10px;justify-content:space-between}
+.ts-natija ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ts-natija li{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:13.5px}
+.ts-natija li .xato-matn{color:var(--xavf-matn-yorqin)}
+.ts-izoh{margin-top:14px;padding:12px 14px;border-radius:16px;background:var(--plitka);font-size:13px;color:var(--matn-2);line-height:1.55}
+.ts-izoh.xavf{background:var(--pushti);color:var(--pushti-matn)}
+.ts-izoh.yashil{background:var(--mint);color:var(--mint-matn)}
+.ts-vakil{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:var(--oq);box-shadow:var(--soya-past);font-size:13.5px;color:var(--matn-2);line-height:1.5}
+.ts-vakil .ic{width:18px;height:18px;flex:none;margin-top:1px}
+.ts-bolim{font:500 13px var(--shrift);color:var(--matn-3);margin:18px 0 6px}
+.ts-ozgarish dd .eski{color:var(--matn-3);text-decoration:line-through;text-decoration-thickness:1px}
+.ts-ozgarish dd .strelka{color:var(--matn-3);margin:0 6px}
+.ts-ozgarish dd .yangi{font-weight:500;color:var(--siyoh)}
+.ts-amal{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.ts-tavsif{font-size:14px;line-height:1.55;color:var(--matn-2);margin:0 0 14px}
+@media (max-width:720px){.ts-asbob .izlash{max-width:none}.ts-qator .ong .pul{min-width:0}.ts-tanlov .tt-amal{margin-left:0;width:100%}
+  /* Tor ekranda qaror tugmalari matn ostida to'liq enda: barmoq bilan bosish oson */
+  .ts-qator-amal{width:100%;justify-content:flex-start}.ts-qator-amal .tugma{flex:1 1 auto;justify-content:center}}
+</style>
 </head>
 <body data-sahifa="vazifa">
 <div class="qobiq">
@@ -14,91 +55,612 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><span>Vazifalar</span></div>
-    <div class="hs-qator"><h1>Tasdiqlar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="vazifalar.html">Vazifalar</a><span class="ajratgich">/</span><span>Qarorlar</span></div>
+    <div class="hs-qator"><h1>Qarorlar</h1><span class="hs-meta" id="hs-meta">—</span><span class="hs-meta" id="ts-yangi" hidden></span>
+      <div class="hs-amallar" id="ts-hs-amal"></div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html">Vazifalar</a><a href="tasdiqlar.html" class="faol">Tasdiqlar</a><a href="bildirishnomalar.html">Bildirishnomalar</a></nav>
-  <section class="karta"><div id="t-royxat"></div></section>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html">Vazifalar</a><a href="tasdiqlar.html" class="faol">Qarorlar</a><a href="bildirishnomalar.html">Bildirishnomalar</a></nav>
+
+  <div class="almashtirgich ts-korinish" id="ts-korinish" role="group" aria-label="Qarorlar ko'rinishi" data-sayohat="korinish"></div>
+  <div id="ts-vakil"></div>
+  <div class="ts-asbob" data-sayohat="filtr">
+    <div class="izlash"><svg class="ic"><use href="#ik-izlash"/></svg><input type="search" id="ts-qidiruv" placeholder="Masala, obyekt yoki raqam" aria-label="Masala, obyekt yoki raqam bo'yicha qidirish"></div>
+    <label class="tanlov"><span class="t-old">Turi:</span><select id="ts-tur" aria-label="Qaror turi"></select></label>
+  </div>
+  <section class="karta" id="ts-royxat" aria-label="Qarorlar ro'yxati"></section>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-/* tasdiqlash va rad etish — faqat administrator va filial rahbari; qolgan rollar ro'yxatni faqat ko'radi */
-const TASDIQLAY_OLADI = ["admin", "filial"].includes(MKB.rol());
-document.addEventListener("mkb:tayyor", async () => {
-  const matn = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"})[c]);
-  const hozir = () => new Date().toISOString().slice(0, 16).replace("T", " ");
-  const kim = () => (MKBapi.sessiya() || {}).ism || "";
+(() => {
+  const $ = id => document.getElementById(id);
+  $("ts-royxat").innerHTML = MKB.skelet(5);
+  MKB.sahifaYukla({
+    joylar: {"ts-royxat": ["qator", 5]},
+    xato: "Qarorlar ro'yxatini yuklab bo'lmadi",
+    ish: boshla,
+  });
 
-  async function chiz(){
-    const r = await MKBapi.royxat("TASDIQLAR");
-    const joy = document.getElementById("t-royxat");
-    document.getElementById("hs-meta").textContent =
-      r.filter(t => !t.hal).length + " ta kutilmoqda · " + r.length + " ta jami";
-    joy.innerHTML =
-      (TASDIQLAY_OLADI ? "" :
-        '<div style="display:flex;align-items:center;gap:9px;padding:4px 0 12px;font-size:12.5px;color:var(--matn-3)">' + ik("info") +
-        "<span>Ro'yxat faqat ko'rish uchun ochiq. Tasdiqlash va rad etish huquqi administrator va filial rahbariga berilgan.</span></div>") +
-      r.map(t =>
-      '<div class="qator">' +
-        '<span style="width:38px;height:38px;border-radius:14px;background:var(--' + (t.tile === "yashil" ? 'yashil-fon' : 'brend-fon') +
-        ');display:grid;place-items:center;color:var(--brend-quyuq)">' + ik("muhr") + '</span>' +
-        '<span class="matn"><b>' + t.sarlavha + '</b>' +
-        '<span style="font-size:12.5px;color:var(--matn-3)">' + [t.org, t.sub, t.vaqt].filter(Boolean).join(" · ") + '</span>' +
-        (t.hal === "rad" && t.radSabab
-          ? '<span style="font-size:12.5px;color:var(--xavf-matn)">Rad sababi: ' + matn(t.radSabab) + '</span>' : '') +
-        '</span>' +
-        (t.hal ? '<span class="chip ' + (t.hal === "tasdiqlandi" ? 'chip-yashil">Tasdiqlangan' : 'chip-xavf">Rad etilgan') + '</span>'
-          : TASDIQLAY_OLADI
-            ? '<button type="button" class="tugma tugma-kichik tugma-oq" data-rad="' + t.id + '">Rad</button>' +
-              '<button type="button" class="tugma tugma-kichik tugma-asosiy" data-ok="' + t.id + '">Tasdiqlash</button>'
-            : '<span class="chip chip-kichik">Kutilmoqda</span>') +
-      '</div>').join("");
+async function boshla(){
+  if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
+  const KOLLAR = ["TASDIQLAR", "TAKLIFLAR", "LOTLAR", "BAHOLASHLAR", "UNDIRUV_ISHLAR", "HUJJATLAR", "FOYDLAR", "PARAMETRLAR"];
+  await MKB.kolYukla(KOLLAR);
+  const D = MKB_DATA, esc = MKB.esc;
+  const TK = window.MKB_TORT_KOZ;
+  const s = MKBapi.sessiya() || {};
+  const bugun = () => { const b = D.bugun(); return new Date(b.getFullYear(), b.getMonth(), b.getDate()); };
+  const TUR = {
+    taklif: {nom: "Xaridor taklifi", ikon: "savdo", belgi: "mint"},
+    pasaytirish: {nom: "Narx pasaytirish", ikon: "pasayish", belgi: "lavanda"},
+    baho: {nom: "Baholash natijasi", ikon: "baholash", belgi: "lavanda"},
+    qabul: {nom: "Balansga qabul", ikon: "bank", belgi: "mint"},
+    chiqim: {nom: "Balansdan chiqarish", ikon: "arxiv", belgi: "pushti"},
+    zaxira: {nom: "Stavka tasdig'i", ikon: "zaxira", belgi: "lavanda"},
+  };
+  const turNom = k => (TUR[k] || {}).nom || k || "—";
+  /* Sarlavha "Amal: nom" ko'rinishida: amal tarjima qilinadi, aktiv nomi o'zgarmaydi */
+  function sarlavhaHTML(matn){
+    const x = String(matn || ""), i = x.indexOf(": ");
+    if (i < 0) return '<span data-tarjimasiz>' + esc(x) + "</span>";
+    const amal = x.slice(0, i), nom = x.slice(i + 2);
+    const p = amal.match(/^Narxni (\d+(?:[.,]\d+)?)% pasaytirish$/);
+    const amalHTML = p ? '<span>Narx pasaytirish</span> <span data-tarjimasiz>' + esc(p[1]) + "%</span>" : "<span>" + esc(amal) + "</span>";
+    return amalHTML + ': <span data-tarjimasiz>' + esc(nom) + "</span>";
+  }
+  const top = (kol, id) => id ? (D[kol] || []).find(x => x && x.id === id) || null : null;
+  const foyd = login => login ? (D.FOYDLAR || []).find(f => f && String(f.login || "").toLowerCase() === String(login).toLowerCase()) || null : null;
+  const foydIsm = login => { const f = foyd(login); return f ? f.nom || f.ism || login : login || ""; };
+  /* So'rov muallifining roli: FOYDLAR dagi login bo'yicha, bo'lmasa ism bo'yicha */
+  const muallifRoli = t => { const f = foyd(t.muallifLogin) || (D.FOYDLAR || []).find(x => x && t.muallif && (x.nom || x.ism) === t.muallif); return f ? f.rol : ""; };
+  const asosi = t => { if (t.asos && typeof t.asos === "object") return t.asos; try{ const j = JSON.parse(t.izoh || "null"); return j && typeof j === "object" ? j : {}; }catch(_){ return {}; } };
+
+  /* ---------- Holat: ko'rinish (xodim bo'yicha eslab qolinadi), tur va qidiruv ---------- */
+  const url = new URLSearchParams(location.search);
+  const KORINISHLAR = [["kutilmoqda", "Mendan kutilmoqda"], ["yuborgan", "Men yuborganlar"], ["hal", "Hal qilinganlar"]];
+  const eslaKalit = MKBapi.kalit("mkb4-tasdiqlar:" + (s.login || "-"));
+  let eslangan = {};
+  try{ eslangan = JSON.parse(localStorage.getItem(eslaKalit) || "{}") || {}; }catch(_){ eslangan = {}; }
+  const ESKI_FILTR = {mening: "kutilmoqda", kutilmoqda: "kutilmoqda", kechikkan: "kutilmoqda", tasdiqlangan: "hal", "rad etilgan": "hal", "oyda-hal": "hal", hammasi: "hal"};
+  const korinishOl = v => KORINISHLAR.some(k => k[0] === v) ? v : null;
+  const h = {
+    korinish: korinishOl(url.get("korinish")) || ESKI_FILTR[url.get("filtr")] || korinishOl(eslangan.korinish) || "kutilmoqda",
+    tur: TUR[url.get("tur")] ? url.get("tur") : "", qidiruv: "",
+  };
+  const eslab = () => { try{ localStorage.setItem(eslaKalit, JSON.stringify({korinish: h.korinish})); }catch(_){ } };
+  let tanlangan = new Set(), natija = null;
+
+  const qolgan = t => { const d = D.sanaOqi(t.javobMuddati); return d ? D.kunFarqi(bugun(), d) : null; };
+  const kechikkanmi = t => t.holat === "kutilmoqda" && qolgan(t) != null && qolgan(t) < 0;
+  /* Muddat: o'tgan bo'lsa qizil, bir ish kuni yoki kamroq qolgan bo'lsa sariq */
+  const yaqinmi = t => { const d = D.sanaOqi(t.javobMuddati); return !!d && d <= D.ishKuniQosh(bugun(), 1); };
+  function muddatChip(t){
+    if (t.holat !== "kutilmoqda") return MKB.holatChip(t.holat, true);
+    const q = qolgan(t);
+    if (q == null) return '<span class="chip chip-kichik chip-kul">Muddatsiz</span>';
+    if (q < 0) return '<span class="chip chip-kichik chip-xavf"><b data-tarjimasiz>' + (-q) + "</b> <span>kun kechikdi</span></span>";
+    if (q === 0) return '<span class="chip chip-kichik chip-sariq">Bugun</span>';
+    if (yaqinmi(t)) return '<span class="chip chip-kichik chip-sariq"><b data-tarjimasiz>' + q + "</b> <span>kun qoldi</span></span>";
+    return '<span class="chip chip-kichik chip-info"><b data-tarjimasiz>' + q + "</b> <span>kun qoldi</span></span>";
+  }
+  const vakolatChip = '<span class="chip chip-kichik chip-binafsha">o\'rinbosar sifatida</span>';
+  const manba = () => MKB.doira((D.TASDIQLAR || []).filter(Boolean));
+  const menikimi = t => t.holat === "kutilmoqda" && MKB.tasdiq.mumkinmi(t);
+  const ozimi = t => MKB.tasdiq.ozimi(t);
+  /* Hal qilinganlar: so'nggi 90 kun ichida qaror chiqarilgan */
+  const halmi = t => { if (t.holat === "kutilmoqda") return false; const d = D.sanaOqi(t.qarorSana); return !!d && D.kunFarqi(d, bugun()) <= 90; };
+  const KOR_FILTR = {kutilmoqda: menikimi, yuborgan: ozimi, hal: halmi};
+  /* Ommaviy tasdiqlash: faqat shu ko'rinishda, chiqim hech qachon ommaviy emas */
+  const tanlasaBoladi = t => h.korinish === "kutilmoqda" && menikimi(t) && t.tur !== "chiqim";
+  const tanlanganTur = () => { const id = tanlangan.values().next().value; const t = id ? top("TASDIQLAR", id) : null; return t ? t.tur : null; };
+
+  /* ---------- Sarlavha: o'rinbosar tugmasi va hisoblagich ---------- */
+  const qarorQiladi = MKB.rol() === "admin" || ["realizatsiya", "qiymat", "aktivlar", "vazifa"].some(b => MKB.huquq(b, "tasdiq"));
+  if (qarorQiladi && MKB.ruxsat("sozlamalar.html")){
+    $("ts-hs-amal").innerHTML = '<a class="tugma tugma-oq" href="sozlamalar.html#orinbosar" data-sayohat="orinbosar">' + ik("foyd") + "O'rinbosar tayinlash</a>";
+    tarjimaQil($("ts-hs-amal"));
+  } else $("ts-hs-amal").remove();
+
+  function vakilChiz(){
+    const joy = $("ts-vakil");
+    const egalar = TK.orinbosarlar(D.FOYDLAR || [], s.login, bugun());
+    if (!egalar.length){ joy.innerHTML = ""; return; }
+    joy.innerHTML = '<div class="ts-vakil">' + ik("info") + "<span><span>Siz o'rinbosar sifatida qaror qilasiz:</span> " +
+      egalar.map(f => '<b data-tarjimasiz>' + esc(f.nom || f.ism || f.login) + "</b> <span data-tarjimasiz>(" + esc(f.orinbosar.dan + " – " + f.orinbosar.gacha) + ")</span>").join(", ") +
+      ". <span>Ularga tegishli so'rovlar ham shu ro'yxatda, qarorda o'rinbosar ekaningiz yoziladi.</span></span></div>";
     tarjimaQil(joy);
-    if (!TASDIQLAY_OLADI) return;
-    joy.querySelectorAll("[data-ok]").forEach(b => b.addEventListener("click", async () => {
-      b.disabled = true;
-      await MKBapi.yangilash("TASDIQLAR", b.dataset.ok, {hal: "tasdiqlandi", halKim: kim(), halVaqt: hozir()});
-      MKB.toast("Tasdiqlandi"); chiz();
+  }
+
+  /* ---------- Ro'yxat ---------- */
+  function qatorHTML(t){
+    const tr = TUR[t.tur] || {ikon: "muhr", belgi: ""};
+    const ob = t.obyektId ? D.obyekt(t.obyektId) : null;
+    const rol = muallifRoli(t);
+    const aid = "ts-" + String(t.id).replace(/[^A-Za-z0-9_-]/g, "_");
+    const v = t.holat === "kutilmoqda" ? MKB.tasdiq.vakolat(t) : null;
+    const orinbosar = (v && v.tur === "o'rinbosar") || t.qarorVakolat === "o'rinbosar";
+    let tanla = "";
+    if (h.korinish === "kutilmoqda"){
+      const mumkin = tanlasaBoladi(t);
+      const boshqaTur = mumkin && tanlangan.size && tanlanganTur() !== t.tur;
+      const izoh = !mumkin ? (t.tur === "chiqim" ? "Balansdan chiqarish faqat alohida tasdiqlanadi" : "") : boshqaTur ? "Bir vaqtda faqat bir turdagi masalalarni tanlash mumkin" : "";
+      tanla = mumkin || t.tur === "chiqim"
+        ? '<label class="ts-tanla' + (!mumkin || boshqaTur ? " ochirilgan" : "") + '"' + (izoh ? ' title="' + esc(izoh) + '"' : "") + '>' +
+          '<input type="checkbox" data-tanla="' + esc(t.id) + '"' + (tanlangan.has(t.id) ? " checked" : "") + (!mumkin || boshqaTur ? " disabled" : "") +
+          ' aria-label="Tanlash" aria-describedby="' + aid + '-t"></label>'
+        : '<span class="ts-tanla-joy" aria-hidden="true"></span>';
+    }
+    return '<div class="qator ts-qator' + (tanlangan.has(t.id) ? " tanlangan" : "") + '" data-id="' + esc(t.id) + '">' + tanla +
+      '<span class="belgi ' + tr.belgi + '">' + ik(tr.ikon) + "</span>" +
+      '<span class="matn"><b><button type="button" class="qator-och" aria-describedby="' + aid + '-t ' + aid + '-m">' + sarlavhaHTML(t.sarlavha) + "</button></b>" +
+        '<span id="' + aid + '-t"><span class="kod-mono" data-tarjimasiz>' + esc(t.id) + "</span> · <span>" + esc(turNom(t.tur)) + "</span>" +
+        (ob ? ' · <span data-tarjimasiz>' + esc(ob.qisqa || ob.nom) + "</span>" : "") +
+        (h.korinish === "yuborgan" ? "" : ' · <span data-tarjimasiz>' + esc(t.muallif || "—") + "</span>" + (rol ? ' <span data-tarjimasiz>(</span><span>' + esc(rol) + '</span><span data-tarjimasiz>)</span>' : "")) +
+        (t.sana ? ' · <span data-tarjimasiz>' + esc(t.sana) + "</span>" : "") + "</span></span>" +
+      '<span class="ong" id="' + aid + '-m">' + (t.summa != null ? '<span class="pul" data-tarjimasiz>' + esc(MKB.pul(t.summa)) + "</span>" : "") +
+        (orinbosar ? vakolatChip : "") + muddatChip(t) + qatorAmal(t) + "</span></div>";
+  }
+  /* Qaror tugmalari qatorning o'zida: yon panelni ochmasdan tasdiqlash yoki rad etish mumkin */
+  function qatorAmal(t){
+    if (h.korinish !== "kutilmoqda" || !menikimi(t)) return "";
+    return '<span class="ts-qator-amal">' +
+      '<button type="button" class="tugma ' + (t.tur === "chiqim" ? "tugma-xavf" : "tugma-asosiy") + ' tugma-kichik" data-qaror="ok" data-yozadi>' + ik("tasdiq") + "Tasdiqlash</button>" +
+      '<button type="button" class="tugma tugma-oq tugma-kichik" data-qaror="rad" data-yozadi>' + ik("rad") + "Rad etish</button>" +
+    "</span>";
+  }
+
+  function korinishChiz(r){
+    const son = {kutilmoqda: r.filter(menikimi).length, yuborgan: r.filter(ozimi).length, hal: r.filter(halmi).length};
+    $("ts-korinish").innerHTML = KORINISHLAR.map(k => '<button type="button" data-k="' + k[0] + '" aria-pressed="' + (h.korinish === k[0]) + '"><span>' + k[1] +
+      '</span><b data-tarjimasiz>' + son[k[0]] + "</b></button>").join("");
+    $("ts-korinish").querySelectorAll("[data-k]").forEach(b => b.addEventListener("click", () => korinishQoy(b.dataset.k)));
+    tarjimaQil($("ts-korinish"));
+    const kut = r.filter(menikimi), kech = kut.filter(kechikkanmi);
+    $("hs-meta").innerHTML = kut.length ? '<span data-tarjimasiz>' + kut.length + "</span> <span>ta qaror sizni kutmoqda</span>" +
+      (kech.length ? '<span data-tarjimasiz> · ' + kech.length + "</span> <span>tasi muddati o'tgan</span>" : "") : "<span>Sizdan qaror kutilmaydi</span>";
+    tarjimaQil($("hs-meta").parentNode);
+  }
+  function korinishQoy(k){
+    h.korinish = k; tanlangan.clear(); natija = null; eslab();
+    const p = new URLSearchParams(location.search);
+    p.delete("filtr"); p.delete("id");
+    if (k === "kutilmoqda") p.delete("korinish"); else p.set("korinish", k);
+    const q = p.toString();
+    history.replaceState(null, "", location.pathname + (q ? "?" + q : ""));
+    chiz();
+  }
+
+  /* Ro'yxat faqat haqiqatan o'zgarganda qayta chiziladi: aks holda ma'lumot yangilanishi ochiq
+     sayohat nishonini, fokusni va tanlovni yo'q qiladi */
+  let oxirgiHTML = null;
+  function chiz(){
+    const r = manba();
+    korinishChiz(r);
+    vakilChiz();
+    const tanlov = $("ts-tur");
+    const turlar = Object.keys(TUR).filter(k => r.some(t => t.tur === k) || k === h.tur);
+    tanlov.innerHTML = '<option value="">Barchasi</option>' + turlar.map(k => '<option value="' + k + '">' + TUR[k].nom + "</option>").join("");
+    tanlov.value = h.tur; tarjimaQil(tanlov);
+
+    const q = h.qidiruv.trim().toLowerCase();
+    const k = r.filter(t => {
+      if (!KOR_FILTR[h.korinish](t)) return false;
+      if (h.tur && t.tur !== h.tur) return false;
+      if (q && [t.id, t.sarlavha, t.tavsif, t.obyektId, t.manbaId, t.muallif].join(" ").toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    }).sort((a, b) => {
+      if (a.holat === "kutilmoqda" && b.holat === "kutilmoqda") return (qolgan(a) ?? 1e9) - (qolgan(b) ?? 1e9);
+      if (a.holat === "kutilmoqda") return -1;
+      if (b.holat === "kutilmoqda") return 1;
+      return (D.sanaOqi(b.qarorSana || b.sana) || 0) - (D.sanaOqi(a.qarorSana || a.sana) || 0);
+    });
+    /* Tanlov faqat ekrandagi va hali tanlasa bo'ladigan masalalar bilan qoladi */
+    tanlangan = new Set([...tanlangan].filter(id => k.some(t => t.id === id && tanlasaBoladi(t))));
+    const joy = $("ts-royxat");
+    const natijaHTML = natijaBlok();
+    if (!k.length){
+      let bosh;
+      if (q || h.tur){
+        bosh = MKB.boshHolat("muhr", "Filtrga mos qaror yo'q", "Qidiruv yoki turi tanlangani uchun ro'yxat bo'sh.",
+          '<button type="button" class="tugma tugma-oq" data-tozala>Filtrlarni tozalash</button>');
+      } else if (!r.length){
+        bosh = MKB.boshHolat("muhr", "Qarorlar hali yo'q",
+          D.MANBA === "mahalliy" ? "Mahalliy reyestrda takliflar, lotlar va baholash hisobotlari kiritilgach, tasdiq talab qiladigan masalalar shu yerda paydo bo'ladi."
+            : "Taklif, narx pasaytirish, baholash, balansga qabul va chiqarish bo'yicha so'rovlar shu yerga keladi.");
+      } else {
+        const b = {kutilmoqda: ["Sizdan qaror kutilmaydi", "Yangi so'rov kelganda shu yerda ko'rinadi. Boshqa mas'ullarga tegishli so'rovlar ularning ro'yxatida."],
+          yuborgan: ["Siz yuborgan so'rov yo'q", "Narx pasaytirish, balansdan chiqarish yoki baholash natijasi uchun so'rov yuborsangiz, holati shu yerda kuzatiladi."],
+          hal: ["So'nggi 90 kunda qaror chiqarilmagan", "Tasdiqlangan va rad etilgan masalalar shu yerda ko'rinadi."]}[h.korinish];
+        bosh = MKB.boshHolat("muhr", b[0], b[1]);
+      }
+      const boshHTML = natijaHTML + bosh;
+      if (boshHTML === oxirgiHTML) return;
+      oxirgiHTML = boshHTML;
+      joy.innerHTML = boshHTML;
+      /* Ro'yxat bo'sh bo'lsa, sayohat nishoni bosh holat blokida qoladi */
+      const bh = joy.querySelector(".bosh-holat");
+      if (bh) bh.setAttribute("data-sayohat", "qaror-karta");
+      const t = joy.querySelector("[data-tozala]");
+      if (t) t.addEventListener("click", () => { h.qidiruv = ""; h.tur = ""; $("ts-qidiruv").value = ""; chiz(); });
+      natijaUla(joy);
+      tarjimaQil(joy); return;
+    }
+    const SARLAVHA = {kutilmoqda: "Qaroringizni kutmoqda", yuborgan: "Siz yuborgan so'rovlar", hal: "So'nggi 90 kunda hal qilingan"};
+    const royxatHTML = natijaHTML + tanlovBlok() +
+      '<div class="karta-bosh"><h2>' + SARLAVHA[h.korinish] + '</h2><span class="soni" data-tarjimasiz>' + k.length + "</span></div>" +
+      k.map(qatorHTML).join("");
+    if (royxatHTML === oxirgiHTML) return;
+    oxirgiHTML = royxatHTML;
+    joy.innerHTML = royxatHTML;
+    joy.querySelectorAll(".ts-qator").forEach(el => el.addEventListener("click", e => {
+      if (e.target.closest(".ts-tanla") || e.target.closest(".ts-qator-amal")) return;
+      panel(el.dataset.id);
     }));
-    joy.querySelectorAll("[data-rad]").forEach(b => b.addEventListener("click", () => {
-      const t = r.find(v => v.id === b.dataset.rad);
-      MKB.modal("So'rovni rad etish",
-        '<p style="font-size:13px;color:var(--matn-2);margin-bottom:12px">' + (t ? t.sarlavha : "") + '</p>' +
-        '<div class="maydon"><label class="maydon-yorliq">Rad etish sababi <b>*</b></label>' +
-        '<textarea class="kirish-matn" name="sabab" placeholder="So\'rov nima uchun rad etilmoqda"></textarea>' +
-        '<span class="maydon-izoh" data-izoh>Sabab so\'rovchiga ko\'rsatiladi</span></div>',
-        {okMatn: "Rad etish", ok(parda){
-          const q = MKB.forma(parda.querySelector(".modal-tana"), ["sabab"]);
-          if (!q){
-            const maydon = parda.querySelector('[name="sabab"]');
-            maydon.style.borderColor = "var(--xavf)";
-            const izoh = parda.querySelector("[data-izoh]");
-            izoh.classList.add("xato");
-            izoh.textContent = "Rad etish sababi kiritilishi shart";
-            tarjimaQil(izoh);
-            return false;
-          }
-          MKBapi.yangilash("TASDIQLAR", b.dataset.rad, {hal: "rad", radSabab: q.sabab, halKim: kim(), halVaqt: hozir()})
-            .then(() => { MKB.toast("Rad etildi"); chiz(); });
-        }});
+    joy.querySelectorAll("[data-qaror]").forEach(b => b.addEventListener("click", e => {
+      e.stopPropagation();
+      const qator = b.closest(".ts-qator");
+      const t = qator ? top("TASDIQLAR", qator.dataset.id) : null;
+      if (!t) return;
+      if (b.dataset.qaror === "ok") tasdiqla(t); else radEt(t);
+    }));
+    joy.querySelectorAll("[data-tanla]").forEach(c => c.addEventListener("change", () => {
+      if (c.checked) tanlangan.add(c.dataset.tanla); else tanlangan.delete(c.dataset.tanla);
+      chiz();
+      const yangi = joy.querySelector('[data-tanla="' + (window.CSS && CSS.escape ? CSS.escape(c.dataset.tanla) : c.dataset.tanla) + '"]');
+      if (yangi) yangi.focus();
+    }));
+    /* Sayohat nishoni bitta qaror kartasida: bo'lim to'liq ekranni egallaydi, qadam matni esa bitta so'rov haqida */
+    const ilk = joy.querySelector(".ts-qator");
+    if (ilk) ilk.setAttribute("data-sayohat", "qaror-karta");
+    natijaUla(joy);
+    tanlovUla(joy, k);
+    tarjimaQil(joy);
+  }
+
+  /* ---------- Ommaviy tanlov ---------- */
+  function tanlovBlok(){
+    if (!tanlangan.size) return "";
+    const r = [...tanlangan].map(id => top("TASDIQLAR", id)).filter(Boolean);
+    const summa = D.yaxlit(r.reduce((a, t) => a + (Number(t.summa) || 0), 0), 1);
+    return '<div class="ts-tanlov" data-sayohat="tanlash" role="region" aria-label="Tanlangan qarorlar">' +
+      '<span class="tt-soni"><span data-tarjimasiz>' + r.length + "</span> <span>ta tanlandi</span></span>" +
+      '<span class="tt-summa"><span>' + esc(turNom(r[0].tur)) + "</span>" + (summa ? ' · <span>jami</span> <b data-tarjimasiz>' + esc(MKB.pul(summa)) + "</b>" : "") + "</span>" +
+      '<span class="tt-amal">' +
+        '<button type="button" class="tugma tugma-asosiy tugma-kichik" data-ommaviy="ok" data-yozadi>' + ik("tasdiq") + "Tasdiqlash</button>" +
+        '<button type="button" class="tugma tugma-oq tugma-kichik" data-ommaviy="rad" data-yozadi>' + ik("rad") + "Rad etish</button>" +
+        '<button type="button" class="tugma tugma-oq tugma-kichik" data-ommaviy="bekor">' + ik("yopish") + "Tanlovni bekor qilish</button>" +
+      "</span></div>";
+  }
+  function tanlovUla(joy, k){
+    joy.querySelectorAll("[data-ommaviy]").forEach(b => b.addEventListener("click", () => {
+      const a = b.dataset.ommaviy;
+      if (a === "bekor"){ tanlangan.clear(); chiz(); return; }
+      const r = k.filter(t => tanlangan.has(t.id));
+      if (a === "ok") ommaviyTasdiq(r); else ommaviyRad(r);
     }));
   }
+  function ommaviyTafsilot(r){
+    const summa = D.yaxlit(r.reduce((a, t) => a + (Number(t.summa) || 0), 0), 1);
+    const rows = [["Turi", turNom(r[0].tur)], ["Soni", {matn: String(r.length), tarjimasiz: true}]];
+    if (summa) rows.push(["Jami summa", {matn: MKB.pul(summa), tarjimasiz: true}]);
+    r.slice(0, 6).forEach(t => rows.push([t.id, {matn: t.sarlavha || "—", tarjimasiz: true}]));
+    return rows;
+  }
+  async function birlabBajar(r, fn){
+    const ok = [], xato = [];
+    for (const t of r){
+      try{ await fn(t); ok.push(t); }
+      catch(e){ xato.push({t, matn: e && e.message ? e.message : "Amal bajarilmadi"}); }
+    }
+    return {ok, xato};
+  }
+  async function ommaviyTasdiq(r){
+    if (!r.length) return;
+    const qolgani = r.length > 6 ? r.length - 6 : 0;
+    const res = await MKB.tasdiqla({
+      sarlavha: r.length + " ta qarorni tasdiqlash",
+      matn: "Tanlangan masalalar birma-bir tasdiqlanadi. Bajarilmagani sababi bilan natijada ko'rsatiladi." + (qolgani ? " Ro'yxatda yana " + qolgani + " ta masala bor." : ""),
+      tafsilot: ommaviyTafsilot(r),
+      oqibat: OQIBAT[r[0].tur] ? [OQIBAT[r[0].tur]] : [],
+      okMatn: r.length + " ta qarorni tasdiqlash",
+      bajar: () => birlabBajar(r, t => MKB.tasdiq.qabul(t.id)),
+    });
+    if (!res) return;
+    natija = {tur: "ok", ...res.qiymat};
+    tanlangan.clear();
+    if (res.qiymat.ok.length) MKB.toast(res.qiymat.ok.length + " ta qaror tasdiqlandi", res.qiymat.xato.length ? "info" : "tasdiq");
+    chiz();
+  }
+  async function ommaviyRad(r){
+    if (!r.length) return;
+    const res = await MKB.tasdiqla({
+      sarlavha: r.length + " ta qarorni rad etish",
+      matn: "Tanlangan so'rovlar bitta umumiy sabab bilan rad etiladi va mualliflariga qaytadi.",
+      tafsilot: ommaviyTafsilot(r),
+      ton: "xavfli",
+      sabab: {majburiy: true, min: 5, maks: 400, yorliq: "Rad etish sababi", izoh: "Sabab har bir so'rov muallifiga ko'rinadi", namuna: "Masalan, narx bozor qiymatidan past"},
+      okMatn: r.length + " ta qarorni rad etish", bekorMatn: "Orqaga",
+      bajar: ({sabab}) => birlabBajar(r, t => MKB.tasdiq.rad(t.id, sabab)),
+    });
+    if (!res) return;
+    natija = {tur: "rad", ...res.qiymat};
+    tanlangan.clear();
+    if (res.qiymat.ok.length) MKB.toast(res.qiymat.ok.length + " ta qaror rad etildi", "info");
+    chiz();
+  }
+  function natijaBlok(){
+    if (!natija) return "";
+    const fe = natija.tur === "ok" ? "tasdiqlandi" : "rad etildi";
+    return '<div class="ts-natija" role="status"><div class="tn-bosh"><b><span data-tarjimasiz>' + natija.ok.length + "</span> <span>ta qaror " + fe + "</span>" +
+        (natija.xato.length ? ", <span data-tarjimasiz>" + natija.xato.length + "</span> <span>tasi bajarilmadi</span>" : "") + "</b>" +
+        '<button type="button" class="tugma tugma-oq tugma-kichik" data-natija-yop>' + ik("yopish") + "Yopish</button></div>" +
+      (natija.xato.length || natija.ok.length ? "<ul>" +
+        natija.ok.map(x => '<li><span class="kod-mono" data-tarjimasiz>' + esc(x.id) + '</span><span data-tarjimasiz>' + esc(x.sarlavha || "") + "</span></li>").join("") +
+        natija.xato.map(x => '<li><span class="kod-mono" data-tarjimasiz>' + esc(x.t.id) + '</span><span class="xato-matn">' + esc(x.matn) + "</span></li>").join("") + "</ul>" : "") +
+      "</div>";
+  }
+  function natijaUla(joy){
+    const b = joy.querySelector("[data-natija-yop]");
+    if (b) b.addEventListener("click", () => { natija = null; chiz(); });
+  }
+
+  /* ---------- Tafsilot: masalaning manbasi, nima o'zgaradi va qaror ---------- */
+  const dd = (n, x, ts) => "<dt>" + n + "</dt><dd" + (ts ? " data-tarjimasiz" : "") + ">" + x + "</dd>";
+  const havola = (href, matn) => MKB.ruxsat(href.split("?")[0]) ? '<a href="' + href + '" data-tarjimasiz>' + esc(matn) + "</a>" : '<span data-tarjimasiz>' + esc(matn) + "</span>";
+  const OQIBAT = {
+    taklif: "Taklif g'olib bo'ladi, lotdagi boshqa takliflar rad etiladi. G'olib to'lovi va shartnoma uchun muddat qo'yiladi, realizatsiya mutaxassisiga vazifa yaratiladi.",
+    pasaytirish: "Lotning boshlang'ich narxi yangilanadi, keyingi pasaytirish sanasi suriladi.",
+    baho: "Obyektning bozor qiymati yangilanadi, hisobot dolzarb deb belgilanadi.",
+    qabul: "Obyekt menejeriga balansga qabul vazifasi yaratiladi. Qabul asosi va sud qarori ishdan to'ldiriladi.",
+    chiqim: "Obyekt balansdan chiqariladi va arxivga yoziladi. Xarajatlar va tiklangan zaxira hisoblanadi.",
+    zaxira: "Stavkalar tasdiqlangan deb belgilanadi va zaxira hamda soliq hisobiga kiradi.",
+  };
+  const MATN = {
+    taklif: "Xaridor taklifi qabul qilinadi va lot g'olibi belgilanadi.",
+    pasaytirish: "Lotning boshlang'ich narxi pasaytiriladi.",
+    baho: "Obyektning bozor qiymati baholash hisoboti bo'yicha yangilanadi.",
+    qabul: "Garov mulkini balansga qabul qilish boshlanadi.",
+    chiqim: "Obyekt balansdan chiqariladi va arxivga o'tadi.",
+    zaxira: "Stavkalar tasdiqlanadi va hisob-kitobga kiradi.",
+  };
+  /* Nima o'zgaradi: [nom, eski, yangi, son] — qiymatlar reyestrdagi yozuvlardan */
+  function ozgarish(t){
+    const r = [];
+    const pul = v => v == null || v === "" ? null : MKB.pul(Number(v));
+    if (t.tur === "taklif"){
+      const tk = top("TAKLIFLAR", t.manbaId), lot = tk && tk.lotId ? top("LOTLAR", tk.lotId) : null;
+      if (lot) r.push(["Lot narxi", pul(lot.boshlangichNarx), tk ? pul(tk.summa) : null, true]);
+      if (lot) r.push(["Lot holati", MKB.holatNomi(lot.holat), MKB.holatNomi("golib"), false]);
+    } else if (t.tur === "pasaytirish"){
+      const lot = top("LOTLAR", t.manbaId);
+      if (lot){
+        const foiz = lot.boshlangichNarx && t.summa ? Math.round((1 - t.summa / lot.boshlangichNarx) * 100) : null;
+        r.push(["Boshlang'ich narx", pul(lot.boshlangichNarx), pul(t.summa) + (foiz != null ? " (−" + foiz + "%)" : ""), true]);
+      }
+    } else if (t.tur === "baho"){
+      const b = top("BAHOLASHLAR", t.manbaId), y = t.obyektId ? D.topish(t.obyektId) : null;
+      if (b) r.push(["Bozor qiymati", y && y.qiymat && y.qiymat.bozor != null ? pul(y.qiymat.bozor) : "Baholanmagan", pul(b.bozorQiymati), true]);
+    } else if (t.tur === "qabul"){
+      const ish = top("UNDIRUV_ISHLAR", t.manbaId);
+      if (ish && ish.garov && ish.garov.bahoMln != null) r.push(["Garov bahosi", null, pul(ish.garov.bahoMln), true]);
+    } else if (t.tur === "chiqim"){
+      const y = t.obyektId ? D.topish(t.obyektId) : null, a = asosi(t);
+      if (y) r.push(["Obyekt holati", y.holat || "—", "Chiqarildi", false]);
+      if (y && y.balans) r.push(["Balans qiymati", pul(y.balans.qiymat), "0", true]);
+      if (a.narx != null && a.narx !== "") r.push(["Sotuv narxi", null, pul(a.narx), true]);
+    } else if (t.tur === "zaxira"){
+      const a = asosi(t);
+      (Array.isArray(a.parametrlar) ? a.parametrlar : []).forEach(p => {
+        const x = (D.PARAMETRLAR || []).find(q => q && q.id === (p && p.id));
+        if (!x) return;
+        const b = x.birlik ? " " + x.birlik : "";
+        r.push([x.nom, x.qiymat != null ? String(x.qiymat).replace(".", ",") + b : null, String(p.qiymat).replace(".", ",") + b, true]);
+      });
+    }
+    return r.filter(x => x[2] != null);
+  }
+  function ozgarishHTML(t){
+    const r = ozgarish(t);
+    if (!r.length) return "";
+    const q = v => /^[\d\s.,−–+-]/.test(String(v)) ? '<span data-tarjimasiz>' + esc(v) + "</span>" : "<span>" + esc(v) + "</span>";
+    return '<div data-sayohat="nima-ozgaradi"><div class="ts-bolim">Nima o\'zgaradi</div><dl class="malumot-royxat ts-ozgarish">' +
+      r.map(x => "<dt>" + esc(x[0]) + "</dt><dd>" + (x[1] != null ? '<span class="eski">' + q(x[1]) + '</span><span class="strelka" aria-hidden="true">→</span>' : "") +
+        '<span class="yangi">' + q(x[2]) + "</span></dd>").join("") + "</dl></div>";
+  }
+  function manbaTafsiloti(t){
+    let html = "", ogoh = "";
+    if (t.tur === "taklif"){
+      const tk = top("TAKLIFLAR", t.manbaId), lot = tk && tk.lotId ? top("LOTLAR", tk.lotId) : null;
+      if (tk){
+        html += dd("Taklif", havola("takliflar.html?id=" + encodeURIComponent(tk.id), tk.id), true) +
+          dd("Xaridor", '<span data-tarjimasiz>' + esc(tk.xaridor) + "</span>" + (tk.xaridorTuri ? " · <span>" + esc(tk.xaridorTuri) + "</span>" : "")) +
+          (lot ? dd("Lot", havola("lot.html?id=" + encodeURIComponent(lot.id), lot.id)) : "") +
+          dd("To'lov sharti", "<span>" + esc(tk.tolovSharti || "—") + "</span>") +
+          dd("AML tekshiruvi", MKB.holatChip(tk.amlNatija || "tekshirilmoqda", true)) +
+          dd("Affillanganlik", tk.affillanganlik ? "<span>Ha</span>" + (tk.qarorRaqami ? ' · <span data-tarjimasiz>' + esc(tk.qarorRaqami) + "</span>" : "") : "<span>Yo'q</span>");
+        if (tk.amlNatija === "shubhali") ogoh = "AML tekshiruvi shubhali natija bergan. Taklifni tasdiqlab bo'lmaydi.";
+        else if (tk.amlNatija !== "toza") ogoh = "AML tekshiruvi tugamagan. Natija kelgach tasdiqlash mumkin.";
+        else if (tk.affillanganlik && !tk.qarorRaqami) ogoh = "Xaridor bank bilan affillangan. Kuzatuv kengashi qarori raqami kiritilmagan.";
+      }
+    } else if (t.tur === "pasaytirish"){
+      const lot = top("LOTLAR", t.manbaId);
+      if (lot){
+        html += dd("Lot", havola("lot.html?id=" + encodeURIComponent(lot.id), lot.id), true) +
+          dd("Minimal narx", esc(MKB.pul(lot.minimalNarx)), true) +
+          dd("Avvalgi pasaytirishlar", '<span data-tarjimasiz>' + (lot.pasaytirishlar || []).length + "</span>");
+        if (lot.minimalNarx && t.summa < lot.minimalNarx) ogoh = "Yangi narx minimal narxdan past. Tasdiqlab bo'lmaydi.";
+      }
+    } else if (t.tur === "baho"){
+      const b = top("BAHOLASHLAR", t.manbaId);
+      if (b){
+        html += dd("Hisobot", havola("baholash-hisobot.html?id=" + encodeURIComponent(b.id), b.hisobotRaqami || b.id), true) +
+          dd("Baholovchi", esc(b.baholovchi || "—") + (b.litsenziya ? ' · <span data-tarjimasiz>' + esc(b.litsenziya) + "</span>" : ""), true) +
+          dd("Usul", esc(b.usul || "—"), true) +
+          dd("Tugatish qiymati", esc(MKB.pul(b.tugatishQiymati)), true);
+      }
+    } else if (t.tur === "qabul"){
+      const ish = top("UNDIRUV_ISHLAR", t.manbaId);
+      if (ish){
+        html += dd("Undiruv ishi", havola("ish.html?id=" + encodeURIComponent(ish.id), ish.id), true) +
+          dd("Qarzdor", esc((ish.qarzdor && ish.qarzdor.nom) || "—"), true) +
+          dd("Garov", esc((ish.garov && ish.garov.nom) || "—"), true) +
+          dd("Qarz", esc(MKB.pul(ish.qarz && ish.qarz.jami)), true) +
+          dd("Sud qarori", esc(ish.qaror && ish.qaror.raqam ? ish.qaror.raqam + (ish.qaror.sana ? ", " + ish.qaror.sana : "") : "—"), true);
+        if (ish.aktivId) ogoh = "Bu ish bo'yicha aktiv allaqachon balansga qabul qilingan.";
+      }
+    } else if (t.tur === "chiqim"){
+      const a = asosi(t);
+      html += (a.usul ? dd("Usul", MKB.holatChip(a.usul, true)) : "") + (a.xaridor ? dd("Xaridor", esc(a.xaridor), true) : "");
+    }
+    return {html, ogoh};
+  }
+
+  let ochiqPanel = null;
+  function panel(id, natijaQ){
+    const t = top("TASDIQLAR", id);
+    if (!t || !MKB.doira([t]).length){ MKB.toast("Qaror topilmadi: " + id, "xavf"); return; }
+    const ob = t.obyektId ? D.obyekt(t.obyektId) : null;
+    const m = manbaTafsiloti(t);
+    const hujjat = t.obyektId ? (D.HUJJATLAR || []).filter(x => x.obyektId === t.obyektId).length : 0;
+    const mumkin = menikimi(t);
+    const oz = ozimi(t);
+    const v = mumkin ? MKB.tasdiq.vakolat(t) : null;
+    const rol = muallifRoli(t);
+    const tafsil = '<div class="ts-bolim">Tafsilot</div><dl class="malumot-royxat">' +
+        (ob ? dd("Obyekt", havola("obyekt.html?id=" + encodeURIComponent(ob.id), ob.qisqa || ob.nom) + ' <span class="kod-mono" data-tarjimasiz>' + esc(ob.id) + "</span>") : "") +
+        (t.summa != null ? dd("Summa", esc(MKB.pul(t.summa)), true) : "") +
+        dd("So'rov muallifi", '<span data-tarjimasiz>' + esc(t.muallif || "—") + "</span>" + (rol ? " · <span>" + esc(rol) + "</span>" : "") +
+          (t.sana ? ' · <span data-tarjimasiz>' + esc(t.sana) + "</span>" : "")) +
+        dd("Mas'ul", esc(t.masulRol || "—")) +
+        dd("Javob muddati", esc(t.javobMuddati || "—"), true) +
+        (ob ? dd("Hujjatlar", havola("obyekt-hujjatlar.html?id=" + encodeURIComponent(ob.id), hujjat + " ta")) : "") +
+        m.html +
+      "</dl>";
+    /* Tartib: holat, nima o'zgaradi va qaror tugmalari tepada; manba tafsiloti pastda */
+    let html =
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">' + muddatChip(t) + '<span class="chip chip-kul">' + esc(turNom(t.tur)) + "</span>" +
+        (v && v.tur === "o'rinbosar" ? vakolatChip : "") + "</div>" +
+      (t.tavsif ? '<p class="ts-tavsif">' + esc(t.tavsif) + "</p>" : "");
+    if (t.holat !== "kutilmoqda"){
+      const kim = t.qarorKim ? foydIsm(t.qarorKim) : "";
+      html += '<div class="ts-izoh' + (t.holat === "rad etilgan" ? " xavf" : " yashil") + '"><b>' + esc(MKB.holatNomi(t.holat)) + "</b> · <span data-tarjimasiz>" + esc(t.qarorSana || "") + "</span>" +
+        (kim ? ' · <span data-tarjimasiz>' + esc(kim) + "</span>" : "") +
+        (t.qarorVakolat === "o'rinbosar" ? " · <span>o'rinbosar sifatida</span>" + (t.qarorNomidan ? ' <span data-tarjimasiz>(' + esc(foydIsm(t.qarorNomidan)) + ")</span>" : "") : "") +
+        (t.sabab ? '<br><span>Sabab:</span> <span data-tarjimasiz>' + esc(t.sabab) + "</span>" : "") + "</div>";
+      html += keyingiQadam(t, natijaQ);
+    } else {
+      if (m.ogoh) html += '<div class="ts-izoh xavf">' + esc(m.ogoh) + "</div>";
+      html += ozgarishHTML(t);
+      if (OQIBAT[t.tur]) html += '<div class="ts-izoh"><span>Tasdiqlansa:</span> <span>' + esc(OQIBAT[t.tur]) + "</span></div>";
+      if (oz) html += '<div class="ts-izoh"><b>Siz yuborgansiz. Boshqa xodim tasdiqlaydi</b></div>';
+      else if (!mumkin) html += '<div class="ts-izoh"><span>Qarorni</span> <b>' + esc(t.masulRol || "mas'ul") + "</b> <span>qabul qiladi.</span></div>";
+      if (mumkin) html += '<div class="ts-amal">' +
+        '<button type="button" class="tugma ' + (t.tur === "chiqim" ? "tugma-xavf" : "tugma-asosiy") + '" data-a="ok" data-yozadi data-sayohat="tasdiqlash">' + ik("tasdiq") + "Tasdiqlash</button>" +
+        '<button type="button" class="tugma tugma-oq" data-a="rad" data-yozadi data-sayohat="rad">' + ik("rad") + "Rad etish</button></div>";
+    }
+    html += tafsil;
+    if (ochiqPanel) ochiqPanel.yop();
+    ochiqPanel = MKB.yonPanel(t.sarlavha, html, {yorliq: t.id});
+    const p = ochiqPanel.panel;
+    p.querySelectorAll("[data-a]").forEach(b => b.addEventListener("click", () => (b.dataset.a === "ok" ? tasdiqla(t) : radEt(t))));
+  }
+
+  /* Qaror qabul qilingandan keyingi qadam: kim nima qiladi va qayerda */
+  function keyingiQadam(t, natijaQ){
+    if (t.holat !== "tasdiqlangan") return "";
+    const tugma = (href, matn) => MKB.ruxsat(href.split("?")[0]) ? '<a class="tugma tugma-oq" href="' + href + '">' + ik("ong") + matn + "</a>" : "";
+    let izoh = "", amal = "";
+    if (t.tur === "taklif"){
+      const tk = top("TAKLIFLAR", t.manbaId), lot = tk && tk.lotId ? top("LOTLAR", tk.lotId) : null;
+      const sh = tk ? (D.SHARTNOMALAR || []).find(x => x.taklifId === tk.id && x.holat !== "bekor") : null;
+      if (sh){ izoh = "<span>Shartnoma tuzilgan:</span> <b data-tarjimasiz>" + esc(sh.id) + "</b>"; amal = tugma("shartnoma.html?id=" + encodeURIComponent(sh.id), "Shartnomani ochish"); }
+      else {
+        izoh = "<span>Shartnoma tuzilishi kerak.</span>" + (lot && lot.shartnomaMuddati ? " <span>Muddat</span> <b data-tarjimasiz>" + esc(lot.shartnomaMuddati) + "</b>." : "") +
+          (lot && lot.tolovMuddati ? " <span>G'olib to'lovi muddati</span> <b data-tarjimasiz>" + esc(lot.tolovMuddati) + "</b>." : "");
+        if (tk && MKB.huquq("realizatsiya", "yoz")) amal = tugma("takliflar.html?id=" + encodeURIComponent(tk.id), "Shartnoma tuzish");
+        else izoh += " <span>Shartnomani realizatsiya mutaxassisi tuzadi.</span>";
+      }
+    } else if (t.tur === "pasaytirish"){
+      izoh = "<span>Lot narxi yangilandi.</span>"; amal = tugma("lot.html?id=" + encodeURIComponent(t.manbaId), "Lotni ochish");
+    } else if (t.tur === "baho"){
+      izoh = "<span>Obyektning bozor qiymati yangilandi.</span>"; if (t.obyektId) amal = tugma("obyekt-moliya.html?id=" + encodeURIComponent(t.obyektId), "Moliya tabini ochish");
+    } else if (t.tur === "qabul"){
+      const ish = top("UNDIRUV_ISHLAR", t.manbaId);
+      if (ish && ish.aktivId){ izoh = "<span>Aktiv balansga qabul qilingan:</span> <b data-tarjimasiz>" + esc(ish.aktivId) + "</b>"; amal = tugma("obyekt.html?id=" + encodeURIComponent(ish.aktivId), "Obyektni ochish"); }
+      else {
+        const hv = (natijaQ && natijaQ.havola) || "qabul-boshlash.html?ish=" + encodeURIComponent(t.manbaId);
+        izoh = "<span>Balansga qabul ustasi to'ldirilishi kerak.</span>";
+        if (MKB.huquq("aktivlar", "yoz")) amal = tugma(hv, "Balansga qabulni boshlash");
+        else izoh += " <span>Qabulni obyekt menejeri rasmiylashtiradi.</span>";
+      }
+    } else if (t.tur === "chiqim"){
+      const a = (D.ARXIV || []).find(x => x.id === t.obyektId);
+      izoh = "<span>Obyekt balansdan chiqarildi.</span>"; if (a) amal = tugma("arxiv-obyekt.html?id=" + encodeURIComponent(a.id), "Arxiv yozuvini ochish");
+    } else if (t.tur === "zaxira"){
+      izoh = "<span>Stavkalar tasdiqlandi va hisobga kirdi.</span>"; amal = tugma("zaxira.html", "Zaxirani ochish");
+    }
+    return '<div class="ts-bolim">Keyingi qadam</div><div class="ts-izoh">' + izoh + "</div>" + (amal ? '<div class="ts-amal">' + amal + "</div>" : "");
+  }
+
+  async function tasdiqla(t){
+    const xavfli = t.tur === "chiqim";
+    const r = ozgarish(t);
+    const res = await MKB.tasdiqla({
+      sarlavha: xavfli ? "Balansdan chiqarishni tasdiqlash" : "Qarorni tasdiqlash",
+      matn: MATN[t.tur] || "So'rov tasdiqlanadi.",
+      tafsilot: [["Qaror", {matn: t.id, tarjimasiz: true}], ["Masala", {matn: t.sarlavha || "—"}]]
+        .concat(t.summa != null && !r.some(x => x[3]) ? [["Summa", {matn: MKB.pul(t.summa), tarjimasiz: true}]] : [])
+        .concat(r.filter(x => x[3]).map(x => [x[0], {matn: (x[1] != null ? x[1] + " → " : "") + x[2], tarjimasiz: true}])),
+      oqibat: [OQIBAT[t.tur]].filter(Boolean),
+      ton: xavfli ? "xavfli" : "oddiy",
+      okMatn: xavfli ? "Chiqarishni tasdiqlash" : "Tasdiqlash",
+      bekorMatn: xavfli ? "Orqaga" : "Bekor qilish",
+      bajar: () => MKB.tasdiq.qabul(t.id),
+    });
+    if (!res) return;
+    MKB.toast("Qaror " + t.id + " tasdiqlandi", "tasdiq");
+    chiz();
+    const n = res.qiymat;
+    if (t.tur === "qabul" && n && n.havola && MKB.huquq("aktivlar", "yoz") && MKB.ruxsat(n.havola.split("?")[0])){ location.href = n.havola; return; }
+    panel(t.id, n);
+  }
+  async function radEt(t){
+    const res = await MKB.tasdiqla({
+      sarlavha: "Qarorni rad etish",
+      matn: "So'rov rad etiladi va sabab bilan muallifga qaytadi.",
+      tafsilot: [["Qaror", {matn: t.id, tarjimasiz: true}], ["Masala", {matn: t.sarlavha || "—"}], ["So'rov muallifi", {matn: t.muallif || "—", tarjimasiz: true}]],
+      ton: "xavfli",
+      sabab: {majburiy: true, min: 5, maks: 400, yorliq: "Rad etish sababi", izoh: "Sabab so'rov muallifiga ko'rinadi", namuna: "Masalan, narx bozor qiymatidan past"},
+      okMatn: "Rad etish", bekorMatn: "Orqaga",
+      bajar: ({sabab}) => MKB.tasdiq.rad(t.id, sabab),
+    });
+    if (!res) return;
+    MKB.toast("Qaror " + t.id + " rad etildi", "info");
+    chiz(); panel(t.id);
+  }
+
+  /* ---------- Hodisalar ---------- */
+  $("ts-tur").addEventListener("change", e => { h.tur = e.target.value; tanlangan.clear(); chiz(); });
+  $("ts-qidiruv").addEventListener("input", e => { h.qidiruv = e.target.value; chiz(); });
+  document.addEventListener("mkb:malumot", chiz);
   chiz();
-});
+  const belgi = MKB.yangilanganBelgi("ts-yangi", {yangila: async () => { await MKB.kolYukla(KOLLAR); chiz(); }, avto: 60});
+  if (belgi && belgi.belgila) belgi.belgila();
+  if (url.get("id")) panel(url.get("id"));
+}
+})();
 </script>
 </body>
 </html>

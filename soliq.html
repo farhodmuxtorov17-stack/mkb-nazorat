@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Soliq</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+</head>
+<body data-sahifa="qiymat">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="baholash.html">Qiymat, zaxira va sug'urta</a><span class="ajratgich">/</span><span>Soliq</span></div>
+    <div class="hs-qator"><h1>Mol-mulk solig'i</h1><span class="hs-meta" id="hs-meta">—</span>
+      <div class="hs-amallar">
+        <div class="tanlov" style="padding:0 16px" data-sayohat="davr"><span class="t-old">Davr:</span><select id="sq-davr" aria-label="Chorak"></select></div>
+        <button type="button" class="tugma tugma-asosiy" id="sq-saqla" data-huquq="yoz" data-yozadi data-sayohat="tasdiqlash" hidden><svg class="ic"><use href="#ik-hisobot"/></svg><span>Chorak hisobini saqlash</span></button>
+      </div></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Baholash</a><a href="baholash-buyurtma.html">Baholash buyurtmasi</a><a href="zaxira.html">Zaxira</a><a href="soliq.html" class="faol" aria-current="page">Soliq</a><a href="sugurta.html">Sug'urta polislari</a></nav>
+
+  <section class="metrika-qator tort" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi">
+    <div class="metrika"><span class="m-yorliq">Chorak bo'yicha soliq <span class="chip chip-kichik chip-sariq" id="sq-taxminiy" data-sayohat="taxminiy" hidden>Taxminiy</span></span><span class="m-qiymat" id="sq-jami">—</span><span class="m-izoh" id="sq-jami-izoh">—</span></div>
+    <a class="metrika" href="#sq-royxat" data-filtr="To'lanmagan"><span class="m-yorliq">To'lanmagan</span><span class="m-qiymat" id="sq-tolanmagan">—</span><span class="m-izoh" id="sq-tolanmagan-izoh">—</span></a>
+    <div class="metrika"><span class="m-yorliq">Imtiyoz davrida</span><span class="m-qiymat" id="sq-imtiyoz">—</span><span class="m-izoh" id="sq-imtiyoz-izoh">—</span></div>
+    <a class="metrika" href="#sq-30"><span class="m-yorliq">30 kunda imtiyozi tugaydi</span><span class="m-qiymat" id="sq-30son">—</span><span class="m-izoh"><span>Keyingi chorakdan soliq hisoblanadi</span></span></a>
+  </section>
+
+  <section class="karta" id="sq-royxat" data-sayohat="jadval">
+    <div class="karta-bosh"><h2>Obyektlar bo'yicha hisob</h2><span class="soni" id="sq-soni" data-tarjimasiz></span></div>
+    <div id="sq-jadval"><div class="skelet-royxat" aria-busy="true"></div></div>
+  </section>
+
+  <div class="tor-2-teng">
+    <section class="karta" id="sq-30">
+      <div class="karta-bosh"><h2>30 kunda imtiyozi tugaydi</h2><span class="soni" id="sq-30-soni" data-tarjimasiz></span></div>
+      <div id="sq-30-joy"></div>
+    </section>
+    <section class="karta" data-sayohat="stavka">
+      <div class="karta-bosh"><h2>Hisob qoidalari</h2></div>
+      <div id="sq-qoidalar"></div>
+    </section>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+(() => {
+  const D = MKB_DATA, esc = MKB.esc, el = id => document.getElementById(id);
+  const b = (() => { const x = D.bugun(); return new Date(x.getFullYear(), x.getMonth(), x.getDate()); })();
+  const yoza = MKB.huquq("qiymat", "yoz");
+  const joriy = b.getFullYear() + "-Q" + (Math.floor(b.getMonth() / 3) + 1);
+  const TOIFA = {}; ((D.HUDUD_TOIFA && D.HUDUD_TOIFA.toifalar) || []).forEach(t => { TOIFA[t.kalit] = t; });
+  const pm = id => (D.PARAMETRLAR || []).find(p => p.id === id) || {};
+  const kasr = n => String(n).replace(".", ",");
+  const sqId = (y, davr) => "SQ-" + y.id.replace(/\//g, "-") + "-" + davr;
+
+  /* Davr tanlovi: joriy chorak va SOLIQ dagi o'tgan choraklar */
+  const tanlov = el("sq-davr");
+  const url = new URLSearchParams(location.search);
+  /* Davrlar ma'lumot yuklangach tuziladi (server rejimida SOLIQ keyin keladi); tanlangan davr saqlanadi */
+  function davrTanlov(){
+    const oldin = tanlov.value || url.get("davr");
+    const davrlar = [...new Set((D.SOLIQ || []).map(s => s.davr).concat([joriy]))].filter(d => /^\d{4}-Q[1-4]$/.test(d) && d <= joriy).sort().reverse();
+    tanlov.innerHTML = davrlar.map(d => '<option value="' + d + '">' + d.replace("-Q", ", ") + "-chorak</option>").join("");
+    if (oldin && davrlar.indexOf(oldin) >= 0) tanlov.value = oldin;
+  }
+
+  let jadval = null, qatorlar = [];
+  function chiz(){
+    const davr = tanlov.value;
+    const aktivlar = MKB.doira(D.YOZUVLAR.filter(y => y.holat !== "Chiqarildi"));
+    qatorlar = [];
+    aktivlar.forEach(y => {
+      const h = D.soliqHisobi(y, davr);
+      if (!h || h.qollanmaydi || (h.soliqOy + h.imtiyozOy) === 0) return;
+      const s = (D.SOLIQ || []).find(x => x.id === sqId(y, davr)) || (D.SOLIQ || []).find(x => x.obyektId === y.id && x.davr === davr);
+      /* Saqlangan, lekin summasi 0 bo'lgan hisob (butun davr imtiyozda) to'lov kutmaydi, shuning uchun "To'lanmagan" emas */
+      const holat = !s ? "Saqlanmagan" : s.holat === "to'langan" ? "To'langan" : !(h.summa > 0) ? "Imtiyoz davrida" : "To'lanmagan";
+      const imt = D.sanaOqi(h.imtiyozTugash);
+      qatorlar.push({id: y.id, obyekt: y.qisqa || y.nom, hudud: y.hudud || "", toifa: (TOIFA[h.toifa] || {}).nom || h.toifa, maydon: h.maydon,
+        maydonYoq: h.maydonKiritilmagan, balans: (y.balans && y.balans.qiymat) || 0, minBaza: h.minBaza, baza: h.baza, minQollandi: h.minBaza > ((y.balans && y.balans.qiymat) || 0),
+        stavka: h.stavka, konservatsiya: !!y.konservatsiya, summa: s && s.holat === "to'langan" ? s.summa : h.summa, hisob: h, soliqOy: h.soliqOy, imtiyozOy: h.imtiyozOy,
+        imtiyozTugash: h.imtiyozTugash || "", imt, imtiyozda: h.imtiyoz, yer: s ? s.yerSoligi : null, holat, yozuv: s || null,
+        /* Imtiyoz muddati taxminiy parametrdan: shu davrga imtiyoz ta'sir qilsa hisob ham taxminiy */
+        taxminiy: holat !== "To'langan" && !!pm("soliqImtiyozOy").taxminiy && (h.imtiyozOy > 0 || !!h.imtiyoz)});
+    });
+    const jami = qatorlar.reduce((a, x) => a + (x.summa || 0), 0);
+    /* Metrika va uni bosganda qo'yiladigan jadval filtri bitta mezon: holat === "To'lanmagan" */
+    const tolanmagan = qatorlar.filter(x => x.holat === "To'lanmagan");
+    /* Imtiyozdagi bino bitta sanaga nisbatan sanaladi: joriy chorakda bugun, o'tgan chorakda chorak oxiri.
+       Chorakning bir qismida imtiyozda bo'lib, imtiyozi shu sanagacha tugagan bino kirmaydi. */
+    const dm = /^(\d{4})-Q([1-4])$/.exec(davr);
+    const chorakOxiri = new Date(+dm[1], +dm[2] * 3, 0);
+    const holatSana = davr === joriy ? b : chorakOxiri;
+    const imtiyozda = qatorlar.filter(x => x.imt && x.imt > holatSana);
+    const q30 = aktivlar.map(y => ({y, h: D.soliqHisobi(y, joriy)})).filter(o => o.h && !o.h.qollanmaydi && o.h.imtiyozTugash)
+      .map(o => Object.assign(o, {s: D.sanaOqi(o.h.imtiyozTugash)})).filter(o => o.s >= b && D.kunFarqi(b, o.s) <= 30).sort((a, c) => a.s - c.s);
+
+    el("hs-meta").innerHTML = "<span data-tarjimasiz>" + qatorlar.length + "</span> <span>ta soliqqa tortiladigan obyekt</span>";
+    el("sq-jami").textContent = MKB.pul(Math.round(jami * 100) / 100);
+    const taxminiySoni = qatorlar.filter(x => x.taxminiy).length;
+    el("sq-taxminiy").hidden = !taxminiySoni;
+    el("sq-jami-izoh").innerHTML = "<span>Yillik baza bo'yicha</span> <span data-tarjimasiz>" + esc(MKB.pul(Math.round(qatorlar.reduce((a, x) => a + x.hisob.yillik, 0) * 10) / 10)) + "</span>" +
+      (taxminiySoni ? " · <span data-tarjimasiz>" + taxminiySoni + "</span> <span>ta hisobda imtiyoz muddati taxminiy</span>" : "");
+    el("sq-tolanmagan").textContent = MKB.fmt(tolanmagan.length);
+    el("sq-tolanmagan-izoh").innerHTML = "<span data-tarjimasiz>" + esc(MKB.pul(Math.round(tolanmagan.reduce((a, x) => a + x.summa, 0) * 100) / 100)) + "</span>";
+    el("sq-imtiyoz").textContent = MKB.fmt(imtiyozda.length);
+    el("sq-imtiyoz-izoh").innerHTML = (davr === joriy ? "<span>Bugungi holat</span>" : "<span>Chorak oxirida</span>") + " · <span>Balansga olingandan</span> <span data-tarjimasiz>" + (D.param("soliqImtiyozOy") || 6) + "</span> <span>oy</span>" + (pm("soliqImtiyozOy").taxminiy ? " · <span>taxminiy</span>" : "");
+    el("sq-30son").textContent = MKB.fmt(q30.length);
+
+    const saqlaTugma = el("sq-saqla");
+    const saqlanmagan = qatorlar.filter(x => x.holat === "Saqlanmagan");
+    saqlaTugma.hidden = !yoza || !saqlanmagan.length;
+
+    el("sq-soni").textContent = qatorlar.length + " ta";
+    const CH = {"To'langan": "chip-yashil", "To'lanmagan": "chip-sariq", "Imtiyoz davrida": "chip-kok", "Saqlanmagan": "chip-kul"};
+    const cfg = {
+      qatorlar, saralash: "summa", yonalish: -1, sahifaHajmi: 12,
+      qidiruv: ["obyekt", "id", "hudud"], qidiruvYozuvi: "Obyekt yoki raqam",
+      filtrlar: [
+        {kalit: "holat", nom: "Holat", variantlar: ["To'lanmagan", "To'langan", "Imtiyoz davrida", "Saqlanmagan"]},
+        {kalit: "toifa", nom: "Hudud toifasi", variantlar: Object.values(TOIFA).map(t => t.nom)},
+      ],
+      csvNomi: "mol-mulk-solighi-" + davr,
+      bosh: {sarlavha: "Soliqqa tortiladigan obyekt yo'q", izoh: D.MANBA === "mahalliy" ? "Mahalliy reyestrda binoli aktivlarning balans ma'lumoti hali kiritilmagan" : "Bu chorakda binoli aktiv balansda bo'lmagan"},
+      ustunlar: [
+        {kalit: "obyekt", nom: "Obyekt", chiz: x => "<b>" + esc(x.obyekt) + '</b><br><span style="font-size:12px;color:var(--matn-3)"><span class="kod-mono" data-tarjimasiz>' + esc(x.id) + "</span> · <span>" + esc(x.toifa) + "</span></span>"},
+        {kalit: "maydon", nom: "Maydon", son: true, chiz: x => x.maydonYoq ? '<span class="chip chip-kichik chip-sariq">kiritilmagan</span>' : '<span data-tarjimasiz>' + MKB.fmt(x.maydon) + " m²</span>", csv: x => x.maydon},
+        {kalit: "baza", nom: "Soliq bazasi", son: true, chiz: x => '<span data-tarjimasiz>' + esc(MKB.pul(x.baza)) + "</span><br><span style=\"font-size:12px;color:var(--matn-3)\">" + (x.minQollandi ? "minimal qiymat" : "balans qiymati") + "</span>"},
+        {kalit: "stavka", nom: "Stavka", son: true, chiz: x => '<span data-tarjimasiz>' + kasr(x.stavka) + "%</span>" + (x.konservatsiya ? '<br><span style="font-size:12px;color:var(--matn-3)">konservatsiya</span>' : "")},
+        {kalit: "summa", nom: "Chorak summasi", son: true, chiz: x => '<b style="font-weight:500" data-tarjimasiz>' + esc(MKB.pul(x.summa)) + "</b>" + (x.taxminiy ? ' <span class="chip chip-kichik chip-sariq">Taxminiy</span>' : "") + "<br><span style=\"font-size:12px;color:var(--matn-3)\"><span data-tarjimasiz>" + x.soliqOy + "</span> <span>oy soliq</span>" + (x.imtiyozOy ? ", <span data-tarjimasiz>" + x.imtiyozOy + "</span> <span>oy imtiyoz</span>" : "") + "</span>"},
+        {kalit: "imtiyozTugash", nom: "Imtiyoz tugashi", tur: "sana", chiz: x => x.imtiyozTugash ? '<span data-tarjimasiz>' + esc(x.imtiyozTugash) + "</span>" : "—"},
+        {kalit: "holat", nom: "Holat", chiz: x => '<span class="chip chip-kichik ' + CH[x.holat] + '">' + esc(x.holat) + "</span>" + (x.yer != null ? '<br><span style="font-size:12px;color:var(--matn-3)"><span>yer solig\'i</span> <span data-tarjimasiz>' + esc(MKB.pul(x.yer)) + "</span></span>" : "")},
+        {kalit: "amal", nom: "", saralash: false, csv: false, chiz: x => yoza && x.holat !== "To'langan" && x.summa > 0
+          ? '<span style="display:inline-flex;gap:6px;justify-content:flex-end;white-space:nowrap"><button type="button" class="tugma tugma-kichik tugma-oq" data-tolov="' + esc(x.id) + '" data-yozadi>To\'landi</button>' +
+            '<button type="button" class="tugma tugma-kichik tugma-oq tugma-ikonka" data-tolov-boshqa="' + esc(x.id) + '" data-yozadi title="Boshqa summa, sana yoki yer solig\'i bilan" aria-label="Boshqa summa, sana yoki yer solig\'i bilan">' + ik("tahrir") + "</button></span>" : ""},
+      ],
+      chizilganda(_, joy){
+        joy.querySelectorAll("[data-tolov]").forEach(bt => bt.addEventListener("click", e => { e.stopPropagation(); tolovTez(bt.dataset.tolov); }));
+        joy.querySelectorAll("[data-tolov-boshqa]").forEach(bt => bt.addEventListener("click", e => { e.stopPropagation(); tolov(bt.dataset.tolovBoshqa); }));
+      },
+      bosilganda: x => { location.href = "obyekt-moliya.html?id=" + encodeURIComponent(x.id); },
+    };
+    if (jadval){ jadval.yangila(qatorlar); } else jadval = MKB.jadval("sq-jadval", cfg);
+
+    el("sq-30-soni").textContent = q30.length + " ta";
+    el("sq-30-joy").innerHTML = q30.length ? q30.map(o => '<a class="qator" href="obyekt-moliya.html?id=' + encodeURIComponent(o.y.id) + '"><span class="belgi sariq" style="background:var(--sariq)">' + ik("kalendar") + "</span>" +
+      '<span class="matn"><b>' + esc(o.y.qisqa || o.y.nom) + '</b><span><span>Yillik soliq</span> <span data-tarjimasiz>' + esc(MKB.pul(o.h.yillik)) + "</span></span></span>" +
+      '<span class="ong"><span class="vaqt" data-tarjimasiz>' + esc(o.h.imtiyozTugash) + "</span></span></a>").join("")
+      : MKB.boshHolat("kalendar", "Yaqin 30 kunda imtiyozi tugaydigan obyekt yo'q");
+
+    const p = (id, birlik) => { const x = pm(id); return '<span data-tarjimasiz>' + (x.qiymat == null ? "—" : kasr(x.qiymat)) + "</span> <span>" + (birlik || x.birlik || "") + "</span>" + (x.taxminiy ? ' <span class="chip chip-kichik chip-sariq">taxminiy</span>' : ""); };
+    el("sq-qoidalar").innerHTML = '<dl class="malumot-royxat">' +
+      "<dt>Stavka</dt><dd>" + p("molMulkSoligiFoiz", "%") + "</dd>" +
+      "<dt>Konservatsiyadagi bino</dt><dd>" + p("konservatsiyaFoiz", "%") + "</dd>" +
+      "<dt>Minimal qiymat, Toshkent</dt><dd>" + p("minM2Toshkent", "mln so'm/m²") + "</dd>" +
+      "<dt>Minimal qiymat, viloyat markazi</dt><dd>" + p("minM2Markaz", "mln so'm/m²") + "</dd>" +
+      "<dt>Minimal qiymat, boshqa hudud</dt><dd>" + p("minM2Boshqa", "mln so'm/m²") + "</dd>" +
+      "<dt>Imtiyoz davri</dt><dd>" + p("soliqImtiyozOy", "oy") + "</dd>" +
+      "</dl>" +
+      '<p class="maydon-izoh" style="margin-top:12px">Baza balans qiymati va maydon × minimal qiymatdan kattasi (O\'RQ-1108). Yer solig\'i to\'lov kiritilganda qo\'lda yoziladi. Taxminiy parametrlar buxgalteriya tasdig\'ida.</p>';
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+
+  /* To'lovni yozish: SOLIQ holati va mol-mulk (hamda yer) solig'i xarajati */
+  async function tolovYoz(x, davr, summa, sana, yer, hf){
+    const y = D.topish(x.id), h = x.hisob;
+    const patch = {obyektId: x.id, davr, baza: h.baza, stavka: h.stavka, summa: Math.round(summa * 100) / 100, imtiyoz: h.imtiyoz, yerSoligi: yer, holat: "to'langan"};
+    if (x.yozuv) await MKBapi.yangilash("SOLIQ", x.yozuv.id, patch);
+    else await MKBapi.yangi("SOLIQ", Object.assign({id: sqId(y, davr)}, patch));
+    const yil = sana.getFullYear(), oy = yil + "-" + String(sana.getMonth() + 1).padStart(2, "0");
+    if (summa > 0) await MKBapi.yangi("XARAJATLAR", {id: await MKB.keyingiId("XARAJATLAR", "XJ-" + yil + "/", 4), obyektId: x.id, toifa: "molmulk",
+      summa: Math.round(summa * 100) / 100, davr: oy, sana: D.sanaYoz(sana), kontragent: "Davlat soliq qo'mitasi", hisobFaktura: hf, tasdiqlovchi: MKB.kim(), holat: "tolangan"});
+    if (yer > 0) await MKBapi.yangi("XARAJATLAR", {id: await MKB.keyingiId("XARAJATLAR", "XJ-" + yil + "/", 4), obyektId: x.id, toifa: "yer",
+      summa: Math.round(yer * 100) / 100, davr: oy, sana: D.sanaYoz(sana), kontragent: "Davlat soliq qo'mitasi", hisobFaktura: hf, tasdiqlovchi: MKB.kim(), holat: "tolangan"});
+  }
+  const davrMatn = d => d.replace("-Q", ", ") + "-chorak";
+
+  /* To'landi: hisoblangan summa bugungi sana bilan, to'lov hujjati raqami so'raladi */
+  function tolovTez(id){
+    const x = qatorlar.find(q => q.id === id);
+    if (!x) return;
+    const davr = tanlov.value;
+    MKB.tasdiqla({
+      sarlavha: "Soliq to'lovini qayd etish",
+      matn: "Mol-mulk solig'i to'langan deb belgilanadi va xarajatlar reyestriga yoziladi. To'lov qaytarilmaydi.",
+      tafsilot: [["Obyekt", {matn: x.obyekt + " · " + x.id, tarjimasiz: true}], ["Davr", {matn: davrMatn(davr)}], ["Mol-mulk solig'i", MKB.pul(x.summa)],
+        ["To'lov sanasi", {matn: D.sanaYoz(b), tarjimasiz: true}]].concat(x.taxminiy ? [["Hisob", {matn: "Taxminiy"}]] : []),
+      oqibat: x.taxminiy ? ["Summa taxminiy imtiyoz muddati bilan hisoblangan. Boshqa summa to'langan bo'lsa, qator oxiridagi tahrir tugmasidan foydalaning"] : [],
+      sabab: {majburiy: true, min: 3, maks: 40, yorliq: "To'lov hujjati raqami", namuna: "Masalan: TP-004512"},
+      okMatn: "To'lovni qayd etish", bekorMatn: "Orqaga",
+      bajar: ({sabab}) => tolovYoz(x, davr, x.summa, b, null, sabab),
+    }).then(r => { if (r){ MKB.toast(x.obyekt + ": " + davrMatn(davr) + " solig'i to'landi"); chiz(); } });
+  }
+
+  /* Boshqa summa, sana yoki yer solig'i bilan to'lov: forma (forma o'zi tasdiq) */
+  function tolov(id){
+    const x = qatorlar.find(q => q.id === id);
+    if (!x) return;
+    const davr = tanlov.value;
+    MKB.modal("Soliq to'lovini qayd etish",
+      '<p><b>' + esc(x.obyekt) + '</b> · <span>' + esc(davrMatn(davr)) + "</span></p>" +
+      '<form class="forma-tor" id="sq-tolov" novalidate>' +
+        '<div class="maydon"><label class="maydon-yorliq" for="sq-summa">Mol-mulk solig\'i <b>*</b></label><div class="kirish"><input id="sq-summa" name="summa" type="text" data-format="pul" min="0" required value="' + esc(String(x.summa).replace(".", ",")) + '"></div>' +
+          '<span class="maydon-izoh"><span>Hisoblangan:</span> <span data-tarjimasiz>' + esc(MKB.pul(x.summa)) + "</span></span></div>" +
+        '<div class="maydon"><label class="maydon-yorliq" for="sq-sana">To\'lov sanasi <b>*</b></label><div class="kirish"><input id="sq-sana" name="sana" type="date" required max="' + D.sanaYoz(b).split(".").reverse().join("-") + '" value="' + D.sanaYoz(b).split(".").reverse().join("-") + '"></div></div>' +
+        '<div class="maydon"><label class="maydon-yorliq" for="sq-yer">Yer solig\'i</label><div class="kirish"><input id="sq-yer" name="yer" type="text" data-format="pul" min="0" placeholder="Kiritilmagan"></div></div>' +
+        '<div class="maydon"><label class="maydon-yorliq" for="sq-hf">To\'lov hujjati raqami <b>*</b></label><div class="kirish"><input id="sq-hf" name="hf" autocomplete="off" required data-xato="To\'lov hujjati raqamini yozing" placeholder="Masalan: TP-004512"></div></div>' +
+      "</form>",
+      {okMatn: "To'lovni qayd etish", async ok(pr){
+        const r = MKB.formaTekshir(pr.querySelector("#sq-tolov"));
+        if (!r) return false;
+        const q = r.qiymatlar;
+        await tolovYoz(x, davr, q.summa, D.sanaOqi(q.sana), Number.isFinite(q.yer) ? q.yer : null, q.hf);
+        MKB.toast(x.obyekt + ": " + davrMatn(davr) + " solig'i to'landi");
+        chiz();
+      }});
+  }
+
+  /* Chorak hisobini SOLIQ ga yozish (hali saqlanmagan obyektlar): ko'p yozuv, avval xulosa */
+  function chorakSaqla(){
+    const davr = tanlov.value;
+    const r = qatorlar.filter(x => x.holat === "Saqlanmagan");
+    if (!r.length) return;
+    const jami = Math.round(r.reduce((a, x) => a + x.summa, 0) * 100) / 100;
+    const tx = r.filter(x => x.taxminiy).length;
+    MKB.tasdiqla({
+      sarlavha: "Chorak hisobini saqlash",
+      matn: r.length + " ta obyekt bo'yicha soliq hisobi «to'lanmagan» holatida saqlanadi. To'lov keyin har bir obyekt bo'yicha qayd etiladi.",
+      tafsilot: [["Davr", {matn: davrMatn(davr)}], ["Obyektlar", String(r.length)], ["Jami soliq", MKB.pul(jami)]].concat(tx ? [["Taxminiy hisoblar", String(tx)]] : []),
+      oqibat: r.slice(0, 5).map(x => x.obyekt + " · " + MKB.pul(x.summa)).concat(r.length > 5 ? ["va yana " + (r.length - 5) + " ta"] : []),
+      okMatn: "Hisobni saqlash",
+      async bajar(){
+        let n = 0;
+        try{
+          for (const x of r){
+            const h = x.hisob, y = D.topish(x.id);
+            await MKBapi.yangi("SOLIQ", {id: sqId(y, davr), obyektId: x.id, davr, baza: h.baza, stavka: h.stavka, summa: h.summa, imtiyoz: h.imtiyoz, yerSoligi: null, holat: "hisoblangan"});
+            n++;
+          }
+        }catch(e){
+          if (n){ chiz(); throw new Error(n + " ta obyekt bo'yicha saqlandi, qolgani saqlanmadi: " + e.message); }
+          throw e;
+        }
+        return n;
+      },
+    }).then(res => { if (res){ MKB.toast(res.qiymat + " ta obyekt bo'yicha hisob saqlandi"); chiz(); } });
+  }
+
+  tanlov.addEventListener("change", chiz);
+  el("sq-saqla").addEventListener("click", chorakSaqla);
+  MKB.sahifaYukla({joylar: {"sq-jadval": ["jadval"], "sq-30-joy": ["qator", 3], "sq-qoidalar": ["qator", 4]}, xato: "Soliq hisobini yuklab bo'lmadi", ish: async () => {
+    await MKB.kolYukla(["SOLIQ", "XARAJATLAR"]);
+    davrTanlov();
+    chiz();
+  }});
+  document.querySelectorAll(".metrika[data-filtr]").forEach(a => a.addEventListener("click", () => { if (jadval){ jadval.holat.filtrlar.holat = a.dataset.filtr; jadval.holat.sahifa = 1; jadval.yangila(); } }));
+  document.addEventListener("mkb:malumot", () => { try{ chiz(); }catch(_){ } });
+})();
+</script>
+</body>
+</html>

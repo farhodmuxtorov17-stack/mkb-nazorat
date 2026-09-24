@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Inventarizatsiya dalolatnomasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.akt{max-width:1040px;width:100%}
+.akt-bosh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 20px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--chiziq)}
+.akt-bosh h2{font:500 22px/1.2 var(--shrift-displey);letter-spacing:-.02em;margin:4px 0 6px}
+.akt-bosh .yorliq{font-size:12.5px;color:var(--matn-3);text-transform:uppercase;letter-spacing:.06em}
+.akt h3{font:500 16px var(--shrift-displey);margin:26px 0 10px}
+.akt p{font-size:14px;line-height:1.55;margin:0}
+.id-jamlama{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:20px}
+.id-jamlama div{padding:14px 16px;border-radius:var(--r-plitka);background:var(--plitka);min-width:0}
+.id-jamlama span{display:block;font-size:12.5px;color:var(--matn-3)}
+.id-jamlama b{font:500 28px/1.1 var(--shrift-displey)}
+.id-jamlama .xavf b{color:var(--xavf-matn-yorqin)}
+.qaydnoma{width:100%;border-collapse:collapse;font-size:13.5px}
+.qaydnoma th{font-weight:500;font-size:12px;color:var(--matn-3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--chiziq)}
+.qaydnoma td{padding:10px;border-bottom:1px solid var(--chiziq);vertical-align:top}
+.qaydnoma td.son,.qaydnoma th.son{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.qaydnoma small{display:block;color:var(--matn-3);font-size:12px}
+.qaydnoma tr.kam td{background:color-mix(in srgb,var(--pushti) 55%,transparent)}
+.qaydnoma tr.ort td{background:color-mix(in srgb,var(--lavanda) 55%,transparent)}
+.qaydnoma-oral{overflow-x:auto;margin:0 -4px;padding:0 4px}
+.akt-imzo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:34px}
+.akt-imzo div{border-top:1px solid var(--matn-3);padding-top:8px;font-size:13px;color:var(--matn-2);min-width:0}
+.akt-imzo small{display:block;color:var(--matn-3)}
+@media (max-width:720px){
+  .id-jamlama{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .akt-imzo{grid-template-columns:minmax(0,1fr)}
+  .qaydnoma thead{display:none}
+  .qaydnoma,.qaydnoma tbody,.qaydnoma tr,.qaydnoma td{display:block;width:100%}
+  .qaydnoma tr{border-bottom:1px solid var(--chiziq);padding:8px 0}
+  .qaydnoma td{border:0;padding:3px 0}
+  .qaydnoma td.son{text-align:left}
+  .qaydnoma td[data-y]::before{content:attr(data-y) ": ";color:var(--matn-3);font-size:12px}
+}
+@media print{
+  .akt{max-width:none;border:0!important}
+  .id-jamlama{grid-template-columns:repeat(4,1fr)}
+  .akt-imzo{grid-template-columns:repeat(3,1fr)}
+  .qaydnoma tr{break-inside:avoid}
+  .qaydnoma-oral{overflow:visible}
+}
+</style>
+</head>
+<body data-sahifa="korik">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="korik-rejasi.html">Ko'rik va inventarizatsiya</a><span class="ajratgich">/</span><a href="inventarizatsiya.html">Inventarizatsiya</a><span class="ajratgich">/</span><span>Dalolatnoma</span></div>
+    <div class="hs-qator"><h1>Inventarizatsiya dalolatnomasi</h1><span class="hs-meta" id="hs-meta" data-tarjimasiz>—</span>
+      <div class="hs-amallar" id="id-amallar"></div></div>
+  </div>
+  <div id="id-xabar" class="chop-yashir"></div>
+  <section class="karta akt" id="id-akt" data-sayohat="akt"><div class="skelet-royxat" aria-busy="true"></div></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+(() => {
+  const akt = document.getElementById("id-akt");
+  const D = MKB_DATA, esc = MKB.esc;
+  MKB.sahifaYukla({joylar: {"id-akt": ["qator", 6]}, xato: "Dalolatnomani yuklab bo'lmadi", ish: async () => {
+  await MKB.kolYukla(["INVENTAR", "INVENTARIZATSIYALAR"]);
+  const id = new URLSearchParams(location.search).get("id");
+  const z = id ? (D.INVENTARIZATSIYALAR || []).find(x => x.id === id) : null;
+  const doirada = z && (MKB.rol() !== "filial" || (z.obyektlar || []).some(o => MKB.doira([{obyektId: o}]).length));
+  if (!z || !doirada){
+    akt.innerHTML = MKB.boshHolat("skaner", "Inventarizatsiya topilmadi", "Inventarizatsiyani ro'yxatdan tanlang",
+      '<a class="tugma tugma-asosiy" href="inventarizatsiya.html" style="margin-top:12px">Inventarizatsiya</a>');
+    tarjimaQil(akt); return;
+  }
+  const TURI = {yillik: "Yillik", "navbatdan tashqari": "Navbatdan tashqari", rejali: "Rejali"};
+  const yakun = z.holat === "yakunlangan";
+  const obNomi = oid => { const o = D.OBYEKT_INDEKS[oid]; return o ? (o.qisqa || o.nom) : oid; };
+  document.getElementById("hs-meta").textContent = z.id;
+  document.title = "MKB — Inventarizatsiya dalolatnomasi " + z.id;
+
+  /* Hisob bo'yicha birliklar: shu inventarizatsiya obyektlaridagi INVENTAR yozuvlari */
+  const birliklar = MKB.doira((D.INVENTAR || []).filter(x => (z.obyektlar || []).includes(x.obyektId)))
+    .slice().sort((a, c) => String(a.inventarRaqam).localeCompare(String(c.inventarRaqam)));
+  const nat = z.natijalar || [];
+  const natija = iid => nat.find(n => n.inventarId === iid);
+  const ortiqcha = nat.filter(n => n.ortiqcha);
+  const qatorlar = birliklar.map(x => {
+    const n = natija(x.id);
+    const holat = !n ? "sanalmagan" : n.topildi ? "topildi" : "kamomad";
+    return {x, n, holat, haqiqat: holat === "topildi" ? 1 : holat === "kamomad" ? 0 : null};
+  });
+  const topildi = qatorlar.filter(q => q.holat === "topildi").length;
+  const kamomad = qatorlar.filter(q => q.holat === "kamomad").length;
+  const sanalmagan = qatorlar.filter(q => q.holat === "sanalmagan").length;
+  const butlikEmas = qatorlar.filter(q => q.n && q.n.topildi && q.n.butlik === false).length;
+
+  const amallar = document.getElementById("id-amallar");
+  amallar.innerHTML =
+    '<button type="button" class="tugma tugma-oq" id="id-csv" data-sayohat="yuklab">' + ik("csv") + "<span>Qaydnomani yuklab olish</span></button>" +
+    (yakun ? '<button type="button" class="tugma tugma-asosiy" id="id-chop" data-sayohat="chop">' + ik("chop") + "<span>Chop etish</span></button>"
+      : '<a class="tugma tugma-asosiy" href="inventarizatsiya.html?id=' + encodeURIComponent(z.id) + '">' + ik("skaner") + "<span>Sanashga qaytish</span></a>");
+  const chop = document.getElementById("id-chop");
+  if (chop) chop.addEventListener("click", () => window.print());
+  document.getElementById("id-csv").addEventListener("click", () => {
+    MKB.csv("inventar-qaydnoma-" + z.id.replace(/\//g, "-") + ".csv",
+      ["Inventar raqami", "Nomi", "Obyekt", "Hisob bo'yicha", "Haqiqatda", "Farq", "Butlik", "Izoh"],
+      qatorlar.map(q => [q.x.inventarRaqam, q.x.nom, q.x.obyektId, 1, q.haqiqat == null ? "" : q.haqiqat, q.haqiqat == null ? "" : q.haqiqat - 1,
+        q.n && q.n.topildi ? (q.n.butlik ? "to'liq" : "to'liq emas") : "", (q.n && q.n.izoh) || ""])
+        .concat(ortiqcha.map(o => ["", o.nom, o.obyektId, 0, 1, 1, "", o.izoh || ""])));
+    MKB.toast("CSV fayl yuklab olindi: " + (qatorlar.length + ortiqcha.length) + " ta qator", "yuklab");
+  });
+
+  if (yakun && new URLSearchParams(location.search).get("yakunlandi")){
+    document.getElementById("id-xabar").innerHTML = '<section class="karta" style="background:var(--brend-fon)"><div class="qator" style="margin:-10px -16px">' +
+      '<span class="belgi mint">' + ik("tasdiq") + '</span><span class="matn"><b>Inventarizatsiya yakunlandi, dalolatnoma saqlandi</b>' +
+      (kamomad ? "<span>Kamomad bo'yicha hodisa xavfsizlik xizmatiga yuborildi</span>" : "<span>Farq aniqlanmadi</span>") + "</span></div></section>";
+  }
+  if (!yakun){
+    document.getElementById("id-xabar").innerHTML = '<section class="karta" style="background:var(--sariq)"><div class="qator" style="margin:-10px -16px">' +
+      '<span class="belgi" style="background:var(--oq)">' + ik("ogoh") + '</span><span class="matn"><b>Inventarizatsiya yakunlanmagan</b>' +
+      "<span><span>Dalolatnoma loyiha holatida.</span> <span>Sanalmagan birliklar:</span> <b data-tarjimasiz>" + sanalmagan + "</b></span></span></div></section>";
+  }
+
+  const tdRaqam = x => '<span class="kod-mono" data-tarjimasiz>' + esc(x) + "</span>";
+  akt.innerHTML =
+    '<div class="akt-bosh"><div><span class="yorliq">Mikrokreditbank · Inventarizatsiya dalolatnomasi</span>' +
+      "<h2><span>Ko'char mulk inventarizatsiyasi</span> <span data-tarjimasiz>" + esc(z.id) + "</span></h2>" +
+      '<span class="maydon-izoh"><span>' + esc(TURI[z.turi] || z.turi || "") + "</span> · <span data-tarjimasiz>" + (z.obyektlar || []).length + "</span> <span>obyekt</span></span></div>" +
+      '<dl class="malumot-royxat" style="min-width:260px;flex:0 1 340px">' +
+        '<dt>Sana</dt><dd data-tarjimasiz>' + esc(z.sana) + "</dd>" +
+        "<dt>Holati</dt><dd>" + (yakun ? "<span>Yakunlangan</span>" : z.holat === "jarayonda" ? "<span>Sanalmoqda</span>" : "<span>Rejada</span>") + "</dd>" +
+        "<dt>Komissiya</dt><dd>" + esc((z.komissiya || []).join(", ") || "—") + "</dd>" +
+      "</dl></div>" +
+    '<div class="id-jamlama">' +
+      "<div><span>Hisob bo'yicha</span><b data-tarjimasiz>" + birliklar.length + "</b></div>" +
+      "<div><span>Haqiqatda topildi</span><b data-tarjimasiz>" + topildi + "</b></div>" +
+      '<div class="' + (kamomad ? "xavf" : "") + '"><span>Kamomad</span><b data-tarjimasiz>' + kamomad + "</b></div>" +
+      "<div><span>Ortiqcha</span><b data-tarjimasiz>" + ortiqcha.length + "</b></div>" +
+    "</div>" +
+    "<h3>Xulosa</h3>" +
+    "<p>" + (yakun
+      ? (kamomad || ortiqcha.length
+        ? "<span>Hisob ma'lumoti bilan haqiqiy mavjudlik o'rtasida farq aniqlandi.</span> <span>Kamomad bo'yicha hodisa qayd etilgan, javobgar shaxslardan tushuntirish xati olinadi.</span>"
+        : "<span>Hisob ma'lumoti haqiqiy mavjudlikka mos keldi. Farq aniqlanmadi.</span>")
+      : "<span>Sanash tugagach xulosa shakllanadi.</span>") +
+      (butlikEmas ? " <span>Butligi to'liq bo'lmagan birliklar:</span> <b data-tarjimasiz>" + butlikEmas + "</b>." : "") + "</p>" +
+    "<h3>Solishtirma qaydnoma</h3>" +
+    (qatorlar.length || ortiqcha.length ? '<div class="qaydnoma-oral"><table class="qaydnoma"><thead><tr><th>Inventar raqami</th><th>Nomi va joyi</th><th class="son">Hisobda</th><th class="son">Haqiqatda</th><th class="son">Farq</th><th>Izoh</th></tr></thead><tbody>' +
+      qatorlar.map(q => '<tr class="' + (q.holat === "kamomad" ? "kam" : "") + '"><td>' + tdRaqam(q.x.inventarRaqam) + "</td>" +
+        '<td><b style="font-weight:500">' + esc(q.x.nom) + "</b><small>" + (obNomi(q.x.obyektId) !== q.x.nom ? esc(obNomi(q.x.obyektId)) + " · " : "") + '<span class="kod-mono" data-tarjimasiz>' + esc(q.x.obyektId) + "</span></small></td>" +
+        '<td class="son" data-y="Hisobda"><span data-tarjimasiz>1</span></td>' +
+        '<td class="son" data-y="Haqiqatda">' + (q.haqiqat == null ? "<span>Sanalmagan</span>" : '<span data-tarjimasiz>' + q.haqiqat + "</span>") + "</td>" +
+        '<td class="son" data-y="Farq">' + (q.haqiqat == null ? "—" : q.haqiqat - 1 ? '<b data-tarjimasiz style="color:var(--xavf-matn-yorqin)">−1</b>' : '<span data-tarjimasiz>0</span>') + "</td>" +
+        "<td>" + (q.n && q.n.topildi && q.n.butlik === false ? "<span>Butligi to'liq emas.</span> " : "") + esc((q.n && q.n.izoh) || "") + "</td></tr>").join("") +
+      ortiqcha.map(o => '<tr class="ort"><td><span>Raqamsiz</span></td><td><b style="font-weight:500">' + esc(o.nom) + "</b><small>" + esc(obNomi(o.obyektId)) + "</small></td>" +
+        '<td class="son" data-y="Hisobda"><span data-tarjimasiz>0</span></td><td class="son" data-y="Haqiqatda"><span data-tarjimasiz>1</span></td>' +
+        '<td class="son" data-y="Farq"><b data-tarjimasiz>+1</b></td><td><span>Ortiqcha.</span> ' + esc(o.izoh || "") + "</td></tr>").join("") +
+      "</tbody></table></div>"
+      : '<p class="maydon-izoh">Bu obyektlarda inventar birligi yo\'q.</p>') +
+    '<div class="akt-imzo">' +
+      (z.komissiya || []).map((k, i) => "<div><span>" + (i ? "Komissiya a'zosi" : "Komissiya raisi") + "</span><small>" + esc(k) + "</small></div>").join("") +
+      "<div><span>Moddiy javobgar shaxs</span><small>&nbsp;</small></div>" +
+      "<div><span>Tasdiqladi</span><small>&nbsp;</small></div>" +
+    "</div>";
+  tarjimaQil(document.querySelector(".kontent"));
+  }});
+})();
+</script>
+</body>
+</html>

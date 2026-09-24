@@ -4,64 +4,57 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Parolni tiklash</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
-.xato-sahna{min-height:100vh;display:grid;place-items:center;padding:26px;
+.ochiq-sahna{min-height:100vh;display:grid;place-items:center;padding:26px 16px;
   background:
-    radial-gradient(900px 640px at 12% 0%, #FAEEE8 0%, transparent 58%),
-    radial-gradient(800px 620px at 92% 16%, #EFEFF8 0%, transparent 56%),
-    linear-gradient(150deg,#F8F1ED 0%,#F2F1F7 54%,#EFF4F1 100%)}
-.xato-karta{text-align:center;max-width:500px;background:var(--oq);border-radius:30px;
-  padding:44px 40px;box-shadow:var(--soya-suzuvchi)}
-.xato-karta .kod{font:500 92px/1 var(--shrift-displey);letter-spacing:-.05em;color:var(--siyoh)}
-.xato-karta .kod i{font-style:normal;color:var(--mint-matn)}
-.xato-karta h1{font:500 24px/1.2 var(--shrift-displey);letter-spacing:-.03em;margin:14px 0 10px}
-.xato-karta p{font-size:14.5px;color:var(--matn-3);line-height:1.6;margin-bottom:26px}
-.xato-karta .tugmalar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    radial-gradient(900px 640px at 12% 0%, var(--fon-issiq) 0%, transparent 58%),
+    radial-gradient(800px 620px at 92% 16%, var(--fon-sovuq) 0%, transparent 56%),
+    linear-gradient(150deg,var(--fon-issiq) 0%,var(--fon-sovuq) 54%,var(--fon-mint) 100%)}
+.ochiq-karta{width:min(480px,100%);background:var(--oq);border-radius:30px;padding:36px 38px;box-shadow:var(--soya-suzuvchi)}
+.ochiq-karta .yorliq{font-size:12.5px;color:var(--matn-3)}
+.ochiq-karta h1{font:500 29px/1.15 var(--shrift-displey);letter-spacing:-.04em;margin:6px 0 10px}
+.ochiq-karta > p{font-size:14.5px;line-height:1.6;color:var(--matn-2)}
+.qadamlar{list-style:none;counter-reset:q;display:flex;flex-direction:column;gap:14px;margin:22px 0 24px}
+.qadamlar li{display:flex;gap:13px;align-items:flex-start;font-size:14px;line-height:1.5;color:var(--matn-2)}
+.qadamlar li::before{counter-increment:q;content:counter(q);flex:none;width:28px;height:28px;border-radius:999px;background:var(--plitka);
+  display:grid;place-items:center;font:500 13px var(--shrift);color:var(--siyoh)}
+.qadamlar b{color:var(--siyoh);font-weight:500}
+.eslatma{display:flex;gap:10px;align-items:flex-start;background:var(--lavanda);color:var(--lavanda-matn);border-radius:16px;padding:12px 14px;font-size:13.5px;line-height:1.5;margin-bottom:22px}
+.eslatma .ic{width:17px;height:17px;flex:none;margin-top:2px}
+.eslatma code{font:500 12.5px var(--shrift-mono);background:rgba(255,255,255,.6);border-radius:7px;padding:1px 6px}
+.tugmalar{display:flex;gap:10px;flex-wrap:wrap}
+@media (max-width:480px){.ochiq-karta{padding:28px 22px;border-radius:26px}.ochiq-karta h1{font-size:25px}}
 </style>
 </head>
 <body data-sahifa="kirish" data-ochiq="1">
-<div class="xato-sahna"><div class="k-karta" style="width:min(430px,100%)">
-  <span class="yorliq" style="font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--brend-quyuq)">Mikrokreditbank · ichki tizim</span>
-  <h1 style="font:700 27px/1.15 var(--shrift-displey);letter-spacing:-.02em;margin:6px 0 4px">Parolni tiklash</h1>
-  <p style="font-size:13px;color:var(--iz);margin-bottom:22px">Korporativ emailingizni kiriting — tiklash havolasi yuboriladi</p>
-  <form id="tiklash-forma" novalidate style="display:flex;flex-direction:column;gap:14px">
-    <div class="maydon">
-      <label class="maydon-yorliq" for="email">Korporativ email</label>
-      <div class="kirish"><svg class="ic"><use href="#i-xat"/></svg>
-        <input id="email" type="email" placeholder="ism.familiya@mkbank.uz"></div>
-      <span class="maydon-izoh xato" id="t-xato" hidden>To&#39;g&#39;ri email kiriting (@mkbank.uz)</span>
-    </div>
-    <button class="tugma tugma-asosiy" type="submit" style="height:46px">Havola yuborish</button>
-  </form>
-  <div id="t-natija" hidden style="margin-top:16px;background:var(--yashil-fon);color:var(--yashil);border-radius:16px;padding:14px 16px;font-size:13px;font-weight:500">
-    Tiklash havolasi yuborildi. Emailingizni tekshiring — havola 30 daqiqa amal qiladi.
+<div class="ochiq-sahna"><main class="ochiq-karta">
+  <span class="yorliq">Mikrokreditbank · ichki tizim</span>
+  <h1>Parolni tiklash</h1>
+  <p>Parolni tizim administratori tiklaydi. Tizim parolni elektron pochta yoki SMS orqali yubormaydi.</p>
+  <ol class="qadamlar" data-sayohat="qadamlar">
+    <li><span><b>Administratorga murojaat qiling.</b> Axborot texnologiyalari departamentiga loginingizni ayting.</span></li>
+    <li><span><b>Vaqtinchalik parol oling.</b> Administrator uni foydalanuvchi kartochkasida o&#39;rnatadi va sizga shaxsan beradi.</span></li>
+    <li><span><b>Parolni almashtiring.</b> Vaqtinchalik parol bilan kiring va darhol o&#39;z parolingizni o&#39;rnating.</span></li>
+  </ol>
+  <div class="eslatma" id="namoyish-eslatma" hidden><svg class="ic"><use href="#ik-info"/></svg>
+    <span><span>Namoyish rejimida hamma hisob bitta parol bilan kiradi:</span> <code data-tarjimasiz id="namoyish-parol">—</code></span></div>
+  <div class="tugmalar">
+    <a class="tugma tugma-asosiy" href="kirish.html" data-sayohat="qaytish"><svg class="ic"><use href="#ik-chap"/></svg><span>Kirish sahifasiga qaytish</span></a>
+    <a class="tugma tugma-oq" href="parol-yangilash.html">Parolni almashtirish</a>
   </div>
-  <div class="k-past" style="margin-top:18px;font-size:12.5px"><a href="kirish.html" style="font-weight:600;color:var(--brend-quyuq)">← Kirish sahifasiga qaytish</a></div>
-</div></div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+</main></div>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
 <script>
-document.getElementById("tiklash-forma").addEventListener("submit", e => {
-  e.preventDefault();
-  const em = document.getElementById("email").value.trim();
-  const xato = document.getElementById("t-xato");
-  if (!/^[\w.-]+@mkbank\.uz$/.test(em)){ xato.hidden = false; return; }
-  xato.hidden = true;
-  document.getElementById("t-natija").hidden = false;
-  MKB.toast("Tiklash havolasi yuborildi");
-});
+(async () => {
+  const rejim = await MKBapi.tayyor;
+  document.getElementById("namoyish-eslatma").hidden = rejim === "server";
+  document.getElementById("namoyish-parol").textContent = MKBapi.NAMOYISH_PAROL;
+})();
 </script>
 </body>
 </html>

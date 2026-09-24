@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Kommunal holat</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.xizmat-karta .karta-bosh{margin-bottom:12px}
+.xizmat-karta .belgi{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;background:var(--plitka);color:var(--matn-2)}
+.xk-sonlar{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+.xk-son{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:var(--r-kichik);background:var(--plitka);transition:background var(--tez)}
+.xk-son:hover{background:var(--band)}
+.xk-son b{font:500 26px/1.1 var(--shrift-displey);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.xk-son span{font-size:12.5px;line-height:1.3;color:var(--matn-3);min-width:0;overflow-wrap:break-word;hyphens:auto}
+.xk-son.xavf b{color:var(--pushti-matn)}
+.xk-izoh{font-size:12.5px;color:var(--matn-3);margin-top:12px}
+.jadval .amal-qator{display:flex;gap:6px;justify-content:flex-end}
+</style>
+</head>
+<body data-sahifa="himoya">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="himoya.html">Himoya va monitoring</a><span class="ajratgich">/</span><span>Kommunal holat</span></div>
+    <div class="hs-qator"><h1>Kommunal holat</h1><span class="hs-meta" id="hs-meta"></span></div>
+  </div>
+  <nav class="bolim-tablar" data-bir-qator aria-label="Bo'lim ichi"><a href="himoya.html">Monitoring markazi</a><a href="qoriqlash.html">Qo'riqlash</a><a href="kommunal.html" class="faol" aria-current="page">Kommunal</a><a href="qurilmalar.html">Qurilmalar</a><a href="hodisalar.html">Hodisalar</a><a href="tashriflar.html">Tashriflar</a><a href="masofaviy-korik.html">Masofaviy ko'rik</a><a href="ruxsatlar.html">Ruxsatlar</a><a href="kirish-voqealari.html">Signallar</a></nav>
+
+  <div class="tor-3" id="km-xizmatlar" data-tur="kommunal-xizmatlar"></div>
+
+  <section class="karta" aria-labelledby="km-a-s" data-tur="kommunal-arizalar">
+    <div class="karta-bosh"><h2 id="km-a-s">Ochiq arizalar</h2><span class="soni" id="km-a-soni"></span></div>
+    <div id="km-arizalar"></div>
+  </section>
+
+  <section class="karta" id="obyektlar" aria-labelledby="km-o-s" data-tur="kommunal-obyektlar">
+    <div class="karta-bosh"><h2 id="km-o-s">Obyektlar bo'yicha</h2><span class="soni" id="km-o-soni"></span></div>
+    <div id="km-obyektlar"></div>
+  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+(async () => {
+  const D = MKB_DATA, esc = MKB.esc, $ = id => document.getElementById(id);
+  let ulandi = false;
+  const yuklandi = await new Promise(hal => MKB.sahifaYukla({
+    joylar: {"km-xizmatlar": ["karta", 3], "km-arizalar": ["jadval", 6], "km-obyektlar": ["jadval", 8]},
+    xato: "Kommunal ma'lumotni yuklab bo'lmadi",
+    ish: async () => {
+      if (ulandi){ location.reload(); return; }
+      if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
+      if (!window.MKB_UX_TAYYOR) await new Promise(r => document.addEventListener("mkb:ux", r, {once: true}));
+      await MKB.kn.yukla(["KOMMUNAL_ARIZALAR"]);
+      ulandi = true;
+      hal(true);
+    },
+  }));
+  if (!yuklandi) return;
+
+  const bugun = D.bugun();
+  const yozadi = MKB.huquq("himoya", "yoz");
+  const XIZMAT = {elektr: ["Elektr", "olov"], gaz: ["Gaz", "olov"], suv: ["Suv", "signal"]};
+  const HOLAT = {"ulangan": ["Ulangan", "chip-yashil"], "uzilgan": ["Uzilgan", "chip-xavf"], "vaqtincha to'xtatilgan": ["To'xtatilgan", "chip-sariq"],
+                 "mavjud emas": ["Tarmoq yo'q", "chip-kul"], "": ["Kiritilmagan", "chip-kul"]};
+  const holatNom = h => (HOLAT[h || ""] || HOLAT[""])[0];
+  const chip = h => { const v = HOLAT[h || ""] || HOLAT[""]; return '<span class="chip chip-kichik ' + v[1] + '">' + v[0] + "</span>"; };
+  const params = new URLSearchParams(location.search);
+
+  let arizaJadval = null, obJadval = null;
+  function chiz(){
+    const obyektlar = MKB.doira(D.YOZUVLAR).filter(y => y.holat !== "Chiqarildi" && (y.kommunal || []).length);
+    const arizalar = MKB.doira(D.KOMMUNAL_ARIZALAR || []);
+    const ochiq = arizalar.filter(a => a.holat !== "bajarildi" && a.holat !== "bekor qilingan");
+
+    /* Xizmatlar kesimi */
+    $("km-xizmatlar").innerHTML = Object.keys(XIZMAT).map(k => {
+      const q = obyektlar.map(y => (y.kommunal || []).find(x => x.xizmat === k)).filter(Boolean);
+      /* Ma'lum bo'lmagan holat "Kiritilmagan" guruhiga tushadi: guruhlar yig'indisi sarlavhadagi soniga teng */
+      const s = h => q.filter(x => (HOLAT[x.holat || ""] ? (x.holat || "") : "") === h).length;
+      const qarz = q.reduce((a, x) => a + (+x.avvalgiQarz || 0), 0);
+      const ar = ochiq.filter(a => a.xizmat === k).length;
+      const son = (h, nom, xavf) => '<a class="xk-son' + (xavf && s(h) ? " xavf" : "") + '" href="kommunal.html?xizmat=' + k + "&holat=" + encodeURIComponent(holatNom(h)) + '#obyektlar"><b data-tarjimasiz>' + s(h) + "</b><span>" + nom + "</span></a>";
+      return '<section class="karta xizmat-karta"><div class="karta-bosh"><h2>' + XIZMAT[k][0] + "</h2>" +
+        '<span class="soni"><b data-tarjimasiz>' + q.length + "</b> <span>ta obyekt</span></span></div>" +
+        '<div class="xk-sonlar">' + son("uzilgan", "Uzilgan", true) + son("vaqtincha to'xtatilgan", "To'xtatilgan", false) + son("ulangan", "Ulangan", false) +
+          (s("mavjud emas") ? son("mavjud emas", "Tarmoq yo'q", false) : "") + (s("") ? son("", "Kiritilmagan", false) : "") + "</div>" +
+        '<p class="xk-izoh"><span>Avvalgi egasidan qolgan qarz:</span> <b data-tarjimasiz>' + (qarz ? MKB.pul(Math.round(qarz * 10) / 10) : "—") + "</b> · " +
+        '<span>ochiq arizalar:</span> <b data-tarjimasiz>' + ar + "</b></p></section>";
+    }).join("");
+
+    $("hs-meta").innerHTML = '<b data-tarjimasiz>' + obyektlar.length + "</b> <span>ta obyektda kommunal ma'lumot bor</span>";
+
+    /* Ochiq arizalar */
+    const aq = ochiq.map(a => {
+      const s = D.sanaOqi(a.sana), m = D.sanaOqi(a.muddat);
+      return {id: a.id, a, obyekt: MKB.kn.obyektNomi(a.obyektId), xizmat: (XIZMAT[a.xizmat] || [a.xizmat])[0], tur: a.tur || "—", raqam: a.raqam || "—",
+        sana: a.sana, otgan: s ? D.kunFarqi(s, bugun) : null, muddat: a.muddat || "", kechikdi: m ? m < bugun : false, holat: a.holat || ""};
+    });
+    $("km-a-soni").textContent = aq.length || "";
+    const acfg = {
+      qatorlar: aq, csvNomi: "kommunal-arizalar",
+      qidiruv: ["obyekt", "raqam", "tur"], qidiruvYozuvi: "Obyekt yoki ariza raqami",
+      filtrlar: [{kalit: "xizmat", nom: "Xizmat", variantlar: ["Elektr", "Gaz", "Suv"]}],
+      bosh: {sarlavha: "Ochiq ariza yo'q", izoh: "Texnik shart yoki qarz ma'lumotnomasi uchun ariza obyekt kartochkasidagi Kommunal tabida qo'shiladi"},
+      ustunlar: [
+        {kalit: "obyekt", nom: "Obyekt", chiz: x => '<a href="obyekt-kommunal.html?id=' + encodeURIComponent(x.a.obyektId) + '"><b>' + esc(x.obyekt) + '</b></a><div class="kod-mono" data-tarjimasiz>' + esc(x.id) + "</div>"},
+        {kalit: "tur", nom: "Ariza", chiz: x => '<span style="display:block;min-width:180px;white-space:normal"><b>' + esc(x.xizmat) + "</b> · " + esc(x.tur) + "</span>" + (x.raqam !== "—" ? '<div class="kod-mono" data-tarjimasiz>' + esc(x.raqam) + "</div>" : ""), csv: x => x.xizmat + ": " + x.tur + (x.raqam !== "—" ? ", " + x.raqam : "")},
+        {kalit: "sana", nom: "Berilgan", tur: "sana", chiz: x => '<span data-tarjimasiz>' + esc(x.sana || "—") + "</span>"},
+        {kalit: "otgan", nom: "O'tgan kunlar", son: true, chiz: x => x.otgan == null ? "—" : '<b data-tarjimasiz>' + x.otgan + "</b>"},
+        {kalit: "muddat", nom: "Javob muddati", tur: "sana", chiz: x => '<span data-tarjimasiz style="white-space:nowrap">' + esc(x.muddat || "—") + "</span>" + (x.kechikdi ? '<div><span class="chip chip-kichik chip-xavf">Kechikdi</span></div>' : "")},
+        {kalit: "holat", nom: "Holat", chiz: x => '<span style="display:block;max-width:150px;white-space:normal;font-size:13px;color:var(--sariq-matn)">' + esc(MKB.holatNomi(x.holat)) + "</span>"},
+        {kalit: "amal", nom: "", saralash: false, csv: false, chiz: x => yozadi ? '<div class="amal-qator"><button type="button" class="amal-tugma" data-bajarildi="' + esc(x.id) + '" data-yozadi title="Arizani yopish" aria-label="Arizani yopish">' + ik("tasdiq") + "</button></div>" : ""},
+      ],
+      saralash: "otgan", yonalish: -1, sahifaHajmi: 8,
+    };
+    if (arizaJadval) arizaJadval.yangila(aq); else arizaJadval = MKB.jadval("km-arizalar", acfg);
+
+    /* Obyektlar */
+    const oq = obyektlar.map(y => {
+      const k = x => ((y.kommunal || []).find(r => r.xizmat === x) || {}).holat || "";
+      const qarz = (y.kommunal || []).reduce((a, x) => a + (+x.avvalgiQarz || 0), 0);
+      return {id: y.id, y, nom: y.qisqa || y.nom, hudud: y.hudud || "", elektr: holatNom(k("elektr")), gaz: holatNom(k("gaz")), suv: holatNom(k("suv")),
+        eK: k("elektr"), gK: k("gaz"), sK: k("suv"), qarz: Math.round(qarz * 100) / 100, ariza: ochiq.filter(a => a.obyektId === y.id).length};
+    });
+    $("km-o-soni").textContent = oq.length || "";
+    const variant = ["Ulangan", "Uzilgan", "To'xtatilgan", "Tarmoq yo'q", "Kiritilmagan"];
+    const ocfg = {
+      qatorlar: oq, csvNomi: "kommunal-holat",
+      qidiruv: ["nom", "hudud", "id"], qidiruvYozuvi: "Obyekt yoki hudud",
+      filtrlar: [{kalit: "elektr", nom: "Elektr", variantlar: variant}, {kalit: "gaz", nom: "Gaz", variantlar: variant}, {kalit: "suv", nom: "Suv", variantlar: variant}],
+      bosh: {sarlavha: "Kommunal ma'lumot kiritilmagan", izoh: "Hisoblagich va ulanish holati obyekt kartochkasidagi Kommunal tabida kiritiladi"},
+      ustunlar: [
+        {kalit: "nom", nom: "Obyekt", chiz: x => "<b>" + esc(x.nom) + '</b><div class="kod-mono" data-tarjimasiz>' + esc(x.id) + "</div>"},
+        {kalit: "hudud", nom: "Hudud"},
+        {kalit: "elektr", nom: "Elektr", chiz: x => chip(x.eK)},
+        {kalit: "gaz", nom: "Gaz", chiz: x => chip(x.gK)},
+        {kalit: "suv", nom: "Suv", chiz: x => chip(x.sK)},
+        {kalit: "qarz", nom: "Qolgan qarz", son: true, chiz: x => x.qarz ? '<span class="pul">' + MKB.pul(x.qarz) + "</span>" : "—"},
+        {kalit: "ariza", nom: "Arizalar", son: true, chiz: x => x.ariza ? '<b data-tarjimasiz>' + x.ariza + "</b>" : "—"},
+      ],
+      saralash: "qarz", yonalish: -1, sahifaHajmi: 12,
+      bosilganda: x => { location.href = "obyekt-kommunal.html?id=" + encodeURIComponent(x.id); },
+    };
+    if (obJadval) obJadval.yangila(oq);
+    else {
+      obJadval = MKB.jadval("km-obyektlar", ocfg);
+      const xz = params.get("xizmat"), h = params.get("holat");
+      if (xz && h && XIZMAT[xz] && variant.includes(h)){ obJadval.holat.filtrlar[xz] = h; obJadval.yangila(); }
+    }
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+
+  document.querySelector(".kontent").addEventListener("click", e => {
+    const b = e.target.closest("[data-bajarildi]");
+    if (!b) return;
+    const a = (D.KOMMUNAL_ARIZALAR || []).find(x => x.id === b.dataset.bajarildi);
+    if (!a) return;
+    arizaYop(a);
+  });
+  /* Arizani yopish: holat "bajarildi", natija ixtiyoriy izoh sifatida qo'shiladi */
+  async function arizaYop(a){
+    const r = await MKB.tasdiqla({
+      sarlavha: "Kommunal arizani yopish",
+      matn: "Ariza bajarilgan deb belgilanadi va ochiq arizalar ro'yxatidan chiqadi. Xizmat ulangan bo'lsa, holatini obyekt kartochkasida yangilang.",
+      tafsilot: [["Obyekt", MKB.kn.obyektNomi(a.obyektId)], ["Xizmat", (XIZMAT[a.xizmat] || [a.xizmat || "—"])[0]], ["Ariza", a.tur || "—"], ["Raqami", {matn: a.raqam || a.id, tarjimasiz: true}]],
+      sabab: {majburiy: false, min: 0, maks: 160, yorliq: "Natija", namuna: "Masalan: texnik shart olindi"},
+      okMatn: "Bajarildi deb yopish", bekorMatn: "Orqaga",
+      bajar: ({sabab}) => MKBapi.yangilash("KOMMUNAL_ARIZALAR", a.id, Object.assign({holat: "bajarildi"}, sabab ? {izoh: [a.izoh, sabab].filter(Boolean).join(". ")} : {})),
+    });
+    if (!r) return;
+    MKB.toast("Ariza " + (a.raqam || a.id) + " yopildi");
+    chiz();
+  }
+  chiz();
+})();
+</script>
+</body>
+</html>

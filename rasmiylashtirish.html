@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Huquqni rasmiylashtirish</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.jadval .obyekt-katak .nom{display:inline-block;min-width:180px}
+.jadval .obyekt-katak .sub{white-space:nowrap}
+.taymer{display:inline-flex;flex-direction:column;gap:1px;line-height:1.25}
+.taymer small{font-size:12px;color:var(--matn-3)}
+.meyor-izoh{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--matn-2);line-height:1.5}
+.meyor-izoh .ic{width:18px;height:18px;flex:none;margin-top:1px;color:var(--matn-3)}
+.taqiq-royxat{list-style:none;display:flex;flex-direction:column;gap:8px}
+.taqiq-royxat li{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 12px;background:var(--plitka);border-radius:14px;font-size:13px}
+.taqiq-royxat li .matn{flex:1;min-width:160px}
+.taqiq-royxat li .matn span{display:block;color:var(--matn-3);font-size:12px}
+.taqiq-royxat label{display:flex;align-items:center;gap:8px;min-height:40px;cursor:pointer}
+.taqiq-royxat input[type=date]{height:40px;border-radius:12px;border:1px solid var(--chiziq);padding:0 10px;background:var(--oq);font:inherit}
+.fayl-tanlov{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fayl-tanlov input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.fayl-tanlov .nomi{font-size:13px;color:var(--matn-2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.panel-obyekt{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+.panel-obyekt .media{width:64px;height:50px;border-radius:12px;overflow:hidden;flex:none}
+.panel-obyekt .media img,.panel-obyekt .media .surat-yoq{width:100%;height:100%;object-fit:cover}
+.panel-obyekt b{display:block;font-weight:500}
+.panel-obyekt span{font-size:12.5px;color:var(--matn-3)}
+.yon-forma{display:flex;flex-direction:column;gap:14px}
+.yon-forma .amallar{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
+.xato-matn{color:var(--xavf-matn);font-size:12.5px}
+.xato-matn[hidden]{display:none}
+a.metrika{transition:transform var(--tez),box-shadow var(--tez)}
+a.metrika:hover{transform:translateY(-2px);box-shadow:var(--soya-suzuvchi)}
+a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
+.soralgan-izoh{padding:16px 20px}
+.qoida-karta summary{cursor:pointer;display:flex;align-items:center;gap:10px;min-height:44px;list-style:none;font:500 15px var(--shrift-displey)}
+.qoida-karta summary::-webkit-details-marker{display:none}
+.qoida-karta summary .ic{width:18px;height:18px;color:var(--matn-3)}
+.qoida-karta summary small{font:400 13px var(--shrift);color:var(--matn-3)}
+.qoida-karta .meyor-izoh{display:block}
+@media (max-width:720px){
+  .yon-forma .amallar .tugma{flex:1 1 100%}
+}
+</style>
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Balans aktivlari</a><span class="ajratgich">/</span><span>Huquqni rasmiylashtirish</span></div>
+    <div class="hs-qator"><h1>Huquqni rasmiylashtirish</h1><span class="hs-meta" id="hs-meta" hidden></span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="obyektlar.html">Reyestr</a><a href="muddatlar.html">Muddatlar</a><a href="xarita.html">Xaritada</a><a href="qabul-boshlash.html">Balansga qabul</a><a href="rasmiylashtirish.html" class="faol" aria-current="page">Huquqni rasmiylashtirish</a><a href="arxiv.html">Arxiv va chiqim</a></nav>
+
+  <section class="metrika-qator tort" id="metrikalar" aria-label="Rasmiylashtirish ko'rsatkichlari" data-sayohat="kpi"></section>
+
+  <div class="karta soralgan-izoh" id="soralgan-izoh" role="status" hidden></div>
+
+  <section class="ustun" aria-labelledby="navbat-sar">
+    <div class="seksiya-bosh"><h2 id="navbat-sar">Navbat</h2></div>
+    <div id="jadval-joy" data-sayohat="jadval"></div>
+  </section>
+
+  <details class="karta qoida-karta" data-sayohat="qoidalar">
+    <summary><svg class="ic"><use href="#ik-info"/></svg><span>Qonuniy talablar</span><small>kadastr va YHXX muddatlari</small></summary>
+    <div class="tor-2-teng" style="margin-top:14px">
+      <p class="meyor-izoh"><b>Ko'chmas mulk.</b> <span>Bankning mulk huquqi kadastr reyestrida qayd etilmaguncha obyektni sotib bo'lmaydi (O'RQ-803). Rasmiylashtirilgach davlat reyestridan ko'chirma obyekt hujjatlariga biriktiriladi.</span></p>
+      <p class="meyor-izoh"><b>Transport va texnika.</b> <span id="yhxx-izoh">Transport vositasi bank nomiga YHXX organlarida 10 kun ichida qayta qayd etiladi (VM 683). Muddat balansga qabul sanasidan hisoblanadi.</span></p>
+    </div>
+  </details>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+(() => {
+  let D, esc, YHXX, yozaOladi, jadval = null, qatorlar = [], ulangan = false;
+  const BINO = ["noturar", "turar"], TRANSPORT = ["transport", "texnika"];
+  const isoga = d => d ? d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") : "";
+  const bugun = () => MKB.bugun();
+  const faolTaqiqlar = y => ((y.huquq && y.huquq.taqiqlar) || []).filter(t => t && !t.yechilganSana);
+  /* Mezon panel-obyekt sahifasida ham xuddi shunday */
+  const rasmiylashganmi = y => {
+    if (typeof MKB.huquqRasmiylashmagan === "function") return !MKB.huquqRasmiylashmagan(y);
+    const h = y.huquq || {};
+    if (TRANSPORT.includes(y.turKalit)) return !!h.yhxxQaydSana;
+    return !!(h.kadastrRaqami && h.qaydSana);
+  };
+  /* Vazifa yoki bildirishnomadan kelgan havola: rasmiylashtirish.html?obyekt=<id> */
+  const soralgan = new URLSearchParams(location.search).get("obyekt");
+
+  function qatorlarniYasa(){
+    return MKB.doira((D.YOZUVLAR || []).filter(y => y.holat !== "Chiqarildi" && (BINO.includes(y.turKalit) || TRANSPORT.includes(y.turKalit)) && !rasmiylashganmi(y)))
+      .map(y => {
+        const transport = TRANSPORT.includes(y.turKalit);
+        const bs = D.sanaOqi(y.balans && y.balans.sana);
+        const otgan = bs ? D.kunFarqi(bs, bugun()) : null;
+        const qolgan = transport && otgan != null ? YHXX - otgan : null;
+        const taqiq = faolTaqiqlar(y);
+        return {id: y.id, y, nom: y.qisqa || y.nom, tur: transport ? "Transport" : "Ko'chmas mulk", turKalit: y.turKalit,
+          filial: y.filial || "", balansSana: (y.balans && y.balans.sana) || "", otgan, qolgan,
+          muddat: transport ? (qolgan == null ? "nomalum" : qolgan < 0 ? "otgan" : "ichida") : "kuzatuv",
+          taqiqSoni: taqiq.length, taqiq: taqiq.length ? "Taqiq bor" : "Taqiq yo'q", holat: y.holat,
+          muddatNomi: transport ? (qolgan == null ? "Balans sanasi yo'q" : qolgan < 0 ? "Muddati o'tgan" : "Muddat ichida") : "Qonuniy muddat yo'q"};
+      });
+  }
+
+  /* ---------- Metrikalar: bosilganda jadval filtri ---------- */
+  function metrikalar(r){
+    const bino = r.filter(x => x.tur === "Ko'chmas mulk").length;
+    const tr = r.filter(x => x.tur === "Transport");
+    const otgan = tr.filter(x => x.muddat === "otgan").length;
+    const taqiqli = r.filter(x => x.taqiqSoni > 0).length;
+    /* YHXX muddatida qayd etilgan transport ulushi: qayd sanasi kiritilganlar orasida */
+    const qayd = MKB.doira((D.YOZUVLAR || []).filter(y => TRANSPORT.includes(y.turKalit) && y.huquq && y.huquq.yhxxQaydSana && y.balans && y.balans.sana))
+      .map(y => D.kunFarqi(D.sanaOqi(y.balans.sana), D.sanaOqi(y.huquq.yhxxQaydSana))).filter(n => n != null);
+    const vaqtida = qayd.filter(n => n <= YHXX).length;
+    const foiz = qayd.length ? Math.round(vaqtida / qayd.length * 100) : null;
+    const joriy = jadval ? jadval.holat.filtrlar : {};
+    const m = (filtr, yorliq, qiymat, izoh, anker) => {
+      const faol = filtr && Object.keys(filtr).length && Object.keys(filtr).every(k => joriy[k] === filtr[k]) &&
+        Object.keys(joriy).filter(k => joriy[k]).length === Object.keys(filtr).length;
+      return filtr
+        ? '<a class="metrika' + (faol ? " faol" : "") + '" href="#navbat-sar" data-filtr="' + esc(JSON.stringify(filtr)) + '" data-sayohat="' + anker + '"><span class="m-yorliq">' + yorliq + "</span>" +
+          '<span class="m-qiymat" data-tarjimasiz>' + qiymat + '</span><span class="m-izoh">' + izoh + "</span></a>"
+        : '<div class="metrika" data-sayohat="' + anker + '"><span class="m-yorliq">' + yorliq + "</span>" +
+          '<span class="m-qiymat" data-tarjimasiz>' + qiymat + '</span><span class="m-izoh">' + izoh + "</span></div>";
+    };
+    const el = document.getElementById("metrikalar");
+    el.innerHTML =
+      m({}, "Rasmiylashtirilmagan", MKB.fmt(r.length),
+        '<span>ko&#39;chmas mulk</span> <b data-tarjimasiz>' + bino + '</b> · <span>transport</span> <b data-tarjimasiz>' + tr.length + "</b>", "kpi-navbat") +
+      m({muddatNomi: "Muddati o'tgan"}, "YHXX muddati o&#39;tgan", MKB.fmt(otgan), '<span>transport, qayd etilmagan</span>', "kpi-kechikkan") +
+      m(null, YHXX + " kun ichida qayd etilgan", foiz == null ? "—" : foiz + "%",
+        foiz == null ? "<span>Qayd sanasi kiritilgan transport yo&#39;q</span>"
+          : '<b data-tarjimasiz>' + vaqtida + " / " + qayd.length + "</b> <span>transport vositasi</span>", "kpi-vaqtida") +
+      m({taqiq: "Taqiq bor"}, "Taqiqi yechilmagan", MKB.fmt(taqiqli), "<span>navbatdagi obyektlar</span>", "kpi-taqiq");
+    tarjimaQil(el);
+  }
+  document.getElementById("metrikalar").addEventListener("click", e => {
+    const a = e.target.closest("[data-filtr]");
+    if (!a || !jadval) return;
+    jadval.holat.filtrlar = JSON.parse(a.dataset.filtr);
+    jadval.holat.sahifa = 1;
+    jadval.yangila();
+  });
+
+  /* ---------- Jadval ---------- */
+  function taymerHTML(x){
+    if (x.tur === "Transport"){
+      if (x.qolgan == null) return '<span class="chip chip-kul chip-kichik">Balans sanasi yo&#39;q</span>';
+      if (x.qolgan < 0) return '<span class="taymer"><span class="chip chip-xavf chip-kichik"><b data-tarjimasiz>' + (-x.qolgan) + "</b>&nbsp;<span>kun kechikdi</span></span></span>";
+      return '<span class="taymer"><span class="chip ' + (x.qolgan <= 3 ? "chip-sariq" : "chip-kok") + ' chip-kichik"><b data-tarjimasiz>' + x.qolgan + "</b>&nbsp;<span>kun qoldi</span></span></span>";
+    }
+    if (x.otgan == null) return '<span class="chip chip-kul chip-kichik">Balans sanasi yo&#39;q</span>';
+    return '<span class="taymer"><span><b data-tarjimasiz>' + MKB.fmt(x.otgan) + "</b> <span>kundan beri</span></span><small>Qonuniy muddat yo&#39;q</small></span>";
+  }
+  const ustunlar = () => [
+    {kalit: "nom", nom: "Obyekt", oral: true, majburiy: true, chiz: x => '<span class="obyekt-katak">' + MKB.obyektSurati(x.y, {kichik: true}) +
+      '<span><span class="nom">' + esc(x.nom) + '</span><br><span class="sub kod-mono" data-tarjimasiz>' + esc(x.id) + "</span></span></span>"},
+    {kalit: "tur", nom: "Ro'yxatdan o'tkazish", chiz: x => x.tur === "Transport" ? "<span>YHXX</span>" : "<span>Kadastr</span>"},
+    {kalit: "filial", nom: "Filial"},
+    {kalit: "balansSana", nom: "Balans sanasi", tur: "sana"},
+    {kalit: "qolgan", nom: "Muddat", son: true, chiz: taymerHTML, csv: x => x.qolgan == null ? "" : x.qolgan},
+    {kalit: "taqiqSoni", nom: "Taqiqlar", son: true, chiz: x => x.taqiqSoni ? '<span class="chip chip-xavf chip-kichik"><b data-tarjimasiz>' + x.taqiqSoni + "</b>&nbsp;<span>ta faol</span></span>" : '<span class="chip chip-yashil chip-kichik">Yo&#39;q</span>'},
+    {kalit: "amal", nom: "", saralash: false, csv: false, majburiy: true, chiz: x => yozaOladi
+      ? '<button type="button" class="tugma tugma-oq tugma-kichik" data-rasm="' + esc(x.id) + '" data-sayohat="rasmiylashtirish">' + ik("tasdiq") + "Rasmiylashtirish</button>" : ""},
+  ];
+  function chiz(){
+    qatorlar = qatorlarniYasa();
+    const saralangan = qatorlar.slice().sort((a, b) => (a.qolgan == null ? 1e6 : a.qolgan) - (b.qolgan == null ? 1e6 : b.qolgan) || (b.otgan || 0) - (a.otgan || 0));
+    if (!jadval) jadval = MKB.jadval("jadval-joy", {id: "rasmiylashtirish", qatorlar: saralangan, ustunlar: ustunlar(), sahifaHajmi: 20, saralash: "qolgan",
+      qidiruv: ["nom", "id", "filial"], qidiruvYozuvi: "Obyekt, id yoki filial",
+      boshQidiruv: soralgan && qatorlar.some(x => x.id === soralgan) ? soralgan : null,
+      filtrlar: [{kalit: "tur", nom: "Tur", variantlar: ["Ko'chmas mulk", "Transport"]},
+                 {kalit: "muddatNomi", nom: "Muddat", variantlar: ["Muddati o'tgan", "Muddat ichida", "Qonuniy muddat yo'q"]},
+                 {kalit: "taqiq", nom: "Taqiq", variantlar: ["Taqiq bor", "Taqiq yo'q"]}],
+      csvNomi: "rasmiylashtirish-navbati",
+      bosh: {sarlavha: "Navbat bo'sh", izoh: D.MANBA === "mahalliy" && !(D.YOZUVLAR || []).length ? "Mahalliy reyestrda hali obyekt kiritilmagan." : "Barcha obyektlarning huquqi bank nomiga rasmiylashtirilgan."},
+      bosilganda: x => { location.href = "obyekt.html?id=" + encodeURIComponent(x.id); },
+      chizilganda: (b, el) => { const iz = el.querySelector(".jadval-asbob .izlash"); if (iz) iz.setAttribute("data-sayohat", "qidiruv"); metrikalar(qatorlar); }});
+    else jadval.yangila(saralangan);
+    metrikalar(qatorlar);
+  }
+  /* Tugma qator bosilishidan oldin ushlanadi */
+  document.getElementById("jadval-joy").addEventListener("click", e => {
+    const b = e.target.closest("[data-rasm]");
+    if (!b) return;
+    e.stopPropagation(); e.preventDefault();
+    formaOch(b.dataset.rasm);
+  }, true);
+
+  /* ---------- Rasmiylashtirish formasi (yon panel) ---------- */
+  function formaOch(id){
+    const y = D.topish(id);
+    if (!y) return;
+    const transport = TRANSPORT.includes(y.turKalit);
+    const h = y.huquq || {};
+    const taqiqlar = (h.taqiqlar || []).map((t, i) => Object.assign({i}, t)).filter(t => !t.yechilganSana);
+    const yer = ["Mulk", "Ijara", "Doimiy foydalanish", "Umumiy ulushli mulk"];
+    const hujjatTur = transport ? "Qayd guvohnomasi" : "Davlat reyestridan ko'chirma";
+    const html = '<div class="panel-obyekt"><span class="media">' + MKB.obyektSurati(y, {kichik: true}) + "</span>" +
+        '<div><b>' + esc(y.qisqa || y.nom) + '</b><span class="kod-mono" data-tarjimasiz>' + esc(y.id) + "</span> · <span data-tarjimasiz>" + esc(y.balans && y.balans.sana || "") + "</span></div></div>" +
+      '<form class="yon-forma" id="rf" novalidate><div class="forma-tor">' +
+      (transport
+        ? '<div class="maydon"><label class="maydon-yorliq" for="rf-raqam">Davlat raqami <b>*</b></label><div class="kirish"><input id="rf-raqam" name="raqam" maxlength="20" required data-xato="Davlat raqamini kiriting" value="' + esc(h.davlatRaqami || "") + '" placeholder="01 A 123 BC"></div></div>' +
+          '<div class="maydon"><label class="maydon-yorliq" for="rf-sana">YHXXda qayd sanasi <b>*</b></label><div class="kirish"><input id="rf-sana" name="sana" type="date" required data-xato="Qayd sanasini kiriting" max="' + isoga(bugun()) + '" value="' + isoga(bugun()) + '"></div></div>' +
+          '<div class="maydon"><label class="maydon-yorliq" for="rf-tex">Texnik pasport</label><div class="kirish"><input id="rf-tex" name="tex" maxlength="30" value="' + esc(h.texPasport || "") + '"></div></div>' +
+          '<div class="maydon"><label class="maydon-yorliq" for="rf-vin">VIN yoki zavod raqami</label><div class="kirish"><input id="rf-vin" name="vin" maxlength="30" value="' + esc(h.vin || "") + '"></div></div>'
+        : '<div class="maydon"><label class="maydon-yorliq" for="rf-raqam">Kadastr raqami <b>*</b></label><div class="kirish"><input id="rf-raqam" name="raqam" data-format="kadastr" maxlength="40" required data-xato="Kadastr raqamini kiriting" value="' + esc(h.kadastrRaqami || "") + '" placeholder="14:05:01:03:0112"></div></div>' +
+          '<div class="maydon"><label class="maydon-yorliq" for="rf-sana">Reyestrda qayd sanasi <b>*</b></label><div class="kirish"><input id="rf-sana" name="sana" type="date" required data-xato="Qayd sanasini kiriting" max="' + isoga(bugun()) + '" value="' + isoga(bugun()) + '"></div></div>' +
+          '<div class="maydon"><label class="maydon-yorliq" for="rf-kochirma">Ko&#39;chirma raqami</label><div class="kirish"><input id="rf-kochirma" name="kochirma" maxlength="40" value="' + esc(h.reyestrKochirma || "") + '"></div></div>' +
+          '<div class="maydon"><label class="maydon-yorliq" for="rf-yer">Yerga huquq turi</label><div class="kirish"><select id="rf-yer" name="yer"><option value="">Tanlang</option>' +
+            yer.map(v => '<option' + (h.yerHuquqiTuri === v ? " selected" : "") + ">" + v + "</option>").join("") + "</select></div></div>") +
+      "</div>" +
+      '<div class="maydon"><span class="maydon-yorliq">' + esc(hujjatTur) + "</span>" +
+        '<div class="fayl-tanlov"><label class="tugma tugma-oq tugma-kichik" tabindex="0">' + ik("yuklash") + '<span>Fayl tanlash</span><input type="file" id="rf-fayl" name="fayl" tabindex="-1" accept="image/*,.pdf"></label>' +
+        '<span class="nomi" id="rf-fayl-nom">Tanlanmagan</span></div>' +
+        '<span class="maydon-izoh">PDF yoki surat, 20 MB gacha. Obyekt hujjatlariga biriktiriladi.</span></div>' +
+      (taqiqlar.length ? '<div class="maydon"><span class="maydon-yorliq">Faol taqiqlar</span><ul class="taqiq-royxat">' + taqiqlar.map(t =>
+        '<li><div class="matn"><b>' + esc(t.turi || "Taqiq") + "</b><span>" + esc((t.organ || "") + (t.sana ? ", " + t.sana : "")) + "</span></div>" +
+        '<label><input type="checkbox" name="taqiq-' + t.i + '" data-taqiq="' + t.i + '"><span>Yechildi</span></label>' +
+        '<input type="date" name="taqiqSana-' + t.i + '" data-taqiq-sana="' + t.i + '" max="' + isoga(bugun()) + '" aria-label="Yechilgan sana" hidden></li>').join("") + "</ul>" +
+        '<span class="maydon-izoh">Yechilmagan taqiq bilan obyekt sotuvga chiqarilmaydi.</span></div>' : "") +
+      '<div class="amallar"><button type="button" class="tugma tugma-oq" data-yop>Bekor qilish</button>' +
+        '<button type="submit" class="tugma tugma-asosiy" data-yozadi data-saqla>' + ik("tasdiq") + "Rasmiylashtirildi deb belgilash</button></div></form>";
+    const p = MKB.yonPanel(transport ? "YHXXda qayd etildi" : "Kadastrda rasmiylashtirildi", html, {yorliq: "Rasmiylashtirish"});
+    const el = p.panel;
+    tarjimaQil(el);
+    const f = el.querySelector("#rf");
+    let fayl = null;
+    el.querySelector("#rf-fayl").addEventListener("change", ev => {
+      fayl = ev.target.files && ev.target.files[0] || null;
+      el.querySelector("#rf-fayl-nom").textContent = fayl ? fayl.name : "Tanlanmagan";
+    });
+    el.querySelector(".fayl-tanlov label").addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); el.querySelector("#rf-fayl").click(); } });
+    el.querySelectorAll("[data-taqiq]").forEach(c => c.addEventListener("change", () => {
+      const d = el.querySelector('[data-taqiq-sana="' + c.dataset.taqiq + '"]');
+      d.hidden = !c.checked; d.required = c.checked; if (c.checked && !d.value) d.value = isoga(bugun());
+    }));
+    /* Saqlanmagan o'zgarishlar: panelni yopishdan oldin so'raladi (×, fon, Escape, Bekor qilish) */
+    const qoriq = MKB.formaQoriqla(f, {nom: "Rasmiylashtirish"});
+    let yopildi = false;
+    const yop = () => { if (yopildi) return; yopildi = true; qoriq.yoq(); document.removeEventListener("click", fonUshla, true); p.yop(); };
+    const soraYop = async () => { if (!qoriq.iflosmi() || await MKB.ketishMumkinmi()) yop(); };
+    const fonUshla = ev => { if (ev.target && ev.target.classList && ev.target.classList.contains("yon-panel-parda")){ ev.stopPropagation(); ev.preventDefault(); soraYop(); } };
+    document.addEventListener("click", fonUshla, true);
+    el.addEventListener("click", ev => { if (ev.target.closest(".modal-yop") || ev.target.closest("[data-yop]")){ ev.stopPropagation(); ev.preventDefault(); soraYop(); } }, true);
+    el.addEventListener("keydown", ev => { if (ev.key === "Escape" && !document.querySelector(".tasdiqla-parda")){ ev.stopPropagation(); ev.preventDefault(); soraYop(); } }, true);
+
+    f.addEventListener("submit", async ev => {
+      ev.preventDefault();
+      const bs = D.sanaOqi(y.balans && y.balans.sana);
+      const qoidalar = {
+        sana: v => { const d = D.sanaOqi(v); return !d || !bs || d >= bs || "Qayd sanasi balansga qabul sanasidan (" + y.balans.sana + ") oldin bo'lmasin"; },
+      };
+      if (!transport) qoidalar.raqam = v => /^[0-9]{2}(:[0-9]{2,4}){3,5}(\/\d+)?$/.test(String(v || "")) || "Kadastr raqamini 14:05:01:03:0112 ko'rinishida kiriting";
+      const r = MKB.formaTekshir(f, qoidalar);
+      if (!r) return;
+      const raqam = String(r.qiymatlar.raqam).trim();
+      const sana = r.qiymatlar.sana;
+      const yechish = [...el.querySelectorAll("[data-taqiq]:checked")].map(c => ({i: +c.dataset.taqiq, sana: el.querySelector('[data-taqiq-sana="' + c.dataset.taqiq + '"]').value}));
+      const yangiHolat = y.holat === "Rasmiylashtirilmoqda" ? "Balansda" : null;
+      const keyingiBosqich = y.qiymat && y.qiymat.bozor != null ? "sotuv" : "baholash";
+      const oqibat = [(transport ? "YHXX qaydi" : "Kadastr qaydi") + " yoziladi: " + raqam + ", " + sana];
+      if (yangiHolat) oqibat.push("Obyekt holati: " + y.holat + " → " + yangiHolat);
+      oqibat.push("Keyingi bosqich: " + (keyingiBosqich === "sotuv" ? "sotuvga tayyorlash" : "baholash"));
+      if (fayl) oqibat.push(hujjatTur + " obyekt hujjatlariga biriktiriladi");
+      if (yechish.length) oqibat.push(yechish.length + " ta taqiq yechilgan deb belgilanadi");
+      oqibat.push("Obyekt rasmiylashtirish navbatidan chiqadi");
+      const natija = await MKB.tasdiqla({
+        sarlavha: "Huquqni rasmiylashtirilgan deb belgilash",
+        matn: (y.qisqa || y.nom) + " bo'yicha bankning huquqi " + (transport ? "YHXXda" : "kadastr reyestrida") + " qayd etilgani yoziladi.",
+        tafsilot: [["Obyekt", y.qisqa || y.nom], ["ID", {matn: y.id, tarjimasiz: true}], [transport ? "Davlat raqami" : "Kadastr raqami", {matn: raqam, tarjimasiz: true}],
+          ["Qayd sanasi", sana], ["Hujjat", fayl ? {matn: fayl.name, tarjimasiz: true} : "Biriktirilmagan"]],
+        oqibat, okMatn: "Rasmiylashtirildi deb belgilash",
+        bajar: async () => {
+          let hjId = null;
+          if (fayl){
+            const fl = await MKBapi.fayl.saqla(fayl, {obyektId: y.id, kolleksiya: "HUJJATLAR"});
+            hjId = await MKB.keyingiId("HUJJATLAR", "HJ-", 0);
+            const hajm = fayl.size >= 1048576 ? (fayl.size / 1048576).toFixed(1).replace(".", ",") + " MB" : Math.max(1, Math.round(fayl.size / 1024)) + " KB";
+            await MKBapi.yangi("HUJJATLAR", {id: hjId, obyektId: y.id, nom: hujjatTur, tur: hujjatTur, bosqich: "rasmiylashtirish",
+              raqam: transport ? raqam : ((r.qiymatlar.kochirma || "").trim() || raqam), sana, amalQilishTugash: null, holat: "Tasdiqlangan",
+              format: (fayl.name.split(".").pop() || "").toUpperCase(), hajm, yuklagan: MKB.kim(), faylId: fl.id});
+            try{ await MKBapi.yangilash("FAYLLAR", fl.id, {yozuvId: hjId}); }catch(_){ }
+          }
+          const taqiqlarYangi = (h.taqiqlar || []).map((t, i) => {
+            const yx = yechish.find(x => x.i === i);
+            return yx ? Object.assign({}, t, {yechilganSana: D.sanaYoz(D.sanaOqi(yx.sana))}) : t;
+          });
+          const huquq = transport
+            ? Object.assign({}, h, {davlatRaqami: raqam, yhxxQaydSana: sana, texPasport: (r.qiymatlar.tex || "").trim() || null, vin: (r.qiymatlar.vin || "").trim() || null, taqiqlar: taqiqlarYangi})
+            : Object.assign({}, h, {kadastrRaqami: raqam, qaydSana: sana, reyestrKochirma: (r.qiymatlar.kochirma || "").trim() || null, yerHuquqiTuri: r.qiymatlar.yer || null, taqiqlar: taqiqlarYangi});
+          const patch = {huquq,
+            tarix: (y.tarix || []).concat([{sana, voqea: transport ? "YHXXda bank nomiga qayd etildi" : "Mulk huquqi kadastrda rasmiylashtirildi",
+              izoh: (transport ? "Davlat raqami " : "Kadastr raqami ") + raqam + (yechish.length ? ". Yechilgan taqiqlar: " + yechish.length : "") + "."}])};
+          if (yangiHolat) patch.holat = yangiHolat;
+          if (!y.bosqich || y.bosqich === "qabul" || y.bosqich === "rasmiylashtirish") patch.bosqich = keyingiBosqich;
+          await MKBapi.yangilash("YOZUVLAR", y.id, patch);
+        },
+      });
+      if (!natija) return;
+      qoriq.toza();
+      yop();
+      MKB.toast((y.qisqa || y.nom) + ": huquq rasmiylashtirildi");
+      chiz();
+    });
+    setTimeout(() => f.elements.raqam.focus(), 50);
+  }
+
+  function boshla(){
+    D = MKB_DATA; esc = MKB.esc;
+    YHXX = D.param("yhxxKun") || 10;
+    yozaOladi = MKB.huquq("aktivlar", "yoz");
+    document.getElementById("yhxx-izoh").textContent = "Transport vositasi bank nomiga YHXX organlarida " + YHXX + " kun ichida qayta qayd etiladi (VM 683). Muddat balansga qabul sanasidan hisoblanadi.";
+    jadval = null;
+    chiz();
+    tarjimaQil(document.querySelector(".kontent"));
+    if (!ulangan){ ulangan = true; document.addEventListener("mkb:malumot", chiz); }
+    if (soralgan){
+      const x = qatorlar.find(r => r.id === soralgan);
+      if (x){ if (yozaOladi) formaOch(x.id); }
+      else {
+        const y = D.topish(soralgan);
+        const korinadi = !!(y && MKB.doira([y]).length);
+        let sabab;
+        if (!korinadi) sabab = "Obyekt topilmadi";
+        else if (y.holat === "Chiqarildi") sabab = "Balansdan chiqarilgan, rasmiylashtirish talab etilmaydi";
+        else if (!(BINO.includes(y.turKalit) || TRANSPORT.includes(y.turKalit))) sabab = "Bu turdagi aktiv davlat reyestrida qayd etilmaydi";
+        else sabab = "Huquq allaqachon rasmiylashtirilgan";
+        const iz = document.getElementById("soralgan-izoh");
+        iz.innerHTML = '<p class="meyor-izoh">' + ik("info") + '<span><b data-tarjimasiz>' + esc(korinadi ? (y.qisqa || y.nom) + " · " + y.id : soralgan) + "</b><br>" +
+          "<span>" + sabab + "</span>" +
+          (korinadi ? ' · <a href="obyekt.html?id=' + encodeURIComponent(y.id) + '" style="text-decoration:underline">Obyekt kartasi</a>' : "") + "</span></p>";
+        iz.hidden = false;
+        tarjimaQil(iz);
+      }
+    }
+  }
+  MKB.sahifaYukla({
+    joylar: {"metrikalar": ["karta", 4], "jadval-joy": ["jadval", 8]},
+    xato: "Rasmiylashtirish navbatini yuklab bo'lmadi",
+    ish: async () => {
+      if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
+      boshla();
+    },
+  });
+})();
+</script>
+</body>
+</html>

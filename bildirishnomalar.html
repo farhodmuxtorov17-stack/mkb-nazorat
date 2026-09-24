@@ -4,8 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Bildirishnomalar</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
-<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.bl-asbob{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.bl-asbob .izlash{flex:1 1 240px;max-width:340px;background:var(--oq);box-shadow:var(--soya-past)}
+.bl-guruh{font:500 13px var(--shrift);color:var(--matn-3);padding:18px 0 6px}
+.bl-guruh:first-of-type{padding-top:4px}
+.bl-qator{cursor:pointer;align-items:flex-start}
+.bl-qator .matn > b,.bl-qator .matn > span{white-space:normal}
+.bl-qator .matn > span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.45;margin-top:2px}
+.bl-qator.oqilgan .matn > b{font-weight:400;color:var(--matn-2)}
+.bl-qator.oqilgan .belgi{opacity:.55}
+.bl-qator .ong{align-self:center}
+.bl-nuqta{width:9px;height:9px;border-radius:99px;background:var(--xavf);flex:none}
+.bl-oqi{width:40px;height:40px}
+.bl-manba{cursor:pointer}
+.bl-manba[aria-pressed="true"]{background:var(--plitka)}
+.bl-manba .matn > span{white-space:normal}
+.bl-yana{display:flex;justify-content:center;padding-top:14px}
+</style>
 </head>
 <body data-sahifa="vazifa">
 <div class="qobiq">
@@ -14,51 +31,256 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><span>Vazifalar</span></div>
-    <div class="hs-qator"><h1>Bildirishnomalar</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="vazifalar.html">Vazifalar</a><span class="ajratgich">/</span><span>Bildirishnomalar</span></div>
+    <div class="hs-qator"><h1>Bildirishnomalar</h1><span class="hs-meta" id="hs-meta">—</span><span class="hs-meta" id="bl-yangi-belgi" hidden></span>
+      <div class="hs-amallar"><button type="button" class="tugma tugma-oq" id="bl-hammasi" hidden data-yozadi data-sayohat="hammasi"><svg class="ic"><use href="#ik-tasdiq"/></svg>Barchasini o'qilgan qilish</button></div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html">Vazifalar</a><a href="tasdiqlar.html">Tasdiqlar</a><a href="bildirishnomalar.html" class="faol">Bildirishnomalar</a></nav>
-  <section class="karta"><div class="karta-bosh"><h2>Oqim</h2><button type="button" class="tugma tugma-kichik tugma-oq" id="b-hammasi" style="margin-left:auto">Barchasini o'qilgan qilish</button></div><div id="b-royxat"></div></section>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="vazifalar.html">Vazifalar</a><a href="tasdiqlar.html">Qarorlar</a><a href="bildirishnomalar.html" class="faol">Bildirishnomalar</a></nav>
+
+  <div class="bl-asbob" data-sayohat="filtr">
+    <div class="izlash"><svg class="ic"><use href="#ik-izlash"/></svg><input type="search" id="bl-qidiruv" placeholder="Sarlavha, matn yoki obyekt" aria-label="Bildirishnomalar bo'yicha qidirish"></div>
+    <div class="filtr-pilyula" id="bl-filtr" role="group" aria-label="O'qilganlik"></div>
+  </div>
+  <div class="tor-2">
+    <section class="karta" id="bl-royxat" aria-label="Bildirishnomalar" data-sayohat="royxat"></section>
+    <section class="karta" id="bl-manbalar" aria-label="Bildirishnoma manbalari" data-sayohat="manbalar"></section>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
-  async function chiz(){
-    const r = await MKBapi.royxat("BILDIRISHLAR");
-    document.getElementById("hs-meta").textContent = r.filter(b => !b.oqildi).length + " ta o'qilmagan";
-    document.getElementById("b-royxat").innerHTML = r.map(b =>
-      '<div style="display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--chiziq-2);' + (b.oqildi ? 'opacity:.55' : '') + '">' +
-        '<span style="width:9px;height:9px;border-radius:99px;background:' + (b.oqildi ? 'var(--xira)' : 'var(--brend)') + ';margin-top:6px;flex:none"></span>' +
-        '<span style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px">' +
-        '<b style="font-size:13px">' + b.sarlavha + '</b><span style="font-size:12.5px;color:var(--matn-3)">' + (b.t || "") + '</span></div>' +
-        '<span style="font-size:12.5px;color:var(--qalam);line-height:1.5">' + b.matn + '</span></span>' +
-        (b.oqildi ? '' : '<button type="button" class="tugma tugma-kichik tugma-oq" data-oqi="' + b.id + '">O\'qildi</button>') +
-      '</div>').join("");
-    document.querySelectorAll("[data-oqi]").forEach(x => x.addEventListener("click", async () => {
-      await MKBapi.yangilash("BILDIRISHLAR", x.dataset.oqi, {oqildi: true}); chiz();
-    }));
-  }
-  chiz();
-  document.getElementById("b-hammasi").addEventListener("click", async () => {
-    const r = await MKBapi.royxat("BILDIRISHLAR");
-    for (const b of r.filter(v => !v.oqildi)) await MKBapi.yangilash("BILDIRISHLAR", b.id, {oqildi: true});
-    MKB.toast("Barchasi o'qilgan deb belgilandi"); chiz();
+(() => {
+  const $ = id => document.getElementById(id);
+  $("bl-royxat").innerHTML = MKB.skelet(6);
+  $("bl-manbalar").innerHTML = MKB.skelet(4);
+  MKB.sahifaYukla({
+    joylar: {"bl-royxat": ["qator", 6], "bl-manbalar": ["qator", 4]},
+    xato: "Bildirishnomalarni yuklab bo'lmadi",
+    ish: boshla,
   });
-});
+
+async function boshla(){
+  if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
+  const KOLLAR = ["BILDIRISHLAR", "QOIDALAR"];
+  await MKB.kolYukla(KOLLAR);
+  const D = MKB_DATA, esc = MKB.esc;
+  const s = MKBapi.sessiya() || {};
+  const bugun = () => { const b = D.bugun(); return new Date(b.getFullYear(), b.getMonth(), b.getDate()); };
+
+  /* Qoida → ikonka va rang */
+  const BELGI = {"Q-UMIDSIZ": ["ogoh", "pushti"], "Q-POLIS": ["sugurta", "lavanda"], "Q-BAHO": ["baholash", "lavanda"], "Q-KORIK": ["korik", "mint"],
+    "Q-QURILMA": ["qurilma", "pushti"], "Q-TOLOV": ["savdo", "mint"], "Q-YHXX": ["avto", "lavanda"], "Q-SOLIQ": ["foiz", "lavanda"], "Q-MB": ["bank", "mint"],
+    "Q-PASAYTIR": ["pasayish", "lavanda"], "Q-DAVAKTIV": ["arxiv", "lavanda"], "Q-KONSERV": ["korik", "mint"]};
+  const belgi = b => BELGI[b.qoidaId] || (/^HODISA\|/.test(b.id) ? ["xavf", "pushti"] : ["qongiroq", ""]);
+  const qoida = id => (D.QOIDALAR || []).find(q => q.id === id) || null;
+
+  /* Qo'ng'iroq bilan bir xil doira: rahbariyat va administrator hammasini, boshqalar o'z roliga tegishlisini ko'radi */
+  const hammasiniKoradi = ["admin", "rahbariyat"].indexOf(MKB.rol()) >= 0;
+  const manba = () => MKB.doira((D.BILDIRISHLAR || []).filter(b => b && (hammasiniKoradi || !b.rol || b.rol === s.rol)));
+
+  const url = new URLSearchParams(location.search);
+  const h = {filtr: url.get("filtr") === "hammasi" ? "hammasi" : "oqilmagan", qoida: url.get("qoida") || "", qidiruv: "", koproq: 0};
+
+  const kunOldin = b => { const d = D.sanaOqi(b.sana); return d ? D.kunFarqi(d, bugun()) : null; };
+  function guruh(b){
+    const k = kunOldin(b);
+    if (k == null) return "oldin";
+    if (k <= 0) return "bugun";
+    if (k === 1) return "kecha";
+    if (k <= 7) return "hafta";
+    return "oldin";
+  }
+  const GURUHLAR = [["bugun", "Bugun"], ["kecha", "Kecha"], ["hafta", "Shu hafta"], ["oldin", "Oldinroq"]];
+  function vaqtHTML(b){
+    const k = kunOldin(b);
+    if (k == null) return "—";
+    if (k <= 0) return '<span>Bugun</span>';
+    if (k === 1) return '<span>Kecha</span>';
+    if (k <= 7) return '<b data-tarjimasiz>' + k + "</b> <span>kun oldin</span>";
+    return '<span data-tarjimasiz>' + esc(b.sana) + "</span>";
+  }
+
+  const oqilgan = b => MKB.bildirish.oqildimi(b);
+  /* Bildirishnoma olib boradigan sahifa. Asosiy havola rol uchun yopiq bo'lsa (masalan, rahbariyat
+     ko'rik yoki baholash formasini to'ldirmaydi), obyekt kartochkasi ochiladi. */
+  const manzil = b => {
+    const hv = b.havola;
+    if (hv && MKB.ruxsat(hv.split("?")[0])) return hv;
+    if (b.obyektId && MKB.ruxsat("obyekt.html")) return "obyekt.html?id=" + encodeURIComponent(b.obyektId);
+    return hv || "";
+  };
+  const havola = b => { const hv = manzil(b); return hv && MKB.ruxsat(hv.split("?")[0]) ? hv : ""; };
+
+  function qatorHTML(b){
+    const [ikon, rang] = belgi(b);
+    const oq = oqilgan(b);
+    const aid = "bl-" + String(b.id).replace(/[^A-Za-z0-9_-]/g, "_");
+    /* Sarlavha: ruxsat etilgan sahifaga havola bo'lsa <a>, aks holda tugma; ikkalasi ham butun qatorni qoplaydi */
+    const hv = havola(b);
+    const tavsif = (oq ? "" : aid + "-h ") + (b.matn ? aid + "-t " : "") + aid + "-v";
+    const sarlavha = hv
+      ? '<a class="qator-och" href="' + esc(hv) + '" aria-describedby="' + tavsif + '">' + esc(b.sarlavha) + "</a>"
+      : '<button type="button" class="qator-och" aria-describedby="' + tavsif + '">' + esc(b.sarlavha) + "</button>";
+    return '<div class="qator bl-qator' + (oq ? " oqilgan" : "") + '" data-id="' + esc(b.id) + '">' +
+      '<span class="belgi ' + rang + '">' + ik(ikon) + "</span>" +
+      '<span class="matn"><b>' + sarlavha + "</b>" + (b.matn ? '<span id="' + aid + '-t">' + esc(b.matn) + "</span>" : "") + "</span>" +
+      '<span class="ong"><span class="vaqt" id="' + aid + '-v" title="' + esc(b.sana || "") + '">' + vaqtHTML(b) + "</span>" +
+        (oq ? "" : '<span class="bl-nuqta" aria-hidden="true"></span><span class="sr-only" id="' + aid + '-h">O\'qilmagan</span><button type="button" class="tugma tugma-oq tugma-ikonka bl-oqi" data-oqi="' + esc(b.id) + '" aria-label="O\'qilgan deb belgilash" title="O\'qilgan deb belgilash">' + ik("tasdiq") + "</button>") +
+      "</span></div>";
+  }
+
+  function chiz(){
+    const r = manba();
+    const oqilmagan = r.filter(b => !oqilgan(b));
+    $("hs-meta").textContent = oqilmagan.length ? oqilmagan.length + " ta o'qilmagan" : "Hammasi o'qilgan";
+    tarjimaQil($("hs-meta").parentNode);
+    $("bl-hammasi").hidden = !oqilmagan.length;
+    $("bl-filtr").innerHTML = [["oqilmagan", "O'qilmagan", oqilmagan.length], ["hammasi", "Barchasi", r.length]].map(p =>
+      '<button type="button" data-f="' + p[0] + '" aria-pressed="' + (h.filtr === p[0]) + '"><span>' + p[1] + '</span><b data-tarjimasiz>' + p[2] + "</b></button>").join("");
+    $("bl-filtr").querySelectorAll("[data-f]").forEach(x => x.addEventListener("click", () => { h.filtr = x.dataset.f; h.koproq = 0; chiz(); }));
+    tarjimaQil($("bl-filtr"));
+    manbalar(r);
+
+    const q = h.qidiruv.trim().toLowerCase();
+    const k = r.filter(b => (h.filtr === "hammasi" || !oqilgan(b)) && (!h.qoida || (b.qoidaId || "") === h.qoida) &&
+      (!q || [b.sarlavha, b.matn, b.obyektId].join(" ").toLowerCase().indexOf(q) >= 0))
+      .sort((a, b) => (D.sanaOqi(b.sana) || 0) - (D.sanaOqi(a.sana) || 0) || (oqilgan(a) ? 1 : 0) - (oqilgan(b) ? 1 : 0));
+    const joy = $("bl-royxat");
+    if (!r.length){
+      joy.innerHTML = MKB.boshHolat("qongiroq", "Bildirishnoma yo'q",
+        D.MANBA === "mahalliy" ? "Mahalliy reyestrda polis, ko'rik va baholash sanalari kiritilgach, qoidalar bo'yicha ogohlantirishlar shu yerga keladi."
+          : "Muddat yaqinlashganda yoki nazorat buzilganda qoidalar bo'yicha ogohlantirish keladi.");
+      tarjimaQil(joy); return;
+    }
+    if (!k.length){
+      joy.innerHTML = h.filtr === "oqilmagan" && !q && !h.qoida
+        ? MKB.boshHolat("tasdiq", "Hammasi o'qilgan", "Yangi ogohlantirish kelganda shu yerda ko'rinadi.", '<button type="button" class="tugma tugma-oq" data-f="hammasi">Barchasini ko\'rish</button>')
+        : MKB.boshHolat("qongiroq", "Bildirishnoma topilmadi", "Qidiruv yoki filtrni o'zgartiring.");
+      const b = joy.querySelector("[data-f]"); if (b) b.addEventListener("click", () => { h.filtr = "hammasi"; chiz(); });
+      tarjimaQil(joy); return;
+    }
+    const chegara = 40 + h.koproq * 40, korinadi = k.slice(0, chegara);
+    const tanlanganQoida = h.qoida ? qoida(h.qoida) : null;
+    let html = '<div class="karta-bosh"><h2>' + (h.filtr === "oqilmagan" ? "O'qilmagan" : "Barcha bildirishnomalar") + '</h2><span class="soni" data-tarjimasiz>' + k.length + "</span>" +
+      (tanlanganQoida ? '<button type="button" class="karta-havola" id="bl-qoida-tozala">' + ik("yopish") + '<span>' + esc(tanlanganQoida.nom) + "</span></button>" : "") + "</div>";
+    GURUHLAR.forEach(g => {
+      const ichi = korinadi.filter(b => guruh(b) === g[0]);
+      if (ichi.length) html += '<div class="bl-guruh">' + g[1] + "</div>" + ichi.map(qatorHTML).join("");
+    });
+    if (k.length > chegara) html += '<div class="bl-yana"><button type="button" class="tugma tugma-oq" id="bl-yana"><span>Yana ko\'rsatish</span> <span data-tarjimasiz>(' + (k.length - chegara) + ")</span></button></div>";
+    joy.innerHTML = html;
+    joy.querySelectorAll("[data-oqi]").forEach(x => x.addEventListener("click", e => { e.stopPropagation(); bittaOqildi(x.dataset.oqi, x); }));
+    joy.querySelectorAll(".bl-qator").forEach(el => {
+      /* Sarlavha havolasi yoki tugmasi (Enter ham) va qatorning qolgan maydoni shu yerga keladi; "o'qilgan" tugmasi o'zi to'xtatadi.
+         Havolani yangi varaqda ochish (Ctrl, Shift, o'rta tugma) brauzerga qoldiriladi, bildirishnoma o'qilgan bo'ladi. */
+      el.addEventListener("click", e => {
+        if (e.target.closest("a.qator-och") && (e.ctrlKey || e.metaKey || e.shiftKey)){ oqildi(el.dataset.id).then(chiz); return; }
+        e.preventDefault(); och(el.dataset.id);
+      });
+      el.addEventListener("auxclick", e => { if (e.button === 1 && e.target.closest("a.qator-och")) oqildi(el.dataset.id).then(chiz); });
+    });
+    const y = $("bl-yana"); if (y) y.addEventListener("click", () => { h.koproq++; chiz(); });
+    const tz = $("bl-qoida-tozala"); if (tz) tz.addEventListener("click", () => { h.qoida = ""; chiz(); });
+    tarjimaQil(joy);
+  }
+
+  /* Manbalar: qaysi qoida qancha ogohlantirish bergan */
+  function manbalar(r){
+    const joy = $("bl-manbalar");
+    const son = {};
+    r.forEach(b => { const k = b.qoidaId || (/^HODISA\|/.test(b.id) ? "HODISA" : ""); if (!k) return; const x = son[k] || (son[k] = {jami: 0, yangi: 0}); x.jami++; if (!oqilgan(b)) x.yangi++; });
+    const qatorlar = (D.QOIDALAR || []).filter(q => son[q.id]).map(q => ({id: q.id, nom: q.nom, manba: q.manba, faol: q.faol !== false, son: son[q.id] || {jami: 0, yangi: 0}}));
+    if (son.HODISA) qatorlar.push({id: "HODISA", nom: "Jiddiy hodisa qayd etildi", manba: "Himoya va monitoring", faol: true, son: son.HODISA});
+    qatorlar.sort((a, b) => b.son.yangi - a.son.yangi || b.son.jami - a.son.jami);
+    if (!qatorlar.length){ joy.innerHTML = '<div class="karta-bosh"><h2>Manbalar</h2></div>' + MKB.boshHolat("sozlama", "Hali ogohlantirish bo'lmagan", "Qoida ishga tushganda manbasi shu yerda ko'rinadi."); tarjimaQil(joy); return; }
+    joy.innerHTML = '<div class="karta-bosh"><h2>Manbalar</h2><span class="soni">nazorat qoidalari</span></div>' +
+      qatorlar.map(q => {
+        const [ikon, rang] = BELGI[q.id] || (q.id === "HODISA" ? ["xavf", "pushti"] : ["qongiroq", ""]);
+        const qid = q.id === "HODISA" ? "" : q.id;
+        return '<div class="qator bl-manba" role="button" tabindex="0" data-qoida="' + esc(q.id) + '" aria-pressed="' + (h.qoida === q.id) + '">' +
+          '<span class="belgi ' + rang + '">' + ik(ikon) + "</span>" +
+          '<span class="matn"><b>' + esc(q.nom) + '</b><span>' + esc(q.manba || "") + "</span></span>" +
+          '<span class="ong">' + (q.son.yangi ? '<span class="chip chip-kichik chip-xavf" data-tarjimasiz>' + q.son.yangi + "</span>" : "") +
+            '<span class="vaqt" data-tarjimasiz>' + q.son.jami + "</span>" + (q.faol ? "" : '<span class="chip chip-kichik chip-kul">O\'chirilgan</span>') + "</span></div>";
+      }).join("");
+    joy.querySelectorAll("[data-qoida]").forEach(el => {
+      const bos = () => { const k = el.dataset.qoida === "HODISA" ? "" : el.dataset.qoida; h.qoida = h.qoida === k ? "" : k; h.filtr = "hammasi"; h.koproq = 0; chiz(); };
+      el.addEventListener("click", bos);
+      el.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target === el){ e.preventDefault(); bos(); } });
+    });
+    tarjimaQil(joy);
+  }
+
+  /* ---------- Amallar ---------- */
+  const qongiroq = () => { if (typeof qongiroqYangila === "function") qongiroqYangila(); };
+  async function oqildi(id){
+    const b = (D.BILDIRISHLAR || []).find(x => x.id === id);
+    if (!b || oqilgan(b)) return true;
+    try{ await MKB.bildirish.oqildi(b); return true; }
+    catch(e){ MKB.toast("Belgi saqlanmadi: " + (e && e.message ? e.message : "xato"), "xavf"); return false; }
+  }
+  /* O'qilganlikni qaytarish: faqat shu xodimning logini olib tashlanadi, boshqalarniki qoladi */
+  async function oqilmagan(id, eski){
+    await MKBapi.yangilash("BILDIRISHLAR", id, {oqiganlar: eski});
+    qongiroq();
+  }
+  /* Bitta bildirishnoma: darhol o'qilgan, 8 soniya ichida qaytarish mumkin */
+  async function bittaOqildi(id, tugma){
+    const b = (D.BILDIRISHLAR || []).find(x => x.id === id);
+    if (!b || oqilgan(b)) return;
+    const eski = Array.isArray(b.oqiganlar) ? b.oqiganlar.slice() : [];
+    let ok = false;
+    try{ ok = await MKB.band(tugma, () => MKB.bildirish.oqildi(b)); }
+    catch(e){ MKB.toast("Belgi saqlanmadi: " + (e && e.message ? e.message : "xato"), "xavf"); return; }
+    chiz();
+    if (ok) MKB.qaytarish("Bildirishnoma o'qilgan deb belgilandi", {bekor: () => oqilmagan(id, eski), keyin: () => chiz()});
+  }
+  async function och(id){
+    const b = (D.BILDIRISHLAR || []).find(x => x.id === id);
+    if (!b) return;
+    await oqildi(id);
+    const hv = manzil(b);
+    if (hv && MKB.ruxsat(hv.split("?")[0])) location.href = hv;
+    else { chiz(); if (!hv) MKB.toast("Bu bildirishnomada havola yo'q"); else MKB.toast("Bu sahifa sizning rolingiz uchun yopiq", "xavf"); }
+  }
+  /* Barchasi: darhol yoziladi; qaytarilsa har biri avvalgi holatiga qaytadi */
+  $("bl-hammasi").addEventListener("click", async e => {
+    const tugma = e.currentTarget;
+    const r = manba().filter(b => !oqilgan(b));
+    if (!r.length) return;
+    const eski = r.map(b => [b.id, Array.isArray(b.oqiganlar) ? b.oqiganlar.slice() : []]);
+    const bajarildi = [];
+    try{
+      await MKB.band(tugma, async () => { for (const b of r){ await MKB.bildirish.oqildi(b); bajarildi.push(b.id); } });
+    }catch(err){ MKB.toast("Hammasi belgilanmadi: " + (err && err.message ? err.message : "xato"), "xavf"); }
+    chiz();
+    if (!bajarildi.length) return;
+    const qaytar = eski.filter(x => bajarildi.indexOf(x[0]) >= 0);
+    MKB.qaytarish(bajarildi.length + " ta bildirishnoma o'qilgan deb belgilandi", {
+      bekor: async () => { for (const [id, o] of qaytar) await MKBapi.yangilash("BILDIRISHLAR", id, {oqiganlar: o}); qongiroq(); },
+      keyin: () => chiz(),
+    });
+  });
+  $("bl-qidiruv").addEventListener("input", e => { h.qidiruv = e.target.value; h.koproq = 0; chiz(); });
+  document.addEventListener("mkb:qoidalar", chiz);
+  chiz();
+  const yangiBelgi = MKB.yangilanganBelgi("bl-yangi-belgi", {yangila: async () => { await MKB.kolYukla(KOLLAR); chiz(); }, avto: 60});
+  if (yangiBelgi && yangiBelgi.belgila) yangiBelgi.belgila();
+}
+})();
 </script>
 </body>
 </html>

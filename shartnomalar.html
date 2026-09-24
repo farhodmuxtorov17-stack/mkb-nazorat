@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Shartnomalar va to'lovlar</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.rz-sub{font-size:12.5px;color:var(--matn-3)}
+.rz-sub.xavf{color:var(--xavf-matn)}
+.rz-foiz{display:inline-flex;align-items:center;gap:10px;min-width:120px}
+.rz-foiz .rz-iz{flex:1;height:6px;border-radius:99px;background:var(--band);overflow:hidden;min-width:60px}
+.rz-foiz .rz-iz > span{display:block;height:100%;background:var(--mint-matn);border-radius:99px}
+.rz-foiz b{font-weight:500;font-size:13px;min-width:38px;text-align:right}
+</style>
+</head>
+<body data-sahifa="realizatsiya">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="realizatsiya.html">Realizatsiya</a><span class="ajratgich">/</span><span>Shartnomalar va to'lovlar</span></div>
+    <div class="hs-qator"><h1>Shartnomalar va to'lovlar</h1><span class="hs-meta" id="hs-meta">—</span>
+      <div class="hs-amallar">
+        <a class="tugma tugma-asosiy" id="tuzish-tugma" href="takliflar.html?korinish=Shartnoma%20tuzilmagan" data-huquq="yoz" data-sayohat="shartnoma-tuzish"><svg class="ic"><use href="#ik-hujjat"/></svg><span>Shartnoma tuzish</span></a>
+      </div></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="realizatsiya.html">Sotuv rejasi</a><a href="lotlar.html">E-auksion lotlari</a><a href="takliflar.html">Takliflar</a><a href="shartnomalar.html" class="faol">Shartnomalar va to'lovlar</a><a href="ijara.html">Ijara</a></nav>
+
+  <section class="metrika-qator tort" id="kpi" aria-label="Shartnomalar ko'rsatkichlari" data-sayohat="kpi"></section>
+  <section id="jadval-joy" aria-label="Shartnomalar ro'yxati" data-sayohat="jadval"></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+(() => {
+  const D = MKB_DATA, esc = MKB.esc, pul = v => MKB.pul(v);
+  const oqi = x => D.sanaOqi(x);
+  const bugun = () => { const b = D.bugun(); return new Date(b.getFullYear(), b.getMonth(), b.getDate()); };
+  const yaxlit = n => Math.round(n * 10) / 10;
+  /* KPI uchun: raqam katta, birlik kichik ("27,53" + "mlrd so'm") */
+  const pulK = v => { const t = MKB.pul(v), i = t.indexOf(" "); return i < 0 ? "<span>" + t + "</span>" : '<span data-tarjimasiz>' + t.slice(0, i) + "</span> <small>" + t.slice(i + 1) + "</small>"; };
+  const usulNomi = k => ((D.SOTISH_USULLARI || []).find(u => u.kalit === k) || {}).nom || "—";
+  /* Sotish usuli (qanday sotildi) va to'lov sharti (qanday to'lanadi) alohida o'lchov.
+     Lot orqali sotilgan bo'lsa usul lotdan olinadi, lotsiz bo'lib to'lash to'g'ridan-to'g'ri sotuv hisoblanadi. */
+  const sotuvUsuli = sh => {
+    if (MKB.sotuvUsuli) return MKB.sotuvUsuli(sh);
+    const l = sh.lotId ? (D.LOTLAR || []).find(x => x.id === sh.lotId) : null;
+    const u = l && l.sotishUsuli !== "bolib" ? l.sotishUsuli : sh.sotishUsuli;
+    return !u || u === "bolib" ? "togridan" : u;
+  };
+  const bolibmi = sh => MKB.bolibTolovmi ? MKB.bolibTolovmi(sh) : sh.sotishUsuli === "bolib" || (Array.isArray(sh.jadval) && sh.jadval.length > 0);
+  const CHIP = {"faol": "chip-info", "kechikkan": "chip-xavf", "toliq tolangan": "chip-yashil", "yakunlangan": "chip-kul", "bekor": "chip-kul",
+    "taqiq qo'yilgan": "chip-sariq", "o'rnatilgan": "chip-sariq", "yechilgan": "chip-kul"};
+  const NOM = {"toliq tolangan": "To'liq to'langan", "taqiq qo'yilgan": "Taqiq qo'yilgan", "o'rnatilgan": "Taqiq qo'yilgan", "yechilgan": "Taqiq yechilgan"};
+  const nomi = k => NOM[k] || MKB.holatNomi(k);
+  const chip = (k, kichik) => '<span class="chip ' + (CHIP[k] || "") + (kichik ? " chip-kichik" : "") + '">' + esc(nomi(k)) + "</span>";
+  const q = new URLSearchParams(location.search);
+  let jadval = null, joriy = [];
+  /* Filtr variantlari chizilgan qatorlardan yig'iladi: mos qatori yo'q variant ro'yxatga tushmaydi */
+  const variantlar = (maydon, tartib) => {
+    const v = [...new Set(joriy.map(x => x[maydon]).filter(Boolean))];
+    const tanlangan = jadval && jadval.holat.filtrlar[maydon];
+    if (tanlangan && v.indexOf(tanlangan) < 0) v.push(tanlangan);
+    return tartib ? v.sort((a, b) => (tartib.indexOf(a) + 1 || 99) - (tartib.indexOf(b) + 1 || 99))
+      : v.sort((a, b) => String(a).localeCompare(String(b), "uz"));
+  };
+  const filtrlar = () => [
+    {kalit: "amalNom", nom: "Shartnoma", variantlar: variantlar("amalNom", ["Amaldagi", "Yopilgan"])},
+    {kalit: "holatNom", nom: "Holat", variantlar: variantlar("holatNom", ["faol", "kechikkan", "toliq tolangan", "yakunlangan", "bekor"].map(k => nomi(k)))},
+    {kalit: "usulNom", nom: "Usul", variantlar: variantlar("usulNom", (D.SOTISH_USULLARI || []).map(u => u.nom))},
+    {kalit: "tolovNom", nom: "To'lov", variantlar: variantlar("tolovNom", ["To'liq to'lov", "Bo'lib to'lash"])},
+    {kalit: "taqiqNom", nom: "Taqiq", variantlar: variantlar("taqiqNom", ["Taqiq qo'yilgan", "Taqiq yechilgan"])},
+  ].filter(f => f.variantlar.length > 1 || (jadval && jadval.holat.filtrlar[f.kalit]));
+  /* Bironta qatorga mos kelmaydigan tayyor ko'rinish ro'yxatda ko'rsatilmaydi */
+  const mosKorinishlar = a => a.filter(v => joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
+  /* Shartnoma tuzilishi kutilayotgan takliflar: rahbariyat tasdiqlagan, ammo shartnomasi yo'q */
+  const shartnomasizTakliflar = () => MKB.doira(D.TAKLIFLAR || [])
+    .filter(t => t.holat === "tasdiqlangan" && !(D.SHARTNOMALAR || []).some(sh => sh.taklifId === t.id && sh.holat !== "bekor"));
+
+  /* To'lov holati: avans imzolashda to'langan hisoblanadi (VM 18: to'lov shartnomadan oldin) */
+  function tolov(s){
+    const b = bugun(), j = Array.isArray(s.jadval) ? s.jadval : [];
+    if (s.holat === "yakunlangan") return {tolangan: +s.narx || 0, qoldiq: 0, otgan: [], otganSumma: 0, kechikish: 0, keyingi: null};
+    const tolangan = yaxlit((+s.avans || 0) + j.filter(x => x.tolandi).reduce((a, x) => a + (+x.summa || 0), 0));
+    const otgan = j.filter(x => !x.tolandi && oqi(x.sana) && oqi(x.sana) < b);
+    return {tolangan, qoldiq: Math.max(0, yaxlit((+s.narx || 0) - tolangan)), otgan, otganSumma: yaxlit(otgan.reduce((a, x) => a + (+x.summa || 0), 0)),
+      kechikish: otgan.length ? D.kunFarqi(oqi(otgan[0].sana), b) : 0, keyingi: j.find(x => !x.tolandi) || null};
+  }
+  /* Amaldagi shartnoma: faol, kechikkan yoki to'liq to'langan (balansdan hali chiqarilmagan). Qolganlari yopilgan */
+  const AMALDAGI = ["faol", "kechikkan", "toliq tolangan"];
+  const korinish = (s, t) => ["yakunlangan", "bekor"].indexOf(s.holat) >= 0 ? s.holat : t.otgan.length ? "kechikkan" : t.qoldiq <= 0 ? "toliq tolangan" : "faol";
+
+  function qatorlar(){
+    return MKB.doira(D.SHARTNOMALAR || []).map(s => {
+      const t = tolov(s), o = D.obyekt(s.obyektId) || {};
+      const k = korinish(s, t);
+      return Object.assign({}, s, {t, obNom: o.qisqa || s.obyektId, korinish: k, holatNom: nomi(k), amalNom: AMALDAGI.indexOf(k) >= 0 ? "Amaldagi" : "Yopilgan", usulNom: usulNomi(sotuvUsuli(s)), tolovNom: bolibmi(s) ? "Bo'lib to'lash" : "To'liq to'lov",
+        taqiqNom: nomi(s.taqiqHolati || "yechilgan"), narxN: +s.narx || 0, foiz: s.narx > 0 ? Math.round(t.tolangan / s.narx * 100) : 0,
+        kechikish: t.kechikish, keyingiSana: t.keyingi ? t.keyingi.sana : ""});
+    });
+  }
+
+  function kpi(r){
+    const faol = r.filter(s => s.amalNom === "Amaldagi");
+    const kech = r.filter(s => s.korinish === "kechikkan");
+    const toliq = r.filter(s => s.korinish === "toliq tolangan");
+    const qoldiq = yaxlit(faol.reduce((a, s) => a + s.t.qoldiq, 0));
+    const otgan = yaxlit(kech.reduce((a, s) => a + s.t.otganSumma, 0));
+    const AMAL = {amalNom: "Amaldagi"};
+    /* Soni nol bo'lgan plitka bosilmaydi: bosilsa doim bo'sh ro'yxat chiqar edi */
+    const m = (filtr, yorliq, qiymat, izoh, bor) => {
+      const t = bor === false ? "div" : "a";
+      return "<" + t + ' class="metrika"' + (t === "a" ? ' href="shartnomalar.html" data-f="' + esc(JSON.stringify(filtr)) + '"' : "") +
+        '><span class="m-yorliq">' + yorliq + '</span><span class="m-qiymat">' + qiymat + '</span><span class="m-izoh">' + izoh + "</span></" + t + ">";
+    };
+    document.getElementById("kpi").innerHTML =
+      m(AMAL, "Amaldagi shartnomalar", '<span data-tarjimasiz>' + faol.length + "</span>", "<span>" + pul(yaxlit(faol.reduce((a, s) => a + s.narxN, 0))) + "</span>") +
+      m(AMAL, "Kutilayotgan tushum", pulK(qoldiq), "<span>To'lov jadvali bo'yicha qoldiq</span>") +
+      m({holatNom: nomi("kechikkan")}, "Muddati o'tgan to'lovlar", otgan ? pulK(otgan) : '<span data-tarjimasiz>0</span>', kech.length ? "<span>" + kech.length + " ta kechikkan shartnoma</span>" : "<span>Kechikish yo'q</span>", kech.length > 0) +
+      m({holatNom: nomi("toliq tolangan")}, "To'liq to'langan", '<span data-tarjimasiz>' + toliq.length + "</span>", "<span>Balansdan chiqarishga tayyor</span>", toliq.length > 0);
+    document.getElementById("kpi").querySelectorAll("[data-f]").forEach(a => a.addEventListener("click", e => {
+      e.preventDefault();
+      /* Karta o'zi sanagan qatorlarni ko'rsatadi: filtr karta hisoblagan to'plam bilan bir xil */
+      jadval.holat.filtrlar = JSON.parse(a.dataset.f);
+      jadval.holat.sahifa = 1;
+      jadval.yangila();
+    }));
+    tarjimaQil(document.getElementById("kpi"));
+  }
+
+  function chiz(){
+    const r = qatorlar();
+    joriy = r;
+    const meta = document.getElementById("hs-meta");
+    meta.textContent = r.length + " ta shartnoma";
+    tarjimaQil(meta);
+    /* Shartnoma tuzilishi kutilayotgan taklif bo'lmasa, asosiy tugma bo'sh ro'yxatga olib bormaydi */
+    const tuzish = document.getElementById("tuzish-tugma");
+    if (tuzish) tuzish.hidden = !MKB.huquq(null, "yoz") || !shartnomasizTakliflar().length;
+    kpi(r);
+    if (jadval){ jadval.yangila(r); return; }
+    const cfg = {
+      id: "shartnomalar",
+      qatorlar: r,
+      qidiruv: ["id", "xaridor", "obNom", "obyektId", "lotId"],
+      qidiruvYozuvi: "Shartnoma, xaridor yoki obyekt",
+      /* Tayyor ko'rinishlar: buxgalteriya va realizatsiya uchun kundalik ro'yxatlar */
+      korinishlar: {tayyor: mosKorinishlar([
+        {nom: "Kechikkan to'lov", filtrlar: {holatNom: nomi("kechikkan")}, saralash: "kechikish", yonalish: -1},
+        {nom: "Balansdan chiqarishga tayyor", filtrlar: {holatNom: nomi("toliq tolangan")}, saralash: "narxN", yonalish: -1},
+        {nom: "Taqiq qo'yilgan", filtrlar: {amalNom: "Amaldagi", taqiqNom: "Taqiq qo'yilgan"}, saralash: "foiz", yonalish: -1},
+      ])},
+      saralash: "kechikish", yonalish: -1, csvNomi: "shartnomalar",
+      bosh: {sarlavha: "Shartnoma tuzilmagan", izoh: "Shartnoma rahbariyat tasdiqlagan taklif asosida «Takliflar» bo'limida tuziladi"},
+      ustunlar: [
+        {kalit: "id", nom: "Shartnoma", majburiy: true, chiz: s => '<span class="nom" data-tarjimasiz>' + esc(s.id) + '</span><br><span class="rz-sub" data-tarjimasiz>' + esc(s.sana || "") + "</span>"},
+        {kalit: "obNom", nom: "Obyekt", oral: true, chiz: s => '<span data-tarjimasiz>' + esc(s.obNom) + '</span><br><span class="rz-sub" data-tarjimasiz>' + esc(s.xaridor || "") + "</span>"},
+        {kalit: "usulNom", nom: "Usul", chiz: s => esc(s.usulNom) + '<br><span class="rz-sub">' + esc(s.tolovNom) + "</span>", csv: s => s.usulNom + " · " + s.tolovNom},
+        {kalit: "narxN", nom: "Narx", son: true, chiz: s => '<span class="pul">' + pul(s.narxN) + "</span>"},
+        {kalit: "foiz", nom: "To'langan", chiz: s => '<span class="rz-foiz"><span class="rz-iz"><span style="width:' + Math.min(100, s.foiz) + '%"></span></span><b data-tarjimasiz>' + s.foiz + "%</b></span>", csv: s => s.foiz + "%"},
+        {kalit: "keyingiSana", nom: "Keyingi to'lov", tur: "sana", chiz: s => s.t.keyingi
+          ? '<span data-tarjimasiz>' + esc(s.t.keyingi.sana) + '</span><br><span class="rz-sub">' + pul(s.t.keyingi.summa) + "</span>" : '<span class="rz-sub">—</span>'},
+        {kalit: "kechikish", nom: "Kechikish", son: true, chiz: s => s.kechikish ? '<span class="rz-sub xavf"><b data-tarjimasiz>' + s.kechikish + "</b> <span>kun</span></span>" : '<span class="rz-sub">—</span>'},
+        {kalit: "holatNom", nom: "Holat", chiz: s => chip(s.korinish, true) + (s.taqiqHolati && s.taqiqHolati !== "yechilgan" && s.korinish !== "yakunlangan" ? " " + chip(s.taqiqHolati, true) : ""), csv: s => s.holatNom},
+      ],
+      bosilganda: s => { location.href = "shartnoma.html?id=" + encodeURIComponent(s.id); },
+    };
+    Object.defineProperty(cfg, "filtrlar", {get: filtrlar, enumerable: true});
+    jadval = MKB.jadval("jadval-joy", cfg);
+    const h = q.get("holat"), u = q.get("usul"), tl = q.get("tolov");
+    /* Havoladagi qiymat faqat mos qator bo'lsa qo'llanadi: aks holda ro'yxat sababsiz bo'sh ko'rinardi */
+    if (h && r.some(x => x.holatNom === nomi(h))) jadval.holat.filtrlar.holatNom = nomi(h);
+    /* Eski havolalar (?usul=bolib) to'lov sharti filtriga o'tadi */
+    const bolibFiltr = tl === "bolib" || u === "bolib";
+    if (u && u !== "bolib" && r.some(x => x.usulNom === usulNomi(u))) jadval.holat.filtrlar.usulNom = usulNomi(u);
+    if (bolibFiltr) jadval.holat.filtrlar.tolovNom = "Bo'lib to'lash";
+    else if (tl === "toliq") jadval.holat.filtrlar.tolovNom = "To'liq to'lov";
+    if (h || u || tl) jadval.yangila();
+  }
+
+  MKB.sahifaYukla({
+    joylar: {"kpi": ["karta", 4], "jadval-joy": ["jadval", 8]},
+    xato: "Shartnomalar ro'yxatini yuklab bo'lmadi",
+    ish: async () => {
+      await MKB.kolYukla(["YOZUVLAR", "SHARTNOMALAR", "LOTLAR"]);
+      jadval = null;
+      chiz();
+    },
+  });
+  document.addEventListener("mkb:malumot", () => { try{ if (jadval) chiz(); }catch(_){ } });
+})();
+</script>
+</body>
+</html>

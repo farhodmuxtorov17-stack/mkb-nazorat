@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Monitoring markazi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.lenta-sana{font-size:12.5px;color:var(--matn-3);padding:14px 0 4px;letter-spacing:.01em}
+.lenta-sana:first-child{padding-top:0}
+.lenta-filtr{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.lenta-filtr .pill{height:38px;padding:0 14px;font-size:13px}
+.smeta-jami{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;padding:4px 0 18px}
+.smeta-jami .m-qiymat{font:500 30px/1.1 var(--shrift-displey);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.smeta-jami .izoh{font-size:13px;color:var(--matn-3)}
+.smeta-izoh{font-size:12.5px;color:var(--matn-3);margin-top:14px;line-height:1.6}
+.smeta-yopiq{font-size:13.5px;color:var(--matn-3);line-height:1.6;margin:0}
+.lenta-ichki > .qator:first-child{box-shadow:inset 0 1px 0 var(--chiziq-2)}
+.yigma-havola{padding:12px 0 2px}
+@media (max-width:720px){.qator:has([data-yigma]) > .ong{flex:none;padding-left:0;margin-left:auto}}
+.metrika-qator a.metrika{transition:transform var(--tez),box-shadow var(--tez)}
+.metrika-qator a.metrika:hover{transform:translateY(-2px);box-shadow:var(--soya-suzuvchi)}
+</style>
+</head>
+<body data-sahifa="himoya">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Himoya va monitoring</span><span class="ajratgich">/</span><span>Monitoring markazi</span></div>
+    <div class="hs-qator"><h1>Monitoring markazi</h1><span class="hs-meta" id="hs-meta"></span><span class="hs-meta" id="hm-yangilandi" data-sayohat="yangilandi" data-tur="himoya-yangilandi" hidden></span>
+      <div class="hs-amallar">
+        <a class="tugma tugma-oq" href="qurilma-ornatish.html" data-huquq="yoz" data-tur="himoya-qurilma-ornatish"><svg class="ic"><use href="#ik-qurilma"/></svg>Qurilma o'rnatish</a>
+        <a class="tugma tugma-asosiy" href="hodisalar.html?yangi=1" data-huquq="yoz" data-tur="himoya-hodisa-qayd"><svg class="ic"><use href="#ik-qoshish"/></svg>Hodisa qayd etish</a>
+      </div></div>
+  </div>
+  <nav class="bolim-tablar" data-bir-qator aria-label="Bo'lim ichi"><a href="himoya.html" class="faol" aria-current="page">Monitoring markazi</a><a href="qoriqlash.html">Qo'riqlash</a><a href="kommunal.html">Kommunal</a><a href="qurilmalar.html">Qurilmalar</a><a href="hodisalar.html">Hodisalar</a><a href="tashriflar.html">Tashriflar</a><a href="masofaviy-korik.html">Masofaviy ko'rik</a><a href="ruxsatlar.html">Ruxsatlar</a><a href="kirish-voqealari.html">Signallar</a></nav>
+
+  <section class="metrika-qator besh" id="hm-metrika" aria-label="Asosiy ko'rsatkichlar" data-sayohat="holat-xarita" data-tur="himoya-kpi"></section>
+
+  <div class="tor-2">
+    <section class="karta" aria-labelledby="hm-lenta-s" data-sayohat="signal-navbat" data-tur="himoya-signallar">
+      <div class="karta-bosh"><h2 id="hm-lenta-s">So'nggi signallar</h2>
+        <div class="lenta-filtr" role="group" aria-label="Signal turi" data-tur="himoya-signal-filtr">
+          <button type="button" class="pill faol" data-lenta="" aria-pressed="true">Hammasi</button>
+          <button type="button" class="pill" data-lenta="qurilma" aria-pressed="false">Qurilma</button>
+          <button type="button" class="pill" data-lenta="kirish" aria-pressed="false">Kirish</button>
+        </div></div>
+      <div id="hm-lenta"></div>
+      <div style="margin-top:14px"><a class="karta-havola" style="margin-left:0" href="kirish-voqealari.html">Barcha signallar<svg class="ic"><use href="#ik-ong"/></svg></a></div>
+    </section>
+    <div class="ustun">
+      <section class="karta" aria-labelledby="hm-oflayn-s" data-tur="himoya-jim-qurilmalar">
+        <div class="karta-bosh"><h2 id="hm-oflayn-s">Uzoq jim turgan qurilmalar</h2>
+          <a class="karta-havola" href="qurilmalar.html?filtr=oflayn24">Barchasi<svg class="ic"><use href="#ik-ong"/></svg></a></div>
+        <div id="hm-oflayn"></div>
+      </section>
+      <section class="karta" aria-labelledby="hm-mk-s" data-tur="himoya-masofaviy">
+        <div class="karta-bosh"><h2 id="hm-mk-s">Masofaviy ko'riklar</h2><span class="soni" id="hm-mk-soni"></span>
+          <a class="karta-havola" href="masofaviy-korik.html">Barchasi<svg class="ic"><use href="#ik-ong"/></svg></a></div>
+        <div id="hm-mk"></div>
+      </section>
+      <section class="karta" aria-labelledby="hm-qm-s" data-tur="himoya-qoriqlanmagan">
+        <div class="karta-bosh"><h2 id="hm-qm-s">Qo'riqlanmayotgan obyektlar</h2>
+          <a class="karta-havola" href="qoriqlash.html?filtr=qoriqlanmagan">Barchasi<svg class="ic"><use href="#ik-ong"/></svg></a></div>
+        <div id="hm-qm"></div>
+      </section>
+    </div>
+  </div>
+
+  <section class="karta" aria-labelledby="hm-smeta-s" data-tur="himoya-smeta">
+    <div class="karta-bosh"><h2 id="hm-smeta-s">Himoya smetasi</h2>
+      <div class="lenta-filtr" role="group" aria-label="Smeta qamrovi" id="hm-qamrov" hidden>
+        <button type="button" class="pill faol" data-qamrov="qurilmasiz" aria-pressed="true">Qurilmasiz obyektlar</button>
+        <button type="button" class="pill" data-qamrov="hammasi" aria-pressed="false">Barcha aktivlar</button>
+      </div>
+      <button type="button" class="tugma tugma-oq tugma-kichik" id="hm-smeta-t" aria-expanded="false" aria-controls="hm-smeta-tana" style="margin-left:auto" data-tur="himoya-smeta-och"><svg class="ic"><use href="#ik-past"/></svg><span>Smetani ko'rsatish</span></button></div>
+    <p class="smeta-yopiq" id="hm-smeta-yopiq">Qurilmasiz obyektlarni himoyalash uchun jihoz, o'rnatish va aloqa xarajatining taxminiy hisobi.</p>
+    <div id="hm-smeta-tana" hidden>
+      <div class="smeta-jami" id="hm-smeta-jami"></div>
+      <div id="hm-smeta"></div>
+      <p class="smeta-izoh" id="hm-smeta-izoh"></p>
+    </div>
+  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+(() => {
+  const D = MKB_DATA, esc = MKB.esc, $ = id => document.getElementById(id);
+  const KOLLAR = ["QURILMALAR", "XAVFSIZLIK_HODISALARI", "HODISALAR", "KIRISH_VOQEALARI", "QORIQLASH", "MASOFAVIY_SESSIYALAR"];
+  let ulandi = false;
+  MKB.sahifaYukla({
+    joylar: {"hm-metrika": ["karta", 5], "hm-lenta": ["qator", 6], "hm-oflayn": ["qator", 3], "hm-mk": ["qator", 3], "hm-qm": ["qator", 3]},
+    xato: "Monitoring ma'lumotini yuklab bo'lmadi",
+    ish: async () => {
+      if (ulandi){ location.reload(); return; }
+      if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
+      if (!window.MKB_UX_TAYYOR) await new Promise(r => document.addEventListener("mkb:ux", r, {once: true}));
+      await MKB.kn.yukla(KOLLAR);
+      ulandi = true;
+      boshla();
+    },
+  });
+
+  function boshla(){
+  const obNomi = id => MKB.kn.obyektNomi(id);
+  const qh = q => D.qurilmaHolati(q) || {};
+  const HOLAT_NOM = {ochiq: ["Yangi", "chip-xavf"], tekshiruvda: ["Tekshiruvda", "chip-sariq"], bartaraf: ["Bartaraf etilmoqda", "chip-info"], hal: ["Hal qilindi", "chip-yashil"], yopildi: ["Yopildi", "chip-kul"]};
+  const GH_HOLAT = {yangi: "ochiq", tekshirilmoqda: "tekshiruvda", tekshiruvda: "tekshiruvda", bartaraf: "bartaraf", hal: "hal", yopildi: "yopildi"};
+  let H = null, lentaTur = "";
+
+  /* ---------- Yagona ta'riflar (hodisalar.html va qoriqlash.html bilan bir xil) ---------- */
+  function hisobla(){
+    const obyektlar = MKB.doira(D.YOZUVLAR).filter(y => y.holat !== "Chiqarildi");
+    const qurilmalar = MKB.doira(D.QURILMALAR || []);
+    const qurilmali = new Set(qurilmalar.map(q => q.obyektId));
+    const shartnomali = new Set(MKB.doira(D.QORIQLASH || []).filter(q => q.holat === "amalda" && !(D.sanaOqi(q.tugash) && D.sanaOqi(q.tugash) < D.bugun())).map(q => q.obyektId));
+    const qoriqlanadimi = y => !!(y.himoya && y.himoya.qoriqlashTuri) || shartnomali.has(y.id) || qurilmali.has(y.id);
+    /* Ochiq hodisa: yangi, tekshiruvda yoki bartaraf etilmoqda */
+    const ochiqXH = MKB.doira(D.XAVFSIZLIK_HODISALARI || []).filter(h => ["ochiq", "tekshiruvda", "bartaraf"].includes(h.holat));
+    const ochiqGH = MKB.doira(D.HODISALAR || []).filter(h => ["yangi", "tekshirilmoqda", "tekshiruvda", "bartaraf"].includes(h.ustun));
+    /* Aloqa faqat qurilmaning oxirgi signal vaqtidan: so'nggi soatda signal kelgan bo'lsa "aloqada" */
+    const aloqada = qurilmalar.filter(q => qh(q).holat === "onlayn").length;
+    const signalKalit = m => { const [s, t] = String(m || "").split(" "); return MKB.kn.vaqtKalit(s, t || ""); };
+    const oxirgiSignal = qurilmalar.filter(q => D.sanaOqi(q.oxirgiSignal)).map(q => ({m: q.oxirgiSignal, k: signalKalit(q.oxirgiSignal)}))
+      .sort((a, b) => b.k.localeCompare(a.k))[0];
+    return {obyektlar, qurilmalar, qurilmali, qoriqlanadimi, ochiqSoni: ochiqXH.length + ochiqGH.length, aloqada, oxirgiSignal: oxirgiSignal ? oxirgiSignal.m : null,
+      uzoq: qurilmalar.filter(q => qh(q).uzoqOflayn || q.holat === "nosoz"), batPast: qurilmalar.filter(q => qh(q).batareyaPast).length,
+      qoriqlanmagan: obyektlar.filter(y => !qoriqlanadimi(y))};
+  }
+
+  function metrikalar(){
+    $("hs-meta").innerHTML = '<b data-tarjimasiz>' + H.qurilmali.size + "</b> <span>ta obyektda qurilma bor</span> · " +
+      '<b data-tarjimasiz>' + H.obyektlar.length + "</b> <span>ta aktiv</span>";
+    const metrika = (href, yorliq, qiymat, izoh, xavf) =>
+      '<a class="metrika" href="' + href + '"><span class="m-yorliq">' + yorliq + "</span>" +
+      '<span class="m-qiymat' + (xavf ? " xavf" : "") + '">' + qiymat + "</span>" +
+      '<span class="m-izoh">' + izoh + "</span></a>";
+    const qBor = H.qurilmalar.length > 0;
+    $("hm-metrika").innerHTML =
+      metrika("qurilmalar.html?filtr=onlayn", "Aloqadagi qurilmalar",
+        '<span data-tarjimasiz>' + H.aloqada + "</span><small data-tarjimasiz>/ " + H.qurilmalar.length + "</small>",
+        qBor ? (H.oxirgiSignal ? "<span>Oxirgi signal:</span> <span data-tarjimasiz>" + esc(H.oxirgiSignal) + "</span>" : "<span>Signal kelmagan</span>") : "<span>Qurilma kiritilmagan</span>") +
+      metrika("qurilmalar.html?filtr=oflayn24", "24 soatdan ortiq jim", '<span data-tarjimasiz>' + H.uzoq.length + "</span>",
+        "Nosozlari bilan birga", H.uzoq.length > 0) +
+      metrika("qurilmalar.html?filtr=batareya", "Batareyasi 20% dan past", '<span data-tarjimasiz>' + H.batPast + "</span>",
+        "Almashtirish kerak", H.batPast > 0) +
+      metrika("qoriqlash.html?filtr=qoriqlanmagan", "Qo'riqlanmayotgan obyektlar", '<span data-tarjimasiz>' + H.qoriqlanmagan.length + "</span>",
+        "Shartnoma ham, qurilma ham yo'q", H.qoriqlanmagan.length > 0) +
+      metrika("hodisalar.html?filtr=ochiq", "Ochiq hodisalar", '<span data-tarjimasiz>' + H.ochiqSoni + "</span>",
+        "Yangi, tekshiruvda va bartaraf etilmoqda", false);
+    tarjimaQil($("hs-meta")); tarjimaQil($("hm-metrika"));
+  }
+
+  /* ---------- Signallar lentasi ----------
+     Tartib: xavfsizlik hodisasi > uzilgan aloqa > past batareya. Qurilma holati haqidagi
+     bir xil signallar (aloqa, batareya) bitta ochiladigan qatorga yig'iladi: haqiqiy
+     xavfsizlik hodisasi ro'yxat boshida turadi va texnik signallar orasida yo'qolmaydi. */
+  const LENTA_TARTIB = {xavfsizlik: 0, aloqa: 1, batareya: 2};
+  const LENTA_YIGMA = {
+    aloqa: {nom: "Aloqasiz qurilmalar", belgi: "sariq", havola: "qurilmalar.html?filtr=oflayn24"},
+    batareya: {nom: "Batareyasi past qurilmalar", belgi: "", havola: "qurilmalar.html?filtr=batareya"},
+  };
+  const yigmaOchiq = {};
+  function signalGuruhi(nom, tur){
+    if (tur === "kirish") return "xavfsizlik";
+    const n = String(nom || "").replace(/[’ʼʻ`´]/g, "'").toLowerCase();
+    if (n.indexOf("batareya") >= 0 || n.indexOf("akkumulyator") >= 0) return "batareya";
+    if (n.indexOf("aloqasiz") >= 0 || n.indexOf("aloqasi uzildi") >= 0) return "aloqa";
+    return "xavfsizlik";
+  }
+  function signallar(){
+    return MKB.doira(D.XAVFSIZLIK_HODISALARI || []).map(h => {
+      const q = D.qurilma(h.qurilmaId);
+      return {tur: "qurilma", vaqt: h.vaqt, d: D.sanaOqi(h.vaqt), nom: h.hodisa, izoh: obNomi(h.obyektId) + (q ? " · " + q.turNomi : ""),
+        href: "hodisa.html?id=" + encodeURIComponent(h.id), jid: h.jiddiylik, holat: h.holat};
+    }).concat(MKB.doira(D.HODISALAR || []).filter(h => h.manba === "qurilma").map(h => ({
+      /* Qurilmadan kelib hodisa sifatida ochilgan signal (tutun, suv bosishi, GPS) */
+      tur: "qurilma", vaqt: h.vaqt, d: D.sanaOqi(h.vaqt), nom: h.hodisa, izoh: obNomi(h.obyektId) + (h.masul ? " · " + h.masul : ""),
+      href: "hodisa.html?id=" + encodeURIComponent(h.id), jid: h.jiddiylik, holat: GH_HOLAT[h.ustun] || null
+    }))).concat(MKB.doira(D.KIRISH_VOQEALARI || []).filter(v => v.natija === "rad" || v.natija === "ogohlantirish").map(v => ({
+      tur: "kirish", vaqt: v.vaqt, d: D.sanaOqi(v.vaqt), nom: v.natija === "rad" ? "Kirish rad etildi" : "Ish vaqtidan tashqari ochilish",
+      izoh: obNomi(v.obyektId) + " · " + (v.nuqtaNomi || "") + (v.sabab ? " · " + v.sabab : ""),
+      href: "kirish-voqea.html?id=" + encodeURIComponent(v.id), jid: v.natija === "rad" ? "yuqori" : "o'rta", holat: null
+    }))).filter(s => s.d).map(s => { s.guruh = signalGuruhi(s.nom, s.tur); return s; })
+      .sort((a, b) => LENTA_TARTIB[a.guruh] - LENTA_TARTIB[b.guruh] || b.d - a.d);
+  }
+  function lentaChiz(){
+    const lenta = $("hm-lenta");
+    const bugunS = D.sanaYoz(D.bugun());
+    const r = signallar().filter(s => !lentaTur || s.tur === lentaTur);
+    if (!r.length){
+      lenta.innerHTML = H.qurilmalar.length || lentaTur ? MKB.boshHolat("signal", "Signal yo'q", "Qurilmalar va kirish nuqtalaridan signal kelmagan")
+        : MKB.boshHolat("qurilma", "Qurilmalar hali kiritilmagan", "Signallar qurilma o'rnatilgandan keyin shu yerda chiqadi",
+          '<a class="tugma tugma-asosiy tugma-kichik" href="qurilma-ornatish.html" data-huquq="yoz">' + ik("qoshish") + "Birinchi qurilmani o'rnatish</a>");
+      tarjimaQil(lenta); return;
+    }
+    /* vaqt: bugungi signalda soat, eskisida kun va soat */
+    const vaqti = s => { const sn = D.sanaYoz(s.d), soat = String(s.vaqt).slice(11); return sn === bugunS ? soat : sn.slice(0, 5) + " " + soat; };
+    const qatorHTML = s => {
+      const h = s.holat ? HOLAT_NOM[s.holat] : null;
+      return '<a class="qator" href="' + s.href + '"><span class="belgi ' + MKB.jiddiylik(s.jid).belgi + '">' + ik(s.tur === "kirish" ? "qulf" : "signal") + "</span>" +
+        '<span class="matn"><b>' + esc(s.nom) + "</b><span>" + esc(s.izoh) + "</span></span>" +
+        '<span class="ong">' + (h ? '<span class="chip chip-kichik ' + h[1] + '">' + h[0] + "</span>" : "") +
+        '<span class="vaqt" data-tarjimasiz>' + esc(vaqti(s)) + "</span></span></a>";
+    };
+    const xavf = r.filter(s => s.guruh === "xavfsizlik");
+    const holat = ["aloqa", "batareya"].map(k => ({k, q: r.filter(s => s.guruh === k)})).filter(g => g.q.length);
+    let html = "";
+    if (xavf.length) html += (holat.length ? '<div class="lenta-sana">Xavfsizlik signallari</div>' : "") + xavf.slice(0, 8).map(qatorHTML).join("");
+    if (holat.length){
+      if (xavf.length) html += '<div class="lenta-sana">Qurilma signallari</div>';
+      holat.forEach(g => {
+        /* ikki-uchta signal yig'ilmaydi: ro'yxat qisqa bo'lsa ochib o'tirishning hojati yo'q */
+        if (g.q.length < 3){ html += g.q.map(qatorHTML).join(""); return; }
+        const y = LENTA_YIGMA[g.k], ochiq = !!yigmaOchiq[g.k], id = "hm-yigma-" + g.k;
+        html += '<div class="qator"><span class="belgi ' + y.belgi + '">' + ik("qurilma") + "</span>" +
+          '<span class="matn"><b><button type="button" class="qator-och" data-yigma="' + g.k + '" aria-expanded="' + ochiq + '" aria-controls="' + id + '">' + y.nom + "</button></b>" +
+          '<span><b data-tarjimasiz>' + g.q.length + "</b> <span>ta qurilma signali</span></span></span>" +
+          '<span class="ong"><svg class="ic"><use href="#ik-' + (ochiq ? "yuqori" : "past") + '"/></svg></span></div>' +
+          '<div class="lenta-ichki" id="' + id + '"' + (ochiq ? "" : " hidden") + ">" + g.q.slice(0, 5).map(qatorHTML).join("") +
+          (g.q.length > 5 ? '<div class="yigma-havola"><a class="karta-havola" style="margin-left:0" href="' + y.havola + '">Barcha qurilmalar' + ik("ong") + "</a></div>" : "") + "</div>";
+      });
+    }
+    lenta.innerHTML = html;
+    tarjimaQil(lenta);
+  }
+  document.querySelectorAll("[data-lenta]").forEach(b => b.addEventListener("click", () => {
+    lentaTur = b.dataset.lenta;
+    document.querySelectorAll("[data-lenta]").forEach(x => { x.classList.toggle("faol", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+    lentaChiz();
+  }));
+  $("hm-lenta").addEventListener("click", e => {
+    const b = e.target.closest("[data-yigma]");
+    if (!b) return;
+    const k = b.dataset.yigma;
+    yigmaOchiq[k] = !yigmaOchiq[k];
+    lentaChiz();
+    const yangi = $("hm-lenta").querySelector('[data-yigma="' + k + '"]');
+    if (yangi) yangi.focus();
+  });
+
+  /* ---------- Uzoq jim qurilmalar (soni yuqoridagi ko'rsatkichda) ---------- */
+  function jimQurilmalar(){
+    const of = H.uzoq.slice().sort((a, b) => (qh(b).oflaynSoat || 0) - (qh(a).oflaynSoat || 0));
+    const qBor = H.qurilmalar.length > 0;
+    $("hm-oflayn").innerHTML = of.length ? of.slice(0, 5).map(q => {
+      const h = qh(q);
+      const vaqt = h.oflaynSoat == null ? "—" : h.oflaynSoat >= 48 ? Math.floor(h.oflaynSoat / 24) + " kun" : h.oflaynSoat + " soat";
+      return '<a class="qator" href="qurilma.html?id=' + encodeURIComponent(q.id) + '"><span class="belgi ' + (q.holat === "nosoz" ? "pushti" : "lavanda") + '">' + ik("qurilma") + "</span>" +
+        '<span class="matn"><b>' + esc(q.turNomi) + "</b><span>" + esc(obNomi(q.obyektId)) + " · " + esc(q.id) + "</span></span>" +
+        '<span class="ong">' + (q.holat === "nosoz" ? '<span class="chip chip-kichik chip-xavf">Nosoz</span>' : "") +
+        '<span class="vaqt" data-tarjimasiz>' + vaqt + "</span></span></a>";
+    }).join("") : MKB.boshHolat("tasdiq", qBor ? "Hamma qurilma aloqada" : "Qurilma kiritilmagan", qBor ? "24 soatdan ortiq jim turgan qurilma yo'q" : "");
+    tarjimaQil($("hm-oflayn"));
+  }
+
+  /* ---------- Masofaviy ko'riklar: bugun rejada va jarayonda ---------- */
+  function masofaviy(){
+    const bugunS = D.sanaYoz(D.bugun());
+    const mkOchiq = MKB.doira(D.MASOFAVIY_SESSIYALAR || []).filter(s => s.holat === "jarayonda" || (s.holat === "rejalashtirilgan" && D.sanaOqi(s.sana) >= D.bugun()))
+      .sort((a, b) => (a.holat === "jarayonda" ? 0 : 1) - (b.holat === "jarayonda" ? 0 : 1) || (D.sanaOqi(a.sana) - D.sanaOqi(b.sana)) || String(a.vaqt || "").localeCompare(String(b.vaqt || "")));
+    const mkJarayonda = mkOchiq.filter(s => s.holat === "jarayonda").length;
+    const mkBugun = mkOchiq.filter(s => s.holat === "rejalashtirilgan" && s.sana === bugunS).length;
+    $("hm-mk-soni").textContent = mkOchiq.length ? mkOchiq.length : "";
+    $("hm-mk").innerHTML = mkOchiq.length
+      ? '<p class="smeta-izoh" style="margin:0 0 6px"><span>Bugun rejada:</span> <b data-tarjimasiz>' + mkBugun + "</b> · <span>jarayonda:</span> <b data-tarjimasiz>" + mkJarayonda + "</b></p>" +
+        mkOchiq.slice(0, 4).map(s => '<a class="qator" href="masofaviy-korik.html?id=' + encodeURIComponent(s.id) + '"><span class="belgi ' + (s.holat === "jarayonda" ? "mint" : "lavanda") + '">' + ik("kamera") + "</span>" +
+          '<span class="matn"><b>' + esc(obNomi(s.obyektId)) + "</b><span>" + esc(s.inspektor || "—") + ' · <span data-tarjimasiz>' + esc(s.id) + "</span></span></span>" +
+          '<span class="ong">' + (s.holat === "jarayonda" ? '<span class="chip chip-kichik chip-sariq">Jarayonda</span>' : "") +
+          '<span class="vaqt" data-tarjimasiz>' + esc((s.sana === bugunS ? "" : s.sana + " ") + (s.vaqt || "")) + "</span></span></a>").join("")
+      : MKB.boshHolat("kamera", "Rejadagi masofaviy ko'rik yo'q", "Kamerasi bor obyektni joyga bormasdan ko'rish uchun sessiya rejalashtiring",
+          '<a class="tugma tugma-asosiy tugma-kichik" href="masofaviy-korik.html" data-huquq="yoz">' + ik("kalendar") + "Ko'rikni rejalashtirish</a>");
+    tarjimaQil($("hm-mk"));
+  }
+
+  /* ---------- Qo'riqlanmayotgan obyektlar (soni yuqoridagi ko'rsatkichda) ---------- */
+  function qoriqlanmagan(){
+    const qm = H.qoriqlanmagan.slice().sort((a, b) => ((b.balans || {}).qiymat || 0) - ((a.balans || {}).qiymat || 0));
+    $("hm-qm").innerHTML = qm.length ? qm.slice(0, 5).map(y =>
+      '<a class="qator" href="obyekt-himoya.html?id=' + encodeURIComponent(y.id) + '">' + MKB.obyektSurati(y, {kichik: true, sinf: "media"}) +
+      '<span class="matn"><b>' + esc(y.qisqa || y.nom) + "</b><span>" + esc(y.hudud || "") + " · " + esc(y.tur || "") + "</span></span>" +
+      '<span class="ong"><span class="pul">' + MKB.pul((y.balans || {}).qiymat) + "</span></span></a>").join("")
+      : MKB.boshHolat("qalqon", "Hamma obyekt himoyada", "Har bir obyektda qo'riqlash shartnomasi yoki qurilma bor");
+    tarjimaQil($("hm-qm"));
+  }
+
+  /* ---------- Himoya smetasi: rejalashtirish vositasi, so'ralganda ochiladi ---------- */
+  const param = (id, def) => { const v = D.param ? D.param(id) : null; return v == null ? def : v; };
+  let qamrov = "qurilmasiz", jadval = null, smetaOchiq = false;
+  const mln = s => s / 1e6;
+  const oraliq = a => MKB.pul([mln(a[0]), mln(a[1])]);
+  const csvOraliq = a => (Math.round(mln(a[0]) * 10) / 10) + "–" + (Math.round(mln(a[1]) * 10) / 10);
+  function smetaQatorlari(){
+    const royxat = qamrov === "qurilmasiz" ? H.obyektlar.filter(y => !H.qurilmali.has(y.id)) : H.obyektlar;
+    const guruh = {};
+    royxat.forEach(y => {
+      const a = D.HIMOYA_ANDOZALARI.find(x => x.id === (y.himoya || {}).andoza) || D.himoyaAndozasi(y);
+      if (!a) return;
+      (guruh[a.id] = guruh[a.id] || {a, obyektlar: []}).obyektlar.push(y);
+    });
+    return Object.values(guruh).map(g => {
+      const s = D.himoyaSmetasi(g.a, g.obyektlar.length);
+      return {id: g.a.id, nom: g.a.nom, qollash: g.a.qollash, soni: g.obyektlar.length, obyektlar: g.obyektlar,
+        jihoz: s.jihoz, ornatish: s.ornatish, aloqa: s.aloqa, jami: s.jami, jamiMin: s.jami[0], tartib: g.a.tartib};
+    }).sort((a, b) => b.jamiMin - a.jamiMin);
+  }
+  function smetaChiz(){
+    if (!smetaOchiq) return;
+    const q = smetaQatorlari();
+    const jami = q.reduce((s, x) => [s[0] + x.jami[0], s[1] + x.jami[1]], [0, 0]);
+    const soni = q.reduce((s, x) => s + x.soni, 0);
+    $("hm-smeta-jami").innerHTML = soni
+      ? '<span class="m-qiymat" data-tarjimasiz>' + oraliq(jami) + "</span>" +
+        '<span class="izoh"><b data-tarjimasiz>' + soni + "</b> <span>ta obyekt</span> · <span>jihoz, o'rnatish va 12 oylik aloqa</span></span>"
+      : "";
+    const cfg = {
+      qatorlar: q, csvNomi: "himoya-smetasi",
+      bosh: {sarlavha: qamrov === "qurilmasiz" ? "Qurilmasiz obyekt yo'q" : "Obyekt yo'q", izoh: "Smeta hisoblanadigan obyekt topilmadi"},
+      ustunlar: [
+        {kalit: "nom", nom: "Andoza", chiz: x => "<b>" + esc(x.nom) + '</b><div class="kod-mono" style="font-weight:400">' + esc(x.qollash || "") + "</div>", csv: x => x.nom},
+        {kalit: "soni", nom: "Obyektlar", son: true},
+        {kalit: "jihoz", nom: "Jihoz", son: true, saralash: false, chiz: x => oraliq(x.jihoz), csv: x => csvOraliq(x.jihoz)},
+        {kalit: "ornatish", nom: "O'rnatish", son: true, saralash: false, chiz: x => oraliq(x.ornatish), csv: x => csvOraliq(x.ornatish)},
+        {kalit: "aloqa", nom: "Aloqa, 12 oy", son: true, chiz: x => MKB.pul(Math.round(mln(x.aloqa) * 10) / 10), csv: x => Math.round(mln(x.aloqa) * 10) / 10},
+        {kalit: "jamiMin", nom: "Jami, mln so'm", son: true, chiz: x => '<b class="pul">' + oraliq(x.jami) + "</b>", csv: x => csvOraliq(x.jami)},
+      ],
+      saralash: "jamiMin", yonalish: -1, sahifaHajmi: 12,
+      bosilganda: x => {
+        const r = x.obyektlar.slice().sort((a, b) => ((b.balans || {}).qiymat || 0) - ((a.balans || {}).qiymat || 0));
+        MKB.yonPanel(x.nom, '<p style="font-size:13.5px;color:var(--matn-3);margin-bottom:12px"><b data-tarjimasiz>' + r.length + "</b> <span>ta obyekt</span> · " +
+          '<span data-tarjimasiz>' + oraliq(x.jami) + "</span></p>" +
+          r.map(y => '<a class="qator" href="obyekt-himoya.html?id=' + encodeURIComponent(y.id) + '"><span class="matn"><b>' + esc(y.qisqa || y.nom) + "</b><span>" +
+            esc(y.hudud || "") + " · " + esc(y.tur || "") + '</span></span><span class="ong"><span class="kod-mono" data-tarjimasiz>' + esc(y.id) + "</span></span></a>").join(""),
+          {yorliq: "Himoya andozasi"});
+      },
+    };
+    if (jadval) jadval.yangila(q); else jadval = MKB.jadval("hm-smeta", cfg);
+    tarjimaQil($("hm-smeta-jami"));
+    $("hm-smeta-izoh").innerHTML = "<span>Smeta taxminiy. Jihoz narxi katalogdagi oraliqdan olinadi.</span> " +
+      "<span>O'rnatish jihoz narxining</span> <b data-tarjimasiz>" + param("ornatishFoiz", 15) + "%</b><span>.</span> " +
+      "<span>4G aloqa bir qurilma uchun oyiga</span> <b data-tarjimasiz>" + param("aloqaSimOylikMing", 60) + "</b> <span>ming so'm, LoRaWAN shlyuzi obyekt uchun</span> <b data-tarjimasiz>" +
+      param("aloqaLoraOylikMing", 90) + "</b> <span>ming so'm.</span> <span>Narxlar integrator taklifi bilan tekshiriladi.</span>";
+    tarjimaQil($("hm-smeta-izoh"));
+  }
+  $("hm-smeta-t").addEventListener("click", () => {
+    smetaOchiq = !smetaOchiq;
+    const t = $("hm-smeta-t");
+    t.setAttribute("aria-expanded", String(smetaOchiq));
+    t.querySelector("span").textContent = smetaOchiq ? "Smetani yashirish" : "Smetani ko'rsatish";
+    t.querySelector("use").setAttribute("href", smetaOchiq ? "#ik-yuqori" : "#ik-past");
+    tarjimaQil(t);
+    $("hm-smeta-tana").hidden = !smetaOchiq; $("hm-qamrov").hidden = !smetaOchiq; $("hm-smeta-yopiq").hidden = smetaOchiq;
+    smetaChiz();
+  });
+  document.querySelectorAll("[data-qamrov]").forEach(b => b.addEventListener("click", () => {
+    qamrov = b.dataset.qamrov;
+    document.querySelectorAll("[data-qamrov]").forEach(x => { x.classList.toggle("faol", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+    jadval = null; smetaChiz();
+  }));
+
+  function hammasi(){ H = hisobla(); metrikalar(); lentaChiz(); jimQurilmalar(); masofaviy(); qoriqlanmagan(); if (smetaOchiq){ jadval = null; smetaChiz(); } }
+  hammasi();
+  const belgi = MKB.yangilanganBelgi("hm-yangilandi", {avto: 60, yangila: async () => { await MKB.kn.yukla(KOLLAR); hammasi(); }});
+  belgi.belgila();
+  }
+})();
+</script>
+</body>
+</html>

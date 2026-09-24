@@ -4,8 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyekt ko'riklari</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
-<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.korik-izoh{display:block;font-size:12.5px;color:var(--matn-2);margin-top:4px;line-height:1.45;white-space:normal}
+.ball{font:500 14px var(--shrift);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chek{list-style:none;display:flex;flex-direction:column}
+.chek li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--chiziq-2);font-size:13.5px}
+.chek li:last-child{border-bottom:none}
+.chek li span:first-child{flex:1;min-width:0}
+.metrika .m-qiymat.kichik-qiymat{font-size:24px}
+.korik-foto{display:flex !important;gap:6px;margin-top:8px}
+.korik-foto img,.korik-foto .surat-yoq{width:52px;height:40px;border-radius:10px;object-fit:cover;flex:none}
+</style>
 </head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
@@ -14,73 +24,131 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Obyekt kartochkasi</span></div>
-    <div class="hs-qator"><h1>Obyekt kartochkasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="obyektlar.html">Balans aktivlari</a><span class="ajratgich">/</span><span id="hs-obyekt" data-tarjimasiz>—</span></div>
+    <div class="hs-qator"><h1>Ko'riklar</h1><span class="hs-meta" id="hs-meta" data-tarjimasiz>—</span>
+      <div class="hs-amallar">
+        <a class="tugma tugma-asosiy tugma-kichik" href="korik-tayinlash.html" id="tayinla" data-huquq="korik:yoz" data-sayohat="tayinlash"><svg class="ic"><use href="#ik-kalendar"/></svg><span>Ko'rik tayinlash</span></a>
+      </div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="obyekt.html" data-id-qoshib="1">Umumiy</a><a href="obyekt-moliya.html" data-id-qoshib="1">Moliya</a><a href="obyekt-hujjatlar.html" data-id-qoshib="1">Hujjatlar</a><a href="obyekt-koriklar.html" class="faol" data-id-qoshib="1">Ko'riklar</a><a href="obyekt-xarajatlar.html" data-id-qoshib="1">Xarajatlar</a><a href="obyekt-3d.html" data-id-qoshib="1">3D navigator</a><a href="obyekt-qavat.html" data-id-qoshib="1">Qavat rejasi</a><a href="obyekt-tarix.html" data-id-qoshib="1">Tarix</a></nav>
-  <section class="foto-shapka" aria-label="Obyekt">
-    <img id="fs-rasm" src="" alt="">
-    <div>
-      <div style="flex:1;min-width:220px">
-        <div style="display:flex;gap:8px;margin-bottom:8px" id="fs-chiplar"></div>
-        <h2 id="fs-nom">—</h2>
-        <div class="fs-meta"><span class="kod-mono" id="fs-id" style="color:rgba(255,255,255,.85)">—</span> · <span id="fs-manzil">—</span></div>
-      </div>
-      <div id="fs-halqa"></div>
-    </div>
-  </section>
-  <section class="karta"><div class="karta-bosh"><h2>Ko'riklar tarixi</h2><span class="soni" id="k-soni"></span><a class="tugma tugma-kichik tugma-asosiy" href="korik-tayinlash.html" style="margin-left:auto" data-id-qoshib><svg class="ic"><use href="#i-qoshish"/></svg>Ko'rik tayinlash</a></div><div id="k-royxat"></div></section>
+  <nav class="bolim-tablar" data-obyekt-tablar data-id-qoshib="1" aria-label="Obyekt kartochkasi"></nav>
+  <section class="foto-shapka" aria-label="Obyekt" data-sayohat="shapka"></section>
+
+  <section class="metrika-qator uch" id="kpi" aria-label="Ko'rik ko'rsatkichlari" data-sayohat="kpi"></section>
+
+  <div class="tor-2">
+    <section class="karta" data-sayohat="royxat">
+      <div class="karta-bosh"><h2>Ko'riklar tarixi</h2><span class="soni" id="soni"></span></div>
+      <div id="royxat"></div>
+    </section>
+    <section class="karta" data-sayohat="chek-list">
+      <div class="karta-bosh"><h2>Oxirgi ko'rik chek-listi</h2><span class="soni" id="chek-sana"></span></div>
+      <div id="chek"></div>
+    </section>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
+MKB.sahifaYukla({joylar: {kpi: ["karta", 3], royxat: ["qator", 4], chek: ["qator", 4]}, xato: "Ko'riklar ro'yxatini yuklab bo'lmadi", ish: async () => {
+  if (document.readyState === "loading") await new Promise(r => document.addEventListener("DOMContentLoaded", r));
+  const D = MKB_DATA, esc = MKB.esc, ik = MKB.ik;
   const id = new URLSearchParams(location.search).get("id");
-  const x = id ? await MKBapi.bitta('YOZUVLAR', id) : null;
-  if (!x){ location.replace("xato-404.html"); return; }
-  document.getElementById("fs-rasm").src = x.mulk.rasm;
-  document.getElementById("fs-nom").textContent = x.mulk.nom;
-  document.getElementById("fs-id").textContent = x.id;
-  document.getElementById("fs-manzil").textContent = x.mulk.manzil;
-  document.getElementById("fs-chiplar").innerHTML =
-    "<span class=\"chip chip-brend\">" + x.bosqichNomi + "</span>" +
-    "<span class=\"chip chip-siyoh\">" + x.mulk.tur + "</span>";
-  const fsIndeks = MKB_DATA.nazoratIndeksi(x);
-  document.getElementById("fs-halqa").innerHTML = MKB.halqa(fsIndeks.ball, 74, 6)
-    .replace('class="halqa', 'class="halqa katta');
-  document.getElementById("fs-halqa").title = "Nazorat indeksi: " + fsIndeks.darajaNomi;
-  /* tab havolalariga ?id= ulab qo'yamiz */
-  document.querySelectorAll(".bolim-tablar a, [data-id-qoshib]").forEach(a => {
-    if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
-  });
-  document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
+  const y = id ? D.topish(id) : null;
+  if (!y || !MKB.doira([y]).length){ location.replace("xato-404.html"); return; }
+  const q = encodeURIComponent(y.id);
+  const bugun = D.bugun();
+  document.getElementById("hs-obyekt").innerHTML = '<a href="obyekt.html?id=' + q + '">' + esc(y.qisqa || y.nom) + "</a>";
+  document.getElementById("hs-meta").textContent = y.id + (y.filial ? " · " + y.filial : "");
+  const tayinla = document.getElementById("tayinla");
+  if (tayinla) tayinla.href = "korik-tayinlash.html?obyekt=" + q;
+  MKB.obyektTablar(y.id, "obyekt-koriklar.html");
+  { const t = document.querySelector(".obyekt-tablar"); if (t) t.setAttribute("data-sayohat", "tablar"); }
+  MKB.fotoShapka(y, ".foto-shapka");
 
-  const r = (await MKBapi.royxat("KORIKLAR")).filter(k => k.obyektId === x.id);
-  document.getElementById("k-soni").textContent = r.length + " ta yozuv";
-  document.getElementById("k-royxat").innerHTML = r.length ? r.map(k =>
-    '<a href="korik-akti.html?id=' + encodeURIComponent(k.id) + '" class="qator">' +
-      '<span style="width:38px;height:38px;border-radius:14px;background:' +
-        (k.holat === "rejada" ? "var(--brend-fon)" : "var(--yashil-fon)") + ';display:grid;place-items:center;color:' +
-        (k.holat === "rejada" ? "var(--brend-quyuq)" : "var(--yashil)") + '">' + ik("korik") + '</span>' +
-      '<span class="matn"><b>' + k.id + ' · ' + (k.tur || "Rejali") + '</b>' +
-      '<span style="font-size:12.5px;color:var(--matn-3)">' + k.inspektor + (k.izoh ? " · " + k.izoh.slice(0, 60) + "…" : "") + '</span></span>' +
-      '<span class="chip ' + (k.holat === "rejada" ? "chip-brend" : "chip-yashil") + '">' + k.sana + '</span></a>').join("")
-    : '<div class="bosh-holat">' + ik("korik") + '<b>Ko\'riklar hali yo\'q</b><span>Birinchi ko\'rikni tayinlang</span></div>';
+  const sanaKalit = s => { const d = D.sanaOqi(s); return d ? d.getTime() : 0; };
+  const OTKAZILGAN = ["otkazildi", "o'tkazildi", "bajarildi", "yakunlandi"];
+  const koriklar = (D.KORIKLAR || []).filter(k => k.obyektId === y.id).sort((a, b) => sanaKalit(b.sana) - sanaKalit(a.sana));
+  const otkazilgan = koriklar.filter(k => OTKAZILGAN.indexOf(String(k.holat).toLowerCase()) >= 0);
+  const oxirgi = otkazilgan[0] || null;
+  /* Rejadagi ko'rik sanasi o'tib ketgan bo'lsa "kechikkan" deb ko'rsatiladi */
+  const kechikkanmi = k => k.holat === "kechikkan" || (k.holat === "rejada" && D.sanaOqi(k.sana) && D.sanaOqi(k.sana) < bugun);
+  const rejada = koriklar.filter(k => k.holat === "rejada" || k.holat === "kechikkan").sort((a, b) => sanaKalit(a.sana) - sanaKalit(b.sana));
+  const davr = D.binolimi(y) ? D.param("korikDavriBino") : D.param("korikDavriTransport");
+  const keyingiSana = rejada[0] ? rejada[0].sana : oxirgi ? (oxirgi.keyingiKorikSana || D.sanaYoz(D.kunQosh(oxirgi.sana, davr))) : null;
+  const keyingiKun = keyingiSana ? D.kunFarqi(bugun, keyingiSana) : null;
+  /* Ko'rikda yuklangan suratlar (FAYLLAR, kolleksiya KORIKLAR) */
+  const fotolar = k => (D.FAYLLAR || []).filter(f => f.kolleksiya === "KORIKLAR" && f.yozuvId === k.id && /^image\//.test(f.tur || "") && f.yol);
+  const ball = k => k.holatBall != null ? k.holatBall : k.ball != null ? k.ball : null;
 
-});
+  const metrika = (yorliq, qiymat, izoh, kichik) =>
+    '<div class="metrika"><span class="m-yorliq">' + yorliq + '</span><span class="m-qiymat' + (kichik ? " kichik-qiymat" : "") + '">' + qiymat + "</span>" +
+    (izoh ? '<span class="m-izoh">' + izoh + "</span>" : "") + "</div>";
+  const oxirgiKun = oxirgi ? D.kunFarqi(oxirgi.sana, bugun) : null;
+  document.getElementById("kpi").innerHTML =
+    metrika("Oxirgi ko'rik", oxirgi ? '<span data-tarjimasiz>' + esc(oxirgi.sana) + "</span>" : "<span>O'tkazilmagan</span>",
+      oxirgi ? '<span data-tarjimasiz>' + oxirgiKun + "</span> <span>kun oldin</span> · <span>me'yor har</span> " + '<span data-tarjimasiz>' + davr + "</span> <span>kunda</span>"
+        : "<span>Me'yor har</span> " + '<span data-tarjimasiz>' + davr + "</span> <span>kunda</span>", true) +
+    metrika("Keyingi ko'rik", keyingiSana ? '<span data-tarjimasiz>' + esc(keyingiSana) + "</span>" : "<span>Rejalashtirilmagan</span>",
+      keyingiKun == null ? "" : keyingiKun < 0 ? '<span class="chip chip-xavf chip-kichik"><span>Muddati</span> <span data-tarjimasiz>' + (-keyingiKun) + "</span> <span>kun o'tgan</span></span>"
+        : '<span data-tarjimasiz>' + keyingiKun + "</span> <span>kun qoldi</span>", true) +
+    metrika("Holat bahosi", oxirgi && ball(oxirgi) != null ? '<span data-tarjimasiz>' + ball(oxirgi) + "</span> <small>/ 5</small>" : "<span>—</span>",
+      oxirgi ? "<span>" + esc(oxirgi.korikTuri || oxirgi.tur || "") + "</span>" : "");
+
+  document.getElementById("soni").innerHTML = koriklar.length ? '<span data-tarjimasiz>' + koriklar.length + "</span> <span>ta</span>" : "";
+  const royxat = document.getElementById("royxat");
+  if (!koriklar.length){
+    royxat.innerHTML = MKB.boshHolat("korik", "Ko'rik o'tkazilmagan",
+      D.MANBA === "mahalliy" ? "Mahalliy reyestrda hali kiritilmagan. Birinchi ko'rikni tayinlang." : "Obyekt bo'yicha ko'rik yozuvi yo'q",
+      MKB.huquq("korik", "yoz") ? '<a class="tugma tugma-oq tugma-kichik" href="korik-tayinlash.html?obyekt=' + q + '">' + ik("kalendar") + "<span>Ko'rik tayinlash</span></a>" : "");
+  } else {
+    royxat.innerHTML = koriklar.map(k => {
+      const kech = kechikkanmi(k);
+      const holatChip = kech ? '<span class="chip chip-xavf chip-kichik">Kechikkan</span>'
+        : k.holat === "rejada" ? '<span class="chip chip-kok chip-kichik">Rejada</span>' : '<span class="chip chip-yashil chip-kichik">O\'tkazildi</span>';
+      const kamchilik = (k.chekList || []).filter(c => c.natija && c.natija !== "joyida").length;
+      const b = ball(k);
+      const xulosa = k.xulosa || k.kamchiliklar || "";
+      const href = k.holat === "rejada" || kech ? (MKB.huquq("korik", "yoz") ? "korik-otkazish.html?id=" : "korik-akti.html?id=") : "korik-akti.html?id=";
+      return '<a class="qator" href="' + href + encodeURIComponent(k.id) + '"><span class="belgi ' + (kech ? "pushti" : k.holat === "rejada" ? "lavanda" : "mint") + '">' + ik("korik") + "</span>" +
+        '<span class="matn"><b><span>' + esc(k.korikTuri || k.tur || "Ko'rik") + '</span> · <span data-tarjimasiz>' + esc(k.sana) + "</span></b>" +
+        '<span data-tarjimasiz>' + esc([k.inspektor, k.id].filter(Boolean).join(" · ")) + "</span>" +
+        (xulosa ? '<span class="korik-izoh">' + esc(xulosa) + "</span>" : "") +
+        (fotolar(k).length ? '<span class="korik-foto">' + fotolar(k).slice(0, 4).map(f =>
+          MKB.obyektSurati({id: y.id, rasmTuri: y.rasmTuri, qisqa: y.qisqa, rasm: f.yol, rasmKichik: f.yol}, {kichik: true})).join("") + "</span>" : "") + "</span>" +
+        '<span class="ong">' + (b != null ? '<span class="ball" data-tarjimasiz>' + b + " / 5</span>" : "") +
+        (kamchilik ? '<span class="chip chip-sariq chip-kichik"><span data-tarjimasiz>' + kamchilik + "</span> <span>kamchilik</span></span>" : "") + holatChip + "</span></a>";
+    }).join("");
+  }
+
+  const chek = document.getElementById("chek");
+  if (oxirgi && (oxirgi.chekList || []).length){
+    document.getElementById("chek-sana").innerHTML = '<span data-tarjimasiz>' + esc(oxirgi.sana) + "</span>";
+    const NAT = {joyida: ["chip-yashil", "Joyida"], kamchilik: ["chip-sariq", "Kamchilik"], yoq: ["chip-xavf", "Yo'q"], buzilgan: ["chip-xavf", "Buzilgan"]};
+    chek.innerHTML = '<ul class="chek">' + oxirgi.chekList.map(c => {
+      const n = NAT[c.natija] || ["chip-kul", MKB.holatNomi(c.natija)];
+      return "<li><span>" + esc(c.band) + '</span><span class="chip chip-kichik ' + n[0] + '">' + esc(n[1]) + "</span></li>";
+    }).join("") + "</ul>" +
+    '<p style="margin-top:14px"><a class="karta-havola" href="korik-akti.html?id=' + encodeURIComponent(oxirgi.id) + '"><span>Ko\'rik dalolatnomasi</span>' + ik("ong") + "</a></p>";
+  } else {
+    const band = D.korikChekListi ? D.korikChekListi(y) : [];
+    chek.innerHTML = MKB.boshHolat("vazifa", "Chek-list to'ldirilmagan",
+      band.length ? "Ko'rikda " + band.length + " band tekshiriladi" : "O'tkazilgan ko'rik yo'q");
+  }
+  tarjimaQil(document.querySelector("main"));
+}});
 </script>
 </body>
 </html>

@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Yozuvni tahrirlash</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
-<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<title>MKB — Obyektni tahrirlash</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.forma-bolim{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--matn-3);font-weight:600;margin:6px 0 -4px}
+.forma-bolim:not(:first-child){margin-top:18px;padding-top:18px;border-top:1px solid var(--chiziq-2)}
+.forma-tugmalar{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px}
+.ozg-royxat{list-style:none;margin:0;padding:0;font-size:13px}
+.ozg-royxat li{padding:10px 0;border-bottom:1px solid var(--chiziq-2);display:grid;gap:3px}
+.ozg-royxat li:last-child{border-bottom:none}
+.ozg-royxat b{font-weight:500}
+.ozg-royxat span{color:var(--matn-3);overflow-wrap:anywhere}
+.ozg-royxat del{color:var(--matn-4)}
+</style>
 </head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
@@ -14,110 +24,269 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="obyektlar.html">Aktivlar reyestri</a><span class="ajratgich">/</span><span>Obyekt kartochkasi</span></div>
-    <div class="hs-qator"><h1>Yozuvni tahrirlash</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="obyektlar.html">Balans aktivlari</a><span class="ajratgich">/</span><span id="hs-obyekt" data-tarjimasiz>—</span></div>
+    <div class="hs-qator"><h1>Obyektni tahrirlash</h1><span class="hs-meta" id="hs-meta" data-tarjimasiz>—</span></div>
   </div>
-  <section class="foto-shapka" aria-label="Obyekt">
-    <img id="fs-rasm" src="" alt="">
-    <div>
-      <div style="flex:1;min-width:220px">
-        <div style="display:flex;gap:8px;margin-bottom:8px" id="fs-chiplar"></div>
-        <h2 id="fs-nom">—</h2>
-        <div class="fs-meta"><span class="kod-mono" id="fs-id" style="color:rgba(255,255,255,.85)">—</span> · <span id="fs-manzil">—</span></div>
-      </div>
-      <div id="fs-halqa"></div>
+  <section class="foto-shapka" aria-label="Obyekt" data-sayohat="shapka"></section>
+
+  <div class="tor-2">
+    <section class="karta" data-sayohat="forma">
+      <div class="karta-bosh"><h2>Aktiv ma'lumotlari</h2></div>
+      <form id="forma" novalidate></form>
+    </section>
+    <div class="ustun">
+      <section class="karta" data-sayohat="ozgarishlar">
+        <div class="karta-bosh"><h2>Saqlanadigan o'zgarishlar</h2><span class="soni" id="ozg-soni"></span></div>
+        <div id="ozgarishlar"></div>
+      </section>
+      <section class="karta" data-sayohat="oxirgi-tahrirlar">
+        <div class="karta-bosh"><h2>Oxirgi tahrirlar</h2><a class="karta-havola" id="tarix-havola" href="obyekt-tarix.html"><span>Tarix</span><svg class="ic"><use href="#ik-ong"/></svg></a></div>
+        <div id="oxirgi"></div>
+      </section>
     </div>
-  </section>
-  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Yozuvni tahrirlash</h2></div>
-  <form id="tahrir-forma" class="forma-tor">
-    <div class="maydon"><label class="maydon-yorliq">Ish bosqichi <b>*</b></label>
-      <div class="kirish"><select name="bosqich" id="t-bosqich"></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Mas'ul xodim <b>*</b></label>
-      <div class="kirish"><input name="masul" id="t-masul"></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Nazorat muddati</label>
-      <div class="kirish"><input name="muddat" id="t-muddat" placeholder="kk.oo.yyyy"></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Shoshilinchlik</label>
-      <div class="kirish"><select name="shoshilinch"><option value="">Odatiy</option><option value="1">Shoshilinch</option></select></div></div>
-    <div class="maydon keng"><label class="maydon-yorliq">Izoh (tarixga yoziladi)</label>
-      <textarea class="kirish-matn" name="izoh" placeholder="O'zgarish sababi va qisqacha izoh"></textarea></div>
-    <div class="keng" style="display:flex;gap:10px;justify-content:flex-end">
-      <a class="tugma tugma-oq" id="t-bekor" href="#">Bekor qilish</a>
-      <button class="tugma tugma-asosiy" type="submit">Saqlash</button></div>
-  </form></section>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
+MKB.sahifaYukla({joylar: {forma: ["qator", 8], ozgarishlar: ["qator", 3], oxirgi: ["qator", 3]}, xato: "Obyekt ma'lumotlarini yuklab bo'lmadi", ish: async () => {
+  if (document.readyState === "loading") await new Promise(r => document.addEventListener("DOMContentLoaded", r));
+  const forma = document.getElementById("forma");
+  const D = MKB_DATA, esc = MKB.esc, ik = MKB.ik;
   const id = new URLSearchParams(location.search).get("id");
-  const x = id ? await MKBapi.bitta('YOZUVLAR', id) : null;
-  if (!x){ location.replace("xato-404.html"); return; }
-  document.getElementById("fs-rasm").src = x.mulk.rasm;
-  document.getElementById("fs-nom").textContent = x.mulk.nom;
-  document.getElementById("fs-id").textContent = x.id;
-  document.getElementById("fs-manzil").textContent = x.mulk.manzil;
-  document.getElementById("fs-chiplar").innerHTML =
-    "<span class=\"chip chip-brend\">" + x.bosqichNomi + "</span>" +
-    "<span class=\"chip chip-siyoh\">" + x.mulk.tur + "</span>";
-  const fsIndeks = MKB_DATA.nazoratIndeksi(x);
-  document.getElementById("fs-halqa").innerHTML = MKB.halqa(fsIndeks.ball, 74, 6)
-    .replace('class="halqa', 'class="halqa katta');
-  document.getElementById("fs-halqa").title = "Nazorat indeksi: " + fsIndeks.darajaNomi;
-  /* tab havolalariga ?id= ulab qo'yamiz */
-  document.querySelectorAll(".bolim-tablar a, [data-id-qoshib]").forEach(a => {
-    if (!a.href.includes("?")) a.href += "?id=" + encodeURIComponent(id);
-  });
-  document.getElementById("hs-meta").textContent = x.id + " · " + x.filial;
+  const y = id ? D.topish(id) : null;
+  if (!y || !MKB.doira([y]).length){ location.replace("xato-404.html"); return; }
+  const q = encodeURIComponent(y.id);
+  document.getElementById("hs-obyekt").innerHTML = '<a href="obyekt.html?id=' + q + '">' + esc(y.qisqa || y.nom) + "</a>";
+  document.getElementById("hs-meta").textContent = y.id + (y.filial ? " · " + y.filial : "");
+  document.getElementById("tarix-havola").href = "obyekt-tarix.html?id=" + q;
+  MKB.fotoShapka(y, ".foto-shapka");
 
-  document.getElementById("t-bosqich").innerHTML = MKB_DATA.BOSQICHLAR.map(b =>
-    '<option value="' + b.kalit + '"' + (b.kalit === x.ish.bosqich ? ' selected' : '') + '>' + b.nom + '</option>').join("");
-  document.getElementById("t-masul").value = x.ish.masul || "";
-  document.getElementById("t-muddat").value = x.ish.muddat || "";
-  document.getElementById("t-bekor").href = "obyekt.html?id=" + encodeURIComponent(x.id);
-  document.getElementById("tahrir-forma").addEventListener("submit", async e => {
-    e.preventDefault();
-    const q = MKB.forma(e.target, ["bosqich", "masul"]);
-    if (!q) return;
-    const b = MKB_DATA.BOSQICHLAR.find(v => v.kalit === q.bosqich);
-    const tarix = (x.ish.tarix || []).concat(q.izoh
-      ? [[new Date().toLocaleDateString("uz"), "Yozuv yangilandi", q.izoh]] : []);
-    /* bosqichdan kelib chiqadigan maydonlar (chip, holat, qabul sanasi) birga yangilanadi */
-    const HOLAT = {
-      ogohlantirish: {nom: "Ta'minotda", rang: "#7BAEFC"}, davo: {nom: "Ta'minotda", rang: "#7BAEFC"},
-      sud: {nom: "Ta'minotda", rang: "#7BAEFC"},
-      qaror: {nom: "Musodara jarayonida", rang: "#E8763C"}, ijro: {nom: "Musodara jarayonida", rang: "#E8763C"},
-      musodara: {nom: "Musodara qilingan", rang: "#0E9F6E"}, balans: {nom: "Balansda saqlanmoqda", rang: "#059669"},
+  const bugun = D.bugun();
+  const iso = s => { const d = D.sanaOqi(s); return d ? d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") : ""; };
+  const b = y.balans || {}, h = y.huquq || {}, md = y.maydon || {}, joy = y.joy || {};
+  /* Lot, ijara, bo'lib to'lash va chiqim holatlari tegishli amal orqali o'rnatiladi */
+  const QOLDA = ["Balansda", "Rasmiylashtirilmoqda", "Sotuvga tayyorlanmoqda"];
+  const holatlar = D.HOLATLAR.filter(x => QOLDA.indexOf(x.nom) >= 0 || x.nom === y.holat);
+  const xodimlar = Array.from(new Set((D.FOYDLAR || []).filter(f => f.faol !== false).map(f => f.nom).filter(Boolean))).sort();
+  const filiallar = (D.FILIALLAR || []).slice().sort((a, c) => String(a.nom).localeCompare(String(c.nom)));
+
+  const maydon = (nom, yorliq, html, opt) => {
+    opt = opt || {};
+    return '<div class="maydon' + (opt.keng ? " keng" : "") + '"' + (opt.guruh ? ' data-guruh="' + opt.guruh + '"' : "") + '><label class="maydon-yorliq" for="t-' + nom + '">' + yorliq + (opt.majburiy ? " <b>*</b>" : "") + "</label>" +
+      '<div class="kirish">' + html + "</div>" + (opt.izoh ? '<span class="maydon-izoh">' + opt.izoh + "</span>" : "") + "</div>";
+  };
+  const inp = (nom, qiymat, attr) => '<input id="t-' + nom + '" name="' + nom + '" value="' + esc(qiymat == null ? "" : qiymat) + '"' + (attr || "") + ">";
+  /* Son maydonlari matn ko'rinishida: formati (1 234,5) va tekshiruvi yadroda (data-format) */
+  const son = (nom, qiymat, format, attr) => inp(nom, qiymat > 0 ? qiymat : "", ' data-format="' + format + '"' + (attr || ""));
+
+  forma.innerHTML =
+    '<div class="forma-tor">' +
+    '<p class="forma-bolim keng">Asosiy</p>' +
+    maydon("nom", "To'liq nomi", inp("nom", y.nom, ' maxlength="160" minlength="3" required data-xato="To\'liq nomini kiriting"'), {keng: true, majburiy: true}) +
+    maydon("qisqa", "Qisqa nomi", inp("qisqa", y.qisqa, ' maxlength="60"')) +
+    maydon("rasmTuri", "Turi", '<select id="t-rasmTuri" name="rasmTuri" required>' + D.TUR_KALITLAR.map(t =>
+      '<option value="' + t.kalit + '"' + (t.kalit === y.rasmTuri ? " selected" : "") + ">" + esc(t.nom) + "</option>").join("") + "</select>", {majburiy: true}) +
+    '<p class="forma-bolim keng">Joylashuv</p>' +
+    maydon("manzil", "Manzil", inp("manzil", y.manzil, ' maxlength="200" required data-xato="Manzilni kiriting"'), {keng: true, majburiy: true}) +
+    maydon("lat", "Kenglik", inp("lat", joy.lat, ' type="number" step="any" inputmode="decimal" placeholder="41.3111"'), {izoh: "37 dan 46 gacha"}) +
+    maydon("lng", "Uzunlik", inp("lng", joy.lng, ' type="number" step="any" inputmode="decimal" placeholder="69.2797"'), {izoh: "55 dan 74 gacha"}) +
+    '<p class="forma-bolim keng" data-guruh="bino">Maydon, m²</p>' +
+    maydon("yer", "Yer maydoni", son("yer", md.yer, "kasr", ' min="0.1"'), {guruh: "bino"}) +
+    maydon("qurilishOsti", "Qurilish osti", son("qurilishOsti", md.qurilishOsti, "kasr", ' min="0.1"'), {guruh: "bino"}) +
+    maydon("foydali", "Foydali maydon", son("foydali", md.foydali, "kasr", ' min="0.1"'), {guruh: "bino"}) +
+    '<p class="forma-bolim keng">Balans</p>' +
+    maydon("qiymat", "Balans qiymati", son("qiymat", b.qiymat, "pul", ' min="0.01" required data-xato="Balans qiymatini kiriting"'), {majburiy: true}) +
+    maydon("sana", "Balansga qabul sanasi", inp("sana", iso(b.sana), ' type="date" required data-xato="Balansga qabul sanasini kiriting" max="' + iso(D.sanaYoz(bugun)) + '"'), {majburiy: true}) +
+    maydon("hisobvaraq", "Hisobvaraq", inp("hisobvaraq", b.hisobvaraq, ' inputmode="numeric" maxlength="5"'), {izoh: "5 xonali raqam"}) +
+    '<p class="forma-bolim keng">Huquq</p>' +
+    maydon("kadastrRaqami", "Kadastr raqami", inp("kadastrRaqami", h.kadastrRaqami, ' maxlength="40" placeholder="10:07:02:01:0105"'), {guruh: "bino"}) +
+    maydon("davlatRaqami", "Davlat raqami", inp("davlatRaqami", h.davlatRaqami, ' maxlength="16" placeholder="01 A 123 BC"'), {guruh: "transport"}) +
+    maydon("vin", "VIN yoki zavod raqami", inp("vin", h.vin, ' maxlength="30"'), {guruh: "binosiz"}) +
+    '<p class="forma-bolim keng">Mas\'uliyat va holat</p>' +
+    maydon("masul", "Mas'ul xodim", inp("masul", y.masul, ' list="xodimlar" maxlength="80"') +
+      '<datalist id="xodimlar">' + xodimlar.map(n => '<option value="' + esc(n) + '">').join("") + "</datalist>") +
+    maydon("filialKod", "Filial", '<select id="t-filialKod" name="filialKod" required>' + filiallar.map(f =>
+      '<option value="' + esc(f.id) + '"' + (f.id === y.filialKod ? " selected" : "") + ">" + esc(f.nom) + "</option>").join("") + "</select>", {majburiy: true}) +
+    maydon("holat", "Holat", '<select id="t-holat" name="holat">' + holatlar.map(x =>
+      '<option value="' + esc(x.nom) + '"' + (x.nom === y.holat ? " selected" : "") + ">" + esc(x.nom) + "</option>").join("") + "</select>",
+      {keng: true, izoh: "Lot, ijara va balansdan chiqarish holati tegishli amal orqali o'rnatiladi"}) +
+    '<div class="maydon keng"><label class="maydon-yorliq" for="t-sabab">O\'zgarish sababi</label>' +
+      '<textarea id="t-sabab" name="sabab" class="kirish-matn" maxlength="300" placeholder="Masalan: kadastr ko\'chirmasi bo\'yicha aniqlashtirildi"></textarea></div>' +
+    "</div>" +
+    '<div class="forma-tugmalar"><a class="tugma tugma-oq" href="obyekt.html?id=' + q + '">Bekor qilish</a>' +
+    '<button type="submit" class="tugma tugma-asosiy" id="saqla" data-saqla data-yozadi data-sayohat="saqla" title="Ctrl+S">' + ik("tasdiq") + "<span>Saqlash</span></button></div>";
+
+  const $ = n => forma.querySelector('[name="' + n + '"]');
+  const turInfo = k => D.TUR_KALITLAR.find(t => t.kalit === k) || {};
+  const binomi = () => ["noturar", "turar"].indexOf(turInfo($("rasmTuri").value).turKalit) >= 0;
+  function guruhlar(){
+    const t = turInfo($("rasmTuri").value);
+    const bino = binomi();
+    forma.querySelectorAll("[data-guruh]").forEach(el => {
+      const g = el.dataset.guruh;
+      el.hidden = g === "bino" ? !bino : g === "transport" ? t.turKalit !== "transport" : bino;
+    });
+  }
+
+  /* ---------- Qo'shimcha qoidalar (HTML atributlaridan tashqari); xato matni maydon ostida chiqadi ---------- */
+  const raqam = v => { const s = String(v == null ? "" : v).replace(/\s/g, "").replace(",", "."); if (!s) return null; const n = Number(s); return Number.isFinite(n) ? n : NaN; };
+  const QOIDA = {
+    hisobvaraq: v => !v || /^\d{5}$/.test(v) || "5 xonali hisobvaraq raqamini kiriting",
+    lat: (v, qv) => {
+      const lng = raqam($("lng").value);
+      if (v == null && lng != null) return "Kenglikni ham kiriting";
+      return v == null || (v >= 37 && v <= 46) || "Kenglik 37 dan 46 gacha bo'ladi";
+    },
+    lng: v => {
+      const lat = raqam($("lat").value);
+      if (v == null && lat != null) return "Uzunlikni ham kiriting";
+      return v == null || (v >= 55 && v <= 74) || "Uzunlik 55 dan 74 gacha bo'ladi";
+    },
+    vin: v => turInfo($("rasmTuri").value).turKalit !== "transport" || !v || /^[A-HJ-NPR-Z0-9]{17}$/i.test(v) || "VIN 17 ta belgidan iborat bo'ladi",
+  };
+
+  /* Qo'shimcha qoida xatosi maydondan chiqqanda ham qoladi (yadro blur tekshiruvi faqat HTML atributlarini ko'radi) */
+  function qoidaJonli(forma, qoidalar){
+    const qiy = el => { const f = el.getAttribute("data-format"); if (f) return MKB_UX_SOF.ajrat(f, el.value);
+      if (el.type === "number") return el.value === "" ? null : Number(el.value); return String(el.value || "").trim(); };
+    Object.keys(qoidalar).forEach(n => {
+      const el = forma.querySelector('[name="' + n + '"]');
+      if (!el) return;
+      el.addEventListener("blur", () => setTimeout(() => {
+        const hamma = {};
+        forma.querySelectorAll("[name]").forEach(m => { hamma[m.name] = qiy(m); });
+        const v = hamma[n];
+        if (v == null || v === "" || el.getAttribute("aria-invalid") === "true") return;
+        const r = qoidalar[n](v, hamma);
+        if (typeof r === "string" && r) MKB.maydonXato(el, r);
+      }, 0));
+    });
+  }
+
+  /* ---------- O'zgarishlarni yig'ish: faqat o'zgargan maydonlar ---------- */
+  const yax = (v, k) => v == null || v === "" ? null : Math.round(Number(v) * k) / k;
+  function yigish(){
+    const f = {};
+    forma.querySelectorAll("[name]").forEach(m => { f[m.name] = m.value.trim(); });
+    const t = turInfo(f.rasmTuri);
+    const bino = binomi();
+    const qiymat = raqam(f.qiymat);
+    const sana = D.sanaOqi(f.sana);
+    const mayd = {};
+    if (bino) ["yer", "qurilishOsti", "foydali"].forEach(k => { const v = raqam(f[k]); mayd[k] = v > 0 ? yax(v, 10) : 0; });
+    const lat = raqam(f.lat), lng = raqam(f.lng);
+
+    /* patch: ichki obyektlar bir daraja birlashtiriladi */
+    const patch = {}, ozg = [];
+    const tekshirQosh = (yorliq, eski, yangi, qoy, korinish) => {
+      const e = eski == null || eski === "" ? null : eski, n = yangi == null || yangi === "" ? null : yangi;
+      if (JSON.stringify(e) === JSON.stringify(n)) return;
+      qoy(n); ozg.push(korinish ? [yorliq, e == null ? null : korinish(e), n == null ? null : korinish(n)] : [yorliq, e, n]);
     };
-    const patch = {
-      ish: Object.assign({}, x.ish, {bosqich: q.bosqich, masul: q.masul,
-        muddat: q.muddat, shoshilinch: !!q.shoshilinch, tarix}),
-      bosqichNomi: b ? b.nom : x.bosqichNomi,
-      bosqichChip: b ? b.chip : x.bosqichChip,
-      holat: HOLAT[q.bosqich] || x.holat,
-    };
-    if (["musodara", "balans"].includes(q.bosqich) && !x.mulk.qabul){
-      const d = new Date(), OY = ["yan", "fev", "mar", "apr", "may", "iyn", "iyl", "avg", "sen", "okt", "noy", "dek"];
-      patch.mulk = Object.assign({}, x.mulk, {qabul: d.getDate() + "-" + OY[d.getMonth()] + ", " + d.getFullYear()});
+    const m2 = v => MKB.fmt(v) + " m²";
+    const ich = (k, kk, v) => { patch[k] = Object.assign(patch[k] || {}, {[kk]: v}); };
+    tekshirQosh("Nomi", y.nom, f.nom, v => { patch.nom = v; });
+    tekshirQosh("Qisqa nomi", y.qisqa, f.qisqa, v => { patch.qisqa = v || ""; });
+    if (f.rasmTuri !== y.rasmTuri){
+      const asosiy = (D.ASOSIY_TURLAR || []).find(a => a.kalit === t.turKalit) || {};
+      Object.assign(patch, {rasmTuri: f.rasmTuri, turKalit: t.turKalit, tur: asosiy.nom || y.tur, binoli: bino});
+      ozg.push(["Turi", turInfo(y.rasmTuri).nom, t.nom]);
     }
-    await MKBapi.yangilash("YOZUVLAR", x.id, patch);
-    MKB.toast(x.id + " raqamli yozuv saqlandi");
-    setTimeout(() => location.href = "obyekt.html?id=" + encodeURIComponent(x.id), 600);
-  });
+    tekshirQosh("Manzil", y.manzil, f.manzil, v => { patch.manzil = v; });
+    const eskiJoy = y.joy && y.joy.lat != null ? [y.joy.lat, y.joy.lng].join(", ") : null;
+    if (Number.isFinite(lat) && Number.isFinite(lng)) tekshirQosh("Koordinata", eskiJoy, [lat, lng].join(", "), () => { patch.joy = {lat, lng, aniq: true}; });
+    else if (lat == null && lng == null) tekshirQosh("Koordinata", eskiJoy, null, () => { patch.joy = null; });
+    if (bino){
+      tekshirQosh("Yer maydoni", yax(md.yer, 10) || null, mayd.yer || null, v => ich("maydon", "yer", v || 0), m2);
+      tekshirQosh("Qurilish osti", yax(md.qurilishOsti, 10) || null, mayd.qurilishOsti || null, v => ich("maydon", "qurilishOsti", v || 0), m2);
+      tekshirQosh("Foydali maydon", yax(md.foydali, 10) || null, mayd.foydali || null, v => ich("maydon", "foydali", v || 0), m2);
+    }
+    if (qiymat > 0) tekshirQosh("Balans qiymati", yax(b.qiymat, 100), yax(qiymat, 100), v => ich("balans", "qiymat", v), MKB.pul);
+    if (sana) tekshirQosh("Qabul sanasi", b.sana, D.sanaYoz(sana), v => ich("balans", "sana", v));
+    tekshirQosh("Hisobvaraq", b.hisobvaraq, f.hisobvaraq, v => ich("balans", "hisobvaraq", v));
+    if (bino) tekshirQosh("Kadastr raqami", h.kadastrRaqami, f.kadastrRaqami, v => ich("huquq", "kadastrRaqami", v));
+    if (t.turKalit === "transport") tekshirQosh("Davlat raqami", h.davlatRaqami, f.davlatRaqami ? f.davlatRaqami.toUpperCase() : "", v => ich("huquq", "davlatRaqami", v));
+    if (!bino) tekshirQosh("VIN yoki zavod raqami", h.vin, f.vin ? f.vin.toUpperCase() : "", v => ich("huquq", "vin", v));
+    tekshirQosh("Mas'ul xodim", y.masul, f.masul, v => { patch.masul = v; });
+    if (f.filialKod !== y.filialKod){
+      const fl = D.filial ? D.filial(f.filialKod) : filiallar.find(x => x.id === f.filialKod);
+      Object.assign(patch, {filialKod: f.filialKod, filial: fl ? fl.nom : f.filialKod});
+      ozg.push(["Filial", y.filial, fl ? fl.nom : f.filialKod]);
+    }
+    if (f.holat !== y.holat){
+      Object.assign(patch, {holat: f.holat, bosqich: (D.HOLAT_BOSQICH || {})[f.holat] || y.bosqich});
+      ozg.push(["Holat", y.holat, f.holat]);
+    }
+    return {patch, ozg, sabab: f.sabab};
+  }
 
-});
+  const qisqa = v => v == null ? "—" : String(v).length > 60 ? String(v).slice(0, 60) + "…" : String(v);
+  function ozgarishlarChiz(){
+    const {ozg} = yigish();
+    document.getElementById("ozg-soni").innerHTML = ozg.length ? '<span data-tarjimasiz>' + ozg.length + "</span>" : "";
+    const el = document.getElementById("ozgarishlar");
+    el.innerHTML = !ozg.length ? MKB.boshHolat("tahrir", "O'zgarish yo'q", "Maydonni o'zgartirsangiz, eski va yangi qiymat shu yerda chiqadi")
+      : '<ul class="ozg-royxat">' + ozg.map(([n, e, v]) => "<li><b>" + esc(n) + '</b><span data-tarjimasiz><del>' + esc(qisqa(e)) + "</del> → " + esc(qisqa(v)) + "</span></li>").join("") + "</ul>";
+    tarjimaQil(el);
+  }
+
+  /* ---------- Oxirgi tahrirlar (amallar tarixi) ---------- */
+  async function oxirgiChiz(){
+    const el = document.getElementById("oxirgi");
+    let r = [];
+    try{ r = (await MKBapi.royxat("amallar")) || []; }
+    catch(_){ MKB.xatoHolat(el, "Tahrirlar tarixini yuklab bo'lmadi", oxirgiChiz); return; }
+    r = r.filter(a => a && a.kolleksiya === "YOZUVLAR" && a.obyektId === y.id && a.turi === "yangilash").slice(0, 5);
+    el.innerHTML = !r.length ? MKB.boshHolat("soat", "Tahrir qayd etilmagan", "Saqlangan o'zgarishlar eski va yangi qiymati bilan yoziladi")
+      : r.map(a => '<div class="qator"><span class="belgi lavanda">' + ik("tahrir") + "</span>" +
+          '<span class="matn"><b data-tarjimasiz>' + esc(a.kim || "—") + "</b>" +
+          '<span data-tarjimasiz>' + esc(a.vaqt + (a.ozgarish ? " · " + Object.keys(a.ozgarish).join(", ") : "")) + "</span></span></div>").join("");
+    tarjimaQil(el);
+  }
+
+  guruhlar();
+  /* Format (1 234,5) qoriqlash asosidan oldin qo'llanadi, aks holda forma darrov "o'zgargan" bo'lib ko'rinadi */
+  MKB.formaUla(forma);
+  const oxirgiTarix = (y.tarix || []).slice(-1)[0];
+  qoidaJonli(forma, QOIDA);
+  const qoriq = MKB.formaQoriqla(forma, {nom: "Obyekt tahriri", qoralama: "obyekt-tahrir:" + y.id, yozuvVaqt: oxirgiTarix && oxirgiTarix.sana,
+    tiklandi(){ guruhlar(); ozgarishlarChiz(); }});
+  ozgarishlarChiz();
+  oxirgiChiz();
+  forma.addEventListener("input", ozgarishlarChiz);
+  forma.addEventListener("change", e => { if (e.target.name === "rasmTuri") guruhlar(); ozgarishlarChiz(); });
+  forma.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!MKB.formaTekshir(forma, QOIDA)) return;
+    const {patch, ozg, sabab} = yigish();
+    if (!ozg.length){ MKB.toast("O'zgarish yo'q", "info"); return; }
+    patch.tarix = (y.tarix || []).concat([{sana: D.sanaYoz(bugun), voqea: "Ma'lumotlar tahrirlandi", izoh: sabab || ozg.map(o => o[0]).join(", ")}]);
+    try{
+      await MKB.band(document.getElementById("saqla"), () => MKBapi.yangilash("YOZUVLAR", y.id, patch));
+    }catch(err){
+      MKB.formaXato(forma, "O'zgarishlar saqlanmadi: " + (err && err.message ? err.message : "qayta urinib ko'ring"));
+      return;
+    }
+    qoriq.toza();
+    MKB.toast("Obyekt ma'lumotlari saqlandi");
+    setTimeout(() => { location.href = "obyekt.html?id=" + q; }, 600);
+  });
+  tarjimaQil(document.querySelector("main"));
+}});
 </script>
 </body>
 </html>

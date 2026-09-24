@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — E-auksion lotlari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.rz-hisob{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--matn-2);padding:12px 16px;border-radius:var(--r-kichik);background:var(--plitka)}
+.rz-hisob b{font-weight:500;color:var(--siyoh)}
+.rz-muddat{font-size:12.5px;color:var(--matn-3)}
+.rz-muddat.xavf{color:var(--xavf-matn)}
+.rz-qoshimcha{grid-column:1 / -1;border-radius:var(--r-kichik);background:var(--plitka);padding:0 16px}
+.rz-qoshimcha > summary{min-height:44px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:var(--matn-2);list-style:none}
+.rz-qoshimcha > summary::-webkit-details-marker{display:none}
+.rz-qoshimcha > summary::after{content:"";width:8px;height:8px;margin-left:auto;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform var(--tez)}
+.rz-qoshimcha[open] > summary::after{transform:rotate(-135deg)}
+.rz-qoshimcha > .forma-tor{padding:4px 0 16px}
+</style>
+</head>
+<body data-sahifa="realizatsiya">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="realizatsiya.html">Realizatsiya</a><span class="ajratgich">/</span><span>E-auksion lotlari</span></div>
+    <div class="hs-qator"><h1>E-auksion lotlari</h1><span class="hs-meta" id="hs-meta">—</span>
+      <div class="hs-amallar">
+        <button type="button" class="tugma tugma-asosiy" id="lot-yangi" data-huquq="yoz" data-yozadi data-sayohat="yaratish"><svg class="ic"><use href="#ik-qoshish"/></svg><span>Lot yaratish</span></button>
+      </div></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="realizatsiya.html">Sotuv rejasi</a><a href="lotlar.html" class="faol">E-auksion lotlari</a><a href="takliflar.html">Takliflar</a><a href="shartnomalar.html">Shartnomalar va to'lovlar</a><a href="ijara.html">Ijara</a></nav>
+
+  <section class="metrika-qator tort" id="kpi" aria-label="Lotlar ko'rsatkichlari" data-sayohat="kpi"></section>
+  <section id="jadval-joy" aria-label="Lotlar ro'yxati" data-sayohat="jadval"></section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+(() => {
+  const D = MKB_DATA, esc = MKB.esc, pul = v => MKB.pul(v);
+  const oqi = x => D.sanaOqi(x);
+  const bugun = () => { const b = D.bugun(); return new Date(b.getFullYear(), b.getMonth(), b.getDate()); };
+  const yaxlit = n => Math.round(n * 10) / 10;
+  const iso = d => d ? d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") : "";
+  const isoDan = v => { const d = v ? oqi(v) : null; return d ? D.sanaYoz(d) : ""; };
+  /* Kiritish maydoni uchun son ko'rinishi: 1 234,5 (data-format="pul" / "foiz") */
+  const sonYoz = n => {
+    if (n == null || n === "" || !Number.isFinite(Number(n))) return "";
+    const [b, k] = (Math.round(Number(n) * 100) / 100).toFixed(2).split(".");
+    const k2 = k.replace(/0+$/, "");
+    return b.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + (k2 ? "," + k2 : "");
+  };
+  const sonOqi = v => { const t = String(v == null ? "" : v).replace(/\s/g, "").replace(",", "."); return /^\d+(\.\d+)?$/.test(t) ? parseFloat(t) : null; };
+  const usulNomi = k => ((D.SOTISH_USULLARI || []).find(u => u.kalit === k) || {}).nom || "—";
+  const param = (id, asl) => { const v = D.param ? D.param(id) : null; return v == null ? asl : v; };
+  const FAOL_LOT = MKB.FAOL_LOT;
+  /* Bo'lib to'lash sotish usuli emas, to'lov sharti: u shartnomada belgilanadi. Ijara lot orqali berilmaydi */
+  const LOT_USUL = k => ["bolib", "ijara"].indexOf(k) < 0;
+  const q = new URLSearchParams(location.search);
+  let jadval = null, joriy = [];
+  /* Filtr variantlari chizilgan qatorlardan yig'iladi: mos qatori yo'q variant ro'yxatga tushmaydi */
+  const variantlar = (maydon, tartib) => {
+    const v = [...new Set(joriy.map(x => x[maydon]).filter(Boolean))];
+    const tanlangan = jadval && jadval.holat.filtrlar[maydon];
+    if (tanlangan && v.indexOf(tanlangan) < 0) v.push(tanlangan);
+    return tartib ? v.sort((a, b) => (tartib.indexOf(a) + 1 || 99) - (tartib.indexOf(b) + 1 || 99))
+      : v.sort((a, b) => String(a).localeCompare(String(b), "uz"));
+  };
+  const filtrlar = () => [
+    {kalit: "holatNom", nom: "Holat", variantlar: variantlar("holatNom", (D.LOT_HOLATLARI || []).map(h => h.nom))},
+    {kalit: "usulNom", nom: "Usul", variantlar: variantlar("usulNom", (D.SOTISH_USULLARI || []).map(u => u.nom))},
+  ].filter(f => f.variantlar.length > 1 || (jadval && jadval.holat.filtrlar[f.kalit]));
+  /* Bironta qatorga mos kelmaydigan tayyor ko'rinish ro'yxatda ko'rsatilmaydi */
+  const mosKorinishlar = a => a.filter(v => joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
+
+  function muddat(l){
+    const b = bugun();
+    if (l.holat === "elon" && l.savdoSana){
+      const k = D.kunFarqi(b, oqi(l.savdoSana));
+      return k >= 0 ? {matn: "Savdogacha " + k + " kun", xavf: false} : {matn: "Savdo natijasi kiritilmagan", xavf: true};
+    }
+    if (l.holat === "golib" && l.shartnomaMuddati){
+      const k = D.kunFarqi(b, oqi(l.shartnomaMuddati));
+      return {matn: k >= 0 ? "Shartnomagacha " + k + " kun" : "Shartnoma muddati o'tgan", xavf: k < 3};
+    }
+    if (l.holat === "otkazilmagan") return l.takroriySavdoSana ? {matn: "Takroriy savdo " + l.takroriySavdoSana, xavf: false} : {matn: "Qaror kutilmoqda", xavf: true};
+    if (l.holat === "tayyorlanmoqda") return {matn: l.elonSana ? "E'lon " + l.elonSana : "E'lon sanasi belgilanmagan", xavf: false};
+    return {matn: "", xavf: false};
+  }
+
+  function qatorlar(){
+    return MKB.doira(D.LOTLAR || []).map(l => {
+      const o = D.obyekt ? D.obyekt(l.obyektId) : null;
+      return Object.assign({}, l, {obNom: o ? o.qisqa : l.obyektId, hudud: o ? o.hudud : "", holatNom: MKB.holatNomi(l.holat), usulNom: usulNomi(l.sotishUsuli),
+        narx: +l.boshlangichNarx || 0, muddatMatn: muddat(l).matn,
+        tartib: Math.max(0, ...[l.takroriySavdoSana, l.bayonnomaSana, l.savdoSana, l.elonSana].map(x => { const d = x ? oqi(x) : null; return d ? d.getTime() : 0; }))});
+    });
+  }
+
+  /* To'rt holat — to'rt karta. Har bir karta jadvaldagi shu holat filtrini ochadi (bir son bir marta) */
+  function kpi(r){
+    const tayyor = r.filter(l => l.holat === "tayyorlanmoqda");
+    const elon = r.filter(l => l.holat === "elon");
+    const otk = r.filter(l => l.holat === "otkazilmagan");
+    /* Sotilgan lotlar: holati "sotildi"; summa lot shartnomasidan olinadi */
+    const lotShartnoma = new Map(MKB.doira(D.SHARTNOMALAR || []).filter(s => s.lotId && s.holat !== "bekor").map(s => [s.lotId, s]));
+    const sotildi = r.filter(l => l.holat === "sotildi").map(l => { const s = lotShartnoma.get(l.id); return s ? +s.narx || 0 : +l.yakuniyNarx || 0; });
+    const summa = x => pul(yaxlit(x.reduce((a, l) => a + l.narx, 0)));
+    /* Soni nol bo'lgan plitka bosilmaydi: bosilsa doim bo'sh ro'yxat chiqar edi */
+    const m = (holat, yorliq, qiymat, izoh) => {
+      const bor = qiymat > 0, t = bor ? "a" : "div";
+      return "<" + t + ' class="metrika"' + (bor ? ' href="lotlar.html' + (holat ? "?holat=" + holat : "") + '" data-filtr="' + (holat || "") + '"' : "") +
+        '><span class="m-yorliq">' + yorliq + '</span><span class="m-qiymat"><span data-tarjimasiz>' + qiymat +
+        '</span></span><span class="m-izoh">' + izoh + "</span></" + t + ">";
+    };
+    document.getElementById("kpi").innerHTML =
+      m("tayyorlanmoqda", "Tayyorlanmoqda", tayyor.length, "<span>" + summa(tayyor) + "</span> <span>boshlang'ich narx</span>") +
+      m("elon", "E'lon qilingan", elon.length, "<span>" + summa(elon) + "</span> <span>boshlang'ich narx</span>") +
+      m("otkazilmagan", "Savdo o'tkazilmagan", otk.length, "<span>Takroriy savdo yoki narx pasaytirish</span>") +
+      m("sotildi", "Sotildi", sotildi.length, "<span>" + pul(yaxlit(sotildi.reduce((a, x) => a + x, 0))) + "</span> <span>shartnoma summasi</span>");
+    document.getElementById("kpi").querySelectorAll("[data-filtr]").forEach(a => a.addEventListener("click", e => {
+      e.preventDefault();
+      const k = a.dataset.filtr;
+      jadval.holat.filtrlar.holatNom = k ? MKB.holatNomi(k) : "";
+      jadval.holat.sahifa = 1;
+      jadval.yangila();
+      history.replaceState(null, "", "lotlar.html" + (k ? "?holat=" + k : ""));
+    }));
+    tarjimaQil(document.getElementById("kpi"));
+  }
+
+  function chiz(){
+    const r = qatorlar();
+    joriy = r;
+    const meta = document.getElementById("hs-meta");
+    meta.textContent = r.length + " ta lot";
+    tarjimaQil(meta);
+    kpi(r);
+    if (jadval){ jadval.yangila(r); return; }
+    const cfg = {
+      id: "lotlar",
+      qatorlar: r,
+      qidiruv: ["id", "eauksionLotRaqami", "obNom", "obyektId", "golib"],
+      qidiruvYozuvi: "Lot, obyekt yoki g'olib",
+      korinishlar: {tayyor: mosKorinishlar([
+        {nom: "Savdo o'tkazilmagan", filtrlar: {holatNom: MKB.holatNomi("otkazilmagan")}, saralash: "tartib", yonalish: -1},
+        {nom: "E'lon qilinmagan", filtrlar: {holatNom: MKB.holatNomi("tayyorlanmoqda")}, saralash: "tartib", yonalish: -1},
+      ])},
+      saralash: "tartib", yonalish: -1,
+      csvNomi: "lotlar",
+      bosh: {sarlavha: "Lot yaratilmagan", izoh: MKB.huquq("realizatsiya", "yoz") ? "Birinchi lotni «Lot yaratish» tugmasi orqali kiriting" : "Lotlar realizatsiya bo'limi tomonidan yaratiladi"},
+      ustunlar: [
+        {kalit: "id", nom: "Lot", majburiy: true, chiz: l => '<span class="obyekt-katak"><span><span class="nom" data-tarjimasiz>' + esc(l.id) + '</span><br><span class="sub kod-mono" data-tarjimasiz>' + esc(l.eauksionLotRaqami || "—") + "</span></span></span>"},
+        {kalit: "obNom", nom: "Obyekt", oral: true, chiz: l => '<span data-tarjimasiz>' + esc(l.obNom) + '</span><br><span class="rz-muddat">' + esc(l.hudud) + "</span>"},
+        {kalit: "usulNom", nom: "Usul"},
+        {kalit: "holatNom", nom: "Holat", chiz: l => MKB.holatChip(l.holat, true), csv: l => l.holatNom},
+        {kalit: "narx", nom: "Boshlang'ich narx", son: true, chiz: l => '<span class="pul">' + pul(l.narx) + "</span>"},
+        {kalit: "elonSana", nom: "E'lon", tur: "sana", chiz: l => '<span data-tarjimasiz>' + esc(l.elonSana || "—") + "</span>"},
+        {kalit: "savdoSana", nom: "Savdo", tur: "sana", chiz: l => '<span data-tarjimasiz>' + esc(l.savdoSana || "—") + "</span>"},
+        {kalit: "muddatMatn", nom: "Keyingi qadam", oral: true, saralash: false, chiz: l => { const m = muddat(l); return '<span class="rz-muddat' + (m.xavf ? " xavf" : "") + '">' + esc(m.matn || "—") + "</span>"; }},
+      ],
+      bosilganda: l => { location.href = "lot.html?id=" + encodeURIComponent(l.id); },
+    };
+    Object.defineProperty(cfg, "filtrlar", {get: filtrlar, enumerable: true});
+    jadval = MKB.jadval("jadval-joy", cfg);
+    /* Havoladagi holat faqat mos qator bo'lsa qo'llanadi: aks holda ro'yxat sababsiz bo'sh ko'rinardi */
+    const h = q.get("holat");
+    if (h && r.some(x => x.holat === h)){ jadval.holat.filtrlar.holatNom = MKB.holatNomi(h); jadval.yangila(); }
+  }
+
+  /* ---------- Lot yaratish ---------- */
+  function nomzodlar(){
+    const band = new Set((D.LOTLAR || []).filter(l => FAOL_LOT.indexOf(l.holat) >= 0).map(l => l.obyektId));
+    /* Faol loti bor obyekt (savdosi o'tkazilmagan lot ham faol) ro'yxatga kirmaydi: yangi lot uchun avvalgisi bekor qilinadi */
+    return MKB.doira(D.YOZUVLAR || []).filter(y => ["Balansda", "Sotuvga tayyorlanmoqda"].indexOf(y.holat) >= 0 && !band.has(y.id))
+      .sort((a, b) => (a.holat === "Sotuvga tayyorlanmoqda" ? 0 : 1) - (b.holat === "Sotuvga tayyorlanmoqda" ? 0 : 1) || String(a.qisqa || a.nom).localeCompare(String(b.qisqa || b.nom), "uz"));
+  }
+  /* MKB.lot.tekshir xatosi qaysi maydonga tegishli */
+  const XATO_MAYDON = [[/faol lot/i, "obyekt"], [/baholanmagan/i, "boshlangichNarx"], [/Boshlang'ich narx/i, "boshlangichNarx"], [/Minimal narx/i, "minimalNarx"],
+    [/E'londan savdogacha/i, "savdoSana"], [/Savdo sanasi/i, "savdoSana"], [/E'lon sanasi/i, "elonSana"], [/Sotish usuli/i, "sotishUsuli"]];
+  function lotYangi(obyektId, paketId){
+    const paket = paketId ? (D.PAKETLAR || []).find(p => p.id === paketId) : null;
+    const tarkib = paket ? (paket.tarkib || []).map(id => D.topish(id)).filter(Boolean) : [];
+    const r = nomzodlar();
+    if (paket && !tarkib.length){ MKB.toast("Paket tarkibi bo'sh", "xavf"); return; }
+    if (!paket && !r.length){ MKB.toast("Lot yaratish mumkin bo'lgan obyekt yo'q", "xavf"); return; }
+    const asosiy = paket ? tarkib[0] : (r.find(y => y.id === obyektId) || r[0]);
+    const b = bugun(), minKun = param("elonMinKun", 30);
+    const usullar = (D.SOTISH_USULLARI || []).filter(u => LOT_USUL(u.kalit));
+    const parda = MKB.modal(paket ? "Paket uchun lot" : "Lot yaratish",
+      '<div class="forma-tor" id="lt-forma">' +
+        (paket
+          ? '<div class="maydon keng"><span class="maydon-yorliq">Paket</span><span class="rz-hisob"><b data-tarjimasiz>' + esc(paket.nom) + "</b><span>" + tarkib.length + " ta obyekt</span></span>" +
+            '<span class="maydon-xato" id="lt-umumiy" role="alert" hidden></span></div>'
+          : '<label class="maydon keng"><span class="maydon-yorliq">Obyekt <b>*</b></span><span class="kirish"><select name="obyekt" required>' +
+            r.map(y => '<option value="' + esc(y.id) + '"' + (y.id === asosiy.id ? " selected" : "") + ">" + esc((y.qisqa || y.nom) + " · " + y.id + " · " + y.holat) + "</option>").join("") +
+            "</select></span></label>") +
+        '<label class="maydon"><span class="maydon-yorliq">Sotish usuli <b>*</b></span><span class="kirish"><select name="sotishUsuli" required>' +
+          usullar.map(u => '<option value="' + u.kalit + '"' + (u.kalit === (paket ? "biznes" : "eauksion") ? " selected" : "") + ">" + esc(u.nom) + "</option>").join("") + "</select></span></label>" +
+        '<label class="maydon"><span class="maydon-yorliq">Boshlang\'ich narx, mln so\'m <b>*</b></span><span class="kirish"><input type="text" name="boshlangichNarx" data-format="pul" required data-xato="Boshlang\'ich narxni kiriting"></span><span class="maydon-izoh" id="lt-bozor"></span></label>' +
+        '<label class="maydon"><span class="maydon-yorliq">E\'lon sanasi</span><span class="kirish"><input type="date" name="elonSana" value="' + iso(b) + '"></span></label>' +
+        '<label class="maydon" data-ea><span class="maydon-yorliq">Savdo sanasi</span><span class="kirish"><input type="date" name="savdoSana" min="' + iso(b) + '" value="' + iso(D.kunQosh(b, minKun + 1)) + '"></span>' +
+          '<span class="maydon-izoh">E\'londan kamida <span data-tarjimasiz>' + minKun + '</span> kun keyin (VM 18)</span></label>' +
+        '<label class="maydon keng" data-ea><span class="maydon-yorliq">E-auksion lot raqami</span><span class="kirish"><input name="eauksionLotRaqami" maxlength="30" placeholder="EA-0000000"></span>' +
+          '<span class="maydon-izoh">E\'lon qilishda kiritiladi</span></label>' +
+        '<details class="rz-qoshimcha" id="lt-qoshimcha"><summary>Qo\'shimcha shartlar</summary><div class="forma-tor">' +
+          '<label class="maydon"><span class="maydon-yorliq">Minimal narx, mln so\'m</span><span class="kirish"><input type="text" name="minimalNarx" data-format="pul"></span></label>' +
+          '<label class="maydon"><span class="maydon-yorliq">Zakalat, %</span><span class="kirish"><input type="text" name="zakalatFoiz" data-format="foiz" value="' + sonYoz(param("zakalatFoiz", 10)) + '"></span></label>' +
+          '<label class="maydon keng"><span class="maydon-yorliq">Realizatsiya qarori raqami</span><span class="kirish"><input name="qarorRaqami" maxlength="30" placeholder="RQ-2026/000"></span></label>' +
+        "</div></details>" +
+        '<div class="maydon keng"><div class="rz-hisob" id="lt-hisob" aria-live="polite"></div></div>' +
+      "</div>",
+      {okMatn: "Lotni saqlash", async ok(p){
+        const forma = p.querySelector("#lt-forma");
+        const f0 = MKB.formaTekshir(forma);
+        if (!f0) return false;
+        const id = paket ? asosiy.id : el("obyekt").value;
+        const m = maydonlar();
+        const x = MKB.lot.tekshir(id, m);
+        if (x.length){ xatoQoy(x); MKB.formaXato(forma, x.join(". ")); return false; }
+        let lot = null;
+        try{
+          lot = await MKB.lot.yarat(id, m);
+          if (paket){
+            /* Paketning qolgan obyektlari shu lotga bog'lanadi */
+            for (const y of tarkib.slice(1)){
+              const yy = D.topish(y.id) || y;
+              await MKBapi.yangilash("YOZUVLAR", y.id, {holat: lot.sotishUsuli === "davaktiv" ? "Davaktivga o'tkazilgan" : "Lotda", bosqich: "lot",
+                sotuv: Object.assign({}, yy.sotuv, {holat: lot.holat, usul: lot.sotishUsuli, lotId: lot.id}),
+                tarix: (Array.isArray(yy.tarix) ? yy.tarix : []).concat([{sana: D.sanaYoz(bugun()), voqea: "Paket lotiga kiritildi", izoh: lot.id + ", " + paket.nom}])});
+            }
+            await MKBapi.yangilash("PAKETLAR", paket.id, {holat: "lotda"});
+          }
+        }catch(e){ MKB.formaXato(forma, "Lot saqlanmadi: " + (e && e.message ? e.message : "qayta urinib ko'ring")); return false; }
+        if (!lot) return false;
+        MKB.toast("Lot " + lot.id + " yaratildi");
+        location.href = "lot.html?id=" + encodeURIComponent(lot.id);
+        return true;
+      }});
+    const el = n => parda.querySelector('[name="' + n + '"]');
+    function maydonlar(){
+      const usul = el("sotishUsuli").value, ea = usul === "eauksion";
+      return {sotishUsuli: usul, elonSana: isoDan(el("elonSana").value) || null, savdoSana: ea ? isoDan(el("savdoSana").value) || null : null,
+        boshlangichNarx: sonOqi(el("boshlangichNarx").value), minimalNarx: sonOqi(el("minimalNarx").value),
+        zakalatFoiz: sonOqi(el("zakalatFoiz").value), eauksionLotRaqami: ea ? el("eauksionLotRaqami").value.trim() : "", qarorRaqami: el("qarorRaqami").value.trim(),
+        paketId: paket ? paket.id : null};
+    }
+    /* Qonuniy tekshiruv natijasi tegishli maydon ostida, yozish paytida yangilanadi */
+    let jonli = new Set();
+    function xatoQoy(x){
+      const har = {}, umumiy = [];
+      x.forEach(t => {
+        let n = (XATO_MAYDON.find(([re]) => re.test(t)) || [])[1];
+        if (/E'lon va savdo/i.test(t)) n = el("elonSana").value ? "savdoSana" : "elonSana";
+        if (!n || (paket && n === "obyekt")){ umumiy.push(t); return; }
+        (har[n] = har[n] || []).push(t);
+      });
+      /* Maydonga bog'lanmagan xato (paketdagi obyektning faol loti) paket nomi ostida */
+      const u = parda.querySelector("#lt-umumiy");
+      if (u){ u.hidden = !umumiy.length; u.textContent = umumiy.join(". "); tarjimaQil(u); }
+      jonli.forEach(n => { if (!har[n] && el(n)) MKB.maydonXato(el(n), null); });
+      jonli = new Set(Object.keys(har));
+      Object.keys(har).forEach(n => {
+        if (!el(n)) return;
+        if (n === "minimalNarx") parda.querySelector("#lt-qoshimcha").open = true;
+        MKB.maydonXato(el(n), har[n].join(". "));
+      });
+    }
+    function narxToldir(){
+      const y = paket ? null : D.topish(el("obyekt").value);
+      const bozor = paket ? tarkib.reduce((a, t) => a + ((t.qiymat && +t.qiymat.bozor) || 0), 0) : (y && y.qiymat && y.qiymat.bozor) || null;
+      el("boshlangichNarx").value = bozor ? sonYoz(yaxlit(bozor)) : "";
+      el("minimalNarx").value = bozor ? sonYoz(yaxlit(bozor * (1 - param("takroriySavdoChegirma", 25) / 100))) : "";
+      const iz = parda.querySelector("#lt-bozor");
+      iz.innerHTML = bozor ? "<span>Bozor qiymati</span> <span>" + pul(yaxlit(bozor)) + "</span>" : "<span>Obyekt baholanmagan</span>";
+      tarjimaQil(iz);
+    }
+    function yangila(){
+      const m = maydonlar(), usul = m.sotishUsuli;
+      parda.querySelectorAll("[data-ea]").forEach(x => { x.style.display = usul === "eauksion" ? "" : "none"; });
+      const narx = +m.boshlangichNarx || 0;
+      const h = parda.querySelector("#lt-hisob");
+      h.innerHTML = narx > 0
+        ? "<span><span>Qadam</span> <b data-tarjimasiz>" + MKB.lot.qadamFoiz(narx) + "%</b></span>" +
+          "<span><span>Zakalat</span> <b>" + pul(yaxlit(narx * (+m.zakalatFoiz || 0) / 100)) + "</b></span>" +
+          (m.elonSana && m.savdoSana ? "<span><span>E'londan savdogacha</span> <b data-tarjimasiz>" + D.kunFarqi(oqi(m.elonSana), oqi(m.savdoSana)) + "</b> <span>kun</span></span>" : "")
+        : "<span>Narx kiritilgach qadam va zakalat hisoblanadi</span>";
+      tarjimaQil(h);
+      xatoQoy(MKB.lot.tekshir(paket ? asosiy.id : el("obyekt").value, m));
+    }
+    if (!paket) el("obyekt").addEventListener("change", () => { narxToldir(); yangila(); });
+    parda.querySelectorAll("[name]").forEach(x => { x.addEventListener("input", yangila); x.addEventListener("change", yangila); });
+    narxToldir();
+    yangila();
+  }
+
+  MKB.sahifaYukla({
+    joylar: {"kpi": ["karta", 4], "jadval-joy": ["jadval", 8]},
+    xato: "Lotlar ro'yxatini yuklab bo'lmadi",
+    ish: async () => {
+      await MKB.kolYukla(["YOZUVLAR", "LOTLAR", "TAKLIFLAR", "SHARTNOMALAR", "PAKETLAR", "ARXIV"]);
+      jadval = null;
+      chiz();
+      if (q.get("yangi") === "1" && MKB.huquq("realizatsiya", "yoz")) lotYangi(q.get("obyekt"), q.get("paket"));
+    },
+  });
+  document.getElementById("lot-yangi").addEventListener("click", () => lotYangi());
+  document.addEventListener("mkb:malumot", () => { try{ if (jadval) chiz(); }catch(_){ } });
+})();
+</script>
+</body>
+</html>

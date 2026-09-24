@@ -3,273 +3,205 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Chiqish tekshiruvi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
-<style>@media (max-width:1100px){.kn-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<title>MKB — Tashrif chiqishi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.tor-2>*,.ustun>*,.forma-tor>*{min-width:0}
+.kirish select{width:100%;text-overflow:ellipsis}
+.topshir-band{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--chiziq-2);flex-wrap:wrap}
+.topshir-band:last-child{border-bottom:0}
+.topshir-band .band-nom{flex:1 1 220px;font-size:14px}
+.topshir-band .tanlash{display:flex;gap:6px}
+.topshir-band label{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:99px;background:var(--plitka);font-size:13px;cursor:pointer;border:1.5px solid transparent}
+.topshir-band input{position:absolute;opacity:0;pointer-events:none}
+.topshir-band label:has(input:checked){border-color:var(--siyoh);background:var(--oq)}
+.topshir-band label.nomuvofiq:has(input:checked){border-color:var(--xavf);color:var(--pushti-matn)}
+.topshir-band label:has(input:focus-visible){outline:2px solid var(--siyoh);outline-offset:2px}
+.nomuv-blok{margin-top:16px;padding:16px;border-radius:18px;background:var(--xavf-fon)}
+.nomuv-blok[hidden]{display:none}
+.amal-qator{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.kichik-izoh{font-size:12.5px;color:var(--matn-3);line-height:1.55;margin-top:10px}
+</style>
 </head>
-<body data-sahifa="kn">
+<body data-sahifa="himoya">
 <div class="qobiq">
 <nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
 <div class="sahna">
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="kirish-nazorati.html">Kirish nazorati</a><span class="ajratgich">/</span><span>Chiqish tekshiruvi</span></div>
-    <div class="hs-qator"><h1>Chiqish tekshiruvi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="himoya.html">Himoya va monitoring</a><span class="ajratgich">/</span><a href="tashriflar.html">Tashriflar</a><span class="ajratgich">/</span><span>Chiqish</span></div>
+    <div class="hs-qator"><h1>Tashrif chiqishi</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px" class="kn-tor">
-    <section class="karta">
-      <div class="karta-bosh"><h2>Chiqish tekshiruvi</h2><span class="soni" id="ch-holat"></span></div>
-      <p style="font-size:13.5px;color:var(--matn-3);margin-bottom:16px">Tashrifchi obyektdan chiqishdan oldin quyidagi bandlar bandma-band tekshiriladi. Nomuvofiqlik topilsa hodisa avtomatik ochiladi va tashrif yopilmaydi.</p>
-      <div id="ch-royxat"></div>
-      <div class="maydon" style="margin-top:16px"><label class="maydon-yorliq">Tekshiruvchi izohi</label>
-        <div class="kirish"><input id="ch-izoh" placeholder="Zarur bo&#39;lsa izoh qoldiring"></div></div>
-      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
-        <button type="button" class="tugma tugma-asosiy" id="ch-yakun"><svg class="ic"><use href="#i-tasdiq"/></svg>Chiqishni rasmiylashtirish</button>
-        <button type="button" class="tugma tugma-xavf" id="ch-hodisa"><svg class="ic"><use href="#i-xavf"/></svg>Nomuvofiqlik qayd etish</button>
-      </div>
-      <div id="ch-qayd" style="margin-top:14px"></div>
+  <div class="tor-2" id="tc-tor">
+    <section class="karta" aria-labelledby="tc-b-s" data-tur="tashrif-chiqish-bandlar">
+      <div class="karta-bosh"><h2 id="tc-b-s">Obyektni topshirish bandlari</h2></div>
+      <div id="tc-asosiy"></div>
     </section>
-    <section class="karta">
-      <div class="karta-bosh"><h2>Tashrif ma&#39;lumoti</h2></div>
-<dl class="malumot-royxat">
-  <dt><svg class="ic"><use href="#i-foyd"/></svg>Tashrifchi</dt>
-  <dd id="ch-ism">—</dd>
-  <dt><svg class="ic"><use href="#i-bino"/></svg>Obyekt</dt>
-  <dd id="ch-obyekt">—</dd>
-  <dt><svg class="ic"><use href="#i-soat"/></svg>Kirish</dt>
-  <dd id="ch-kirish">—</dd>
-  <dt><svg class="ic"><use href="#i-vazifa"/></svg>Maqsad</dt>
-  <dd id="ch-maqsad">—</dd>
-  <dt><svg class="ic"><use href="#i-foydalar"/></svg>Hamroh</dt>
-  <dd id="ch-hamroh">—</dd>
-</dl>
-    </section>
+    <div class="ustun">
+      <section class="karta" aria-labelledby="tc-m-s">
+        <div class="karta-bosh"><h2 id="tc-m-s">Tashrif</h2></div>
+        <dl class="malumot-royxat" id="tc-malumot"></dl>
+      </section>
+      <section class="karta" aria-labelledby="tc-d-s" data-tur="tashrif-chiqish-dalolatnoma">
+        <div class="karta-bosh"><h2 id="tc-d-s">Dalolatnoma</h2></div>
+        <div id="tc-dalolatnoma"></div>
+      </section>
+    </div>
   </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
+(async () => {
+  const D = MKB_DATA, esc = MKB.esc, $ = id => document.getElementById(id);
+  let ulandi = false;
+  const yuklandi = await new Promise(hal => MKB.sahifaYukla({
+    joylar: {"tc-asosiy": ["qator", 6], "tc-dalolatnoma": ["qator", 1]},
+    xato: "Tashrif ma'lumotini yuklab bo'lmadi",
+    ish: async () => {
+      if (ulandi){ location.reload(); return; }
+      if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
+      if (!window.MKB_UX_TAYYOR) await new Promise(r => document.addEventListener("mkb:ux", r, {once: true}));
+      await MKB.kn.yukla(["TASHRIFLAR", "SHAXSLAR", "HUJJATLAR", "FAYLLAR", "KIRISH_VOQEALARI", "MENING_VAZIFALARIM"]);
+      ulandi = true;
+      hal(true);
+    },
+  }));
+  if (!yuklandi) return;
+  /* Yangi kiritilgan shaxs indeksda bo'lmasligi mumkin: to'plamdan ham qidiriladi */
+  const shaxsTop = id => D.shaxs(id) || (D.SHAXSLAR || []).find(s => s.id === id) || null;
 
-const KN_NATIJA = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"],
-                   ogohlantirish: ["Ogohlantirish", "chip-sariq"]};
-const KN_HOLAT = {onlayn: ["Onlayn", "chip-yashil"], oflayn: ["Oflayn", "chip-xavf"],
-                  xizmatda: ["Xizmatda", "chip-sariq"]};
-const QR_HOLAT = {ishlayapti: ["Ishlayapti", "chip-yashil"], ogohlantirish: ["Ogohlantirish", "chip-sariq"],
-                  nosoz: ["Nosoz", "chip-xavf"]};
-function chip(xarita, kalit){
-  const v = xarita[kalit] || [kalit, ""];
-  return '<span class="chip ' + v[1] + '">' + v[0] + "</span>";
-}
-function nuqtaIkonka(t){
-  return t === "turniket" ? "turniket" : t === "shlagbaum" ? "mashina" : t === "darvoza" ? "zavod" : "eshik";
-}
-function shaxsSurati(sh, olcham){
-  const o = olcham || 38;
-  return sh && sh.rasm
-    ? '<img class="shaxs-surat" src="' + sh.rasm + '" alt="" loading="lazy" style="width:' + o +
-      "px;height:" + o + 'px">'
-    : '<span class="belgi">' + (sh ? sh.belgi : "?") + "</span>";
-}
-function shaxsQatori(sh, ong){
-  if (!sh) return '<span class="matn"><b>Aniqlanmagan shaxs</b><span>Identifikatsiya o&#39;tmadi</span></span>';
-  return shaxsSurati(sh) +
-    '<span class="matn"><b>' + sh.ism + "</b><span><span>" + sh.lavozim + "</span> · <span>" + sh.tashkilot + "</span></span></span>" +
-    (ong || "");
-}
-function obyektNomi(id){
-  const o = MKB_DATA.OBYEKT_INDEKS[id];
-  return o ? o.qisqa : id;
-}
-function voqeaQatori(v){
-  const sh = MKB_DATA.shaxs(v.shaxsId);
-  return '<a class="qator" href="kirish-voqea.html?id=' + encodeURIComponent(v.id) + '">' +
-    '<span class="belgi ' + (v.natija === "rad" ? "pushti" : v.natija === "ogohlantirish" ? "lavanda" : "mint") + '">' +
-      ik(v.natija === "ruxsat" ? "tasdiq" : v.natija === "rad" ? "rad" : "xavf") + "</span>" +
-    '<span class="matn"><b>' + (sh ? sh.ism : v.operator || "Aniqlanmagan shaxs") + "</b>" +
-    "<span>" + obyektNomi(v.obyektId) + " · " + v.nuqtaNomi + " · " + v.usul + "</span></span>" +
-    '<span class="ong"><span class="vaqt">' + v.soat + "</span>" + chip(KN_NATIJA, v.natija) + "</span></a>";
-}
-
-/* ---------- saqlash yordamchilari (yozuv faqat MKBapi orqali) ---------- */
-/* server rejimida kolleksiya xotiradagi nusxaga id bo'yicha qo'shib olinadi */
-async function knYukla(nomlar){
-  await MKBapi.tayyor;
-  if (MKBapi.rejim() !== "server") return;
-  for (const k of nomlar){
-    try{
-      const asl = MKB_DATA[k], r = await MKBapi.royxat(k);
-      if (!Array.isArray(asl) || !Array.isArray(r)) continue;
-      const ix = new Map(asl.map(x => [x.id, x]));
-      r.forEach(x => { const b = ix.get(x.id); if (b) Object.assign(b, x); else asl.push(x); });
-    }catch(_){ }
-  }
-}
-async function knYangila(k, id, patch){
-  await MKBapi.yangilash(k, id, patch);
-  const b = (MKB_DATA[k] || []).find(x => x.id === id);
-  if (b) Object.assign(b, patch);
-  return b;
-}
-async function knYangi(k, obyekt){
-  const j = await MKBapi.yangi(k, obyekt);
-  const y = j && j.id ? j : obyekt;
-  const a = MKB_DATA[k];
-  if (Array.isArray(a) && !a.some(x => x.id === y.id)) a.push(y);
-  return (Array.isArray(a) && a.find(x => x.id === y.id)) || y;
-}
-/* keyingi raqam: shu old qo'shimchali id'larning eng katta soni + 1 */
-async function knKeyingiId(k, old, uzunlik){
-  const r = await MKBapi.royxat(k);
-  let maks = 0;
-  r.forEach(x => {
-    const s = String(x.id || ""), m = /(\d+)$/.exec(s);
-    if (m && s.indexOf(old) === 0) maks = Math.max(maks, +m[1]);
-  });
-  return old + String(maks + 1).padStart(uzunlik || 0, "0");
-}
-async function knSaqla(ish){
-  try{ await ish(); return true; }
-  catch(_){ MKB.toast("Saqlab bo'lmadi, qayta urinib ko'ring", "xavf"); return false; }
-}
-function knKim(){ const s = MKBapi.sessiya(); return s && s.ism ? s.ism : "Operator"; }
-function knSoat(){
-  const d = new Date();
-  return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
-}
-/* "26.08.2026" + "14:05" -> saralash kaliti */
-function knVaqtKalit(sana, soat){ return String(sana || "").split(".").reverse().join("") + (soat || ""); }
-
-document.addEventListener("mkb:tayyor", async () => {
-  const D = MKB_DATA;
-  await knYukla(["TASHRIFLAR", "XAVFSIZLIK_HODISALARI"]);
-  const BANDLAR = [
-    ["Mebel va jihozlar", "Xonalardagi inventar ro&#39;yxat bo&#39;yicha joyida"],
-    ["Elektron qurilmalar", "Kompyuter, kamera va o&#39;lchov asboblari olib chiqilmagan"],
-    ["Hujjatlar", "Obyekt hujjatlari joyida yoki rasmiy ravishda olib chiqilgan"],
-    ["Muhrlar", "Muhrlangan xonalarning muhri butun"],
-    ["Eshik va derazalar", "Barcha ochiqliklar yopilgan va qulflangan"],
-    ["Kommunikatsiyalar", "Suv, gaz va elektr o&#39;chirilgan"],
-  ];
   const id = new URLSearchParams(location.search).get("id");
-  const t = D.TASHRIFLAR.find(x => x.id === id) ||
-            D.TASHRIFLAR.find(x => x.holat === "obyektda") || D.TASHRIFLAR[0];
-  if (!t){ location.replace("xato-404.html"); return; }
-  const sh = D.shaxs(t.shaxsId) || {};
-  document.getElementById("hs-meta").textContent = t.id;
-  document.getElementById("ch-ism").textContent = sh.ism || "—";
-  document.getElementById("ch-obyekt").textContent = obyektNomi(t.obyektId);
-  document.getElementById("ch-kirish").textContent = t.sana + " " + t.kirish;
-  document.getElementById("ch-maqsad").textContent = t.maqsad;
-  document.getElementById("ch-hamroh").textContent = t.hamroh || "Hamrohsiz";
+  let t = (D.TASHRIFLAR || []).find(x => x.id === id);
+  if (!t || !MKB.doira([t]).length){ location.replace("xato-404.html"); return; }
+  const sh = shaxsTop(t.shaxsId), y = D.topish(t.obyektId);
+  const yozadi = MKB.huquq("himoya", "yoz");
+  const BANDLAR = ["Tashrifchi obyektdan chiqdi", "Eshik va darvozalar yopildi, qulflandi", "Deraza va panjaralar butun", "Mulk joyida, zarar yetkazilmagan",
+    "Hisoblagich plombalari butun", "Elektr va suv o'chirildi", "Kalit va kirish kodi qaytarildi"];
+  const dalolatnoma = () => (D.HUJJATLAR || []).find(h => h.raqam === t.id && h.obyektId === t.obyektId);
+  const inspektorlar = (D.FOYDLAR || []).filter(f => f.faol !== false && f.rol === "Ko'rik va xavfsizlik inspektori");
 
-  document.getElementById("ch-royxat").innerHTML = BANDLAR.map((b, i) =>
-    '<label class="qator" style="cursor:pointer">' +
-      '<input type="checkbox" data-band="' + i + '" style="width:20px;height:20px;accent-color:var(--brend)">' +
-      '<span class="matn"><b>' + b[0] + "</b><span>" + b[1] + "</span></span></label>").join("");
-
-  const yakunTugma = document.getElementById("ch-yakun"), hodisaTugma = document.getElementById("ch-hodisa");
-  const izohEl = document.getElementById("ch-izoh");
-  /* tashrifga bog'langan, hali hal etilmagan nomuvofiqlik chiqishni to'sadi */
-  function ochiqHodisa(){
-    const h = t.nomuvofiqlik ? D.XAVFSIZLIK_HODISALARI.find(x => x.id === t.nomuvofiqlik) : null;
-    return h && h.holat !== "hal" && h.holat !== "yopildi" ? h : null;
+  function malumot(){
+    t = (D.TASHRIFLAR || []).find(x => x.id === id) || t;
+    $("hs-meta").innerHTML = '<span data-tarjimasiz>' + esc(t.id) + "</span> · <span>" + esc(sh ? sh.ism : "") + "</span>";
+    $("tc-malumot").innerHTML = [["Tashrifchi", esc(sh ? sh.ism + (sh.tashkilot ? ", " + sh.tashkilot : "") : "—")],
+      ["Obyekt", y ? '<a href="obyekt-himoya.html?id=' + encodeURIComponent(y.id) + '">' + esc(y.qisqa || y.nom) + "</a>" : esc(t.obyektId)],
+      ["Maqsad", esc(t.maqsad || "—")], ["Hamroh", esc(t.hamroh || "—")],
+      ["Kirish", '<span data-tarjimasiz>' + esc((t.sana || "") + " " + (t.kirish || "—")) + "</span>"],
+      ["Chiqish", '<span data-tarjimasiz>' + esc(t.chiqish || "—") + "</span>"], ["Davomiylik", '<span data-tarjimasiz>' + esc(t.davomiylik || "—") + "</span>"]]
+      .map(x => "<dt>" + x[0] + "</dt><dd>" + x[1] + "</dd>").join("");
+    tarjimaQil(document.querySelector(".hujjat-shapka")); tarjimaQil($("tc-malumot"));
   }
-  function holatChiz(){
-    const yakun = t.holat === "yakunlandi", h = ochiqHodisa();
-    document.getElementById("ch-holat").innerHTML = yakun
-      ? '<span class="chip chip-yashil">Yakunlandi</span>'
-      : h ? '<span class="chip chip-xavf">Nomuvofiqlik</span>'
-      : '<span class="chip chip-sariq">Tekshirilmoqda</span>';
-    document.querySelectorAll("[data-band]").forEach(x => { if (yakun) x.checked = true; x.disabled = yakun; });
-    yakunTugma.disabled = yakun || !!h;
-    hodisaTugma.disabled = yakun || !!h;
-    izohEl.disabled = yakun;
-    if (yakun && t.chiqishIzoh) izohEl.value = t.chiqishIzoh;
-    const joy = document.getElementById("ch-qayd");
-    joy.innerHTML = yakun
-      ? '<div class="qator"><span class="belgi mint">' + ik("tasdiq") + "</span>" +
-        '<span class="matn"><b>Chiqish rasmiylashtirildi</b><span></span></span><span class="vaqt"></span></div>'
-      : h ? '<a class="qator" href="hodisa.html?id=' + encodeURIComponent(h.id) + '">' +
-        '<span class="belgi pushti">' + ik("xavf") + "</span>" +
-        '<span class="matn"><b>' + h.hodisa + "</b><span>Hodisa hal etilgach chiqish rasmiylashtiriladi</span></span>" +
-        '<span class="ong"><span class="vaqt">' + h.id + "</span></span></a>"
-      : "";
-    if (yakun){
-      joy.querySelector(".matn span").textContent =
-        (t.chiqishTekshirgan || "—") + " · " + (t.davomiylik || "");
-      joy.querySelector(".vaqt").textContent = t.chiqish || "";
+
+  function dalolatChiz(){
+    const h = dalolatnoma();
+    $("tc-dalolatnoma").innerHTML = h ? '<div class="qator"><span class="belgi mint">' + ik("hujjat") + '</span><span class="matn"><b>' + esc(h.nom) + '</b><span data-tarjimasiz>' + esc(h.sana + " · " + (h.yuklagan || "")) +
+      '</span></span><span class="ong"><button type="button" class="tugma tugma-oq tugma-kichik" id="tc-yukla">' + ik("yuklab") + "<span>Yuklab olish</span></button></span></div>" +
+      '<p class="kichik-izoh">Dalolatnoma obyektning Hujjatlar tabida saqlangan.</p>'
+      : MKB.boshHolat("hujjat", "Dalolatnoma tuzilmagan", "Chiqish rasmiylashtirilganda avtomatik tuziladi");
+    tarjimaQil($("tc-dalolatnoma"));
+    const b = $("tc-yukla");
+    if (b) b.addEventListener("click", async () => { if (!h.faylId || !(await MKBapi.fayl.yuklab(h.faylId))) MKB.toast("Fayl bank tarmog'ida saqlanadi"); });
+  }
+
+  function asosiy(){
+    if (t.holat === "yakunlandi" || t.holat === "bekor qilingan" || !yozadi){
+      const h = dalolatnoma();
+      const qator = h && h.izoh ? String(h.izoh).split("\n").filter(s => / — /.test(s)) : [];
+      $("tc-asosiy").innerHTML = qator.length ? qator.map(s => { const [b, n] = s.split(" — "); const ok = n === "joyida";
+        return '<div class="qator"><span class="belgi ' + (ok ? "mint" : "pushti") + '">' + ik(ok ? "tasdiq" : "xavf") + '</span><span class="matn"><b>' + esc(b) + '</b></span><span class="ong"><span class="chip chip-kichik ' + (ok ? "chip-yashil" : "chip-xavf") + '">' + (ok ? "Joyida" : "Nomuvofiq") + "</span></span></div>"; }).join("")
+        : MKB.boshHolat("hujjat", t.holat === "kutilmoqda" ? "Tashrifchi hali kirmagan" : t.holat === "obyektda" ? "Chiqishni xavfsizlik xizmati yoki inspektor rasmiylashtiradi" : "Bandlar saqlanmagan",
+          t.holat === "kutilmoqda" ? "Avval kirishni qayd eting" : t.holat === "yakunlandi" ? "Tashrif chiqish dalolatnomasisiz yakunlangan" : "", t.holat === "kutilmoqda" ? '<a class="tugma tugma-oq tugma-kichik" href="tashrif-jonli.html?id=' + encodeURIComponent(t.id) + '">Tashrif sahifasi</a>' : "");
+      tarjimaQil($("tc-asosiy")); return;
     }
-    tarjimaQil(document.getElementById("ch-holat"));
-    tarjimaQil(joy);
-  }
-  holatChiz();
-
-  function belgilangan(){
-    return [...document.querySelectorAll("[data-band]")].filter(x => x.checked).length;
-  }
-  let band = false;
-  yakunTugma.addEventListener("click", () => {
-    if (belgilangan() < BANDLAR.length){
-      MKB.toast("Barcha bandlar tekshirilishi shart", "xavf");
-      return;
+    if (t.holat !== "obyektda"){
+      $("tc-asosiy").innerHTML = MKB.boshHolat("eshik", "Tashrifchi hali kirmagan", "Chiqishdan oldin kirish qayd etiladi", '<a class="tugma tugma-asosiy tugma-kichik" href="tashrif-jonli.html?id=' + encodeURIComponent(t.id) + '">' + ik("eshik") + "Tashrif sahifasi</a>");
+      tarjimaQil($("tc-asosiy")); return;
     }
-    if (band) return;
-    band = true;
-    const soat = knSoat();
-    const k = t.kirish.split(":"), c = soat.split(":");
-    const daq = (+c[0] * 60 + +c[1]) - (+k[0] * 60 + +k[1]);
-    knSaqla(async () => {
-      await knYangila("TASHRIFLAR", t.id, {holat: "yakunlandi", chiqish: soat,
-        davomiylik: t.sana === D.KIRISH_BUGUN && daq > 0 ? daq + " daqiqa" : "—",
-        chiqishIzoh: izohEl.value.trim(), chiqishTekshirgan: knKim()});
-      holatChiz();
-      MKB.toast("Chiqish rasmiylashtirildi, dalolatnoma saqlandi");
-    }).then(() => { band = false; });
-  });
-  hodisaTugma.addEventListener("click", () => {
-    MKB.modal("Nomuvofiqlik qayd etish",
-      '<div class="maydon"><label class="maydon-yorliq">Nomuvofiqlik turi <b>*</b></label>' +
-      '<div class="kirish"><select name="tur"><option>Uskunalar ro&#39;yxatida kamomad</option>' +
-      "<option>Muhr buzilgan</option><option>Xona ochiq qoldirilgan</option>" +
-      "<option>Hujjat joyida yo&#39;q</option></select></div></div>" +
-      '<div class="maydon" style="margin-top:12px"><label class="maydon-yorliq">Tavsif <b>*</b></label>' +
-      '<div class="kirish"><input name="tavsif" placeholder="Nima aniqlandi" maxlength="200"></div></div>',
-      {okMatn: "Hodisa ochish", ok: pd => {
-        const f = MKB.forma(pd.querySelector(".modal-tana"), ["tur", "tavsif"]);
-        if (!f){ MKB.toast("Tavsif kiritilishi shart", "xavf"); return false; }
-        if (band) return false;
-        band = true;
-        const nuq2 = D.obyektNuqtalari(t.obyektId)[0];
-        knSaqla(async () => {
-          const h = await knYangi("XAVFSIZLIK_HODISALARI", {
-            id: await knKeyingiId("XAVFSIZLIK_HODISALARI", "XH-2026/"),
-            vaqt: D.KIRISH_BUGUN + " " + knSoat(), sana: D.KIRISH_BUGUN,
-            obyektId: t.obyektId, kirishNuqtaId: nuq2 ? nuq2.id : null,
-            hodisa: f.tur, tavsif: f.tavsif, jiddiylik: "yuqori",
-            holat: "ochiq", masul: t.hamroh || knKim(), chora: "",
-            tashrifId: t.id, qaydEtgan: knKim(),
-          });
-          await knYangila("TASHRIFLAR", t.id, {nomuvofiqlik: h.id});
-          holatChiz();
-          MKB.toast("Hodisa ochildi va inspektorga yuborildi");
-        }).then(() => { band = false; });
-      }});
-  });
-});
+    $("tc-asosiy").innerHTML = '<form id="tc-forma" novalidate>' + BANDLAR.map((b, i) =>
+      '<div class="topshir-band"><span class="band-nom">' + esc(b) + '</span><span class="tanlash" role="radiogroup" aria-label="' + esc(b) + '">' +
+        '<label><input type="radio" name="b' + i + '" value="joyida" checked>' + ik("tasdiq") + "<span>Joyida</span></label>" +
+        '<label class="nomuvofiq"><input type="radio" name="b' + i + '" value="nomuvofiq">' + ik("xavf") + "<span>Nomuvofiq</span></label></span></div>").join("") +
+      '<div class="forma-tor" style="margin-top:14px"><div class="maydon"><label class="maydon-yorliq" for="f-ch">Chiqish vaqti <b>*</b></label><div class="kirish"><input id="f-ch" type="time" name="chiqish" required data-xato="Chiqish vaqtini kiriting" value="' + MKB.soat() + '"></div></div>' +
+      '<div class="maydon keng"><label class="maydon-yorliq" for="f-iz">Izoh</label><textarea class="kirish-matn" id="f-iz" name="izoh" rows="2" maxlength="400"></textarea></div></div>' +
+      '<div class="nomuv-blok" id="nomuv" hidden><b style="font-weight:500">Nomuvofiqlik aniqlandi.</b> <span>Hodisa ochiladi va inspektorga tekshirish vazifasi beriladi.</span>' +
+        '<div class="forma-tor" style="margin-top:12px"><div class="maydon"><label class="maydon-yorliq" for="f-j">Jiddiylik <b>*</b></label><div class="kirish"><select id="f-j" name="jiddiylik"><option value="yuqori">Yuqori</option><option value="o\'rta" selected>O\'rta</option><option value="past">Past</option></select></div></div>' +
+        '<div class="maydon"><label class="maydon-yorliq" for="f-in">Inspektor <b>*</b></label><div class="kirish"><select id="f-in" name="inspektor" required data-xato="Inspektorni tanlang"><option value="">Tanlang</option>' +
+          inspektorlar.map(f => '<option value="' + esc(f.nom) + '">' + esc(f.nom) + "</option>").join("") + "</select></div></div>" +
+        '<div class="maydon keng"><label class="maydon-yorliq" for="f-nt">Nima aniqlandi <b>*</b></label><textarea class="kirish-matn" id="f-nt" name="tavsif" rows="2" maxlength="400" required minlength="5" data-xato="Nima aniqlanganini yozing"></textarea></div></div></div>' +
+      '</form><div class="amal-qator"><button type="button" class="tugma tugma-asosiy" id="tc-saqla" data-yozadi data-tur="tashrif-chiqish-rasmiylashtirish">' + ik("tasdiq") + "<span>Chiqishni rasmiylashtirish</span></button></div>";
+    tarjimaQil($("tc-asosiy"));
+    const forma = $("tc-forma");
+    const nomuvlar = () => BANDLAR.filter((b, i) => forma.querySelector('input[name="b' + i + '"]:checked').value === "nomuvofiq");
+    forma.addEventListener("change", () => { $("nomuv").hidden = !nomuvlar().length; });
+    $("tc-saqla").addEventListener("click", async () => {
+      const nm = nomuvlar();
+      const daqiqa = v => { const [a, b] = String(v || "00:00").split(":").map(Number); return a * 60 + b; };
+      const tek = MKB.formaTekshir(forma, {chiqish: v => daqiqa(v) >= daqiqa(t.kirish) || "Chiqish vaqti kirishdan (" + (t.kirish || "—") + ") oldin bo'lmaydi"});
+      if (!tek) return;
+      const f = Object.assign({}, tek.qiymatlar, {izoh: (forma.querySelector("[name=izoh]").value || "").trim()});
+      const daq = daqiqa(f.chiqish) - daqiqa(t.kirish);
+      /* Rasmiylashtirish dalolatnoma tuzadi va tashrifni yakunlaydi: tashrifchi, obyekt va vaqt bilan tasdiqlanadi */
+      const tasdiq = await MKB.tasdiqla({
+        sarlavha: "Chiqishni rasmiylashtirish",
+        matn: "Tashrif yakunlanadi, chiqish dalolatnomasi obyekt hujjatlariga saqlanadi va kirish jurnaliga chiqish yoziladi.",
+        tafsilot: [["Tashrifchi", sh ? sh.ism : "—"], ["Obyekt", y ? (y.qisqa || y.nom) : t.obyektId], ["Kirish", {matn: (t.sana || "") + " " + (t.kirish || "—"), tarjimasiz: true}],
+          ["Chiqish", {matn: f.chiqish, tarjimasiz: true}], ["Davomiyligi", {matn: daq + " daq", tarjimasiz: true}]],
+        oqibat: nm.length ? ["Nomuvofiqlik bo'yicha hodisa ochiladi va inspektorga vazifa beriladi"] : [],
+        okMatn: "Chiqishni rasmiylashtirish", bekorMatn: "Orqaga",
+      });
+      if (!tasdiq) return;
+      await MKB.band($("tc-saqla"), async () => {
+      const bugun = D.sanaYoz(D.bugun());
+      const natijalar = BANDLAR.map((b, i) => b + " — " + forma.querySelector('input[name="b' + i + '"]:checked').value);
+      const matn = ["TASHRIF CHIQISHI DALOLATNOMASI", "Tashrif: " + t.id, "Sana: " + bugun, "Obyekt: " + (y ? (y.qisqa || y.nom) + " (" + y.id + ")" : t.obyektId),
+        "Tashrifchi: " + (sh ? sh.ism + (sh.tashkilot ? ", " + sh.tashkilot : "") : "—"), "Maqsad: " + (t.maqsad || "—"), "Hamroh: " + (t.hamroh || "—"),
+        "Kirish: " + (t.kirish || "—") + ", chiqish: " + f.chiqish + ", davomiyligi: " + daq + " daqiqa", "", "Bandlar:"].concat(natijalar.map(s => "  " + s))
+        .concat(f.izoh ? ["", "Izoh: " + f.izoh] : []).concat(nm.length ? ["", "Nomuvofiqlik: " + f.tavsif] : []).concat(["", "Rasmiylashtirdi: " + MKB.kim()]).join("\r\n");
+      let hodisaId = null;
+      const ok = await MKB.saqla(async () => {
+        const fayl = await MKBapi.fayl.saqla(new File(["﻿" + matn], "tashrif-" + t.id.replace(/\W/g, "") + "-dalolatnoma.txt", {type: "text/plain"}), {obyektId: t.obyektId, kolleksiya: "HUJJATLAR"});
+        const hid = await MKB.keyingiId("HUJJATLAR", "HJ-", 0);
+        await MKBapi.yangi("HUJJATLAR", {id: hid, obyektId: t.obyektId, nom: "Tashrif chiqishi dalolatnomasi", tur: "Dalolatnoma", bosqich: (y && y.bosqich) || "qabul", raqam: t.id,
+          sana: bugun, amalQilishTugash: null, holat: "Tasdiqlangan", format: "TXT", hajm: Math.max(1, Math.round(fayl.hajm / 1024)) + " KB", yuklagan: MKB.kim(), faylId: fayl.id, izoh: natijalar.join("\n")});
+        await MKBapi.yangilash("TASHRIFLAR", t.id, {holat: "yakunlandi", chiqish: f.chiqish, davomiylik: daq + " daqiqa",
+          izoh: [t.izoh, f.chiqish + " · Chiqish rasmiylashtirildi" + (nm.length ? ", nomuvofiqlik: " + nm.length : "") + (f.izoh ? ". " + f.izoh : "")].filter(Boolean).join("\n")});
+        const n = D.obyektNuqtalari(t.obyektId)[0];
+        const vid = await MKB.keyingiId("KIRISH_VOQEALARI", "KV-", 5);
+        await MKBapi.yangi("KIRISH_VOQEALARI", {id: vid, vaqt: bugun + " " + f.chiqish, sana: bugun, soat: f.chiqish, obyektId: t.obyektId, kirishNuqtaId: n ? n.id : null, qurilmaId: null,
+          nuqtaNomi: n ? n.nom : "Obyekt", shaxsId: t.shaxsId, usul: "Xodim qaydi", yuzMoslik: null, natija: "qayd etildi", sabab: "Tashrif " + t.id + " yakunlandi", yonalish: "chiqish"});
+        if (nm.length){
+          const h = await MKB.hodisa.yarat({obyektId: t.obyektId, hodisa: "Tashrifdan keyin nomuvofiqlik", jiddiylik: f.jiddiylik, manba: "qo'lda", masul: f.inspektor,
+            tavsif: f.tavsif + " Bandlar: " + nm.join("; ") + ". Tashrif " + t.id + "."});
+          hodisaId = h && h.id;
+          const vzid = await MKB.keyingiId("MENING_VAZIFALARIM", "VZ-" + D.bugun().getFullYear() + "-", 0);
+          await MKBapi.yangi("MENING_VAZIFALARIM", {id: vzid, nom: "Tashrifdan keyin obyektni tekshirish", tur: "Hodisa", obyektId: t.obyektId, kod: hodisaId || t.id, qoidaId: null,
+            sana: bugun, muddat: D.sanaYoz(D.ishKuniQosh(D.bugun(), 1)), ijrochi: f.inspektor, rol: "Ko'rik va xavfsizlik inspektori", muhimlik: f.jiddiylik === "past" ? "orta" : "yuqori", bajarildi: false});
+        }
+      }, nm.length ? "Chiqish rasmiylashtirildi. Hodisa ochildi, inspektorga vazifa berildi" : "Chiqish rasmiylashtirildi. Dalolatnoma saqlandi");
+      if (!ok) return;
+      t = (D.TASHRIFLAR || []).find(x => x.id === id) || t;
+      malumot(); dalolatChiz(); asosiy();
+      if (hodisaId) $("tc-asosiy").insertAdjacentHTML("afterbegin", '<p class="kichik-izoh" style="margin:0 0 10px"><a href="hodisa.html?id=' + encodeURIComponent(hodisaId) + '">Ochilgan hodisa: ' + esc(hodisaId) + "</a></p>");
+      });
+    });
+  }
+  malumot(); dalolatChiz(); asosiy();
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Obyekt suratlari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.surat-tor{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.surat-band{display:flex;flex-direction:column;gap:10px;min-width:0}
+.surat-kadr{position:relative;display:block;width:100%;aspect-ratio:4/3;border-radius:18px;overflow:hidden;padding:0;
+  background:var(--plitka);cursor:zoom-in;box-shadow:var(--soya-past)}
+.surat-kadr img,.surat-kadr .surat-yoq{width:100%;height:100%;display:block}
+.surat-kadr img{object-fit:cover;transition:transform var(--sekin)}
+.surat-kadr:hover img{transform:scale(1.03)}
+.surat-kadr:focus-visible{outline:2px solid var(--siyoh);outline-offset:3px}
+.surat-kadr .chip{position:absolute;left:10px;top:10px}
+.surat-amal{display:flex;gap:8px;flex-wrap:wrap}
+.surat-bosh{border-radius:22px;overflow:hidden;height:260px}
+.qosh-sozlama{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:13.5px;color:var(--matn-2)}
+.qosh-sozlama .kirish{min-width:220px}
+</style>
+</head>
+<body data-sahifa="aktivlar">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="obyektlar.html">Balans aktivlari</a><span class="ajratgich">/</span><span id="hs-obyekt" data-tarjimasiz>—</span></div>
+    <div class="hs-qator"><h1>Suratlar</h1><span class="hs-meta" id="hs-meta" data-tarjimasiz>—</span>
+      <div class="hs-amallar">
+        <a class="tugma tugma-asosiy tugma-kichik" href="#qosh" id="qosh-tugma" data-huquq="aktivlar:yoz" data-sayohat="surat-qosh"><svg class="ic"><use href="#ik-surat-qosh"/></svg><span>Surat qo'shish</span></a>
+      </div></div>
+  </div>
+  <nav class="bolim-tablar" data-obyekt-tablar data-id-qoshib="1" aria-label="Obyekt kartochkasi"></nav>
+  <section class="foto-shapka" aria-label="Obyekt" data-sayohat="shapka"></section>
+
+  <section class="karta" data-sayohat="galereya">
+    <div class="karta-bosh"><h2>Obyekt suratlari</h2><span class="soni" id="soni"></span><span class="karta-havola" id="manba" hidden></span></div>
+    <div id="suratlar"></div>
+  </section>
+
+  <section class="karta" id="qosh" hidden data-sayohat="yuklash">
+    <div class="karta-bosh"><h2>Surat qo'shish</h2></div>
+    <div class="qosh-sozlama">
+      <label for="qosh-tur">Yuklanadigan fayl turi</label>
+      <div class="kirish"><select id="qosh-tur"><option value="foto">Obyekt surati</option><option value="sxema">Joylashuv sxemasi</option></select></div>
+    </div>
+    <div id="yuklash"></div>
+  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+MKB.sahifaYukla({joylar: {suratlar: ["karta", 2]}, xato: "Suratlarni yuklab bo'lmadi", ish: async () => {
+  const joy = document.getElementById("suratlar");
+  if (document.readyState === "loading") await new Promise(r => document.addEventListener("DOMContentLoaded", r));
+  const D = MKB_DATA, esc = MKB.esc, ik = MKB.ik;
+  const id = new URLSearchParams(location.search).get("id");
+  const y0 = id ? D.topish(id) : null;
+  if (!y0 || !MKB.doira([y0]).length){ location.replace("xato-404.html"); return; }
+  const Y = () => D.topish(id);
+  const q = encodeURIComponent(id);
+  const yoz = MKB.huquq("aktivlar", "yoz");
+
+  document.getElementById("hs-obyekt").innerHTML = '<a href="obyekt.html?id=' + q + '">' + esc(y0.qisqa || y0.nom) + "</a>";
+  document.getElementById("hs-meta").textContent = y0.id + (y0.filial ? " · " + y0.filial : "");
+
+  function shapka(){
+    const y = Y();
+    MKB.obyektTablar(y.id, "obyekt-suratlar.html", document.querySelector(".obyekt-tablar, [data-obyekt-tablar]"));
+    MKB.fotoShapka(y, ".foto-shapka");
+    const t = document.querySelector(".obyekt-tablar"); if (t) t.setAttribute("data-sayohat", "tablar");
+  }
+
+  /* Bir surat uchun MKB.obyektSurati ga beriladigan ko'rinish */
+  const kadr = (y, s) => ({id: y.id, qisqa: y.qisqa, nom: y.nom, rasmTuri: y.rasmTuri, rasm: s.yol, rasmKichik: s.yol});
+
+  function chiz(){
+    const y = Y();
+    const r = MKB.suratlar(y);
+    document.getElementById("soni").innerHTML = r.length ? '<span data-tarjimasiz>' + r.length + "</span> <span>ta</span>" : "";
+    const manba = document.getElementById("manba");
+    manba.hidden = !(r.length && y.rasmManba);
+    manba.textContent = y.rasmManba || "";
+    if (!r.length){
+      joy.innerHTML = '<div class="surat-bosh">' + MKB.obyektSurati({id: y.id, rasmTuri: y.rasmTuri}) + "</div>";
+    } else {
+      joy.innerHTML = '<div class="surat-tor">' + r.map((s, i) => {
+        const asosiy = s.yol === (y.rasm || r[0].yol);
+        return '<div class="surat-band">' +
+          '<button type="button" class="surat-kadr" data-och="' + i + '" aria-label="' + (i + 1) + '-suratni kattalashtirish">' +
+            MKB.obyektSurati(kadr(y, s)) +
+            (asosiy ? '<span class="chip chip-brend chip-kichik">Asosiy surat</span>'
+              : s.tur === "sxema" ? '<span class="chip chip-oq chip-kichik">Joylashuv sxemasi</span>' : "") +
+          "</button>" +
+          (yoz ? '<div class="surat-amal">' +
+            (asosiy ? "" : '<button type="button" class="tugma tugma-oq tugma-kichik" data-yozadi data-asosiy="' + i + '">' + ik("yulduz") + "<span>Asosiy qilish</span></button>") +
+            '<button type="button" class="tugma tugma-oq tugma-kichik" data-yozadi data-ochir="' + i + '">' + ik("ochirish") + "<span>O'chirish</span></button>" +
+          "</div>" : "") +
+        "</div>";
+      }).join("") + "</div>";
+    }
+    joy.querySelectorAll("[data-och]").forEach(b => b.addEventListener("click", () => MKB.galereya(Y(), +b.dataset.och)));
+    /* Asosiy surat darrov yoziladi: kartochka shapkasi va "Asosiy surat" belgisi shu zahoti o'zgaradi */
+    joy.querySelectorAll("[data-asosiy]").forEach(b => b.addEventListener("click", async () => {
+      const s = MKB.suratlar(Y())[+b.dataset.asosiy];
+      if (await MKB.band(b, () => MKB.saqla(() => MKBapi.yangilash("YOZUVLAR", id, {rasm: s.yol, rasmKichik: s.yol}), "Asosiy surat tanlandi"))){ shapka(); chiz(); }
+    }));
+    /* O'chirish qaytariladigan amal: surat galereyadan olinadi, fayl FAYLLAR da qoladi, 8 soniya ichida "Qaytarish" */
+    joy.querySelectorAll("[data-ochir]").forEach(b => b.addEventListener("click", async () => {
+      const y = Y();
+      const hammasi = MKB.suratlar(y);
+      const s = hammasi[+b.dataset.ochir];
+      if (!s) return;
+      const eski = {rasmlar: Array.isArray(y.rasmlar) ? y.rasmlar.slice() : null, rasm: y.rasm || "", rasmKichik: y.rasmKichik || "", rasmManba: y.rasmManba || null};
+      const qoldi = (Array.isArray(y.rasmlar) && y.rasmlar.length ? y.rasmlar : hammasi).filter(x => x.yol !== s.yol);
+      const patch = {rasmlar: qoldi};
+      if (!qoldi.length) patch.rasmManba = null;
+      if (y.rasm === s.yol || y.rasmKichik === s.yol){
+        patch.rasm = qoldi[0] ? qoldi[0].yol : "";
+        patch.rasmKichik = qoldi[0] ? qoldi[0].yol : "";
+      }
+      try{ await MKB.band(b, () => MKBapi.yangilash("YOZUVLAR", id, patch)); }
+      catch(e){ MKB.toast("Surat o'chirilmadi: " + (e && e.message ? e.message : "qayta urinib ko'ring"), "xavf"); return; }
+      shapka(); chiz();
+      MKB.qaytarish("Surat galereyadan olindi", {
+        bekor: () => MKBapi.yangilash("YOZUVLAR", id, eski),
+        keyin: () => { shapka(); chiz(); },
+      });
+    }));
+    tarjimaQil(joy);
+  }
+
+  shapka();
+  chiz();
+
+  /* ---------- Surat qo'shish ---------- */
+  if (yoz){
+    document.getElementById("qosh").hidden = false;
+    MKB.faylMaydon("#yuklash", {obyektId: id, kolleksiya: "YOZUVLAR", yozuvId: id, accept: "image/*", kop: true,
+      sarlavha: "Suratni shu yerga tashlang yoki tanlang",
+      async yuklandi(f){
+        const y = Y();
+        const tur = document.getElementById("qosh-tur").value === "sxema" ? "sxema" : "foto";
+        const asl = Array.isArray(y.rasmlar) && y.rasmlar.length ? y.rasmlar : MKB.suratlar(y);
+        const rasmlar = asl.concat([{yol: f.yol, tur, faylId: f.id}]);
+        const patch = {rasmlar, rasmManba: "Qo'lda yuklangan"};
+        if (!y.rasm && tur === "foto"){ patch.rasm = f.yol; patch.rasmKichik = f.yol; }
+        await MKBapi.yangilash("YOZUVLAR", id, patch);
+        shapka(); chiz();
+        MKB.toast("Surat saqlandi");
+      }});
+    if (location.hash === "#qosh") setTimeout(() => document.getElementById("qosh").scrollIntoView({behavior: "smooth", block: "start"}), 150);
+  } else {
+    document.getElementById("qosh-tugma").remove();
+  }
+  tarjimaQil(document.querySelector("main"));
+}});
+</script>
+</body>
+</html>

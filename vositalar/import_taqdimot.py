@@ -3,16 +3,31 @@
 Bank balansidagi mol-mulk taqdimotidan (.pptx) haqiqiy obyektlarni tizimga yuklash.
 
     python vositalar/import_taqdimot.py "D:\\...\\Taqdimot.pptx"
+    python vositalar/import_taqdimot.py --sanab "D:\\...\\Taqdimot.pptx"
 
-Natija faqat shu kompyuterda qoladi: mahalliy/obyektlar.json va mahalliy/rasm/*.jpg.
-"mahalliy/" papkasi .gitignore ro'yxatida — repozitoriyga va internetga chiqmaydi.
+--sanab hech narsa yozmaydi. U har bir obyekt slaydi bo'yicha foto va PNG nomzodlari
+sonini, oxirida jami sonni chiqaradi. Importdan oldin tekshirish uchun ishlatiladi.
+
+Natija faqat shu kompyuterda qoladi: mahalliy/obyektlar.json va mahalliy/rasm/.
+"mahalliy/" papkasi .gitignore ro'yxatida, repozitoriyga va internetga chiqmaydi.
 Tizim bu faylni faqat localhost orqali ochilganda o'qiydi.
+
+Suratlar slayddagi joylashuv maydoni bo'yicha saralanadi, bir xil fayllar (md5) bir
+marta olinadi. Asosiy surat <slayd>.jpg, qo'shimchalar <slayd>-<k>.jpg, xarita yoki
+sxema <slayd>-sxema.jpg, eskiz rasm/k/<slayd>.jpg (240 px gacha, sifat 72).
 Talab: Python 3.9+, suratlar uchun Pillow (bo'lmasa suratsiz import qilinadi).
 """
-import io, json, os, re, sys, zipfile
+import hashlib, io, json, os, re, sys, zipfile
 from xml.etree import ElementTree as ET
 
 A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
+PN = "{http://schemas.openxmlformats.org/presentationml/2006/main}"
+RN = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
+EMU_PT = 12700
+MIN_BAYT = 40000          # bundan kichik fayl logotip yoki belgi
+MIN_TOMON_PT = 90         # slayddagi eng kichik tomoni bundan kichik rasm ikonka
+KATTA = (1280, 960)
+ESKIZ = 240
 ILDIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHIQISH = os.path.join(ILDIZ, "mahalliy")
 
@@ -91,16 +106,70 @@ def maydon_top(matn, kalit):
     try: return round(float(xom.replace(",", ".")))
     except ValueError: return 0
 
-def asosiy(pptx):
+def slayd_suratlari(z, raqam, takror):
+    """Slayddagi rasm nomzodlari: joylashuv maydoni kamayishi bo'yicha, md5 bo'yicha takrorsiz."""
+    try:
+        rels = z.read("ppt/slides/_rels/slide%d.xml.rels" % raqam).decode("utf-8", "ignore")
+    except KeyError:
+        return []
+    manzil = {}
+    for teg in re.findall(r"<Relationship\b[^>]*>", rels):
+        rid = re.search(r'Id="([^"]+)"', teg)
+        t = re.search(r'Target="\.\./media/([^"]+)"', teg)
+        if rid and t: manzil[rid.group(1)] = t.group(1)
+    ildiz = ET.fromstring(z.read("ppt/slides/slide%d.xml" % raqam))
+    nomzodlar, korilgan = [], set()
+    for pic in ildiz.iter(PN + "pic"):
+        blip = pic.find(".//" + A + "blip")
+        ext = pic.find(".//" + A + "xfrm/" + A + "ext")
+        if blip is None: continue
+        fayl = manzil.get(blip.get(RN + "embed"))
+        if not fayl or not fayl.lower().endswith((".jpg", ".jpeg", ".png", ".jfif")): continue
+        en = int(ext.get("cx")) / EMU_PT if ext is not None else 0
+        boy = int(ext.get("cy")) / EMU_PT if ext is not None else 0
+        hajm = z.getinfo("ppt/media/" + fayl).file_size
+        if hajm < MIN_BAYT or min(en, boy) < MIN_TOMON_PT: continue
+        xom = z.read("ppt/media/" + fayl)
+        md5 = hashlib.md5(xom).hexdigest()
+        if md5 in korilgan: continue
+        korilgan.add(md5)
+        nomzodlar.append({"fayl": fayl, "md5": md5, "maydon": en * boy, "png": fayl.lower().endswith(".png"), "xom": xom})
+    nomzodlar.sort(key=lambda n: -n["maydon"])
+    for n in nomzodlar:
+        takror.setdefault(n["md5"], set()).add(raqam)
+    return nomzodlar
+
+def sxemami(n, im):
+    """Xarita skrinshoti: PNG, tepasida oq qidiruv qatori va unda to'q rangli koordinata matni bor.
+    Oq osmonli fotoda qator oq bo'lsa ham, unda matn (to'q piksellar) bo'lmaydi."""
+    if not n["png"]: return False
+    en, boy = im.size
+    tepa = im.crop((0, 0, en, max(1, boy * 6 // 100))).resize((200, 12), 0).tobytes()
+    piksel = [tepa[i:i + 3] for i in range(0, len(tepa), 3)]
+    oq = sum(1 for p in piksel if p == b"\xff\xff\xff") / len(piksel)
+    toq = sum(1 for p in piksel if max(p) < 110) / len(piksel)
+    return oq >= 0.35 and toq >= 0.04
+
+def saqla(im, yol, olcham, sifat):
+    nusxa = im.copy()
+    nusxa.thumbnail(olcham)
+    nusxa.save(yol, quality=sifat, optimize=True)
+    return nusxa.size
+
+def asosiy(pptx, sanab=False):
     z = zipfile.ZipFile(pptx)
     slaydlar = sorted([n for n in z.namelist() if re.match(r"ppt/slides/slide\d+\.xml$", n)], key=lambda n: int(re.findall(r"\d+", n)[0]))
-    os.makedirs(os.path.join(CHIQISH, "rasm"), exist_ok=True)
+    Image = None
     try:
         from PIL import Image
     except ImportError:
-        Image = None
-        print("Pillow topilmadi — suratlar import qilinmaydi (pip install pillow)")
+        print("Pillow topilmadi, suratlar import qilinmaydi (pip install pillow)")
+    rasm_papka = os.path.join(CHIQISH, "rasm")
+    if not sanab:
+        os.makedirs(os.path.join(rasm_papka, "k"), exist_ok=True)
     obyektlar, oxirgi_hudud, filiallar = [], None, {}
+    takror, yozilgan = {}, set()
+    jami_foto = jami_png = 0
     for s in slaydlar:
         raqam = int(re.findall(r"\d+", s)[0])
         ildiz = ET.fromstring(z.read(s))
@@ -130,32 +199,68 @@ def asosiy(pptx):
         f_lotin = lotin(filial) or HUDUD_NOMI[hudud] + " BXO"
         f_lotin = re.sub(r"\bBXM\b|\bBXO\b", lambda q: q.group(0), f_lotin.replace("BXM", "BXM").replace("Bxm", "BXM").replace("Bxo", "BXO"))
         f_id = f_lotin      # vaqtincha; hudud ovozi aniqlangach raqamlanadi
-        rasm = None
-        if Image:
-            try:
-                rels = z.read("ppt/slides/_rels/slide%d.xml.rels" % raqam).decode("utf-8", "ignore")
-                nomzodlar = [(z.getinfo("ppt/media/" + t).file_size, t) for t in re.findall(r'Target="\.\./media/([^"]+)"', rels) if t.lower().endswith((".jpg", ".jpeg", ".png", ".jfif"))]
-                nomzodlar = [n for n in nomzodlar if n[0] > 40000]
-                fotolar = [n for n in nomzodlar if not n[1].lower().endswith(".png")]      # PNG ko'pincha xarita skrinshoti
-                if fotolar: nomzodlar = fotolar
-                if nomzodlar:
-                    im = Image.open(io.BytesIO(z.read("ppt/media/" + max(nomzodlar)[1]))).convert("RGB")
-                    im.thumbnail((1280, 960))
-                    im.save(os.path.join(CHIQISH, "rasm", "%d.jpg" % raqam), quality=80, optimize=True)
-                    rasm = "mahalliy/rasm/%d.jpg" % raqam
-            except Exception as xato:
-                print("  slayd %d: surat o'qilmadi (%s)" % (raqam, xato))
+        nomzodlar = slayd_suratlari(z, raqam, takror)
+        if sanab:
+            foto = sum(1 for n in nomzodlar if not n["png"])
+            png = len(nomzodlar) - foto
+            jami_foto += foto; jami_png += png
+            print("slayd %3d: foto %d, PNG %d" % (raqam, foto, png))
+            obyektlar.append({"slayd": raqam})
+            continue
+        rasm = rasm_kichik = md5 = None
+        rasmlar = []
+        if Image and nomzodlar:
+            k = 0
+            sxema_soni = 0
+            for n in nomzodlar:
+                try:
+                    im = Image.open(io.BytesIO(n["xom"])).convert("RGB")
+                except Exception as xato:
+                    print("  slayd %d: surat o'qilmadi (%s)" % (raqam, xato)); continue
+                if sxemami(n, im):
+                    sxema_soni += 1
+                    nom_f = "%d-sxema.jpg" % raqam if sxema_soni == 1 else "%d-sxema-%d.jpg" % (raqam, sxema_soni)
+                    tur_r = "sxema"
+                elif rasm is None:
+                    nom_f, tur_r = "%d.jpg" % raqam, "foto"
+                else:
+                    k += 1
+                    nom_f, tur_r = "%d-%d.jpg" % (raqam, k), "foto"
+                en, boy = saqla(im, os.path.join(rasm_papka, nom_f), KATTA, 80)
+                yozilgan.add(nom_f)
+                yol = "mahalliy/rasm/" + nom_f
+                rasmlar.append({"yol": yol, "tur": tur_r, "en": en, "boy": boy})
+                if tur_r == "foto" and rasm is None:
+                    rasm, md5 = yol, n["md5"]
+                    saqla(im, os.path.join(rasm_papka, "k", "%d.jpg" % raqam), (ESKIZ, ESKIZ), 72)
+                    yozilgan.add("k/%d.jpg" % raqam)
+                    rasm_kichik = "mahalliy/rasm/k/%d.jpg" % raqam
+            # foto yo'q, faqat sxema bo'lsa eskiz sxemadan olinadi, asosiy surat bo'sh qoladi
+            if rasm is None and rasmlar:
+                im = Image.open(os.path.join(rasm_papka, rasmlar[0]["yol"].split("/")[-1]))
+                saqla(im, os.path.join(rasm_papka, "k", "%d.jpg" % raqam), (ESKIZ, ESKIZ), 72)
+                yozilgan.add("k/%d.jpg" % raqam)
+                rasm_kichik = "mahalliy/rasm/k/%d.jpg" % raqam
         obyektlar.append({
-            "id": "BM-%s/%04d" % (sana[:4], raqam), "nom": lotin(nom)[:70], "tur": tur, "turKalit": tur_kalit, "rasmTuri": rasm_turi, "binoli": binoli,
+            "id": "BM-%s/%04d" % (sana[:4], raqam), "slayd": raqam, "nom": lotin(nom)[:70], "tur": tur, "turKalit": tur_kalit, "rasmTuri": rasm_turi, "binoli": binoli,
             "hudud": hudud, "hududNomi": HUDUD_NOMI[hudud], "tuman": (lotin(tuman_q.group(1)).split(",")[-1].strip() + " tumani") if tuman_q else f_lotin,
-            "manzil": lotin(manzil) or HUDUD_NOMI[hudud], "filial": f_id, "filialNomi": f_lotin, "sobiqEga": lotin(ega) or "—",
+            "manzil": lotin(manzil) or HUDUD_NOMI[hudud], "filial": f_id, "filialNomi": f_lotin, "sobiqEga": lotin(ega) or "",
             "yerMaydon": maydon_top(matn, r"(?:Умумий|ер)\s*(?:ер\s*)?майдони") if binoli else 0,
             "qurilishOsti": maydon_top(matn, r"[ҚК]урилиш\s*ости") if binoli else 0,
-            "foydaliMaydon": (maydon_top(matn, r"Фойдал\w*\s*майдони") or maydon_top(matn, r"Яшаш\s*майдони") or maydon_top(matn, r"[ҚК]урилиш\s*ости") or 1) if binoli else 0,
+            # maydon topilmasa 0 yoziladi, tizim uni "kiritilmagan" deb ko'rsatadi
+            "foydaliMaydon": (maydon_top(matn, r"Фойдал\w*\s*майдони") or maydon_top(matn, r"Яшаш\s*майдони") or maydon_top(matn, r"[ҚК]урилиш\s*ости")) if binoli else 0,
             "tafsilot": None if binoli else lotin(" ".join(qatorlar[:2]))[:120],
             "balansQiymat": qiymat, "balansSana": sana, "sotishQiymat": sotish,
-            "holat": "Sotuvga tayyorlanmoqda" if sotish else "Balansda", "rasm": rasm, "urug": 7000 + raqam * 13,
+            "holat": "Sotuvga tayyorlanmoqda" if sotish else "Balansda",
+            "rasm": rasm, "rasmKichik": rasm_kichik, "rasmlar": rasmlar, "rasmMd5": md5,
+            "rasmManba": "Balansga qabul taqdimoti, %d-slayd" % raqam, "urug": 7000 + raqam * 13,
         })
+    if sanab:
+        print("Jami: %d obyekt slaydi, foto %d, PNG %d, hammasi %d" % (len(obyektlar), jami_foto, jami_png, jami_foto + jami_png))
+        return
+    # boshqa slaydlarda ham uchragan surat obyektga xos emas
+    for o in obyektlar:
+        o["rasmUmumiy"] = bool(o["rasmMd5"] and len(takror.get(o["rasmMd5"], ())) > 1)
     # Bank hududni filial bo'yicha yuritadi: filialdagi obyektlar manzilining ko'pchiligi filial hududini belgilaydi
     ovoz = {}
     for o in obyektlar:
@@ -172,11 +277,24 @@ def asosiy(pptx):
     with io.open(os.path.join(CHIQISH, "obyektlar.json"), "w", encoding="utf-8") as f:
         json.dump({"manba": os.path.basename(pptx), "obyektlar": obyektlar,
                    "filiallar": [{"id": v, "nom": k, "hudud": v[:2], "turi": "BXM" if "BXM" in k else "BXO"} for k, v in filiallar.items()]}, f, ensure_ascii=False)
+    # oldingi importdan qolgan, bu safar yozilmagan suratlar olib tashlanadi
+    eski = 0
+    for ichki in ("", "k"):
+        papka = os.path.join(rasm_papka, ichki)
+        if not os.path.isdir(papka): continue
+        for f in os.listdir(papka):
+            nisbiy = (ichki + "/" + f) if ichki else f
+            if f.lower().endswith(".jpg") and nisbiy not in yozilgan:
+                os.remove(os.path.join(papka, f)); eski += 1
     jami = sum(o["balansQiymat"] for o in obyektlar)
-    print("Import qilindi: %d obyekt, %d surat, jami %.1f mlrd so'm" % (len(obyektlar), sum(1 for o in obyektlar if o["rasm"]), jami / 1000))
+    print("Import qilindi: %d obyekt, asosiy surati bor %d, galereyada %d surat (sxema %d), jami %.1f mlrd so'm" % (
+        len(obyektlar), sum(1 for o in obyektlar if o["rasm"]), sum(len(o["rasmlar"]) for o in obyektlar),
+        sum(1 for o in obyektlar for r in o["rasmlar"] if r["tur"] == "sxema"), jami / 1000))
+    if eski: print("Eskirgan surat fayllari o'chirildi: %d" % eski)
     print("Fayl: " + os.path.join(CHIQISH, "obyektlar.json"))
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    argv = [a for a in sys.argv[1:] if a != "--sanab"]
+    if not argv:
         print(__doc__); sys.exit(1)
-    asosiy(sys.argv[1])
+    asosiy(argv[0], sanab="--sanab" in sys.argv[1:])

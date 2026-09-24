@@ -4,70 +4,259 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Baholash buyurtmasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
-<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
 </head>
-<body data-sahifa="baholash">
+<body data-sahifa="qiymat">
 <div class="qobiq">
 <nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
 <div class="sahna">
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><span>Baholash</span></div>
+    <div class="hs-yorliq"><a href="baholash.html">Qiymat, zaxira va sug'urta</a><span class="ajratgich">/</span><span>Baholash buyurtmasi</span></div>
     <div class="hs-qator"><h1>Baholash buyurtmasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Baholash</a><a href="baholash-buyurtma.html" class="faol">Buyurtma</a><a href="baholash-hisobot-kiritish.html">Hisobot kiritish</a><a href="sugurta.html">Sug&#39;urta polislari</a><a href="sugurta-yangilash.html">Polisni yangilash</a></nav>
-  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Baholash buyurtmasi</h2></div>
-  <form id="bb-forma" class="forma-tor">
-    <div class="maydon keng"><label class="maydon-yorliq">Obyekt <b>*</b></label>
-      <div class="kirish"><select name="obyektId" id="bb-obyekt"></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Baholovchi tashkilot <b>*</b></label>
-      <div class="kirish"><select name="baholovchi"><option>«Baholash Servis» MChJ</option><option>«Expert Baho» MChJ</option><option>«Milliy Baholash Markazi» DUK</option></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Sabab <b>*</b></label>
-      <div class="kirish"><select name="sabab"><option>Yillik qayta baholash</option><option>Balansga qabul uchun</option><option>Sud jarayoni uchun</option><option>Sug'urta qoplamasi uchun</option></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Muddat</label>
-      <div class="kirish"><input name="muddat" value="10 ish kuni"></div></div>
-    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
-      <a class="tugma tugma-oq" href="baholash.html">Bekor qilish</a>
-      <button class="tugma tugma-asosiy" type="submit">Buyurtma berish</button></div>
-  </form></section>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Baholash</a><a href="baholash-buyurtma.html" class="faol" aria-current="page">Baholash buyurtmasi</a><a href="zaxira.html">Zaxira</a><a href="soliq.html">Soliq</a><a href="sugurta.html">Sug'urta polislari</a></nav>
+
+  <div class="tor-2">
+    <section class="karta">
+      <div class="karta-bosh"><h2>Yangi buyurtma</h2></div>
+      <form id="bb-forma" class="forma-tor" novalidate data-sayohat="forma">
+        <div class="maydon keng"><label class="maydon-yorliq" for="bb-obyekt">Obyekt <b>*</b></label>
+          <div class="kirish"><svg class="ic"><use href="#ik-izlash"/></svg><input id="bb-obyekt" name="obyekt" list="bb-obyektlar" autocomplete="off" required data-xato="Obyektni ro'yxatdan tanlang" placeholder="Nomi yoki raqamini yozing"></div>
+          <datalist id="bb-obyektlar"></datalist><span class="maydon-izoh" id="bb-obyekt-izoh">Ro'yxatdan tanlang</span></div>
+        <div class="maydon"><label class="maydon-yorliq" for="bb-sabab">Sabab <b>*</b></label>
+          <div class="kirish"><select id="bb-sabab" name="sabab" required data-xato="Baholash sababini tanlang">
+            <option value="">Tanlang</option>
+            <option>Birlamchi baholash</option>
+            <option>Qayta baholash</option>
+            <option>Sotuv oldi baholash</option>
+            <option>MHXS bo'yicha qadrsizlanish testi</option>
+          </select></div></div>
+        <div class="maydon"><label class="maydon-yorliq" for="bb-baholovchi">Baholovchi tashkilot <b>*</b></label>
+          <div class="kirish"><input id="bb-baholovchi" name="baholovchi" list="bb-baholovchilar" autocomplete="off" required data-xato="Baholovchi tashkilotni yozing" placeholder="Masalan: «Baholash Servis» MChJ"></div>
+          <datalist id="bb-baholovchilar"></datalist></div>
+        <div class="maydon"><label class="maydon-yorliq" for="bb-narx">Xizmat narxi <b>*</b></label>
+          <div class="kirish"><input id="bb-narx" name="narx" type="text" data-format="pul" min="0.1" required data-xato="Xizmat narxini kiriting" placeholder="0,0"></div>
+          <span class="maydon-izoh">Xarajatlar reyestriga to'lanmagan deb yoziladi</span></div>
+        <div class="maydon"><label class="maydon-yorliq" for="bb-muddat">Hisobot muddati <b>*</b></label>
+          <div class="kirish"><input id="bb-muddat" name="muddat" type="date" required></div>
+          <span class="maydon-izoh" id="bb-muddat-izoh"></span></div>
+        <div class="maydon keng"><label class="maydon-yorliq" for="bb-tt">Texnik topshiriq <b>*</b></label>
+          <div class="kirish"><input id="bb-tt" name="tt" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required data-xato="Texnik topshiriq faylini biriktiring"></div>
+          <span class="maydon-izoh">PDF yoki Word, 20 MB gacha</span></div>
+        <div class="maydon keng" style="flex-direction:row;justify-content:flex-end;gap:10px;flex-wrap:wrap;display:flex">
+          <a class="tugma tugma-oq" href="baholash.html">Bekor qilish</a>
+          <button class="tugma tugma-asosiy" type="submit" id="bb-saqla" data-yozadi data-saqla data-sayohat="buyurtma"><svg class="ic"><use href="#ik-baholash"/></svg><span>Buyurtma berish</span></button>
+        </div>
+      </form>
+      <div id="bb-natija" hidden></div>
+    </section>
+    <section class="karta" id="bb-obyekt-karta">
+      <div class="karta-bosh"><h2>Obyekt</h2></div>
+      <div id="bb-obyekt-tana"></div>
+    </section>
+  </div>
+
+  <section class="karta" data-sayohat="jadval">
+    <div class="karta-bosh"><h2>Buyurtmalar</h2><span class="soni" id="bb-soni" data-tarjimasiz></span></div>
+    <div id="bb-jadval"><div class="skelet-royxat" aria-busy="true"></div></div>
+  </section>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
-  const yoz = await MKBapi.royxat("YOZUVLAR");
-  document.getElementById("bb-obyekt").innerHTML = yoz.map(y =>
-    '<option value="' + y.id + '">' + y.id + " — " + y.mulk.qisqa + '</option>').join("");
-  document.getElementById("bb-forma").addEventListener("submit", async e => {
-    e.preventDefault();
-    const q = MKB.forma(e.target, ["obyektId", "baholovchi", "sabab"]);
-    if (!q) return;
-    /* takrorlanmas raqam: mavjud eng katta tartib raqamidan keyingisi */
-    const bor = await MKBapi.royxat("BAHOLASHLAR");
-    const maks = bor.reduce((m, b) => { const s = /\/(\d+)$/.exec(String(b.id || "")); return s ? Math.max(m, +s[1]) : m; }, 0);
-    const id = "BH-" + new Date().getFullYear() + "/" + String(maks + 1).padStart(4, "0");
-    await MKBapi.yangi("BAHOLASHLAR", {id, obyektId: q.obyektId, sana: "buyurtma berildi",
-      qiymat: 0, avvalgi: 0, baholovchi: q.baholovchi, usul: q.sabab,
-      keyingi: q.muddat, holat: "jarayonda"});
-    MKB.toast(id + " raqamli buyurtma ro'yxatga olindi");
-    setTimeout(() => location.href = "baholash.html", 700);
+(() => {
+  const D = MKB_DATA, esc = MKB.esc, el = id => document.getElementById(id);
+  let boshlandi = false, qayta = () => {};
+  MKB.sahifaYukla({joylar: {"bb-jadval": ["jadval"], "bb-obyekt-tana": ["qator", 3]}, xato: "Baholash buyurtmalarini yuklab bo'lmadi", ish: async () => {
+    await MKB.kolYukla(["BAHOLASHLAR", "MENING_VAZIFALARIM", "XARAJATLAR", "FAYLLAR"]);
+    if (boshlandi) return qayta();
+    boshla(); boshlandi = true;
+  }});
+  function boshla(){
+  const b = (() => { const x = D.bugun(); return new Date(x.getFullYear(), x.getMonth(), x.getDate()); })();
+  const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const forma = el("bb-forma");
+  const url = new URLSearchParams(location.search);
+  const OCHIQ = ["buyurtma", "tasdiqda"];
+  const aktivlar = MKB.doira(D.YOZUVLAR.filter(y => y.holat !== "Chiqarildi"));
+  const yorliq = y => y.id + " — " + (y.qisqa || y.nom);
+  const vazifa = h => (D.MENING_VAZIFALARIM || []).find(v => v.kod === h.id && v.tur === "Baholash");
+
+  el("bb-obyektlar").innerHTML = aktivlar.map(y => '<option value="' + esc(yorliq(y)) + '">').join("");
+  el("bb-baholovchilar").innerHTML = [...new Set((D.BAHOLASHLAR || []).map(h => h.baholovchi).filter(Boolean))].sort()
+    .map(n => '<option value="' + esc(n) + '">').join("");
+  el("bb-muddat").min = iso(D.kunQosh(b, 1));
+  el("bb-muddat").value = iso(D.ishKuniQosh(b, 10));
+
+  const tanlangan = () => {
+    const v = el("bb-obyekt").value.trim(), id = v.split(" — ")[0];
+    return aktivlar.find(y => y.id === id) || aktivlar.find(y => yorliq(y) === v) || null;
+  };
+  const ochiqBuyurtma = y => (D.BAHOLASHLAR || []).find(h => h.obyektId === y.id && OCHIQ.indexOf(h.holat) >= 0) || null;
+
+  function obyektKarta(){
+    const y = tanlangan(), joy = el("bb-obyekt-tana");
+    el("bb-obyekt-izoh").textContent = "Ro'yxatdan tanlang";
+    if (!y){ joy.innerHTML = MKB.boshHolat("baholash", "Obyekt tanlanmagan", "Nomi yoki raqamini yozing"); tarjimaQil(joy); return; }
+    const q = y.qiymat || {};
+    const oxirgi = (D.BAHOLASHLAR || []).filter(h => h.obyektId === y.id && h.bozorQiymati != null && OCHIQ.indexOf(h.holat) < 0)
+      .sort((a, c) => D.sanaOqi(c.sana) - D.sanaOqi(a.sana))[0];
+    const o = ochiqBuyurtma(y);
+    joy.innerHTML = '<div class="qator" style="margin-top:-8px">' + MKB.obyektSurati(y, {kichik: true, sinf: "media"}) +
+        '<span class="matn"><b>' + esc(y.qisqa || y.nom) + '</b><span><span class="kod-mono" data-tarjimasiz>' + esc(y.id) + "</span> · <span>" + esc(y.tur || "") + "</span> · <span>" + esc(y.hudud || "") + "</span></span></span></div>" +
+      '<dl class="malumot-royxat">' +
+        "<dt>Balans qiymati</dt><dd data-tarjimasiz>" + esc(MKB.pul(y.balans && y.balans.qiymat)) + "</dd>" +
+        "<dt>Bozor qiymati</dt><dd>" + (q.bozor != null ? '<span data-tarjimasiz>' + esc(MKB.pul(q.bozor)) + "</span>" : "<span>Baholanmagan</span>") + "</dd>" +
+        "<dt>Oxirgi baho</dt><dd>" + (oxirgi ? '<span data-tarjimasiz>' + esc(oxirgi.sana) + "</span> · " + esc(oxirgi.baholovchi || "") : "<span>Yo'q</span>") + "</dd>" +
+        "<dt>Maydon</dt><dd data-tarjimasiz>" + esc(D.maydonMatn(y)) + "</dd>" +
+      "</dl>" +
+      (o ? '<div class="qator" style="margin:12px 0 0;background:var(--sariq);border-radius:var(--r-kichik);padding:12px 14px">' +
+        '<span class="belgi" style="background:var(--oq)">' + ik("ogoh") + '</span><span class="matn"><b>Ochiq buyurtma bor</b><span><span class="kod-mono" data-tarjimasiz>' + esc(o.id) + "</span> · <span data-tarjimasiz>" + esc(o.sana) + "</span> · " + esc(o.baholovchi || "") + "</span></span></div>" : "");
+    if (!el("bb-sabab").value) el("bb-sabab").value = q.bozor == null ? "Birlamchi baholash" : y.holat === "Sotuvga tayyorlanmoqda" ? "Sotuv oldi baholash" : "Qayta baholash";
+    tarjimaQil(joy);
+  }
+  el("bb-obyekt").addEventListener("change", obyektKarta);
+  el("bb-obyekt").addEventListener("input", () => { if (tanlangan()) obyektKarta(); });
+  el("bb-muddat").addEventListener("change", () => {
+    const s = D.sanaOqi(el("bb-muddat").value);
+    el("bb-muddat-izoh").textContent = s && !D.ishKunimi(s) ? "Dam olish yoki bayram kuni" : "";
   });
-});
+  if (url.get("obyekt")){ const y = aktivlar.find(x => x.id === url.get("obyekt")); if (y) el("bb-obyekt").value = yorliq(y); }
+  obyektKarta();
+
+  /* Buyurtmalar jadvali */
+  let jadval = null;
+  function royxat(){
+    const r = MKB.doira(D.BAHOLASHLAR || []).filter(h => OCHIQ.indexOf(h.holat) >= 0 || h.holat === "bekor").map(h => {
+      const v = vazifa(h);
+      const muddat = v && v.muddat ? D.sanaOqi(v.muddat) : null;
+      const kech = h.holat === "buyurtma" && muddat && muddat < b;
+      return {id: h.id, obyektId: h.obyektId, obyekt: D.obyektNomi(h.obyektId, true) || h.obyektId, sana: h.sana, baholovchi: h.baholovchi || "",
+        sabab: h.izoh || "", muddat: muddat ? D.sanaYoz(muddat) : "", kech,
+        holat: h.holat === "tasdiqda" ? "Tasdiqda" : h.holat === "bekor" ? "Bekor qilingan" : kech ? "Muddati o'tgan" : "Kutilmoqda"};
+    });
+    el("hs-meta").innerHTML = "<span>Ochiq buyurtmalar:</span> <span data-tarjimasiz>" + r.filter(x => x.holat !== "Bekor qilingan").length + "</span>";
+    el("bb-soni").textContent = r.length + " ta";
+    const CH = {"Tasdiqda": "chip-binafsha", "Bekor qilingan": "chip-kul", "Muddati o'tgan": "chip-xavf", "Kutilmoqda": "chip-kok"};
+    const yoza = MKB.huquq("qiymat", "yoz");
+    const cfg = {
+      qatorlar: r, saralash: "muddat", yonalish: 1, sahifaHajmi: 10,
+      qidiruv: ["obyekt", "id", "baholovchi"], qidiruvYozuvi: "Obyekt, raqam yoki baholovchi",
+      filtrlar: [{kalit: "holat", nom: "Holat", variantlar: ["Kutilmoqda", "Muddati o'tgan", "Tasdiqda", "Bekor qilingan"]}],
+      csvNomi: "baholash-buyurtmalari",
+      bosh: {sarlavha: "Buyurtma yo'q", izoh: D.MANBA === "mahalliy" ? "Mahalliy reyestrda baholash buyurtmalari hali kiritilmagan" : "Yangi buyurtma formasi yuqorida"},
+      ustunlar: [
+        {kalit: "id", nom: "Raqam", chiz: x => '<span class="kod-mono" data-tarjimasiz>' + esc(x.id) + "</span>"},
+        {kalit: "obyekt", nom: "Obyekt", chiz: x => "<b>" + esc(x.obyekt) + '</b><br><span style="font-size:12px;color:var(--matn-3)">' + esc(x.sabab) + "</span>"},
+        {kalit: "baholovchi", nom: "Baholovchi"},
+        {kalit: "sana", nom: "Berilgan", tur: "sana"},
+        {kalit: "muddat", nom: "Muddat", tur: "sana", chiz: x => x.muddat ? '<span data-tarjimasiz' + (x.kech ? ' style="color:var(--xavf-matn-yorqin)"' : "") + ">" + esc(x.muddat) + "</span>" : "—"},
+        {kalit: "holat", nom: "Holat", chiz: x => '<span class="chip chip-kichik ' + CH[x.holat] + '">' + esc(x.holat) + "</span>"},
+        {kalit: "amal", nom: "", saralash: false, csv: false, chiz: x => !yoza ? "" :
+          x.holat === "Tasdiqda" ? '<a class="tugma tugma-kichik tugma-oq" href="baholash-hisobot.html?id=' + encodeURIComponent(x.id) + '">Ochish</a>' :
+          x.holat === "Bekor qilingan" ? "" :
+          '<span style="display:inline-flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="tugma tugma-kichik tugma-oq" data-bekor="' + esc(x.id) + '" data-yozadi>Bekor qilish</button>' +
+          '<a class="tugma tugma-kichik tugma-asosiy" href="baholash-hisobot-kiritish.html?id=' + encodeURIComponent(x.id) + '">Hisobot kiritish</a></span>'},
+      ],
+      chizilganda(_, joy){ joy.querySelectorAll("[data-bekor]").forEach(bt => bt.addEventListener("click", () => bekor(bt.dataset.bekor, bt))); },
+    };
+    if (jadval) jadval.yangila(r); else jadval = MKB.jadval("bb-jadval", cfg);
+  }
+  /* Buyurtmani bekor qilish: sabab majburiy, vazifa yopiladi, to'lanmagan xizmat haqi xarajatlardan olinadi */
+  function bekor(id){
+    const h = (D.BAHOLASHLAR || []).find(x => x.id === id);
+    if (!h) return;
+    const v = vazifa(h);
+    const x = (D.XARAJATLAR || []).find(r => r.izoh === "Baholash buyurtmasi " + h.id && r.holat === "tolanmagan");
+    MKB.tasdiqla({
+      sarlavha: "Baholash buyurtmasini bekor qilish",
+      matn: "Buyurtma bekor qilinadi. Baholovchi tashkilot bu buyurtma bo'yicha hisobot topshirmaydi.",
+      tafsilot: [["Buyurtma", {matn: h.id, tarjimasiz: true}], ["Obyekt", {matn: D.obyektNomi(h.obyektId, true) || h.obyektId, tarjimasiz: true}],
+        ["Baholovchi", {matn: h.baholovchi || "—", tarjimasiz: true}]].concat(x ? [["Xizmat haqi", MKB.pul(x.summa)]] : []),
+      oqibat: [].concat(v && !v.bajarildi ? ["Hisobot kiritish vazifasi yopiladi"] : [], x ? ["To'lanmagan xizmat haqi xarajatlar reyestridan olib tashlanadi"] : []),
+      ton: "xavfli",
+      sabab: {majburiy: true, min: 5, maks: 500, yorliq: "Bekor qilish sababi", namuna: "Masalan: obyekt sotuvdan olindi, boshqa tashkilot tanlandi"},
+      okMatn: "Buyurtmani bekor qilish", bekorMatn: "Orqaga",
+      async bajar({sabab}){
+        await MKBapi.yangilash("BAHOLASHLAR", h.id, {holat: "bekor", izoh: (h.izoh ? h.izoh + ". " : "") + "Bekor qilindi: " + sabab});
+        if (v && !v.bajarildi) await MKBapi.yangilash("MENING_VAZIFALARIM", v.id, {bajarildi: true});
+        if (x) await MKBapi.ochir("XARAJATLAR", x.id);
+      },
+    }).then(r => {
+      if (!r) return;
+      MKB.toast("Buyurtma " + h.id + " bekor qilindi");
+      royxat(); obyektKarta();
+    });
+  }
+  qayta = () => { royxat(); obyektKarta(); };
+  royxat();
+
+  const qoriq = MKB.formaQoriqla(forma, {nom: "Baholash buyurtmasi"});
+  forma.addEventListener("submit", async e => {
+    e.preventDefault();
+    const r = MKB.formaTekshir(forma, {
+      obyekt: () => { const y = tanlangan(); return !y ? "Obyektni ro'yxatdan tanlang" : ochiqBuyurtma(y) ? "Bu obyektda ochiq buyurtma bor. Yangisi berilmaydi" : true; },
+      muddat: v => { const s = D.sanaOqi(v); return s && s > b ? true : "Hisobot muddati bugundan keyin bo'lishi kerak"; },
+      tt: () => { const f = el("bb-tt").files[0]; return f && f.size > MKBapi.fayl.MAX_HAJM ? "Fayl 20 MB dan katta" : true; },
+    });
+    if (!r) return;
+    const q = r.qiymatlar;
+    const y = tanlangan();
+    const narx = q.narx;
+    const muddat = D.sanaOqi(q.muddat);
+    const fayl = el("bb-tt").files[0];
+    const bugunS = D.sanaYoz(b), yil = b.getFullYear();
+    let id;
+    try{
+      await MKB.band(el("bb-saqla"), async () => {
+        id = await MKB.keyingiId("BAHOLASHLAR", "BH-" + yil + "/", 4);
+        await MKBapi.yangi("BAHOLASHLAR", {id, obyektId: y.id, sana: bugunS, hisobotRaqami: null, bozorQiymati: null, tugatishQiymati: null,
+          avvalgi: y.qiymat && y.qiymat.bozor != null ? y.qiymat.bozor : null, baholovchi: q.baholovchi, litsenziya: null, usul: null,
+          amalQilishTugash: null, holat: "buyurtma", izoh: q.sabab});
+        const f = await MKBapi.fayl.saqla(fayl, {obyektId: y.id, kolleksiya: "BAHOLASHLAR", yozuvId: id});
+        await MKBapi.yangi("HUJJATLAR", {id: await MKB.keyingiId("HUJJATLAR", "HJ-", 0), obyektId: y.id, nom: "Baholash texnik topshirig'i " + id,
+          tur: "Texnik topshiriq", bosqich: "baholash", raqam: id, sana: bugunS, amalQilishTugash: null, holat: "Yuklangan",
+          format: (fayl.name.split(".").pop() || "").toUpperCase(), hajm: (Math.round(fayl.size / 1048576 * 10) / 10 || 0.1).toString().replace(".", ",") + " MB",
+          yuklagan: MKB.kim(), faylId: f.id});
+        await MKBapi.yangi("MENING_VAZIFALARIM", {id: await MKB.keyingiId("MENING_VAZIFALARIM", "VZ-" + yil + "-", 0),
+          nom: "Baholash hisobotini kiritish: " + (y.qisqa || y.nom), tur: "Baholash", obyektId: y.id, kod: id, qoidaId: null,
+          sana: bugunS, muddat: D.sanaYoz(muddat), ijrochi: MKB.kim(), rol: "Baholovchi", muhimlik: "orta", bajarildi: false});
+        await MKBapi.yangi("XARAJATLAR", {id: await MKB.keyingiId("XARAJATLAR", "XJ-" + yil + "/", 4), obyektId: y.id, toifa: "baholash", summa: narx,
+          davr: yil + "-" + String(b.getMonth() + 1).padStart(2, "0"), sana: bugunS, kontragent: q.baholovchi, hisobFaktura: null,
+          tasdiqlovchi: null, holat: "tolanmagan", izoh: "Baholash buyurtmasi " + id});
+      });
+    }catch(err){ MKB.formaXato(forma, "Buyurtma saqlanmadi: " + err.message); return; }
+    qoriq.toza();
+    MKB.toast("Buyurtma " + id + " berildi");
+    forma.hidden = true;
+    const n = el("bb-natija");
+    n.hidden = false;
+    n.innerHTML = '<div class="bosh-holat">' + ik("tasdiq") + "<b>Buyurtma berildi</b>" +
+      '<span><span class="kod-mono" data-tarjimasiz>' + esc(id) + "</span> · " + esc(y.qisqa || y.nom) + " · <span>muddat</span> <span data-tarjimasiz>" + D.sanaYoz(muddat) + "</span></span>" +
+      '<span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px">' +
+        '<a class="tugma tugma-oq" href="baholash-buyurtma.html">Yana buyurtma</a>' +
+        '<a class="tugma tugma-asosiy" href="baholash-hisobot-kiritish.html?id=' + encodeURIComponent(id) + '">Hisobot kiritish</a></span></div>';
+    tarjimaQil(n);
+    royxat(); obyektKarta();
+  });
+  tarjimaQil(document.querySelector(".kontent"));
+  }
+})();
 </script>
 </body>
 </html>

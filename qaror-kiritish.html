@@ -4,7 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Sud qarorini kiritish</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.kirish textarea{width:100%;border:0;outline:0;background:none;font:inherit;resize:vertical;padding:10px 0;min-height:96px}
+.kirish:has(textarea){height:auto;align-items:stretch}
+.forma-oyoq{grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding-top:6px}
+.malumot-royxat dd .ikkinchi{display:block;font-size:12.5px;color:var(--matn-3);font-weight:400;margin-top:2px}
+.belgilash{display:flex;gap:10px;align-items:center;cursor:pointer;font-size:14px;min-height:40px}
+#ogoh:empty,#yuklash-joy:empty{display:none}
+</style>
 </head>
 <body data-sahifa="yuridik">
 <div class="qobiq">
@@ -13,79 +21,224 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="undiruv.html">Undiruv va sud</a><span class="ajratgich">/</span><span>Qaror</span></div>
-    <div class="hs-qator"><h1>Sud qarorini kiritish</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="undiruv.html">Undiruv ishlari</a><span class="ajratgich">/</span><span>Sud qarori</span></div>
+    <div class="hs-qator"><h1>Sud qarorini kiritish</h1><span class="hs-meta" id="hs-meta"></span></div>
   </div>
-  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Sud qarorini kiritish</h2></div>
-  <form id="qr-forma" class="forma-tor">
-    <div class="maydon keng"><label class="maydon-yorliq">Ish <b>*</b></label>
-      <div class="kirish"><select name="obyektId" id="qr-yozuv"></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Qaror raqami <b>*</b></label>
-      <div class="kirish"><input name="raqam" placeholder="2-1234/2026"></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Qaror sanasi <b>*</b></label>
-      <div class="kirish"><input name="sana" placeholder="kk.oo.yyyy"></div></div>
-    <div class="maydon keng"><label class="maydon-yorliq">Xulosa <b>*</b></label>
-      <textarea class="kirish-matn" name="xulosa" placeholder="Sud xulosasi: da'vo qanoatlantirildi..."></textarea></div>
-    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
-      <a class="tugma tugma-oq" href="undiruv.html">Bekor qilish</a>
-      <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-muhr"/></svg>Qarorni saqlash</button></div>
-  </form></section>
+  <div id="ogoh"></div>
+  <div id="yuklash-joy"></div>
+  <div class="tor-2" id="tor" hidden>
+    <section class="karta" aria-labelledby="f-h" data-sayohat="forma"><div class="karta-bosh"><h2 id="f-h">Qaror rekvizitlari</h2></div>
+      <form id="q-forma" class="forma-tor" novalidate>
+        <div class="maydon keng"><label class="maydon-yorliq" for="q-ish">Undiruv ishi <b>*</b></label>
+          <div class="kirish"><select name="ish" id="q-ish" required data-xato="Undiruv ishini tanlang"></select></div>
+          <span class="maydon-izoh">Da'vo berilgan va sudda ko'rilayotgan ishlar</span></div>
+        <div class="maydon"><label class="maydon-yorliq" for="q-raqam">Qaror raqami <b>*</b></label>
+          <div class="kirish"><input name="raqam" id="q-raqam" required data-xato="Qaror raqamini kiriting" autocomplete="off" placeholder="2-1234/2026"></div></div>
+        <div class="maydon"><label class="maydon-yorliq" for="q-sana">Qaror sanasi <b>*</b></label>
+          <div class="kirish"><input name="sana" id="q-sana" type="date" required></div></div>
+        <div class="maydon keng" data-sayohat="natija"><label class="maydon-yorliq" for="q-natija">Natija <b>*</b></label>
+          <div class="kirish"><select name="natija" id="q-natija" required data-xato="Qaror natijasini tanlang"><option value="">Tanlang</option><option>Da'vo to'liq qanoatlantirildi</option><option>Da'vo qisman qanoatlantirildi</option><option>Kelishuv bitimi tasdiqlandi</option><option>Da'vo rad etildi</option></select></div></div>
+        <div class="maydon"><label class="maydon-yorliq" for="q-summa">Undiriladigan summa, mln so'm</label>
+          <div class="kirish"><input name="summa" id="q-summa" type="text" data-format="pul" min="0"></div>
+          <span class="maydon-izoh" id="q-summa-izoh"></span></div>
+        <div class="maydon"><label class="maydon-yorliq" for="q-kuch">Qonuniy kuchga kirish sanasi</label>
+          <div class="kirish"><input name="kuch" id="q-kuch" type="date"></div>
+          <span class="maydon-izoh">Ishda nazorat muddati sifatida chiqadi</span></div>
+        <div class="maydon keng"><label class="belgilash" for="q-garov"><input type="checkbox" name="garov" id="q-garov" checked><span>Undiruv garov mulkiga qaratildi</span></label>
+          <span class="maydon-izoh" id="q-garov-izoh">Belgilanmasa, ish bo'yicha garov mulki balansga qabul qilish uchun taklif etilmaydi</span></div>
+        <div class="maydon keng"><label class="maydon-yorliq" for="q-xulosa">Qaror xulosasi <b>*</b></label>
+          <div class="kirish"><textarea name="xulosa" id="q-xulosa" required minlength="10" data-xato="Qaror xulosasini yozing" placeholder="Qaror qismining qisqa mazmuni"></textarea></div></div>
+        <div class="maydon keng"><span class="maydon-yorliq">Qaror nusxasi</span><div id="q-fayl"></div></div>
+        <div class="forma-oyoq"><a class="tugma tugma-oq" id="q-bekor" href="undiruv.html">Bekor qilish</a>
+          <button class="tugma tugma-asosiy" type="submit" id="q-saqla" data-saqla data-yozadi data-sayohat="saqla"><svg class="ic"><use href="#ik-muhr"/></svg>Qarorni saqlash</button></div>
+      </form>
+    </section>
+    <div class="ustun">
+      <section class="karta" aria-labelledby="t-h" data-sayohat="tanlangan-ish"><div class="karta-bosh"><h2 id="t-h">Tanlangan ish</h2><a class="karta-havola" id="t-havola" href="undiruv.html">Ish varaqasi<svg class="ic"><use href="#ik-ong"/></svg></a></div><dl class="malumot-royxat" id="t-malumot"></dl></section>
+      <section class="karta" aria-labelledby="m-h"><div class="karta-bosh"><h2 id="m-h">Sud majlislari</h2></div><div id="t-majlis"></div></section>
+    </div>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
-  const yoz = await MKBapi.royxat("YOZUVLAR");
-  const oldindan = new URLSearchParams(location.search).get("id");
-  const tartib = MKB_DATA.BOSQICHLAR.map(b => b.kalit);
-  const tanlangan = oldindan ? yoz.find(y => y.id === oldindan) : null;
-  /* ro'yxat: da'vo/sud bosqichidagi ishlar + havola orqali kelgan ish (bosqichidan qat'i nazar) */
-  const royxat = yoz.filter(y => ["sud", "davo"].includes(y.ish.bosqich));
-  if (tanlangan && !royxat.includes(tanlangan)) royxat.unshift(tanlangan);
-  const sel = document.getElementById("qr-yozuv");
-  sel.innerHTML = (tanlangan ? "" : '<option value="">Ishni tanlang</option>') + royxat.map(y =>
-    '<option value="' + y.id + '"' + (y.id === oldindan ? ' selected' : '') + '>' +
-    y.ish.raqam + " — " + y.mijoz.nom + " · " + y.bosqichNomi + '</option>').join("");
-  const meta = () => {
-    const y = yoz.find(v => v.id === sel.value);
-    document.getElementById("hs-meta").textContent = y ? y.ish.raqam + " · " + y.bosqichNomi : "—";
+(async () => {
+  document.getElementById("yuklash-joy").innerHTML = '<section class="karta">' + MKB.skelet(6) + "</section>";
+  await MKBapi.tayyor;
+  const D = MKB_DATA;
+  const esc = MKB.esc;
+  const bugun = D.bugun();
+  const iso = s => { const d = s instanceof Date ? s : D.sanaOqi(s); return d ? d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") : ""; };
+  /* qiymat boshi lug'atdagi atama bo'lsa ("Noturar bino · 1,48 mlrd so'm") u o'giriladi, qolgani o'zgarmaydi */
+  const t = s => {
+    const v = s == null || s === "" ? "—" : String(s), i = v.indexOf(" · "), bosh = i > 0 ? v.slice(0, i) : v;
+    if ((window.MKB_LUGAT || {})[bosh] == null) return '<span data-tarjimasiz>' + esc(v) + "</span>";
+    return "<span>" + esc(bosh) + "</span>" + (i > 0 ? ' · <span data-tarjimasiz>' + esc(v.slice(i + 3)) + "</span>" : "");
   };
-  sel.addEventListener("change", meta); meta();
-  tarjimaQil(sel);
-  document.getElementById("qr-forma").addEventListener("submit", async e => {
-    e.preventDefault();
-    const q = MKB.forma(e.target, ["obyektId", "raqam", "sana", "xulosa"]);
-    if (!q) return;
-    const y = yoz.find(v => v.id === q.obyektId);
-    if (!y) return;
-    const joriy = tartib.indexOf(y.ish.bosqich);
-    if (joriy < tartib.indexOf("davo")){
-      MKB.toast("Avval da'vo arizasi ro'yxatga olinishi kerak", "xavf");
-      return;
-    }
-    const tarix = (y.ish.tarix || []).concat([[q.sana, "Sud qarori qabul qilindi", q.raqam + ": " + q.xulosa.slice(0, 90)]]);
-    /* qarordan keyingi bosqichdagi ish orqaga qaytarilmaydi — faqat qaror rekvizitlari yoziladi */
-    const oldinga = joriy < tartib.indexOf("qaror");
-    await MKBapi.yangilash("YOZUVLAR", y.id, Object.assign({
-      ish: Object.assign({}, y.ish, {qaror: q.raqam, tarix}, oldinga ? {bosqich: "qaror"} : {})},
-      oldinga ? {bosqichNomi: "Sud qarori"} : {}));
-    MKB.toast(q.raqam + " raqamli qaror kiritildi");
-    setTimeout(() => location.href = "ish.html?id=" + encodeURIComponent(y.id), 700);
+  const tj = s => ({matn: s == null || s === "" ? "—" : String(s), tarjimasiz: true});
+  const oldindan = new URLSearchParams(location.search).get("id");
+  const forma = document.getElementById("q-forma");
+  const sel = document.getElementById("q-ish");
+  const BOSQ = D.UNDIRUV_BOSQICHLAR;
+  const bosqichNomi = k => (BOSQ.find(b => b.kalit === k) || {nom: k}).nom;
+
+  let ishlar = null, majlislar = [];
+  await MKB.sahifaYukla({joylar: {"yuklash-joy": ["qator", 6]}, xato: "Undiruv ishlarini yuklab bo'lmadi",
+    ish: async () => {
+      const [a, b] = await Promise.all([MKBapi.royxat("UNDIRUV_ISHLAR"), MKBapi.royxat("SUD_MAJLISLAR")]);
+      ishlar = MKB.doira(a); majlislar = b;
+    }});
+  if (!ishlar) return;
+  document.getElementById("yuklash-joy").innerHTML = "";
+  document.getElementById("tor").hidden = false;
+
+  const nomzod = ishlar.filter(i => i.holat === "faol" && ["davo", "sud"].includes(i.bosqich) && !i.qaror);
+  document.getElementById("hs-meta").innerHTML = '<b data-tarjimasiz>' + nomzod.length + "</b> <span>ta ish qaror kutmoqda</span>";
+
+  const tanlangan = oldindan ? ishlar.find(i => i.id === oldindan) : null;
+  if (tanlangan && !nomzod.includes(tanlangan)){
+    const sabab = tanlangan.holat !== "faol" ? "<span>Ish yopilgan.</span>" : tanlangan.qaror
+      ? "<span>Qaror allaqachon kiritilgan:</span> <b data-tarjimasiz>" + esc(tanlangan.qaror.raqam) + "</b>"
+      : "<span>Avval da'vo sudga berilishi kerak. Joriy bosqich:</span> <b>" + esc(bosqichNomi(tanlangan.bosqich)) + "</b>";
+    document.getElementById("ogoh").innerHTML = '<section class="karta"><div class="qator" style="margin:0"><span class="belgi pushti">' + ik("ogoh") + "</span>" +
+      '<span class="matn"><b><span data-tarjimasiz>' + esc(tanlangan.id) + "</span> <span>bo'yicha qaror kiritilmaydi</span></b><span>" + sabab + "</span></span>" +
+      '<span class="ong"><a class="tugma tugma-oq tugma-kichik" href="ish.html?id=' + encodeURIComponent(tanlangan.id) + '">Ish varaqasi</a></span></div></section>';
+  }
+  /* Havoladagi ish ko'rinmasa (raqam xato yoki ish boshqa filialda) forma boshqa ishni o'zi tanlamaydi */
+  if (oldindan && !tanlangan){
+    document.getElementById("ogoh").innerHTML = '<section class="karta"><div class="qator" style="margin:0"><span class="belgi pushti">' + ik("ogoh") + "</span>" +
+      '<span class="matn"><b><span>Undiruv ishi topilmadi</span> <span data-tarjimasiz>' + esc(oldindan) + "</span></b>" +
+      "<span>Bunday raqamli ish yo\'q yoki u boshqa filialga tegishli. Ishni ro\'yxatdan tanlang.</span></span>" +
+      '<span class="ong"><a class="tugma tugma-oq tugma-kichik" href="undiruv.html">Undiruv ishlari</a></span></div></section>';
+  }
+  if (!nomzod.length){
+    document.getElementById("tor").innerHTML = '<section class="karta">' + MKB.boshHolat("muhr", "Qaror kutayotgan ish yo'q",
+      ishlar.length ? "Sudda ko'rilayotgan barcha ishlar bo'yicha qaror kiritilgan." : "Da'vo sudga berilgach, ishlar shu yerda chiqadi.",
+      '<a class="tugma tugma-oq" href="undiruv.html">Undiruv ishlari</a>') + "</section>";
+    tarjimaQil(document.querySelector(".kontent"));
+    return;
+  }
+
+  /* Havola bilan kelgan ish ro'yxatda bo'lmasa, tanlov bo'sh qoladi va foydalanuvchi ishni o'zi belgilaydi */
+  const boshTanlov = !!oldindan && !nomzod.some(i => i.id === oldindan);
+  sel.innerHTML = (boshTanlov ? '<option value="" selected>Ishni tanlang</option>' : "") +
+    nomzod.map(i => '<option value="' + esc(i.id) + '"' + (i.id === oldindan ? " selected" : "") + ">" +
+    esc(i.id + " — " + (i.qarzdor ? i.qarzdor.nom : "")) + "</option>").join("");
+  const sanaInp = document.getElementById("q-sana");
+  sanaInp.max = iso(bugun); sanaInp.value = iso(bugun);
+  let faylId = null, qoriq = null;
+  const ish = () => nomzod.find(i => i.id === sel.value);
+  const davoSana = i => { const x = (i.tarix || []).find(v => /da'vo/i.test(v.voqea || "")); return x ? x.sana : null; };
+
+  function tanla(){
+    const i = ish();
+    /* Ish tanlanmagan bo'lsa o'ng tomondagi ish kartalari yashiriladi */
+    document.getElementById("t-malumot").closest(".karta").hidden = !i;
+    document.getElementById("t-majlis").closest(".karta").hidden = !i;
+    if (!i){ document.getElementById("q-summa-izoh").innerHTML = ""; return; }
+    const q = i.qarz || {}, g = i.garov || {};
+    document.getElementById("q-summa-izoh").innerHTML = "<span>Qarz:</span> " + t(MKB.pul(q.jami));
+    const ds = davoSana(i);
+    sanaInp.min = ds ? iso(ds) : "";
+    document.getElementById("q-bekor").href = document.getElementById("t-havola").href = "ish.html?id=" + encodeURIComponent(i.id);
+    const qator = (nom, v) => "<dt><span>" + nom + "</span></dt><dd>" + v + "</dd>";
+    document.getElementById("t-malumot").innerHTML =
+      qator("Qarzdor", t(i.qarzdor && i.qarzdor.nom)) +
+      qator("Qarz", t(MKB.pul(q.jami))) +
+      qator("Garov", t(g.nom) + '<span class="ikkinchi">' + t([g.tur, g.bahoMln != null ? MKB.pul(g.bahoMln) : ""].filter(Boolean).join(" · ")) + "</span>") +
+      qator("Sud", t(i.sud && i.sud.nomi) + (i.sud && i.sud.ishRaqami ? '<span class="ikkinchi"><span>ish raqami:</span> ' + t(i.sud.ishRaqami) + "</span>" : "")) +
+      qator("Da'vo berilgan", t(ds));
+    const m = majlislar.filter(x => x.ishId === i.id).sort((a, b) => (D.sanaOqi(b.sana) || 0) - (D.sanaOqi(a.sana) || 0));
+    document.getElementById("t-majlis").innerHTML = m.length ? m.map(x =>
+      '<a class="qator" href="sud-majlis.html?id=' + encodeURIComponent(x.id) + '"><span class="belgi ' + (x.holat === "rejada" ? "lavanda" : "mint") + '">' + ik("kalendar") + "</span>" +
+      '<span class="matn"><b data-tarjimasiz>' + esc(x.mavzu || "Sud majlisi") + '</b><span data-tarjimasiz>' + esc(x.natija || x.zal || "") + "</span></span>" +
+      '<span class="ong"><span class="vaqt" data-tarjimasiz>' + esc(x.sana) + "</span></span></a>").join("")
+      : MKB.boshHolat("kalendar", "Majlis qayd etilmagan");
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+  function faylMaydon(){
+    if (!MKB.huquq("yuridik", "yoz")){ document.getElementById("q-fayl").innerHTML = ""; return; }
+    if (!sel.value){ document.getElementById("q-fayl").innerHTML = ""; return; }
+    MKB.faylMaydon("#q-fayl", {kolleksiya: "UNDIRUV_ISHLAR", yozuvId: sel.value, obyektId: null, sarlavha: "Qaror nusxasini tashlang yoki tanlang",
+      yuklandi(f){ faylId = f.id; if (qoriq) qoriq.fayllar([f.id]); }});
+  }
+  sel.addEventListener("change", () => { faylId = null; if (qoriq) qoriq.fayllar([]); faylMaydon(); tanla(); });
+  /* Da'vo rad etilsa undiruv hech qaysi mulkka qaratilmaydi: belgi o'chiriladi va yopiladi */
+  const natijaSel = document.getElementById("q-natija"), garovBelgi = document.getElementById("q-garov");
+  natijaSel.addEventListener("change", () => {
+    const rad = natijaSel.value === "Da'vo rad etildi";
+    if (rad) garovBelgi.checked = false;
+    garovBelgi.disabled = rad || !MKB.huquq("yuridik", "yoz");
   });
-});
+  MKB.formaUla(forma);
+  faylMaydon();
+  tanla();
+  if (!MKB.huquq("yuridik", "yoz")){
+    forma.querySelectorAll("input, select, textarea").forEach(e => { e.disabled = true; });
+    document.getElementById("q-saqla").hidden = true;
+  } else {
+    /* Uzun forma: qoralama shu qurilmada avtomatik saqlanadi, sahifadan chiqishda so'raladi */
+    qoriq = MKB.formaQoriqla(forma, {nom: "Sud qarori", qoralama: "qaror", tiklandi: d => {
+      faylId = (d.fayllar || [])[0] || null;
+      natijaSel.dispatchEvent(new Event("change"));
+    }});
+  }
+
+  forma.addEventListener("submit", async e => {
+    e.preventDefault();
+    const i = ish();
+    const r = MKB.formaTekshir(forma, {
+      raqam: v => /\d/.test(v) || "Qaror raqamini raqamlari bilan kiriting",
+      sana: v => { const ds = i ? D.sanaOqi(davoSana(i)) : null; return !(ds && D.sanaOqi(v) < ds) || "Qaror da'vo berilgan sanadan oldin bo'lmaydi"; },
+      kuch: (v, q) => !(v && q.sana && D.sanaOqi(v) < D.sanaOqi(q.sana)) || "Kuchga kirish sanasi qaror sanasidan oldin bo'lmaydi",
+    });
+    if (!r || !i) return;
+    const q = r.qiymatlar;
+    const rad = q.natija === "Da'vo rad etildi";
+    const summa = q.summa != null && q.summa !== "" && Number.isFinite(q.summa) ? q.summa : null;
+    const garovga = !rad && !!garovBelgi.checked;
+    const izoh = [q.raqam, q.natija, summa != null ? "undiriladi " + MKB.pul(summa) : "",
+      garovga ? "undiruv garovga qaratildi" : "", q.xulosa.slice(0, 160)].filter(Boolean).join(". ");
+    const muddat = q.kuch ? {sana: q.kuch, izoh: rad ? "Apellyatsiya shikoyati muddati" : "Qaror qonuniy kuchga kiradi"} : null;
+    /* Sud qarori keyingi bosqichni belgilaydi, shuning uchun saqlashdan oldin xulosa tasdiqlanadi */
+    const ok = await MKB.tasdiqla({
+      sarlavha: "Sud qarorini saqlash",
+      matn: rad ? "Da'vo rad etilgani qayd etiladi. Bosqich o'zgarmaydi: " + bosqichNomi(i.bosqich) + "."
+                : "Bosqich o'zgaradi: " + bosqichNomi(i.bosqich) + " → " + bosqichNomi("qaror") + ".",
+      tafsilot: [["Ish", tj(i.id)], ["Qarzdor", tj(i.qarzdor && i.qarzdor.nom)], ["Qaror", tj(q.raqam + " · " + q.sana)], ["Natija", q.natija],
+        ["Undiriladi", summa != null ? tj(MKB.pul(summa)) : "Ko'rsatilmagan"],
+        ["Garov", garovga ? "Undiruv garovga qaratildi" : "Undiruv garovga qaratilmagan"],
+        ["Nazorat muddati", muddat ? tj(muddat.sana) : "Belgilanmaydi"]],
+      oqibat: [rad ? "Apellyatsiya muddatini nazorat qiling" : "Keyingi qadam: qaror kuchga kirgach ijro varaqasini MIBga topshirish",
+        garovga ? "" : "Garov balansga qabul qilish uchun taklif etilmaydi", "Qaror ishdagi hujjatlarga qo'shiladi"].filter(Boolean),
+      okMatn: "Qarorni saqlash",
+      bekorMatn: "Orqaga",
+      bajar: () => MKBapi.yangilash("UNDIRUV_ISHLAR", i.id, Object.assign({
+        qaror: {raqam: q.raqam, sana: q.sana, natija: q.natija, summa, garovgaQaratildi: garovga, kuchgaKirish: q.kuch || null, xulosa: q.xulosa},
+        muddat,
+        hujjatlar: (i.hujjatlar || []).concat([Object.assign({tur: "Sud qarori", nom: "Sud qarori " + q.raqam, sana: q.sana}, faylId ? {faylId} : {})]),
+        tarix: (i.tarix || []).concat([{sana: q.sana, voqea: rad ? "Sud da'voni rad etdi" : "Sud qarori qabul qilindi", izoh}])
+      }, rad ? {} : {bosqich: "qaror"})),
+    });
+    if (!ok) return;
+    if (qoriq) qoriq.toza();
+    MKB.toast("Qaror " + q.raqam + " ish " + i.id + " ga kiritildi");
+    location.href = "ish.html?id=" + encodeURIComponent(i.id);
+  });
+})();
 </script>
 </body>
 </html>

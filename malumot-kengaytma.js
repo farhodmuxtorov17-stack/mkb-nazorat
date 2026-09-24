@@ -1,29 +1,59 @@
 /* ============================================================
-   malumot-kengaytma.js — ma'lumot bazasini kengaytirish
+   malumot-kengaytma.js — namoyish reyestri va aktivga bog'liq to'plamlar
    malumot-qoshimcha.js dan KEYIN ulanadi.
-   Reyestr, ko'riklar, baholash, sug'urta va hujjatlar bo'yicha to'liq qamrov
-   deterministik tarzda shakllantiriladi.
+
+   Namoyish rejimida 267 ta aktiv (8 tasi malumot.js da) va ularning ko'riklari,
+   sug'urtasi, baholash, hujjatlar, xarajatlar, qo'riqlash, kommunal arizalar,
+   inventar, soliq, lotlar, takliflar, shartnomalar, ijara, arxiv, tasdiqlar,
+   MB hisobotlari va zaxira tarixi yaratiladi. Barcha sanalar bugun() ga nisbatan.
+
+   Mahalliy (haqiqiy) rejimda hech narsa yaratilmaydi: to'plamlar bo'sh,
+   faqat foydalanuvchi kiritgan yozuvlar bo'ladi.
    ============================================================ */
-(function(){
+(function () {
   const D = window.MKB_DATA;
   if (!D || D.__kengaytirilgan) return;
   D.__kengaytirilgan = true;
 
-  /* ---------- deterministik "tasodif" ---------- */
-  let urug = 20260826;
-  const rnd = () => { urug = (urug * 1103515245 + 12345) & 0x7fffffff; return urug / 0x7fffffff; };
-  const tanla = a => a[Math.floor(rnd() * a.length)];
-  const oraliq = (a, b) => a + Math.floor(rnd() * (b - a + 1));
+  const namoyish = D.MANBA !== "mahalliy";
+  const BUGUN = D.BUGUN;
+  const nisbiy = D.__nisbiy;
+  const {sanaYoz, sanaOqi, kunQosh, oyQosh, kunFarqi, yaxlit} = D;
 
+  /* ---------- deterministik tasodif ----------
+     rnd  — eski generator bilan bir xil urug' va chaqiruvlar tartibi: aktivning turi, hududi,
+            nomi va qiymati avvalgi versiyadagidek qoladi.
+     rnd2 — aktivning yangi maydonlari, rnd3 — bog'liq to'plamlar. */
+  function generator(boshUrug) {
+    let urug = boshUrug;
+    const r = () => { urug = (urug * 1103515245 + 12345) & 0x7fffffff; return urug / 0x7fffffff; };
+    return {r, tanla: a => a[Math.floor(r() * a.length)], oraliq: (a, b) => a + Math.floor(r() * (b - a + 1)),
+            ehtimol: p => r() < p};
+  }
+  const G1 = generator(20260826), G2 = generator(52260921), G3 = generator(63260921);
+  const rnd = G1.r, tanla = G1.tanla, oraliq = G1.oraliq;
 
-  /* ---------- sana yordamchilari ---------- */
-  const OY_QISQA = ["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"];
-  const BUGUN_S = new Date(2026, 7, 26);
-  const kunlar = k => { const d = new Date(BUGUN_S); d.setDate(d.getDate() + k); return d; };
-  const uzSana = d => d.getDate() + "-" + OY_QISQA[d.getMonth()] + ", " + d.getFullYear();
-  const nuqtaliSana = d => String(d.getDate()).padStart(2, "0") + "." +
-    String(d.getMonth() + 1).padStart(2, "0") + "." + d.getFullYear();
+  /* Surat o'rniga hech narsa qo'yilmaydi. Funksiya eski chizma funksiyasi o'rnida turadi va bitta
+     tasodifiy son iste'mol qiladi: shu sabab keyingi yozuvlarning qiymatlari o'zgarmaydi. */
+  const suratYoq = () => { rnd(); return ""; };
 
+  /* ---------- Filiallar (namoyish) ---------- */
+  const FILIAL_KODLAR = {
+    "Toshkent shahar BXO": "TS-01", "Yunusobod BXM": "TS-02", "Chilonzor BXM": "TS-03", "Toshkent viloyat BXO": "TV-01",
+    "Samarqand BXO": "SA-01", "Namangan BXO": "NA-01", "Farg'ona BXO": "FA-01", "Andijon BXO": "AN-01",
+    "Buxoro BXO": "BU-01", "G'ijduvon BXM": "BU-02", "Urganch BXO": "XO-01", "Qarshi BXO": "QA-01",
+    "Termiz BXO": "SU-01", "Denov BXM": "SU-02", "Jizzax BXO": "JI-01", "Zarbdor BXM": "JI-02",
+    "Navoiy BXO": "NV-01", "Guliston BXM": "SI-01", "Nukus BXO": "QR-01"
+  };
+  if (namoyish && !D.FILIALLAR.length) {
+    Object.keys(FILIAL_KODLAR).forEach(nom => {
+      const id = FILIAL_KODLAR[nom], h = id.slice(0, 2);
+      D.FILIALLAR.push({id, nom, hudud: h, hududNomi: (D.HUDUD_KODLAR[h] || {}).nom || "", turi: /BXM$/.test(nom) ? "BXM" : "BXO"});
+    });
+  }
+  D.filial = kod => D.FILIALLAR.find(f => f.id === kod || f.nom === kod) || null;
+
+  /* ---------- Eski generator ro'yxatlari (tartib o'zgartirilmaydi) ---------- */
   const HUDUDLAR = [
     ["Toshkent sh.", "Toshkent sh., Yunusobod", "Toshkent shahar BXO"],
     ["Toshkent sh.", "Toshkent sh., Chilonzor", "Chilonzor BXM"],
@@ -40,17 +70,15 @@
     ["Qashqadaryo", "Qarshi sh., Mustaqillik", "Qarshi BXO"],
     ["Surxondaryo", "Termiz sh., Sharq", "Termiz BXO"],
     ["Jizzax", "Jizzax sh., Sharof Rashidov", "Jizzax BXO"],
-    ["Navoiy", "Navoiy sh., Galaba", "Navoiy BXO"],
+    ["Navoiy", "Navoiy sh., G'alaba", "Navoiy BXO"],
     ["Sirdaryo", "Guliston sh., Ahillik", "Guliston BXM"],
     ["Qoraqalpog'iston", "Nukus sh., Do'stlik", "Nukus BXO"],
     ["Surxondaryo", "Denov tumani", "Denov BXM"],
     ["Jizzax", "Zarbdor tumani", "Zarbdor BXM"],
-    ["Buxoro", "G'ijduvon tumani", "G'ijduvon BXM"],
+    ["Buxoro", "G'ijduvon tumani", "G'ijduvon BXM"]
   ];
-
-  /* [tur, chizma turi, maydon oralig'i, birlik, baho oralig'i (mln so'm), ulush]
-     Ulushlar bank balansidagi haqiqiy reyestr tarkibini takrorlaydi: ma'muriy bino
-     va transport eng ko'p, maxsus texnika yakka. Jami 267 ta. */
+  /* [tur, surat turi, maydon oralig'i, birlik, qiymat oralig'i (mln so'm), ulush]. Ulushlar haqiqiy
+     reyestr tarkibini takrorlaydi, jami 267 ta. */
   const TURLAR = [
     ["Ma'muriy bino",   "mamuriy",   [240, 1800],  "m²",  1200, 7400, 44],
     ["Ma'muriy bino",   "mamuriy",   [110, 620],   "m²",   460, 2400, 18],
@@ -58,586 +86,889 @@
     ["Asbob-uskuna",    "uskuna",    [1, 1],       "dona",  60,  540, 30],
     ["Avtotransport",   "yuk",       [1, 1],       "dona", 240, 1400,  6],
     ["Maxsus texnika",  "texnika",   [1, 1],       "dona", 420, 2600,  1],
-    ["Ishlab chiqarish","ferma",     [800, 5200],  "m²",  1800, 8600, 32],
-    ["Ishlab chiqarish","sex",       [600, 2400],  "m²",  1100, 4600, 24],
-    ["Ishlab chiqarish","issiqxona", [1200, 9800], "m²",   640, 3200,  6],
+    ["Ishlab chiqarish", "ferma",    [800, 5200],  "m²",  1800, 8600, 32],
+    ["Ishlab chiqarish", "sex",      [600, 2400],  "m²",  1100, 4600, 24],
+    ["Ishlab chiqarish", "issiqxona", [1200, 9800], "m²",  640, 3200,  6],
     ["Kvartira",        "kopqavat",  [58, 124],    "m²",   380,  980, 18],
     ["Savdo maydoni",   "dokon",     [90, 640],    "m²",   420, 2600, 18],
     ["Turar-joy",       "uy",        [180, 640],   "m²",   260, 1500, 16],
-    ["Ombor",           "ombor",     [600, 3400],  "m²",   700, 4200, 12],
+    ["Ombor",           "ombor",     [600, 3400],  "m²",   700, 4200, 12]
   ];
-  /* Ulushga mos tanlov havzasi */
   const TUR_HAVZA = TURLAR.reduce((a, t) => a.concat(Array(t[6]).fill(t)), []);
-  /* Obyekt chizmasi: bir xil urug' — bir xil rasm. Kichik variant jadval katagi uchun. */
-  const chizma = turi => "assets/obyekt/" + turi + "-" + (1 + Math.floor(rnd() * 6)) + ".svg";
-  const kichik = yol => yol.replace(/\.svg$/, "-k.svg");
-
+  /* Nomlar ro'yxati turdagi aktivlar sonidan kichik bo'lmasin: bitta nom reyestrda 3-4 martadan ko'p takrorlanmaydi.
+     Kvartira nomi uning manzili (ko'cha va uy), manzil shu nomdan yasaladi. */
   const NOM_BOSH = {
-    "Kvartira": ["12-kvartal, 45-uy", "9-kvartal, 12-uy", "Bunyodkor ko'chasi, 8-uy",
-                 "Navoiy ko'chasi, 21-uy", "Chinor mavzesi, 3-uy"],
-    "Turar-joy majmuasi": ["Nurafshon turar-joy majmuasi", "Yangi Hayot majmuasi",
-                           "Baraka Residence", "Chinor Park majmuasi"],
-    "Savdo maydoni": ["Savdo do'koni binosi", "Choyxona va do'kon binosi", "Xizmat ko'rsatish binosi",
-                      "Dorixona binosi", "Savdo pavilyoni"],
-    "Ma'muriy bino": ["Ma'muriy bino", "Ma'muriy-xo'jalik binosi", "Boshqaruv binosi",
-                      "Ofis bloki A", "Ish markazi, 5-qavat"],
-    "Turar-joy": ["Turar joy binosi", "Bir qavatli turar joy", "Hovli-joy"],
-    "Asbob-uskuna": ["Tikuv stanogi", "Un tortish liniyasi", "Sovutish agregati",
-                     "Nonvoyxona pechi", "Qadoqlash liniyasi", "Payvandlash uskunasi"],
+    "Kvartira": ["12-kvartal, 45-uy", "9-kvartal, 12-uy", "Bunyodkor ko'chasi, 8-uy", "Navoiy ko'chasi, 21-uy", "Chinor mavzesi, 3-uy",
+                 "4-kvartal, 17-uy", "7-mavze, 30-uy", "Ipak yo'li ko'chasi, 5-uy", "Mustaqillik ko'chasi, 14-uy"],
+    "Savdo maydoni": ["Savdo do'koni binosi", "Choyxona va do'kon binosi", "Xizmat ko'rsatish binosi", "Dorixona binosi", "Savdo pavilyoni",
+                      "Oziq-ovqat do'koni", "Maishiy xizmat binosi"],
+    "Ma'muriy bino": ["Ma'muriy bino", "Ma'muriy-xo'jalik binosi", "Boshqaruv binosi", "Ofis bloki A", "Ish markazi, 5-qavat",
+                      "Ikki qavatli ofis binosi", "Uch qavatli ma'muriy bino", "Biznes markaz binosi", "Ofis binosi", "Idora binosi",
+                      "Xizmat binosi", "Ma'muriy korpus", "Ofis va ombor majmuasi", "Ofis bloki B", "Ish markazi, 2-qavat",
+                      "Ish markazi, 3-qavat", "Ma'muriy bino va hovli", "Konferens-zal binosi"],
+    "Turar-joy": ["Turar joy binosi", "Bir qavatli turar joy", "Hovli-joy", "Ikki qavatli turar joy", "Turar joy va hovli", "Yozgi uy"],
+    "Asbob-uskuna": ["Tikuv stanogi", "Un tortish liniyasi", "Sovutish agregati", "Nonvoyxona pechi", "Qadoqlash liniyasi", "Payvandlash uskunasi",
+                     "Tokarlik stanogi", "Frezalash stanogi", "Beton qorish uskunasi", "Havo kompressori", "Elektr generatori", "Quyish liniyasi"],
     "Maxsus texnika": ["Ekskavator-yuklagich", "G'ildirakli yuklagich"],
     "Ishlab chiqarish": ["Tikuvchilik sexi", "Un tegirmoni binosi", "Parrandachilik binosi", "Paypoq ishlab chiqarish sexi",
-                         "Oziq-ovqat ishlab chiqarish sexi", "Chorvachilik kompleksi"],
-    "Ombor": ["Omborxona binosi", "Sovutkichli ombor", "Mineral o'g'itlar ombori", "Don saqlash ombori"],
-    "Yer uchastkasi": ["Issiqxona majmuasi yeri", "Baliqchilik xo'jaligi yeri", "Sanoat yer uchastkasi", "Bog' va yer uchastkasi"],
-    "Dala hovli": ["Dala hovlisi", "Bog' uyi", "Yozgi dala hovli"],
-    "Avtotransport": ["Chevrolet Cobalt (2022)", "Isuzu yuk avtomobili (2021)",
-                      "Chevrolet Malibu (2023)", "MAN tortuvchi (2020)",
-                      "Chevrolet Damas (2021)", "Dongfeng yuk avtomobili (2019)"],
+                         "Oziq-ovqat ishlab chiqarish sexi", "Chorvachilik kompleksi", "Mebel sexi", "Non zavodi binosi",
+                         "Sut qayta ishlash sexi", "Qandolatchilik sexi", "Go'sht qayta ishlash sexi", "Plastmassa buyumlar sexi",
+                         "Qurilish materiallari sexi", "Issiqxona majmuasi", "Baliqchilik xo'jaligi binosi", "Quyonchilik fermasi",
+                         "Tikuv-trikotaj sexi", "Konserva sexi"],
+    "Ombor": ["Omborxona binosi", "Sovutkichli ombor", "Mineral o'g'itlar ombori", "Don saqlash ombori", "Meva-sabzavot ombori"],
+    "Avtotransport": ["Chevrolet Cobalt (2022)", "Isuzu NQR 71 (2021)", "Chevrolet Malibu (2023)", "MAN TGS 26.400 (2020)",
+                      "Chevrolet Damas (2021)", "Dongfeng DFL1160 (2019)", "Chevrolet Nexia 3 (2020)", "Chevrolet Spark (2021)",
+                      "Chevrolet Lacetti (2019)", "Chevrolet Tracker (2022)", "Chevrolet Onix (2023)", "Chevrolet Labo (2022)",
+                      "Chevrolet Captiva (2019)", "Chevrolet Equinox (2021)", "Kia K5 (2022)", "Hyundai HD78 (2021)"]
   };
+  const EGA_JIS = ["Karimov Javlon", "Ergasheva Dilnoza", "Yusupova Nodira", "To'xtasinov Sherzod", "Rasulov Otabek", "Islomov Bekzod",
+    "Nazarova Malika", "Qodirov Alisher", "Sattorova Gulnoza", "Umarov Doniyor", "Hakimova Zulfiya", "Ochilov Sanjar",
+    "Yo'ldosheva Sevara", "Aliyev Rustam", "Nurmatova Kamola", "Mamatqulov Shuhrat", "Xolmatov Jasur", "Ibrohimova Nilufar"];
+  const EGA_YUR = ["«Zarafshon Tekstil» MChJ", "«Baraka Savdo» MChJ", "«Oq Tepa Servis» MChJ", "«Chust Textile» QK", "«Farovon Market» MChJ",
+    "«Nurli Yo'l» QK", "«Sharq Logistika» MChJ", "«Bo'ston Agro» fermer xo'jaligi", "«Temir Konstruksiya» MChJ",
+    "«Mehr Oziq-ovqat» MChJ", "«Zamin Qurilish» MChJ", "«Sifat Print» MChJ"];
+  const ESKI_MASUL = ["Sattorov Jasur", "Karimova Feruza", "Yo'ldoshev Sardor", "Tosheva Barno", "Rahimov Sherzod", "Salimova Gulnora",
+    "Ergashev Botir", "Nazarov Aziz"];
+  /* Tuman manzili uchun mahalla va ko'cha (tasodifiy son olinmaydi: uy raqamidan tanlanadi) */
+  const TUMAN_KOCHA = ["Navbahor MFY, Mustaqillik ko'chasi", "Guliston MFY, Bog'bon ko'chasi", "Yangiobod MFY, Amir Temur ko'chasi",
+    "Do'stlik MFY, Istiqlol ko'chasi", "Oqtepa MFY, Paxtakor ko'chasi", "Bunyodkor MFY, Navoiy ko'chasi", "Tinchlik MFY, Sharq ko'chasi"];
+  const MENEJERLAR = D.FOYDLAR.filter(f => f.rol === "Obyekt menejeri").map(f => f.nom);
+  const INSPEKTORLAR = D.FOYDLAR.filter(f => f.rol === "Ko'rik va xavfsizlik inspektori").map(f => f.nom);
 
-  const MIJOZ_JIS = ["Karimov Javlon", "Ergasheva Dilnoza", "Yusupova Nodira", "To'xtasinov Sherzod",
-    "Rasulov Otabek", "Islomov Bekzod", "Nazarova Malika", "Qodirov Alisher", "Sattorova Gulnoza",
-    "Umarov Doniyor", "Hakimova Zulfiya", "Ochilov Sanjar", "Yo'ldosheva Sevara", "Aliyev Rustam",
-    "Nurmatova Kamola", "Sobirov Ulug'bek", "Xolmatov Jasur", "Ibrohimova Nilufar"];
-  const MIJOZ_YUR = ["«Zarafshon Tekstil» MChJ", "«Baraka Savdo» MChJ", "«Oq Tepa Servis» MChJ",
-    "«Chust Textile» QK", "«Farovon Market» MChJ", "«Nurli Yo'l» QK", "«Sharq Logistika» MChJ",
-    "«Bo'ston Agro» fermer xo'jaligi", "«Temir Konstruksiya» MChJ", "«Mehr Oziq-ovqat» MChJ",
-    "«Zamin Qurilish» MChJ", "«Sifat Print» MChJ"];
-
-  const MASULLAR = ["Sattorov Jasur", "Karimova Feruza", "Yo'ldoshev Sardor", "Tosheva Barno",
-    "Rahimov Sherzod", "Salimova Gulnora", "Ergashev Botir", "Nazarov Aziz"];
-
-  const BOSQICHLAR = D.BOSQICHLAR.map(b => b.kalit);
-
-  function pulMatn(mln){
-    return mln >= 1000
-      ? (mln / 1000).toFixed(2).replace(".", ",") + " mlrd so'm"
-      : String(Math.round(mln * 10) / 10).replace(".", ",") + " mln so'm";
-  }
-  function son(n){ return new Intl.NumberFormat("ru-RU").format(n); }
-
-
-  /* ---------- Mahalliy reyestr ----------
-     vositalar/import_taqdimot.py hosil qilgan fayl (mahalliy/obyektlar.json). Faqat shu kompyuterda,
-     localhost orqali ochilganda o'qiladi; ommaviy nusxada har doim shartli namoyish ma'lumoti ishlaydi. */
-  function mahalliyOqish(){
-    if (typeof location === "undefined" || typeof XMLHttpRequest === "undefined") return null;
-    if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return null;
-    try{
-      if (localStorage.getItem("mkb-manba") === "shartli" || sessionStorage.getItem("mkb-mahalliy-yoq")) return null;
-      const x = new XMLHttpRequest();
-      x.open("GET", "mahalliy/obyektlar.json", false);
-      x.send();
-      if (x.status === 200){ const j = JSON.parse(x.responseText); return j && j.obyektlar && j.obyektlar.length ? j.obyektlar : null; }
-      sessionStorage.setItem("mkb-mahalliy-yoq", "1");
-    }catch(_){ try{ sessionStorage.setItem("mkb-mahalliy-yoq", "1"); }catch(e){} }
-    return null;
-  }
-  const MAH = mahalliyOqish();
-  D.MANBA = MAH ? "mahalliy" : "shartli";
-  const MAH_TUR = {ombor: "Ombor", ferma: "Ishlab chiqarish", issiqxona: "Ishlab chiqarish", sex: "Ishlab chiqarish", dokon: "Savdo maydoni",
-    mamuriy: "Ma'muriy bino", uy: "Turar-joy", kopqavat: "Kvartira", avto: "Avtotransport", yuk: "Avtotransport", texnika: "Avtotransport", uskuna: "Avtotransport"};
-  /* Yozuvni haqiqiy obyekt ma'lumoti bilan to'ldirish: bog'lanishlar (id, ish, ko'riklar) o'zgarmaydi */
-  function mahalliyQolla(y, m){
-    const balansKun = Math.max(1, Math.round((BUGUN_S - new Date(m.balansSana + "T12:00:00")) / 864e5));
-    const qarz = m.balansQiymat, baho = m.sotishQiymat || Math.round(m.balansQiymat * 1.12 * 10) / 10;
-    const bosq = D.BOSQICHLAR.find(b => b.kalit === "balans");
-    const tasnif = D.tasnifla ? D.tasnifla(balansKun) : y.tasnif;
-    const sanaQ = new Date(m.balansSana + "T12:00:00");
-    y.mijoz = Object.assign({}, y.mijoz, {nom: m.sobiqEga, yur: !/^YaTT|^YATT/i.test(m.sobiqEga), tur: "Sobiq egasi",
-      belgi: m.sobiqEga.replace(/[«»"“”]/g, "").split(" ").map(v => v[0]).join("").slice(0, 2).toUpperCase()});
-    y.filial = m.filialNomi;
-    y.qarz = {asosiy: Math.round(qarz * .82), foiz: Math.round(qarz * .18), kunlar: balansKun, jami: qarz};
-    /* Obyektning o'z surati bo'lmasa — turiga mos izometrik chizma */
-    const mahRasm = chizma(m.rasmTuri || "mamuriy");
-    y.mulk = Object.assign({}, y.mulk, {tur: m.tur || MAH_TUR[m.rasmTuri] || "Noturar bino", nom: m.nom + " · " + m.manzil, qisqa: m.nom,
-      hudud: m.hududNomi, hududToliq: m.hududNomi + ", " + m.tuman, manzil: m.manzil,
-      maydon: !m.binoli ? "1 dona" : m.foydaliMaydon > 1 ? son(m.foydaliMaydon) + " m²" : m.yerMaydon > 1 ? son(m.yerMaydon) + " m²" : "—", baho, bahoSana: nuqtaliSana(sanaQ),
-      rasm: m.rasm || mahRasm, rasmKichik: m.rasm || kichik(mahRasm), qabul: uzSana(sanaQ)});
-    y.ish = Object.assign({}, y.ish, {bosqich: "balans", kun: balansKun, shoshilinch: false});
-    if (y.ish.ijro === "—" || y.ish.ijro === "Hali berilmagan") y.ish.ijro = "IH-" + m.balansSana.slice(0, 4) + "/" + String(1000 + (m.urug % 8999));
-    Object.assign(y, {bosqichNomi: bosq.nom, bosqichChip: bosq.chip, holat: m.holat === "Sotuvga tayyorlanmoqda" ? {nom: m.holat, rang: "#F2C230"} : {nom: "Balansda saqlanmoqda", rang: bosq.rang},
-      qarzMatn: pulMatn(qarz), asosiyMatn: pulMatn(y.qarz.asosiy), foizMatn: pulMatn(y.qarz.foiz), bahoMatn: pulMatn(baho), qarzSon: son(qarz),
-      tasnif, zaxira: tasnif ? +(qarz * tasnif.zaxira / 100).toFixed(1) : 0, ochiqQoldiq: Math.max(0, Math.round(qarz - baho)), qoplash: Math.round(baho / qarz * 100)});
-    y.zaxiraMatn = pulMatn(y.zaxira);
-  }
-
-  /* ---------- YOZUVLAR (asosiy reyestr) ---------- */
-  const bor = D.YOZUVLAR.length;
-  /* Boshlang'ich yozuvlar haqiqiy obyektlar bilan almashtirilganda bog'liq to'plamlardagi nomlar ham yangilanadi */
-  const nomAlmashuvi = {};
-  if (MAH) D.YOZUVLAR.forEach((y, i) => {
-    if (!MAH[i]) return;
-    const eski = [y.mulk.qisqa, y.mulk.nom, y.mijoz.nom];
-    mahalliyQolla(y, MAH[i]);
-    nomAlmashuvi[eski[0]] = y.mulk.qisqa; nomAlmashuvi[eski[1]] = y.mulk.nom; nomAlmashuvi[eski[2]] = y.mijoz.nom;
-    const r = D.OBYEKT_INDEKS && D.OBYEKT_INDEKS[y.id];
-    if (r) Object.assign(r, {nom: y.mulk.nom, qisqa: y.mulk.qisqa, tur: y.mulk.tur, hudud: y.mulk.hudud, manzil: y.mulk.manzil,
-      baho: y.mulk.baho, rasm: y.mulk.rasm, rasmKichik: y.mulk.rasmKichik, maydon: y.mulk.maydon});
-  });
-  if (MAH) Object.keys(D).forEach(k => {
-    if (!Array.isArray(D[k]) || k === "YOZUVLAR") return;
-    D[k].forEach(q => { if (q && typeof q === "object" && !Array.isArray(q)) Object.keys(q).forEach(f => {
-      if (typeof q[f] === "string" && nomAlmashuvi[q[f]]) q[f] = nomAlmashuvi[q[f]];
-    }); });
-  });
-  /* namoyish reyestri ham haqiqiy reyestr miqyosida; qiymatlar urug'li tasodifiy */
-  const KERAK = MAH ? Math.max(bor, MAH.length) : 267;
-  const yangiYozuvlar = [];
-  for (let i = bor; i < KERAK; i++){
+  /* Eski generatorning bitta yozuvi: tasodifiy sonlar avvalgi tartibda iste'mol qilinadi,
+     kerakli qiymatlar qaytariladi, qolganlari tashlab yuboriladi. */
+  const NOM_NAVBAT = {};
+  /* Namoyish reyestri yig'ilgan sana: raqamlardagi yil shu sanaga nisbatan hisoblanadi */
+  const RAQAM_SANASI = new Date(2026, 8, 21);
+  function eskiNavbat() {
     const t = tanla(TUR_HAVZA);
-    const [tur, chizmaTuri, mayd, birlik, bahoMin, bahoMaks] = t;
     const [hudud, manzilBosh, filial] = tanla(HUDUDLAR);
     const yur = rnd() < 0.42;
-    const mijozNomi = yur ? tanla(MIJOZ_YUR) : tanla(MIJOZ_JIS);
-    const nomQisqa = tanla(NOM_BOSH[tur]);
-    const baho = oraliq(bahoMin, bahoMaks);
-    const qoplashFoiz = oraliq(58, 260);
-    const qarz = Math.max(24, Math.round(baho / (qoplashFoiz / 100)));
+    const ega = yur ? tanla(EGA_YUR) : tanla(EGA_JIS);
+    /* nom navbat bilan beriladi (tasodifiy son baribir olinadi, keyingi qiymatlar ketma-ketligi o'zgarmaydi) */
+    rnd();
+    const royxat = NOM_BOSH[t[0]];
+    const nomQisqa = royxat[(NOM_NAVBAT[t[0]] = (NOM_NAVBAT[t[0]] || 0) + 1) % royxat.length];
+    const baho = oraliq(t[4], t[5]);
+    const qoplash = oraliq(58, 260);
     const kunlar = oraliq(35, 720);
-    const bosqich = kunlar > 500 ? tanla(["ijro", "musodara", "balans"])
-                  : kunlar > 300 ? tanla(["qaror", "ijro", "sud"])
-                  : kunlar > 150 ? tanla(["sud", "davo"]) : tanla(["ogohlantirish", "davo"]);
-    const bIndeks = BOSQICHLAR.indexOf(bosqich);
-    const bosq = D.BOSQICHLAR[bIndeks < 0 ? 0 : bIndeks];
-    const yil = 2025 + (i % 2);
-    const id = "AK-" + yil + "/" + String(1000 + i * 37 % 8999).padStart(4, "0");
-    const maydon = birlik === "dona" ? "1 dona" : son(oraliq(mayd[0], mayd[1])) + " " + birlik;
-    const asosiy = Math.round(qarz * 0.82);
-    const foiz = qarz - asosiy;
-    const tasnif = D.tasnifla ? D.tasnifla(kunlar) : null;
-    const zaxira = tasnif ? +(qarz * tasnif.zaxira / 100).toFixed(1) : 0;
-    const rasm = chizma(chizmaTuri);
-    yangiYozuvlar.push({
-      id,
-      mijoz: {nom: mijozNomi, tur: yur ? "Yuridik shaxs" : "Jismoniy shaxs",
-        raqam: yur ? "INN " + oraliq(200, 599) + " " + oraliq(100, 999) + " " + oraliq(100, 999)
-                   : "PINFL " + oraliq(3000, 5999) + " " + oraliq(1000, 9999) + " " + oraliq(1000, 9999),
-        belgi: mijozNomi.replace(/[«»]/g, "").split(" ").map(v => v[0]).join("").slice(0, 2).toUpperCase(),
-        yur, tel: "+998 " + tanla(["90", "93", "94", "97", "99", "71"]) + " " +
-          oraliq(100, 999) + " " + oraliq(10, 99) + " " + oraliq(10, 99)},
-      filial,
-      shartnoma: {raqam: "KR-" + (yil - 1) + "/" + oraliq(1000, 9999), tur: tanla(
-        ["Mikroqarz", "Tadbirkorlik krediti", "Iste'mol krediti", "Ipoteka", "Agro kredit"]),
-        sana: oraliq(1, 28) + "-" + tanla(["yan", "fev", "mar", "apr", "may", "iyn", "iyl", "avg"]) + ", " + (yil - 1),
-        berilgan: pulMatn(Math.round(qarz * 1.15))},
-      qarz: {asosiy, foiz, kunlar, jami: qarz},
-      mulk: {tur, nom: nomQisqa + " · " + manzilBosh, qisqa: nomQisqa, hudud,
-        hududToliq: manzilBosh, manzil: manzilBosh + ", " + oraliq(1, 120) + "-uy",
-        maydon, baho, bahoSana: oraliq(1, 28) + "." + String(oraliq(1, 12)).padStart(2, "0") + "." + yil,
-        sugurta: rnd() < 0.72 ? "Amalda" : "Muddati tugagan", rasm, rasmKichik: kichik(rasm),
-        nazoratBall: oraliq(52, 96)},
-      ish: {raqam: "UI-" + yil + "/" + String(100 + i).padStart(4, "0"), bosqich,
-        masul: tanla(MASULLAR),
-        sud: bIndeks >= 2 ? tanla(["Toshkent shahar sudi", "Toshkent viloyat sudi",
-          "Samarqand sudi", "Namangan sudi", "Buxoro sudi"]) : "—",
-        qaror: bIndeks >= 3 ? "2-" + oraliq(1000, 1999) + "/" + yil : "—",
-        ijro: bIndeks >= 4 ? "IH-" + yil + "/" + oraliq(1000, 9999) : "—",
-        muddat: oraliq(1, 28) + "." + String(oraliq(9, 12)).padStart(2, "0") + ".2026",
-        kun: kunlar, shoshilinch: kunlar > 480,
-        tarix: [[oraliq(1, 28) + "." + String(oraliq(1, 8)).padStart(2, "0") + "." + yil,
-          "Yozma ogohlantirish yuborildi", "Qarzdorga rasmiy talabnoma topshirildi."]],
-        hujjatlar: [["PDF", "Ta'minot shartnomasi", oraliq(1, 3) + "," + oraliq(1, 9) + " MB"],
-                    ["PDF", "Baholash hisoboti", oraliq(1, 2) + "," + oraliq(1, 9) + " MB"]]},
-      tolov: Array.from({length: 12}, () => rnd() > 0.32),
-      bosqichNomi: bosq.nom, bosqichChip: bosq.chip,
-      /* Д-2: holat bosqichdan, bazadagi yozuvlar bilan bir xil jadval bo'yicha */
-      holat: D.BOSQICH_HOLAT[bosq.kalit] || {nom: bosq.nom, rang: bosq.rang},
-      qarzMatn: pulMatn(qarz), asosiyMatn: pulMatn(asosiy), foizMatn: pulMatn(foiz),
-      bahoMatn: pulMatn(baho), qarzSon: son(qarz),
-      tasnif, zaxira, zaxiraMatn: pulMatn(zaxira),
-      ochiqQoldiq: Math.max(0, Math.round(qarz - baho)),
-      qoplash: Math.round(baho / qarz * 100),
-    });
-    if (MAH && MAH[i]) mahalliyQolla(yangiYozuvlar[yangiYozuvlar.length - 1], MAH[i]);
+    const eskiBosq = kunlar > 500 ? tanla([4, 5, 6]) : kunlar > 300 ? tanla([3, 4, 2]) : kunlar > 150 ? tanla([2, 1]) : tanla([0, 1]);
+    const maydon = t[3] === "dona" ? null : oraliq(t[2][0], t[2][1]);
+    suratYoq();
+    oraliq(0, 1); oraliq(0, 1); oraliq(0, 1);                      /* sobiq egasining raqami */
+    tanla([0]); oraliq(0, 1); oraliq(0, 1); oraliq(0, 1);           /* telefon */
+    oraliq(0, 1); tanla([0]); oraliq(0, 1); tanla([0]);             /* kredit shartnomasi */
+    const uy = oraliq(1, 120);
+    oraliq(0, 1); oraliq(0, 1);                                     /* eski baholash sanasi */
+    rnd();                                                          /* eski sug'urta belgisi */
+    oraliq(0, 1);                                                   /* eski nazorat bali */
+    const masul = tanla(ESKI_MASUL);
+    if (eskiBosq >= 2) tanla([0]);
+    if (eskiBosq >= 3) oraliq(0, 1);
+    if (eskiBosq >= 4) oraliq(0, 1);
+    oraliq(0, 1); oraliq(0, 1); oraliq(0, 1); oraliq(0, 1);         /* eski muddat va tarix */
+    oraliq(0, 1); oraliq(0, 1); oraliq(0, 1); oraliq(0, 1);         /* eski hujjat hajmlari */
+    for (let k = 0; k < 12; k++) rnd();                             /* eski to'lov intizomi */
+    return {t, hudud, manzilBosh, filial, yur, ega, nomQisqa, baho, qoplash, kunlar, maydon, uy, masul};
   }
-  /* balans bosqichidagi obyektda qabul sanasi majburiy (Д-2) */
-  yangiYozuvlar.forEach(y => {
-    if (["musodara", "balans"].includes(y.ish.bosqich) && !y.mulk.qabul){
-      y.mulk.qabul = uzSana(kunlar(-oraliq(40, 520)));
-    }
-    if (["musodara", "balans"].includes(y.ish.bosqich) && y.ish.ijro === "Hali berilmagan"){
-      y.ish.ijro = "IH-2026/" + oraliq(1000, 9999);
-    }
-  });
-  D.YOZUVLAR = D.YOZUVLAR.concat(yangiYozuvlar);
-  yangiYozuvlar.forEach(y => {
-    D.OBYEKT_INDEKS[y.id] = {id: y.id, nom: y.mulk.nom, qisqa: y.mulk.qisqa, tur: y.mulk.tur,
-      hudud: y.mulk.hudud, manzil: y.mulk.manzil, baho: y.mulk.baho, rasm: y.mulk.rasm,
-      rasmKichik: y.mulk.rasmKichik, maydon: y.mulk.maydon};
-  });
 
-  /* asosiy yozuvlar uchun ham reyestrda baho va maydon bo'lsin */
-  D.YOZUVLAR.forEach(y => {
-    const r = D.OBYEKT_INDEKS[y.id];
-    if (r && r.baho == null){ r.baho = y.mulk.baho; r.maydon = y.mulk.maydon; }
-  });
-
-  /* ---------- KORIKLAR ---------- */
-  const INSPEKTORLAR = ["Sattorov Jasur", "Karimova Feruza", "Yo'ldoshev Sardor", "Tosheva Barno",
-    "Nazarov Aziz", "Ergashev Botir"];
-  const KORIK_TUR = ["Rejali", "Navbatdan tashqari", "Qabul ko'rigi", "Nazorat ko'rigi"];
-  const KORIK_HOLAT = ["rejada", "otkazildi", "otkazildi", "kechikkan"];
-  const yangiKorik = [];
-  const KORIK_DAVR = t => /Avtotransport/.test(t) ? 30 : /Yer/.test(t) ? 180 : 90;
-  let korikRaqam = 500;
-  D.YOZUVLAR.forEach(y => {
-    if (D.KORIKLAR.some(k => k.obyektId === y.id && k.holat !== "rejada")) return;
-    const davr = KORIK_DAVR(y.mulk.tur);
-    const soni = oraliq(2, 4);
-    for (let j = soni; j >= 1; j--) {
-      const otgan = j > 1;
-      const kun = otgan ? -oraliq(Math.round(davr * (j - 1) * 0.7), Math.round(davr * j * 0.9))
-                        : oraliq(2, 34);
-      const holat = otgan ? "otkazildi" : (rnd() < 0.16 ? "kechikkan" : "rejada");
-      korikRaqam += 1;
-      yangiKorik.push({
-        id: "KO-2026/" + String(korikRaqam).padStart(4, "0"),
-        obyektId: y.id, tur: tanla(KORIK_TUR),
-        sana: uzSana(kunlar(holat === "kechikkan" ? -oraliq(3, 24) : kun)),
-        holat, inspektor: tanla(INSPEKTORLAR),
-        baho: holat === "otkazildi" ? tanla(["A'lo", "Qoniqarli", "Nuqsonli"]) : "",
-        izoh: holat === "otkazildi"
-          ? tanla(["Obyekt saqlanish holati qoniqarli, muhrlar butun.",
-                   "Kommunikatsiyalarda kichik nuqsonlar aniqlandi.",
-                   "Tashqi konstruksiyalar butun, ruxsatsiz foydalanish belgilari yo'q."])
-          : holat === "kechikkan" ? "Reja muddati o'tgan, ko'rik o'tkazilmagan."
-          : "Rejaga muvofiq ko'rik o'tkaziladi.",
+  /* ============================================================
+     1. Aktivlar (namoyish)
+     ============================================================ */
+  if (namoyish) {
+    const {r: r2, tanla: tanla2, oraliq: oraliq2, ehtimol: eh2} = G2;
+    const KERAK = 267;
+    const yangi = [];
+    for (let i = D.YOZUVLAR.length; i < KERAK; i++) {
+      const e = eskiNavbat();
+      const rasmTuri = e.t[1];
+      const ti = D.turInfo(rasmTuri);
+      const turKalit = ti.turKalit;
+      const binoli = turKalit === "noturar" || turKalit === "turar";
+      const hududKod = D.hududKodi(e.hudud);
+      const hk = D.HUDUD_KODLAR[hududKod] || {};
+      /* Reyestr raqamidagi yil balansga qabul qilingan yil. Raqam kundan kunga o'zgarmasligi kerak (saqlangan
+         o'zgarishlar va havolalar raqamga bog'langan), shuning uchun yil namoyish reyestri yig'ilgan sanaga
+         (RAQAM_SANASI) nisbatan olinadi: shu davrda ko'rilganda yil qabul sanasiga to'liq mos keladi. */
+      const yil = D.kunQosh(RAQAM_SANASI, -e.kunlar).getFullYear();
+      const id = "AK-" + yil + "/" + String(1000 + i * 37 % 8999).padStart(4, "0");
+      const qarz = Math.max(24, Math.round(e.baho / (e.qoplash / 100)));
+      const balansQiymat = yaxlit(Math.min(qarz, e.baho * 0.92));
+      const balansSana = nisbiy(-e.kunlar);
+      /* qabul asosi va holat */
+      const asos = eh2(0.06) ? "boshqa" : tanla2(["sud", "sud", "sud", "notarial", "takroriy", "takroriy", "ixtiyoriy"]);
+      let holat;
+      const h = r2();
+      if (e.kunlar < 150 && h < 0.25) holat = "Rasmiylashtirilmoqda";
+      else if (h < 0.42) holat = "Balansda";
+      else if (h < 0.66) holat = "Sotuvga tayyorlanmoqda";
+      else if (h < 0.80) holat = "Lotda";
+      else if (h < 0.87) holat = binoli ? "Ijarada" : "Sotuvga tayyorlanmoqda";
+      /* bo'lib to'lash e-auksiondan keyin: balansda 120 kundan kam turgan aktiv hali lotda */
+      else if (h < 0.95) holat = e.kunlar >= 120 ? "Bo'lib to'lashda" : "Lotda";
+      else holat = e.kunlar > 365 ? "Davaktivga o'tkazilgan" : "Balansda";
+      /* baholanmagan aktiv faqat dastlabki holatlarda bo'ladi */
+      const baholanmagan = ["Balansda", "Rasmiylashtirilmoqda"].indexOf(holat) >= 0 && eh2(0.3);
+      const bahoKun = Math.min(e.kunlar - 5, oraliq2(20, 430));
+      const foydali = binoli ? e.maydon : 0;
+      const maydon = !binoli ? {} : rasmTuri === "kopqavat"
+        ? {yer: 0, qurilishOsti: 0, foydali}
+        : {yer: Math.round(foydali * (1.3 + r2() * 2.2)), qurilishOsti: Math.round(foydali * (0.95 + r2() * 0.2)), foydali};
+      const manzil = !binoli ? "Bank saqlash maydonchasi, " + e.manzilBosh
+        : rasmTuri === "kopqavat" ? e.manzilBosh + ", " + e.nomQisqa + ", " + (e.uy % 90 + 1) + "-xonadon"
+        : / tumani$/.test(e.manzilBosh) ? e.manzilBosh + ", " + TUMAN_KOCHA[e.uy % TUMAN_KOCHA.length] + ", " + e.uy + "-uy"
+        : e.manzilBosh + " ko'chasi, " + e.uy + "-uy";
+      const rasmiy = holat !== "Rasmiylashtirilmoqda" && eh2(0.85);
+      const huquq = binoli
+        ? {kadastrRaqami: rasmiy ? String(oraliq2(10, 14)) + ":" + String(oraliq2(1, 12)).padStart(2, "0") + ":" + String(oraliq2(1, 20)).padStart(2, "0") + ":" + String(oraliq2(1, 9)).padStart(2, "0") + ":" + String(oraliq2(1, 999)).padStart(4, "0") : null,
+           qaydSana: rasmiy ? nisbiy(-e.kunlar + oraliq2(15, 60)) : null, reyestrKochirma: rasmiy ? "RK-" + yil + "/" + oraliq2(10000, 59999) : null,
+           yerHuquqiTuri: rasmTuri === "kopqavat" ? "Umumiy ulushli mulk" : tanla2(["Mulk", "Ijara", "Doimiy foydalanish"]),
+           taqiqlar: eh2(0.12) ? [{turi: tanla2(["Soliq taqiqi", "MIB taqiqi"]), organ: hk.markaz ? hk.markaz + " DSI" : "DSI", sana: nisbiy(-e.kunlar - oraliq2(30, 200)), yechilganSana: rasmiy ? nisbiy(-e.kunlar + oraliq2(10, 40)) : null}] : []}
+        : (turKalit === "transport" || turKalit === "texnika"
+          ? {davlatRaqami: String(oraliq2(1, 95)).padStart(2, "0") + " " + tanla2(["A", "B", "M", "S"]) + " " + oraliq2(100, 999) + " " + tanla2(["AA", "BA", "KA", "MB"]),
+             vin: "XWB" + Math.floor(r2() * 1e14).toString(36).toUpperCase().padEnd(14, "0").slice(0, 14),
+             texPasport: "AAF " + oraliq2(1000000, 9999999), yhxxQaydSana: rasmiy ? nisbiy(-e.kunlar + oraliq2(3, 12)) : null}
+          : {});
+      /* kommunal: obyekt odatda hisoblagichlari nolga tushirilgan holda keladi */
+      const kommunal = !binoli ? [] : D.KOMMUNAL_XIZMATLAR.map(k => {
+        const r = r2();
+        const yoq = (k.kalit === "gaz" && ["ombor", "issiqxona", "dokon"].indexOf(rasmTuri) >= 0 && r < 0.4);
+        const ulangan = !yoq && r < (k.kalit === "elektr" ? 0.38 : 0.28);
+        const holatK = yoq ? "mavjud emas" : ulangan ? "ulangan" : (r > 0.92 ? "vaqtincha to'xtatilgan" : "uzilgan");
+        const qarzOld = !yoq && eh2(0.4) ? yaxlit(r2() * 24) : 0;
+        return D.kommunalQator(k.kalit, yoq ? {holat: holatK} : {
+          holat: holatK, hisoblagich: k.kalit[0].toUpperCase() + "-" + id.slice(-4) + "-" + oraliq2(1, 20),
+          korsatkich: ulangan ? oraliq2(100, 60000) : 0, korsatkichSana: ulangan ? nisbiy(-oraliq2(2, 35)) : balansSana,
+          plomba: eh2(0.6) ? "P-" + oraliq2(100000, 999999) : null,
+          shaxsiyHisob: ulangan ? oraliq2(1000, 9999) + "-" + id.slice(-4) : null,
+          avvalgiQarz: qarzOld, qarzYoqligiMalumotnoma: ulangan ? true : null,
+          texnikShartAriza: !ulangan && k.kalit === "elektr" && eh2(0.3) ? "MG-" + BUGUN.getFullYear() + "/" + oraliq2(10000, 99999) : null,
+          texnikShartSana: null, shartnomaSana: ulangan ? nisbiy(-e.kunlar + oraliq2(20, 90)) : null,
+          oylikXarajat: ulangan ? yaxlit((k.kalit === "elektr" ? 0.3 : 0.1) + r2() * (foydali / 800), 2) : null
+        });
       });
-    }
-  });
-  D.KORIKLAR = D.KORIKLAR.concat(yangiKorik);
-
-  /* ---------- SOTUV (auksion lotlari) ---------- */
-  const auksionYozuv = D.YOZUVLAR.filter(y => ["musodara", "balans"].includes(y.ish.bosqich));
-  const yangiLot = [];
-  auksionYozuv.forEach((y, i) => {
-    if (D.SOTUV.some(l => l.id === y.id)) return;
-    yangiLot.push({id: y.id, nom: y.mulk.qisqa, tur: y.mulk.tur, hudud: y.mulk.hudud,
-      hududToliq: y.mulk.hududToliq, baho: y.mulk.baho, rasm: y.mulk.rasm,
-      ish: y.ish.raqam, ijro: y.ish.ijro,
-      bosqich: D.AUKSION_BOSQICH[i % D.AUKSION_BOSQICH.length][0],
-      korik: oraliq(0, 4)});
-  });
-  D.SOTUV = D.SOTUV.concat(yangiLot);
-
-  /* ---------- TAKLIFLAR ---------- */
-  const XARIDOR_NOM = MIJOZ_YUR.concat(MIJOZ_JIS).slice(0, 22);
-  const yangiTaklif = [];
-  yangiLot.forEach((l, i) => {
-    const soni = oraliq(0, 3);
-    for (let k = 0; k < soni; k++){
-      yangiTaklif.push({
-        id: "TK-2026/" + String(400 + i * 5 + k).padStart(4, "0"),
-        obyektId: l.id, obyekt: l.nom, kim: tanla(XARIDOR_NOM),
-        turi: rnd() < 0.5 ? "Yuridik shaxs" : "Jismoniy shaxs",
-        summa: Math.round(l.baho * (0.92 + rnd() * 0.28)),
-        sana: oraliq(1, 28) + "-avg, 2026",
-        holat: k === 0 ? "yetakchi" : tanla(["korib chiqilmoqda", "muzokarada"]),
+      const qTur = binoli
+        ? tanla2(["post", "pult", "pult", "mobil", "avtonom", "avtonom", "ichki", null, null])
+        : tanla2(["post", "post", "avtonom", "avtonom", null]);
+      const y = D.aktivQolip({
+        id, nom: e.nomQisqa + ", " + e.manzilBosh, qisqa: e.nomQisqa,
+        tur: D.ASOSIY_TURLAR.find(a => a.kalit === turKalit).nom, turKalit, rasmTuri, binoli,
+        hudud: e.hudud, hududKod, hududToliq: e.manzilBosh, tuman: e.manzilBosh.split(", ").pop(), manzil,
+        /* Namoyish manzili aniq nuqtani bildirmaydi: joy hudud markazi, aniq:false (xarita "taxminiy joy" deb ko'rsatadi).
+           r2() ikki marta chaqiriladi, shunda keyingi tasodifiy qiymatlar ketma-ketligi o'zgarmaydi */
+        joy: hk.lat ? (r2(), r2(), {lat: hk.lat, lng: hk.lng, aniq: false}) : null,
+        filial: e.filial, filialKod: FILIAL_KODLAR[e.filial] || null, sobiqEga: e.ega,
+        tafsilot: binoli ? null : e.nomQisqa + ", " + tanla2(["oq", "kulrang", "qora", "ko'k"]) + " rang",
+        holat, bosqich: D.HOLAT_BOSQICH[holat], masul: tanla2(MENEJERLAR), konservatsiya: binoli && e.kunlar > 500 && eh2(0.25),
+        balans: {sana: balansSana, qiymat: balansQiymat, hisobvaraq: D.param("hisobvaraqAktiv"), qabulAsosi: asos,
+          asosHujjat: (() => {
+            /* raqamdagi yil hujjat sanasining yili (tasodifiy sonlar avvalgi tartibda olinadi) */
+            const n = oraliq2(1000, 9999), sana = nisbiy(-e.kunlar - oraliq2(5, 60));
+            const hYil = D.kunQosh(RAQAM_SANASI, kunFarqi(BUGUN, sanaOqi(sana))).getFullYear();
+            return {raqam: (asos === "sud" ? "2-" : asos === "notarial" ? "NK-" : asos === "takroriy" ? "EA-" : "TK-") + n + "/" + hYil, sana};
+          })(),
+          yopilganQarz: asos === "boshqa" ? null : balansQiymat, ixtiyoriyTopshirish: asos === "ixtiyoriy"},
+        qiymat: baholanmagan ? {bozor: null, baholanmagan: true}
+          : {bozor: e.baho, tugatish: Math.round(e.baho * (0.72 + r2() * 0.1)), bahoSana: nisbiy(-bahoKun),
+             baholovchi: tanla2(["«Baholash Servis» MChJ", "«Expert Baho» MChJ", "«Milliy Baholash Markazi» DUK", "«Aniq Baho» MChJ"])},
+        maydon, huquq, kommunal,
+        himoya: {qoriqlashTuri: qTur, qurilmaSoni: 0, andoza: null},
+        sotuv: {holat: holat === "Sotuvga tayyorlanmoqda" ? "tayyorlanmoqda" : holat === "Lotda" ? "lotda" : holat === "Bo'lib to'lashda" ? "sotildi" : holat === "Davaktivga o'tkazilgan" ? "davaktiv" : null,
+                usul: holat === "Lotda" ? "eauksion" : holat === "Bo'lib to'lashda" ? "bolib" : holat === "Davaktivga o'tkazilgan" ? "davaktiv" : holat === "Ijarada" ? "ijara" : null},
+        tarix: [{sana: balansSana, voqea: "Balansga qabul qilindi", izoh: D.qabulAsosiInfo(asos).nom}]
       });
+      y.himoya.andoza = D.himoyaAndozasi(y).id;
+      if (!baholanmagan) y.tarix.push({sana: y.qiymat.bahoSana, voqea: "Baholash hisoboti qabul qilindi", izoh: "Bozor qiymati: " + D.pul(e.baho)});
+      if (huquq.qaydSana) y.tarix.push({sana: huquq.qaydSana, voqea: "Huquq bank nomiga ro'yxatdan o'tkazildi", izoh: ""});
+      if (huquq.yhxxQaydSana) y.tarix.push({sana: huquq.yhxxQaydSana, voqea: "YHXXda bank nomiga qayd etildi", izoh: ""});
+      y.tarix.sort((a, b) => sanaOqi(a.sana) - sanaOqi(b.sana));
+      yangi.push(y);
     }
-  });
-  D.TAKLIFLAR = (D.TAKLIFLAR || []).concat(yangiTaklif);
-
-  /* ---------- ARXIV ---------- */
-  const yangiArxiv = [];
-  for (let i = 0; i < 14; i++){
-    const t = tanla(TUR_HAVZA);
-    const nom = tanla(NOM_BOSH[t[0]]);
-    const summa = oraliq(t[4], t[5]);
-    const yil = tanla(["2024", "2025", "2026"]);
-    const kod = "AK-" + (parseInt(yil, 10) - 2) + "/" + String(200 + i * 13).padStart(4, "0");
-    yangiArxiv.push({id: kod, kod, nom, tur: t[0],
-      sotilgan: oraliq(1, 28) + "-" + tanla(["yan", "mar", "may", "iyl", "sen"]) + ", " + yil,
-      yil, xaridor: tanla(XARIDOR_NOM), summa,
-      ish: "UI-" + (parseInt(yil, 10) - 2) + "/" + oraliq(100, 999),
-      qabul: oraliq(1, 28) + "-" + tanla(["fev", "apr", "iyn"]) + ", " + (parseInt(yil, 10) - 1),
-      nazorat: oraliq(6, 22) + " oy", rasm: chizma(t[1])});
+    yangi.forEach(y => { D.YOZUVLAR.push(y); D.reyestrgaQosh(y, "balans"); });
   }
-  D.ARXIV = D.ARXIV.concat(yangiArxiv);
 
-  /* ---------- SUGURTALAR ---------- */
-  const KOMPANIYA = ["O'zbekinvest", "Kafolat sug'urta", "Gross Insurance", "Alskom", "Apex Insurance"];
-  const yangiPolis = [];
-  let polisRaqam = 12000;
-  D.YOZUVLAR.forEach(y => {
-    if (D.SUGURTALAR.some(x => x.obyektId === y.id)) return;
-    if (rnd() < 0.08) return;                       /* polisi yo'q obyektlar ham bo'ladi */
-    polisRaqam += 1;
-    const tugashKun = rnd() < 0.14 ? -oraliq(3, 120) : oraliq(8, 400);
-    const toliq = rnd() < 0.82;
-    yangiPolis.push({
-      id: "PL-2026/" + String(polisRaqam).padStart(5, "0"),
-      obyektId: y.id, polis: "PL-2026/" + String(polisRaqam).padStart(5, "0"),
-      kompaniya: tanla(KOMPANIYA),
-      summa: toliq ? y.mulk.baho : Math.round(y.mulk.baho * (0.6 + rnd() * 0.3)),
-      tugash: uzSana(kunlar(tugashKun)),
-      holat: tugashKun > 0 ? "amalda" : "muddati tugagan",
-      obyekt: y.mulk.qisqa,
-    });
-  });
-  D.SUGURTALAR = D.SUGURTALAR.concat(yangiPolis);
-  D.POLISLAR = D.SUGURTALAR;
+  /* ============================================================
+     2. Bog'liq to'plamlar (namoyish). Mahalliy rejimda bo'sh.
+     ============================================================ */
+  const KORIKLAR = [], SUGURTALAR = [], BAHOLASHLAR = [], HUJJATLAR = [], XARAJATLAR = [], QORIQLASH = [],
+        KOMMUNAL_ARIZALAR = [], INVENTAR = [], INVENTARIZATSIYALAR = [], SOLIQ = [], LOTLAR = [], TAKLIFLAR = [],
+        XARIDORLAR = [], SHARTNOMALAR = [], IJARA = [], PAKETLAR = [], ARXIV = [], SUGURTA_DAVOLARI = [], TASDIQLAR = [],
+        MENING_VAZIFALARIM = [], MB_HISOBOTLAR = [], ZAXIRA_TARIX = [], FAYLLAR = [];
 
-  /* ---------- BAHOLASHLAR ---------- */
-  const BAHOLOVCHI = ["«Baholash Servis» MChJ", "«Expert Baho» MChJ", "«Milliy Baholash Markazi» DUK",
-    "«Aniq Baho» MChJ"];
-  const USUL = ["Qiyosiy yondashuv", "Daromad yondashuvi", "Xarajat yondashuvi"];
-  const yangiBaho = [];
-  let bahoRaqam = 300;
-  D.YOZUVLAR.forEach(y => {
-    if (D.BAHOLASHLAR.some(b => b.obyektId === y.id)) return;
-    const soni = rnd() < 0.4 ? 2 : 1;
-    for (let j = soni; j >= 1; j--) {
-      bahoRaqam += 1;
-      const kun = j > 1 ? -oraliq(400, 900) : -oraliq(20, 400);
-      const d = kunlar(kun);
-      const keyingi = new Date(d); keyingi.setFullYear(keyingi.getFullYear() + 1);
-      const avvalgi = Math.round(y.mulk.baho * (0.84 + rnd() * 0.24));
-      yangiBaho.push({
-        id: "BH-2026/" + String(bahoRaqam).padStart(4, "0"),
-        obyektId: y.id, sana: nuqtaliSana(d),
-        qiymat: j > 1 ? avvalgi : y.mulk.baho, avvalgi,
-        baholovchi: tanla(BAHOLOVCHI), usul: tanla(USUL),
-        keyingi: nuqtaliSana(keyingi),
-        holat: j > 1 ? "eskirgan" : "dolzarb",
+  /* Ko'rik chek-listlari: obyekt turi bo'yicha */
+  const KORIK_CHEKLIST = {
+    bino: ["Eshik, darvoza va qulflar butun", "Deraza va panjaralar butun", "Tom va tarnovlar holati", "Devor va poydevorda yoriq yo'q",
+           "Hisoblagichlar va plombalar joyida", "Ruxsatsiz foydalanish belgilari yo'q", "Hudud va perimetr toza", "Himoya qurilmalari ishlaydi"],
+    transport: ["Saqlash joyida turibdi", "Kuzov va oynalar butun", "Butlovchi qismlar to'liq", "Akkumulyator holati",
+                "Kilometraj yoki motosoat qayd etildi", "Kalitlar va hujjatlar joyida", "GPS-treker ishlaydi"],
+    uskuna: ["Saqlash joyida turibdi", "Seriya raqami mos", "Butlovchi qismlar to'liq", "Korroziya va shikast yo'q", "Qadoq yoki himoya qoplamasi butun"]
+  };
+  const chekListTuri = y => D.binolimi(y) ? "bino" : y.turKalit === "uskuna" ? "uskuna" : "transport";
+
+  if (namoyish) {
+    const {r: r3, tanla: tanla3, oraliq: oraliq3, ehtimol: eh3} = G3;
+    const YOZ = D.YOZUVLAR;
+    const turgan = y => kunFarqi(y.balans.sana, BUGUN);
+
+    /* ---------- Ko'riklar ---------- */
+    let korikN = 400;
+    const XULOSA_YAXSHI = ["Obyekt saqlanish holati qoniqarli, plombalar butun.", "Tashqi konstruksiyalar butun, ruxsatsiz foydalanish belgilari yo'q.",
+      "Holat o'zgarmagan, fotojadval yangilandi."];
+    const XULOSA_KAMCHILIK = ["Tomdan suv o'tishi aniqlandi, ta'mir talab qilinadi.", "Darvoza qulfi almashtirilishi kerak.",
+      "Hududda begona buyumlar tashlangan, tozalash kerak.", "Akkumulyator zaryadsizlangan, almashtirish taklif qilindi."];
+    YOZ.forEach(y => {
+      const davr = D.binolimi(y) ? D.param("korikDavriBino") : D.param("korikDavriTransport");
+      const tk = turgan(y);
+      const royxat = [];
+      if (tk < 420) royxat.push({kun: -tk + oraliq3(1, 3), korikTuri: "Birlamchi", holat: "otkazildi"});
+      const oxirgi = -oraliq3(3, Math.max(4, davr - 5));
+      [oxirgi - davr, oxirgi].forEach(k => { if (-k < tk - 5) royxat.push({kun: k, korikTuri: eh3(0.1) ? "Navbatdan tashqari" : "Rejali", holat: "otkazildi"}); });
+      const keyingi = oxirgi + davr;
+      if (keyingi < 0) royxat.push({kun: keyingi, korikTuri: "Rejali", holat: "kechikkan"});
+      else royxat.push({kun: eh3(0.14) ? -oraliq3(2, 20) : keyingi, korikTuri: y.holat === "Lotda" && eh3(0.4) ? "Sotuv oldi" : "Rejali", holat: "rejada"});
+      royxat.forEach(k => {
+        if (k.holat === "rejada" && k.kun < 0) k.holat = "kechikkan";
+        korikN++;
+        const otgan = k.holat === "otkazildi";
+        const kamchilik = otgan && eh3(0.22);
+        const tur = chekListTuri(y);
+        const korikSana = nisbiy(k.kun);
+        KORIKLAR.push({
+          /* id yili ko'rik sanasidan olinadi */
+          id: "KO-" + sanaOqi(korikSana).getFullYear() + "/" + String(korikN).padStart(4, "0"), obyektId: y.id,
+          korikTuri: k.korikTuri, tur: k.korikTuri, sana: korikSana, holat: k.holat, inspektor: tanla3(INSPEKTORLAR),
+          holatBall: otgan ? (kamchilik ? oraliq3(2, 3) : oraliq3(4, 5)) : null,
+          chekList: otgan ? KORIK_CHEKLIST[tur].map((band, j) => ({band, natija: kamchilik && j === 2 ? "kamchilik" : "joyida"})) : [],
+          kamchiliklar: kamchilik ? tanla3(XULOSA_KAMCHILIK) : "",
+          xarajatTaklifi: kamchilik ? yaxlit(1 + r3() * 14) : null,
+          keyingiKorikSana: otgan ? nisbiy(k.kun + davr) : null,
+          xulosa: otgan ? (kamchilik ? "Kamchilik bor" : tanla3(XULOSA_YAXSHI)) : "",
+          izoh: k.holat === "kechikkan" ? "Reja muddati o'tgan, ko'rik o'tkazilmagan." : k.holat === "rejada" ? "Rejaga muvofiq." : ""
+        });
       });
-      if (j === 1) y.mulk.bahoSana = nuqtaliSana(d);
+    });
+
+    /* ---------- Sug'urta ---------- */
+    const KOMPANIYA = ["O'zbekinvest", "Kafolat", "Gross Insurance", "Alskom", "Apex Insurance"];
+    let polisN = 12000;
+    const polisQosh = (y, polisTuri, summa, mukofotFoiz) => {
+      const tugashKun = eh3(0.12) ? -oraliq3(3, 120) : oraliq3(5, 360);
+      const tugash = kunQosh(BUGUN, tugashKun), boshlanish = kunQosh(tugash, -365);
+      polisN++;
+      const id = "PL-" + boshlanish.getFullYear() + "/" + String(polisN).padStart(5, "0");
+      SUGURTALAR.push({id, obyektId: y.id, polis: id, polisTuri, kompaniya: tanla3(KOMPANIYA), summa,
+        mukofot: yaxlit(summa * mukofotFoiz / 100, 2), boshlanish: sanaYoz(boshlanish), tugash: sanaYoz(tugash),
+        holat: tugashKun < 0 ? "muddati tugagan" : tugashKun <= 30 ? "tugaydi" : "amalda"});
+    };
+    YOZ.forEach(y => {
+      if (eh3(0.08)) return;                                  /* polisi yo'q obyektlar ham bor */
+      const summa = y.qiymat.bozor || y.balans.qiymat;
+      if (y.turKalit === "transport") {
+        polisQosh(y, "OSAGO", D.param("osagoSummaMln"), 0.25);
+        if (eh3(0.5)) polisQosh(y, "mulk", summa, 1.2);
+      } else polisQosh(y, "mulk", summa, 0.35 + r3() * 0.25);
+      if (["sex", "ferma"].indexOf(y.rasmTuri) >= 0 && y.kommunal.some(k => k.xizmat === "gaz" && k.holat === "ulangan"))
+        polisQosh(y, "XICHO", 50, 0.6);
+    });
+
+    /* ---------- Baholash ---------- */
+    const BAHOLOVCHI = {"«Baholash Servis» MChJ": "BL-0214", "«Expert Baho» MChJ": "BL-0387", "«Milliy Baholash Markazi» DUK": "BL-0011",
+      "«Aniq Baho» MChJ": "BL-0452", "«Andoza Baho» MChJ": "BL-0296"};
+    const USUL = ["Qiyosiy yondashuv", "Daromad yondashuvi", "Xarajat yondashuvi"];
+    let bahoN = 300;
+    YOZ.forEach(y => {
+      if (y.qiymat.bozor == null) return;
+      const oxirgiSana = sanaOqi(y.qiymat.bahoSana);
+      const eski = eh3(0.35) && kunFarqi(y.balans.sana, oxirgiSana) > 200;
+      const avvalgi = Math.round(y.qiymat.bozor * (0.88 + r3() * 0.2));
+      const qosh = (sana, bozor, tugatish, oldingi) => {
+        bahoN++;
+        const baholovchi = y.qiymat.baholovchi && BAHOLOVCHI[y.qiymat.baholovchi] ? y.qiymat.baholovchi : tanla3(Object.keys(BAHOLOVCHI));
+        const amal = oyQosh(sana, D.param("bahoAmalOy"));
+        const qolgan = kunFarqi(BUGUN, amal);
+        BAHOLASHLAR.push({id: "BH-" + sana.getFullYear() + "/" + String(bahoN).padStart(4, "0"), obyektId: y.id, sana: sanaYoz(sana),
+          hisobotRaqami: "BH-" + oraliq3(100, 999) + "/" + sana.getFullYear(), bozorQiymati: bozor, tugatishQiymati: tugatish,
+          avvalgi: oldingi, baholovchi, litsenziya: BAHOLOVCHI[baholovchi], usul: tanla3(USUL),
+          amalQilishTugash: sanaYoz(amal), holat: qolgan < 0 ? "eskirgan" : qolgan <= 60 ? "tugaydi" : "dolzarb"});
+      };
+      if (eski) qosh(kunQosh(y.balans.sana, -oraliq3(5, 30)), avvalgi, Math.round(avvalgi * 0.78), null);
+      qosh(oxirgiSana, y.qiymat.bozor, y.qiymat.tugatish, eski ? avvalgi : null);
+    });
+
+    /* ---------- Hujjatlar: bosqichlar bo'yicha majburiy ro'yxat, ayrimlari yetishmaydi ---------- */
+    const BOSQ = D.BOSQICHLAR.map(b => b.kalit);
+    const YUKLOVCHI = MENEJERLAR.concat(["Sobirov Ulug'bek"]);
+    /* Hujjat raqami prefiksi: tur nomidagi so'zlarning bosh harflari ("E'lon matni" -> EM, "Kadastr pasporti" -> KP) */
+    const hujjatPrefiks = tur => String(tur).replace(/['’ʻʼ`]/g, "").split(/[\s-]+/).filter(Boolean).map(w => w[0]).join("").toUpperCase();
+    let hujN = 200;
+    YOZ.forEach(y => {
+      const gacha = BOSQ.indexOf(y.bosqich);
+      BOSQ.slice(0, gacha + 1).forEach(b => {
+        if (b === "chiqim") return;
+        D.majburiyHujjatlar(b, y.balans.qabulAsosi, y.turKalit).forEach(tur => {
+          if (b === y.bosqich ? eh3(0.35) : eh3(0.1)) return;   /* joriy bosqich hujjatlari ko'proq yetishmaydi */
+          hujN++;
+          const sana = b === "qabul" ? kunQosh(y.balans.sana, oraliq3(0, 5)) : kunQosh(BUGUN, -oraliq3(3, Math.max(4, turgan(y) - 5)));
+          HUJJATLAR.push({id: "HJ-" + hujN, obyektId: y.id, nom: tur, tur, bosqich: b,
+            raqam: hujjatPrefiks(tur) + "-" + oraliq3(1000, 9999), sana: sanaYoz(sana), amalQilishTugash: null,
+            holat: eh3(0.86) ? "Tasdiqlangan" : "Ko'rib chiqilmoqda", format: "PDF",
+            hajm: oraliq3(1, 6) + "," + oraliq3(1, 9) + " MB", yuklagan: tanla3(YUKLOVCHI), faylId: null});
+        });
+      });
+    });
+
+    /* ---------- Qo'riqlash shartnomalari ---------- */
+    let qN = 100;
+    YOZ.forEach(y => {
+      const t = y.himoya.qoriqlashTuri;
+      if (["post", "pult", "mobil", "ichki"].indexOf(t) < 0) return;
+      qN++;
+      const bosh = kunQosh(y.balans.sana, oraliq3(1, 20));
+      const tugash = oyQosh(bosh, 12 * Math.max(1, Math.ceil((kunFarqi(bosh, BUGUN) + 30) / 365)));
+      const hk = D.HUDUD_KODLAR[y.hududKod] || {};
+      QORIQLASH.push({id: "QQ-" + bosh.getFullYear() + "/" + String(qN).padStart(4, "0"), obyektId: y.id, qoriqlashTuri: t,
+        ijrochi: t === "ichki" ? "Bank xavfsizlik xizmati" : "IIV huzuridagi Qo'riqlash departamenti, " + (hk.toliq || y.hudud) + " boshqarmasi",
+        shartnomaRaqami: t === "ichki" ? null : "QD-" + oraliq3(1000, 9999) + "/" + bosh.getFullYear(),
+        boshlanish: sanaYoz(bosh), tugash: sanaYoz(tugash),
+        oylikTolov: t === "post" ? yaxlit(6 + r3() * 3) : t === "pult" ? yaxlit(0.6 + r3() * 0.6, 2) : t === "mobil" ? yaxlit(1.5 + r3() * 1.5) : 0,
+        javobVaqtiDaq: t === "post" ? 0 : t === "pult" ? oraliq3(8, 20) : t === "mobil" ? oraliq3(15, 40) : null,
+        holat: kunFarqi(BUGUN, tugash) < 0 ? "tugagan" : "amalda"});
+    });
+
+    /* ---------- Kommunal arizalar ---------- */
+    let kaN = 100;
+    YOZ.forEach(y => y.kommunal.forEach(k => {
+      if (!k.texnikShartAriza) return;
+      kaN++;
+      const sana = kunQosh(BUGUN, -oraliq3(1, 25));
+      const tugagan = eh3(0.4);
+      if (tugagan) k.texnikShartSana = sanaYoz(D.ishKuniQosh(sana, 3));
+      KOMMUNAL_ARIZALAR.push({id: "KA-" + sana.getFullYear() + "/" + kaN, obyektId: y.id, xizmat: k.xizmat, tur: "Texnik shart",
+        raqam: k.texnikShartAriza, sana: sanaYoz(sana), muddat: sanaYoz(D.ishKuniQosh(sana, 3)),
+        holat: tugagan ? "bajarildi" : "ko'rib chiqilmoqda", izoh: "my.gov.uz orqali, 20 kVt gacha"});
+    }));
+    YOZ.filter(y => y.kommunal.some(k => k.holat === "uzilgan" && k.avvalgiQarz > 0)).slice(0, 14).forEach(y => {
+      const k = y.kommunal.find(x => x.holat === "uzilgan" && x.avvalgiQarz > 0);
+      kaN++;
+      const sana = kunQosh(BUGUN, -oraliq3(2, 40));
+      KOMMUNAL_ARIZALAR.push({id: "KA-" + sana.getFullYear() + "/" + kaN, obyektId: y.id, xizmat: k.xizmat,
+        tur: "Shaxsiy hisobni qayta rasmiylashtirish", raqam: null, sana: sanaYoz(sana), muddat: null,
+        holat: "qarz yopilishi kutilmoqda", izoh: "Avvalgi egasidan qolgan qarz: " + D.pul(k.avvalgiQarz)});
+    });
+
+    /* ---------- Inventar ---------- */
+    let invN = 0;
+    const invQosh = (y, nom, marka, model, yil, vin, km) => {
+      invN++;
+      const raqam = "INV-" + String(invN).padStart(5, "0");
+      const butlik = eh3(0.88);
+      INVENTAR.push({id: raqam, obyektId: y.id, inventarRaqam: raqam, qrKod: "MKB:" + raqam, nom, marka, model, yil, vin,
+        motosoatYokiKm: km, butlik, butlikIzoh: butlik ? "" : tanla3(["Akkumulyator yo'q", "Ehtiyot g'ildirak yo'q", "Boshqaruv bloki yechilgan"]),
+        akkumulyator: tanla3(["bor", "bor", "zaryadsiz", "yo'q"]), kalit: y.turKalit === "uskuna" ? 0 : oraliq3(1, 2),
+        saqlashJoyi: y.manzil, holatBall: oraliq3(2, 5),
+        /* oxirgi sanash balansga qabul qilingandan keyin (bugundan o'tmaydi) */
+        oxirgiSanash: (() => { const n = kunQosh(BUGUN, -oraliq3(10, 300)), q = kunQosh(sanaOqi(y.balans.sana), 3);
+          return sanaYoz(n < q ? (q > BUGUN ? BUGUN : q) : n); })()});
+    };
+    YOZ.forEach(y => {
+      if (y.turKalit === "transport" || y.turKalit === "texnika") {
+        const [marka, ...qolgan] = y.qisqa.replace(/\s*\(\d{4}\)/, "").split(" ");
+        const yil = +((/\((\d{4})\)/.exec(y.qisqa) || [])[1] || 2020);
+        invQosh(y, y.qisqa, marka, qolgan.join(" ") || marka, yil, y.huquq.vin, oraliq3(8000, 240000) + " km");
+      } else if (y.turKalit === "uskuna") {
+        invQosh(y, y.qisqa, tanla3(["Juki", "Brother", "Bühler", "Ilpa", "Esab"]), "SN-" + oraliq3(10000, 99999), oraliq3(2012, 2022), null, oraliq3(200, 9000) + " motosoat");
+      } else if (["sex", "ferma"].indexOf(y.rasmTuri) >= 0 && eh3(0.4)) {
+        for (let k = 0; k < oraliq3(1, 3); k++)
+          invQosh(y, tanla3(["Sovutish agregati", "Generator", "Tikuv liniyasi", "Inkubator"]), tanla3(["Bitzer", "FG Wilson", "Juki", "Petersime"]),
+            "SN-" + oraliq3(10000, 99999), oraliq3(2010, 2021), null, null);
+      }
+    });
+    const yilOxiri = new Date(BUGUN.getFullYear() - 1, 11, 20);
+    /* Yillik inventarizatsiya faqat o'sha sanada balansda bo'lgan aktivlarni sanaydi.
+       Natija hamma birlik uchun hisoblanadi (tasodifiy sonlar tartibi saqlanadi), keyin sana bo'yicha saralanadi. */
+    const balanslimi = i => { const y = D.topish(i.obyektId); return !!y && sanaOqi(y.balans.sana) <= yilOxiri; };
+    const yillikNatija = INVENTAR.map(i => ({inventarId: i.id, topildi: i.butlik || eh3(0.6), izoh: i.butlik ? "" : i.butlikIzoh}))
+      .filter((n, k) => balanslimi(INVENTAR[k]));
+    const yillikBirlik = INVENTAR.filter(balanslimi);
+    INVENTARIZATSIYALAR.push(
+      {id: "INVZ-" + yilOxiri.getFullYear() + "/01", sana: sanaYoz(yilOxiri), turi: "yillik",
+       komissiya: ["Tosheva Barno", "Karimova Feruza", "Xolmatova Zulfiya"], obyektlar: yillikBirlik.map(i => i.obyektId).filter((v, i, a) => a.indexOf(v) === i),
+       natijalar: yillikNatija,
+       kamomad: 0, ortiqcha: 0, holat: "yakunlangan"},
+      {id: "INVZ-" + BUGUN.getFullYear() + "/02", sana: nisbiy(oraliq3(5, 25)), turi: "navbatdan tashqari",
+       komissiya: ["Ismoilova Nilufar", "Sattorov Javohir"], obyektlar: INVENTAR.filter(i => !i.butlik).map(i => i.obyektId),
+       natijalar: [], kamomad: 0, ortiqcha: 0, holat: "rejada"});
+    /* kamomad natijalardan sanaladi: topilmagan inventar soni */
+    INVENTARIZATSIYALAR.forEach(z => { z.kamomad = (z.natijalar || []).filter(n => n.topildi === false).length; });
+    /* Kamomad hodisasi (GH-...-00213) haqiqiy kamomaddan olinadi: yillik inventarizatsiyada topilmagan birlik
+       va shu aktivning oxirgi o'tkazilgan ko'rigi (u ham kamomadni qayd etadi) */
+    (function kamomadHodisasi() {
+      const h = (D.HODISALAR || []).find(x => x.hodisa === "Inventar ro'yxatida kamomad");
+      if (!h) return;
+      const faol = i => { const y = i && D.topish(i.obyektId); return !!y && y.holat !== "Chiqarildi"; };
+      /* avval yillik inventarizatsiyada topilmagan birlik, bo'lmasa butlovchi qismi yetishmaydigan birlik
+         (navbatdan tashqari inventarizatsiya aynan shu birliklar uchun rejalashtirilgan) */
+      const topilmagan = yillikNatija.filter(n => n.topildi === false).map(n => INVENTAR.find(i => i.id === n.inventarId)).filter(faol);
+      const oxirgiKorik = id => KORIKLAR.filter(k => k.obyektId === id && k.holat === "otkazildi" && sanaOqi(k.sana) <= BUGUN)
+        .sort((a, b) => sanaOqi(b.sana) - sanaOqi(a.sana))[0];
+      const nomzod = (topilmagan.length ? topilmagan : INVENTAR.filter(i => !i.butlik && faol(i)))
+        .map(i => ({i, k: oxirgiKorik(i.obyektId)}))
+        .sort((a, b) => (b.k ? +sanaOqi(b.k.sana) : 0) - (a.k ? +sanaOqi(a.k.sana) : 0))[0];   /* eng yangi ko'rik */
+      if (!nomzod) { D.HODISALAR.splice(D.HODISALAR.indexOf(h), 1); return; }
+      const u = nomzod.i, korik = nomzod.k;
+      const yoq = !topilmagan.length;
+      const y = D.topish(u.obyektId);
+      const nom = u.nom + " (" + u.id + ")";
+      const topilma = yoq ? nom + " to'liq emas: " + u.butlikIzoh.toLowerCase() : nom + " joyida topilmadi";
+      if (korik) {
+        Object.assign(korik, {holatBall: Math.min(korik.holatBall || 2, 2), xulosa: "Kamchilik bor",
+          kamchiliklar: "Inventar ro'yxatidagi " + topilma + "."});
+        const b = (korik.chekList || []).find(c => /Butlovchi|Ruxsatsiz/.test(c.band)) || (korik.chekList || [])[0];
+        if (b) b.natija = "kamchilik";
+      }
+      const sana = korik ? korik.sana : sanaYoz(BUGUN);
+      Object.assign(h, {obyektId: y.id, bino: y.qisqa, joy: y.hududToliq, sarlavha: y.qisqa + " — " + h.hodisa,
+        vaqt: D.__vaqtNisbiy(kunFarqi(BUGUN, sanaOqi(sana)), 11, 40),
+        tavsif: (korik ? "Rejali ko'rikda" : "Tekshiruvda") + " inventar ro'yxatidagi " + topilma + ". " +
+          (yoq ? "Navbatdan tashqari inventarizatsiya rejalashtirildi." : "Yillik inventarizatsiyada (" + sanaYoz(yilOxiri) + ") ham kamomad qayd etilgan.") +
+          " Xavfsizlik xizmati politsiyaga ariza berdi.",
+        iibAriza: {raqam: "IIB-" + (y.hududKod || "TS") + "-" + BUGUN.getFullYear() + "/3312", sana}});
+    })();
+
+    /* ---------- Soliq: oxirgi to'rt chorak (to'langan) va joriy chorak ---------- */
+    const chorakKodi = d => d.getFullYear() + "-Q" + (Math.floor(d.getMonth() / 3) + 1);
+    const davrlar = [-12, -9, -6, -3, 0].map(n => chorakKodi(oyQosh(BUGUN, n)));
+    YOZ.forEach(y => {
+      if (!D.binolimi(y)) return;
+      davrlar.forEach((davr, i) => {
+        const h = D.soliqHisobi(y, davr);
+        if (!h || h.qollanmaydi || (h.soliqOy + h.imtiyozOy) === 0) return;
+        SOLIQ.push({id: "SQ-" + y.id.replace("/", "-") + "-" + davr, obyektId: y.id, davr, baza: h.baza, stavka: h.stavka,
+          summa: h.summa, imtiyoz: h.imtiyoz, yerSoligi: null, holat: i < davrlar.length - 1 ? "to'langan" : "hisoblangan"});
+      });
+    });
+
+    /* ---------- Lotlar, takliflar, shartnomalar, ijara ---------- */
+    const XARIDOR_YUR = ["«Turon Retail» MChJ", "«Sifat Qurilish» MChJ", "«Humo Trade» MChJ", "«Agrotex Invest» MChJ", "«Savdo Plyus» MChJ",
+      "«Yashil Vodiy» MChJ", "«Orient Logistik» MChJ", "«Baraka Tekstil» MChJ"];
+    const XARIDOR_JIS = ["Soliyev Umidjon", "Alimov Sardor", "Qodirova Malika", "Aliyev Kamron", "Mirzayev Botir", "Rashidova Lola",
+      "Nematov Ilhom", "Sodiqov Anvar"];
+    const xaridorOl = () => {
+      const yur = eh3(0.55);
+      return {nom: yur ? tanla3(XARIDOR_YUR) : tanla3(XARIDOR_JIS), tur: yur ? "Yuridik shaxs" : "Jismoniy shaxs"};
+    };
+    const stir = x => x.tur === "Yuridik shaxs"
+      ? "STIR " + (200 + (x.nom.length * 37) % 399) + " " + (100 + (x.nom.charCodeAt(2) * 7) % 899) + " " + (100 + (x.nom.length * 113) % 899)
+      : "PINFL " + (3000 + (x.nom.length * 97) % 2999) + " " + (1000 + (x.nom.charCodeAt(1) * 31) % 8999) + " " + (1000 + (x.nom.length * 211) % 8999);
+    const bhmChegara = 2000 * D.param("bhmMing") / 1000;     /* mln so'm */
+    let lotN = 100, tkN = 400, shN = 100, ijN = 30;
+    const lotNarx = y => y.qiymat.bozor || Math.round(y.balans.qiymat * 1.05);
+    /* Ijaraga berilgan binoda elektr va suv ijara boshidan ulangan: ijarachi to'laydi (tasodifiy son olinmaydi) */
+    const ijaraKommunali = (y, bosh) => {
+      const kod = y.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+      ["elektr", "suv"].forEach((x, j) => {
+        const k = (y.kommunal || []).find(q => q.xizmat === x);
+        if (!k || k.holat === "ulangan" || k.holat === "mavjud emas") return;
+        const ulandi = kunQosh(bosh, 3 + j * 2);
+        const oqildi = kunQosh(BUGUN, -(2 + (kod + j * 7) % 20));
+        Object.assign(k, {holat: "ulangan", shartnomaSana: sanaYoz(ulandi), korsatkich: 300 + (kod * (j + 3)) % 9000,
+          korsatkichSana: sanaYoz(oqildi < ulandi ? ulandi : oqildi), shaxsiyHisob: (1000 + kod % 8999) + "-" + y.id.slice(-4),
+          qarzYoqligiMalumotnoma: true, oylikXarajat: yaxlit((x === "elektr" ? 0.3 : 0.1) + ((y.maydon && y.maydon.foydali) || 100) / 800, 2)});
+        KOMMUNAL_ARIZALAR.filter(a => a.obyektId === y.id && a.xizmat === x && a.holat !== "bajarildi").forEach(a => {
+          a.holat = "bajarildi";
+          if (a.tur === "Texnik shart") k.texnikShartSana = a.muddat;
+        });
+      });
+    };
+    const lotQosh = (y, holat, elonKun) => {
+      lotN++;
+      const id = "LT-" + BUGUN.getFullYear() + "/" + String(lotN).padStart(4, "0");
+      const narx = lotNarx(y);
+      let elon = elonKun != null ? kunQosh(BUGUN, elonKun) : null;
+      if (elon) {
+        /* e'lon balansga qabuldan 30 kun va boshlang'ich narxni bergan baholashdan 3 kun oldin bo'lmaydi.
+           Sotilgan lotda savdo, bayonnoma va shartnoma bugungacha sig'ishi kerak, sig'masa 30 kunlik zaxira olib tashlanadi */
+        const bal = sanaOqi(y.balans.sana), baho = sanaOqi(y.qiymat && y.qiymat.bahoSana);
+        const oxirgi = kunQosh(BUGUN, holat === "sotildi" ? -(D.param("elonMinKun") + 30) : -5);
+        let eng = new Date(Math.max(+kunQosh(bal, 30), baho ? +kunQosh(baho, 3) : 0));
+        if (eng > oxirgi) eng = new Date(Math.max(+kunQosh(bal, 1), baho ? +kunQosh(baho, 3) : 0));
+        if (elon < eng) elon = eng;
+      }
+      /* savdo kuni ish kuni (dam olish kuni bo'lsa keyingi ish kuniga suriladi) */
+      const savdo = elon ? D.ishKuniQosh(kunQosh(elon, D.param("elonMinKun") + oraliq3(0, 10)), 0) : null;
+      const pasaytirishlar = [];
+      let joriyNarx = narx;
+      if (holat === "elon" && elon && kunFarqi(elon, BUGUN) > 95) {
+        const p = D.param("pasaytirishFoiz");
+        joriyNarx = Math.round(narx * (1 - p / 100));
+        pasaytirishlar.push({sana: sanaYoz(oyQosh(elon, D.param("pasaytirishOy"))), foiz: p, narx: joriyNarx, tasdiqId: null});
+      }
+      const l = {id, obyektId: y.id, eauksionLotRaqami: elon ? "EA-" + oraliq3(1000000, 9999999) : null, sotishUsuli: "eauksion",
+        elonSana: elon ? sanaYoz(elon) : null, savdoSana: savdo ? sanaYoz(savdo) : null,
+        boshlangichNarx: narx, minimalNarx: Math.round(joriyNarx * (1 - D.param("takroriySavdoChegirma") / 100)),
+        zakalatFoiz: D.param("zakalatFoiz"), qadamFoiz: narx > bhmChegara ? D.param("qadamFoizKatta") : D.param("qadamFoiz"),
+        pasaytirishlar, keyingiPasaytirishSana: holat === "elon" ? sanaYoz(oyQosh(elon, D.param("pasaytirishOy") * (pasaytirishlar.length + 1))) : null,
+        holat, golib: null, yakuniyNarx: null, bayonnomaSana: null, ishtirokchilarSoni: 0,
+        takroriySavdoSana: null, tolovMuddati: null, shartnomaMuddati: null, paketId: null, qarorRaqami: y.sotuv.qarorRaqami || "RQ-" + oraliq3(10, 199)};
+      if (holat === "elon" && savdo < BUGUN) {
+        l.holat = "otkazilmagan";
+        l.takroriySavdoSana = sanaYoz(D.ishKuniQosh(kunQosh(savdo, D.param("takroriySavdoMinKun") + oraliq3(0, 8)), 0));
+      }
+      LOTLAR.push(l);
+      y.sotuv.lotId = id;
+      return l;
+    };
+    const taklifQosh = (y, l, holat, summa) => {
+      tkN++;
+      const x = xaridorOl();
+      const t = {id: "TK-" + BUGUN.getFullYear() + "/" + String(tkN).padStart(4, "0"), obyektId: y.id, lotId: l ? l.id : null,
+        xaridor: x.nom, xaridorTuri: x.tur, stirYokiPinfl: stir(x), summa,
+        tolovSharti: tanla3(["To'liq to'lov", "Bo'lib to'lash, 24 oy", "Bo'lib to'lash, 36 oy"]),
+        sana: nisbiy(-oraliq3(1, 30)), amlNatija: eh3(0.9) ? "toza" : eh3(0.5) ? "tekshirilmoqda" : "shubhali",
+        affillanganlik: eh3(0.04), qarorRaqami: null, holat, izoh: ""};
+      TAKLIFLAR.push(t);
+      return t;
+    };
+    const shartnomaQosh = (y, l, t, narx, sana, usul, oylar) => {
+      shN++;
+      const avans = usul === "bolib" ? Math.round(narx * D.param("avansFoiz") / 100 * 10) / 10 : narx;
+      const jadval = [];
+      if (usul === "bolib") {
+        const qoldiq = narx - avans, bir = Math.floor(qoldiq / oylar * 10) / 10;
+        for (let k = 1; k <= oylar; k++) {
+          const s = oyQosh(sana, k);
+          const summa = k === oylar ? yaxlit(qoldiq - bir * (oylar - 1)) : bir;
+          jadval.push({sana: sanaYoz(s), summa, tolandi: s < BUGUN});
+        }
+      }
+      const kechikkan = jadval.length && eh3(0.25);
+      if (kechikkan) { const oxirgiOtgan = jadval.filter(j => sanaOqi(j.sana) < BUGUN).pop(); if (oxirgiOtgan) oxirgiOtgan.tolandi = false; }
+      const toliq = jadval.length ? jadval.every(j => j.tolandi) : true;
+      const s = {id: "SH-" + sana.getFullYear() + "/" + String(shN).padStart(4, "0"), lotId: l ? l.id : null, taklifId: t ? t.id : null,
+        obyektId: y.id, xaridor: t ? t.xaridor : xaridorOl().nom, narx, avans, sotishUsuli: usul, sana: sanaYoz(sana), jadval,
+        taqiqHolati: usul === "bolib" && !toliq ? "taqiq qo'yilgan" : "yechilgan",
+        holat: kechikkan ? "kechikkan" : toliq ? (usul === "bolib" ? "toliq tolangan" : "yakunlangan") : "faol"};
+      SHARTNOMALAR.push(s);
+      return s;
+    };
+
+    YOZ.forEach(y => {
+      if (y.holat === "Lotda") {
+        const l = lotQosh(y, "elon", -oraliq3(5, 130));
+        const soni = l.holat === "elon" ? oraliq3(0, 2) : 0;
+        l.ishtirokchilarSoni = soni;
+        for (let k = 0; k < soni; k++) taklifQosh(y, l, "yangi", Math.round(l.boshlangichNarx * (1 + k * l.qadamFoiz / 100)));
+      } else if (y.holat === "Sotuvga tayyorlanmoqda") {
+        if (eh3(0.35)) lotQosh(y, "tayyorlanmoqda", null);
+        if (eh3(0.3)) {
+          const narx = lotNarx(y);
+          const t = taklifQosh(y, null, tanla3(["yangi", "korib chiqilmoqda", "qo'mitada", "qo'mitada"]), Math.round(narx * (0.9 + r3() * 0.15)));
+          y.sotuv.usul = "togridan";
+          if (t.holat === "qo'mitada") t.izoh = "To'g'ridan-to'g'ri sotish taklifi, PQ-142";
+        }
+      } else if (y.holat === "Bo'lib to'lashda") {
+        const l = lotQosh(y, "sotildi", -oraliq3(90, 260));
+        l.holat = "sotildi";
+        l.takroriySavdoSana = null;
+        const bayon = kunQosh(sanaOqi(l.savdoSana), 0);
+        const t = taklifQosh(y, l, "tasdiqlangan", Math.round(l.boshlangichNarx * (1 + l.qadamFoiz / 100)));
+        t.qarorRaqami = "QQ-" + oraliq3(100, 999);
+        Object.assign(l, {golib: t.xaridor, yakuniyNarx: t.summa, bayonnomaSana: sanaYoz(bayon), ishtirokchilarSoni: oraliq3(2, 5),
+          tolovMuddati: sanaYoz(D.ishKuniQosh(bayon, D.param("golibTolovIshKuni"))),
+          shartnomaMuddati: sanaYoz(D.ishKuniQosh(bayon, D.param("shartnomaIshKuni")))});
+        const s = shartnomaQosh(y, l, t, t.summa, D.ishKuniQosh(bayon, oraliq3(3, 9)), "bolib", tanla3([12, 24, 36]));
+        y.sotuv.lotId = l.id;
+        y.tarix.push({sana: s.sana, voqea: "Bo'lib to'lash shartnomasi tuzildi", izoh: s.id});
+      } else if (y.holat === "Ijarada") {
+        ijN++;
+        const bosh = kunQosh(BUGUN, -oraliq3(40, Math.max(41, Math.min(400, turgan(y) - 10))));
+        const oylik = yaxlit(y.balans.qiymat * (0.006 + r3() * 0.004), 2);
+        const tolovlar = [];
+        /* To'lov jadvali shartnoma muddati (12 oy) ichida qoladi */
+        for (let k = 0; k < 12 && oyQosh(bosh, k) < BUGUN; k++) tolovlar.push({davr: sanaYoz(oyQosh(bosh, k)).slice(3), summa: oylik, tolandi: true});
+        const kech = eh3(0.25);
+        if (kech && tolovlar.length) tolovlar[tolovlar.length - 1].tolandi = false;
+        IJARA.push({id: "IJ-" + bosh.getFullYear() + "/" + String(ijN).padStart(4, "0"), obyektId: y.id,
+          ijarachi: tanla3(["«Savdo Plyus» MChJ", "«Oq Tepa Servis» MChJ", "Norqulov Jamshid", "«Farovon Market» MChJ", "«Zamin Qurilish» MChJ"]),
+          maydon: y.maydon.foydali, oylikIjara: oylik, boshlanish: sanaYoz(bosh), tugash: sanaYoz(oyQosh(bosh, 12)),
+          depozit: yaxlit(oylik * 2, 2), kommunalKimTolaydi: "ijarachi", sotuvdaBekorQilishSharti: true, tolovlar,
+          holat: kech ? "kechikkan" : "amalda"});
+        ijaraKommunali(y, bosh);
+      }
+    });
+
+    /* Tayyor biznes paketi: bir hududdagi sex va uskuna */
+    const sex = YOZ.find(y => y.rasmTuri === "sex" && y.holat === "Sotuvga tayyorlanmoqda");
+    if (sex) {
+      const uskuna = YOZ.filter(y => y.turKalit === "uskuna" && y.hudud === sex.hudud && y.holat === "Sotuvga tayyorlanmoqda").slice(0, 2);
+      PAKETLAR.push({id: "PK-" + BUGUN.getFullYear() + "/01", nom: sex.qisqa + " va uskunalar", tarkib: [sex.id].concat(uskuna.map(u => u.id)),
+        investKompaniya: null, holat: "shakllantirilmoqda"});
     }
-  });
-  D.BAHOLASHLAR = D.BAHOLASHLAR.concat(yangiBaho);
 
-  /* ---------- HODISALAR ---------- */
-  const HODISA_MATN = [
-    ["Yerto'lani suv bosgan, poydevor shikastlangan", "yuqori"], ["Uskunalar ro'yxatida kamomad", "o'rta"],
-    ["Sug'urta polisining muddati o'tgan", "yuqori"], ["Obyekt ruxsatsiz ijaraga berilgan", "yuqori"],
-    ["Mulk qiymati keskin pasaygan", "o'rta"], ["Eshikdagi plomba buzilgan", "yuqori"],
-    ["Kommunal to'lovlardan qarz aniqlandi", "o'rta"], ["Tomdan suv o'tayotgani aniqlandi", "past"],
-    ["Hududda ruxsatsiz qurilish boshlangan", "o'rta"], ["Yong'in signalizatsiyasi ishlamayapti", "yuqori"],
-  ];
-  const yangiHodisa = [];
-  yangiYozuvlar.slice(0, 18).forEach((y, i) => {
-    const [matn, jid] = tanla(HODISA_MATN);
-    yangiHodisa.push({id: "GH-2026-" + String(300 + i).padStart(5, "0"),
-      kod: "#GH-2026-" + String(300 + i).padStart(5, "0"), obyektId: y.id,
-      rang: jid === "yuqori" ? "#E2523A" : jid === "o'rta" ? "#E8A13C" : "#0E8D74",
-      hodisa: matn, vaqt: tanla(["Bugun", "Kecha", "2 kun oldin"]) + ", " +
-        oraliq(9, 18) + ":" + String(oraliq(0, 59)).padStart(2, "0"),
-      jiddiylik: jid, ustun: tanla(["yangi", "tekshirilmoqda", "bartaraf", "hal", "yopildi"])});
-  });
-  D.HODISALAR = D.HODISALAR.concat(yangiHodisa);
+    /* Xaridorlar reyestri */
+    const kor = {};
+    TAKLIFLAR.forEach(t => {
+      if (!kor[t.xaridor]) {
+        kor[t.xaridor] = {id: "XR-" + String(XARIDORLAR.length + 11).padStart(3, "0"), nom: t.xaridor, tur: t.xaridorTuri,
+          stirYokiPinfl: t.stirYokiPinfl, ishtirok: 0, yutgan: 0, holat: "faol"};
+        XARIDORLAR.push(kor[t.xaridor]);
+      }
+      kor[t.xaridor].ishtirok++;
+      if (t.holat === "tasdiqlangan") kor[t.xaridor].yutgan++;
+    });
 
-  /* ---------- VAZIFALAR ---------- */
-  const VAZ = [
-    ["Ko'rik dalolatnomasini imzolatish", "Ko'rik nazorati"],
-    ["Sug'urta polisini yangilash", "Sug'urta"],
-    ["Baholash hisobotini qabul qilish", "Baholash"],
-    ["Auksion e'lonini joylash", "Realizatsiya"],
-    ["Sud majlisiga hujjat tayyorlash", "Yuridik"],
-    ["Balansga qabul dalolatnomasi", "Aktivlar reyestri"],
-    ["Zaxira hisobini qayta ko'rish", "Tasnif va zaxira"],
-    ["Obyekt fotosuratlarini yangilash", "Ko'rik nazorati"],
-    ["Ijara to'lovini nazorat qilish", "Realizatsiya"],
-    ["Kadastr hujjatini so'rash", "Aktivlar reyestri"],
-  ];
-  const yangiVazifa = [];
-  VAZ.forEach((v, i) => {
-    const y = yangiYozuvlar[i * 3 % yangiYozuvlar.length];
-    yangiVazifa.push({id: "VZ-2026-" + String(200 + i), nom: v[0], tur: v[1],
-      kod: y ? y.id : "", sana: "2026-08-" + String(24 + (i % 5)).padStart(2, "0"),
-      vaqt: oraliq(9, 17) + ":00", bugunmi: i % 3 === 0,
-      muhimlik: i % 4 === 0 ? "yuqori" : "oddiy", bajarildi: i % 5 === 0});
-  });
-  D.MENING_VAZIFALARIM = D.MENING_VAZIFALARIM.concat(yangiVazifa);
-  D.VAZIFALAR = D.MENING_VAZIFALARIM;
+    /* ---------- Arxiv: balansdan chiqarilgan aktivlar ---------- */
+    const ARXIV_TUR = [["Kvartira", "kopqavat", "turar"], ["Dala hovlisi", "uy", "turar"], ["Savdo do'koni", "dokon", "noturar"],
+      ["Omborxona", "ombor", "noturar"], ["Ofis binosi", "mamuriy", "noturar"], ["Tikuvchilik sexi", "sex", "noturar"],
+      ["Chevrolet Cobalt (2021)", "avto", "transport"], ["Isuzu yuk avtomobili (2020)", "yuk", "transport"], ["Qadoqlash liniyasi", "uskuna", "uskuna"]];
+    const ARXIV_HUDUD = [["Toshkent sh.", "TS", "Toshkent shahar BXO"], ["Toshkent vil.", "TV", "Toshkent viloyat BXO"],
+      ["Samarqand", "SA", "Samarqand BXO"], ["Farg'ona", "FA", "Farg'ona BXO"], ["Buxoro", "BU", "Buxoro BXO"]];
+    /* Sotuvdan oldingi baholash: sotuv narxi qonunan baholash hisobotiga tayanadi. Alohida tasodifiy qator,
+       shu sabab keyingi to'plamlarning qiymatlari o'zgarmaydi. */
+    const G5 = generator(85260921);
+    for (let i = 0; i < 20; i++) {
+      const [nom, rasmTuri, turKalit] = tanla3(ARXIV_TUR);
+      const [hudud, hududKod, filial] = tanla3(ARXIV_HUDUD);
+      const sotuvKun = oraliq3(15, 900);
+      const turganKun = oraliq3(90, 700);
+      const sotuv = kunQosh(BUGUN, -sotuvKun), balans = kunQosh(sotuv, -turganKun);
+      const balansQiymat = turKalit === "transport" ? oraliq3(90, 700) : turKalit === "uskuna" ? oraliq3(60, 400) : oraliq3(300, 4200);
+      const sotuvNarxi = Math.round(balansQiymat * (0.8 + r3() * 0.45));
+      const jamiXarajat = yaxlit(balansQiymat * (0.01 + r3() * 0.04));
+      const usul = tanla3(["eauksion", "eauksion", "togridan", "bolib"]);
+      const id = "AK-" + balans.getFullYear() + "/" + String(200 + i * 13).padStart(4, "0");
+      const zax = D.zaxiraToifasi(turganKun, D.param("umidsizKun"));
+      const x = xaridorOl();
+      shN++;
+      const shId = "SH-" + sotuv.getFullYear() + "/" + String(shN).padStart(4, "0");
+      SHARTNOMALAR.push({id: shId, lotId: null, taklifId: null, obyektId: id, xaridor: x.nom, narx: sotuvNarxi, avans: sotuvNarxi,
+        sotishUsuli: usul, sana: sanaYoz(sotuv), jadval: [], taqiqHolati: "yechilgan", holat: "yakunlangan"});
+      const a = {id, obyektId: id, nom: nom + ", " + hudud, qisqa: nom, tur: D.ASOSIY_TURLAR.find(t => t.kalit === turKalit).nom, turKalit, rasmTuri,
+        hudud, hududKod, filial, filialKod: FILIAL_KODLAR[filial] || null,
+        balansSana: sanaYoz(balans), balansQiymat, sotuvSana: sanaYoz(sotuv), sotuvNarxi, sotishUsuli: usul, xaridor: x.nom,
+        jamiXarajat, tiklanganZaxira: yaxlit(balansQiymat * zax.foiz / 100),
+        foydaZarar: yaxlit(sotuvNarxi - balansQiymat - jamiXarajat), shartnomaId: shId, lotId: null,
+        turganKun, rasm: "", rasmKichik: ""};
+      ARXIV.push(a);
+      {
+        const bSana = kunQosh(sotuv, -G5.oraliq(20, Math.min(150, turganKun - 10)));
+        const bozor = Math.round(balansQiymat * (0.95 + G5.r() * 0.3));
+        const baholovchi = G5.tanla(Object.keys(BAHOLOVCHI));
+        const amal = oyQosh(bSana, D.param("bahoAmalOy"));
+        bahoN++;
+        BAHOLASHLAR.push({id: "BH-" + bSana.getFullYear() + "/" + String(bahoN).padStart(4, "0"), obyektId: id, sana: sanaYoz(bSana),
+          hisobotRaqami: "BH-" + G5.oraliq(100, 999) + "/" + bSana.getFullYear(), bozorQiymati: bozor, tugatishQiymati: Math.round(bozor * 0.78),
+          avvalgi: null, baholovchi, litsenziya: BAHOLOVCHI[baholovchi], usul: G5.tanla(USUL),
+          amalQilishTugash: sanaYoz(amal), holat: kunFarqi(BUGUN, amal) < 0 ? "eskirgan" : "dolzarb"});
+      }
+      D.reyestrgaQosh(Object.assign({}, a, {balans: {qiymat: balansQiymat}, qiymat: null, maydon: null}), "arxiv");
+    }
 
-  /* ---------- HUJJATLAR ---------- */
-  const HUJ_TUR = ["Texnik pasport", "Kadastr hujjati", "Sud hujjati", "Shartnoma", "Dalolatnoma",
-    "Baholash hisoboti", "Sug'urta polisi"];
-  const MAJBURIY = ["Texnik pasport", "Kadastr hujjati", "Qabul dalolatnomasi"];
-  const QOSHIMCHA_HUJ = ["Baholash hisoboti", "Sug'urta polisi", "Sud qarori nusxasi",
-                         "Ko'rik dalolatnomasi", "Kommunal shartnoma"];
-  const yangiHujjat = [];
-  let hujRaqam = 200;
-  D.YOZUVLAR.forEach(y => {
-    const bor = D.HUJJATLAR.filter(h => h.obyektId === y.id).map(h => h.tur);
-    const kerak = MAJBURIY.filter(t => bor.indexOf(t) < 0);
-    /* ayrim obyektlarda hujjat to'liq bo'lmaydi — nazorat indeksi buni ko'rsatadi */
-    const tushirib = rnd() < 0.22 ? 1 : 0;
-    const royxat = kerak.slice(0, kerak.length - tushirib)
-      .concat(rnd() < 0.6 ? [tanla(QOSHIMCHA_HUJ)] : []);
-    royxat.forEach(tur => {
-      hujRaqam += 1;
-      yangiHujjat.push({
-        id: "HJ-" + hujRaqam, nom: tur + " — " + y.mulk.qisqa,
-        ikon: "pdf", iturl: "i-hujjat", obyektId: y.id, tur, teg: "pdf",
-        sana: uzSana(kunlar(-oraliq(5, 420))),
-        holat: rnd() < 0.82 ? "Tasdiqlangan" : "Ko'rib chiqilmoqda",
-        hajm: oraliq(1, 6) + "," + oraliq(1, 9) + " MB",
+    /* ---------- Hodisalar (generatsiya) ---------- */
+    const HODISA_MATN = [
+      ["Harakat datchigi tunda signal berdi", "yuqori", "qurilma"], ["Eshik plombasi buzilgan", "yuqori", "korik"],
+      ["Kamera 24 soatdan ortiq aloqasiz", "o'rta", "qurilma"], ["Tomdan suv o'tayotgani aniqlandi", "past", "korik"],
+      ["Hududda ruxsatsiz qurilish boshlangan", "o'rta", "korik"], ["Tutun datchigi ishga tushdi", "yuqori", "qurilma"],
+      ["Datchik batareyasi 15% dan past", "past", "qurilma"], ["Avtomobil saqlash joyidan siljigan", "yuqori", "qurilma"]
+    ];
+    const USTUNLAR = [["yangi", "Yangi"], ["tekshirilmoqda", "Tekshirilmoqda"], ["bartaraf", "Bartaraf etilmoqda"], ["yopildi", "Yopildi"]];
+    YOZ.slice(8).filter((y, i) => i % 13 === 0).forEach((y, i) => {
+      const [matn, jid, manba] = tanla3(HODISA_MATN.filter(h => D.binolimi(y) ? h[0].indexOf("Avtomobil") < 0 : h[0].indexOf("Tom") < 0 && h[0].indexOf("qurilish") < 0));
+      const [ustun, holat] = tanla3(USTUNLAR);
+      const kod = "GH-" + BUGUN.getFullYear() + "-" + String(300 + i).padStart(5, "0");
+      const kun = -oraliq3(0, 20);
+      D.HODISALAR.push({id: kod, kod: "#" + kod, obyektId: y.id, rang: jid === "yuqori" ? "#E2523A" : jid === "o'rta" ? "#E8A13C" : "#0E8D74",
+        hodisa: matn, vaqt: D.__vaqtNisbiy(kun, oraliq3(0, 23), oraliq3(0, 59)), jiddiylik: jid, ustun, holat, manba,
+        tavsif: "", masul: tanla3(INSPEKTORLAR), bolim: "Aktivlar nazorati bo'limi",
+        iibAriza: jid === "yuqori" && eh3(0.4) ? {raqam: "IIB-" + y.hududKod + "-" + BUGUN.getFullYear() + "/" + oraliq3(1000, 9999), sana: nisbiy(kun)} : null,
+        bino: y.qisqa, joy: y.hududToliq, sarlavha: y.qisqa + " — " + matn});
+    });
+
+    /* ---------- Sug'urta da'volari: jiddiy hodisalardan ---------- */
+    D.HODISALAR.filter(h => h.jiddiylik === "yuqori").forEach((h, i) => {
+      const polis = SUGURTALAR.find(s => s.obyektId === h.obyektId && s.polisTuri === "mulk" && s.holat !== "muddati tugagan");
+      if (!polis || i % 2) return;
+      SUGURTA_DAVOLARI.push({id: "SD-" + BUGUN.getFullYear() + "/" + String(100 + i).padStart(4, "0"), polisId: polis.id, hodisaId: h.id,
+        obyektId: h.obyektId, sana: sanaYoz(sanaOqi(h.vaqt)), summa: yaxlit(polis.summa * (0.01 + r3() * 0.04)),
+        holat: tanla3(["korib chiqilmoqda", "topshirilgan", "tolangan"])});
+    });
+
+    /* ---------- Xarajatlar: shartnoma yoki balans sanasidan bugungacha, toifalar bo'yicha.
+       Alohida tasodifiy qator: xarajatlar soni boshqa to'plamlarga ta'sir qilmaydi ---------- */
+    const G4 = generator(74260921);
+    let xN = 1000;
+    const xarajat = (y, toifa, summa, sana, kontragent) => {
+      if (!(summa > 0) || sanaOqi(sana) < sanaOqi(y.balans.sana) || sanaOqi(sana) > BUGUN) return;
+      xN++;
+      const d = sanaOqi(sana);
+      XARAJATLAR.push({id: "XJ-" + d.getFullYear() + "/" + xN, obyektId: y.id, toifa, summa: yaxlit(summa, 2),
+        davr: d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"), sana: sanaYoz(d), kontragent,
+        hisobFaktura: "HF-" + G4.oraliq(10000, 99999), tasdiqlovchi: "Xolmatova Zulfiya",
+        holat: kunFarqi(d, BUGUN) < 20 && G4.ehtimol(0.4) ? "tolanmagan" : "tolangan"});
+    };
+    /* boshlanish oyidan joriy oygacha har oyning shu kunida (kelajakdagi sana yozilmaydi) */
+    const harOy = (bosh, kun, tugash, fn) => {
+      const b = sanaOqi(bosh);
+      if (!b) return;
+      const oxiri = tugash && sanaOqi(tugash) < BUGUN ? sanaOqi(tugash) : BUGUN;
+      for (let d = new Date(b.getFullYear(), b.getMonth(), kun); d <= oxiri; d = oyQosh(d, 1))
+        if (d >= b) fn(d);
+    };
+    YOZ.forEach(y => {
+      const q = QORIQLASH.find(x => x.obyektId === y.id);
+      if (q && q.oylikTolov) harOy(q.boshlanish, 5, q.tugash, d => xarajat(y, "qoriqlash", q.oylikTolov, d, q.ijrochi));
+      y.kommunal.filter(x => x.oylikXarajat).forEach(x => harOy(x.shartnomaSana || y.balans.sana, 10, null, d => xarajat(y, "kommunal", x.oylikXarajat, d,
+        x.xizmat === "elektr" ? "Hududiy elektr tarmoqlari" : x.xizmat === "gaz" ? "Hududgazta'minot" : "Suvoqova")));
+      if (!D.binolimi(y) && y.himoya.qoriqlashTuri === "post")
+        harOy(y.balans.sana, 7, null, d => xarajat(y, "saqlash", 0.8 + (y.id.charCodeAt(9) % 5) / 10, d, "Saqlash maydonchasi"));
+      SOLIQ.filter(s => s.obyektId === y.id && s.holat === "to'langan" && s.summa > 0).forEach(s => {
+        const [yil, ch] = s.davr.split("-Q");
+        xarajat(y, "molmulk", s.summa, new Date(+yil, +ch * 3, 15), "Davlat soliq xizmati");
       });
+      SUGURTALAR.filter(s => s.obyektId === y.id).forEach(s => xarajat(y, "sugurta", s.mukofot, s.boshlanish, s.kompaniya));
+      BAHOLASHLAR.filter(b => b.obyektId === y.id).forEach(b => xarajat(y, "baholash", 2 + (b.bozorQiymati > 2000 ? 6 : 1.5), b.sana, b.baholovchi));
+      if (y.huquq.qaydSana) xarajat(y, "notarius", 0.4 + (y.balans.qiymat > 1000 ? 1.2 : 0.3), y.huquq.qaydSana, "Kadastr xizmati");
+      if (y.sotuv.lotId) { const l = LOTLAR.find(x => x.id === y.sotuv.lotId); if (l && l.elonSana) xarajat(y, "elon", 0.35, l.elonSana, "E-auksion operatori"); }
+      KORIKLAR.filter(k => k.obyektId === y.id && k.xarajatTaklifi && G4.ehtimol(0.5)).forEach(k =>
+        xarajat(y, "tamir", k.xarajatTaklifi, kunQosh(k.sana, G4.oraliq(5, 20)), "Pudratchi"));
     });
-  });
-  D.HUJJATLAR = D.HUJJATLAR.concat(yangiHujjat);
 
-  /* ---------- MULOQOTLAR ---------- */
-  const KANAL = ["Telefon", "SMS", "Xat", "Uchrashuv", "Ogohlantirish"];
-  const NATIJA = ["Qarzni qayta ko'rib chiqish so'raldi", "To'lov jadvali muhokama qilindi",
-    "Aloqaga chiqmadi", "Rasmiy talabnoma topshirildi", "Qisman to'lov va'da qilindi",
-    "Obyektni ixtiyoriy topshirishga rozilik", "Restrukturizatsiya arizasi qabul qilindi"];
-  yangiYozuvlar.forEach((y, i) => {
-    if (i % 2) return;
-    D.MULOQOTLAR[y.id] = Array.from({length: oraliq(1, 3)}, () => [
-      oraliq(1, 28) + "-" + tanla(["iyn", "iyl", "avg"]) + ", 2026", tanla(KANAL), tanla(NATIJA)]);
-  });
-
-  /* ---------- PORTFEL ko'rsatkichlari (real songa moslash) ---------- */
-  const jamiObyekt = D.YOZUVLAR.length;
-  const jamiQarz = D.YOZUVLAR.reduce((a, y) => a + y.qarz.jami, 0);
-  const jamiBaho = D.YOZUVLAR.reduce((a, y) => a + y.mulk.baho, 0);
-  /* Barcha portfel ko'rsatkichi reyestrdagi yozuvlardan hisoblanadi: bir tushuncha uchun
-     barcha ekranda bir xil son chiqishi shart. Ilgari namoyish rejimida bank bo'yicha
-     statistik raqamlar (1248 / 340) ishlatilardi va reyestr sonlariga zid kelardi. */
-  const balansdaB = y => ["musodara", "balans"].includes(y.ish.bosqich);
-  D.PORTFEL.jami = jamiObyekt;
-  D.PORTFEL.balansda = D.YOZUVLAR.filter(balansdaB).length;
-  D.PORTFEL.reyestrda = jamiObyekt;
-  D.PORTFEL.bahoMlrd = Math.round(jamiBaho / 1000);
-  D.PORTFEL.qarzMlrd = Math.round(jamiQarz / 1000);
-
-  /* Holatlar taqsimoti — yozuvlarning haqiqiy holatidan; yig'indi doim jami ga teng */
-  const holatRang = {};
-  Object.keys(D.BOSQICH_HOLAT || {}).forEach(k => { holatRang[D.BOSQICH_HOLAT[k].nom] = D.BOSQICH_HOLAT[k].rang; });
-  const holatSanoq = {};
-  D.YOZUVLAR.forEach(y => { const n = (y.holat && y.holat.nom) || "Boshqa"; holatSanoq[n] = (holatSanoq[n] || 0) + 1; });
-  D.PORTFEL.holatlar = Object.keys(holatSanoq).sort((a, b) => holatSanoq[b] - holatSanoq[a])
-    .map(n => ({nom: n, rang: holatRang[n] || "#8A94A0", son: holatSanoq[n]}));
-  /* foizlar eng katta qoldiq usulida — yig'indi doim 100 */
-  (function () {
-    const ulush = D.PORTFEL.holatlar.map(h => h.son / Math.max(1, D.PORTFEL.jami) * 100);
-    const butun = ulush.map(Math.floor);
-    const qoldi = 100 - butun.reduce((a, b) => a + b, 0);
-    ulush.map((u, i) => [u - butun[i], i]).sort((a, b) => b[0] - a[0])
-      .slice(0, Math.max(0, qoldi)).forEach(([, i]) => butun[i]++);
-    D.PORTFEL.holatlar.forEach((h, i) => { h.foiz = butun[i]; });
-  })();
-
-  /* Undiruv kesimi — yozuvlardan */
-  const undiruvdaB = D.YOZUVLAR.filter(y => !balansdaB(y));
-  D.PORTFEL.undiruv = {
-    qarzdorlar: undiruvdaB.length,
-    muddatiOtganQarzMlrd: (undiruvdaB.reduce((a, y) => a + y.qarz.jami, 0) / 1000).toFixed(1).replace(".", ","),
-    sudJarayonida: D.YOZUVLAR.filter(y => ["sud", "qaror", "ijro"].includes(y.ish.bosqich)).length,
-    musodara: D.YOZUVLAR.filter(y => y.ish.bosqich === "musodara").length,
-  };
-
-  /* Shartnoma kesimi — yozuvlardagi shartnomalardan (bosqich bo'yicha) */
-  const shartnomali = D.YOZUVLAR.filter(y => y.shartnoma && y.shartnoma.raqam);
-  D.PORTFEL.shartnoma = {
-    jami: shartnomali.length,
-    faol: shartnomali.filter(y => ["ogohlantirish", "davo"].includes(y.ish.bosqich)).length,
-    kechikkan: shartnomali.filter(y => ["sud", "qaror"].includes(y.ish.bosqich)).length,
-    sudda: shartnomali.filter(y => y.ish.bosqich === "ijro").length,
-    yakunlangan: shartnomali.filter(balansdaB).length,
-  };
-
-  /* Hududlar kesimi — reyestrdagi jonli sanoq */
-  const TOLIQ = {"Toshkent sh.": "Toshkent shahri", "Toshkent vil.": "Toshkent viloyati", "Qoraqalpog'iston": "Qoraqalpog'iston R."};
-  const hSanoq = {};
-  D.YOZUVLAR.forEach(y => { const n = TOLIQ[y.mulk.hudud] || y.mulk.hudud + " viloyati"; hSanoq[n] = (hSanoq[n] || 0) + 1; });
-  D.HUDUDLAR = Object.keys(hSanoq).sort((a, b) => hSanoq[b] - hSanoq[a])
-    .map(n => [n, String(hSanoq[n]), "", hSanoq[n]]);
-
-  /* ---------- Hosilaviy kolleksiyalarni qayta hisoblash ---------- */
-  const balansda = y => ["musodara", "balans"].includes(y.ish.bosqich);
-  /* xarajatlar */
-  const XAR_TUR = [["Qo'riqlash xizmati", 4.2], ["Kommunal to'lovlar", 2.8],
-                   ["Mulk solig'i", 6.5], ["Joriy ta'mirlash", 3.6]];
-  D.YOZUVLAR.filter(balansda).forEach((y, i) => {
-    if (D.XARAJATLAR.some(x => x.obyektId === y.id)) return;
-    XAR_TUR.forEach(([tur, asos], j) => {
-      if ((i + j) % 3 === 2) return;
-      D.XARAJATLAR.push({id: "XJ-2026/" + String(600 + i * 10 + j),
-        obyektId: y.id, obyekt: y.mulk.qisqa, tur,
-        summa: Math.round(asos * (8 + ((i + j) % 9)) * 10) / 10,
-        sana: oraliq(1, 28) + "-avg, 2026",
-        holat: (i + j) % 3 === 1 ? "tolanmagan" : "tolangan"});
+    /* ---------- Tasdiqlar ---------- */
+    let tsN = 40;
+    const tasdiq = (o) => {
+      tsN++;
+      const t = Object.assign({id: "TS-" + BUGUN.getFullYear() + "/" + String(tsN).padStart(4, "0"), qaror: null, sabab: "", qarorSana: null}, o);
+      TASDIQLAR.push(t);
+      return t;
+    };
+    TAKLIFLAR.filter(t => t.holat === "qo'mitada").forEach(t => tasdiq({tur: "taklif", manbaKol: "TAKLIFLAR", manbaId: t.id, obyektId: t.obyektId,
+      sarlavha: "Taklifni tasdiqlash: " + D.obyektNomi(t.obyektId, true), tavsif: t.xaridor + " " + D.pul(t.summa) + " taklif qildi. " + (t.izoh || ""),
+      summa: t.summa, muallif: "Qosimova Dilnoza", masulRol: "Rahbariyat", sana: t.sana, javobMuddati: sanaYoz(D.ishKuniQosh(t.sana, 5)), holat: "kutilmoqda"}));
+    LOTLAR.filter(l => l.keyingiPasaytirishSana && sanaOqi(l.keyingiPasaytirishSana) <= kunQosh(BUGUN, 10) && ["elon", "otkazilmagan"].indexOf(l.holat) >= 0)
+      .forEach(l => {
+        const p = D.param("pasaytirishFoiz");
+        const joriy = l.pasaytirishlar.length ? l.pasaytirishlar[l.pasaytirishlar.length - 1].narx : l.boshlangichNarx;
+        /* tasdiq so'rovi kelajak sanasi bilan yozilmaydi: muddat yaqin bo'lsa, bugun yuborilgan */
+        const sana = sanaOqi(l.keyingiPasaytirishSana) > BUGUN ? sanaYoz(BUGUN) : l.keyingiPasaytirishSana;
+        tasdiq({tur: "pasaytirish", manbaKol: "LOTLAR", manbaId: l.id, obyektId: l.obyektId,
+          sarlavha: "Narxni " + p + "% pasaytirish: " + D.obyektNomi(l.obyektId, true),
+          tavsif: "Lot " + D.param("pasaytirishOy") + " oydan beri sotilmadi. Yangi narx: " + D.pul(Math.round(joriy * (1 - p / 100))) + ".",
+          summa: Math.round(joriy * (1 - p / 100)), muallif: "Qosimova Dilnoza", masulRol: "Rahbariyat", sana,
+          javobMuddati: sanaYoz(D.ishKuniQosh(sana, 5)), holat: "kutilmoqda"});
+      });
+    SHARTNOMALAR.filter(s => s.holat === "toliq tolangan").forEach(s => tasdiq({tur: "chiqim", manbaKol: "SHARTNOMALAR", manbaId: s.id, obyektId: s.obyektId,
+      sarlavha: "Balansdan chiqarish: " + D.obyektNomi(s.obyektId, true), tavsif: "Shartnoma bo'yicha to'lov to'liq tushdi. Taqiq yechiladi, aktiv arxivga o'tadi.",
+      summa: s.narx, muallif: "Xolmatova Zulfiya", masulRol: "Rahbariyat", sana: nisbiy(-oraliq3(0, 4)), javobMuddati: nisbiy(oraliq3(2, 6)), holat: "kutilmoqda"}));
+    BAHOLASHLAR.filter(b => kunFarqi(b.sana, BUGUN) <= 25).slice(0, 4).forEach(b => tasdiq({tur: "baho", manbaKol: "BAHOLASHLAR", manbaId: b.id, obyektId: b.obyektId,
+      sarlavha: "Baholash natijasini tasdiqlash: " + D.obyektNomi(b.obyektId, true), tavsif: b.baholovchi + ", bozor qiymati " + D.pul(b.bozorQiymati) + ".",
+      summa: b.bozorQiymati, muallif: "Nazarov Aziz", masulRol: "Rahbariyat", sana: b.sana, javobMuddati: sanaYoz(D.ishKuniQosh(b.sana, 10)), holat: "kutilmoqda"}));
+    D.UNDIRUV_ISHLAR.filter(i => i.bosqich === "ijro").slice(0, 2).forEach(i => tasdiq({tur: "qabul", manbaKol: "UNDIRUV_ISHLAR", manbaId: i.id, obyektId: null,
+      sarlavha: "Garovni balansga qabul qilish: " + i.garov.nom, tavsif: "Ijro varaqasi MIBda. Garovni o'zida qoldirish qarori kerak.",
+      summa: i.qarz.jami, muallif: i.masul, masulRol: "Rahbariyat", sana: nisbiy(-oraliq3(0, 5)), javobMuddati: nisbiy(oraliq3(3, 9)), holat: "kutilmoqda"}));
+    /* hal qilingan tasdiqlar (tarix uchun) */
+    TAKLIFLAR.filter(t => t.holat === "tasdiqlangan").slice(0, 6).forEach(t => {
+      const s = tasdiq({tur: "taklif", manbaKol: "TAKLIFLAR", manbaId: t.id, obyektId: t.obyektId, sarlavha: "Taklifni tasdiqlash: " + D.obyektNomi(t.obyektId, true),
+        tavsif: t.xaridor + ", " + D.pul(t.summa), summa: t.summa, muallif: "Qosimova Dilnoza", masulRol: "Rahbariyat", sana: t.sana,
+        javobMuddati: sanaYoz(D.ishKuniQosh(t.sana, 5)), holat: "tasdiqlangan"});
+      s.qaror = "tasdiqlandi"; s.qarorSana = sanaYoz(D.ishKuniQosh(t.sana, 2));
     });
-  });
-  /* ijara */
-  const IJARACHI = ["«Savdo Plyus» MChJ", "«Oq Tepa Servis» MChJ", "Norqulov Jamshid",
-    "«Chust Textile» QK", "«Farovon Market» MChJ", "«Zamin Qurilish» MChJ"];
-  D.YOZUVLAR.filter(balansda).forEach((y, i) => {
-    if (i % 3 || D.IJARA.some(v => v.obyektId === y.id)) return;
-    D.IJARA.push({id: "IJ-2026/" + String(100 + i).padStart(4, "0"),
-      obyektId: y.id, obyekt: y.mulk.qisqa, hudud: y.mulk.hudud,
-      ijarachi: tanla(IJARACHI), oylik: Math.round(y.mulk.baho * 0.009 * 10) / 10,
-      boshlanish: "01-iyl, 2026", tugash: "01-iyl, 2027",
-      tolangan: oraliq(1, 8), jami: 12, holat: rnd() < 0.75 ? "amalda" : "kechikkan"});
-  });
-  /* sud majlislari */
-  const ZALLAR = ["1-zal", "2-zal", "4-zal", "6-zal", "8-zal"];
-  const SOATLAR = ["09:30", "11:00", "14:30", "16:00"];
-  const ADVOKAT = D.ADVOKATLAR.map(a => a.ism);
-  D.YOZUVLAR.forEach((y, i) => {
-    /* majlis faqat sud jarayoni boshlangan ishlarda bo'ladi; "—" va "Hali murojaat qilinmagan"
-       kabi belgilar sud nomi emas */
-    if (!["sud", "qaror", "ijro"].includes(y.ish.bosqich)) return;
-    if (!y.ish.sud || y.ish.sud === "—" || /murojaat qilinmagan/i.test(y.ish.sud)) return;
-    if (D.SUD_MAJLISLAR.some(m => m.obyektId === y.id)) return;
-    D.SUD_MAJLISLAR.push({id: "SM-2026/" + String(300 + i).padStart(4, "0"),
-      ishRaqam: y.ish.raqam, obyektId: y.id, obyekt: y.mulk.qisqa, sud: y.ish.sud,
-      sana: String(oraliq(1, 28)).padStart(2, "0") + "-sen, 2026", soat: tanla(SOATLAR),
-      zal: tanla(ZALLAR), advokat: tanla(ADVOKAT),
-      mavzu: tanla(["Asosiy muhokama", "Dalillarni o'rganish", "Qaror e'lon qilish"]),
-      holat: rnd() < 0.62 ? "rejada" : "otkazildi"});
-  });
-  /* xaridorlar */
-  const korilgan = new Set(D.XARIDORLAR.map(x => x.nom));
-  D.TAKLIFLAR.forEach(t => {
-    if (korilgan.has(t.kim)) return;
-    korilgan.add(t.kim);
-    D.XARIDORLAR.push({id: "XR-" + String(D.XARIDORLAR.length + 11).padStart(3, "0"),
-      nom: t.kim, tur: t.turi,
-      ishtirok: D.TAKLIFLAR.filter(x => x.kim === t.kim).length,
-      yutgan: D.ARXIV.filter(a => a.xaridor === t.kim).length, holat: "faol"});
-  });
-  /* restrukturizatsiya */
-  D.YOZUVLAR.forEach((y, i) => {
-    if (y.qarz.kunlar < 90 || y.qarz.kunlar > 300 || i % 4 ||
-        D.RESTRUKTURIZATSIYA.some(r => r.obyektId === y.id)) return;
-    D.RESTRUKTURIZATSIYA.push({id: "RS-2026/" + String(100 + i).padStart(4, "0"),
-      obyektId: y.id, mijoz: y.mijoz.nom, shartnoma: y.shartnoma.raqam,
-      qarz: y.qarzMatn, kunlar: y.qarz.kunlar,
-      taklif: tanla(["Muddatni 18 oyga uzaytirish", "Yangi to'lov grafigi (bosqichma-bosqich)",
-        "Imtiyozli davr — 6 oy", "Qisman kechish va qayta rasmiylashtirish"]),
-      sana: oraliq(1, 28) + "-avg, 2026",
-      holat: tanla(["korib chiqilmoqda", "kelishilgan", "rad etilgan"])});
-  });
-  /* sug'urta da'volari */
-  D.HODISALAR.filter(h => h.jiddiylik === "yuqori").slice(0, 9).forEach((h, i) => {
-    if (D.SUGURTA_DAVOLARI.some(d => d.obyektId === h.obyektId)) return;
-    const y = D.OBYEKT_INDEKS[h.obyektId] || {};
-    const polis = D.SUGURTALAR.find(s => s.obyektId === h.obyektId);
-    D.SUGURTA_DAVOLARI.push({id: "SD-2026/" + String(100 + i).padStart(4, "0"),
-      obyektId: h.obyektId, obyekt: y.qisqa || h.obyektId,
-      polis: polis ? polis.polis : "—", kompaniya: polis ? polis.kompaniya : "O'zbekinvest",
-      hodisa: h.hodisa, sana: h.vaqt,
-      summa: Math.round((y.baho || 300) * (0.03 + rnd() * 0.08) * 10) / 10,
-      holat: tanla(["korib chiqilmoqda", "topshirilgan", "tolangan"])});
-  });
 
-  /* Mahalliy reyestrda barcha obyektlar balansda: sud majlisi, restrukturizatsiya va ijara yozuvlari
-     ularga tegishli emas — namoyish uchun tuzilgan bunday yozuvlar olib tashlanadi */
-  if (MAH) ["SUD_MAJLISLAR", "RESTRUKTURIZATSIYA", "IJARA"].forEach(k => { if (D[k]) D[k].length = 0; });
+    /* ---------- Mening vazifalarim (qo'lda qo'yilgan) ---------- */
+    [["Ko'rik dalolatnomasini imzolatish", "Ko'rik", "AK-2025/1187", 0, "Karimova Feruza", "Ko'rik va xavfsizlik inspektori", "yuqori"],
+     ["Gaz bo'yicha qarz yo'qligi haqidagi ma'lumotnomani olish", "Kommunal", "AK-2026/4471", 2, "Ismoilova Nilufar", "Obyekt menejeri", "orta"],
+     ["Sug'urta polisini yangilash", "Sug'urta", "AK-2025/0934", 1, "Tosheva Barno", "Obyekt menejeri", "yuqori"],
+     ["Kadastrga taqiq yechilganini tasdiqlovchi xatni topshirish", "Rasmiylashtirish", "AK-2026/2210", 4, "Sobirov Ulug'bek", "Yurist", "orta"],
+     ["Birlamchi ko'rik o'tkazish", "Ko'rik", "AK-2026/0141", -1, "Sattorov Javohir", "Ko'rik va xavfsizlik inspektori", "yuqori"],
+     ["Baholash buyurtmasini berish", "Baholash", "AK-2026/0141", 3, "Nazarov Aziz", "Baholovchi", "orta"]
+    ].forEach(([nom, tur, obyektId, kun, ijrochi, rol, muhimlik], i) => MENING_VAZIFALARIM.push({
+      id: "VZ-" + BUGUN.getFullYear() + "-" + String(71 + i), nom, tur, obyektId, kod: obyektId, qoidaId: null,
+      sana: nisbiy(Math.min(0, kun) - 1), muddat: nisbiy(kun), ijrochi, rol, muhimlik, bajarildi: false}));
 
-  /* ---------- HUDUDLAR statistikasini reyestrga moslash ---------- */
-  const hududSoni = {};
-  D.YOZUVLAR.forEach(y => { hududSoni[y.mulk.hudud] = (hududSoni[y.mulk.hudud] || 0) + 1; });
-  D.HUDUDLAR.forEach(h => {
-    /* "Toshkent shahri" va "Toshkent viloyati" bir xil so'z bilan boshlanadi — qisqa nom aniq moslanadi */
-    const QISQA = {"Toshkent shahri": "Toshkent sh.", "Toshkent viloyati": "Toshkent vil.", "Qoraqalpog'iston R.": "Qoraqalpog'iston"};
-    const qism = QISQA[h[0]] || String(h[0]).split(" ")[0];
-    const mos = Object.keys(hududSoni).find(k => k === qism);
-    if (mos) h[3] = hududSoni[mos];
+    /* ---------- Fayllar (hujjatlar metama'lumoti, namoyishda fayl mazmuni yo'q) ---------- */
+    HUJJATLAR.filter(h => ["AK-2026/4471", "AK-2025/1187", "AK-2025/0934", "AK-2026/5512"].indexOf(h.obyektId) >= 0).forEach((h, i) => {
+      const f = {id: "FL-" + String(1001 + i), obyektId: h.obyektId, kolleksiya: "HUJJATLAR", yozuvId: h.id, nom: h.nom + ".pdf",
+        tur: "application/pdf", hajm: Math.round(parseFloat(h.hajm.replace(",", ".")) * 1048576), yuklangan: h.sana + " 10:00",
+        yuklagan: h.yuklagan, yol: ""};
+      FAYLLAR.push(f);
+      h.faylId = f.id;
+    });
+  }
+
+  /* ============================================================
+     3. MB hisoboti va zaxira tarixi (hisoblash funksiyalari ikki rejimda ham ishlaydi)
+     ============================================================ */
+  function oyOxiri(davr) {
+    const [y, m] = davr.split("-").map(Number);
+    return new Date(y, m, 0);
+  }
+  /* Davr oxirida balansda bo'lgan aktivlar: hozirgi reyestr va arxivdagi (keyin sotilgan) aktivlar */
+  function davrAktivlari(davr) {
+    const oxir = oyOxiri(davr);
+    const hozir = D.YOZUVLAR.filter(y => { const b = sanaOqi(y.balans && y.balans.sana); return b && b <= oxir && y.holat !== "Chiqarildi"; })
+      .map(y => ({id: y.id, filialKod: y.filialKod, sana: y.balans.sana, qiymat: y.balans.qiymat, asos: y.balans.qabulAsosi}));
+    /* D.ARXIV eksportdan keyin mavjud; namoyish suratlari eksportdan oldin hisoblanadi, shuning uchun mahalliy ARXIV ga tushiladi */
+    const arx = (D.ARXIV || ARXIV || []).filter(a => sanaOqi(a.balansSana) <= oxir && sanaOqi(a.sotuvSana) > oxir)
+      .map(a => ({id: a.id, filialKod: a.filialKod, sana: a.balansSana, qiymat: a.balansQiymat, asos: null}));
+    return hozir.concat(arx);
+  }
+  function zaxiraTarixHisobla(davr) {
+    const oxir = oyOxiri(davr);
+    return davrAktivlari(davr).map(a => {
+      const chegara = D.chegaraKuni({balans: {qabulAsosi: a.asos}});
+      const t = D.zaxiraToifasi(kunFarqi(a.sana, oxir), chegara);
+      return {id: davr + "/" + a.id, davr, obyektId: a.id, toifa: t.kalit, foiz: t.foiz, summa: yaxlit(a.qiymat * t.foiz / 100)};
+    });
+  }
+  /* saralash (ixtiyoriy): aktivlar ro'yxatini toraytiradi, masalan filial rahbari uchun MKB.doira */
+  function mbHisobotHisobla(davr, saralash) {
+    const oxir = oyOxiri(davr);
+    const aktiv = saralash ? saralash(davrAktivlari(davr)) : davrAktivlari(davr);
+    const jami = yaxlit(aktiv.reduce((s, a) => s + a.qiymat, 0));
+    const kapital = D.param("kapital1DarajaMlrd");
+    const muddat = D.ishKuniQosh(new Date(oxir.getFullYear(), oxir.getMonth() + 1, D.param("mbHisobotKuni")), 0);
+    return {id: "MB-" + davr, davr, muddat: sanaYoz(muddat), topshirilganSana: null, obyektlarSoni: aktiv.length,
+      jamiBalansQiymat: jami, kapital1Daraja: kapital, kapitalgaNisbat: kapital ? yaxlit(jami / 1000 / kapital, 3) : null,
+      umidsizSoni: aktiv.filter(a => kunFarqi(a.sana, oxir) >= D.chegaraKuni({balans: {qabulAsosi: a.asos}})).length,
+      holat: "tayyorlanmoqda"};
+  }
+  if (namoyish) {
+    for (let k = 12; k >= 1; k--) {
+      const d = oyQosh(new Date(BUGUN.getFullYear(), BUGUN.getMonth(), 1), -k);
+      const davr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+      zaxiraTarixHisobla(davr).forEach(z => ZAXIRA_TARIX.push(z));
+      const h = mbHisobotHisobla(davr);
+      if (sanaOqi(h.muddat) < BUGUN) { h.holat = "topshirilgan"; h.topshirilganSana = sanaYoz(D.ishKuniQosh(h.muddat, -G3.oraliq(0, 3))); }
+      MB_HISOBOTLAR.push(h);
+    }
+  }
+
+  /* ============================================================
+     4. Qoidalar (ikki rejimda ham): bildirishnoma va vazifa triggerlari
+     ============================================================ */
+  const QOIDALAR = [
+    {id: "Q-UMIDSIZ",   trigger: "umidsiz",          nom: "Umidsiz toifagacha qolgan kun", kunlar: [90, 60, 30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 30, faol: true, manba: "MB 2696, 20-band"},
+    {id: "Q-POLIS",     trigger: "polis",            nom: "Sug'urta polisi 30 kunda tugaydi", kunlar: [30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Filial rahbari", eskalatsiyaKun: 7, faol: true, manba: "Ichki tartib"},
+    {id: "Q-BAHO",      trigger: "baholash",         nom: "Baholash eskirmoqda", kunlar: [30], natija: "ikkalasi", qabulQiluvchiRol: "Baholovchi", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "Yagona milliy baholash standarti"},
+    {id: "Q-KORIK",     trigger: "korik",            nom: "Ko'rik kechikdi", kunlar: [0], natija: "ikkalasi", qabulQiluvchiRol: "Ko'rik va xavfsizlik inspektori", eskalatsiyaRol: "Filial rahbari", eskalatsiyaKun: 7, faol: true, manba: "Ichki me'yor"},
+    {id: "Q-QURILMA",   trigger: "qurilma-oflayn",   nom: "Qurilma 24 soatdan ortiq aloqasiz", kunlar: [1], natija: "ikkalasi", qabulQiluvchiRol: "Xavfsizlik xizmati", eskalatsiyaRol: "Obyekt menejeri", eskalatsiyaKun: 3, faol: true, manba: "Ichki me'yor"},
+    {id: "Q-TOLOV",     trigger: "eauksion-tolov",   nom: "E-auksion g'olibining to'lov muddati (5 ish kuni)", kunlar: [2], natija: "ikkalasi", qabulQiluvchiRol: "Realizatsiya mutaxassisi", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "VM 18, 31-band"},
+    {id: "Q-YHXX",      trigger: "yhxx",             nom: "Transportni YHXXda 10 kun ichida qayta qayd etish", kunlar: [3], natija: "ikkalasi", qabulQiluvchiRol: "Yurist", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "VM 683, 6-band"},
+    {id: "Q-SOLIQ",     trigger: "soliq-imtiyoz",    nom: "Soliq imtiyozi tugaydi", kunlar: [30], natija: "bildirish", qabulQiluvchiRol: "Buxgalteriya va risk", eskalatsiyaRol: null, eskalatsiyaKun: null, faol: true, manba: "Prezident farmoni, 2026-yil 28-avgust"},
+    {id: "Q-MB",        trigger: "mb-hisobot",       nom: "Markaziy bank hisoboti oyning 10-sanasigacha", kunlar: [5], natija: "ikkalasi", qabulQiluvchiRol: "Buxgalteriya va risk", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 1, faol: true, manba: "MB 3441, 16-band"},
+    {id: "Q-PASAYTIR",  trigger: "pasaytirish",      nom: "Lot 3 oy sotilmadi: narx pasaytirish tasdiqqa", kunlar: [0], natija: "vazifa", qabulQiluvchiRol: "Realizatsiya mutaxassisi", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 5, faol: true, manba: "Bank realizatsiya tartibi"},
+    {id: "Q-DAVAKTIV",  trigger: "davaktiv",         nom: "Davaktivda 1 yil: qaytarish so'rovi", kunlar: [0], natija: "vazifa", qabulQiluvchiRol: "Realizatsiya mutaxassisi", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 10, faol: true, manba: "Prezident farmoni, 2026-yil 28-avgust"},
+    {id: "Q-MAJLIS",    trigger: "sud-majlis",       nom: "Sud majlisi eslatmasi", kunlar: [1, 0], natija: "ikkalasi", qabulQiluvchiRol: "Yurist", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 3, faol: true, manba: "Ichki tartib"},
+    {id: "Q-KONSERV",   trigger: "konservatsiya",    nom: "Mavsumiy konservatsiya chek-listi (15-noyabr)", kunlar: [0], natija: "vazifa", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: null, eskalatsiyaKun: null, faol: true, manba: "Ichki tartib"}
+  ];
+
+  /* ============================================================
+     5. Eksport
+     ============================================================ */
+  Object.assign(D, {
+    KORIKLAR, SUGURTALAR, POLISLAR: SUGURTALAR, BAHOLASHLAR, HUJJATLAR, XARAJATLAR, QORIQLASH, KOMMUNAL_ARIZALAR,
+    INVENTAR, INVENTARIZATSIYALAR, SOLIQ, LOTLAR, SOTUV: LOTLAR, TAKLIFLAR, XARIDORLAR, SHARTNOMALAR, IJARA, PAKETLAR,
+    ARXIV, SUGURTA_DAVOLARI, TASDIQLAR, MENING_VAZIFALARIM, VAZIFALAR: MENING_VAZIFALARIM, BILDIRISHLAR: [],
+    MB_HISOBOTLAR, ZAXIRA_TARIX, QOIDALAR, FAYLLAR, KORIK_CHEKLIST,
+    zaxiraTarixHisobla, mbHisobotHisobla, korikChekListi: y => KORIK_CHEKLIST[chekListTuri(y)]
   });
 })();

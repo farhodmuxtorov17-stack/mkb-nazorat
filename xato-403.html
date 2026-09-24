@@ -4,50 +4,79 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ruxsat yo'q</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
-.xato-sahna{min-height:100vh;display:grid;place-items:center;padding:26px;
+.ochiq-sahna{min-height:100vh;display:grid;place-items:center;padding:26px 16px;
   background:
-    radial-gradient(900px 640px at 12% 0%, #FAEEE8 0%, transparent 58%),
-    radial-gradient(800px 620px at 92% 16%, #EFEFF8 0%, transparent 56%),
-    linear-gradient(150deg,#F8F1ED 0%,#F2F1F7 54%,#EFF4F1 100%)}
-.xato-karta{text-align:center;max-width:500px;background:var(--oq);border-radius:30px;
-  padding:44px 40px;box-shadow:var(--soya-suzuvchi)}
+    radial-gradient(900px 640px at 12% 0%, var(--fon-issiq) 0%, transparent 58%),
+    radial-gradient(800px 620px at 92% 16%, var(--fon-sovuq) 0%, transparent 56%),
+    linear-gradient(150deg,var(--fon-issiq) 0%,var(--fon-sovuq) 54%,var(--fon-mint) 100%)}
+.xato-karta{text-align:center;width:min(500px,100%);background:var(--oq);border-radius:30px;padding:44px 40px;box-shadow:var(--soya-suzuvchi)}
 .xato-karta .kod{font:500 92px/1 var(--shrift-displey);letter-spacing:-.05em;color:var(--siyoh)}
 .xato-karta .kod i{font-style:normal;color:var(--mint-matn)}
 .xato-karta h1{font:500 24px/1.2 var(--shrift-displey);letter-spacing:-.03em;margin:14px 0 10px}
-.xato-karta p{font-size:14.5px;color:var(--matn-3);line-height:1.6;margin-bottom:26px}
+.xato-karta p{font-size:14.5px;color:var(--matn-3);line-height:1.6;margin-bottom:22px}
+.xato-karta .rol{display:flex;justify-content:center;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--matn-3);margin:-6px 0 24px}
+.xato-karta p b{font-weight:500;color:var(--siyoh)}
 .xato-karta .tugmalar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+@media (max-width:480px){.xato-karta{padding:34px 22px;border-radius:26px}.xato-karta .kod{font-size:72px}}
 </style>
 </head>
 <body data-sahifa="kirish" data-ochiq="1">
-<div class="xato-sahna"><div class="xato-karta">
-  <div class="kod">4<i>0</i>3</div>
-  <h1>Bu bo'limga kirish huquqi yo'q</h1>
-  <p>Sahifa lavozimingiz vakolatidan tashqarida. Kerak bo'lsa, administratorga murojaat qiling.</p>
-  <div class="tugmalar">
-    <a class="tugma tugma-oq" href="javascript:history.back()">Orqaga qaytish</a>
-    <a class="tugma tugma-asosiy" id="bosh-havola" href="kirish.html">Bosh sahifa</a>
+<div class="ochiq-sahna"><main class="xato-karta">
+  <div class="kod" data-tarjimasiz>4<i>0</i>3</div>
+  <h1>Bu sahifa lavozimingizga yopiq</h1>
+  <p id="izoh" data-sayohat="kim-ochadi">Huquqlar rolga qarab beriladi. Sahifa ishingiz uchun kerak bo&#39;lsa, administratorga murojaat qiling.</p>
+  <div class="rol" id="rol-qator" hidden><span>Joriy rol:</span><span class="chip chip-kul" id="rol-nomi"></span></div>
+  <div class="tugmalar" data-sayohat="tugmalar">
+    <button type="button" class="tugma tugma-oq" id="orqaga"><svg class="ic"><use href="#ik-chap"/></svg><span>Orqaga qaytish</span></button>
+    <a class="tugma tugma-asosiy" id="bosh-havola" href="kirish.html">Kirish sahifasi</a>
   </div>
-</div></div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+</main></div>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", () => {
-  const s = MKBapi.sessiya();
-  if (s) document.getElementById("bosh-havola").href = rolBoshSahifasi(ROL_KALIT[s.rol] || "admin");
-});
+(async () => {
+  await MKBapi.tayyor;
+  const orqaga = document.getElementById("orqaga");
+  if (history.length > 1) orqaga.addEventListener("click", () => history.back());
+  else orqaga.hidden = true;
+  const s = MKBapi.sessiya(), rol = MKB.rol();
+  if (s && rol){
+    const a = document.getElementById("bosh-havola");
+    a.href = rolBoshSahifasi(rol);
+    a.textContent = "Bosh sahifa";
+    document.getElementById("rol-nomi").textContent = s.rol;
+    document.getElementById("rol-qator").hidden = false;
+  }
+  /* Kim ochadi: ?sahifa=<fayl> berilgan bo'lsa, shu sahifani ochadigan rollar (yadro/app.js huquq jadvali bo'yicha) */
+  const fayl = String(new URLSearchParams(location.search).get("sahifa") || "").split("?")[0];
+  if (/^[a-z0-9-]+\.html$/i.test(fayl)){
+    const ochadimi = k => {
+      if (SAHIFA_MAXSUS[fayl] && !SAHIFA_MAXSUS[fayl].includes(k)) return false;
+      const b = bolimTopish(fayl);
+      if (!b) return true;
+      if (!huquqBor(k, b, "o")) return false;
+      if (SAHIFA_AMAL[fayl] && !SAHIFA_AMAL[fayl].split("|").some(x => huquqBor(k, b, AMAL_HARF[x]))) return false;
+      if (SAHIFA_BOLIM2[fayl] && !huquqBor(k, SAHIFA_BOLIM2[fayl], "o")) return false;
+      return true;
+    };
+    const rollar = Object.keys(ROL_KALIT).filter(n => ROL_KALIT[n] !== "admin" && ochadimi(ROL_KALIT[n]));
+    const d = window.MKB_DARAXT || {};
+    let nom = null;
+    Object.keys(d).forEach(k => (d[k] || []).forEach(x => { if (x.f === fayl && !nom) nom = x.n; }));
+    const esc = MKB.esc;
+    document.getElementById("izoh").innerHTML =
+      (nom ? "<span>Sahifa:</span> <b>" + nom + "</b>. " : "") +
+      (rollar.length ? "<span>Uni ochadigan rollar:</span> " + rollar.map(r => "<b>" + esc(r) + "</b>").join(", ") + ". " +
+        "<span>Ishingiz uchun kerak bo&#39;lsa, administrator rolingizni o&#39;zgartiradi.</span>"
+        : "<span>Bu sahifani faqat administrator ochadi.</span>");
+  }
+  tarjimaQil();
+})();
 </script>
 </body>
 </html>

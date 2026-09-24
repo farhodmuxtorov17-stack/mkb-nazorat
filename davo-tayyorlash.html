@@ -4,7 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Da'vo tayyorlash</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.kirish textarea{width:100%;border:0;outline:0;background:none;font:inherit;resize:vertical;padding:10px 0;min-height:96px}
+.kirish:has(textarea){height:auto;align-items:stretch}
+.forma-oyoq{grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding-top:6px}
+.malumot-royxat dd .ikkinchi{display:block;font-size:12.5px;color:var(--matn-3);font-weight:400;margin-top:2px}
+#ogoh:empty,#yuklash-joy:empty{display:none}
+</style>
 </head>
 <body data-sahifa="yuridik">
 <div class="qobiq">
@@ -13,82 +20,215 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="undiruv.html">Undiruv va sud</a><span class="ajratgich">/</span><span>Da'vo</span></div>
-    <div class="hs-qator"><h1>Da'vo tayyorlash</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="undiruv.html">Undiruv ishlari</a><span class="ajratgich">/</span><span>Da'vo tayyorlash</span></div>
+    <div class="hs-qator"><h1>Da'vo tayyorlash</h1><span class="hs-meta" id="hs-meta"></span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="undiruv.html">Undiruv doskasi</a><a href="sud-kalendar.html">Sud kalendari</a><a href="davo-tayyorlash.html" class="faol">Da&#39;vo tayyorlash</a></nav>
-  <section class="karta" style="max-width:760px"><div class="karta-bosh"><h2>Da'vo arizasi tayyorlash</h2></div>
-  <form id="d-forma" class="forma-tor">
-    <div class="maydon keng"><label class="maydon-yorliq">Yozuv <b>*</b></label>
-      <div class="kirish"><select name="obyektId" id="d-yozuv"></select></div>
-      <span class="maydon-izoh">Faqat ogohlantirish bosqichidagi ishlar ko'rsatiladi</span></div>
-    <div class="maydon"><label class="maydon-yorliq">Sud <b>*</b></label>
-      <div class="kirish"><select name="sud"><option>Toshkent shahar sudi</option><option>Toshkent viloyat sudi</option><option>Samarqand sudi</option><option>Namangan sudi</option><option>Buxoro sudi</option></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Da'vo summasi</label>
-      <div class="kirish"><input name="summa" id="d-summa" readonly></div></div>
-    <div class="maydon keng"><label class="maydon-yorliq">Da'vo asosi <b>*</b></label>
-      <textarea class="kirish-matn" name="asos" placeholder="Shartnoma bandlari va qonun moddalariga havola"></textarea></div>
-    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
-      <a class="tugma tugma-oq" href="undiruv.html">Bekor qilish</a>
-      <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-sud"/></svg>Da'voni ro'yxatga olish</button></div>
-  </form></section>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="undiruv.html">Undiruv ishlari</a><a href="sud-kalendar.html">Sud kalendari</a><a href="davo-tayyorlash.html" class="faol">Da&#39;vo tayyorlash</a></nav>
+  <div id="ogoh"></div>
+  <div id="yuklash-joy"></div>
+  <div class="tor-2" id="tor" hidden>
+    <section class="karta" aria-labelledby="f-h" data-sayohat="forma"><div class="karta-bosh"><h2 id="f-h">Da'vo arizasi</h2></div>
+      <form id="d-forma" class="forma-tor" novalidate>
+        <div class="maydon keng" data-sayohat="ish"><label class="maydon-yorliq" for="d-ish">Undiruv ishi <b>*</b></label>
+          <div class="kirish"><select name="ish" id="d-ish" required data-xato="Undiruv ishini tanlang"></select></div>
+          <span class="maydon-izoh">Talabnoma yuborilgan, lekin hali sudga berilmagan ishlar</span></div>
+        <div class="maydon keng"><label class="maydon-yorliq" for="d-sud">Sud <b>*</b></label>
+          <div class="kirish"><input name="sud" id="d-sud" required data-xato="Sud nomini kiriting" list="d-sudlar" autocomplete="off" placeholder="Masalan: Toshkent shahar iqtisodiy sudi"><datalist id="d-sudlar"></datalist></div></div>
+        <div class="maydon" data-sayohat="summa"><label class="maydon-yorliq" for="d-summa">Da'vo summasi, mln so'm <b>*</b></label>
+          <div class="kirish"><input name="summa" id="d-summa" type="text" data-format="pul" required data-xato="Da'vo summasini kiriting"></div>
+          <span class="maydon-izoh" id="d-summa-izoh"></span></div>
+        <div class="maydon"><label class="maydon-yorliq" for="d-sana">Sudga topshirilgan sana <b>*</b></label>
+          <div class="kirish"><input name="sana" id="d-sana" type="date" required></div></div>
+        <div class="maydon"><label class="maydon-yorliq" for="d-adv">Advokat</label>
+          <div class="kirish"><select name="advokat" id="d-adv"></select></div></div>
+        <div class="maydon"><label class="maydon-yorliq" for="d-muddat">Nazorat muddati</label>
+          <div class="kirish"><input name="muddat" id="d-muddat" type="date"></div>
+          <span class="maydon-izoh">Sud arizani qabul qilishini shu sanada tekshirasiz</span></div>
+        <div class="maydon keng"><label class="maydon-yorliq" for="d-asos">Da'vo asosi <b>*</b></label>
+          <div class="kirish"><textarea name="asos" id="d-asos" required minlength="15" data-xato="Da'vo asosini yozing" placeholder="Shartnoma bandlari, qarz tarkibi va talab"></textarea></div></div>
+        <div class="maydon keng"><span class="maydon-yorliq">Ariza nusxasi</span><div id="d-fayl"></div></div>
+        <div class="forma-oyoq"><a class="tugma tugma-oq" href="undiruv.html">Bekor qilish</a>
+          <button class="tugma tugma-asosiy" type="submit" id="d-saqla" data-saqla data-yozadi data-sayohat="saqla"><svg class="ic"><use href="#ik-sud"/></svg>Da'voni ro'yxatga olish</button></div>
+      </form>
+    </section>
+    <div class="ustun">
+      <section class="karta" aria-labelledby="t-h" data-sayohat="tanlangan-ish"><div class="karta-bosh"><h2 id="t-h">Tanlangan ish</h2><a class="karta-havola" id="t-havola" href="undiruv.html">Ish varaqasi<svg class="ic"><use href="#ik-ong"/></svg></a></div><dl class="malumot-royxat" id="t-malumot"></dl></section>
+      <section class="karta" aria-labelledby="h-h"><div class="karta-bosh"><h2 id="h-h">Ishdagi hujjatlar</h2></div><div id="t-hujjat"></div></section>
+    </div>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
-  const yoz = await MKBapi.royxat("YOZUVLAR");
-  /* da'vo faqat ogohlantirish bosqichidagi ish bo'yicha tayyorlanadi */
-  const oldindan = new URLSearchParams(location.search).get("id");
-  const nomzod = yoz.filter(y => y.ish.bosqich === "ogohlantirish");
-  const sel = document.getElementById("d-yozuv");
-  const forma = document.getElementById("d-forma");
-  const tanlangan = oldindan ? yoz.find(y => y.id === oldindan) : null;
-  document.getElementById("hs-meta").textContent = nomzod.length + " ta ish";
-  if (tanlangan && tanlangan.ish.bosqich !== "ogohlantirish")
-    MKB.toast(tanlangan.ish.raqam + " raqamli ish " + tanlangan.bosqichNomi + " bosqichida, da'vo qayta tayyorlanmaydi", "xavf");
-  if (!nomzod.length){
-    sel.innerHTML = "<option value=''>Ogohlantirish bosqichida ish yo'q</option>";
-    forma.querySelector('[type="submit"]').disabled = true;
-  } else {
-    sel.innerHTML = nomzod.map(y =>
-      '<option value="' + y.id + '"' + (y.id === oldindan ? ' selected' : '') + '>' +
-      y.ish.raqam + " — " + y.mijoz.nom + '</option>').join("");
-  }
-  tarjimaQil(forma);
-  const summa = () => {
-    const y = yoz.find(v => v.id === sel.value);
-    document.getElementById("d-summa").value = y ? y.qarzMatn : "";
+(async () => {
+  document.getElementById("yuklash-joy").innerHTML = '<section class="karta">' + MKB.skelet(6) + "</section>";
+  await MKBapi.tayyor;
+  const D = MKB_DATA;
+  const esc = MKB.esc;
+  const bugun = D.bugun();
+  const iso = s => { const d = s instanceof Date ? s : D.sanaOqi(s); return d ? d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") : ""; };
+  /* qiymat boshi lug'atdagi atama bo'lsa ("Noturar bino · 1,48 mlrd so'm") u o'giriladi, qolgani o'zgarmaydi */
+  const t = s => {
+    const v = s == null || s === "" ? "—" : String(s), i = v.indexOf(" · "), bosh = i > 0 ? v.slice(0, i) : v;
+    if ((window.MKB_LUGAT || {})[bosh] == null) return '<span data-tarjimasiz>' + esc(v) + "</span>";
+    return "<span>" + esc(bosh) + "</span>" + (i > 0 ? ' · <span data-tarjimasiz>' + esc(v.slice(i + 3)) + "</span>" : "");
   };
-  sel.addEventListener("change", summa); summa();
-  document.getElementById("d-forma").addEventListener("submit", async e => {
+  const tj = s => ({matn: s == null || s === "" ? "—" : String(s), tarjimasiz: true});
+  const oldindan = new URLSearchParams(location.search).get("id");
+  const forma = document.getElementById("d-forma");
+  const sel = document.getElementById("d-ish");
+
+  let ishlar = null;
+  await MKB.sahifaYukla({joylar: {"yuklash-joy": ["qator", 6]}, xato: "Undiruv ishlarini yuklab bo'lmadi",
+    ish: async () => { ishlar = MKB.doira(await MKBapi.royxat("UNDIRUV_ISHLAR")); }});
+  if (!ishlar) return;
+  document.getElementById("yuklash-joy").innerHTML = "";
+  document.getElementById("tor").hidden = false;
+
+  const nomzod = ishlar.filter(i => i.holat === "faol" && i.bosqich === "ogohlantirish")
+    .sort((a, b) => (D.sanaOqi(a.muddat && a.muddat.sana) || 8e15) - (D.sanaOqi(b.muddat && b.muddat.sana) || 8e15));
+  document.getElementById("hs-meta").innerHTML = '<b data-tarjimasiz>' + nomzod.length + "</b> <span>ta ish da'vo kutmoqda</span>";
+
+  const tanlangan = oldindan ? ishlar.find(i => i.id === oldindan) : null;
+  if (tanlangan && !nomzod.includes(tanlangan)){
+    const b = D.UNDIRUV_BOSQICHLAR.find(x => x.kalit === tanlangan.bosqich) || {nom: tanlangan.bosqich};
+    document.getElementById("ogoh").innerHTML = '<section class="karta"><div class="qator" style="margin:0"><span class="belgi pushti">' + ik("ogoh") + '</span>' +
+      '<span class="matn"><b><span data-tarjimasiz>' + esc(tanlangan.id) + "</span> <span>bo'yicha da'vo allaqachon berilgan</span></b><span>" +
+      (tanlangan.holat === "faol" ? "<span>Joriy bosqich:</span> <b>" + esc(b.nom) + "</b>" : "<span>Ish yopilgan.</span>") + "</span></span>" +
+      '<span class="ong"><a class="tugma tugma-oq tugma-kichik" href="ish.html?id=' + encodeURIComponent(tanlangan.id) + '">Ish varaqasi</a></span></div></section>';
+  }
+
+  /* Havoladagi ish ko'rinmasa (raqam xato yoki ish boshqa filialda) forma boshqa ishni o'zi tanlamaydi */
+  if (oldindan && !tanlangan){
+    document.getElementById("ogoh").innerHTML = '<section class="karta"><div class="qator" style="margin:0"><span class="belgi pushti">' + ik("ogoh") + "</span>" +
+      '<span class="matn"><b><span>Undiruv ishi topilmadi</span> <span data-tarjimasiz>' + esc(oldindan) + "</span></b>" +
+      "<span>Bunday raqamli ish yo\'q yoki u boshqa filialga tegishli. Ishni ro\'yxatdan tanlang.</span></span>" +
+      '<span class="ong"><a class="tugma tugma-oq tugma-kichik" href="undiruv.html">Undiruv ishlari</a></span></div></section>';
+  }
+  if (!nomzod.length){
+    document.getElementById("tor").innerHTML = '<section class="karta">' + MKB.boshHolat("sud", "Da'vo kutayotgan ish yo'q",
+      ishlar.length ? "Talabnoma bosqichidagi barcha ishlar bo'yicha da'vo berilgan." : "Undiruv ishi ochilgach, talabnoma bosqichidagi ishlar shu yerda chiqadi.",
+      '<a class="tugma tugma-oq" href="undiruv.html">Undiruv ishlari</a>') + "</section>";
+    tarjimaQil(document.querySelector(".kontent"));
+    return;
+  }
+
+  /* Havola bilan kelgan ish ro'yxatda bo'lmasa, tanlov bo'sh qoladi va foydalanuvchi ishni o'zi belgilaydi */
+  const boshTanlov = !!oldindan && !nomzod.some(i => i.id === oldindan);
+  sel.innerHTML = (boshTanlov ? '<option value="" selected>Ishni tanlang</option>' : "") +
+    nomzod.map(i => '<option value="' + esc(i.id) + '"' + (i.id === oldindan ? " selected" : "") + ">" +
+    esc(i.id + " — " + (i.qarzdor ? i.qarzdor.nom : "")) + "</option>").join("");
+  const sudlar = [...new Set((D.UNDIRUV_ISHLAR || []).map(i => i.sud && i.sud.nomi).filter(Boolean))].sort();
+  document.getElementById("d-sudlar").innerHTML = sudlar.map(s => '<option value="' + esc(s) + '">').join("");
+  const adv = D.ADVOKATLAR || [];
+  document.getElementById("d-adv").innerHTML = '<option value="">Biriktirilmagan</option>' + adv.map(a => '<option value="' + esc(a.id) + '">' + esc(a.ism) + "</option>").join("");
+  const sanaInp = document.getElementById("d-sana");
+  sanaInp.max = iso(bugun); sanaInp.value = iso(bugun);
+  document.getElementById("d-muddat").min = iso(bugun);
+
+  let faylId = null, qoriq = null;
+  const ish = () => nomzod.find(i => i.id === sel.value);
+  const ogohSana = i => { const x = (i.tarix || []).find(v => /ogohlantirish|talabnoma/i.test(v.voqea || "")); return x ? x.sana : null; };
+
+  function tanla(){
+    const i = ish();
+    /* Ish tanlanmagan bo'lsa o'ng tomondagi ish kartalari yashiriladi */
+    document.getElementById("t-malumot").closest(".karta").hidden = !i;
+    document.getElementById("t-hujjat").closest(".karta").hidden = !i;
+    if (!i){ document.getElementById("d-summa-izoh").innerHTML = ""; return; }
+    const q = i.qarz || {}, g = i.garov || {};
+    const summa = document.getElementById("d-summa");
+    summa.value = q.jami != null ? String(q.jami).replace(".", ",") : "";
+    summa.dispatchEvent(new Event("blur"));
+    document.getElementById("d-summa-izoh").innerHTML = "<span>Qarz:</span> " + t(MKB.pul(q.jami)) + " (<span>asosiy</span> " + t(MKB.pul(q.asosiy)) + ", <span>foiz</span> " + t(MKB.pul(q.foiz)) + ")";
+    document.getElementById("d-adv").value = i.advokatId || "";
+    const os = ogohSana(i);
+    sanaInp.min = os ? iso(os) : "";
+    document.getElementById("t-havola").href = "ish.html?id=" + encodeURIComponent(i.id);
+    const qator = (nom, v) => "<dt><span>" + nom + "</span></dt><dd>" + v + "</dd>";
+    document.getElementById("t-malumot").innerHTML =
+      qator("Qarzdor", t(i.qarzdor && i.qarzdor.nom) + '<span class="ikkinchi">' + t([i.qarzdor && i.qarzdor.tur, i.qarzdor && i.qarzdor.stirYokiPinfl].filter(Boolean).join(" · ")) + "</span>") +
+      qator("Kredit shartnomasi", t(i.shartnoma && i.shartnoma.raqam) + '<span class="ikkinchi">' + t(i.shartnoma && i.shartnoma.tur) + "</span>") +
+      qator("Garov", t(g.nom) + '<span class="ikkinchi">' + t([g.tur, g.bahoMln != null ? MKB.pul(g.bahoMln) : ""].filter(Boolean).join(" · ")) + "</span>") +
+      qator("Talabnoma yuborilgan", t(os)) +
+      qator("Kechikish", q.kechikishKun != null ? '<b data-tarjimasiz>' + q.kechikishKun + "</b> <span>kun</span>" : "—") +
+      qator("Mas'ul", t(i.masul));
+    const h = i.hujjatlar || [];
+    document.getElementById("t-hujjat").innerHTML = h.length ? h.map(x =>
+      '<div class="qator"><span class="belgi lavanda">' + ik("hujjat") + '</span><span class="matn"><b' + ((window.MKB_LUGAT || {})[x.nom || x.tur] != null ? "" : " data-tarjimasiz") + '>' + esc(x.nom || x.tur) + "</b><span>" +
+      (x.faylId ? "Fayl biriktirilgan" : "Fayl biriktirilmagan") + "</span></span></div>").join("")
+      : MKB.boshHolat("hujjat", "Hujjat biriktirilmagan", "Kredit va garov shartnomasini ish varaqasida yuklang.");
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+  sel.addEventListener("change", () => { faylId = null; if (qoriq) qoriq.fayllar([]); faylMaydon(); tanla(); });
+
+  function faylMaydon(){
+    if (!MKB.huquq("yuridik", "yoz")) { document.getElementById("d-fayl").innerHTML = ""; return; }
+    if (!sel.value){ document.getElementById("d-fayl").innerHTML = ""; return; }
+    MKB.faylMaydon("#d-fayl", {kolleksiya: "UNDIRUV_ISHLAR", yozuvId: sel.value, obyektId: null, sarlavha: "Imzolangan ariza nusxasini tashlang yoki tanlang",
+      yuklandi(f){ faylId = f.id; if (qoriq) qoriq.fayllar([f.id]); }});
+  }
+  MKB.formaUla(forma);
+  faylMaydon();
+  tanla();
+
+  if (!MKB.huquq("yuridik", "yoz")){
+    forma.querySelectorAll("input, select, textarea, button[type=submit]").forEach(e => { e.disabled = true; });
+    document.getElementById("d-saqla").hidden = true;
+  } else {
+    /* Uzun forma: qoralama shu qurilmada avtomatik saqlanadi, sahifadan chiqishda so'raladi */
+    qoriq = MKB.formaQoriqla(forma, {nom: "Da'vo arizasi", qoralama: "davo", tiklandi: d => { faylId = (d.fayllar || [])[0] || null; }});
+  }
+
+  forma.addEventListener("submit", async e => {
     e.preventDefault();
-    const q = MKB.forma(e.target, ["obyektId", "sud", "asos"]);
-    if (!q) return;
-    const y = nomzod.find(v => v.id === q.obyektId);
-    if (!y || y.ish.bosqich !== "ogohlantirish") return;
-    const tarix = (y.ish.tarix || []).concat([[new Date().toLocaleDateString("uz"),
-      "Da'vo arizasi tayyorlandi", q.sud + "ga taqdim etish uchun. " + q.asos.slice(0, 80)]]);
-    await MKBapi.yangilash("YOZUVLAR", y.id, {
-      ish: Object.assign({}, y.ish, {bosqich: "davo", sud: q.sud, tarix}),
-      bosqichNomi: "Da'vo arizasi"});
-    MKB.toast(y.ish.raqam + " raqamli ish bo'yicha da'vo ro'yxatga olindi");
-    setTimeout(() => location.href = "ish.html?id=" + encodeURIComponent(y.id), 700);
+    const i = ish();
+    const r = MKB.formaTekshir(forma, {
+      ish: v => { const x = nomzod.find(n => n.id === v); return !v || (x && x.bosqich === "ogohlantirish") || "Ish talabnoma bosqichida emas"; },
+      summa: v => v > 0 || "Da'vo summasi noldan katta bo'lishi kerak",
+      sana: v => { const os = i ? D.sanaOqi(ogohSana(i)) : null; return !(os && D.sanaOqi(v) < os) || "Da'vo talabnomadan oldin berilmaydi"; },
+      muddat: (v, q) => !(v && q.sana && D.sanaOqi(v) < D.sanaOqi(q.sana)) || "Nazorat muddati topshirilgan sanadan oldin bo'lmaydi",
+    });
+    if (!r || !i) return;
+    const q = r.qiymatlar;
+    const a = adv.find(x => x.id === q.advokat);
+    const muddat = q.muddat ? {sana: q.muddat, izoh: "Sud da'voni ish yuritishga qabul qilishi"} : null;
+    const ok = await MKB.tasdiqla({
+      sarlavha: "Da'voni ro'yxatga olish",
+      matn: "Bosqich o'zgaradi: Ogohlantirish → Da'vo arizasi. Ariza ishdagi hujjatlarga qo'shiladi.",
+      tafsilot: [["Ish", tj(i.id)], ["Qarzdor", tj(i.qarzdor && i.qarzdor.nom)], ["Sud", tj(q.sud)], ["Da'vo summasi", tj(MKB.pul(q.summa))],
+        ["Topshirilgan sana", tj(q.sana)], ["Advokat", a ? tj(a.ism) : "Biriktirilmagan"],
+        ["Nazorat muddati", muddat ? tj(muddat.sana) : "Belgilanmaydi"]],
+      oqibat: ["Ish \"Da'vo arizasi\" bosqichiga o'tadi", "Sud ishni qabul qilganda ish varaqasida sud ish raqami qayd etiladi"],
+      okMatn: "Ro'yxatga olish",
+      bekorMatn: "Orqaga",
+      bajar: () => MKBapi.yangilash("UNDIRUV_ISHLAR", i.id, {
+        bosqich: "davo", sud: {nomi: q.sud, ishRaqami: null},
+        advokatId: a ? a.id : (i.advokatId || null),
+        muddat,
+        hujjatlar: (i.hujjatlar || []).concat([Object.assign({tur: "Da'vo arizasi", nom: "Da'vo arizasi", sana: q.sana}, faylId ? {faylId} : {})]),
+        tarix: (i.tarix || []).concat([{sana: q.sana, voqea: "Da'vo arizasi berildi", izoh: q.sud + ", " + MKB.pul(q.summa) + ". " + q.asos.slice(0, 160)}])
+      }),
+    });
+    if (!ok) return;
+    if (qoriq) qoriq.toza();
+    MKB.toast("Ish " + i.id + " bo'yicha da'vo ro'yxatga olindi");
+    location.href = "ish.html?id=" + encodeURIComponent(i.id);
   });
-});
+})();
 </script>
 </body>
 </html>

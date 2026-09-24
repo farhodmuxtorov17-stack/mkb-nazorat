@@ -3,64 +3,118 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Yangi parol</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
+<title>MKB — Parolni almashtirish</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
-.xato-sahna{min-height:100vh;display:grid;place-items:center;padding:26px;
+.ochiq-sahna{min-height:100vh;display:grid;place-items:center;padding:26px 16px;
   background:
-    radial-gradient(900px 640px at 12% 0%, #FAEEE8 0%, transparent 58%),
-    radial-gradient(800px 620px at 92% 16%, #EFEFF8 0%, transparent 56%),
-    linear-gradient(150deg,#F8F1ED 0%,#F2F1F7 54%,#EFF4F1 100%)}
-.xato-karta{text-align:center;max-width:500px;background:var(--oq);border-radius:30px;
-  padding:44px 40px;box-shadow:var(--soya-suzuvchi)}
-.xato-karta .kod{font:500 92px/1 var(--shrift-displey);letter-spacing:-.05em;color:var(--siyoh)}
-.xato-karta .kod i{font-style:normal;color:var(--mint-matn)}
-.xato-karta h1{font:500 24px/1.2 var(--shrift-displey);letter-spacing:-.03em;margin:14px 0 10px}
-.xato-karta p{font-size:14.5px;color:var(--matn-3);line-height:1.6;margin-bottom:26px}
-.xato-karta .tugmalar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    radial-gradient(900px 640px at 12% 0%, var(--fon-issiq) 0%, transparent 58%),
+    radial-gradient(800px 620px at 92% 16%, var(--fon-sovuq) 0%, transparent 56%),
+    linear-gradient(150deg,var(--fon-issiq) 0%,var(--fon-sovuq) 54%,var(--fon-mint) 100%)}
+.ochiq-karta{width:min(460px,100%);background:var(--oq);border-radius:30px;padding:36px 38px;box-shadow:var(--soya-suzuvchi)}
+.ochiq-karta .yorliq{font-size:12.5px;color:var(--matn-3)}
+.ochiq-karta h1{font:500 29px/1.15 var(--shrift-displey);letter-spacing:-.04em;margin:6px 0 8px}
+.ochiq-karta > p{font-size:14px;line-height:1.55;color:var(--matn-3);margin-bottom:22px}
+.ochiq-karta form{display:flex;flex-direction:column;gap:15px}
+.ochiq-karta .tugma[type=submit]{height:50px;justify-content:center}
+.xabar{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:11px 14px;font-size:13.5px;line-height:1.45}
+.xabar .ic{width:17px;height:17px;flex:none;margin-top:1px}
+.xabar.xato{background:var(--xavf-fon);color:var(--xavf-matn)}
+.xabar.info{background:var(--lavanda);color:var(--lavanda-matn)}
+.xabar.ok{background:var(--yashil-fon);color:var(--yashil)}
+.talablar{list-style:none;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--matn-3)}
+.talablar li{display:inline-flex;align-items:center;gap:5px}
+.talablar .ic{width:14px;height:14px;opacity:.35}
+.talablar li.bajarildi{color:var(--yashil)}
+.talablar li.bajarildi .ic{opacity:1}
+.pastki{margin-top:18px;font-size:13.5px}
+.pastki a{text-decoration:underline;text-underline-offset:3px}
+@media (max-width:480px){.ochiq-karta{padding:28px 22px;border-radius:26px}.ochiq-karta h1{font-size:25px}}
 </style>
 </head>
 <body data-sahifa="kirish" data-ochiq="1">
-<div class="xato-sahna"><div class="k-karta" style="width:min(430px,100%)">
-  <h1 style="font:700 27px/1.15 var(--shrift-displey);letter-spacing:-.02em;margin:6px 0 4px">Yangi parol o&#39;rnatish</h1>
-  <p style="font-size:13px;color:var(--iz);margin-bottom:22px">Kamida 8 belgi: katta-kichik harf va raqam bo&#39;lsin</p>
-  <form id="yangi-forma" novalidate style="display:flex;flex-direction:column;gap:14px">
+<div class="ochiq-sahna"><main class="ochiq-karta">
+  <span class="yorliq" id="kim">Mikrokreditbank · ichki tizim</span>
+  <h1>Parolni almashtirish</h1>
+  <p>Vaqtinchalik parol bilan kirgan bo&#39;lsangiz, shu yerda o&#39;z parolingizni o&#39;rnating.</p>
+  <div class="xabar info" id="sessiyasiz" hidden><svg class="ic"><use href="#ik-info"/></svg>
+    <span>Avval vaqtinchalik parol bilan tizimga kiring.</span></div>
+  <div class="xabar info" id="namoyishda" hidden><svg class="ic"><use href="#ik-info"/></svg>
+    <span>Namoyish rejimida parol almashtirilmaydi. Hamma hisob bitta namoyish paroli bilan kiradi.</span></div>
+  <form id="parol-forma" novalidate hidden data-sayohat="forma">
+    <div class="maydon">
+      <label class="maydon-yorliq" for="eski">Joriy parol</label>
+      <div class="kirish"><svg class="ic"><use href="#ik-qulf"/></svg><input id="eski" name="eski" type="password" autocomplete="current-password" required data-xato="Joriy parolni kiriting"></div>
+    </div>
     <div class="maydon">
       <label class="maydon-yorliq" for="p1">Yangi parol</label>
-      <div class="kirish"><svg class="ic"><use href="#i-qulf"/></svg><input id="p1" type="password" placeholder="Yangi parol"></div>
+      <div class="kirish"><svg class="ic"><use href="#ik-qulf"/></svg><input id="p1" name="p1" type="password" autocomplete="new-password" required data-xato="Yangi parolni kiriting" aria-describedby="talablar"></div>
+      <ul class="talablar" id="talablar" aria-live="polite" data-sayohat="talablar">
+        <li id="talab-uzunlik"><svg class="ic"><use href="#ik-tasdiq"/></svg><span>Kamida 8 belgi</span></li>
+        <li id="talab-harf"><svg class="ic"><use href="#ik-tasdiq"/></svg><span>Kamida bitta harf</span></li>
+        <li id="talab-raqam"><svg class="ic"><use href="#ik-tasdiq"/></svg><span>Kamida bitta raqam</span></li>
+      </ul>
     </div>
     <div class="maydon">
-      <label class="maydon-yorliq" for="p2">Parolni takrorlang</label>
-      <div class="kirish"><svg class="ic"><use href="#i-qulf"/></svg><input id="p2" type="password" placeholder="Qayta kiriting"></div>
-      <span class="maydon-izoh xato" id="p-xato" hidden>Parollar mos emas yoki talabga javob bermaydi</span>
+      <label class="maydon-yorliq" for="p2">Yangi parolni takrorlang</label>
+      <div class="kirish"><svg class="ic"><use href="#ik-qulf"/></svg><input id="p2" name="p2" type="password" autocomplete="new-password" required data-xato="Yangi parolni takrorlang"></div>
     </div>
-    <button class="tugma tugma-asosiy" type="submit" style="height:46px">Parolni saqlash</button>
+    <div class="xabar ok" id="p-ok" role="status" hidden><svg class="ic"><use href="#ik-tasdiq"/></svg><span>Parol almashtirildi. Keyingi kirishda yangi parolni kiriting.</span></div>
+    <button class="tugma tugma-asosiy" type="submit" id="saqla" data-sayohat="saqla" data-yozadi>Parolni saqlash</button>
   </form>
-</div></div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+  <div class="pastki"><a href="kirish.html" id="qaytish">Kirish sahifasiga qaytish</a></div>
+</main></div>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
 <script>
-document.getElementById("yangi-forma").addEventListener("submit", e => {
-  e.preventDefault();
-  const p1 = document.getElementById("p1").value, p2 = document.getElementById("p2").value;
-  const kuchli = p1.length >= 8 && /[A-Z]/.test(p1) && /[a-z]/.test(p1) && /\d/.test(p1);
-  const xato = document.getElementById("p-xato");
-  if (!kuchli || p1 !== p2){ xato.hidden = false; return; }
-  xato.hidden = true;
-  MKB.toast("Parol yangilandi — endi kirishingiz mumkin");
-  setTimeout(() => location.href = "kirish.html", 900);
-});
+(async () => {
+  const rejim = await MKBapi.tayyor;
+  const s = MKBapi.sessiya();
+  const forma = document.getElementById("parol-forma");
+  if (!s){ document.getElementById("sessiyasiz").hidden = false; return; }
+  const qaytish = document.getElementById("qaytish");
+  if (MKB.rol()){ qaytish.href = rolBoshSahifasi(MKB.rol()); qaytish.textContent = "Bosh sahifaga qaytish"; }
+  document.getElementById("kim").textContent = s.ism || s.login || "";
+  document.getElementById("kim").setAttribute("data-tarjimasiz", "");
+  if (rejim !== "server"){ document.getElementById("namoyishda").hidden = false; tarjimaQil(); return; }
+  forma.hidden = false;
+
+  const $ = id => document.getElementById(id);
+  const TALAB = [["talab-uzunlik", p => p.length >= 8], ["talab-harf", p => /[A-Za-z]/.test(p)], ["talab-raqam", p => /\d/.test(p)]];
+  const talablarBajarildi = p => TALAB.every(([, f]) => f(p));
+  /* Talablar yozish paytida belgilanadi; takror maydoni xatosi tuzatilishi bilan yo'qoladi */
+  const tekshir = () => {
+    const p = $("p1").value;
+    TALAB.forEach(([id, f]) => $(id).classList.toggle("bajarildi", f(p)));
+    if ($("p2").getAttribute("aria-invalid") === "true" && $("p2").value === p) MKB.maydonXato($("p2"), null);
+    if ($("p1").getAttribute("aria-invalid") === "true" && talablarBajarildi(p) && p !== $("eski").value) MKB.maydonXato($("p1"), null);
+  };
+  $("p1").addEventListener("input", tekshir);
+  $("p2").addEventListener("input", tekshir);
+  forma.addEventListener("submit", async e => {
+    e.preventDefault();
+    $("p-ok").hidden = true;
+    const r = MKB.formaTekshir(forma, {
+      p1: (v, q) => !talablarBajarildi(v) ? "Parol kamida 8 belgi bo'lsin, unda harf va raqam bo'lsin"
+        : v === q.eski ? "Yangi parol joriy paroldan farq qilsin" : true,
+      p2: (v, q) => v === q.p1 || "Parollar bir xil emas",
+    });
+    if (!r) return;
+    try{
+      await MKB.band($("saqla"), () => MKBapi.parolAlmashtir(r.qiymatlar.eski, r.qiymatlar.p1));
+    }catch(err){
+      const m = err && err.message ? err.message : "Parol saqlanmadi";
+      MKB.formaXato(forma, m, /joriy|eski/i.test(m) ? "eski" : null);
+      return;
+    }
+    forma.reset(); tekshir();
+    $("p-ok").hidden = false;
+    tarjimaQil($("p-ok"));
+  });
+})();
 </script>
 </body>
 </html>

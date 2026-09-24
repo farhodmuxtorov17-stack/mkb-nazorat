@@ -1,36 +1,37 @@
 # Контракт серверного API
-## Система контроля проблемных активов «Микрокредитбанк»
+## Система управления активами на балансе «Микрокредитбанк»
 
-Версия 0.4 · Редакция от 17.09.2026
+Версия 0.5 · Редакция от 21.09.2026
 
 ---
 
-## 1. Назначение документа
+## 1. Назначение
 
-Документ описывает интерфейс между клиентской частью системы и сервером
-данных: набор методов, формат ответов, порядок аутентификации, состав
-коллекций и правила локального режима работы без сервера.
+Документ описывает интерфейс между клиентом и сервером данных: методы, формат
+ответов, аутентификацию, проверку записей, состав коллекций и работу без
+сервера. Разделы 2–11 описывают реализованное поведение `server/server.js` и
+`yadro/api.js`. Раздел 12 — требования к промышленному контуру, которые
+предстоит выполнить при переносе в сеть банка.
 
-Всё, что перечислено в разделах 2–8, реализовано и работает. Раздел 12
-собирает требования к промышленному контуру, которые предстоит выполнить
-при переносе системы в сеть банка; они помечены отдельно и не описывают
-текущее поведение.
+### 1.1 Режимы клиента
 
-### 1.1 Два режима работы клиента
-
-Страницы не обращаются к сети напрямую. Единственная точка доступа к
-данным — модуль `yadro/api.js`, публикующий объект `MKBapi`. При загрузке
-он определяет режим:
+Страницы не обращаются к сети напрямую: единственная точка доступа —
+`MKBapi` из `yadro/api.js`.
 
 | Режим | Условие | Источник данных |
 |---|---|---|
-| `server` | `GET /api/salomat` ответил `{"holat":"ok"}` быстрее 700 мс | REST-хранилище `server/malumotlar/*.json` |
-| `snapshot` | ответа нет, ошибка или превышено ожидание | массивы `window.MKB_DATA` + слой правок в `localStorage` |
+| `server` | `GET /api/salomat` ответил `{"holat":"ok"}` быстрее 700 мс и поддерживает текущий источник | REST-хранилище сервера |
+| `snapshot` | ответа нет, ошибка или превышено ожидание | `window.MKB_DATA` + слой правок в браузере |
 
-Определённый режим публикуется тремя способами: промис `MKBapi.tayyor`
-разрешается его именем, метод `MKBapi.rejim()` возвращает текущее значение,
-и на `document` отправляется событие `mkb:rejim`. Один и тот же набор
-экранов работает в обоих режимах без изменений в разметке.
+Режим доступен через промис `MKBapi.tayyor`, метод `MKBapi.rejim()` и событие
+`mkb:rejim` на `document`.
+
+### 1.2 Источники данных
+
+Независимо от режима существует два источника (`MKBapi.manba()`,
+`MKB_DATA.MANBA`): `shartli` — демонстрационные данные и `mahalliy` —
+фактический реестр из `mahalliy/obyektlar.json`, доступный только с адреса
+самого компьютера. Правки, журнал и файлы двух источников хранятся раздельно.
 
 ---
 
@@ -39,622 +40,378 @@
 | Параметр | Значение |
 |---|---|
 | Базовый путь | `/api` |
-| Формат | `application/json; charset=utf-8` |
-| Кеширование | ответы API отдаются с `Cache-Control: no-store` |
-| Идентификаторы | строки вида `AK-2026/4471`, `KO-2026/0412`, `QR-0001`; символ «/» в сегменте пути кодируется как `%2F` |
-| Даты | строки в отображаемой форме: `ДД.ММ.ГГГГ` либо `ДД-ммм, ГГГГ` (`18-fev, 2026`) |
-| Суммы | число в миллионах сумов; форматирование выполняет клиент |
-| Транспорт | HTTP/1.1, тело запроса не более 1 МБ |
+| Формат | `application/json; charset=utf-8`, ответы с `Cache-Control: no-store` |
+| Идентификаторы | строки: `AK-2026/4471` (актив), `UI-2026/0412` (дело взыскания), `LOT-…`, `TK-…`, `SH-…`; «/» в сегменте пути кодируется как `%2F` |
+| Даты | `ДД.ММ.ГГГГ`, время — `ДД.ММ.ГГГГ ЧЧ:ММ` |
+| Суммы | число в миллионах сумов; форматирует клиент |
+| Размер тела | JSON — до 4 МБ, файл — до 20 МБ |
 
-Локальный сервер запускается командой `node server/server.js` и слушает
-порт из переменной окружения `PORT`, по умолчанию 8790. Внешних библиотек
-не требуется. Помимо API он раздаёт статические файлы проекта: корневой
-путь «/» отдаёт `kirish.html`, отсутствующий файл — страницу `xato-404.html`
-с кодом 404, попытка выйти за пределы каталога проекта — 403. Содержимое
-`/assets/` кешируется на сутки, остальная статика — с `no-cache`.
+Запуск: `node server/server.js`. Переменные окружения: `PORT` (по умолчанию
+8790), `MKB_HOST` (по умолчанию `127.0.0.1`), `MKB_PAROL` (начальный пароль
+учётных записей из исходных данных; если не задан — создаётся случайный и
+печатается в консоль один раз), `MKB_BUGUN` (фиксированная дата для проверок).
+
+Статика: «/» отдаёт `kirish.html`, отсутствующий файл — `xato-404.html` с
+кодом 404. Пути `/server/` и скрытые файлы не отдаются. Путь `/mahalliy/`
+отдаётся только запросам с `127.0.0.1` или `::1`, остальным — 404.
 
 ### 2.1 Хранилище
 
-Каждая коллекция — отдельный файл `server/malumotlar/<коллекция>.json`,
-содержащий массив записей. Имя файла — имя коллекции в нижнем регистре;
-оно же является сегментом пути в запросе.
+Для каждого источника каталог `server/malumotlar/<источник>/`:
 
-При первом запуске сервер исполняет модули данных в том же порядке, что и
-страница (`yadro/bino.js`, `malumot.js`, `malumot-qoshimcha.js`,
-`malumot-kengaytma.js`, `malumot-kirish.js`, `malumot-indeks.js`), в
-изолированном контексте (без DOM), берёт из них `window.MKB_DATA` и создаёт
-файлы для 26 коллекций, перечисленных в константе `KOLLEKSIYALAR` модуля
-`server/server.js`, а также пустой журнал `amallar.json`. Уже существующие
-файлы не перезаписываются — накопленные правки переживают перезапуск.
+| Файл | Содержание |
+|---|---|
+| `ozgarishlar.json` | слой правок `{коллекция: {id: правка}}`; `{"__yangi": {...}}` — новая запись, признак `__ochirilgan` — удалённая |
+| `versiya.json` | отпечаток модулей данных; при изменении модели несовместимые поля и оборванные правки отбрасываются |
+| `amallar.json` | журнал действий, последние 5000 записей |
+| `parollar.json` | хеши паролей (scrypt с солью) |
+| `fayllar/` | загруженные файлы |
 
-Из этого следуют два важных для интеграции ограничения. Вычисляемые
-значения — индекс контроля, сводные показатели портфеля, указатель объектов —
-в файлы не выгружаются и считаются на клиенте. Хранилища засеваются только
-условными демонстрационными данными: локальный реестр банка
-(`mahalliy/obyektlar.json`, см. `docs/ARXITEKTURA.md`, раздел 10) читается
-исключительно браузером с локального адреса и в изолированном контексте
-сервера недоступен.
+Исходные данные при каждом запуске строятся из модулей `malumot*.js` в
+изолированном контексте, затем поверх накладывается слой правок. Вычисляемые
+показатели (сроки, резерв, индекс контроля, сводки) не хранятся и считаются
+на клиенте.
 
 ---
 
 ## 3. Аутентификация и сессии
 
 ```
-POST /api/kirish     { login, parol, rol }  -> { token, ism, rol, filial }
-GET  /api/salomat                           -> { holat: "ok", vaqt }
+POST /api/kirish    {login, parol, manba?}  → {token, id, login, ism, rol, filial, filialKod, manba, tugash}
+POST /api/chiqish                           → {holat: "ok"}
+POST /api/parol     {eski, yangi}           → {holat: "ok"}
+GET  /api/salomat                           → {holat: "ok", vaqt, manbalar}
 ```
 
-Порядок:
-
-- **А-1.** Сервер знает шесть наименований ролей: `Administrator`,
-  `Filial rahbari`, `Obyekt menejeri`, `Ko'rik inspektori`,
-  `Baholovchi mutaxassis`, `Yurist`. Роль сессии берётся только из учётной
-  записи; поле `rol` в теле запроса на вход не учитывается. Учётная запись
-  с ролью вне этого списка получает 403.
-- **А-2.** Учётная запись ищется в хранилище учётных записей по полю
-  `login`. Пароль сверяется с полем `parol` записи, а при его отсутствии —
-  с паролем входа сервера: он задаётся переменной окружения `MKB_PAROL`
-  либо формируется случайным при запуске и печатается в консоль.
-  Неизвестный логин, отключённая учётная запись и неверный пароль дают
-  один и тот же ответ 401 — существование учётной записи не раскрывается;
-  отказ попадает в журнал действий.
-- **А-3.** Токен сессии — 18 случайных байт в шестнадцатеричной записи
-  (36 символов). Сессии хранятся в памяти процесса: перезапуск сервера
-  завершает все сессии. Срок жизни сессии сервером не ограничивается.
-- **А-4.** Все последующие запросы несут заголовок `X-Sessiya: <token>`.
-  Без действующей сессии любой метод, кроме `GET /api/salomat` и
-  `POST /api/kirish`, отвечает 401.
-- **А-5.** Отдельного метода выхода нет: клиент удаляет токен локально
-  (`MKBapi.chiqish()`), после чего сессия на сервере становится
-  недостижимой.
-- **А-6.** Получив 401 на любом запросе, клиент очищает сессию и
-  переводит пользователя на `kirish.html`.
-
-Ответ на вход:
-
-```json
-{
-  "token": "9f2c...",
-  "ism": "Ismoilov Otabek",
-  "rol": "Administrator",
-  "filial": "Toshkent shahar filiali"
-}
-```
-
-В режиме `snapshot` вход выполняется тем же вызовом `MKBapi.kirish()`:
-учётная запись берётся из коллекции `FOYDLAR`, а сессия сохраняется в
-`localStorage` под ключом `mkb4-sessiya` с тем же составом полей.
+- **А-1.** Роль берётся только из учётной записи; поле `rol` в теле входа
+  игнорируется. Роль вне перечня (раздел 4) — 403.
+- **А-2.** Неизвестный логин, отключённая или удалённая учётная запись и
+  неверный пароль дают одинаковый ответ 401; отказ пишется в журнал.
+- **А-3.** Пять неудачных попыток подряд блокируют логин на 15 минут (429).
+- **А-4.** Токен — 24 случайных байта в шестнадцатеричной записи. Сессия
+  живёт 8 часов и хранится в памяти процесса. Токен передаётся заголовком
+  `X-Sessiya` или cookie `mkb_s` (`HttpOnly; SameSite=Strict`).
+- **А-5.** Вход в источник `mahalliy` разрешён только с адреса компьютера
+  (иначе 403).
+- **А-6.** Получив 401, клиент очищает сессию и открывает `kirish.html`.
+- **А-7.** Новый пароль — не менее 8 символов. В режиме `snapshot` пароль не
+  меняется: все учётные записи входят с демонстрационным паролем.
 
 ---
 
 ## 4. Разграничение доступа
 
-Матрица разделов задана в `yadro/app.js` (`BOLIMLAR`, `ROL_KALIT`,
-`ROL_RUXSAT`) и применяется на клиенте: она определяет состав рельсы,
-доступность страниц и переход на `xato-403.html`. Сервер хранит
-собственную копию матрицы (`ROL_BOLIMLAR` в `server/server.js`) и проверяет
-её на каждом запросе к коллекции (раздел 4.1).
+Роли: `Administrator`, `Rahbariyat`, `Filial rahbari`, `Obyekt menejeri`,
+`Ko'rik va xavfsizlik inspektori`, `Baholovchi`, `Realizatsiya mutaxassisi`,
+`Yurist`, `Buxgalteriya va risk`, `Xavfsizlik xizmati`. Разделы: `panel`,
+`aktivlar`, `himoya`, `korik`, `qiymat`, `realizatsiya`, `yuridik`, `hisobot`,
+`vazifa`, `sozlama`.
 
-| Роль | Ключ | Разделы |
-|---|---|---|
-| Administrator | `admin` | все |
-| Filial rahbari | `filial` | panel, aktivlar, kn, korik, baholash, yuridik, hisobot, vazifa, sozlama |
-| Obyekt menejeri | `obyekt` | panel, aktivlar, kn, korik, hisobot, vazifa, sozlama |
-| Ko'rik inspektori | `nazorat` | panel, aktivlar, kn, korik, baholash, hisobot, vazifa, sozlama |
-| Baholovchi mutaxassis | `baholash` | panel, aktivlar, baholash, hisobot, vazifa, sozlama |
-| Yurist | `yurist` | panel, yuridik, aktivlar, hisobot, vazifa, sozlama |
-
-Ключей разделов девять: `panel` — панель управления, `aktivlar` — реестр
-объектов вместе с картой и архивом, `kn` — контроль доступа, `korik` —
-осмотры, `baholash` — оценка и страхование, `yuridik` — взыскание и суд,
-`hisobot` — отчёты, `vazifa` — задачи, `sozlama` — настройки. Прежние ключи
-`arxiv`, `xarita`, `sugurta` и `hujjat` упразднены и не принимаются ни
-клиентом, ни сервером. Страховые полисы относятся к разделу `baholash`,
-поэтому он открыт и инспектору осмотра.
-
-Поверх разделов действует поимённый список `SAHIFA_MAXSUS`: страницы
-управления пользователями, ролями, интеграциями и журналом действий
-открыты только администратору; рабочая панель каждой роли — её владельцу
-и администратору; филиалы — администратору и руководителю филиала; мастер
-установки оборудования — администратору, менеджеру объекта и инспектору
-осмотра; мастер приёма на баланс — администратору, менеджеру объекта и
-руководителю филиала; редактирование записи объекта — администратору и
-менеджеру объекта.
-
-### 4.1 Проверка на сервере
-
-Каждая коллекция отнесена к разделу константой `KOLLEKSIYA_BOLIM`. Если
-раздел закрыт роли сессии, любой метод коллекции отвечает 403
-`bu bo'lim rolingizga yopiq` — до чтения из хранилища.
+Клиентская матрица (`ROL_RUXSAT` в `yadro/app.js`) строит меню и скрывает
+кнопки; решение принимает сервер (`ROL_BOLIMLAR`): для каждой роли — список
+разделов на чтение и на запись. Каждая коллекция отнесена к разделу:
 
 | Раздел | Коллекции |
 |---|---|
-| `aktivlar` | `yozuvlar`, `hududlar`, `xarajatlar`, `hodisalar`, `arxiv`, `hujjatlar` |
-| `korik` | `koriklar` |
-| `baholash` | `baholashlar`, `sugurtalar`, `sugurta_davolari` |
-| `yuridik` | `sud_majlislar`, `advokatlar` |
-| `vazifa` | `mening_vazifalarim`, `tasdiqlar`, `bildirishlar` |
-| `sozlama` | `foydlar` |
-| `kn` | `shaxslar`, `kirish_nuqtalari`, `qurilmalar`, `kirish_voqealari`, `ruxsatlar`, `kirish_sorovlari`, `tashriflar`, `xavfsizlik_hodisalari`, `masofaviy_sessiyalar`, `xizmat_ishlari` |
+| `aktivlar` | `yozuvlar`, `hujjatlar`, `fayllar`, `arxiv`, `xarajatlar`, `hududlar` |
+| `korik` | `koriklar`, `inventar`, `inventarizatsiyalar` |
+| `qiymat` | `baholashlar`, `sugurtalar` (`polislar`), `sugurta_davolari`, `soliq`, `zaxira_tarix` |
+| `hisobot` | `mb_hisobotlar`, `hisobotlar` |
+| `realizatsiya` | `lotlar` (`sotuv`), `takliflar`, `xaridorlar`, `shartnomalar`, `ijara`, `paketlar` |
+| `yuridik` | `undiruv_ishlar`, `sud_majlislar`, `advokatlar`, `restrukturizatsiya`, `muloqotlar` |
+| `himoya` | `hodisalar`, `qoriqlash`, `kommunal_arizalar`, `qurilma_katalog`, `himoya_andozalari`, `shaxslar`, `kirish_nuqtalari`, `qurilmalar`, `kirish_voqealari`, `ruxsatlar`, `kirish_sorovlari`, `tashriflar`, `xavfsizlik_hodisalari`, `masofaviy_sessiyalar`, `xizmat_ishlari` |
+| `vazifa` | `tasdiqlar`, `mening_vazifalarim` (`vazifalar`), `bildirishlar` |
+| `sozlama` | `foydlar`, `filiallar`, `parametrlar`, `bayramlar`, `qoidalar`, `integratsiyalar` |
 
-Имена коллекций `arxiv` и `hujjatlar` сохранены — изменился только раздел,
-к которому они отнесены. Коллекцию `foydlar` читает любая роль, которой
-открыты настройки, а изменять может только администратор (403
-`faqat administrator`). Неизвестная роль не получает ни одного раздела.
+В скобках — псевдонимы. Дополнительные правила:
 
-- **Р-1.** Клиентская матрица — представление; решение принимает сервер.
-  Совпадение состава разделов в `ROL_RUXSAT` и `ROL_BOLIMLAR` проверяется
-  набором `tests/sahifalar.test.js`, поведение 403/200 — набором
-  `tests/server.test.js`.
-- **Р-2.** Право на раздел не даёт права на запись: модифицирующие методы
-  перечисляют допустимые роли отдельно.
+- **Р-1.** Закрытый раздел — 403 `bu bo'lim rolingizga yopiq` до чтения
+  хранилища.
+- **Р-2.** `parametrlar` изменяют администратор и «Buxgalteriya va risk».
+- **Р-3.** «Xavfsizlik xizmati» может создать страховую претензию и читать
+  полисы, хотя раздел `qiymat` ему закрыт.
+- **Р-4.** `foydlar` изменяет только администратор; пароль в ответах не
+  возвращается.
+- **Р-5.** «Filial rahbari» изменяет только записи своего филиала: для
+  активов и дел — по `filialKod`, для остальных — по активу из `obyektId`
+  или `aktivId`. Чужой филиал — 403 `boshqa filial obyekti`.
+- **Р-6.** Коллекции `hududlar`, `hisobotlar`, `qurilma_katalog`,
+  `himoya_andozalari` только для чтения (405 на запись).
 
 ---
 
 ## 5. Методы
 
-| Метод | Путь | Сессия | Результат |
+| Метод | Путь | Доступ | Результат |
 |---|---|---|---|
-| GET | `/api/salomat` | не нужна | 200, `{holat, vaqt}` — проба доступности |
-| POST | `/api/kirish` | не нужна | 200, сессия |
-| GET | `/api/amallar` | администратор | 200, журнал действий |
-| GET | `/api/{коллекция}` | нужна | 200, массив записей |
-| GET | `/api/{коллекция}/{id}` | нужна | 200, запись; 404, если не найдена |
-| POST | `/api/{коллекция}` | нужна | 201, созданная запись |
-| PATCH | `/api/{коллекция}/{id}` | нужна | 200, обновлённая запись |
+| GET | `/api/salomat` | без сессии | доступность и список источников |
+| POST | `/api/kirish` | без сессии | сессия |
+| POST | `/api/chiqish` | сессия | завершение сессии |
+| POST | `/api/parol` | сессия | смена собственного пароля |
+| GET | `/api/amallar` | администратор | журнал действий |
+| POST | `/api/amallar/tizim` | сессия | одна сводная запись движка правил: `{hisob: {КОЛЛЕКЦИЯ: число}}` |
+| GET | `/api/ozgarishlar` | сессия | слой правок по доступным роли коллекциям |
+| GET | `/api/{коллекция}` | раздел: чтение | массив записей без удалённых |
+| GET | `/api/{коллекция}/{id}` | раздел: чтение | запись; 404, если нет или удалена |
+| POST | `/api/{коллекция}` | раздел: запись | 201, созданная запись |
+| PATCH | `/api/{коллекция}/{id}` | раздел: запись | обновлённая запись |
+| DELETE | `/api/{коллекция}/{id}` | раздел: запись | `{id, ochirildi: true}` |
+| POST | `/api/{коллекция}/{id}/tiklash` | администратор | восстановление удалённой записи |
+| POST | `/api/fayllar/yukla` | раздел `aktivlar`: запись | 201, запись `FAYLLAR` |
+| GET | `/api/fayllar/{id}/xom` | раздел `aktivlar`: чтение | содержимое файла |
 
-Остальные методы отвечают 405. Обращение к несуществующей коллекции —
-404 с указанием имени.
+Прочие методы — 405, неизвестная коллекция — 404.
 
 ### 5.1 Выборка
 
-Списочный метод принимает произвольные параметры запроса:
+`GET /api/koriklar?holat=rejada&obyektId=AK-2026%2F4471` — фильтр по
+равенству строкового значения поля, `q=` — поиск подстроки по всей записи,
+параметры соединяются по «и». Администратор может запросить удалённые записи
+параметром `ochirilgan=1`. Постраничной выдачи нет.
 
-```
-GET /api/koriklar?holat=rejada&obyektId=AK-2026%2F4471
-GET /api/hujjatlar?q=kadastr
-```
+### 5.2 Создание и изменение
 
-- любой параметр `поле=значение` оставляет записи, у которых значение поля
-  в строковом виде совпадает с переданным;
-- зарезервированный параметр `q` выполняет поиск подстроки по всей записи
-  без учёта регистра;
-- несколько параметров соединяются по «и».
+- Если `id` не передан, сервер формирует его из префикса коллекции (`BM`,
+  `FL`, `LOT`, `TK`, `SH`, `UI`, `HD`, `KR`, `TS` или первые две буквы имени) и
+  отметки времени. Занятый `id` — 409.
+- Вложенные объекты (`balans`, `qiymat`, `huquq` и т. п.) сливаются на один
+  уровень, массивы заменяются целиком. `id` в теле PATCH игнорируется.
+- PATCH без фактических изменений не сохраняется и в журнал не попадает.
 
-Постраничная выдача не применяется: объём коллекций рассчитан на полную
-загрузку раздела одним запросом.
+### 5.3 Проверка записи
 
-### 5.2 Создание
+Одинаковые правила применяют сервер и `api.js` (в режиме `snapshot`):
 
-```
-POST /api/xarajatlar
-{ "obyektId": "AK-2026/4471", "tur": "Qo'riqlash xizmati", "summa": 3.4 }
-```
+- поле должно входить в схему коллекции `MKB_DATA.SXEMA` (или в
+  `QOSHIMCHA_MAYDONLAR`); иначе 400 `noma'lum maydon: <поле>`;
+- тип значения совпадает с типом поля в исходных данных; нечисловые и
+  бесконечные числа отклоняются;
+- поля `sana`, `boshlanish`, `tugash` и `…Sana` должны читаться как дата;
+- путь `assets/obyekt/` отклоняется (выведенные чертежи);
+- `YOZUVLAR`: статус из `HOLATLAR`, этап из `BOSQICHLAR`, `balans.qiymat` —
+  положительное число, `balans.sana` — дата; новая запись требует названия,
+  даты и стоимости постановки на баланс;
+- поля, начинающиеся с `__`, записывать нельзя.
 
-Если тело не содержит `id`, сервер формирует его из двух первых букв имени
-коллекции в верхнем регистре и отметки времени в 36-ричной записи.
-Запись добавляется в конец массива, файл переписывается целиком, в журнал
-попадает действие `yaratish`.
+### 5.4 Удаление
 
-### 5.3 Изменение
+Удаление мягкое: запись получает `__ochirilgan`, `ochirilganSana`, `ochirgan`
+и исчезает из выдачи. Администратор восстанавливает её методом `tiklash`.
+Нельзя удалить собственную учётную запись; удаление учётной записи закрывает
+её сессии.
 
-```
-PATCH /api/yozuvlar/AK-2026%2F4471
-{ "mulk": { ... } }
-```
+### 5.5 Файлы
 
-Поле `id` из тела удаляется — идентификатор менять нельзя. Остальные поля
-накладываются на запись поверх существующих; вложенные объекты заменяются
-целиком, а не сливаются. В журнал попадает действие `yangilash` с перечнем
-имён изменённых полей.
+`POST /api/fayllar/yukla` принимает тело файла; тип — из `Content-Type`
+(JPEG, PNG, WEBP, GIF, PDF, DOC/DOCX, XLS/XLSX, TXT, CSV), имя — заголовок
+`X-Fayl-Nom`, привязка — `X-ObyektId`, `X-Kolleksiya`, `X-YozuvId`. Ответ —
+запись `FAYLLAR` с путём `api/fayllar/<id>/xom`. Изображения и PDF отдаются
+для просмотра, остальное — вложением; `?yuklab=1` — всегда вложением.
+В режиме `snapshot` файлы хранятся в IndexedDB браузера (`MKBapi.fayl`).
+
+Фото актива записываются в `rasmlar[] {yol, tur}`; основное фото — `rasm` и
+`rasmKichik`, источник — `rasmManba`, признак общего фото для нескольких
+объектов — `rasmUmumiy`.
 
 ---
 
-## 6. Коды ответов и ошибок
+## 6. Коды ответов
 
-Ошибка возвращается плоским объектом с единственным полем `xato`:
+Ошибка — объект `{"xato": "<текст>"}`.
 
-```json
-{ "xato": "kolleksiya yo'q: mavjudmas" }
-```
-
-| HTTP | Текст | Когда |
-|---|---|---|
-| 200 | — | успешное чтение или изменение |
-| 201 | — | запись создана |
-| 401 | `sessiya yo'q` | заголовок `X-Sessiya` отсутствует или токен неизвестен |
-| 401 | `Login yoki parol noto'g'ri` | неизвестный логин, отключённая учётная запись или неверный пароль |
-| 403 | `faqat administrator` | журнал действий запрошен не администратором; изменение учётных записей не администратором |
-| 403 | `bu bo'lim rolingizga yopiq` | коллекция относится к разделу, закрытому роли сессии |
-| 403 | `Rol tizimda ro'yxatdan o'tmagan` | роль учётной записи не входит в перечень ролей |
-| 404 | `kolleksiya yo'q: <имя>` | хранилища с таким именем нет |
-| 404 | `topilmadi` | запись с указанным идентификатором отсутствует |
-| 405 | `usul qo'llanmaydi` | метод не поддерживается для этого пути |
-| 500 | текст сбоя | необработанная ошибка, в том числе неразбираемое тело запроса |
+| HTTP | Когда |
+|---|---|
+| 200 / 201 | успешное чтение, изменение / создание |
+| 400 | неверное тело, неизвестное поле, неверный тип или дата, нарушено правило записи |
+| 401 | нет сессии или истёк срок; неверный логин или пароль |
+| 403 | раздел закрыт роли, чужой филиал, действие только для администратора, вход в `mahalliy` не с компьютера |
+| 404 | нет коллекции, записи или файла |
+| 405 | метод не поддержан или коллекция только для чтения |
+| 409 | занятый `id` или логин |
+| 413 / 415 | файл больше 20 МБ / тип файла не принимается |
+| 429 | логин временно заблокирован |
 
 ---
 
 ## 7. Журнал действий
 
-Журнал ведётся в файле `server/malumotlar/amallar.json` и читается методом
-`GET /api/amallar`, доступным только администратору.
+`GET /api/amallar` (администратор) возвращает записи от новых к старым:
+`id`, `vaqt` (`ДД.ММ.ГГГГ ЧЧ:ММ`), `kim`, `rol`, `kolleksiya` (для входа —
+`SESSIYA`), `obyektId`, `turi` (`kirish`, `chiqish`, `kirish rad etildi`,
+`yaratish`, `yangilash`, `o'chirish`, `tiklash`, `fayl yuklash`,
+`parol almashtirildi`), `tafsilot` (имена полей), `ozgarish` (старое и новое
+значение каждого поля). Автоматические записи движка правил в коллекции
+уведомлений, задач, срезов резерва и отчётов ЦБ не пишутся по одной:
+клиент отправляет одну сводку `POST /api/amallar/tizim`.
 
-| Поле | Содержание |
-|---|---|
-| `id` | `AM-` и отметка времени в 36-ричной записи со случайным суффиксом |
-| `vaqt` | `ГГГГ-ММ-ДД ЧЧ:ММ` |
-| `kim` | имя пользователя сессии |
-| `rol` | роль сессии |
-| `kolleksiya` | имя коллекции; для входа в систему — `sessiya` |
-| `obyektId` | идентификатор записи; для входа — имя пользователя |
-| `turi` | `kirish`, `yaratish` или `yangilash` |
-| `tafsilot` | для изменения — перечень имён изменённых полей |
-
-Новые записи добавляются в начало, журнал усекается до 2000 последних
-действий. Методов изменения и удаления записей журнала нет.
-
-В режиме `snapshot` тот же журнал ведётся локально в `localStorage`
-(ключ `mkb4-amallar`, предел — 400 записей) и читается вызовом
-`MKBapi.amallar()`.
+В режиме `snapshot` журнал ведётся в браузере (ключ `mkb4-amallar`, 400
+последних записей) и читается `MKBapi.amallar()`.
 
 ---
 
-## 8. Локальный снимок данных
+## 8. Работа без сервера
 
-Без сервера страницы работают на снимке — наборе модулей, подключаемых
-в строгом порядке:
+Слой правок хранится в `localStorage` под ключом `mkb4-ozgarishlar`
+(для локального реестра — `mkb4-ozgarishlar-mahalliy`) в том же формате, что и
+`ozgarishlar.json`. При загрузке страницы слой накладывается на
+`MKB_DATA`, поэтому экраны и производные показатели видят правки.
 
-| Файл | Что добавляет |
-|---|---|
-| `yadro/bino.js` | модель здания: этажи, помещения, стены, проёмы, точки прохода |
-| `malumot.js` | базовый реестр, справочники, агрегаты, `moslikTekshiruvi()` |
-| `malumot-qoshimcha.js` | адвокаты, заседания, расходы, страховые требования |
-| `malumot-kengaytma.js` | расширение реестра до 64 объектов и связанных с ними записей |
-| `malumot-kirish.js` | модуль электронного контроля доступа |
-| `malumot-indeks.js` | индекс контроля объекта |
-
-Все коллекции публикуются в `window.MKB_DATA`.
-
-### 8.1 Слой правок
-
-Изменения, сделанные в режиме `snapshot`, складываются в `localStorage`
-под ключом `mkb4-ozgarishlar` в виде
-`{ коллекция: { идентификатор: правка } }`. Правка вида `{"__yangi": {...}}`
-означает добавленную запись, признак `__ochirilgan` — скрытую. При чтении
-слой накладывается на базовый массив, поэтому страница видит данные так же,
-как если бы они пришли с сервера.
-
-### 8.2 Методы `MKBapi`
-
-| Метод | Режим `server` | Режим `snapshot` |
+| Метод `MKBapi` | Режим `server` | Режим `snapshot` |
 |---|---|---|
-| `royxat(коллекция, фильтр)` | `GET /api/<коллекция>` с параметрами | массив со слоем правок и фильтром по равенству |
-| `bitta(коллекция, id)` | `GET /api/<коллекция>/<id>` | поиск по `id`, иначе `null` |
-| `yangi(коллекция, объект)` | `POST /api/<коллекция>` | запись в слой правок |
-| `yangilash(коллекция, id, патч)` | `PATCH /api/<коллекция>/<id>` | наложение патча в слое правок |
-| `kirish(login, parol, rol)` | `POST /api/kirish` | учётная запись из `FOYDLAR` |
-| `chiqish()` | очистка локальной сессии | то же |
-| `sessiya()` | текущая сессия из `localStorage` | то же |
-| `amallar()` | локальный журнал | локальный журнал |
+| `royxat(коллекция, фильтр)` | `GET` с параметрами | массив со слоем правок |
+| `bitta(коллекция, id)` | `GET /…/{id}` | поиск по `id` |
+| `yangi(коллекция, объект, opts)` | `POST` | запись в слой |
+| `yangilash(коллекция, id, патч, opts)` | `PATCH` | наложение в слое |
+| `ochir(коллекция, id)` / `tiklash(коллекция, id)` | `DELETE` / `POST …/tiklash` | признак в слое |
+| `fayl.saqla(файл, meta)` / `fayl.ol(id)` | `POST /api/fayllar/yukla` / `GET …/xom` | IndexedDB |
+| `kirish(login, parol)` / `chiqish()` / `sessiya()` | сервер | учётная запись из `FOYDLAR`, демонстрационный пароль |
+| `parolAlmashtir(eski, yangi)` | `POST /api/parol` | недоступно |
+| `amallar()` / `tizimQayd(hisob)` | сервер | браузер |
 
-Имя коллекции передаётся в верхнем регистре и приводится к нижнему при
-построении пути. Пустые значения фильтра игнорируются, поэтому один и тот
-же обработчик обслуживает и незаполненные поля панели фильтров.
+Имя коллекции передаётся в верхнем регистре; псевдонимы `POLISLAR`, `SOTUV`,
+`VAZIFALAR` приводятся к основным именам.
 
 ---
 
-## 9. Коллекции данных
+## 9. Коллекции
 
-Колонка «Хранилище» указывает сегмент пути для режима `server`; прочерк
-означает, что коллекция вычисляется на клиенте и по сети не передаётся.
+### 9.1 Активы на балансе
 
-### 9.1 Объекты и реестр
+**`YOZUVLAR`** — актив. Поля: `id`, `nom`, `qisqa`, `tur`, `turKalit`,
+`rasmTuri`, `binoli`, `hudud`, `hududKod`, `hududToliq`, `tuman`, `manzil`,
+`joy`, `filial`, `filialKod`, `sobiqEga`, `tafsilot`, `holat`, `bosqich`,
+`masul`, `balans`, `qiymat`, `maydon`, `huquq`, `kommunal`, `himoya`, `sotuv`,
+`konservatsiya`, `rasm`, `rasmKichik`, `rasmlar`, `rasmManba`, `rasmUmumiy`,
+`tarix`, `izoh`, `qabul`. Состав вложенных групп — `docs/ARXITEKTURA.md`,
+раздел 3.3. Полей кредита в активе нет.
 
-| Коллекция | Хранилище | Содержание |
-|---|---|---|
-| `YOZUVLAR` | `yozuvlar` | карточки объектов, 64 записи |
-| `OBYEKT_INDEKS` | — | реестр отображаемых имён по идентификатору |
-| `BOSQICHLAR` | — | этапы взыскания, 7 значений |
-| `XONALAR` | — | помещения объекта: площадь, доля, кадастровый номер, права |
-| `ARXIV` | `arxiv` | выбывшие объекты |
-| `XARITA_NUQTALARI` | — | точки карты: `kod`, `nom`, `tur`, `holat`, `lat`, `lng`, `guruh` |
-
-Запись `YOZUVLAR` состоит из групп полей:
-
-| Группа | Поля |
+| Коллекция | Поля |
 |---|---|
-| корень | `id`, `filial`, `tolov`, производные `bosqichNomi`, `bosqichChip`, `holat` |
-| `mulk` | `tur`, `nom`, `qisqa`, `hudud`, `hududToliq`, `manzil`, `maydon`, `baho`, `bahoSana`, `sugurta`, `rasm`, `rasmKichik`, `nazoratBall` |
-| `ish` | `raqam`, `bosqich`, `masul`, `sud`, `qaror`, `ijro`, `muddat`, `kun`, `shoshilinch`, `tarix`, `hujjatlar` |
-| `mijoz` | `nom`, `tur`, `raqam`, `belgi`, `yur`, `tel` |
-| `shartnoma` | `raqam`, `tur`, `sana`, `berilgan` |
-| `qarz` | `asosiy`, `foiz`, `kunlar`, производное `jami` |
+| `ARXIV` | `id`, `obyektId`, `nom`, `tur`, `rasmTuri`, `hudud`, `filial`, `balansSana`, `balansQiymat`, `sotuvSana`, `sotuvNarxi`, `sotishUsuli`, `xaridor`, `jamiXarajat`, `tiklanganZaxira`, `foydaZarar`, `shartnomaId`, `lotId`, `turganKun` |
+| `HUJJATLAR` | `id`, `obyektId`, `nom`, `tur`, `bosqich`, `raqam`, `sana`, `amalQilishTugash`, `holat`, `format`, `hajm`, `yuklagan`, `faylId` |
+| `FAYLLAR` | `id`, `obyektId`, `kolleksiya`, `yozuvId`, `nom`, `tur`, `hajm`, `yuklangan`, `yuklagan`, `yol` |
+| `XARAJATLAR` | `id`, `obyektId`, `toifa`, `summa`, `davr`, `sana`, `kontragent`, `hisobFaktura`, `tasdiqlovchi`, `holat` |
 
-Этапы `BOSQICHLAR` проходятся строго по порядку: `ogohlantirish`, `davo`,
-`sud`, `qaror`, `ijro`, `musodara`, `balans`. Состояние объекта не хранится
-отдельным полем, а выводится из этапа: этапу `balans` соответствует
-состояние «Balansda saqlanmoqda». Продажа объекта находится за пределами
-системы; её результат фиксируется записью архива.
+### 9.2 Осмотры, стоимость, налоги
 
-Запись `OBYEKT_INDEKS` содержит `id`, `nom`, `qisqa`, `tur`, `hudud`,
-`hududToliq`, `rasm`, `manba`. Вторичные коллекции ссылаются на объект
-идентификатором `obyektId`, а отображаемое имя берут отсюда — одно и то же
-имя не может разойтись между экранами.
+| Коллекция | Поля |
+|---|---|
+| `KORIKLAR` | `id`, `obyektId`, `korikTuri`, `tur`, `sana`, `holat`, `inspektor`, `holatBall`, `chekList`, `kamchiliklar`, `xarajatTaklifi`, `keyingiKorikSana`, `xulosa` |
+| `INVENTAR` | `id`, `obyektId`, `inventarRaqam`, `qrKod`, `nom`, `marka`, `model`, `yil`, `vin`, `motosoatYokiKm`, `butlik`, `butlikIzoh`, `akkumulyator`, `kalit`, `saqlashJoyi`, `holatBall`, `oxirgiSanash` |
+| `INVENTARIZATSIYALAR` | `id`, `sana`, `turi`, `komissiya`, `obyektlar`, `natijalar`, `kamomad`, `ortiqcha`, `holat` |
+| `BAHOLASHLAR` | `id`, `obyektId`, `sana`, `hisobotRaqami`, `bozorQiymati`, `tugatishQiymati`, `avvalgi`, `baholovchi`, `litsenziya`, `usul`, `amalQilishTugash`, `holat` |
+| `SUGURTALAR` | `id`, `obyektId`, `polis`, `polisTuri`, `kompaniya`, `summa`, `mukofot`, `boshlanish`, `tugash`, `holat` |
+| `SUGURTA_DAVOLARI` | `id`, `polisId`, `hodisaId`, `obyektId`, `sana`, `summa`, `holat` |
+| `SOLIQ` | `id`, `obyektId`, `davr`, `baza`, `stavka`, `summa`, `imtiyoz`, `yerSoligi`, `holat` |
+| `ZAXIRA_TARIX` | `id`, `davr`, `obyektId`, `toifa`, `foiz`, `summa` — ежемесячные срезы резерва |
+| `MB_HISOBOTLAR` | `id`, `davr`, `muddat`, `topshirilganSana`, `obyektlarSoni`, `jamiBalansQiymat`, `kapital1Daraja`, `kapitalgaNisbat`, `umidsizSoni`, `holat` |
 
-Запись `ARXIV`: `kod`, `nom`, `tur`, `sotilgan` (дата выбытия), `yil`,
-`xaridor` (приобретатель), `summa`, `ish` (номер дела), `qabul` (дата
-приёма на баланс), `nazorat` (срок нахождения под контролем), `rasm`.
+### 9.3 Реализация
 
-### 9.2 Контроль состояния объекта
+| Коллекция | Поля |
+|---|---|
+| `LOTLAR` | `id`, `obyektId`, `eauksionLotRaqami`, `sotishUsuli`, `elonSana`, `savdoSana`, `boshlangichNarx`, `minimalNarx`, `zakalatFoiz`, `qadamFoiz`, `pasaytirishlar`, `keyingiPasaytirishSana`, `holat`, `golib`, `yakuniyNarx`, `bayonnomaSana`, `ishtirokchilarSoni`, `takroriySavdoSana`, `tolovMuddati`, `shartnomaMuddati`, `paketId`, `qarorRaqami` |
+| `TAKLIFLAR` | `id`, `obyektId`, `lotId`, `xaridor`, `xaridorTuri`, `stirYokiPinfl`, `summa`, `tolovSharti`, `sana`, `amlNatija`, `affillanganlik`, `qarorRaqami`, `holat` |
+| `SHARTNOMALAR` | `id`, `lotId`, `taklifId`, `obyektId`, `xaridor`, `narx`, `avans`, `sotishUsuli`, `sana`, `jadval`, `taqiqHolati`, `holat` |
+| `IJARA` | `id`, `obyektId`, `ijarachi`, `maydon`, `oylikIjara`, `boshlanish`, `tugash`, `depozit`, `kommunalKimTolaydi`, `sotuvdaBekorQilishSharti`, `tolovlar`, `holat` |
+| `PAKETLAR` | `id`, `nom`, `tarkib`, `investKompaniya`, `holat` |
+| `XARIDORLAR` | покупатели, на которых ссылаются предложения |
 
-| Коллекция | Хранилище | Поля |
-|---|---|---|
-| `KORIKLAR` | `koriklar` | `id`, `obyektId`, `tur`, `sana`, `holat`, `inspektor`, `izoh`, `obyekt`, `hudud` |
-| `SUGURTALAR` | `sugurtalar` | `id`, `obyektId`, `polis`, `kompaniya`, `summa`, `tugash`, `holat`, `obyekt` |
-| `SUGURTA_DAVOLARI` | `sugurta_davolari` | `id`, `obyektId`, `obyekt`, `polis`, `kompaniya`, `hodisa`, `sana`, `summa`, `holat` |
-| `BAHOLASHLAR` | `baholashlar` | `obyektId`, `sana`, `qiymat`, `avvalgi`, `baholovchi`, `usul`, `keyingi`, `holat`, `obyekt` |
-| `HODISALAR` | `hodisalar` | `id`, `kod`, `obyektId`, `hodisa`, `sarlavha`, `tavsif`, `vaqt`, `jiddiylik`, `holat`, `ustun`, `masul`, `bolim`, `bino`, `joy`, `fayl`, `hajm`, `rang` |
+### 9.4 Взыскание и суд
 
-Состояния: осмотр — `rejada`, `otkazildi`, `kechikkan`, `muddati_otgan`;
-полис — `amalda`, `tugaydi`, `muddati_otgan`, `yoq`; оценка — `dolzarb`,
-`tugaydi`, `eskirgan`. Происшествие движется по колонкам доски `ustun`:
-`yangi`, `tekshirilmoqda`, `bartaraf`, `yopildi`.
+| Коллекция | Поля |
+|---|---|
+| `UNDIRUV_ISHLAR` | `id`, `holat` (`faol`, `yopilgan`), `bosqich`, `qarzdor`, `shartnoma`, `qarz`, `garov`, `filial`, `filialKod`, `masul`, `advokatId`, `sud`, `qaror`, `ijro`, `muddat`, `tarix`, `hujjatlar`, `aktivId`, `yopilganSana` |
+| `SUD_MAJLISLAR` | `id`, `ishId`, `sud`, `sana`, `soat`, `zal`, `advokatId`, `advokat`, `mavzu`, `holat`, `natija` |
+| `ADVOKATLAR` | `id`, `ism`, `litsenziya`, `ixtisos`, `tel`, `tajriba` |
+| `RESTRUKTURIZATSIYA`, `MULOQOTLAR` | предложения должника и контакты по делу, ссылка `ishId` |
 
-### 9.3 Взыскание и суд
+### 9.5 Защита и мониторинг
 
-| Коллекция | Хранилище | Поля |
-|---|---|---|
-| `SUD_MAJLISLAR` | `sud_majlislar` | `id`, `ishRaqam`, `obyektId`, `obyekt`, `sud`, `sana`, `soat`, `zal`, `advokat`, `mavzu`, `holat` |
-| `ADVOKATLAR` | `advokatlar` | `id`, `ism`, `litsenziya`, `ixtisos`, `tel`, `tajriba` |
-| `XARAJATLAR` | `xarajatlar` | `id`, `obyektId`, `obyekt`, `tur`, `summa`, `sana`, `holat` |
+| Коллекция | Поля |
+|---|---|
+| `HODISALAR` | `id`, `kod`, `obyektId`, `hodisa`, `sarlavha`, `tavsif`, `vaqt`, `jiddiylik`, `ustun`, `holat`, `manba`, `masul`, `iibAriza {raqam, sana}` |
+| `QORIQLASH` | `id`, `obyektId`, `qoriqlashTuri`, `ijrochi`, `shartnomaRaqami`, `boshlanish`, `tugash`, `oylikTolov`, `javobVaqtiDaq`, `holat` |
+| `KOMMUNAL_ARIZALAR` | `id`, `obyektId`, `xizmat`, `tur`, `raqam`, `sana`, `muddat`, `holat` |
+| `QURILMALAR` | `id`, `obyektId`, `kirishNuqtaId`, `shlyuzId`, `tur`, `katalogId`, `ishlabChiqaruvchi`, `model`, `seriya`, `ornatilgan`, `quvvat`, `aloqa`, `simRaqam`, `batareya`, `oxirgiSignal`, `holat`, `keyingiXizmat` |
+| `KIRISH_NUQTALARI` | `id`, `obyektId`, `nom`, `tur`, `rejim`, `holat`, `qurilmalar`, `kunlikOtish`, `oxirgiAloqa` — только у зданий |
+| `SHAXSLAR`, `RUXSATLAR`, `KIRISH_SOROVLARI`, `TASHRIFLAR`, `KIRISH_VOQEALARI`, `XAVFSIZLIK_HODISALARI`, `MASOFAVIY_SESSIYALAR`, `XIZMAT_ISHLARI` | лица, допуски, заявки на доступ, посещения, события доступа, сигналы, дистанционные осмотры, сервисные работы |
 
-Реквизиты документа органа исполнения хранятся в поле `ish.ijro` карточки
-объекта; отдельной коллекции для них нет.
+Справочники защиты (`QURILMA_TURLARI`, `QURILMA_KATALOG`, `HIMOYA_ANDOZALARI`)
+включают устройства для объектов без электроснабжения: 4G-камеры с солнечной
+панелью, датчики LoRaWAN, терминал Face ID, пожарный датчик (дым,
+температура, угарный газ), GPS-трекер, шлюз. `himoyaSmetasi(шаблон, n)`
+считает смету: оборудование × цена + монтаж + связь на 12 месяцев.
 
-### 9.4 Электронный контроль доступа
+### 9.6 Работа пользователя и настройки
 
-Коллекции модуля строятся на клиенте из модели здания `yadro/bino.js`:
-точки прохода на плане этажа, в трёхмерном навигаторе и в реестре — одни
-и те же. Ссылки внутри модуля идут по `obyektId`, `kirishNuqtaId`,
-`qurilmaId` и `shaxsId`.
-
-**`SHAXSLAR`** — люди, обращающиеся к объектам.
-
-`id`, `ism`, `belgi` (инициалы), `tur`, `lavozim`, `tashkilot`, `rasm`,
-`hujjat`, `tel`, `faol`. Значения `tur`: `xodim`, `pudratchi`,
-`tashrifchi`, `nazoratchi`.
-
-**`KIRISH_NUQTALARI`** — точки прохода.
-
-`id`, `obyektId`, `qavat`, `xonaId`, `nom`, `tur`, `turNomi`, `rejim`,
-`holat`, `kunlikOtish`, `oxirgiAloqa`, `ishVaqti`, `geom`.
-Значения `tur`: `turniket`, `eshik`, `shlagbaum`, `darvoza`.
-Значения `holat`: `onlayn`, `oflayn`, `xizmatda`.
-Режим прохода `rejim`: `Face ID + karta`, `Karta`, `Karta + PIN`,
-`Face ID`, `Masofadan ochish`.
-Вложенный `geom` содержит `x`, `y`, `en`, `yonalish` — положение точки в
-координатах плана этажа.
-
-**`QURILMALAR`** — оборудование точек прохода.
-
-`id`, `obyektId`, `kirishNuqtaId`, `tur`, `turNomi`, `model`, `seriya`,
-`ornatilgan`, `proshivka`, `holat`, `oxirgiAloqa`, `batareya`,
-`keyingiXizmat`. Значения `tur`: `qulf`, `oquvchi`, `yuz`, `kamera`,
-`kontroller`, `interkom`, `datchik`. Значения `holat`: `ishlayapti`,
-`ogohlantirish`, `nosoz`. Поле `batareya` заполняется только для датчиков.
-
-**`KIRISH_VOQEALARI`** — журнал проходов.
-
-`id`, `vaqt`, `sana`, `soat`, `obyektId`, `kirishNuqtaId`, `nuqtaNomi`,
-`shaxsId`, `usul`, `natija`, `sabab`, `yonalish`.
-Значения `natija`: `ruxsat`, `rad`, `ogohlantirish`; `yonalish`: `kirish`,
-`chiqish`. При отказе заполняется `sabab`; `shaxsId` может быть пустым,
-если человек не опознан. Коллекция отсортирована от новых к старым.
-
-**`RUXSATLAR`** — постоянные разрешения.
-
-`id`, `shaxsId`, `obyektId`, `nuqtalar` (массив идентификаторов точек),
-`daraja`, `usul`, `boshlanish`, `tugash`, `holat`, `bergan`.
-Значения `daraja`: `To'liq kirish`, `Cheklangan kirish`,
-`Hamrohlik bilan`. Значения `holat`: `amalda`, `muddati tugagan`,
-`to'xtatilgan`.
-
-**`KIRISH_SOROVLARI`** — заявки на разовый доступ.
-
-`id`, `sana`, `vaqt`, `shaxsId`, `obyektId`, `maqsad`, `muddat`,
-`sorovchi`, `tasdiqlovchi`, `holat`, `izoh`. Значения `holat`:
-`kutilmoqda`, `tasdiqlangan`, `bajarildi`, `rad etilgan`. Пока заявка не
-рассмотрена, `tasdiqlovchi` пуст; при отказе заполняется `izoh`.
-
-**`TASHRIFLAR`** — посещения объекта.
-
-`id`, `obyektId`, `shaxsId`, `sana`, `kirish`, `chiqish`, `davomiylik`,
-`maqsad`, `hamroh`, `holat`. Значения `holat`: `obyektda` (визит идёт,
-`chiqish` пуст) и `yakunlandi`. Поле `hamroh` заполняется для тех, кто
-допускается только в сопровождении.
-
-**`XAVFSIZLIK_HODISALARI`** — происшествия контроля доступа.
-
-`id`, `vaqt`, `sana`, `obyektId`, `kirishNuqtaId`, `hodisa`, `jiddiylik`,
-`holat`, `masul`, `chora`. Значения `jiddiylik`: `past`, `o'rta`,
-`yuqori`; `holat`: `ochiq`, `tekshiruvda`, `yopildi`. Поле `chora`
-заполняется при закрытии.
-
-**`MASOFAVIY_SESSIYALAR`** — сеансы дистанционного осмотра.
-
-`id`, `obyektId`, `sana`, `vaqt`, `inspektor`, `holat`, `bosqich`,
-`bosqichlar`, `kameralar`, `davomiylik`. Значения `holat`:
-`rejalashtirilgan`, `jarayonda`, `yakunlandi`. Поле `bosqichlar` содержит
-шесть шагов сеанса, `bosqich` — номер достигнутого шага.
-
-**`XIZMAT_ISHLARI`** — обслуживание оборудования.
-
-`id`, `qurilmaId`, `obyektId`, `kirishNuqtaId`, `tur`, `sana`, `usta`,
-`holat`, `ehtiyotQismlar` (массив), `izoh`. Значения `holat`: `rejada`,
-`bajarilmoqda`, `bajarildi`.
-
-**Служебные структуры модуля.** `SHAXS_INDEKS` и `NUQTA_INDEKS` —
-разыменование по идентификатору; `BINO_MODELLARI` — модель здания по
-объекту; `KIRISH_BUGUN` — рабочая дата. Готовые выборки:
-`shaxs(id)`, `shaxsNomi(id)`, `kirishNuqtasi(id)`,
-`obyektNuqtalari(obyektId)`, `obyektVoqealari(obyektId)` и сводка
-`kirishJamlama()`, возвращающая `nuqta`, `onlayn`, `oflayn`, `qurilma`,
-`nosoz`, `bugungiVoqea`, `rad`, `obyektda`, `kutilayotganSorov`,
-`ochiqHodisa`, `amaldagiRuxsat`.
-
-### 9.5 Работа пользователя
-
-| Коллекция | Хранилище | Поля |
-|---|---|---|
-| `HUJJATLAR` | `hujjatlar` | `id`, `kod`, `obyektId`, `nom`, `tur`, `teg`, `sana`, `holat`, `format`, `hajm`, `yuklagan`, `tavsif`, `obyekt`, `rasm`, `ikon`, `iturl`, `hrang` |
-| `MENING_VAZIFALARIM` | `mening_vazifalarim` | `id`, `nom`, `tur`, `kod`, `sana`, `vaqt`, `bugunmi`, `muhimlik`, `ijrochi`, `ikon` |
-| `TASDIQLAR` | `tasdiqlar` | заявки на согласование: `id`, `sarlavha`, `obyektId`, `sorovchi`, `lavozim`, `sorovSana`, `javobMuddati`, `qolgan`, `hujjatNomi`, `hujjatHajmi`, `masulNom`, `koribNom`, `nusxaNom`, `ishtirokchilar`, `joy` |
-| `BILDIRISHLAR` | `bildirishlar` | `id`, `sarlavha`, `matn`, `vaqt`, `yangi`, `havola`, `ikon`, `t` |
-| `FOYDLAR` | `foydlar` | `id`, `nom`, `login`, `rol`, `teg`, `bolim`, `lavozim`, `email`, `tel`, `sana`, `faol`, `rasm` |
-
-Коллекция `MENING_VAZIFALARIM` публикуется также под именем `VAZIFALAR`,
-`SUGURTALAR` — под именем `POLISLAR`; это ссылки на те же массивы.
-
-### 9.6 Агрегаты и справочники
-
-| Коллекция | Хранилище | Содержание |
-|---|---|---|
-| `PORTFEL` | — | показатели портфеля целиком: `jami`, `bahoTrln`, `oylikUndiruvMlrd`, разрезы `holatlar`, `koriklar`, `sugurtali`, `baholash`, `undiruv`, `shartnoma`, приросты `delta` |
-| `HUDUDLAR` | `hududlar` | разрез по регионам: название, число объектов, прирост, знак |
-| `KPI_BAZA` | — | четыре показателя года: `qiymat`, `birlik`, `delta`, `manfiy` |
-| `UNDIRUV_SERIYA` | — | ряды взыскания: `oylik` и `yillik`, каждый — `yorliq` и `qiymat` |
-| `HISOBOTLAR` | — | сформированные отчёты: имя, формат, дата, объём, ряд для графика |
-
-Числа разрезов не пишутся вручную: они считаются из массивов функциями
-`bosqichStatistikasi()`, `holatStatistikasi()`, `jamiQarz()`, `jamiBaho()`.
-Доли состояний округляются по наибольшему остатку, поэтому их сумма всегда
-равна 100.
+| Коллекция | Поля |
+|---|---|
+| `TASDIQLAR` | `id`, `tur`, `manbaKol`, `manbaId`, `obyektId`, `sarlavha`, `tavsif`, `summa`, `muallif`, `masulRol`, `javobMuddati`, `holat`, `qaror`, `sabab`, `qarorSana` |
+| `MENING_VAZIFALARIM` | `id`, `nom`, `tur`, `obyektId`, `kod`, `qoidaId`, `sana`, `muddat`, `ijrochi`, `rol`, `muhimlik`, `bajarildi` |
+| `BILDIRISHLAR` | `id`, `qoidaId`, `obyektId`, `sarlavha`, `matn`, `havola`, `sana`, `rol`, `oqildi`, `oqiganlar` |
+| `FOYDLAR` | `id`, `nom`, `login`, `rol`, `bolim`, `filialKod`, `lavozim`, `email`, `tel`, `faol` |
+| `FILIALLAR` | `id`, `nom`, `hudud`, `hududNomi`, `turi` |
+| `PARAMETRLAR` | `id`, `guruh`, `nom`, `qiymat`, `birlik`, `taxminiy`, `manba` — сроки, ставки резерва, налоги, торги, связь |
+| `QOIDALAR` | `id`, `trigger`, `nom`, `kunlar`, `natija`, `qabulQiluvchiRol`, `eskalatsiyaRol`, `eskalatsiyaKun`, `faol`, `manba` |
+| `BAYRAMLAR` | `id`, `sana`, `nom`, `taxminiy` |
+| `INTEGRATSIYALAR` | `id`, `nom`, `holat`, `masul`, `oxirgiSinxron` |
 
 ---
 
 ## 10. Индекс контроля объекта
 
-Процент в карточке объекта — индекс контроля: насколько объект в порядке
-с точки зрения банковского контроля. Значение от 0 до 100 нигде не
-хранится и пересчитывается из текущих данных модулем `malumot-indeks.js`.
-
-| Составляющая | Вес | Норматив |
-|---|---|---|
-| Актуальность осмотра | 25 | 30 дней для транспорта, 180 для земельного участка, 90 для остальных типов |
-| Страховая защита | 25 | действующий полис, покрытие не ниже оценочной стоимости |
-| Актуальность оценки | 20 | один раз в 12 месяцев |
-| Полнота документов | 15 | технический паспорт, кадастровый документ, акт приёма |
-| Контроль доступа | 15 | все точки прохода на связи, незакрытых происшествий нет |
-
-Балл составляющей убывает ступенями: в пределах норматива — полный,
-до полутора нормативов — 0,6, до двух — 0,3, далее — 0. Просроченный
-плановый осмотр ограничивает составляющую осмотра значением 0,3.
-Каждое незакрытое происшествие снимает 0,2 с составляющей контроля
-доступа, но не более 0,6 суммарно.
-
-Итог распределяется по уровням: 85 и выше — «Yuqori nazorat», от 70 —
-«Barqaror», от 50 — «E'tibor talab», ниже — «Kritik».
-
-Доступ к расчёту:
+Считается на клиенте (`malumot-indeks.js`): осмотр 25, страхование 25,
+оценка 20, документы 15, охрана и устройства 15. Уровни: 85 и выше — высокий,
+от 70 — устойчивый, от 50 — требует внимания, ниже — критический.
 
 ```
-MKB_DATA.nazoratIndeksi(объект | идентификатор)
-  -> { obyektId, ball, daraja, darajaNomi, tarkib[], zaif[] }
-MKB_DATA.nazoratJamlama(список)
-  -> { ortacha, daraja: {yuqori, barqaror, past, kritik}, jami }
-MKB_DATA.NAZORAT_OGIRLIK
-  -> перечень составляющих и весов
+MKB_DATA.nazoratIndeksi(объект) → {obyektId, ball, daraja, tarkib[], zaif[]}
+MKB_DATA.nazoratJamlama()       → {ortacha, daraja, jami}
 ```
-
-Каждый элемент `tarkib` содержит `kalit`, `nom`, `ogirlik`, `ulush`,
-`qiymat` (текущее значение), `meyor` (норматив), `holat` (`yaxshi`,
-`ogohlantirish`, `xavf`) и `izoh` с пояснением отклонения. Массив `zaif`
-повторяет составляющие вне нормы, от худшей к лучшей. Готовый балл
-дублируется в поле `mulk.nazoratBall` карточки.
 
 ---
 
 ## 11. Инварианты данных
 
-Функция `moslikTekshiruvi()` в `malumot.js` — исполняемая спецификация
-целостности. Она возвращает список нарушений; на исправных данных список
-пуст. Каждая проверка должна получить серверный аналог, срабатывающий
-до записи:
-
-1. `qarz.jami` равно сумме `qarz.asosiy` и `qarz.foiz`;
-2. каждому этапу дела сопоставлено состояние объекта;
-3. этап `balans` невозможен без даты приёма на баланс;
-4. этапы `musodara` и `balans` невозможны без документа органа исполнения;
-5. оценочная стоимость больше нуля, число дней просрочки больше нуля;
-6. разрезы портфеля по состояниям, осмотрам, страхованию и оценке сходятся
-   с общим числом объектов;
-7. разрез по регионам покрывает весь портфель;
-8. ссылка `obyektId` во вторичных коллекциях разрешается в существующую
-   запись реестра;
-9. статус земельного участка совпадает с этапом связанного дела;
-10. страховое покрытие действующего полиса не ниже оценочной стоимости
-    (земельные участки не страхуются);
-11. стоимость в карточке синхронна актуальной записи реестра оценок;
-12. запись архива содержит приобретателя, номер дела и сумму выбытия;
-13. разрезы договоров сходятся между собой, число должников не превышает
-    числа договоров.
-
-Нарушение инварианта — отказ в записи целиком: частичное сохранение
-не допускается.
+`moslikTekshiruvi()` — исполняемая спецификация целостности (перечень —
+`docs/ARXITEKTURA.md`, раздел 3.6). Сервер уже применяет правила записи из
+раздела 5.3; при переносе в промышленный контур каждый инвариант получает
+серверную проверку до записи, частичное сохранение не допускается.
 
 ---
 
 ## 12. Требования к промышленному контуру
 
-Раздел перечисляет то, что должно быть выполнено при переносе системы в
-сеть банка. В локальном сервере это не реализовано.
-
-- **Н-1.** Все запросы поверх TLS 1.2 и выше; порт HTTP — только для
-  перенаправления.
-- **Н-2.** Сессия переносится в cookie с признаками `HttpOnly`, `Secure`,
-  `SameSite=Strict`; хранение токена в `localStorage` прекращается.
-- **Н-3.** Срок жизни сессии: 30 минут бездействия, не более 12 часов
-  подряд. Пять неудачных попыток входа — блокировка учётной записи на
-  15 минут с записью в журнал действий.
-- **Н-4.** Второй фактор обязателен для ролей `Administrator` и
-  `Filial rahbari`.
-- **Н-5.** Матрица разделов проверяется сервером до чтения из хранилища;
-  клиентская копия остаётся только для построения меню. В локальном сервере
-  это требование уже выполнено (раздел 4.1).
-- **Н-6.** Ограничение частоты: 300 запросов в минуту на сессию,
-  10 в минуту на вход.
-- **Н-7.** Заголовки `Content-Security-Policy`, `X-Content-Type-Options`,
-  `Referrer-Policy: same-origin`.
-- **Н-8.** Персональные данные (ПИНФЛ, телефоны, адреса) не попадают в
-  журналы приложения и в параметры адресной строки.
-- **Н-9.** Журнал действий пишется в хранилище с правом только на
-  добавление: у прикладной учётной записи СУБД нет `UPDATE` и `DELETE`
-  на этой таблице.
-- **Н-10.** Записи архива неизменяемы; исправление оформляется новой
-  корректирующей записью со ссылкой на исходную.
-
-Показатели, на которые следует ориентироваться при нагрузочной проверке:
+- **Н-1.** Все запросы поверх TLS 1.2+; HTTP — только перенаправление.
+- **Н-2.** Токен только в cookie `HttpOnly; Secure; SameSite=Strict`, без
+  копии в `localStorage`.
+- **Н-3.** 30 минут бездействия завершают сессию. Блокировка после пяти
+  неудачных попыток уже реализована.
+- **Н-4.** Второй фактор для `Administrator`, `Rahbariyat`, `Filial rahbari`.
+- **Н-5.** Ограничение частоты: 300 запросов в минуту на сессию, 10 в минуту
+  на вход.
+- **Н-6.** Заголовки `Content-Security-Policy`, `Referrer-Policy: same-origin`.
+- **Н-7.** Персональные данные (ПИНФЛ, телефоны, изображения лиц) хранятся на
+  серверах в Узбекистане (ЗРУ-547, ЗРУ-1125) и не попадают в журналы и адресную
+  строку.
+- **Н-8.** Журнал действий — только добавление, без `UPDATE` и `DELETE`.
+- **Н-9.** Записи архива неизменяемы; исправление — новая корректирующая запись.
 
 | Показатель | Значение |
 |---|---|
-| Ответ списочного метода | 95-й процентиль не более 400 мс |
-| Ответ карточки объекта | 95-й процентиль не более 250 мс |
+| Ответ списочного метода | 95-й процентиль ≤ 400 мс |
+| Ответ карточки объекта | 95-й процентиль ≤ 250 мс |
 | Одновременные пользователи | 150 |
 | Доступность в рабочие часы | 99,5 % |
 | Восстановление после сбоя | RPO 15 минут, RTO 2 часа |
 
 ---
 
-## 13. Вопросы, требующие решения заказчика
+## 13. Вопросы к заказчику
 
-1. Источник учётных записей: собственные записи системы, доменный каталог
-   банка или единый вход.
-2. Протокол обмена с оборудованием контроля доступа: состав команд
-   открытия точки прохода, формат потока событий, способ получения
-   видеосигнала.
-3. Контур размещения: внутренняя сеть банка, облако или смешанная схема.
-4. Срок хранения журнала действий и записей архива, согласованный со
-   службой комплаенса.
-
-Пункты 1 и 3 блокирующие: без них нельзя зафиксировать ни схему
-развёртывания, ни модель доступа.
+1. Источник учётных записей: собственные записи, доменный каталог или единый вход.
+2. Интеграции: ABS (остатки счетов 16701 и резерва), кадастр, ГУБДД, E-auksion,
+   коммунальные поставщики, шлюз устройств — формат и порядок доступа.
+3. Контур размещения и срок хранения журнала и архива.
+4. Утверждение бухгалтерией промежуточных ставок резерва (сейчас `taxminiy`).

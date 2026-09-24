@@ -13,10 +13,29 @@ window.MKBchizma = (function(){
     if (ich != null) e.textContent = ich;
     return e;
   }
-  function rang(nomi){ /* CSS token -> haqiqiy qiymat */
-    return getComputedStyle(document.documentElement).getPropertyValue(nomi).trim() || nomi;
+  function rang(nomi){ /* CSS token ("--kok" yoki "var(--kok)") -> haqiqiy qiymat: SVG atributi var() ni yechmaydi */
+    const m = /^\s*(?:var\(\s*)?(--[\w-]+)\s*\)?\s*$/.exec(String(nomi || ""));
+    return (m && getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim()) || nomi;
   }
   let idSanoq = 0;
+  /* Grafik ma'lumoti ekran o'quvchi uchun yashirin jadval sifatida ham beriladi (SVG o'zi aria-hidden) */
+  function matnJadval(orin, cfg, ustunlar, qatorlar){
+    const esc = v => String(v == null ? "" : v).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+    const karta = orin.closest ? orin.closest(".karta, section") : null;
+    const h = karta ? karta.querySelector("h2, h3") : null;
+    const sarlavha = cfg.sarlavha || (h ? h.textContent.trim() : "");
+    const t = document.createElement("table");
+    t.className = "sr-only";
+    t.innerHTML = (sarlavha ? "<caption>" + esc(sarlavha) + "</caption>" : "") +
+      "<thead><tr>" + ustunlar.map(u => '<th scope="col">' + esc(u) + "</th>").join("") + "</tr></thead><tbody>" +
+      qatorlar.map(r => "<tr>" + r.map((v, i) => i ? "<td>" + esc(v) + "</td>" : '<th scope="row">' + esc(v) + "</th>").join("") + "</tr>").join("") +
+      "</tbody>";
+    orin.appendChild(t);
+    /* Jadval grafik chizilgandan keyin qo'shiladi: ruscha interfeysda matni ham o'giriladi */
+    if (typeof tarjimaQil === "function") tarjimaQil(t);
+  }
+  const qFormat = (cfg, v) => cfg.tooltipFormat ? cfg.tooltipFormat(v) : v;
+  const yorliq = (y, i) => (y && y[i] != null ? y[i] : String(i + 1));
 
   /* Catmull-Rom -> silliq kubik Bezier yo'li */
   function silliqYol(n){
@@ -61,7 +80,7 @@ window.MKBchizma = (function(){
       const toldirish = rang(cfg.fonRang || cfg.rang || "--mint");
       const gid = "cg" + (++idSanoq);
 
-      const svg = el("svg", {width: "100%", height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true"});
+      const svg = el("svg", {width: "100%", height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true", class: "chizma-svg"});
       const defs = el("defs", {});
       const gr = el("linearGradient", {id: gid, x1: 0, y1: 0, x2: 0, y2: 1});
       gr.appendChild(el("stop", {offset: "0%", "stop-color": toldirish, "stop-opacity": ".85"}));
@@ -77,8 +96,7 @@ window.MKBchizma = (function(){
         if (!cfg.oqlSiz){
           const v = maks - (maks - min) * g / 3;
           svg.appendChild(el("text", {x: P.l - 8, y: gy + 3.5, "text-anchor": "end",
-            "font-size": 10, "font-family": "JetBrains Mono, monospace",
-            fill: rang("--iz")}, cfg.oqFormat ? cfg.oqFormat(v) : Math.round(v)));
+            "font-size": 10, fill: rang("--iz")}, cfg.oqFormat ? cfg.oqFormat(v) : Math.round(v)));
         }
       }
       /* area + chiziq */
@@ -119,11 +137,13 @@ window.MKBchizma = (function(){
         tt.removeAttribute("hidden");
         tt.innerHTML = "<b>" + (cfg.tooltipFormat ? cfg.tooltipFormat(q[eng]) : q[eng]) + "</b>" +
           (y && y[eng] ? '<span>' + y[eng] + "</span>" : "");
+        if (typeof tarjimaQil === "function") tarjimaQil(tt);
         tt.style.left = (nx / W * 100) + "%";
         tt.style.top = (ny / H * 100) + "%";
       });
       svg.addEventListener("pointerleave", () => { belgi.setAttribute("opacity", 0); tt.setAttribute("hidden", ""); });
       orin.appendChild(svg);
+      matnJadval(orin, cfg, ["Davr", "Qiymat"], q.map((v, i) => [yorliq(y, i), qFormat(cfg, v)]));
     };
     chiz();
     new ResizeObserver(() => chiz()).observe(orin);
@@ -144,14 +164,14 @@ window.MKBchizma = (function(){
       const en = Math.min(cfg.en || 30, joy * 0.62);
       const asosiy = rang(cfg.rang || "--siyoh");
       const urgu = rang(cfg.urguRang || "--mint-matn");
-      const svg = el("svg", {width: "100%", height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true"});
+      const svg = el("svg", {width: "100%", height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true", class: "chizma-svg"});
       for (let g = 0; g <= 3; g++){
         const gy = P.t + (H - P.t - P.b) * g / 3;
         svg.appendChild(el("line", {x1: P.l, x2: W - P.r, y1: gy, y2: gy, stroke: rang("--chiziq-2")}));
         if (!cfg.oqlSiz){
           const v = maks * (1 - g / 3);
           svg.appendChild(el("text", {x: P.l - 8, y: gy + 3.5, "text-anchor": "end",
-            "font-size": 10, "font-family": "JetBrains Mono, monospace", fill: rang("--iz")},
+            "font-size": 10, fill: rang("--iz")},
             cfg.oqFormat ? cfg.oqFormat(v) : Math.round(v)));
         }
       }
@@ -169,6 +189,7 @@ window.MKBchizma = (function(){
           tt.removeAttribute("hidden");
           tt.innerHTML = "<b>" + (cfg.tooltipFormat ? cfg.tooltipFormat(v) : v) + "</b>" +
             (y && y[i] ? "<span>" + y[i] + "</span>" : "");
+          if (typeof tarjimaQil === "function") tarjimaQil(tt);
           tt.style.left = ((x + en / 2) / W * 100) + "%";
           tt.style.top = (yy / H * 100) + "%";
         });
@@ -179,6 +200,7 @@ window.MKBchizma = (function(){
             "text-anchor": "middle", "font-size": 10.5, fill: rang("--iz")}, y[i]));
       });
       orin.appendChild(svg);
+      matnJadval(orin, cfg, ["Davr", "Qiymat"], q.map((v, i) => [yorliq(y, i), qFormat(cfg, v)]));
     };
     chiz();
     new ResizeObserver(() => chiz()).observe(orin);
@@ -192,20 +214,21 @@ window.MKBchizma = (function(){
     const R = (O - T) / 2, C = 2 * Math.PI * R;
     const jami = cfg.segmentlar.reduce((a, s) => a + s.qiymat, 0);
     const svg = el("svg", {width: O, height: O, viewBox: "0 0 " + O + " " + O,
-      style: "transform:rotate(-90deg)", "aria-hidden": "true"});
+      style: "transform:rotate(-90deg)", "aria-hidden": "true", class: "chizma-svg"});
     let siljish = 0;
     orin.style.position = "relative";
     const tt = tooltipYarat(orin);
     cfg.segmentlar.forEach(s => {
       const ul = s.qiymat / jami;
       const seg = el("circle", {cx: O / 2, cy: O / 2, r: R, fill: "none",
-        stroke: s.rang, "stroke-width": T, "stroke-linecap": "butt",
+        stroke: rang(s.rang), "stroke-width": T, "stroke-linecap": "butt",
         "stroke-dasharray": (ul * C - 2.5) + " " + (C - ul * C + 2.5),
         "stroke-dashoffset": -siljish * C, style: "transition:stroke-width .15s"});
       seg.addEventListener("pointerenter", () => {
         seg.setAttribute("stroke-width", T + 5);
         tt.removeAttribute("hidden");
         tt.innerHTML = "<b>" + s.qiymat + (cfg.birlik || "") + "</b><span>" + s.nom + " · " + Math.round(ul * 100) + "%</span>";
+        if (typeof tarjimaQil === "function") tarjimaQil(tt);
         tt.style.left = "50%"; tt.style.top = "8%";
       });
       seg.addEventListener("pointerleave", () => { seg.setAttribute("stroke-width", T); tt.setAttribute("hidden", ""); });
@@ -218,6 +241,8 @@ window.MKBchizma = (function(){
     markaz.className = "chizma-donut-markaz";
     markaz.innerHTML = "<b>" + (cfg.markaz != null ? cfg.markaz : jami) + "</b><span>" + (cfg.markazIzoh || "") + "</span>";
     orin.appendChild(markaz);
+    matnJadval(orin, cfg, ["Toifa", "Qiymat", "Ulush"], cfg.segmentlar.map(s =>
+      [s.nom, s.qiymat + (cfg.birlik || ""), (jami ? Math.round(s.qiymat / jami * 100) : 0) + "%"]));
   }
 
   /* ---------- SPARKLINE ---------- */
@@ -231,7 +256,7 @@ window.MKBchizma = (function(){
     const n = qiymatlar.map((v, i) => [X(i), Y(v)]);
     const asosiy = rang(rangNomi || "--siyoh");
     const gid = "cu" + (++idSanoq);
-    const svg = el("svg", {width: W, height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true"});
+    const svg = el("svg", {width: W, height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true", class: "chizma-svg"});
     const defs = el("defs", {});
     const gr = el("linearGradient", {id: gid, x1: 0, y1: 0, x2: 0, y2: 1});
     gr.appendChild(el("stop", {offset: "0%", "stop-color": rang("--mint"), "stop-opacity": ".9"}));
@@ -258,7 +283,7 @@ window.MKBchizma = (function(){
       const y = cfg.yorliqlar, S = cfg.seriyalar, N = S[0].qiymatlar.length;
       const maks = Math.max(1, ...S.map(s => Math.max(...s.qiymatlar))) * 1.12;
       const joy = (W - P.l - P.r) / N, en = Math.min(cfg.en || 22, joy * .7 / S.length), oraliq = 4;
-      const svg = el("svg", {width: "100%", height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true"});
+      const svg = el("svg", {width: "100%", height: H, viewBox: "0 0 " + W + " " + H, "aria-hidden": "true", class: "chizma-svg"});
       for (let g = 0; g <= 3; g++){
         const gy = P.t + (H - P.t - P.b) * g / 3;
         svg.appendChild(el("line", {x1: P.l, x2: W - P.r, y1: gy, y2: gy, stroke: rang("--chiziq-2")}));
@@ -275,6 +300,7 @@ window.MKBchizma = (function(){
             r.setAttribute("opacity", .78);
             tt.removeAttribute("hidden");
             tt.innerHTML = "<b>" + (cfg.tooltipFormat ? cfg.tooltipFormat(v) : v) + "</b><span>" + s.nom + " · " + y[i] + "</span>";
+            if (typeof tarjimaQil === "function") tarjimaQil(tt);
             tt.style.left = ((x + en / 2) / W * 100) + "%"; tt.style.top = (yy / H * 100) + "%";
           });
           r.addEventListener("pointerleave", () => { r.setAttribute("opacity", 1); tt.setAttribute("hidden", ""); });
@@ -283,6 +309,7 @@ window.MKBchizma = (function(){
         svg.appendChild(el("text", {x: P.l + joy * i + joy / 2, y: H - 8, "text-anchor": "middle", "font-size": 10.5, fill: rang("--iz")}, y[i]));
       }
       orin.appendChild(svg);
+      matnJadval(orin, cfg, ["Davr"].concat(S.map(s => s.nom)), y.map((t, i) => [t].concat(S.map(s => qFormat(cfg, s.qiymatlar[i])))));
     };
     chiz();
     let eni = orin.clientWidth;

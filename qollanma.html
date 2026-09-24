@@ -3,15 +3,119 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Ish qo'llanmasi</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
+<title>MKB — Qo'llanma</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
-.ql-tor{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px}
-.ql-rollar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-.ql-rollar button{height:38px;padding:0 16px;border-radius:999px;background:var(--oq);
-  box-shadow:var(--soya-past);font-size:13.5px;font-weight:500;color:var(--matn-2)}
-.ql-rollar button.faol{background:var(--siyoh);color:var(--oq)}
-@media (max-width:1100px){.ql-tor{grid-template-columns:minmax(0,1fr)}}
+/* Yordam markazi: v6 tokenlari, o'lchamlar kichraytirilmaydi */
+/* Ichki daraja: yadrodagi yagona segment almashtirgich (trek + pilyulalar), bo'lim tasmasidan aniq ajraladi */
+.ym-menyu{align-self:flex-start;max-width:100%;margin-bottom:16px}
+.ym-izlash{position:relative;margin-bottom:20px}
+.ym-izlash .ic{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--matn-3);pointer-events:none}
+.ym-izlash input{width:100%;min-height:56px;padding:0 52px 0 52px;border:0;border-radius:var(--r-pilyula);background:var(--oq);box-shadow:var(--soya);font-size:15.5px}
+.ym-izlash input:focus-visible{outline:2px solid var(--siyoh);outline-offset:2px}
+.ym-izlash .ym-tozala{position:absolute;right:8px;top:50%;transform:translateY(-50%)}
+.ym-izlash-izoh{font-size:13px;color:var(--matn-3);margin:-10px 0 18px 8px}
+.ym-bolim{margin-top:24px}
+.ym-bolim > h2{font:500 20px/1.25 var(--shrift-displey);letter-spacing:-.02em;margin:0 0 12px 4px}
+.ym-bolim > .ym-izoh{font-size:13.5px;color:var(--matn-3);margin:-6px 0 14px 4px;line-height:1.55}
+.ym-panjara{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.ym-plitka{display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:var(--r-plitka);background:var(--oq);box-shadow:var(--soya-past);
+  min-height:88px;transition:background var(--tez),box-shadow var(--tez);color:inherit;text-align:left;width:100%}
+.ym-plitka:hover{background:var(--plitka)}
+.ym-plitka:focus-visible{outline:2px solid var(--siyoh);outline-offset:2px}
+.ym-plitka .ym-ikon{width:40px;height:40px;border-radius:999px;background:var(--plitka);display:grid;place-items:center;flex:none}
+.ym-plitka:hover .ym-ikon{background:var(--oq)}
+.ym-plitka b{display:block;font-size:14.5px;font-weight:500;line-height:1.35}
+.ym-plitka span.ym-kichik{display:block;font-size:13px;color:var(--matn-3);line-height:1.5;margin-top:3px}
+.ym-plitka .chip{margin-top:6px}
+.ym-natija{display:flex;flex-direction:column;gap:2px}
+.ym-natija a{display:block;padding:14px 18px;border-radius:var(--r-orta);color:inherit}
+.ym-natija a:hover,.ym-natija a:focus-visible{background:var(--plitka)}
+.ym-natija .ym-tur{font-size:12px;color:var(--matn-3);letter-spacing:.04em;text-transform:uppercase}
+.ym-natija b{display:block;font-size:14.5px;font-weight:500;margin:2px 0}
+.ym-natija p{font-size:13.5px;color:var(--matn-2);line-height:1.55}
+mark{background:var(--sariq);color:var(--siyoh);border-radius:4px;padding:0 2px}
+.ym-bosh{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.ym-bosh .ym-ikon-katta{width:56px;height:56px;border-radius:999px;background:var(--plitka);display:grid;place-items:center;flex:none}
+.ym-bosh .ym-bosh-matn{flex:1;min-width:240px}
+.ym-bosh h2{font:500 26px/1.2 var(--shrift-displey);letter-spacing:-.03em}
+.ym-tugmalar{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.ym-uch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.ym-uch .qol-blok{margin-top:0}
+.ym-rasm{margin:10px 0 4px;border-radius:var(--r-kichik);overflow:hidden;box-shadow:0 0 0 1px var(--chiziq);background:var(--plitka);max-width:640px}
+.ym-rasm img{width:100%;height:auto;display:block}
+.ym-rasm figcaption{font-size:12.5px;color:var(--matn-3);padding:8px 12px;background:var(--oq)}
+.ym-dl{display:flex;flex-direction:column}
+.ym-dl > div{padding:12px 0;border-top:1px solid var(--chiziq-2)}
+.ym-dl > div:first-child{border-top:0;padding-top:0}
+.ym-dl dt{font-size:14px;font-weight:500}
+.ym-dl dd{font-size:13.5px;color:var(--matn-2);line-height:1.6;margin-top:3px}
+.ym-chiplar{display:flex;gap:6px;flex-wrap:wrap}
+.ym-havolalar{display:flex;gap:8px;flex-wrap:wrap}
+.ym-havolalar a{min-height:40px;display:inline-flex;align-items:center;gap:6px;padding:0 14px;border-radius:var(--r-pilyula);background:var(--plitka);font-size:13.5px}
+.ym-havolalar a:hover{background:var(--band-hover)}
+.huquq-royxat{list-style:none;display:flex;flex-direction:column}
+.huquq-royxat li{display:flex;align-items:center;gap:12px;padding:9px 0;font-size:13.5px}
+.huquq-royxat li + li{border-top:1px solid var(--chiziq-2)}
+.huquq-royxat li > span:first-child{flex:1;min-width:0}
+.huquq-royxat li.yopiq{color:var(--matn-3)}
+.huquq-royxat .chiplar{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.ym-savol{border-top:1px solid var(--chiziq-2)}
+.ym-savol:first-of-type{border-top:0}
+.ym-savol summary{list-style:none;cursor:pointer;padding:14px 4px;font-size:14.5px;font-weight:500;display:flex;gap:10px;align-items:flex-start;min-height:44px}
+.ym-savol summary::-webkit-details-marker{display:none}
+.ym-savol summary::before{content:"+";width:24px;height:24px;flex:none;border-radius:999px;background:var(--plitka);display:grid;place-items:center;font-weight:400}
+.ym-savol[open] summary::before{content:"−"}
+.ym-savol p{font-size:13.5px;color:var(--matn-2);line-height:1.65;padding:0 4px 16px 38px}
+.ym-savol:target summary,.ym-atama:target{background:var(--sariq-fon);border-radius:var(--r-kichik)}
+.ym-harflar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px}
+.ym-harflar a{min-width:40px;min-height:40px;display:grid;place-items:center;border-radius:999px;background:var(--plitka);font-size:13.5px}
+.ym-harflar a:hover{background:var(--band-hover)}
+.ym-atama{padding:14px 8px;border-top:1px solid var(--chiziq-2)}
+.ym-atama dt{font-size:15px;font-weight:500}
+.ym-atama dd{font-size:13.5px;color:var(--matn-2);line-height:1.6;margin-top:4px}
+.ym-atama .ym-havolalar{margin-top:8px}
+.ym-jadval{width:100%;border-collapse:collapse;font-size:14px}
+.ym-jadval th,.ym-jadval td{text-align:left;padding:12px 10px;border-top:1px solid var(--chiziq-2);vertical-align:top}
+.ym-jadval th{font-weight:500;color:var(--matn-3);font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;border-top:0}
+kbd{display:inline-block;min-width:28px;padding:3px 8px;border-radius:8px;background:var(--plitka);box-shadow:inset 0 -1px 0 var(--chiziq-3);font:500 13px var(--shrift);text-align:center;margin:2px 2px 2px 0}
+.ym-xarita{width:100%;overflow:visible}
+.ym-xarita svg{display:block;width:100%;height:auto}
+.ym-xarita .jx-quti{fill:var(--oq);stroke:var(--chiziq-3);stroke-width:1;transition:fill var(--tez)}
+.ym-xarita a:hover .jx-quti,.ym-xarita a:focus .jx-quti{fill:var(--plitka)}
+.ym-xarita a:focus{outline:none}
+.ym-xarita a:focus-visible .jx-quti{stroke:var(--siyoh);stroke-width:2}
+.ym-xarita .jx-raqam{fill:var(--siyoh)}
+.ym-xarita .jx-raqam-t{fill:var(--oq);font:500 12px var(--shrift)}
+.ym-xarita .jx-nom{fill:var(--siyoh);font:500 13px var(--shrift)}
+.ym-xarita .jx-rol{fill:var(--matn-3);font:400 12px var(--shrift)}
+.ym-xarita .jx-chiziq{stroke:var(--matn-4);stroke-width:1.5;fill:none}
+.ym-xarita .jx-uch{fill:var(--matn-4)}
+.ym-xarita .jx-yolak{fill:var(--plitka)}
+.ym-xarita .jx-yolak-t{fill:var(--matn-3);font:500 12px var(--shrift);letter-spacing:.04em}
+.ym-yangi li{padding:12px 0;border-top:1px solid var(--chiziq-2);font-size:14px;line-height:1.6;list-style:none}
+.ym-yangi li:first-child{border-top:0}
+.ym-yangi b{font-weight:500}
+.ym-mundarija ol{columns:2;column-gap:32px;padding-left:20px}
+.ym-mundarija li{font-size:14px;line-height:1.9}
+.ym-toliq-bolim{margin-top:28px}
+.ym-toliq-bolim > h2{font:500 22px/1.25 var(--shrift-displey);margin-bottom:12px}
+.ym-toliq-maqola{margin-top:16px}
+@media (max-width:980px){ .ym-uch{grid-template-columns:1fr} }
+@media (max-width:720px){
+  .ym-bosh h2{font-size:22px}
+  .ym-mundarija ol{columns:1}
+  .ym-panjara{grid-template-columns:1fr}
+}
+@media print{
+  .ym-menyu,.ym-izlash,.ym-izlash-izoh,.ym-tugmalar,.ym-yashir-chop{display:none!important}
+  .ym-toliq-bolim{break-before:page}
+  .qol-qadam,.ym-rasm,.ym-savol,.ym-atama,.ym-dl > div,.huquq-royxat li{break-inside:avoid}
+  h2,h4{break-after:avoid}
+  .ym-rasm{max-width:100%;box-shadow:0 0 0 1px #ccc}
+  .ym-savol p{padding-left:0}
+  .ym-plitka,.karta{box-shadow:none!important;border:1px solid #ddd}
+}
 </style>
 </head>
 <body data-sahifa="sozlama">
@@ -21,73 +125,854 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><span>Ish qo'llanmasi</span></div>
-    <div class="hs-qator"><h1>Ish qo'llanmasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><span>Qo&#39;llanma</span></div>
+    <div class="hs-qator"><h1>Yordam markazi</h1><span class="hs-meta" id="hs-meta">—</span>
+      <div class="hs-amallar"><a class="tugma tugma-oq" href="#toliq" id="ym-chop-havola"><svg class="ic"><use href="#ik-chop"/></svg><span>Chop etiladigan qo&#39;llanma</span></a></div></div>
   </div>
-  <div class="ql-rollar" id="ql-rollar"></div>
-  <div class="ql-tor">
-    <section class="karta">
-      <div class="karta-bosh"><h2 id="ql-nom">—</h2></div>
-      <p class="qol-maqsad" id="ql-maqsad"></p>
-      <div class="qol-blok"><h4>Kunlik ish tartibi</h4><ol class="qol-qadamlar" id="ql-qadamlar"></ol></div>
-    </section>
-    <section class="karta">
-      <div class="karta-bosh"><h2>Javobgarlik va me&#39;yorlar</h2></div>
-      <div id="ql-ongi"></div>
-    </section>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html" class="faol" aria-current="page">Qo&#39;llanma</a></nav>
+
+  <nav class="almashtirgich ym-menyu" id="ym-menyu" aria-label="Yordam markazi bo'limlari"></nav>
+  <div class="ym-izlash" role="search">
+    <svg class="ic" aria-hidden="true"><use href="#ik-izlash"/></svg>
+    <input type="search" id="ym-q" autocomplete="off" aria-describedby="ym-q-izoh" aria-controls="ym-kontent" placeholder="Nimani qidiryapsiz?">
+    <button type="button" class="tugma-ikonka ym-tozala" id="ym-tozala" hidden aria-label="Qidiruvni tozalash"><svg class="ic"><use href="#ik-yopish"/></svg></button>
   </div>
+  <p class="ym-izlash-izoh" id="ym-q-izoh">Masalan: lot, ko&#39;rik, zaxira. Qidiruv hamma maqola, rol yo&#39;riqnomasi, atama va savolni qamraydi.</p>
+  <div id="ym-kontent" aria-live="polite"></div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", () => {
-  const Q = window.MKB_QOLLANMA || {};
-  const joriy = MKB.rol() || "admin";
-  const rollar = Object.keys(Q).filter(k => joriy === "admin" || k === joriy);
-  let tanlangan = Q[joriy] ? joriy : rollar[0];
+/* ---------- Yordam markazi matnlari (ruschasi shu yerda, lug'atga qo'shiladi) ---------- */
+const X = window.mkbIkkiTil || (s => s);
+[
+  ["Yordam markazi", "Центр помощи"],
+  ["Chop etiladigan qo'llanma", "Руководство для печати"],
+  ["Nimani qidiryapsiz?", "Что ищете?"],
+  ["Masalan: lot, ko'rik, zaxira. Qidiruv hamma maqola, rol yo'riqnomasi, atama va savolni qamraydi.", "Например: лот, осмотр, резерв. Поиск охватывает все статьи, инструкции по ролям, термины и вопросы."],
+  ["Qidiruvni tozalash", "Очистить поиск"],
+  ["Yordam markazi bo'limlari", "Разделы центра помощи"],
+].forEach(p => X(p[0], p[1]));
 
-  function royxat(nom, bandlar, kls){
-    if (!bandlar || !bandlar.length) return "";
-    return '<div class="qol-blok' + (kls ? " " + kls : "") + '"><h4>' + nom + "</h4><ul>" +
-      bandlar.map(b => "<li>" + b + "</li>").join("") + "</ul></div>";
+/* Rol kirish nuqtalari: "Men ..." */
+const ROL_KIRISH = {
+  rahbariyat:   {ik: "bank",      men: X("Men raisman yoki boshqaruv a'zosiman", "Я председатель или член правления")},
+  filial:       {ik: "bino",      men: X("Men filial rahbariman", "Я руководитель филиала")},
+  obyekt:       {ik: "aktivlar",  men: X("Men obyekt menejeriman", "Я менеджер по объектам")},
+  nazorat:      {ik: "korik",     men: X("Men ko'rik inspektoriman", "Я инспектор по осмотрам")},
+  baholash:     {ik: "baholash",  men: X("Men baholovchiman", "Я оценщик")},
+  realizatsiya: {ik: "savdo",     men: X("Men realizatsiya mutaxassisiman", "Я специалист по реализации")},
+  yurist:       {ik: "sud",       men: X("Men yuristman", "Я юрист")},
+  buxgalteriya: {ik: "zaxira",    men: X("Men buxgalteriya va risk xodimiman", "Я сотрудник бухгалтерии и рисков")},
+  xavfsizlik:   {ik: "qalqon",    men: X("Men xavfsizlik xizmati xodimiman", "Я сотрудник службы безопасности")},
+  admin:        {ik: "sozlama",   men: X("Men administratorman", "Я администратор")},
+};
+
+/* Vazifa bo'yicha kirish: har birida qadamlar, sahifalar va sayohat */
+const V = (id, ik, nu, nr, iu, ir, rollar, qadamlar, sahifalar, sayohat, namoyish) =>
+  ({id, ik, nom: X(nu, nr), izoh: X(iu, ir), rollar, qadamlar: qadamlar.map(q => X(q[0], q[1])), sahifalar, sayohat, namoyish});
+const VAZIFALAR = [
+  V("qabul", "aktivlar", "Obyektni balansga qabul qilish", "Принять объект на баланс", "Uch qadam: asos va obyekt, hujjatlar va komissiya, balans qiymati.", "Три шага: основание и объект, документы и комиссия, балансовая стоимость.",
+    ["obyekt", "filial", "yurist", "admin"], [
+      ["«Balansga qabul qilish» tugmasini bosing yoki panelda «Qabul qilish»ni tanlang.", "Нажмите «Balansga qabul qilish» или выберите «Qabul qilish» на панели."],
+      ["Nima qabul qilinishini va qabul asosini tanlang, hujjat raqami va sanasini yozing.", "Выберите, что принимается, и основание, укажите номер и дату документа."],
+      ["Obyekt nomi, turi, hududi, filiali va manzilini kiriting, «Davom etish».", "Внесите название, тип, регион, филиал и адрес объекта, «Davom etish»."],
+      ["Hujjatlar, komissiya, hisoblagichlar, kalitlar va suratlarni qo'shing, «Davom etish».", "Добавьте документы, комиссию, счётчики, ключи и фото, «Davom etish»."],
+      ["Balans qiymati va sanasini kiriting, xulosani tekshiring va «Balansga qabul qilish».", "Внесите балансовую стоимость и дату, проверьте итог и нажмите «Balansga qabul qilish»."],
+      ["Dalolatnomani chop eting. 72 soat ichida birlamchi ko'rik o'tkaziladi.", "Распечатайте акт. В течение 72 часов проводится первичный осмотр."],
+    ], ["qabul-boshlash.html", "qabul-hujjatlar.html", "qabul-tasdiqlash.html", "qabul-dalolatnoma.html"], "balansga-qabul"),
+  V("kartochka", "hujjat", "Obyekt kartochkasini o'qish", "Разобраться в карточке объекта", "Keyingi qadam, aktiv yo'li, muddatlar va nazorat indeksi.", "Следующий шаг, путь актива, сроки и индекс контроля.",
+    "hammasi", [
+      ["Reyestrdan obyektni toping va qatorni bosing.", "Найдите объект в реестре и нажмите на строку."],
+      ["«Keyingi qadam» blokidagi tugma eng muhim ishga olib boradi.", "Кнопка в блоке «Keyingi qadam» ведёт к самому важному делу."],
+      ["«Me'yoriy muddatlar»da umidsiz toifagacha qolgan kunni ko'ring.", "В «Me'yoriy muddatlar» посмотрите, сколько дней до безнадёжной категории."],
+      ["Nazorat indeksi past bo'lsa, qizil bandni bosib sababini oching.", "Если индекс контроля низкий, нажмите на красный пункт и узнайте причину."],
+    ], ["obyekt.html", "obyekt-tarix.html"], "obyekt-kartochkasi", "qanday-obyekt"),
+  V("korik", "korik", "Ko'rik o'tkazish", "Провести осмотр", "Rejadan dalolatnomagacha, joyida, qoralama bilan.", "От плана до акта, на месте, с черновиком.",
+    ["nazorat", "obyekt", "filial", "admin"], [
+      ["Panelda «Ko'rikni boshlash» yoki rejada «O'tkazish»ni bosing.", "Нажмите «Ko'rikni boshlash» на панели или «O'tkazish» в плане."],
+      ["Har nazorat bandini belgilang. Kamchilikka surat biriktiring.", "Отметьте каждый контрольный пункт. К недостатку приложите фото."],
+      ["«Aniqlash» bilan joylashuvni yozing.", "Запишите местоположение кнопкой «Aniqlash»."],
+      ["Holat bahosi, xulosa va keyingi ko'rik sanasini kiriting.", "Внесите оценку состояния, вывод и дату следующего осмотра."],
+      ["«Dalolatnomani yakunlash». Baho 2 yoki 1 bo'lsa, hodisa o'zi ochiladi.", "«Dalolatnomani yakunlash». При оценке 2 или 1 инцидент откроется сам."],
+    ], ["korik-rejasi.html", "korik-otkazish.html", "korik-akti.html"], "korik-otkazish"),
+  V("inventar", "skaner", "Inventarizatsiya o'tkazish", "Провести инвентаризацию", "Ko'char mulkni inventar raqami bo'yicha sanash.", "Пересчёт движимого имущества по инвентарным номерам.",
+    ["nazorat", "obyekt", "filial", "admin"], [
+      ["«Yangi inventarizatsiya»: tur, sana, obyektlar va komissiya.", "«Yangi inventarizatsiya»: вид, дата, объекты и комиссия."],
+      ["«Sanashni boshlash» va har birlikni «Topildi» yoki «Topilmadi» deb belgilang.", "«Sanashni boshlash» и отметьте каждую единицу «Topildi» или «Topilmadi»."],
+      ["Ro'yxatda yo'q narsani «Ortiqcha birlik» bilan qo'shing.", "То, чего нет в списке, добавьте через «Ortiqcha birlik»."],
+      ["«Yakunlash»: kamomad va ortiqcha dalolatnomaga yoziladi.", "«Yakunlash»: недостача и излишки попадают в акт."],
+    ], ["inventarizatsiya.html", "inventar-dalolatnoma.html"], "inventarizatsiya"),
+  V("qurilma", "qurilma", "Qurilma o'rnatish", "Установить устройство", "Himoya komplekti va qurilmani ro'yxatga olish.", "Комплект охраны и регистрация устройства.",
+    ["xavfsizlik", "obyekt", "filial", "nazorat", "admin"], [
+      ["Obyekt kartochkasida «Himoya» tabini oching va smetani ko'ring.", "Откройте вкладку «Himoya» в карточке объекта и посмотрите смету."],
+      ["«Qurilma o'rnatish»ni bosing.", "Нажмите «Qurilma o'rnatish»."],
+      ["Joy, qurilma, quvvat va aloqa ma'lumotini kiriting.", "Внесите место, устройство, питание и связь."],
+      ["Xulosani tekshirib «Ro'yxatga olish»ni bosing.", "Проверьте итог и нажмите «Ro'yxatga olish»."],
+    ], ["obyekt-himoya.html", "qurilma-ornatish.html", "qurilma.html"], "himoya-qurilma"),
+  V("hodisa", "signal", "Hodisani yopish", "Закрыть инцидент", "Qabul qilish, bartaraf etish, hal qilish va yopish.", "Принять, устранить, решить и закрыть.",
+    ["xavfsizlik", "nazorat", "obyekt", "filial", "admin"], [
+      ["Hodisani oching va «Qabul qilish»ni bosing.", "Откройте инцидент и нажмите «Qabul qilish»."],
+      ["Kerak bo'lsa mas'ulni «Almashtirish» bilan o'zgartiring.", "При необходимости смените ответственного кнопкой «Almashtirish»."],
+      ["Dalil fayllarini yuklang, zarar bo'lsa sug'urta da'vosini oching.", "Загрузите доказательства; при ущербе откройте страховое требование."],
+      ["«Bartaraf etishga o'tkazish», keyin «Hal qilindi deb belgilash» va chorani yozing.", "«Bartaraf etishga o'tkazish», затем «Hal qilindi deb belgilash» с описанием мер."],
+      ["«Hodisani yopish». Keyin kerak bo'lsa «Qayta ochish» mumkin.", "«Hodisani yopish». При необходимости потом можно «Qayta ochish»."],
+    ], ["hodisalar.html", "hodisa.html"], "hodisa-hal-qilish"),
+  V("eshik", "ochiq-qulf", "Eshikni masofadan ochish", "Удалённо открыть дверь", "Ruxsatni tekshirish, asos va jurnal. Tizim qulfga buyruq yubormaydi.", "Проверка допуска, основание и журнал. Система не отправляет команду замку.",
+    ["xavfsizlik", "nazorat", "obyekt", "filial", "admin"], [
+      ["Qulf yoki yuzni tanish terminali sahifasini oching.", "Откройте страницу замка или терминала распознавания лиц."],
+      ["Kamera ilovasida eshik oldini ko'ring.", "Посмотрите вход в приложении камеры."],
+      ["Kim kirishini va yo'nalishni tanlang. Amaldagi ruxsati bo'lishi shart.", "Выберите, кто входит, и направление. Нужен действующий допуск."],
+      ["«Ochishga ruxsatni qayd etish», asosni yozing va tasdiqlang.", "«Ochishga ruxsatni qayd etish», напишите основание и подтвердите."],
+      ["Eshikni joyidagi xodim ochadi. Qaror jurnalga yozilgan.", "Дверь открывает сотрудник на месте. Решение записано в журнал."],
+    ], ["qurilma.html", "ruxsatlar.html", "kirish-voqealari.html"], "eshik-ochish"),
+  V("lot", "savdo", "Lot chiqarish", "Выставить лот", "Lot yaratish, e'lon, savdo natijasi va shartnoma.", "Создание лота, объявление, итог торгов и договор.",
+    ["realizatsiya", "admin"], [
+      ["«Lot yaratish»: aktiv, usul, narx, zakalat va sanalar.", "«Lot yaratish»: актив, способ, цена, задаток и даты."],
+      ["«Boshqa amallar» → «E'lon qilish».", "«Boshqa amallar» → «E'lon qilish»."],
+      ["Savdodan keyin «G'olib taklifini kiritish» yoki «Savdo o'tkazilmadi».", "После торгов — «G'olib taklifini kiritish» или «Savdo o'tkazilmadi»."],
+      ["G'olib to'lagach «Shartnoma tuzish».", "После оплаты победителем — «Shartnoma tuzish»."],
+    ], ["lotlar.html", "lot.html", "shartnoma.html"], "lot-chiqarish"),
+  V("taklif", "tasdiq", "Taklifni tasdiqlash", "Утвердить предложение", "AML tekshiruvi, Rahbariyat qarori va shartnoma.", "Проверка ПОД/ФТ, решение Руководства и договор.",
+    ["realizatsiya", "rahbariyat", "admin"], [
+      ["Realizatsiya mutaxassisi «Taklif kiritish» bilan taklifni qayd etadi.", "Специалист по реализации фиксирует предложение через «Taklif kiritish»."],
+      ["AML natijasini tekshirib «Yuborish» bilan qarorga jo'natadi.", "Проверяет результат ПОД/ФТ и отправляет на решение через «Yuborish»."],
+      ["Rahbariyat «Qarorlar»da «Tasdiqlash» yoki sabab bilan «Rad etish».", "Руководство в «Qarorlar» нажимает «Tasdiqlash» или «Rad etish» с причиной."],
+      ["Tasdiqlangach 10 ish kunida «Shartnomani imzolash».", "После утверждения в течение 10 рабочих дней — «Shartnomani imzolash»."],
+    ], ["takliflar.html", "tasdiqlar.html"], "taklif-tasdiqlash"),
+  V("zaxira", "zaxira", "Zaxira va muddatlarni tekshirish", "Проверить резерв и сроки", "Umidsiz toifa chegarasi va oraliq stavkalar.", "Порог безнадёжной категории и промежуточные ставки.",
+    ["buxgalteriya", "rahbariyat", "filial", "admin"], [
+      ["«Muddatlar»da 30, 60 va 90 kunda chegaraga yetadiganlarni ko'ring.", "В «Muddatlar» посмотрите, кто достигнет порога через 30, 60 и 90 дней."],
+      ["«Zaxira»da taxminiy stavkalarni tekshiring.", "В «Zaxira» проверьте предварительные ставки."],
+      ["Buxgalteriya stavkani «Tasdiqqa yuborish», Rahbariyat «Tasdiqlash».", "Бухгалтерия — «Tasdiqqa yuborish», Руководство — «Tasdiqlash»."],
+    ], ["muddatlar.html", "zaxira.html"], "zaxira-muddatlar", "qanday-muddatlar"),
+  V("mb", "bank", "Hisobot topshirish", "Сдать отчёт", "MB oylik hisoboti: raqamlar, kapital va topshirish belgisi.", "Ежемесячный отчёт ЦБ: цифры, капитал и отметка о сдаче.",
+    ["buxgalteriya", "rahbariyat", "admin"], [
+      ["«MB oylik hisoboti»da oyni tanlang.", "Выберите месяц в «MB oylik hisoboti»."],
+      ["«Raqamlarni yangilash» va kerak bo'lsa «Kapitalni kiritish».", "«Raqamlarni yangilash» и при необходимости «Kapitalni kiritish»."],
+      ["«Ilovani yuklab olish» va hisobotni Markaziy bankka topshiring.", "«Ilovani yuklab olish» и сдайте отчёт в Центральный банк."],
+      ["10-sanagacha «Topshirildi deb belgilash».", "До 10-го числа — «Topshirildi deb belgilash»."],
+    ], ["hisobotlar.html", "hisobot-mb.html"], "mb-hisobot"),
+  V("tasdiq", "muhr", "Qaror qabul qilish", "Принять решение", "To'rt ko'z qoidasi: so'rovni boshqa xodim tasdiqlaydi.", "Принцип четырёх глаз: запрос утверждает другой сотрудник.",
+    "hammasi", [
+      ["«Qarorlar» sahifasida «Mendan kutilmoqda» ko'rinishini oching.", "Откройте представление «Mendan kutilmoqda» на странице «Qarorlar»."],
+      ["Kartadagi «Nima o'zgaradi» blokini o'qing.", "Прочитайте блок «Nima o'zgaradi» в карточке."],
+      ["«Tasdiqlash» yoki sabab bilan «Rad etish».", "«Tasdiqlash» или «Rad etish» с причиной."],
+      ["Ta'tilga chiqsangiz, «O'rinbosar tayinlash».", "Если уходите в отпуск — «O'rinbosar tayinlash»."],
+    ], ["tasdiqlar.html"], ["tasdiqlar-maker-checker", "tasdiqlar-yuborganlarim"], "qanday-qarorlar"),
+  V("chiqim", "arxiv", "Aktivni balansdan chiqarish", "Списать актив с баланса", "So'rov, Rahbariyat tasdig'i va arxiv.", "Запрос, утверждение Руководства и архив.",
+    ["obyekt", "filial", "rahbariyat", "yurist", "admin"], [
+      ["«Arxiv va chiqim»da «Balansdan chiqarish»ni bosing.", "В «Arxiv va chiqim» нажмите «Balansdan chiqarish»."],
+      ["Obyektni tanlang, asos va moliyaviy natijani tekshiring.", "Выберите объект, проверьте основание и финансовый результат."],
+      ["«Qaror so'rovini yuborish».", "«Qaror so'rovini yuborish»."],
+      ["Rahbariyat obyekt raqamini yozib «Chiqarishni tasdiqlash». Aktiv arxivga o'tadi.", "Руководство вводит номер объекта и нажимает «Chiqarishni tasdiqlash». Актив уходит в архив."],
+    ], ["arxiv.html", "chiqim-tasdiqlash.html", "arxiv-obyekt.html"], ["chiqim", "tasdiqlar-maker-checker"]),
+  V("undiruv", "sud", "Garovni undiruvdan balansga o'tkazish", "Передать залог из взыскания на баланс", "Yurist, Rahbariyat va obyekt menejeri o'rtasida.", "Между юристом, руководством и менеджером по объектам.",
+    ["yurist", "rahbariyat", "obyekt", "admin"], [
+      ["Yurist qarorni kiritadi va «Undiruv garov mulkiga qaratildi»ni belgilaydi.", "Юрист вносит решение и отмечает «Undiruv garov mulkiga qaratildi»."],
+      ["Ijro tugagach ishda «Balansga qabul qilish» — Rahbariyat qarori so'raladi.", "После исполнения в деле — «Balansga qabul qilish», запрашивается решение Руководства."],
+      ["Rahbariyat «Qarorlar»da tasdiqlaydi.", "Руководство утверждает в «Qarorlar»."],
+      ["Obyekt menejeri panelidagi navbatdan «Qabul qilish» va uch qadam.", "Менеджер по объектам — «Qabul qilish» из очереди на панели и три шага."],
+    ], ["ish.html", "qaror-kiritish.html", "tasdiqlar.html", "qabul-boshlash.html"], "undiruv-qabul"),
+  V("baho", "baholash", "Baholash hisobotini kiritish", "Внести отчёт об оценке", "Buyurtma, hisobot va tasdiq.", "Заказ, отчёт и утверждение.",
+    ["baholash", "admin"], [
+      ["Baholash reyestrida aktivga «Buyurtma» bering.", "Оформите «Buyurtma» на актив в реестре оценки."],
+      ["Hisobot kelgach «Hisobot kiritish»: qiymatlar, raqam, sana, PDF.", "Когда придёт отчёт — «Hisobot kiritish»: стоимости, номер, дата, PDF."],
+      ["«Tasdiqqa yuborish». Holatini «Men yuborganlar»da kuzating.", "«Tasdiqqa yuborish». Следите за статусом в «Men yuborganlar»."],
+    ], ["baholash.html", "baholash-buyurtma.html", "baholash-hisobot-kiritish.html"], "baholash-tanishuv"),
+  V("xodim", "foyd", "Xodimga hisob ochish", "Открыть учётную запись сотруднику", "Rol, filial va vaqtinchalik parol.", "Роль, филиал и временный пароль.",
+    ["admin"], [
+      ["«Foydalanuvchilar»da «Foydalanuvchi qo'shish».", "В «Foydalanuvchilar» — «Foydalanuvchi qo'shish»."],
+      ["Ism, login, rol, filial va bo'limni kiriting, «Hisob ochish».", "Внесите имя, логин, роль, филиал и подразделение, «Hisob ochish»."],
+      ["Server rejimida «Parol o'rnatish» bilan vaqtinchalik parol bering.", "В серверном режиме выдайте временный пароль через «Parol o'rnatish»."],
+    ], ["foydalanuvchilar.html", "foydalanuvchi.html"], "admin-tanishuv"),
+];
+
+/* Atamalar lug'ati */
+const A = (id, tu, tr, iu, ir, sahifalar) => ({id, nom: X(tu, tr), izoh: X(iu, ir), sahifalar: sahifalar || []});
+const ATAMALAR = [
+  A("auksion-qadami", "Auksion qadami", "Шаг аукциона", "Savdoda narx oshadigan eng kichik ulush: 10%, 2000 BHM dan yuqori lotda 5%.", "Минимальная доля повышения цены на торгах: 10%, для лота дороже 2000 БРВ — 5%.", ["lot.html"]),
+  A("aml", "AML tekshiruvi", "Проверка ПОД/ФТ", "Xaridorni jinoiy daromadni legallashtirish va terrorizmni moliyalashtirishga qarshi ro'yxatlar bo'yicha tekshirish. «Shubhali» natijali taklif qarorga yuborilmaydi.", "Проверка покупателя по спискам противодействия отмыванию доходов и финансированию терроризма. Предложение с результатом «Shubhali» не отправляется на решение.", ["takliflar.html"]),
+  A("balans", "Balans", "Баланс", "Bankning buxgalteriya balansi. Undiruv natijasida olingan yoki boshqa yo'l bilan kelgan mulk qabul dalolatnomasi bilan balansga olinadi va sotilguncha shu yerda turadi.", "Бухгалтерский баланс банка. Имущество, полученное при взыскании или иным путём, принимается на баланс по акту и находится там до продажи.", ["qabul-boshlash.html", "obyektlar.html"]),
+  A("balans-qiymati", "Balans qiymati", "Балансовая стоимость", "Aktiv balansga qabul qilingan summa, mln so'mda. 16701 hisobvarag'ida hisobga olinadi.", "Сумма, по которой актив принят на баланс, в млн сум. Учитывается на счёте 16701.", ["obyekt-moliya.html"]),
+  A("bhm", "BHM", "БРВ", "Bazaviy hisoblash miqdori. Auksion qadami chegarasi shu miqdorda o'lchanadi.", "Базовая расчётная величина. Порог шага аукциона измеряется в ней.", ["lot.html"]),
+  A("bolib-tolash", "Bo'lib to'lash", "Рассрочка", "Xaridor narxni jadval bo'yicha to'laydi, avans kamida 15%. Mulk to'lov tugaguncha taqiqda turadi.", "Покупатель платит по графику, аванс не меньше 15%. Имущество под запретом до полной оплаты.", ["shartnoma.html"]),
+  A("bozor-qiymati", "Bozor qiymati", "Рыночная стоимость", "Baholovchi hisobotida ko'rsatilgan narx. 12 oy amal qiladi.", "Цена, указанная в отчёте оценщика. Действует 12 месяцев.", ["baholash.html"]),
+  A("dalolatnoma", "Dalolatnoma", "Акт", "Fakt qayd etilgan imzoli hujjat: qabul-topshirish, ko'rik, inventarizatsiya, tashrif chiqishi.", "Подписанный документ, фиксирующий факт: приём-передача, осмотр, инвентаризация, выход посетителя.", ["qabul-dalolatnoma.html", "korik-akti.html", "inventar-dalolatnoma.html"]),
+  A("davaktiv", "Davaktiv", "Давактив", "Davlat aktivlarini boshqarish agentligiga sotish uchun topshirilgan mulk. 1 yilda sotilmasa bankka qaytariladi.", "Имущество, переданное Агентству по управлению государственными активами для продажи. Если не продано за год, возвращается банку.", ["realizatsiya.html", "arxiv.html"]),
+  A("davo", "Da'vo", "Иск", "Qarzni undirish uchun sudga beriladigan ariza. Undiruv ishining ikkinchi bosqichi.", "Заявление в суд о взыскании долга. Второй этап дела о взыскании.", ["davo-tayyorlash.html"]),
+  A("e-auksion", "E-auksion", "Электронный аукцион", "Davlat elektron onlayn savdo platformasi. Lot raqami va natija hozir qo'lda kiritiladi.", "Государственная электронная торговая платформа. Номер лота и итог пока вносятся вручную.", ["lotlar.html", "integratsiyalar.html"]),
+  A("eskalatsiya", "Eskalatsiya", "Эскалация", "Muddat o'tsa vazifa yoki bildirishnoma yuqori rahbarga o'tishi. Qoidalar Sozlamalarda.", "Передача задачи или уведомления вышестоящему руководителю при просрочке. Правила — в Настройках.", ["sozlamalar.html"]),
+  A("garov", "Garov", "Залог", "Kredit ta'minoti bo'lgan mulk. Sud qarori garovga qaratilsa, u balansga qabul qilinishi mumkin.", "Имущество, обеспечивающее кредит. Если решение суда обращено на залог, его можно принять на баланс.", ["ish.html"]),
+  A("hodisa", "Hodisa", "Инцидент", "Xavfsizlik bilan bog'liq voqea: buzilish, signal, zarar. Besh bosqichdan o'tadi.", "Событие, связанное с безопасностью: взлом, сигнал, ущерб. Проходит пять этапов.", ["hodisalar.html", "hodisa.html"]),
+  A("inventarizatsiya", "Inventarizatsiya", "Инвентаризация", "Ko'char mulkni inventar raqami bo'yicha sanash va hisob bilan solishtirish.", "Пересчёт движимого имущества по инвентарным номерам и сверка с учётом.", ["inventarizatsiya.html"]),
+  A("kamomad", "Kamomad", "Недостача", "Hisobda bor, lekin joyida topilmagan birlik. Dalolatnomaga yoziladi va hodisa ochiladi.", "Единица, которая есть в учёте, но не найдена на месте. Попадает в акт, открывается инцидент.", ["inventar-dalolatnoma.html"]),
+  A("korik", "Ko'rik", "Осмотр", "Aktivning jismoniy holatini joyida tekshirish. Turlari: rejali, birlamchi (qabuldan 72 soat ichida), navbatdan tashqari, sotuv oldi.", "Проверка физического состояния актива на месте. Виды: плановый, первичный (в течение 72 часов после приёма), внеочередной, предпродажный.", ["korik-rejasi.html", "korik-otkazish.html"]),
+  A("lot", "Lot", "Лот", "Savdoga chiqarilgan aktiv yoki aktivlar paketi: narx, zakalat, sanalar va holat bilan.", "Актив или пакет активов, выставленный на торги: с ценой, задатком, датами и статусом.", ["lotlar.html", "lot.html"]),
+  A("maker-checker", "Maker-checker (to'rt ko'z)", "Maker-checker (четыре глаза)", "Muhim amalni bir xodim so'raydi, boshqasi tasdiqlaydi. Bitta login o'z so'rovini hech qachon tasdiqlay olmaydi.", "Важное действие один сотрудник запрашивает, другой утверждает. Один логин никогда не утверждает свой запрос.", ["tasdiqlar.html"]),
+  A("mb-2696", "MB 2696", "ЦБ 2696", "Markaziy bankning aktivlar sifatini tasniflash va zaxira yaratish tartibi. Balansdagi mulk uchun toifa va zaxira stavkasi shundan olinadi.", "Положение Центрального банка о классификации качества активов и создании резервов. Отсюда берутся категория и ставка резерва для имущества на балансе.", ["zaxira.html", "muddatlar.html"]),
+  A("mb-3441", "MB 3441", "ЦБ 3441", "Markaziy bankning 3441-son nizomi. 16-band bo'yicha bank balansidagi mulk haqida har oyning 10-sanasigacha hisobot topshiriladi.", "Положение Центрального банка № 3441. По пункту 16 отчёт об имуществе на балансе сдаётся до 10-го числа каждого месяца.", ["hisobot-mb.html"]),
+  A("mhxs-5", "MHXS 5", "МСФО 5", "Sotish uchun saqlanadigan aktivlar standarti: aktiv balans qiymati va sof sotish qiymatining kichigida aks etadi.", "Стандарт по активам, предназначенным для продажи: актив отражается по меньшей из балансовой стоимости и чистой стоимости продажи.", ["obyekt-moliya.html"]),
+  A("nazorat-indeksi", "Nazorat indeksi", "Индекс контроля", "Aktiv qanchalik tartibda ekanini 0 dan 100 gacha ko'rsatadi: ko'rik 25%, sug'urta 25%, baho 20%, hujjatlar 15%, qo'riqlash 15%.", "Показывает от 0 до 100, насколько актив в порядке: осмотр 25%, страховка 25%, оценка 20%, документы 15%, охрана 15%.", ["obyekt.html", "hisobot-kpi.html"]),
+  A("niqoblash", "Niqoblash", "Маскирование", "Eksport va chop etishda telefon, pasport va PINFL raqamlarini yashirish.", "Скрытие номеров телефонов, паспортов и ПИНФЛ при экспорте и печати.", ["sozlamalar.html"]),
+  A("orinbosar", "O'rinbosar", "Заместитель", "Belgilangan davrda sizning qarorlaringizni qabul qiladigan boshqa faol xodim.", "Другой активный сотрудник, принимающий ваши решения в заданный период.", ["tasdiqlar.html", "sozlamalar.html"]),
+  A("ortiqcha", "Ortiqcha", "Излишек", "Inventarizatsiyada joyida topilgan, lekin hisobda yo'q birlik.", "Единица, найденная при инвентаризации на месте, но отсутствующая в учёте.", ["inventarizatsiya.html"]),
+  A("qabul-asosi", "Qabul asosi", "Основание приёма", "Mulk balansga qaysi hujjat bilan olingani: sud qarori va ijro varaqasi, notarial kelishuv, o'zida qoldirish, ixtiyoriy topshirish yoki boshqa mulk.", "По какому документу имущество принято на баланс: решение суда и исполнительный лист, нотариальное соглашение, оставление за собой, добровольная передача или прочее имущество.", ["qabul-boshlash.html"]),
+  A("qadrsizlanish", "Qadrsizlanish", "Обесценение", "Sof sotish qiymati balans qiymatidan past bo'lgan farq.", "Разница, на которую чистая стоимость продажи ниже балансовой.", ["obyekt-moliya.html", "baholash-hisobot.html"]),
+  A("qaytarish", "Qaytarish", "Отмена действия", "Ayrim amallardan keyin 8 soniya chiqadigan tugma. Bosilsa, amal bekor bo'ladi. Ctrl+Z ham ishlaydi.", "Кнопка, которая 8 секунд видна после некоторых действий. Нажатие отменяет действие. Работает и Ctrl+Z.", ["vazifalar.html"]),
+  A("qoralama", "Qoralama", "Черновик", "Formaga kiritilgan, lekin saqlanmagan ma'lumot. Shu qurilmada 7 kun saqlanadi, tizimdan chiqilganda o'chiriladi.", "Введённые в форму, но не сохранённые данные. Хранятся на этом устройстве 7 дней, удаляются при выходе из системы.", ["korik-otkazish.html", "qabul-boshlash.html"]),
+  A("realizatsiya", "Realizatsiya", "Реализация", "Balansdagi aktivni sotish yoki ijaraga berish jarayoni.", "Процесс продажи или сдачи в аренду актива с баланса.", ["realizatsiya.html"]),
+  A("ruxsat", "Ruxsat", "Допуск", "Shaxsga obyektga ma'lum usul bilan (kalit, kod, yuz, masofadan) ma'lum muddatga kirish huquqi.", "Право человека входить на объект определённым способом (ключ, код, лицо, удалённо) на определённый срок.", ["ruxsatlar.html"]),
+  A("soliq-imtiyozi", "Soliq imtiyozi", "Налоговая льгота", "Balansga olingandan 6 oy mol-mulk va yer solig'i to'lanmaydi.", "Шесть месяцев после принятия на баланс налог на имущество и земельный налог не платятся.", ["soliq.html"]),
+  A("taqiq", "Taqiq", "Запрет", "Mulkni boshqa shaxsga o'tkazishni cheklovchi qayd: bo'lib to'lashda to'lov tugaguncha qo'yiladi.", "Запись, ограничивающая передачу имущества: при рассрочке ставится до полной оплаты.", ["shartnoma.html", "rasmiylashtirish.html"]),
+  A("taxminiy", "Taxminiy", "Предварительно", "Hali tasdiqlanmagan qiymat belgisi. Masalan, oraliq zaxira stavkasi Rahbariyat tasdiqlaguncha taxminiy.", "Отметка ещё не утверждённого значения. Например, промежуточная ставка резерва предварительна до утверждения Руководством.", ["zaxira.html", "soliq.html"]),
+  A("toifa", "Toifa", "Категория", "Aktivning balansda turgan muddatiga qarab zaxira toifasi: substandart, qoniqarsiz, shubhali, umidsiz.", "Категория резерва в зависимости от срока на балансе: субстандартная, неудовлетворительная, сомнительная, безнадёжная.", ["zaxira.html"]),
+  A("tugatish-qiymati", "Tugatish qiymati", "Ликвидационная стоимость", "Mulkni qisqa muddatda sotish mumkin bo'lgan narx. Bozor qiymatidan oshmaydi.", "Цена продажи имущества в короткий срок. Не выше рыночной.", ["baholash-hisobot-kiritish.html"]),
+  A("umidsiz", "Umidsiz toifa", "Безнадёжная категория", "Undiruvdan olingan mulk 365 kundan, boshqa mulk 1095 kundan keyin shu toifaga o'tadi. Zaxira balans qiymatining 100%.", "Имущество из взыскания через 365 дней, прочее через 1095 дней переходит в эту категорию. Резерв — 100% балансовой стоимости.", ["muddatlar.html", "zaxira.html"]),
+  A("undiruv", "Undiruv", "Взыскание", "Muammoli kredit bo'yicha qarzni undirish: ogohlantirish, da'vo, sud, qaror, ijro va balansga qabul.", "Взыскание долга по проблемному кредиту: предупреждение, иск, суд, решение, исполнение и приём на баланс.", ["undiruv.html"]),
+  A("vm-18", "VM 18", "ПКМ 18", "Vazirlar Mahkamasining savdo tartibi: e'londan savdogacha kamida 30 kun, g'olib 5 ish kunida to'laydi, shartnoma 10 ish kunida.", "Порядок торгов по постановлению Кабмина: от объявления до торгов не меньше 30 дней, победитель платит за 5 рабочих дней, договор — за 10.", ["lot.html"]),
+  A("vm-683", "VM 683", "ПКМ 683", "Transportni YHXXda 10 kun ichida qayta qayd etish talabi.", "Требование перерегистрировать транспорт в ГУБДД в течение 10 дней.", ["rasmiylashtirish.html"]),
+  A("yhxx", "YHXX", "ГУБДД", "Yo'l harakati xavfsizligi xizmati. Transport shu yerda bank nomiga qayd etiladi.", "Служба безопасности дорожного движения. Здесь транспорт регистрируется на банк.", ["rasmiylashtirish.html"]),
+  A("zakalat", "Zakalat", "Задаток", "Savdo ishtirokchisi oldindan to'laydigan summa, odatda boshlang'ich narxning 10%.", "Сумма, которую участник торгов вносит заранее, обычно 10% начальной цены.", ["lot.html"]),
+  A("zaxira", "Zaxira", "Резерв", "Balansdagi aktivning ehtimoliy yo'qotishini qoplash uchun ajratiladigan summa. 16799 hisobvarag'ida.", "Сумма, создаваемая для покрытия возможных потерь по активу на балансе. На счёте 16799.", ["zaxira.html"]),
+  A("zaxira-yuki", "Zaxira yuki", "Резервная нагрузка", "Jami zaxiraning balans qiymatiga nisbati.", "Отношение общего резерва к балансовой стоимости.", ["zaxira.html", "panel.html"]),
+];
+
+/* Ko'p so'raladigan savollar: rol bo'yicha */
+const S = (id, rol, su, sr, ju, jr) => ({id, rol, savol: X(su, sr), javob: X(ju, jr)});
+const SAVOLLAR = [
+  S("umumiy-til", "umumiy", "Tilni qanday almashtiraman?", "Как сменить язык?", "Shapkadagi UZ yoki RU tugmasini bosing. Tanlov shu brauzerda saqlanadi.", "Нажмите UZ или RU в шапке. Выбор сохраняется в этом браузере."),
+  S("umumiy-yordam", "umumiy", "Sahifada nima qilishni bilmasam-chi?", "Что делать, если не понимаю страницу?", "Shapkadagi «?» tugmasini bosing: shu sahifa bo'yicha maqola va sayohat ochiladi.", "Нажмите «?» в шапке: откроются статья и тур по этой странице."),
+  S("umumiy-qaytarish", "umumiy", "Adashib vazifani yopdim. Qanday qaytaraman?", "Ошибочно закрыл задачу. Как вернуть?", "Pastda 8 soniya «Qaytarish» tugmasi turadi. Uni yoki Ctrl+Z ni bosing.", "Внизу 8 секунд видна кнопка «Qaytarish». Нажмите её или Ctrl+Z."),
+  S("umumiy-qoralama", "umumiy", "Forma to'ldirayotganda aloqa uzildi. Ma'lumot yo'qoldimi?", "Пока заполнял форму, пропала связь. Данные потеряны?", "Yo'q. Uzun formalar qoralama bo'lib shu qurilmada saqlanadi. Qayta ochsangiz, «Qoralamani tiklash» taklif qilinadi.", "Нет. Длинные формы сохраняются как черновик на этом устройстве. При повторном открытии будет предложено «Qoralamani tiklash»."),
+  S("umumiy-sessiya", "umumiy", "Nega tizim meni chiqarib yubordi?", "Почему система меня вывела?", "30 daqiqa harakatsizlikdan keyin sessiya yopiladi. 2 daqiqa oldin ogohlantirish chiqadi. Qayta kirsangiz, ish shu sahifadan davom etadi.", "Сессия закрывается после 30 минут бездействия. За 2 минуты появляется предупреждение. После входа работа продолжится с той же страницы."),
+  S("umumiy-yopiq", "umumiy", "Ba'zi tugma yoki bo'lim ko'rinmaydi. Nega?", "Почему некоторые кнопки или разделы не видны?", "Rolingizga yopiq amal va sahifalar ko'rsatilmaydi. Kerak bo'lsa, administrator mos rol beradi.", "Закрытые для вашей роли действия и страницы не показываются. При необходимости администратор назначит подходящую роль."),
+  S("umumiy-qidiruv", "umumiy", "Obyektni raqami bo'yicha qanday tez topaman?", "Как быстро найти объект по номеру?", "Ctrl+K yoki / bosing va raqamni yozing, masalan AK-2026/3775. Enter uni ochadi.", "Нажмите Ctrl+K или / и введите номер, например AK-2026/3775. Enter откроет его."),
+  S("rahbariyat-oz", "rahbariyat", "Nega ba'zi qarorlarda tasdiqlash tugmasi yo'q?", "Почему у некоторых решений нет кнопки утверждения?", "Bu siz yuborgan so'rov. To'rt ko'z qoidasi bo'yicha uni boshqa xodim tasdiqlaydi.", "Это ваш запрос. По принципу четырёх глаз его утверждает другой сотрудник."),
+  S("rahbariyat-ommaviy", "rahbariyat", "Bir nechta taklifni birdan tasdiqlasa bo'ladimi?", "Можно утвердить несколько предложений сразу?", "Ha, «Mendan kutilmoqda»da bir turdagi so'rovlarni belgilab. Balansdan chiqarish faqat bittadan tasdiqlanadi.", "Да, отметив в «Mendan kutilmoqda» запросы одного типа. Списание утверждается только по одному."),
+  S("rahbariyat-tatil", "rahbariyat", "Ta'tilga chiqaman. Qarorlar to'xtab qoladimi?", "Ухожу в отпуск. Решения остановятся?", "«O'rinbosar tayinlash» bilan davr va o'rinbosarni belgilang. Shu davrda u qaror qabul qiladi.", "Через «O'rinbosar tayinlash» укажите период и заместителя. В этот период решения принимает он."),
+  S("filial-boshqa", "filial", "Nega boshqa filial aktivlarini ko'rmayman?", "Почему я не вижу активы других филиалов?", "Filial rahbari faqat o'z filiali yozuvlarini ko'radi. Bu rol qoidasi.", "Руководитель филиала видит только записи своего филиала. Это правило роли."),
+  S("filial-kochirish", "filial", "Kechikkan ko'riklarni qanday birdan ko'chiraman?", "Как перенести просроченные осмотры разом?", "«Kechikkanlar» sahifasida qatorlarni belgilang, yangi sana va sababni yozing, «Ko'chirish»ni bosing.", "На странице «Kechikkanlar» отметьте строки, укажите новую дату и причину, нажмите «Ko'chirish»."),
+  S("obyekt-hujjat", "obyekt", "Qaysi hujjatlar majburiy?", "Какие документы обязательны?", "Obyekt kartochkasining «Hujjatlar» tabida joriy bosqichgacha kerakli ro'yxat va yetishmayotganlar ko'rinadi.", "Во вкладке «Hujjatlar» карточки объекта виден список, нужный до текущего этапа, и недостающие."),
+  S("obyekt-holat", "obyekt", "Nega holatni «Lotda» qilib bo'lmaydi?", "Почему нельзя поставить статус «Lotda»?", "Lot, ijara va chiqim holati tegishli amal orqali o'rnatiladi: lot yaratilganda, ijaraga berilganda, chiqim tasdiqlanganda.", "Статусы лота, аренды и выбытия ставятся соответствующим действием: при создании лота, сдаче в аренду, утверждении выбытия."),
+  S("obyekt-qoldirish", "obyekt", "Vazifani keyinroqqa qanday qoldiraman?", "Как отложить задачу?", "Navbatdagi vazifada «Qoldirish»ni bosing va sanani tanlang. Sana kelganda vazifa qaytadi.", "Нажмите «Qoldirish» у задачи и выберите дату. В этот день задача вернётся."),
+  S("nazorat-surat", "nazorat", "Nega dalolatnomani yakunlab bo'lmayapti?", "Почему не получается завершить акт?", "Kamchilik belgilangan bandga surat kerak. Surat yuklang yoki bandni to'g'rilang.", "К пункту с недостатком нужно фото. Загрузите фото или исправьте пункт."),
+  S("nazorat-oflayn", "nazorat", "Obyektda internet yo'q. Ko'rikni qanday o'tkazaman?", "На объекте нет интернета. Как провести осмотр?", "Formani to'ldiravering: u qoralama bo'lib saqlanadi. Aloqa tiklangach «Dalolatnomani yakunlash»ni bosing.", "Заполняйте форму: она сохраняется как черновик. Когда связь появится, нажмите «Dalolatnomani yakunlash»."),
+  S("baholash-tasdiq", "baholash", "Nega o'z hisobotimni tasdiqlay olmayman?", "Почему я не могу утвердить свой отчёт?", "Baho aktiv qiymatini o'zgartiradi, shuning uchun uni Rahbariyat yoki Buxgalteriya tasdiqlaydi.", "Оценка меняет стоимость актива, поэтому её утверждает Руководство или Бухгалтерия."),
+  S("baholash-tugatish", "baholash", "Tugatish qiymati maydoni xato ko'rsatyapti.", "Поле ликвидационной стоимости показывает ошибку.", "Tugatish qiymati bozor qiymatidan oshmasligi kerak. Summani mln so'mda yozing.", "Ликвидационная стоимость не должна превышать рыночную. Пишите сумму в млн сум."),
+  S("realizatsiya-30", "realizatsiya", "Lot saqlanmayapti: «30 kun» xatosi.", "Лот не сохраняется: ошибка «30 дней».", "E'londan savdogacha kamida 30 kun bo'lishi kerak (VM 18). Savdo sanasini keyinroqqa qo'ying.", "От объявления до торгов должно быть не меньше 30 дней (ПКМ 18). Перенесите дату торгов."),
+  S("realizatsiya-narx", "realizatsiya", "Narxni qachon pasaytirish mumkin?", "Когда можно снизить цену?", "Lot 3 oy sotilmasa. «Narxni pasaytirish» Rahbariyatga so'rov yuboradi, narx tasdiqdan keyin o'zgaradi.", "Если лот не продан 3 месяца. «Narxni pasaytirish» отправляет запрос Руководству, цена меняется после утверждения."),
+  S("yurist-qabul", "yurist", "Garov qabul navbatiga tushmadi.", "Залог не попал в очередь приёма.", "Sud qarorini kiritishda «Undiruv garov mulkiga qaratildi» belgilanmagan bo'lishi mumkin. Qarorni tekshiring.", "Возможно, при вводе решения не отмечено «Undiruv garov mulkiga qaratildi». Проверьте решение."),
+  S("yurist-majlis", "yurist", "Majlis natijasini qayerga kiritaman?", "Куда вносить результат заседания?", "Majlisni oching va «Natijani saqlash». Qaror e'lon qilingan bo'lsa, «Qaror kiritish» taklif qilinadi.", "Откройте заседание и нажмите «Natijani saqlash». Если решение объявлено, будет предложено «Qaror kiritish»."),
+  S("buxgalteriya-taxminiy", "buxgalteriya", "«Taxminiy» belgisi nimani bildiradi?", "Что означает отметка «Taxminiy»?", "Qiymat hali tasdiqlanmagan. Stavka Rahbariyat tasdiqlagach belgi olinadi.", "Значение ещё не утверждено. Отметка снимается после утверждения ставки Руководством."),
+  S("buxgalteriya-mb", "buxgalteriya", "MB hisobotini xato «Topshirilgan» deb belgiladim.", "Ошибочно отметил отчёт ЦБ как сданный.", "«Belgini bekor qilish» tugmasini bosing. Bu amal tarixda qoladi.", "Нажмите «Belgini bekor qilish». Действие останется в истории."),
+  S("xavfsizlik-video", "xavfsizlik", "Kamera videosini qayerda ko'raman?", "Где смотреть видео с камеры?", "Tizim videoni ko'rsatmaydi. Uni kamera ilovasida ko'rasiz, tizimda qurilmaning oxirgi signal vaqti turadi.", "Система не показывает видео. Смотрите его в приложении камеры, в системе — время последнего сигнала устройства."),
+  S("xavfsizlik-eshik", "xavfsizlik", "«Ochishga ruxsatni qayd etish» eshikni ochadimi?", "Открывает ли дверь «Ochishga ruxsatni qayd etish»?", "Yo'q. Qulf tizimga ulanmagan. Qaror asos bilan jurnalga yoziladi, eshikni joyidagi xodim ochadi.", "Нет. Замок не подключён к системе. Решение с основанием пишется в журнал, дверь открывает сотрудник на месте."),
+  S("xavfsizlik-chora", "xavfsizlik", "Hodisani yopolmayapman.", "Не получается закрыть инцидент.", "Ko'rilgan chorani yozing, kamida 5 belgi. Bosqichlar ketma-ket o'tkaziladi.", "Опишите принятые меры, не меньше 5 символов. Этапы проходятся по порядку."),
+  S("admin-parol", "admin", "Xodim parolini unutdi.", "Сотрудник забыл пароль.", "Foydalanuvchi kartochkasida «Parol o'rnatish» bilan vaqtinchalik parol bering. Namoyish rejimida hamma bitta parol bilan kiradi.", "В карточке пользователя выдайте временный пароль через «Parol o'rnatish». В демонстрационном режиме все входят с одним паролем."),
+  S("admin-kim", "admin", "Yozuvni kim o'zgartirganini qanday bilaman?", "Как узнать, кто изменил запись?", "«Amallar tarixi»da xodim, bo'lim yoki davr bo'yicha filtrlang. Har yozuvda eski va yangi qiymat bor.", "В «Amallar tarixi» отфильтруйте по сотруднику, разделу или периоду. В каждой записи есть старое и новое значение."),
+];
+
+/* Klaviatura */
+const TUGMALAR = [
+  [["Ctrl", "K"], ["/"], X("Buyruqlar oynasi: obyekt, sahifa yoki amalni topish", "Окно команд: поиск объекта, страницы или действия")],
+  [["?"], null, X("Tugmalar ro'yxati", "Список клавиш")],
+  [["g", "p"], null, X("Bosh panelga o'tish", "Перейти на главную панель")],
+  [["g", "o"], null, X("Obyektlar reyestriga o'tish", "Перейти в реестр объектов")],
+  [["g", "t"], null, X("Qarorlarga o'tish", "Перейти к решениям")],
+  [["g", "v"], null, X("Vazifalarga o'tish", "Перейти к задачам")],
+  [["g", "b"], null, X("Bildirishnomalarga o'tish", "Перейти к уведомлениям")],
+  [["Esc"], null, X("Oyna, panel yoki sayohatni yopish", "Закрыть окно, панель или тур")],
+  [["Ctrl", "Z"], null, X("«Qaytarish» ko'rinib turganda amalni bekor qilish", "Отменить действие, пока видна «Qaytarish»")],
+  [["Ctrl", "S"], null, X("Formani saqlash", "Сохранить форму")],
+  [["↑", "↓"], ["Enter"], X("Jadval qatorlari bo'ylab yurish va ochish", "Перемещение по строкам таблицы и открытие")],
+  [["→"], ["←"], X("Sayohatda keyingi va oldingi qadam", "Следующий и предыдущий шаг тура")],
+];
+
+/* Nima yangi */
+const YANGILIKLAR = [
+  X("Yordam markazi: rol, sahifa va vazifa bo'yicha yo'riqnomalar, jarayon xaritalari, atamalar va savollar, chop etiladigan to'liq qo'llanma.", "Центр помощи: инструкции по ролям, страницам и задачам, карты процессов, термины и вопросы, полное руководство для печати."),
+  X("Sayohatlar: har rol uchun tanishuv va 14 ta vazifa sayohati. Ekran qorayadi, kerakli joy yoritiladi.", "Туры: знакомство для каждой роли и 14 туров по задачам. Экран затемняется, нужное место подсвечивается."),
+  X("«Qanday ishlaydi» rejimi: sahifa o'zi ko'rsatiladi, qadamlar 6 soniyada almashadi.", "Режим «Qanday ishlaydi»: страница показывает себя сама, шаги меняются каждые 6 секунд."),
+  X("Qarorlar sahifasi: uch ko'rinish, «Nima o'zgaradi» bloki, bir turdagi so'rovlarni birdan tasdiqlash va o'rinbosar.", "Страница решений: три представления, блок «Nima o'zgaradi», массовое утверждение однотипных запросов и заместитель."),
+  X("To'rt ko'z qoidasi: o'z so'rovingizni tasdiqlay olmaysiz, administrator ham.", "Принцип четырёх глаз: свой запрос утвердить нельзя, даже администратору."),
+  X("Tasdiqlash oynalari: nima, qaysi obyektda va qancha pulga o'zgarishi aniq yoziladi.", "Окна подтверждения: точно указано, что, на каком объекте и на какую сумму изменится."),
+  X("«Qaytarish»: vazifa, bildirishnoma va ayrim belgilarni 8 soniya ichida bekor qilish.", "«Qaytarish»: отмена задачи, уведомления и некоторых отметок в течение 8 секунд."),
+  X("Qoralamalar: ko'rik, qabul, tahrir va boshqa uzun formalar shu qurilmada saqlanadi.", "Черновики: осмотр, приём, редактирование и другие длинные формы сохраняются на устройстве."),
+  X("Buyruqlar oynasi (Ctrl+K), saqlangan ko'rinishlar, ustun tanlash va ommaviy amallar.", "Окно команд (Ctrl+K), сохранённые представления, выбор столбцов и массовые действия."),
+  X("Masofadan ochish: ruxsat tekshiruvi, majburiy asos va jurnal.", "Удалённое открытие: проверка допуска, обязательное основание и журнал."),
+  X("Sessiya ogohlantirishi, aloqa uzilganda lenta va «Yangilandi» vaqti.", "Предупреждение о сессии, лента при обрыве связи и время «Yangilandi»."),
+];
+
+(async () => {
+  await MKBapi.tayyor;
+  /* Sayohat matnlari (yadro/sayohatlar.js) va dvigateli (yadro/ux.js) app.js tomonidan keyinroq
+     yuklanadi. Ular kelmasdan chizilsa, vazifa kartalarida «Sayohatni boshlash» tugmasi umuman
+     chiqmaydi, shuning uchun eng ko'pi bilan 2 soniya kutiladi. */
+  for (let i = 0; i < 40 && !(window.MKB_SAYOHATLAR && MKB.sayohat); i++) await new Promise(r => setTimeout(r, 50));
+  const esc = MKB.esc;
+  const $ = id => document.getElementById(id);
+  const Q = window.MKB_QOLLANMA || {};
+  const Y = window.MKB_YORDAM || {};
+  const TUR = window.MKB_SAYOHATLAR || {};
+  const L = window.MKB_LUGAT || {};
+  const joriyRol = MKB.rol();
+  const ru = () => joriyTil() === "ru";
+  const tr = s => (ru() && s && L[s] != null ? L[s] : s);
+  const ROL_TARTIB = Object.keys(ROL_KIRISH).filter(k => Q[k]);
+  const BOLIM_NOM = {};
+  BOLIMLAR.forEach(b => { BOLIM_NOM[b.kalit] = b.yorliq; });
+  BOLIM_NOM.sozlama = BOLIM_NOM.sozlama || "Sozlamalar";
+  BOLIM_NOM.kirish = X("Kirish va xato sahifalari", "Вход и страницы ошибок");
+  const HARF = [["o", X("Ko'rish", "Просмотр"), "chip-kul"], ["y", X("Yozish", "Запись"), "chip-kok"], ["t", X("Tasdiqlash", "Утверждение"), "chip-binafsha"]];
+  const KIRISH_SAHIFALAR = ["kirish.html", "parol-tiklash.html", "parol-yangilash.html", "xato-403.html", "xato-404.html"];
+  /* Yozuv tanlanganda ochiladigan sahifalar: to'g'ridan-to'g'ri havola o'rniga ro'yxat sahifasi */
+  const OTA = {"obyekt.html": "obyektlar.html", "arxiv-obyekt.html": "arxiv.html", "qabul-hujjatlar.html": "qabul-boshlash.html", "qabul-tasdiqlash.html": "qabul-boshlash.html",
+    "qabul-dalolatnoma.html": "obyektlar.html", "lot.html": "lotlar.html", "shartnoma.html": "shartnomalar.html", "ish.html": "undiruv.html", "sud-majlis.html": "sud-kalendar.html",
+    "hodisa.html": "hodisalar.html", "qurilma.html": "qurilmalar.html", "servis-topshirigi.html": "qurilmalar.html", "tashrif-jonli.html": "tashriflar.html", "tashrif-chiqish.html": "tashriflar.html",
+    "kirish-voqea.html": "kirish-voqealari.html", "korik-otkazish.html": "korik-rejasi.html", "korik-akti.html": "korik-tarixi.html", "inventar-dalolatnoma.html": "inventarizatsiya.html",
+    "baholash-hisobot.html": "baholash.html", "sugurta-polis.html": "sugurta.html", "foydalanuvchi.html": "foydalanuvchilar.html"};
+  ["obyekt-suratlar", "obyekt-moliya", "obyekt-hujjatlar", "obyekt-koriklar", "obyekt-xarajatlar", "obyekt-kommunal", "obyekt-himoya", "obyekt-sotuv", "obyekt-tarix", "obyekt-pasport", "obyekt-tahrir"]
+    .forEach(f => { OTA[f + ".html"] = "obyektlar.html"; });
+  [
+    ["Bosh sahifa", "Главная"], ["Rollar", "Роли"], ["Sahifalar", "Страницы"], ["Jarayonlar", "Процессы"], ["Atamalar", "Термины"], ["Savollar", "Вопросы"],
+    ["Klaviatura", "Клавиатура"], ["Nima yangi", "Что нового"], ["Siz kimsiz?", "Кто вы?"], ["Rolingizni tanlang: ish tartibi, ekranlar va huquqlar ochiladi.", "Выберите роль: откроются порядок работы, экраны и права."],
+    ["Nima qilmoqchisiz?", "Что нужно сделать?"], ["Har vazifada qadamlar va sayohat bor.", "В каждой задаче есть шаги и тур."], ["Ko'p so'raladigan savollar", "Частые вопросы"],
+    ["Yana", "Ещё"], ["Barcha savollar", "Все вопросы"], ["siz", "вы"], ["Sayohatni boshlash", "Начать тур"], ["Qanday ishlaydi", "Как работает"],
+    ["Sayohat shu rolda kirgan xodimga ochiladi", "Тур доступен сотруднику, вошедшему в этой роли"], ["Har kuni", "Каждый день"], ["Har hafta", "Каждую неделю"], ["Har oy", "Каждый месяц"],
+    ["Ish tartibi", "Порядок работы"], ["Qadamma-qadam", "Пошагово"], ["Nima qila olasiz", "Что вы можете"], ["Nima qila olmaysiz", "Чего вы не можете"],
+    ["Bo'limlar va huquqlar", "Разделы и права"], ["Qaysi ekranlar", "Какие экраны"], ["Javobgarlik", "Ответственность"], ["Muddat va me'yorlar", "Сроки и нормы"],
+    ["Vazifa sayohatlari", "Туры по задачам"], ["Shu rol savollari", "Вопросы этой роли"], ["Yopiq", "Закрыт"], ["Kim foydalanadi", "Кто пользуется"],
+    ["Ekrandagi bloklar", "Блоки на экране"], ["Tugmalar va ulardan keyin nima bo'ladi", "Кнопки и что происходит после них"], ["Ko'p uchraydigan xatolar", "Частые ошибки"],
+    ["Qoidalar", "Правила"], ["Bog'liq sahifalar", "Связанные страницы"], ["Sahifani ochish", "Открыть страницу"], ["Shu sahifa bo'yicha sayohat", "Тур по этой странице"],
+    ["Bu sahifa ro'yxatdan yozuv tanlanganda ochiladi", "Эта страница открывается при выборе записи из списка"], ["Ro'yxatni ochish", "Открыть список"],
+    ["Sahifa rolingizga yopiq", "Страница закрыта для вашей роли"], ["Yozadi", "Пишет"], ["Ko'radi", "Видит"], ["Rasmni kattalashtirish", "Увеличить изображение"],
+    ["Aktivning hayot sikli", "Жизненный цикл актива"], ["Har bosqichni bosing: tegishli maqola ochiladi.", "Нажмите на этап: откроется нужная статья."],
+    ["Undiruvdan balansga qabul", "Из взыскания на приём на баланс"], ["Garov uch rol orqali o'tadi: yurist, Rahbariyat va obyekt menejeri.", "Залог проходит через три роли: юрист, руководство и менеджер по объектам."],
+    ["Atamalar lug'ati", "Словарь терминов"], ["Qayerda", "Где"], ["Tugma", "Клавиша"], ["Yoki", "Или"], ["Amal", "Действие"],
+    ["Klaviatura tugmalari", "Сочетания клавиш"], ["Matn kiritayotganda tugmalar ishlamaydi, Ctrl+K, Ctrl+S va Esc bundan mustasno.", "Во время ввода текста клавиши не работают, кроме Ctrl+K, Ctrl+S и Esc."],
+    ["Shu versiyada", "В этой версии"], ["Qidiruv natijalari", "Результаты поиска"], ["Hech narsa topilmadi", "Ничего не найдено"],
+    ["Boshqa so'z bilan qidiring yoki bo'limlarni ko'rib chiqing.", "Попробуйте другое слово или просмотрите разделы."], ["Sahifa", "Страница"], ["Rol", "Роль"],
+    ["Vazifa", "Задача"], ["Atama", "Термин"], ["Savol", "Вопрос"], ["Umumiy", "Общие"], ["Mundarija", "Содержание"], ["Chop etish", "Печать"],
+    ["To'liq qo'llanma", "Полное руководство"], ["Rollar bo'yicha yo'riqnoma", "Инструкции по ролям"], ["Sahifalar bo'yicha maqolalar", "Статьи по страницам"],
+    ["Vazifalar bo'yicha yo'riqnoma", "Инструкции по задачам"], ["Kim bajaradi", "Кто выполняет"], ["Qadamlar", "Шаги"], ["Sahifalar va maqolalar", "Страницы и статьи"],
+    ["Qo'llanma chop etish uchun tayyor. Mundarija birinchi varaqda.", "Руководство готово к печати. Содержание — на первом листе."],
+    ["Namoyish faqat shartli ma'lumotda ishlaydi", "Демонстрация работает только на условных данных"], ["Maqola topilmadi", "Статья не найдена"],
+    ["Bo'limga qaytish", "Вернуться к разделу"], ["Hamma rollar", "Все роли"], ["Qidiruv", "Поиск"], ["Sayohat", "Тур"],
+  ].forEach(p => X(p[0], p[1]));
+  if (typeof window.mkbYordamTuzat === "function") window.mkbYordamTuzat();
+
+  /* ---------- Yordamchilar ---------- */
+  const MENYU = [["", "Bosh sahifa"], ["rollar", "Rollar"], ["sahifalar", "Sahifalar"], ["jarayonlar", "Jarayonlar"], ["atamalar", "Atamalar"], ["savollar", "Savollar"], ["klaviatura", "Klaviatura"], ["yangi", "Nima yangi"]];
+  const ikon = (nom, kls) => '<span class="' + (kls || "ym-ikon") + '" aria-hidden="true">' + ik(nom) + "</span>";
+  const sahifaNomi = f => (Y[f] && Y[f].sarlavha) || f;
+  const rolNomi = k => (Q[k] && Q[k].nom) || k;
+  const rolOchadimi = (rol, f) => {
+    if (rol === "admin") return true;
+    if (SAHIFA_MAXSUS[f] && !SAHIFA_MAXSUS[f].includes(rol)) return false;
+    const b = bolimTopish(f);
+    if (!b) return true;
+    if (!huquqBor(rol, b, "o")) return false;
+    if (SAHIFA_AMAL[f] && !SAHIFA_AMAL[f].split("|").some(a => huquqBor(rol, b, AMAL_HARF[a]))) return false;
+    if (SAHIFA_BOLIM2[f] && !huquqBor(rol, SAHIFA_BOLIM2[f], "o")) return false;
+    return true;
+  };
+  const turRollari = id => { const t = TUR[id]; if (!t) return []; return t.rol === "hammasi" || !t.rol ? ROL_TARTIB.slice() : [].concat(t.rol); };
+  const turMenga = id => !!TUR[id] && (turRollari(id).includes(joriyRol));
+  const havolaTugma = (href, matn, ikn, kls) => '<a class="tugma ' + (kls || "tugma-oq") + '" href="' + esc(href) + '">' + (ikn ? ik(ikn) : "") + "<span>" + esc(matn) + "</span></a>";
+  const sayohatTugma = (id, matn, kls, qadam) => '<button type="button" class="tugma ' + (kls || "tugma-asosiy") + '" data-ym-sayohat="' + esc(id) + '"' + (qadam ? ' data-ym-qadam="' + qadam + '"' : "") + ">" + ik("ong") + "<span>" + esc(matn) + "</span></button>";
+  /* Vazifaning sayohati bitta yoki bir nechta bo'lishi mumkin: rolga mos kelgani ochiladi
+     (qaror qabul qiladigan xodim va so'rov yuboradigan xodim uchun alohida sayohat) */
+  const turTanla = s => [].concat(s || []).find(turMenga) || null;
+  const sayohatTugmalari = (turId2, namoyishId) => {
+    let h = "";
+    const turId = turTanla(turId2);
+    if (turId) h += sayohatTugma(turId, "Sayohatni boshlash");
+    if (namoyishId && turMenga(namoyishId)) h += '<button type="button" class="tugma tugma-oq" data-ym-sayohat="' + esc(namoyishId) + '">' + ik("korish") + "<span>Qanday ishlaydi</span></button>";
+    return h;
+  };
+  const royxatBlok = (nom, bandlar, kls) => bandlar && bandlar.length
+    ? '<div class="qol-blok' + (kls ? " " + kls : "") + '"><h4>' + esc(nom) + "</h4><ul>" + bandlar.map(b => "<li>" + esc(b) + "</li>").join("") + "</ul></div>" : "";
+  const huquqRoyxati = rol => {
+    const r = ROL_RUXSAT[rol];
+    const bol = BOLIMLAR.map(b => ({kalit: b.kalit, nom: b.yorliq}));
+    if (!bol.some(b => b.kalit === "sozlama")) bol.push({kalit: "sozlama", nom: "Sozlamalar"});
+    return '<ul class="huquq-royxat">' + bol.map(b => {
+      const h = r === null ? "oyt" : ((r || {})[b.kalit] || "");
+      return '<li class="' + (h ? "" : "yopiq") + '"><span>' + esc(b.nom) + '</span><span class="chiplar">' +
+        (h ? HARF.filter(x => h.includes(x[0])).map(x => '<span class="chip chip-kichik ' + x[2] + '">' + esc(x[1]) + "</span>").join("") : "<span>Yopiq</span>") + "</span></li>";
+    }).join("") + "</ul>";
+  };
+  const rasm = (src, izoh) => src ? '<figure class="ym-rasm"><a href="' + esc(src) + '" target="_blank" rel="noopener" aria-label="Rasmni kattalashtirish">' +
+    '<img src="' + esc(src) + '" alt="' + esc(izoh || "") + '" loading="lazy" decoding="async"></a>' + (izoh ? "<figcaption>" + esc(izoh) + "</figcaption>" : "") + "</figure>" : "";
+  /* Sahifaga tegishli rasm: rol qadamlarida shu sahifaga bog'langan birinchi rasm */
+  const sahifaRasmi = f => {
+    for (const k of ROL_TARTIB) for (const q of (Q[k].qadamlar || [])) if (q.rasm && q.havola && q.havola.split("#")[0] === f) return {src: q.rasm, izoh: q.nom};
+    return null;
+  };
+  const kontent = $("ym-kontent");
+
+  /* ---------- Menyu ---------- */
+  function menyuChiz(faol){
+    $("ym-menyu").innerHTML = MENYU.map(m => '<a href="#' + m[0] + '"' + (m[0] === faol ? ' aria-current="page"' : "") + ">" + esc(m[1]) + "</a>").join("");
+  }
+
+  /* ---------- Bosh sahifa ---------- */
+  function boshSahifa(){
+    const rollar = ROL_TARTIB.map(k => '<a class="ym-plitka" href="#rol-' + k + '">' + ikon(ROL_KIRISH[k].ik) +
+      "<span><b>" + esc(ROL_KIRISH[k].men) + '</b><span class="ym-kichik">' + esc(rolNomi(k)) + "</span>" +
+      (k === joriyRol ? '<span class="chip chip-kichik chip-brend">siz</span>' : "") + "</span></a>").join("");
+    const vaz = VAZIFALAR.filter(v => v.rollar === "hammasi" || v.rollar.includes(joriyRol)).concat(VAZIFALAR.filter(v => !(v.rollar === "hammasi" || v.rollar.includes(joriyRol))));
+    const vazifalar = vaz.map(v => '<a class="ym-plitka" href="#vazifa-' + v.id + '">' + ikon(v.ik) + "<span><b>" + esc(v.nom) + '</b><span class="ym-kichik">' + esc(v.izoh) + "</span></span></a>").join("");
+    const savol = SAVOLLAR.filter(s => s.rol === "umumiy" || s.rol === joriyRol).slice(0, 6);
+    return '<section class="ym-bolim" aria-labelledby="ym-rol-s"><h2 id="ym-rol-s">Siz kimsiz?</h2><p class="ym-izoh">Rolingizni tanlang: ish tartibi, ekranlar va huquqlar ochiladi.</p>' +
+        '<div class="ym-panjara">' + rollar + "</div></section>" +
+      '<section class="ym-bolim" aria-labelledby="ym-vaz-s"><h2 id="ym-vaz-s">Nima qilmoqchisiz?</h2><p class="ym-izoh">Har vazifada qadamlar va sayohat bor.</p>' +
+        '<div class="ym-panjara">' + vazifalar + "</div></section>" +
+      '<section class="ym-bolim karta" aria-labelledby="ym-sav-s" style="margin-top:24px"><div class="karta-bosh"><h2 id="ym-sav-s">Ko&#39;p so&#39;raladigan savollar</h2>' +
+        '<a class="karta-havola" href="#savollar"><span>Barcha savollar</span>' + ik("ong") + "</a></div>" + savol.map(x => savolHTML(x)).join("") + "</section>" +
+      '<section class="ym-bolim karta" aria-labelledby="ym-hs-s" style="margin-top:20px"><div class="karta-bosh"><h2 id="ym-hs-s">Aktivning hayot sikli</h2>' +
+        '<a class="karta-havola" href="#jarayonlar"><span>Jarayonlar</span>' + ik("ong") + '</a></div><div class="ym-xarita" data-xarita="hayot"></div></section>';
+  }
+  const savolHTML = (s, ochiq) => '<details class="ym-savol" id="savol-' + esc(s.id) + '"' + (ochiq ? " open" : "") + "><summary>" + esc(s.savol) + "</summary><p>" + esc(s.javob) + "</p></details>";
+
+  /* ---------- Rollar ---------- */
+  function rollarSahifa(){
+    return '<section class="ym-bolim"><h2>Rollar</h2><div class="ym-panjara">' + ROL_TARTIB.map(k => '<a class="ym-plitka" href="#rol-' + k + '">' + ikon(ROL_KIRISH[k].ik) +
+      "<span><b>" + esc(rolNomi(k)) + '</b><span class="ym-kichik">' + esc(Q[k].maqsad) + "</span>" + (k === joriyRol ? '<span class="chip chip-kichik chip-brend">siz</span>' : "") + "</span></a>").join("") + "</div></section>";
+  }
+  function rolSahifa(k, toliq){
+    const q = Q[k];
+    if (!q) return null;
+    const turTugma = q.sayohat && turMenga(q.sayohat) ? sayohatTugma(q.sayohat, "Sayohatni boshlash")
+      : '<span class="maydon-izoh">Sayohat shu rolda kirgan xodimga ochiladi</span>';
+    const qadamlar = '<ol class="qol-qadamlar">' + q.qadamlar.map((x, i) => {
+      const ochiq = x.havola && sahifaRuxsatlimi(x.havola);
+      return '<li class="qol-qadam"><span class="raqam" data-tarjimasiz>' + (i + 1) + '</span><span class="matn"><b>' + esc(x.nom) + "</b><span>" + esc(x.izoh) + "</span>" +
+        (x.rasm ? rasm(x.rasm, x.nom) : "") +
+        (x.havola ? '<a href="#' + esc(x.havola.split("#")[0]) + '"><span>' + esc(sahifaNomi(x.havola.split("#")[0])) + "</span>" + ik("ong", "mitti") + "</a>" : "") +
+        (ochiq && !toliq ? '<a href="' + esc(x.havola) + '"><span>Sahifani ochish</span>' + ik("tashqi", "mitti") + "</a>" : "") +
+        "</span></li>";
+    }).join("") + "</ol>";
+    const turlar = Object.keys(TUR).filter(id => (TUR[id].rejim || "sayohat") === "sayohat" && !TUR[id].birinchi && turRollari(id).includes(k));
+    const savollar = SAVOLLAR.filter(s => s.rol === k);
+    return (toliq ? "" : '<section class="karta"><div class="ym-bosh">' + ikon(ROL_KIRISH[k].ik, "ym-ikon-katta") + '<div class="ym-bosh-matn">' +
+        '<h2 id="rol-' + k + '-s">' + esc(q.nom) + (k === joriyRol ? ' <span class="chip chip-kichik chip-brend">siz</span>' : "") + "</h2>" +
+        '<p class="qol-maqsad" style="margin-top:8px">' + esc(q.maqsad) + '</p><div class="ym-tugmalar">' + turTugma + "</div></div></div></section>") +
+      (toliq ? '<p class="qol-maqsad">' + esc(q.maqsad) + "</p>" : "") +
+      '<section class="karta" style="margin-top:20px"><div class="karta-bosh"><h2>Ish tartibi</h2></div><div class="ym-uch">' +
+        royxatBlok("Har kuni", q.kunlik) + royxatBlok("Har hafta", q.haftalik) + royxatBlok("Har oy", q.oylik) + "</div></section>" +
+      '<div class="tor-2" style="margin-top:20px"><section class="karta"><div class="karta-bosh"><h2>Qadamma-qadam</h2></div>' + qadamlar + "</section>" +
+      '<div class="ustun">' +
+        '<section class="karta"><div class="karta-bosh"><h2>Nima qila olasiz</h2></div>' + royxatBlok("", q.mumkin).replace("<h4></h4>", "") +
+          royxatBlok("Nima qila olmaysiz", q.mumkinEmas, "qol-yopiq") + "</section>" +
+        '<section class="karta"><div class="karta-bosh"><h2>Bo&#39;limlar va huquqlar</h2></div>' + huquqRoyxati(k) + "</section>" +
+        '<section class="karta"><div class="karta-bosh"><h2>Qaysi ekranlar</h2></div><div class="ym-havolalar">' +
+          (q.ekranlar || []).map(f => '<a href="#' + esc(f) + '">' + esc(sahifaNomi(f)) + "</a>").join("") + "</div></section>" +
+        '<section class="karta">' + royxatBlok("Javobgarlik", q.javobgarlik) + royxatBlok("Muddat va me'yorlar", q.meyor, "qol-meyor") + "</section>" +
+        (turlar.length && !toliq ? '<section class="karta"><div class="karta-bosh"><h2>Vazifa sayohatlari</h2></div><div class="ym-havolalar">' +
+          turlar.map(id => {
+            const v = VAZIFALAR.find(x => [].concat(x.sayohat || []).indexOf(id) >= 0);
+            return '<a href="' + (v ? "#vazifa-" + v.id : "#") + '"' + (v ? "" : ' data-ym-sayohat="' + esc(id) + '"') + ">" + ik("ong") + "<span>" + esc(TUR[id].sarlavha) + "</span></a>";
+          }).join("") + "</div></section>" : "") +
+        (savollar.length ? '<section class="karta"><div class="karta-bosh"><h2>Shu rol savollari</h2></div>' + savollar.map(x => savolHTML(x, toliq)).join("") + "</section>" : "") +
+      "</div></div>";
+  }
+
+  /* ---------- Sahifa maqolasi ---------- */
+  function maqolaHTML(f, toliq){
+    const m = Y[f];
+    if (!m) return null;
+    const bolim = KIRISH_SAHIFALAR.includes(f) ? "kirish" : bolimTopish(f);
+    const kim = ROL_TARTIB.filter(k => rolOchadimi(k, f));
+    const yozadi = kim.filter(k => k === "admin" || huquqBor(k, bolim, "y"));
+    const r = sahifaRasmi(f);
+    let ochish = "";
+    if (!toliq && !KIRISH_SAHIFALAR.includes(f) && f !== "qollanma.html"){
+      if (OTA[f]) ochish = '<span class="maydon-izoh">Bu sahifa ro&#39;yxatdan yozuv tanlanganda ochiladi</span>' + (sahifaRuxsatlimi(OTA[f]) ? havolaTugma(OTA[f], "Ro'yxatni ochish", "ong") : "");
+      else if (sahifaRuxsatlimi(f)) ochish = havolaTugma(f, "Sahifani ochish", "ong");
+      else ochish = '<span class="maydon-izoh">Sahifa rolingizga yopiq</span>';
+    }
+    const turlar = toliq ? [] : (MKB.sayohat && MKB.sayohat.sahifaUchun ? MKB.sayohat.sahifaUchun(f) : []);
+    const oddiy = turlar.filter(t => (t.rejim || "sayohat") === "sayohat");
+    const nam = turlar.filter(t => t.rejim === "namoyish");
+    const turTugmalar = (oddiy.length ? sayohatTugma(oddiy[0].id, "Shu sahifa bo'yicha sayohat", "tugma-asosiy", "sahifa:" + f) : "") +
+      nam.map(t => '<button type="button" class="tugma tugma-oq" data-ym-sayohat="' + esc(t.id) + '">' + ik("korish") + "<span>Qanday ishlaydi</span></button>").join("");
+    const blok = (nom, bandlar) => bandlar && bandlar.length ? '<div class="qol-blok"><h4>' + esc(nom) + '</h4><dl class="ym-dl">' +
+      bandlar.map(b => "<div><dt>" + esc(b.nom) + "</dt><dd>" + esc(b.izoh) + "</dd></div>").join("") + "</dl></div>" : "";
+    const amallar = m.amallar && m.amallar.length ? '<div class="qol-blok"><h4>Tugmalar va ulardan keyin nima bo&#39;ladi</h4><ol class="qol-qadamlar">' +
+      m.amallar.map((a, i) => '<li class="qol-qadam"><span class="raqam" data-tarjimasiz>' + (i + 1) + '</span><span class="matn"><b>' + esc(a.nom) + "</b><span>" + esc(a.izoh) + "</span></span></li>").join("") + "</ol></div>" : "";
+    return '<article class="' + (toliq ? "ym-toliq-maqola karta" : "karta") + '" id="' + (toliq ? "m-" + esc(f.replace(".html", "")) : "ym-maqola") + '">' +
+      '<div class="ym-bosh"><div class="ym-bosh-matn"><span class="chip chip-kichik chip-kul">' + esc(BOLIM_NOM[bolim] || "") + "</span>" +
+        "<h2 style=\"margin-top:8px\">" + esc(m.sarlavha) + "</h2>" +
+        '<p class="qol-maqsad" style="margin-top:8px">' + esc(m.nimaUchun) + "</p>" +
+        ((ochish || turTugmalar) ? '<div class="ym-tugmalar">' + turTugmalar + ochish + "</div>" : "") + "</div></div>" +
+      (kim.length && !KIRISH_SAHIFALAR.includes(f) ? '<div class="qol-blok"><h4>Kim foydalanadi</h4><div class="ym-chiplar">' +
+        kim.map(k => '<span class="chip ' + (yozadi.includes(k) ? "chip-kok" : "chip-kul") + '"><span>' + esc(rolNomi(k)) + "</span> · <span>" + (yozadi.includes(k) ? "Yozadi" : "Ko'radi") + "</span></span>").join("") + "</div></div>" : "") +
+      (r ? rasm(r.src, m.sarlavha) : "") +
+      blok("Ekrandagi bloklar", m.bloklar) + amallar +
+      royxatBlok("Ko'p uchraydigan xatolar", m.xatolar, "qol-yopiq") + royxatBlok("Qoidalar", m.qoidalar, "qol-meyor") +
+      (m.bogliq && m.bogliq.length ? '<div class="qol-blok"><h4>Bog&#39;liq sahifalar</h4><div class="ym-havolalar">' +
+        m.bogliq.filter(b => Y[b]).map(b => '<a href="#' + esc(b) + '">' + esc(sahifaNomi(b)) + "</a>").join("") + "</div></div>" : "") +
+      "</article>";
+  }
+
+  /* ---------- Sahifalar ro'yxati ---------- */
+  function sahifalarGuruhlari(){
+    const guruh = [];
+    const kalitlar = BOLIMLAR.map(b => b.kalit).concat(["sozlama"]).filter((k, i, a) => a.indexOf(k) === i);
+    kalitlar.forEach(k => {
+      const f = ((window.MKB_DARAXT || {})[k] || []).map(x => x.f).concat((window.MKB_ICHKI || {})[k] || []).filter(x => Y[x]);
+      if (f.length) guruh.push([k, f]);
+    });
+    guruh.push(["kirish", KIRISH_SAHIFALAR.filter(x => Y[x])]);
+    const bor = new Set(guruh.flatMap(g => g[1]));
+    const qolgan = Object.keys(Y).filter(x => !bor.has(x));
+    if (qolgan.length) guruh.push(["boshqa", qolgan]);
+    return guruh;
+  }
+  function sahifalarSahifa(){
+    return sahifalarGuruhlari().map(([k, f]) => '<section class="ym-bolim" id="bolim-' + esc(k) + '"><h2>' + esc(BOLIM_NOM[k] || k) + '</h2><div class="ym-panjara">' +
+      f.map(x => '<a class="ym-plitka" href="#' + esc(x) + '"><span><b>' + esc(Y[x].sarlavha) + '</b><span class="ym-kichik" data-tarjimasiz>' + esc(tr(Y[x].nimaUchun).split(". ")[0].replace(/\.$/, "")) + "</span></span></a>").join("") +
+      "</div></section>").join("");
+  }
+
+  /* ---------- Vazifa maqolasi ---------- */
+  function vazifaHTML(v, toliq){
+    const rollar = v.rollar === "hammasi" ? ROL_TARTIB : v.rollar;
+    return '<article class="karta' + (toliq ? " ym-toliq-maqola" : "") + '"><div class="ym-bosh">' + ikon(v.ik, "ym-ikon-katta") + '<div class="ym-bosh-matn"><h2>' + esc(v.nom) + "</h2>" +
+      '<p class="qol-maqsad" style="margin-top:8px">' + esc(v.izoh) + "</p>" +
+      (toliq ? "" : '<div class="ym-tugmalar">' + sayohatTugmalari(v.sayohat, v.namoyish) + "</div>") + "</div></div>" +
+      '<div class="qol-blok"><h4>Kim bajaradi</h4><div class="ym-chiplar">' + rollar.map(k => '<span class="chip chip-kul">' + esc(rolNomi(k)) + "</span>").join("") + "</div></div>" +
+      '<div class="qol-blok"><h4>Qadamlar</h4><ol class="qol-qadamlar">' + v.qadamlar.map((q, i) => '<li class="qol-qadam"><span class="raqam" data-tarjimasiz>' + (i + 1) +
+        '</span><span class="matn"><span style="color:var(--siyoh);font-size:14px">' + esc(q) + "</span></span></li>").join("") + "</ol></div>" +
+      '<div class="qol-blok"><h4>Sahifalar va maqolalar</h4><div class="ym-havolalar">' + v.sahifalar.filter(f => Y[f]).map(f => '<a href="#' + esc(f) + '">' + esc(sahifaNomi(f)) + "</a>").join("") + "</div></div></article>";
+  }
+
+  /* ---------- Jarayon xaritalari (SVG, kenglikka qarab gorizontal yoki vertikal) ---------- */
+  const HAYOT = [
+    ["qabul-boshlash.html", X("Balansga qabul", "Приём на баланс"), X("Obyekt menejeri", "Менеджер по объектам")],
+    ["rasmiylashtirish.html", X("Rasmiylashtirish", "Оформление права"), X("Obyekt menejeri, yurist", "Менеджер, юрист")],
+    ["baholash.html", X("Baholash", "Оценка"), X("Baholovchi", "Оценщик")],
+    ["korik-rejasi.html", X("Ko'rik va himoya", "Осмотры и охрана"), X("Inspektor, xavfsizlik", "Инспектор, безопасность")],
+    ["zaxira.html", X("Zaxira va muddatlar", "Резерв и сроки"), X("Buxgalteriya va risk", "Бухгалтерия и риски")],
+    ["lotlar.html", X("Sotuv yoki ijara", "Продажа или аренда"), X("Realizatsiya", "Реализация")],
+    ["chiqim-tasdiqlash.html", X("Balansdan chiqarish", "Списание с баланса"), X("Rahbariyat tasdiqlaydi", "Утверждает руководство")],
+  ];
+  const TOPSHIRISH = [
+    ["undiruv.html", X("Ogohlantirish", "Предупреждение"), 0],
+    ["davo-tayyorlash.html", X("Da'vo arizasi", "Исковое заявление"), 0],
+    ["sud-kalendar.html", X("Sud jarayoni", "Судебный процесс"), 0],
+    ["qaror-kiritish.html", X("Sud qarori", "Решение суда"), 0],
+    ["ish.html", X("Ijro va qabul so'rovi", "Исполнение и запрос приёма"), 0],
+    ["tasdiqlar.html", X("Rahbariyat qarori", "Решение руководства"), 1],
+    ["qabul-boshlash.html", X("Balansga qabul", "Приём на баланс"), 2],
+    ["rasmiylashtirish.html", X("Rasmiylashtirish", "Оформление права"), 2],
+  ];
+  const YOLAKLAR = [X("Yurist", "Юрист"), X("Rahbariyat", "Руководство"), X("Obyekt menejeri", "Менеджер по объектам")];
+  const svgMatn = s => esc(tr(s));
+  function xaritaSVG(tur, en){
+    const tor = en < 720;
+    const uch = '<defs><marker id="jx-uch-' + tur + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="jx-uch" d="M0 0L10 5L0 10z"/></marker></defs>';
+    const qutiH = (x, y, w, h, n, nom, rol, href) => '<a href="#' + href + '" aria-label="' + svgMatn(nom) + '">' +
+      '<rect class="jx-quti" x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="16"/>' +
+      '<circle class="jx-raqam" cx="' + (x + 22) + '" cy="' + (y + 24) + '" r="11"/><text class="jx-raqam-t" x="' + (x + 22) + '" y="' + (y + 28) + '" text-anchor="middle">' + n + "</text>" +
+      '<text class="jx-nom" x="' + (x + 14) + '" y="' + (y + 58) + '">' + svgMatn(nom) + "</text>" +
+      (rol ? '<text class="jx-rol" x="' + (x + 14) + '" y="' + (y + 78) + '">' + svgMatn(rol) + "</text>" : "") + "</a>";
+    if (tur === "hayot"){
+      if (!tor){
+        const w = 146, g = 12, h = 96, W = HAYOT.length * w + (HAYOT.length - 1) * g;
+        let s = '<svg viewBox="0 0 ' + W + " " + (h + 4) + '" role="group" aria-label="' + svgMatn("Aktivning hayot sikli") + '">' + uch;
+        HAYOT.forEach((b, i) => {
+          const x = i * (w + g);
+          s += qutiH(x, 2, w, h, i + 1, b[1], b[2], b[0]);
+          if (i < HAYOT.length - 1) s += '<path class="jx-chiziq" d="M' + (x + w + 1) + " " + (2 + h / 2) + "H" + (x + w + g - 1) + '" marker-end="url(#jx-uch-' + tur + ')"/>';
+        });
+        return s + "</svg>";
+      }
+      const w = Math.max(280, en - 4), h = 88, g = 18;
+      let s = '<svg viewBox="0 0 ' + w + " " + (HAYOT.length * (h + g) - g + 4) + '" role="group" aria-label="' + svgMatn("Aktivning hayot sikli") + '">' + uch;
+      HAYOT.forEach((b, i) => {
+        const y = 2 + i * (h + g);
+        s += qutiH(2, y, w - 4, h, i + 1, b[1], b[2], b[0]);
+        if (i < HAYOT.length - 1) s += '<path class="jx-chiziq" d="M36 ' + (y + h + 1) + "V" + (y + h + g - 1) + '" marker-end="url(#jx-uch-' + tur + ')"/>';
+      });
+      return s + "</svg>";
+    }
+    /* Undiruvdan balansga: uch yo'lak */
+    if (!tor){
+      const n = TOPSHIRISH.length, w = 124, g = 10, lw = 118, h = 70, yh = 96, W = lw + n * w + (n - 1) * g + 8;
+      let s = '<svg viewBox="0 0 ' + W + " " + (YOLAKLAR.length * yh + 4) + '" role="group" aria-label="' + svgMatn("Undiruvdan balansga qabul") + '">' + uch;
+      YOLAKLAR.forEach((y, i) => { s += '<rect class="jx-yolak" x="0" y="' + (2 + i * yh) + '" width="' + W + '" height="' + (yh - 8) + '" rx="18"/>' +
+        '<text class="jx-yolak-t" x="16" y="' + (2 + i * yh + yh / 2) + '">' + svgMatn(y) + "</text>"; });
+      let oldin = null;
+      TOPSHIRISH.forEach((b, i) => {
+        const x = lw + i * (w + g), y = 2 + b[2] * yh + (yh - 8 - h) / 2;
+        s += '<a href="#' + b[0] + '" aria-label="' + svgMatn(b[1]) + '"><rect class="jx-quti" x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="14"/>' +
+          '<circle class="jx-raqam" cx="' + (x + 20) + '" cy="' + (y + 22) + '" r="10"/><text class="jx-raqam-t" x="' + (x + 20) + '" y="' + (y + 26) + '" text-anchor="middle">' + (i + 1) + "</text>" +
+          '<text class="jx-nom" x="' + (x + 12) + '" y="' + (y + 54) + '" style="font-size:12px">' + svgMatn(b[1]) + "</text></a>";
+        if (oldin){
+          const [ox, oy] = oldin;
+          s += oy === y ? '<path class="jx-chiziq" d="M' + (ox + w + 1) + " " + (y + h / 2) + "H" + (x - 1) + '" marker-end="url(#jx-uch-' + tur + ')"/>'
+            : '<path class="jx-chiziq" d="M' + (ox + w / 2) + " " + (oy + h + 1) + "V" + (y + h / 2) + "H" + (x - 1) + '" marker-end="url(#jx-uch-' + tur + ')"/>';
+        }
+        oldin = [x, y];
+      });
+      return s + "</svg>";
+    }
+    const w = Math.max(280, en - 4), h = 88, g = 16;
+    let s = '<svg viewBox="0 0 ' + w + " " + (TOPSHIRISH.length * (h + g) - g + 4) + '" role="group" aria-label="' + svgMatn("Undiruvdan balansga qabul") + '">' + uch;
+    TOPSHIRISH.forEach((b, i) => {
+      const y = 2 + i * (h + g);
+      s += qutiH(2, y, w - 4, h, i + 1, b[1], YOLAKLAR[b[2]], b[0]);
+      if (i < TOPSHIRISH.length - 1) s += '<path class="jx-chiziq" d="M36 ' + (y + h + 1) + "V" + (y + h + g - 1) + '" marker-end="url(#jx-uch-' + tur + ')"/>';
+    });
+    return s + "</svg>";
+  }
+  function xaritalarniChiz(ildiz){
+    (ildiz || document).querySelectorAll("[data-xarita]").forEach(el => {
+      const en = el.clientWidth || 1000;
+      el.innerHTML = xaritaSVG(el.dataset.xarita, en);
+      el.setAttribute("data-tarjimasiz", "");
+    });
+  }
+  function jarayonlarSahifa(){
+    const izoh = (royxat, rolIdx) => '<ol class="qol-qadamlar" style="margin-top:16px">' + royxat.map((b, i) => '<li class="qol-qadam"><span class="raqam" data-tarjimasiz>' + (i + 1) +
+      '</span><span class="matn"><b>' + esc(b[1]) + "</b><span>" + esc(rolIdx ? YOLAKLAR[b[2]] : b[2]) + '</span><a href="#' + esc(b[0]) + '"><span>' + esc(sahifaNomi(b[0])) + "</span>" + ik("ong", "mitti") + "</a></span></li>").join("") + "</ol>";
+    return '<section class="karta"><div class="karta-bosh"><h2>Aktivning hayot sikli</h2></div><p class="maydon-izoh" style="margin:-8px 0 16px">Har bosqichni bosing: tegishli maqola ochiladi.</p>' +
+        '<div class="ym-xarita" data-xarita="hayot"></div>' + izoh(HAYOT, false) + "</section>" +
+      '<section class="karta" style="margin-top:20px"><div class="karta-bosh"><h2>Undiruvdan balansga qabul</h2></div><p class="maydon-izoh" style="margin:-8px 0 16px">Garov uch rol orqali o&#39;tadi: yurist, Rahbariyat va obyekt menejeri.</p>' +
+        '<div class="ym-xarita" data-xarita="topshirish"></div>' + izoh(TOPSHIRISH, true) + "</section>";
+  }
+
+  /* ---------- Atamalar, savollar, klaviatura, yangiliklar ---------- */
+  function atamalarSahifa(toliq){
+    const tartib = ATAMALAR.slice().sort((a, b) => tr(a.nom).localeCompare(tr(b.nom), ru() ? "ru" : "uz"));
+    const harflar = [...new Set(tartib.map(a => tr(a.nom)[0].toUpperCase()))];
+    return '<section class="karta"><div class="karta-bosh"><h2>Atamalar lug&#39;ati</h2></div>' +
+      (toliq ? "" : '<nav class="ym-harflar" aria-label="Harflar" data-tarjimasiz>' + harflar.map(h => '<a href="#harf-' + encodeURIComponent(h) + '">' + esc(h) + "</a>").join("") + "</nav>") +
+      '<dl data-tarjimasiz>' + tartib.map((a, i) => {
+        const h = tr(a.nom)[0].toUpperCase();
+        const birinchiHarf = i === 0 || tr(tartib[i - 1].nom)[0].toUpperCase() !== h;
+        return '<div class="ym-atama" id="atama-' + esc(a.id) + '"' + (birinchiHarf ? ' data-harf="' + esc(h) + '"' : "") + "><dt>" + esc(tr(a.nom)) + "</dt><dd>" + esc(tr(a.izoh)) + "</dd>" +
+          (a.sahifalar.length && !toliq ? '<div class="ym-havolalar">' + a.sahifalar.filter(f => Y[f]).map(f => '<a href="#' + esc(f) + '">' + esc(tr(sahifaNomi(f))) + "</a>").join("") + "</div>" : "") + "</div>";
+      }).join("") + "</dl></section>";
+  }
+  function savollarSahifa(ochiq){
+    const guruhlar = [["umumiy", "Umumiy"]].concat(ROL_TARTIB.map(k => [k, rolNomi(k)]));
+    return guruhlar.map(([k, nom]) => {
+      const s = SAVOLLAR.filter(x => x.rol === k);
+      return s.length ? '<section class="karta" style="margin-bottom:20px" id="savollar-' + k + '"><div class="karta-bosh"><h2>' + esc(nom) + "</h2>" +
+        (k === joriyRol ? '<span class="chip chip-kichik chip-brend">siz</span>' : "") + "</div>" + s.map(x => savolHTML(x, ochiq)).join("") + "</section>" : "";
+    }).join("");
+  }
+  function klaviaturaSahifa(){
+    const k = a => a ? a.map(x => "<kbd>" + esc(x) + "</kbd>").join(" ") : "";
+    return '<section class="karta"><div class="karta-bosh"><h2>Klaviatura tugmalari</h2></div><p class="maydon-izoh" style="margin:-8px 0 12px">Matn kiritayotganda tugmalar ishlamaydi, Ctrl+K, Ctrl+S va Esc bundan mustasno.</p>' +
+      '<div style="overflow-x:auto"><table class="ym-jadval"><thead><tr><th>Tugma</th><th>Yoki</th><th>Amal</th></tr></thead><tbody>' +
+      TUGMALAR.map(t => '<tr><td data-tarjimasiz>' + k(t[0]) + '</td><td data-tarjimasiz>' + k(t[1]) + "</td><td>" + esc(t[2]) + "</td></tr>").join("") + "</tbody></table></div></section>";
+  }
+  function yangiSahifa(){
+    return '<section class="karta"><div class="karta-bosh"><h2>Shu versiyada</h2><span class="chip chip-kichik chip-kul" data-tarjimasiz>26092200</span></div><ul class="ym-yangi">' +
+      YANGILIKLAR.map(y => "<li>" + esc(y) + "</li>").join("") + "</ul></section>";
+  }
+
+  /* ---------- Chop etiladigan to'liq qo'llanma ---------- */
+  function toliqSahifa(){
+    const guruh = sahifalarGuruhlari();
+    const mundarija = '<section class="karta ym-mundarija"><div class="karta-bosh"><h2>Mundarija</h2>' +
+      '<button type="button" class="tugma tugma-asosiy ym-yashir-chop" data-ym-chop>' + ik("chop") + "<span>Chop etish</span></button></div>" +
+      '<p class="maydon-izoh" style="margin:-8px 0 12px">Qo&#39;llanma chop etish uchun tayyor. Mundarija birinchi varaqda.</p><ol>' +
+      '<li><a href="#t-rollar">Rollar bo&#39;yicha yo&#39;riqnoma</a></li><li><a href="#t-vazifalar">Vazifalar bo&#39;yicha yo&#39;riqnoma</a></li>' +
+      '<li><a href="#t-jarayonlar">Jarayonlar</a></li>' +
+      guruh.map(([k]) => '<li><a href="#t-' + esc(k) + '">' + esc(BOLIM_NOM[k] || k) + "</a></li>").join("") +
+      '<li><a href="#t-atamalar">Atamalar lug&#39;ati</a></li><li><a href="#t-savollar">Savollar</a></li><li><a href="#t-klaviatura">Klaviatura</a></li></ol></section>';
+    return mundarija +
+      '<section class="ym-toliq-bolim" id="t-rollar"><h2>Rollar bo&#39;yicha yo&#39;riqnoma</h2>' + ROL_TARTIB.map(k => '<div class="ym-toliq-maqola"><h2 style="font-size:20px;margin:18px 0 8px">' + esc(rolNomi(k)) + "</h2>" + rolSahifa(k, true) + "</div>").join("") + "</section>" +
+      '<section class="ym-toliq-bolim" id="t-vazifalar"><h2>Vazifalar bo&#39;yicha yo&#39;riqnoma</h2>' + VAZIFALAR.map(v => vazifaHTML(v, true)).join('<div style="height:14px"></div>') + "</section>" +
+      '<section class="ym-toliq-bolim" id="t-jarayonlar"><h2>Jarayonlar</h2>' + jarayonlarSahifa() + "</section>" +
+      guruh.map(([k, f]) => '<section class="ym-toliq-bolim" id="t-' + esc(k) + '"><h2>' + esc(BOLIM_NOM[k] || k) + "</h2>" + f.map(x => maqolaHTML(x, true)).join("") + "</section>").join("") +
+      '<section class="ym-toliq-bolim" id="t-atamalar">' + atamalarSahifa(true) + "</section>" +
+      '<section class="ym-toliq-bolim" id="t-savollar"><h2>Savollar</h2>' + savollarSahifa(true) + "</section>" +
+      '<section class="ym-toliq-bolim" id="t-klaviatura">' + klaviaturaSahifa() + "</section>";
+  }
+
+  /* ---------- Qidiruv ---------- */
+  const norm = s => String(s || "").toLowerCase().replace(/[’ʼʻ`´‘]/g, "'").replace(/ё/g, "е");
+  /* Solishtirish uchun apostrofsiz ko'rinish: klaviaturada ' belgisi yo'q xodim «korik», «sugurta»
+     deb yozsa ham topilsin. Ta'kidlash norm() da qoladi, shunda mark indekslari siljimaydi. */
+  const norm2 = s => norm(s).replace(/'/g, "");
+  let INDEKS = null;
+  function indeksQur(){
+    const t = [];
+    Object.keys(Y).forEach(f => { const m = Y[f]; t.push({tur: "Sahifa", nom: m.sarlavha, havola: "#" + f,
+      matnlar: [m.sarlavha, m.nimaUchun].concat((m.bloklar || []).flatMap(b => [b.nom, b.izoh]), (m.amallar || []).flatMap(b => [b.nom, b.izoh]), m.xatolar || [], m.qoidalar || [])}); });
+    ROL_TARTIB.forEach(k => { const q = Q[k]; t.push({tur: "Rol", nom: q.nom, havola: "#rol-" + k,
+      matnlar: [q.nom, ROL_KIRISH[k].men, q.maqsad].concat(q.qadamlar.flatMap(x => [x.nom, x.izoh]), q.kunlik || [], q.haftalik || [], q.oylik || [], q.mumkin || [], q.mumkinEmas || [], q.javobgarlik || [], q.meyor || [])}); });
+    VAZIFALAR.forEach(v => t.push({tur: "Vazifa", nom: v.nom, havola: "#vazifa-" + v.id, matnlar: [v.nom, v.izoh].concat(v.qadamlar)}));
+    ATAMALAR.forEach(a => t.push({tur: "Atama", nom: a.nom, havola: "#atama-" + a.id, matnlar: [a.nom, a.izoh]}));
+    SAVOLLAR.forEach(s => t.push({tur: "Savol", nom: s.savol, havola: "#savol-" + s.id, matnlar: [s.savol, s.javob]}));
+    return t;
+  }
+  function qidir(q){
+    const sozlar = norm2(q).split(/\s+/).filter(s => s.length > 1 || /\d/.test(s));
+    if (!sozlar.length) return [];
+    INDEKS = INDEKS || indeksQur();
+    const nat = [];
+    const boshqa = s => (!ru() && s && L[s] != null ? L[s] : s);
+    INDEKS.forEach(x => {
+      const matnlar = x.matnlar.map(tr);
+      /* ikkala tilda qidiriladi: o'zbekcha interfeysda ruscha so'z bilan ham topiladi */
+      const hammasi = norm2(matnlar.join(" \n ") + " \n " + (ru() ? x.matnlar.join(" \n ") : x.matnlar.map(boshqa).join(" \n ")));
+      if (!sozlar.every(s => hammasi.includes(s))) return;
+      const nom = norm2(tr(x.nom));
+      let ball = sozlar.reduce((b, s) => b + (nom.includes(s) ? 10 : 0) + (nom.startsWith(s) ? 5 : 0), 0);
+      ball += {Vazifa: 3, Sahifa: 2, Rol: 2, Atama: 2, Savol: 1}[x.tur] || 0;
+      const parcha = matnlar.slice(1).find(m => sozlar.some(s => norm2(m).includes(s))) || matnlar[1] || "";
+      nat.push({x, ball, parcha});
+    });
+    return nat.sort((a, b) => b.ball - a.ball).slice(0, 40);
+  }
+  /* Apostrofsiz so'z matndagi apostrofli shakliga ham mos kelsin: «korik» → «ko'rik».
+     norm() belgilarni birma-bir almashtiradi, shuning uchun indekslar asl matn bilan bir xil turadi. */
+  const izRe = s => new RegExp(s.split("").map(c => c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("'?"), "g");
+  function moslar(n, sozlar){
+    const o = [];
+    sozlar.forEach(s => { const re = izRe(s); let m; while ((m = re.exec(n))){ if (!m[0]){ re.lastIndex++; continue; } o.push([m.index, m.index + m[0].length]); } });
+    return o.sort((a, b) => a[0] - b[0]);
+  }
+  /* Matnni DOM tugunlariga bo'lib, mos qismlarni <mark> bilan ajratish */
+  function belgila(el, matn, sozlar){
+    const n = norm(matn);
+    if (n.length !== matn.length){ el.appendChild(document.createTextNode(matn)); return; }
+    const oraliq = moslar(n, sozlar);
+    let joy = 0;
+    oraliq.forEach(([a, b]) => {
+      if (a < joy) return;
+      if (a > joy) el.appendChild(document.createTextNode(matn.slice(joy, a)));
+      const m = document.createElement("mark"); m.textContent = matn.slice(a, b); el.appendChild(m); joy = b;
+    });
+    if (joy < matn.length) el.appendChild(document.createTextNode(matn.slice(joy)));
+  }
+  const kesma = (matn, sozlar) => {
+    if (matn.length < 180) return matn;
+    const n = norm(matn);
+    const o = n.length === matn.length ? moslar(n, sozlar) : [];
+    const i = o.length ? o[0][0] : 0;
+    const bosh = Math.max(0, i - 60);
+    return (bosh ? "…" : "") + matn.slice(bosh, bosh + 180) + (bosh + 180 < matn.length ? "…" : "");
+  };
+  function natijalarChiz(q){
+    const sozlar = norm2(q).split(/\s+/).filter(s => s.length > 1 || /\d/.test(s));
+    const nat = qidir(q);
+    kontent.innerHTML = '<section class="karta"><div class="karta-bosh"><h2>Qidiruv natijalari</h2><span class="chip chip-kichik chip-kul" data-tarjimasiz>' + nat.length + "</span></div>" +
+      (nat.length ? '<div class="ym-natija" data-tarjimasiz></div>' : MKB.boshHolat("izlash", "Hech narsa topilmadi", "Boshqa so'z bilan qidiring yoki bo'limlarni ko'rib chiqing.")) + "</section>";
+    const joy = kontent.querySelector(".ym-natija");
+    if (joy) nat.forEach(({x, parcha}) => {
+      const a = document.createElement("a"); a.href = x.havola;
+      const t = document.createElement("span"); t.className = "ym-tur"; t.textContent = tr(x.tur); a.appendChild(t);
+      const b = document.createElement("b"); belgila(b, tr(x.nom), sozlar); a.appendChild(b);
+      if (parcha && parcha !== x.nom){ const p = document.createElement("p"); belgila(p, kesma(tr(parcha), sozlar), sozlar); a.appendChild(p); }
+      joy.appendChild(a);
+    });
+    tarjimaQil(kontent);
+  }
+
+  /* ---------- Marshrutlash ---------- */
+  function yol(){
+    let h = decodeURIComponent(location.hash.replace(/^#/, ""));
+    const p = new URLSearchParams(location.search);
+    if (!h && p.get("rol") && Q[p.get("rol")]) h = "rol-" + p.get("rol");
+    return h;
   }
   function chiz(){
-    const q = Q[tanlangan];
-    document.getElementById("hs-meta").textContent = q.nom;
-    document.getElementById("ql-nom").textContent = q.nom;
-    document.getElementById("ql-maqsad").textContent = q.maqsad;
-    document.getElementById("ql-qadamlar").innerHTML = q.qadamlar.map((x, i) =>
-      '<li class="qol-qadam"><span class="raqam">' + (i + 1) + "</span>" +
-      '<span class="matn"><b>' + x.nom + "</b><span>" + x.izoh + "</span>" +
-      (x.havola ? '<a href="' + x.havola + '">' + (x.havolaNomi || "Ochish") +
-        '<svg class="ic mitti"><use href="#i-ong"/></svg></a>' : "") + "</span></li>").join("");
-    document.getElementById("ql-ongi").innerHTML =
-      royxat("Sizning javobgarligingiz", q.javobgarlik) +
-      royxat("Muddat va me&#39;yorlar", q.meyor, "qol-meyor") +
-      royxat("Sizga yopiq bo&#39;limlar", q.yopiq, "qol-yopiq");
-    document.querySelectorAll("#ql-rollar button").forEach(b =>
-      b.classList.toggle("faol", b.dataset.rol === tanlangan));
+    const q = $("ym-q").value.trim();
+    $("ym-tozala").hidden = !q;
+    if (q){ menyuChiz(null); natijalarChiz(q); $("hs-meta").textContent = "Qidiruv"; tarjimaQil(document.querySelector(".hujjat-shapka")); return; }
+    const h = yol();
+    let html = "", faol = null, meta = "";
+    if (!h){ faol = ""; html = boshSahifa(); }
+    else if (h === "rollar"){ faol = "rollar"; html = rollarSahifa(); meta = "Rollar"; }
+    else if (h.indexOf("rol-") === 0 && Q[h.slice(4)]){ faol = "rollar"; html = rolSahifa(h.slice(4)); meta = rolNomi(h.slice(4)); }
+    else if (h === "sahifalar"){ faol = "sahifalar"; html = sahifalarSahifa(); meta = "Sahifalar"; }
+    else if (/\.html$/.test(h)){ faol = "sahifalar"; html = maqolaHTML(h) || MKB.boshHolat("hujjat", "Maqola topilmadi"); meta = sahifaNomi(h); }
+    else if (h.indexOf("vazifa-") === 0){ const v = VAZIFALAR.find(x => x.id === h.slice(7)); faol = ""; html = v ? vazifaHTML(v) : MKB.boshHolat("hujjat", "Maqola topilmadi"); meta = v ? v.nom : ""; }
+    else if (h === "jarayonlar"){ faol = "jarayonlar"; html = jarayonlarSahifa(); meta = "Jarayonlar"; }
+    else if (h === "atamalar" || h.indexOf("atama-") === 0 || h.indexOf("harf-") === 0){ faol = "atamalar"; html = atamalarSahifa(); meta = "Atamalar"; }
+    else if (h === "savollar" || h.indexOf("savol-") === 0){ faol = "savollar"; html = savollarSahifa(); meta = "Savollar"; }
+    else if (h === "klaviatura"){ faol = "klaviatura"; html = klaviaturaSahifa(); meta = "Klaviatura"; }
+    else if (h === "yangi"){ faol = "yangi"; html = yangiSahifa(); meta = "Nima yangi"; }
+    else if (h === "toliq"){ faol = null; html = toliqSahifa(); meta = "To'liq qo'llanma"; }
+    else if (h.indexOf("t-") === 0 || h.indexOf("bolim-") === 0){ return; }
+    else { faol = ""; html = boshSahifa(); }
+    menyuChiz(faol);
+    kontent.innerHTML = html;
+    $("hs-meta").textContent = meta || "—";
+    xaritalarniChiz(kontent);
     tarjimaQil(document.querySelector(".kontent"));
+    /* Nishonga o'tish: atama, savol, harf */
+    const nishon = h.indexOf("atama-") === 0 ? document.getElementById(h)
+      : h.indexOf("savol-") === 0 ? document.getElementById(h)
+      : h.indexOf("harf-") === 0 ? kontent.querySelector('[data-harf="' + CSS.escape(h.slice(5)) + '"]') : null;
+    if (nishon){
+      if (nishon.tagName === "DETAILS") nishon.open = true;
+      nishon.scrollIntoView({block: "center"});
+      const f = nishon.querySelector("summary, dt") || nishon; f.setAttribute("tabindex", "-1"); f.focus({preventScroll: true});
+    } else if (h) window.scrollTo(0, 0);
   }
-  document.getElementById("ql-rollar").innerHTML = rollar.map(r =>
-    '<button type="button" data-rol="' + r + '">' + Q[r].nom + "</button>").join("");
-  document.querySelectorAll("#ql-rollar button").forEach(b =>
-    b.addEventListener("click", () => { tanlangan = b.dataset.rol; chiz(); }));
+
+  /* ---------- Hodisalar ---------- */
+  let qT = 0;
+  $("ym-q").addEventListener("input", () => { clearTimeout(qT); qT = setTimeout(chiz, 90); });
+  $("ym-q").addEventListener("keydown", e => {
+    if (e.key === "Escape" && $("ym-q").value){ e.stopPropagation(); $("ym-q").value = ""; chiz(); }
+    if (e.key === "Enter"){ const a = kontent.querySelector(".ym-natija a"); if (a){ e.preventDefault(); a.click(); } }
+  });
+  $("ym-tozala").addEventListener("click", () => { $("ym-q").value = ""; chiz(); $("ym-q").focus(); });
+  kontent.addEventListener("click", e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (a && $("ym-q").value){ $("ym-q").value = ""; $("ym-tozala").hidden = true; }
+    const c = e.target.closest("[data-ym-chop]");
+    if (c){ window.print(); return; }
+    const b = e.target.closest("[data-ym-sayohat]");
+    if (!b || !MKB.sayohat) return;
+    e.preventDefault();
+    const id = b.dataset.ymSayohat;
+    let qadam = 0;
+    const s = b.dataset.ymQadam || "";
+    if (s.indexOf("sahifa:") === 0){
+      /* sahifadagi birinchi qadamdan: dvigatel rol uchun qadamlarni o'zi saralaydi, biz shu ro'yxatdagi indeksni topamiz */
+      const f = s.slice(7);
+      const T = TUR[id];
+      const ruxsatli = (T && T.qadamlar || []).filter(q => !q.sahifa || sahifaRuxsatlimi(String(q.sahifa).split("?")[0]));
+      const i = ruxsatli.findIndex(q => String(q.sahifa).split("?")[0] === f);
+      /* Shu sahifadagi yagona qadam oxirgisi bo'lsa boshidan ochiladi: yolg'iz yakuniy karta ko'rsatilmaydi */
+      qadam = i > 0 && i + 1 < ruxsatli.length ? i : 0;
+    }
+    MKB.sayohat.boshla(id, {qadam});
+  });
+  window.addEventListener("hashchange", () => { $("ym-q").value = ""; chiz(); });
+  document.addEventListener("mkb:til", () => { INDEKS = null; chiz(); });
+  let enT = 0, oldEn = window.innerWidth;
+  window.addEventListener("resize", () => { clearTimeout(enT); enT = setTimeout(() => {
+    if ((oldEn < 720) !== (window.innerWidth < 720) || Math.abs(oldEn - window.innerWidth) > 80){ oldEn = window.innerWidth; xaritalarniChiz(kontent); tarjimaQil(kontent); }
+  }, 150); });
+
   chiz();
-});
+})();
 </script>
 </body>
 </html>

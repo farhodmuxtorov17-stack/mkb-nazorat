@@ -4,7 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ma'lumot eksporti</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.ek-xulosa{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:18px 0 4px}
+.ek-xulosa .ek-son{font:500 40px/1 var(--shrift-displey);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.ek-xulosa .ek-birlik{font-size:14px;color:var(--matn-3)}
+.ek-amal{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.ek-izoh{font-size:13px;color:var(--matn-3);line-height:1.5}
+.ek-korish{overflow:auto;margin:0 -4px;padding:0 4px}
+.ek-korish table{width:100%;border-collapse:collapse;font-size:12.5px}
+.ek-korish th{font-weight:500;color:var(--matn-3);text-align:left;padding:8px 10px;white-space:nowrap;border-bottom:1px solid var(--chiziq-2)}
+.ek-korish td{padding:9px 10px;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid var(--chiziq-2)}
+.ek-korish tr:last-child td{border-bottom:0}
+</style>
 </head>
 <body data-sahifa="hisobot">
 <div class="qobiq">
@@ -16,194 +28,282 @@
     <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>Eksport</span></div>
     <div class="hs-qator"><h1>Ma'lumot eksporti</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Ma'lumot eksporti</h2></div>
-  <form id="ex-forma" class="forma-tor">
-    <div class="maydon"><label class="maydon-yorliq">Bo'lim <b>*</b></label>
-      <div class="kirish"><select name="bolim"></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Format <b>*</b></label>
-      <div class="kirish"><select name="format"><option value="csv">CSV (Excel)</option><option value="json">JSON</option></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Davr</label>
-      <div class="kirish"><select name="davr"><option value="hammasi">Barcha davr</option><option value="oy">Joriy oy</option><option value="chorak">Joriy chorak</option><option value="yil">Joriy yil</option></select></div>
-      <span class="maydon-izoh" id="ex-davr-izoh"></span></div>
-    <div class="maydon"><label class="maydon-yorliq">Maydonlar</label>
-      <div class="kirish"><select name="maydon"><option value="standart">Standart to'plam</option><option value="keng">Kengaytirilgan</option></select></div></div>
-    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
-      <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-yuklab"/></svg>Eksport qilish</button></div>
-  </form>
-  <div id="ex-jurnal" style="margin-top:18px"></div></section>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">KPI</a><a href="hisobot-hudud.html">Hududlar</a><a href="hisobot-undiruv.html">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-eksport.html" class="faol">Eksport</a></nav>
+
+  <div class="tor-2-teng">
+    <section class="karta" aria-label="Eksport sozlamalari">
+      <div class="karta-bosh"><h2>Nimani yuklab olasiz</h2></div>
+      <form id="ek-forma" class="forma-tor" novalidate data-sayohat="forma">
+        <div class="maydon keng"><label class="maydon-yorliq" for="ek-kol">To'plam <b>*</b></label>
+          <div class="kirish"><select id="ek-kol" name="kol"></select></div>
+          <span class="maydon-izoh" id="ek-kol-izoh"></span></div>
+        <div class="maydon"><label class="maydon-yorliq" for="ek-davr">Davr</label>
+          <div class="kirish"><select id="ek-davr" name="davr"><option value="hammasi">Barcha davr</option><option value="oy">Joriy oy</option><option value="otgan">O'tgan oy</option><option value="chorak">Joriy chorak</option><option value="yil">Joriy yil</option></select></div>
+          <span class="maydon-izoh" id="ek-davr-izoh"></span></div>
+        <div class="maydon"><label class="maydon-yorliq" for="ek-ustun">Ustunlar</label>
+          <div class="kirish"><select id="ek-ustun" name="ustun"><option value="asosiy">Asosiy ustunlar</option><option value="barcha">Barcha maydonlar</option></select></div>
+          <span class="maydon-izoh" id="ek-ustun-izoh"></span></div>
+        <div class="maydon"><label class="maydon-yorliq" for="ek-format">Format</label>
+          <div class="kirish"><select id="ek-format" name="format"><option value="csv">CSV (Excel)</option><option value="json">JSON</option></select></div></div>
+      </form>
+      <div class="ek-xulosa"><span class="ek-son" id="ek-son" data-tarjimasiz>—</span><span class="ek-birlik" id="ek-birlik"></span></div>
+      <p class="ek-izoh" id="ek-fayl"></p>
+      <div class="ek-amal"><button type="button" class="tugma tugma-asosiy" id="ek-yukla" data-sayohat="yuklab"><svg class="ic"><use href="#ik-yuklab"/></svg>Faylni yuklab olish</button></div>
+    </section>
+    <section class="karta" aria-label="Oldindan ko'rish" data-sayohat="korish">
+      <div class="karta-bosh"><h2>Oldindan ko'rish</h2><span class="soni" id="ek-korish-soni"></span></div>
+      <div id="ek-korish"></div>
+    </section>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
-  const D = window.MKB_DATA || {};
-  const OYLAR = ["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"];
+(() => {
+  const $ = id => document.getElementById(id);
+  MKB.sahifaYukla({
+    joylar: {"ek-korish": ["jadval", 5]},
+    xato: "Eksport uchun ma'lumotni yuklab bo'lmadi",
+    ish: boshla,
+  });
 
-  /* "26-avg, 2026" | "26.08.2026 21:57" | "2026-08-26" -> Date yoki null */
-  function sanaOqi(m){
-    const s = String(m == null ? "" : m).trim().toLowerCase();
-    let t = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})/);
-    if (t) return new Date(+t[3], +t[2] - 1, +t[1]);
-    t = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (t) return new Date(+t[1], +t[2] - 1, +t[3]);
-    t = s.match(/^(\d{1,2})-([a-z]{3})[a-z]*,?\s*(\d{4})/);
-    if (t && OYLAR.indexOf(t[2]) >= 0) return new Date(+t[3], OYLAR.indexOf(t[2]), +t[1]);
+async function boshla(){
+  if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
+  const D = MKB_DATA, esc = MKB.esc;
+  /* Eksportda niqoblanadigan maydonlar (Sozlamalar: eksportNiqob): telefon, pasport, PINFL va shunga o'xshash */
+  const MAXFIY = /(^|\.)(tel|telefon|hujjat|pasport|pinfl|stirYokiPinfl|simRaqam|kartaRaqam)$/i;
+  const MAXFIY_NOM = /telefon|pasport|pinfl|karta raqami/i;
+
+  /* ---------- Yordamchilar ---------- */
+  const son = n => n == null || n === "" || isNaN(n) ? "" : String(D.yaxlit(Number(n), 2)).replace(".", ",");
+  const ha = v => v == null ? "" : v ? "Ha" : "Yo'q";
+  const nom = (royxat, k) => ((D[royxat] || []).find(x => x.kalit === k) || {}).nom || k || "";
+  const holat = k => k == null || k === "" ? "" : MKB.holatNomi(k);
+  const ob = id => id ? (D.obyektNomi ? D.obyektNomi(id, true) : "") || id : "";
+  const yol = (x, p) => p.split(".").reduce((a, k) => a == null ? a : a[k], x);
+  const muddat = y => { try{ return D.muddatHisobi(y) || {}; }catch(_){ return {}; } };
+  const zaxira = y => { try{ return D.zaxiraHisobi(y) || {}; }catch(_){ return {}; } };
+  const chorakBosh = s => { const m = /^(\d{4})-Q([1-4])$/.exec(String(s || "")); return m ? new Date(+m[1], (m[2] - 1) * 3, 1) : null; };
+  const oyBosh = s => { const m = /^(\d{4})-(\d{2})$/.exec(String(s || "")); return m ? new Date(+m[1], m[2] - 1, 1) : null; };
+  const k = kalit => x => yol(x, kalit);
+  const OBYEKT = [["Obyekt kodi", k("obyektId")], ["Obyekt", x => ob(x.obyektId)]];
+
+  /* ---------- To'plamlar: bo'lim, sana maydoni va asosiy ustunlar ---------- */
+  const T = [
+    {kol: "YOZUVLAR", bolim: "aktivlar", nom: "Balans aktivlari reyestri", fayl: "aktivlar-reyestri", sana: y => D.sanaOqi(y.balans && y.balans.sana), davrIzoh: "balansga olingan sana bo'yicha",
+      ustunlar: [["Kod", k("id")], ["Nomi", k("nom")], ["Turi", k("tur")], ["Hudud", k("hudud")], ["Tuman", k("tuman")], ["Manzil", k("manzil")], ["Filial", k("filial")],
+        ["Holat", k("holat")], ["Bosqich", y => nom("BOSQICHLAR", y.bosqich)], ["Mas'ul", k("masul")],
+        ["Balansga olingan", k("balans.sana")], ["Balans qiymati, mln so'm", y => son(yol(y, "balans.qiymat"))], ["Hisobvaraq", k("balans.hisobvaraq")],
+        ["Qabul asosi", y => nom("QABUL_ASOSLARI", yol(y, "balans.qabulAsosi"))], ["Asos hujjati", y => [yol(y, "balans.asosHujjat.raqam"), yol(y, "balans.asosHujjat.sana")].filter(Boolean).join(", ")],
+        ["Bozor qiymati, mln so'm", y => son(yol(y, "qiymat.bozor"))], ["Tugatish qiymati, mln so'm", y => son(yol(y, "qiymat.tugatish"))], ["Baholash sanasi", k("qiymat.bahoSana")],
+        ["Maydon", y => D.maydonMatn ? D.maydonMatn(y) : ""], ["Kadastr raqami", k("huquq.kadastrRaqami")], ["Davlat raqami", k("huquq.davlatRaqami")],
+        ["Balansda, kun", y => muddat(y).turganKun ?? ""], ["Umidsiz toifa sanasi", y => muddat(y).chegaraSana || ""], ["Muddat holati", y => muddat(y).holatNomi || ""],
+        ["Zaxira toifasi", y => zaxira(y).toifaNomi || ""], ["Zaxira, %", y => son(zaxira(y).foiz)], ["Zaxira, mln so'm", y => son(zaxira(y).summa)],
+        ["Qo'riqlash", y => holat(yol(y, "himoya.qoriqlashTuri"))], ["Sotish usuli", y => nom("SOTISH_USULLARI", yol(y, "sotuv.usul"))]]},
+    {kol: "HUJJATLAR", bolim: "aktivlar", nom: "Hujjatlar", fayl: "hujjatlar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Raqam", k("id")]].concat(OBYEKT, [["Hujjat", k("nom")], ["Turi", k("tur")], ["Bosqich", x => nom("BOSQICHLAR", x.bosqich)], ["Hujjat raqami", k("raqam")],
+        ["Sana", k("sana")], ["Amal qilish muddati", k("amalQilishTugash")], ["Holat", k("holat")], ["Format", k("format")], ["Hajm", k("hajm")], ["Yuklagan", k("yuklagan")]])},
+    {kol: "XARAJATLAR", bolim: "aktivlar", nom: "Saqlash xarajatlari", fayl: "xarajatlar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Raqam", k("id")], ["Sana", k("sana")], ["Davr", k("davr")]].concat(OBYEKT, [["Toifa", x => nom("XARAJAT_TOIFALARI", x.toifa)], ["Summa, mln so'm", x => son(x.summa)],
+        ["Kontragent", k("kontragent")], ["Hisob-faktura", k("hisobFaktura")], ["Tasdiqlovchi", k("tasdiqlovchi")], ["Holat", x => holat(x.holat)]])},
+    {kol: "ARXIV", bolim: "aktivlar", nom: "Balansdan chiqarilgan aktivlar", fayl: "arxiv", sana: x => D.sanaOqi(x.sotuvSana), davrIzoh: "chiqarilgan sana bo'yicha",
+      ustunlar: [["Kod", k("id")], ["Nomi", k("nom")], ["Turi", k("tur")], ["Hudud", k("hudud")], ["Filial", k("filial")], ["Balansga olingan", k("balansSana")],
+        ["Balans qiymati, mln so'm", x => son(x.balansQiymat)], ["Chiqarilgan", k("sotuvSana")], ["Usul", x => x.sotishUsuli === "hisobdan" ? "Hisobdan chiqarish" : nom("SOTISH_USULLARI", x.sotishUsuli)],
+        ["Sotuv narxi, mln so'm", x => son(x.sotuvNarxi)], ["Xaridor", k("xaridor")], ["Xarajatlar, mln so'm", x => son(x.jamiXarajat)],
+        ["Tiklangan zaxira, mln so'm", x => son(x.tiklanganZaxira)], ["Foyda yoki zarar, mln so'm", x => son(x.foydaZarar)], ["Balansda, kun", k("turganKun")]]},
+    {kol: "KORIKLAR", bolim: "korik", nom: "Ko'riklar", fayl: "koriklar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Ko'rik", k("id")]].concat(OBYEKT, [["Turi", x => x.korikTuri || x.tur], ["Sana", k("sana")], ["Holat", x => holat(x.holat)], ["Inspektor", k("inspektor")],
+        ["Holat bahosi", k("holatBall")], ["Kamchiliklar", k("kamchiliklar")], ["Xarajat taklifi, mln so'm", x => son(x.xarajatTaklifi)], ["Keyingi ko'rik", k("keyingiKorikSana")], ["Xulosa", k("xulosa")]])},
+    {kol: "INVENTAR", bolim: "korik", nom: "Inventar ro'yxati", fayl: "inventar", sana: x => D.sanaOqi(x.oxirgiSanash), davrIzoh: "oxirgi sanash bo'yicha",
+      ustunlar: [["Inventar raqami", k("inventarRaqam")]].concat(OBYEKT, [["Nomi", k("nom")], ["Marka", k("marka")], ["Model", k("model")], ["Yil", k("yil")], ["VIN", k("vin")],
+        ["Kilometraj yoki motosoat", k("motosoatYokiKm")], ["Butlik", x => ha(x.butlik)], ["Akkumulyator", k("akkumulyator")], ["Kalitlar", k("kalit")], ["Saqlash joyi", k("saqlashJoyi")],
+        ["Holat bahosi", k("holatBall")], ["Oxirgi sanash", k("oxirgiSanash")]])},
+    {kol: "INVENTARIZATSIYALAR", bolim: "korik", nom: "Inventarizatsiyalar", fayl: "inventarizatsiyalar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Raqam", k("id")], ["Sana", k("sana")], ["Turi", k("turi")], ["Komissiya", x => (x.komissiya || []).join(", ")], ["Obyektlar", x => (x.obyektlar || []).length],
+        ["Kamomad", k("kamomad")], ["Ortiqcha", k("ortiqcha")], ["Holat", x => holat(x.holat)]]},
+    {kol: "BAHOLASHLAR", bolim: "qiymat", nom: "Baholash hisobotlari", fayl: "baholashlar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Raqam", k("id")]].concat(OBYEKT, [["Sana", k("sana")], ["Hisobot raqami", k("hisobotRaqami")], ["Bozor qiymati, mln so'm", x => son(x.bozorQiymati)],
+        ["Tugatish qiymati, mln so'm", x => son(x.tugatishQiymati)], ["Avvalgi qiymat, mln so'm", x => son(x.avvalgi)], ["Baholovchi", k("baholovchi")], ["Litsenziya", k("litsenziya")],
+        ["Usul", k("usul")], ["Amal qilish muddati", k("amalQilishTugash")], ["Holat", x => holat(x.holat)]])},
+    {kol: "SUGURTALAR", bolim: "qiymat", nom: "Sug'urta polislari", fayl: "sugurta-polislari", sana: x => D.sanaOqi(x.boshlanish), davrIzoh: "polis boshlangan sana bo'yicha",
+      ustunlar: [["Polis", x => x.polis || x.id]].concat(OBYEKT, [["Turi", k("polisTuri")], ["Kompaniya", k("kompaniya")], ["Sug'urta summasi, mln so'm", x => son(x.summa)],
+        ["Mukofot, mln so'm", x => son(x.mukofot)], ["Boshlanish", k("boshlanish")], ["Tugash", k("tugash")], ["Holat", x => holat(x.holat)]])},
+    {kol: "SUGURTA_DAVOLARI", bolim: "qiymat", nom: "Sug'urta da'volari", fayl: "sugurta-davolari", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Da'vo", k("id")], ["Polis", k("polisId")], ["Hodisa", k("hodisaId")]].concat(OBYEKT, [["Sana", k("sana")], ["Summa, mln so'm", x => son(x.summa)], ["Holat", x => holat(x.holat)]])},
+    {kol: "SOLIQ", bolim: "qiymat", nom: "Mol-mulk solig'i", fayl: "soliq", sana: x => chorakBosh(x.davr), davrIzoh: "soliq davri bo'yicha",
+      ustunlar: OBYEKT.concat([["Davr", k("davr")], ["Soliq bazasi, mln so'm", x => son(x.baza)], ["Stavka, %", x => son(x.stavka)], ["Summa, mln so'm", x => son(x.summa)],
+        ["Imtiyoz", x => ha(x.imtiyoz)], ["Yer solig'i, mln so'm", x => son(x.yerSoligi)], ["Holat", x => holat(x.holat)]])},
+    {kol: "ZAXIRA_TARIX", bolim: "qiymat", nom: "Oylik zaxira suratlari", fayl: "zaxira-tarixi", sana: x => oyBosh(x.davr), davrIzoh: "hisobot oyi bo'yicha",
+      ustunlar: [["Davr", k("davr")]].concat(OBYEKT, [["Toifa", x => nom("ZAXIRA_TOIFALARI", x.toifa) || x.toifa], ["Zaxira, %", x => son(x.foiz)], ["Zaxira, mln so'm", x => son(x.summa)]])},
+    {kol: "LOTLAR", bolim: "realizatsiya", nom: "Lotlar", fayl: "lotlar", sana: x => D.sanaOqi(x.elonSana), davrIzoh: "e'lon sanasi bo'yicha",
+      ustunlar: [["Lot", k("id")], ["E-auksion raqami", k("eauksionLotRaqami")]].concat(OBYEKT, [["Sotish usuli", x => nom("SOTISH_USULLARI", x.sotishUsuli)], ["E'lon sanasi", k("elonSana")],
+        ["Savdo sanasi", k("savdoSana")], ["Boshlang'ich narx, mln so'm", x => son(x.boshlangichNarx)], ["Minimal narx, mln so'm", x => son(x.minimalNarx)], ["Zakalat, %", k("zakalatFoiz")],
+        ["Narx pasaytirishlar", x => (x.pasaytirishlar || []).length], ["Holat", x => holat(x.holat)], ["G'olib", k("golib")], ["Yakuniy narx, mln so'm", x => son(x.yakuniyNarx)],
+        ["Ishtirokchilar", k("ishtirokchilarSoni")], ["Qaror raqami", k("qarorRaqami")]])},
+    {kol: "TAKLIFLAR", bolim: "realizatsiya", nom: "Takliflar", fayl: "takliflar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Taklif", k("id")], ["Sana", k("sana")]].concat(OBYEKT, [["Lot", k("lotId")], ["Xaridor", k("xaridor")], ["Xaridor turi", k("xaridorTuri")], ["Summa, mln so'm", x => son(x.summa)],
+        ["To'lov sharti", k("tolovSharti")], ["AML natijasi", x => holat(x.amlNatija)], ["Affillangan", x => ha(x.affillanganlik)], ["Qaror raqami", k("qarorRaqami")], ["Holat", x => holat(x.holat)]])},
+    {kol: "SHARTNOMALAR", bolim: "realizatsiya", nom: "Sotuv shartnomalari", fayl: "shartnomalar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Shartnoma", k("id")], ["Sana", k("sana")]].concat(OBYEKT, [["Lot", k("lotId")], ["Taklif", k("taklifId")], ["Xaridor", k("xaridor")], ["Narx, mln so'm", x => son(x.narx)],
+        ["Avans, mln so'm", x => son(x.avans)], ["Sotish usuli", x => nom("SOTISH_USULLARI", x.sotishUsuli)], ["To'lovlar soni", x => (x.jadval || []).length],
+        ["Qoldiq, mln so'm", x => son((x.jadval || []).filter(j => !j.tolandi).reduce((s, j) => s + (Number(j.summa) || 0), 0))], ["Taqiq", k("taqiqHolati")], ["Holat", x => holat(x.holat)]])},
+    {kol: "IJARA", bolim: "realizatsiya", nom: "Ijara shartnomalari", fayl: "ijara", sana: x => D.sanaOqi(x.boshlanish), davrIzoh: "ijara boshlangan sana bo'yicha",
+      ustunlar: [["Shartnoma", k("id")]].concat(OBYEKT, [["Ijarachi", k("ijarachi")], ["Maydon, m²", k("maydon")], ["Oylik ijara, mln so'm", x => son(x.oylikIjara)], ["Boshlanish", k("boshlanish")],
+        ["Tugash", k("tugash")], ["Depozit, mln so'm", x => son(x.depozit)], ["Kommunalni to'laydi", k("kommunalKimTolaydi")],
+        ["To'langan oylar", x => (x.tolovlar || []).filter(t => t.tolandi).length], ["To'lanmagan oylar", x => (x.tolovlar || []).filter(t => !t.tolandi).length], ["Holat", x => holat(x.holat)]])},
+    {kol: "PAKETLAR", bolim: "realizatsiya", nom: "Sotuv paketlari", fayl: "paketlar",
+      ustunlar: [["Paket", k("id")], ["Nomi", k("nom")], ["Tarkibi", x => (x.tarkib || []).join(", ")], ["Investitsiya kompaniyasi", k("investKompaniya")], ["Holat", x => holat(x.holat)]]},
+    {kol: "UNDIRUV_ISHLAR", bolim: "yuridik", nom: "Undiruv ishlari", fayl: "undiruv-ishlari",
+      ustunlar: [["Ish", k("id")], ["Holat", x => holat(x.holat)], ["Bosqich", x => nom("UNDIRUV_BOSQICHLAR", x.bosqich)], ["Qarzdor", k("qarzdor.nom")], ["Kredit shartnomasi", k("shartnoma.raqam")],
+        ["Qarz, mln so'm", x => son(yol(x, "qarz.jami"))], ["Garov", k("garov.nom")], ["Garov bahosi, mln so'm", x => son(yol(x, "garov.bahoMln"))], ["Filial", k("filial")],
+        ["Sud", k("sud.nomi")], ["Sud qarori", x => [yol(x, "qaror.raqam"), yol(x, "qaror.sana")].filter(Boolean).join(", ")],
+        ["Qaror natijasi", k("qaror.natija")], ["Undiriladigan summa, mln so'm", x => son(yol(x, "qaror.summa"))],
+        ["Undiruv garovga qaratilgan", x => ha(yol(x, "qaror.garovgaQaratildi"))], ["Mas'ul", k("masul")], ["Aktiv", k("aktivId")], ["Yopilgan", k("yopilganSana")]]},
+    {kol: "SUD_MAJLISLAR", bolim: "yuridik", nom: "Sud majlislari", fayl: "sud-majlislari", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Majlis", k("id")], ["Ish", k("ishId")], ["Sud", k("sud")], ["Sana", k("sana")], ["Vaqt", k("soat")], ["Zal", k("zal")], ["Advokat", k("advokat")],
+        ["Mavzu", k("mavzu")], ["Holat", x => holat(x.holat)], ["Natija", k("natija")]]},
+    {kol: "QORIQLASH", bolim: "himoya", nom: "Qo'riqlash shartnomalari", fayl: "qoriqlash", sana: x => D.sanaOqi(x.boshlanish), davrIzoh: "shartnoma boshlangan sana bo'yicha",
+      ustunlar: [["Shartnoma", k("id")]].concat(OBYEKT, [["Qo'riqlash turi", x => holat(x.qoriqlashTuri)], ["Ijrochi", k("ijrochi")], ["Shartnoma raqami", k("shartnomaRaqami")],
+        ["Boshlanish", k("boshlanish")], ["Tugash", k("tugash")], ["Oylik to'lov, mln so'm", x => son(x.oylikTolov)], ["Javob vaqti, daqiqa", k("javobVaqtiDaq")], ["Holat", x => holat(x.holat)]])},
+    {kol: "KOMMUNAL_ARIZALAR", bolim: "himoya", nom: "Kommunal arizalar", fayl: "kommunal-arizalar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Ariza", k("id")]].concat(OBYEKT, [["Xizmat", x => holat(x.xizmat)], ["Turi", k("tur")], ["Raqam", k("raqam")], ["Sana", k("sana")], ["Muddat", k("muddat")],
+        ["Holat", x => holat(x.holat)], ["Izoh", k("izoh")]])},
+    {kol: "HODISALAR", bolim: "himoya", nom: "Hodisalar", fayl: "hodisalar", sana: x => D.sanaOqi(x.vaqt),
+      ustunlar: [["Hodisa", k("id")], ["Vaqt", k("vaqt")]].concat(OBYEKT, [["Hodisa turi", k("hodisa")], ["Jiddiylik", x => holat(x.jiddiylik)], ["Holat", k("holat")], ["Manba", k("manba")],
+        ["Mas'ul", k("masul")], ["IIB arizasi", x => [yol(x, "iibAriza.raqam"), yol(x, "iibAriza.sana")].filter(Boolean).join(", ")], ["Tavsif", k("tavsif")]])},
+    {kol: "QURILMALAR", bolim: "himoya", nom: "Qurilmalar", fayl: "qurilmalar", sana: x => D.sanaOqi(x.ornatilgan), davrIzoh: "o'rnatilgan sana bo'yicha",
+      ustunlar: [["Qurilma", k("id")]].concat(OBYEKT, [["Turi", k("turNomi")], ["Ishlab chiqaruvchi", k("ishlabChiqaruvchi")], ["Model", k("model")], ["Seriya", k("seriya")],
+        ["O'rnatilgan", k("ornatilgan")], ["Quvvat", k("quvvat")], ["Aloqa", k("aloqa")], ["Batareya, %", k("batareya")], ["Oxirgi signal", k("oxirgiSignal")], ["Holat", x => holat(x.holat)]])},
+    {kol: "KIRISH_VOQEALARI", bolim: "himoya", nom: "Kirish voqealari", fayl: "kirish-voqealari", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Voqea", k("id")], ["Vaqt", k("vaqt")]].concat(OBYEKT, [["Kirish nuqtasi", k("nuqtaNomi")], ["Shaxs", x => x.shaxsId ? (D.shaxsNomi ? D.shaxsNomi(x.shaxsId) : x.shaxsId) : ""],
+        ["Usul", k("usul")], ["Natija", k("natija")], ["Yo'nalish", k("yonalish")], ["Sabab", k("sabab")]])},
+    {kol: "MB_HISOBOTLAR", bolim: "hisobot", nom: "Markaziy bank hisobotlari", fayl: "mb-hisobotlari", sana: x => oyBosh(x.davr), davrIzoh: "hisobot oyi bo'yicha",
+      ustunlar: [["Davr", k("davr")], ["Topshirish muddati", k("muddat")], ["Topshirilgan", k("topshirilganSana")], ["Obyektlar soni", k("obyektlarSoni")],
+        ["Jami balans qiymati, mln so'm", x => son(x.jamiBalansQiymat)], ["1-darajali kapital, mlrd so'm", x => son(x.kapital1Daraja)], ["Kapitalga nisbati", x => son(x.kapitalgaNisbat)],
+        ["Umidsiz toifada", k("umidsizSoni")], ["Holat", x => holat(x.holat)]]},
+    {kol: "TASDIQLAR", bolim: "vazifa", nom: "Qarorlar", fayl: "qarorlar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Raqam", k("id")], ["Sana", k("sana")], ["Masala", k("sarlavha")], ["Obyekt kodi", k("obyektId")], ["Manba", k("manbaId")], ["Summa, mln so'm", x => son(x.summa)],
+        ["Muallif", k("muallif")], ["Mas'ul", k("masulRol")], ["Javob muddati", k("javobMuddati")], ["Holat", x => holat(x.holat)], ["Qaror sanasi", k("qarorSana")], ["Sabab", k("sabab")]]},
+    {kol: "MENING_VAZIFALARIM", bolim: "vazifa", nom: "Vazifalar", fayl: "vazifalar", sana: x => D.sanaOqi(x.sana),
+      ustunlar: [["Raqam", k("id")], ["Vazifa", k("nom")], ["Turi", k("tur")]].concat(OBYEKT, [["Qo'yilgan", k("sana")], ["Muddat", k("muddat")], ["Ijrochi", k("ijrochi")],
+        ["Rol", k("rol")], ["Muhimlik", x => holat(x.muhimlik)], ["Bajarildi", x => ha(x.bajarildi)]])},
+  ];
+  const BOLIM = {aktivlar: "Balans aktivlari", korik: "Ko'rik va inventarizatsiya", qiymat: "Qiymat, zaxira va sug'urta", realizatsiya: "Realizatsiya",
+    yuridik: "Undiruv va sud", himoya: "Himoya va monitoring", hisobot: "Hisobotlar", vazifa: "Vazifalar"};
+  const ochiq = T.filter(t => MKB.huquq(t.bolim, "oqi"));
+  const TUR_MOS = {portfel: "YOZUVLAR", reyestr: "YOZUVLAR", xarajat: "XARAJATLAR", mb: "MB_HISOBOTLAR", undiruv: "UNDIRUV_ISHLAR"};
+
+  /* ---------- Forma ---------- */
+  const sel = $("ek-kol");
+  sel.innerHTML = Object.keys(BOLIM).filter(b => ochiq.some(t => t.bolim === b)).map(b =>
+    '<optgroup label="' + esc(BOLIM[b]) + '">' + ochiq.filter(t => t.bolim === b).map(t => '<option value="' + t.kol + '">' + esc(t.nom) + "</option>").join("") + "</optgroup>").join("");
+  const q = new URLSearchParams(location.search);
+  const bosh = TUR_MOS[q.get("tur")] || q.get("kol");
+  if (ochiq.some(t => t.kol === bosh)) sel.value = bosh;
+  tarjimaQil($("ek-forma"));
+
+  function oraliq(k){
+    const b = D.bugun(), y = b.getFullYear(), m = b.getMonth(), bugun = new Date(y, m, b.getDate());
+    if (k === "oy") return [new Date(y, m, 1), bugun];
+    if (k === "otgan") return [new Date(y, m - 1, 1), new Date(y, m, 0)];
+    if (k === "chorak") return [new Date(y, m - m % 3, 1), bugun];
+    if (k === "yil") return [new Date(y, 0, 1), bugun];
     return null;
   }
-  /* hisobot sanasi: namoyish ma'lumotida — ma'lumot to'plamining joriy kuni */
-  const bugun = (D.MANBA !== "mahalliy" && sanaOqi(D.KIRISH_BUGUN)) || new Date();
-  function davrda(sana, davr){
-    if (davr === "hammasi") return true;
-    if (!sana || sana.getFullYear() !== bugun.getFullYear()) return false;
-    if (davr === "yil") return true;
-    if (davr === "chorak") return Math.floor(sana.getMonth() / 3) === Math.floor(bugun.getMonth() / 3);
-    return sana.getMonth() === bugun.getMonth();
+  /* Barcha maydonlar: ichki obyektlar nuqta bilan yoyiladi, ro'yxatlar JSON ko'rinishida */
+  function yoy(x, old, natija){
+    Object.keys(x).forEach(k => {
+      const v = x[k], p = old ? old + "." + k : k;
+      if (v && typeof v === "object" && !Array.isArray(v)) yoy(v, p, natija);
+      else natija[p] = Array.isArray(v) ? JSON.stringify(v) : v;
+    });
+    return natija;
   }
-  const son = v => v == null || v === "" ? "" : String(v).replace(".", ",");
-  const oxirgi = y => { const t = (y.ish && y.ish.tarix) || []; return t.length ? t[t.length - 1][0] : ""; };
-  const indeks = y => { try{ return D.nazoratIndeksi ? D.nazoratIndeksi(y) : null; }catch(_){ return null; } };
-  const obyektNomi = id => (D.obyektNomi ? D.obyektNomi(id) : "") || id || "";
-  const TARKIB = [["korik", "Ko'rik"], ["sugurta", "Sug'urta"], ["baho", "Baho"], ["hujjat", "Hujjatlar"], ["kirish", "Kirish nazorati"]];
+  function tozaYozuv(t, x){
+    const sx = D.SXEMA && D.SXEMA[t.kol];
+    const r = {};
+    (sx ? ["id"].concat(sx.filter(k => k !== "id")).concat("izoh" in x ? ["izoh"] : []) : Object.keys(x)).forEach(k => { if (x[k] !== undefined && typeof x[k] !== "function") r[k] = x[k]; });
+    return JSON.parse(JSON.stringify(r));
+  }
 
-  /* To'plam: manba kolleksiya, davr maydoni, ruxsat sahifasi, ustunlar [nom, qiymat(x), kengaytirilgan?] */
-  const TOPLAMLAR = {
-    reyestr: {nom: "Obyektlar reyestri", kol: "YOZUVLAR", fayl: "obyektlar-reyestri", sahifa: "obyektlar.html",
-      sana: oxirgi, davrIzoh: "oxirgi harakat sanasi bo'yicha",
-      ustunlar: [
-        ["Obyekt kodi", y => y.id], ["Nomi", y => y.mulk.nom], ["Turi", y => y.mulk.tur], ["Hudud", y => y.mulk.hudud],
-        ["Filial", y => y.filial], ["Holat", y => y.holat && y.holat.nom], ["Baho, mln so'm", y => son(y.mulk.baho)],
-        ["Baholash sanasi", y => y.mulk.bahoSana], ["Sug'urta", y => y.mulk.sugurta],
-        ["Nazorat indeksi", y => { const n = indeks(y); return n ? n.ball : ""; }],
-        ["Manzil", y => y.mulk.hududToliq || y.mulk.manzil, 1], ["Maydon", y => y.mulk.maydon, 1],
-        ["Qarzdor", y => y.mijoz.nom, 1], ["Shartnoma", y => y.shartnoma.raqam, 1],
-        ["Qoplash, %", y => son(y.qoplash), 1], ["Oxirgi harakat", oxirgi, 1]]},
-    nazorat: {nom: "Nazorat indeksi (KPI)", kol: "YOZUVLAR", fayl: "nazorat-indeksi", sahifa: "obyektlar.html",
-      sana: oxirgi, davrIzoh: "oxirgi harakat sanasi bo'yicha",
-      ustunlar: [
-        ["Obyekt kodi", y => y.id], ["Nomi", y => y.mulk.qisqa || y.mulk.nom], ["Hudud", y => y.mulk.hudud], ["Filial", y => y.filial],
-        ["Nazorat indeksi", y => { const n = indeks(y); return n ? n.ball : ""; }],
-        ["Daraja", y => { const n = indeks(y); return n ? n.darajaNomi : ""; }]]
-        .concat(TARKIB.map(([k, nom]) =>
-          [nom, y => { const n = indeks(y); const t = n && (n.tarkib || []).find(v => v.kalit === k); return t ? t.qiymat : ""; }, 1]))},
-    hudud: {nom: "Hududlar kesimi", kol: "YOZUVLAR", fayl: "hududlar-kesimi", sahifa: "obyektlar.html",
-      sana: oxirgi, davrIzoh: "oxirgi harakat sanasi bo'yicha",
-      guruhla(qatorlar){
-        const g = {};
-        qatorlar.forEach(y => {
-          const h = g[y.mulk.hudud] || (g[y.mulk.hudud] = {hudud: y.mulk.hudud, soni: 0, baho: 0, qarz: 0, balans: 0, ball: 0});
-          const n = indeks(y);
-          h.soni++; h.baho += y.mulk.baho || 0; h.qarz += (y.qarz && y.qarz.jami) || 0;
-          if (y.ish.bosqich === "balans") h.balans++;
-          h.ball += n ? n.ball : 0;
-        });
-        return Object.keys(g).map(k => g[k]).sort((a, b) => b.soni - a.soni);
-      },
-      ustunlar: [
-        ["Hudud", h => h.hudud], ["Obyektlar soni", h => h.soni], ["Jami baho, mln so'm", h => son(Math.round(h.baho * 10) / 10)],
-        ["Balansda", h => h.balans], ["O'rtacha nazorat indeksi", h => h.soni ? Math.round(h.ball / h.soni) : ""],
-        ["Jami qarz, mln so'm", h => son(Math.round(h.qarz * 10) / 10), 1]]},
-    korik: {nom: "Ko'riklar", kol: "KORIKLAR", fayl: "koriklar", sahifa: "korik-rejasi.html", sana: k => k.sana,
-      ustunlar: [
-        ["Ko'rik raqami", k => k.id], ["Obyekt kodi", k => k.obyektId], ["Obyekt", k => k.obyekt], ["Hudud", k => k.hudud],
-        ["Turi", k => k.tur], ["Sana", k => k.sana], ["Holat", k => k.holat], ["Inspektor", k => k.inspektor],
-        ["Ball", k => k.ball, 1], ["Xulosa", k => k.xulosa, 1], ["Izoh", k => k.izoh, 1]]},
-    baholash: {nom: "Baholashlar", kol: "BAHOLASHLAR", fayl: "baholashlar", sahifa: "baholash.html", sana: b => b.sana,
-      ustunlar: [
-        ["Raqam", b => b.id], ["Obyekt kodi", b => b.obyektId], ["Obyekt", b => b.obyekt], ["Sana", b => b.sana],
-        ["Qiymat, mln so'm", b => son(b.qiymat)], ["Avvalgi qiymat, mln so'm", b => son(b.avvalgi)], ["Holat", b => b.holat],
-        ["Baholovchi", b => b.baholovchi, 1], ["Usul", b => b.usul, 1], ["Keyingi baholash", b => b.keyingi, 1]]},
-    polis: {nom: "Sug'urta polislari", kol: "POLISLAR", fayl: "sugurta-polislari", sahifa: "sugurta.html",
-      sana: p => p.tugash, davrIzoh: "polis tugash sanasi bo'yicha",
-      ustunlar: [
-        ["Polis", p => p.polis || p.id], ["Obyekt kodi", p => p.obyektId], ["Obyekt", p => p.obyekt],
-        ["Kompaniya", p => p.kompaniya], ["Sug'urta summasi, mln so'm", p => son(p.summa)],
-        ["Tugash sanasi", p => p.tugash], ["Holat", p => p.holat]]},
-    undiruv: {nom: "Undiruv va sud ishlari", kol: "YOZUVLAR", fayl: "undiruv-ishlari", sahifa: "undiruv.html",
-      sana: oxirgi, davrIzoh: "oxirgi harakat sanasi bo'yicha",
-      ustunlar: [
-        ["Ish raqami", y => y.ish.raqam], ["Obyekt kodi", y => y.id], ["Qarzdor", y => y.mijoz.nom], ["Obyekt", y => y.mulk.qisqa || y.mulk.nom],
-        ["Bosqich", y => y.bosqichNomi], ["Da'vo summasi, mln so'm", y => son(y.qarz && y.qarz.jami)], ["Sud", y => y.ish.sud],
-        ["Sud qarori", y => y.ish.qaror], ["Ijro hujjati", y => y.ish.ijro], ["Mas'ul", y => y.ish.masul],
-        ["Kechikish, kun", y => y.qarz && y.qarz.kunlar, 1], ["Tasnif", y => y.tasnif && y.tasnif.nom, 1],
-        ["Nazorat muddati", y => y.ish.muddat, 1], ["Oxirgi harakat", oxirgi, 1]]},
-    majlis: {nom: "Sud majlislari", kol: "SUD_MAJLISLAR", fayl: "sud-majlislari", sahifa: "sud-kalendar.html", sana: m => m.sana,
-      ustunlar: [
-        ["Majlis", m => m.id], ["Ish raqami", m => m.ishRaqam], ["Obyekt", m => m.obyekt], ["Sud", m => m.sud],
-        ["Sana", m => m.sana], ["Vaqt", m => m.soat], ["Holat", m => m.holat],
-        ["Zal", m => m.zal, 1], ["Advokat", m => m.advokat, 1], ["Mavzu", m => m.mavzu, 1], ["Bayonnoma", m => m.bayon, 1]]},
-    kirish: {nom: "Kirish voqealari", kol: "KIRISH_VOQEALARI", fayl: "kirish-voqealari", sahifa: "kirish-voqealari.html", sana: v => v.sana,
-      ustunlar: [
-        ["Voqea", v => v.id], ["Vaqt", v => v.vaqt], ["Obyekt kodi", v => v.obyektId], ["Obyekt", v => obyektNomi(v.obyektId)],
-        ["Kirish nuqtasi", v => v.nuqtaNomi], ["Shaxs", v => D.shaxsNomi ? D.shaxsNomi(v.shaxsId) : v.shaxsId],
-        ["Natija", v => v.natija], ["Yo'nalish", v => v.yonalish],
-        ["Usul", v => v.usul, 1], ["Sabab", v => v.sabab, 1]]},
-    xarajat: {nom: "Saqlash xarajatlari", kol: "XARAJATLAR", fayl: "saqlash-xarajatlari", sahifa: "hisobot-xarajat.html", sana: x => x.sana,
-      ustunlar: [
-        ["Raqam", x => x.id], ["Obyekt kodi", x => x.obyektId], ["Obyekt", x => x.obyekt], ["Xarajat turi", x => x.tur],
-        ["Summa, mln so'm", x => son(x.summa)], ["Sana", x => x.sana], ["Holat", x => x.holat]]},
-    arxiv: {nom: "Arxiv", kol: "ARXIV", fayl: "arxiv", sahifa: "arxiv.html", sana: a => a.sotilgan,
-      ustunlar: [
-        ["Obyekt kodi", a => a.kod || a.id], ["Nomi", a => a.nom], ["Turi", a => a.tur], ["Sotilgan sana", a => a.sotilgan],
-        ["Summa, mln so'm", a => son(a.summa)], ["Xaridor", a => a.xaridor],
-        ["Ish raqami", a => a.ish, 1], ["Balansga qabul", a => a.qabul, 1], ["Nazorat muddati", a => a.nazorat, 1]]},
-  };
-  const TUR_MOS = {portfel: "reyestr", kpi: "nazorat"};
-
-  const forma = document.getElementById("ex-forma");
-  const bolim = forma.elements.bolim;
-  const ochiq = Object.keys(TOPLAMLAR).filter(k => Array.isArray(D[TOPLAMLAR[k].kol]) && MKB.ruxsat(TOPLAMLAR[k].sahifa));
-  bolim.innerHTML = ochiq.map(k => '<option value="' + k + '">' + TOPLAMLAR[k].nom + "</option>").join("");
-  const tur = new URLSearchParams(location.search).get("tur") || "";
-  const boshlangich = TUR_MOS[tur] || tur;
-  if (ochiq.includes(boshlangich)) bolim.value = boshlangich;
-  tarjimaQil(forma);
-
+  let tayyor = null;
   async function tayyorla(){
-    const t = TOPLAMLAR[bolim.value];
+    const t = ochiq.find(x => x.kol === sel.value);
     if (!t) return null;
-    const kengaytirilgan = forma.elements.maydon.value === "keng";
-    const davr = forma.elements.davr.value;
-    let qatorlar = (await MKBapi.royxat(t.kol)).filter(x => davrda(sanaOqi(t.sana(x)), davr));
-    if (t.guruhla) qatorlar = t.guruhla(qatorlar);
-    const ustunlar = t.ustunlar.filter(u => kengaytirilgan || !u[2]);
-    return {t, qatorlar, ustunlar, davr};
+    const davr = t.sana ? $("ek-davr").value : "hammasi";
+    let r = [];
+    try{ r = await MKBapi.royxat(t.kol); }catch(_){ r = D[t.kol] || []; }
+    r = MKB.doira((r || []).filter(Boolean));
+    const o = oraliq(davr);
+    if (o) r = r.filter(x => { const d = t.sana(x); return d && d >= o[0] && d < D.kunQosh(o[1], 1); });
+    const barcha = $("ek-ustun").value === "barcha";
+    let sarlavhalar, qatorlar, obyektlar;
+    const niqob = MKB.niqobYoqilgan();
+    if (barcha){
+      const tekis = r.map(x => yoy(tozaYozuv(t, x), "", {}));
+      if (niqob) tekis.forEach(x => Object.keys(x).forEach(k => { if (MAXFIY.test(k) && x[k] != null && x[k] !== "") x[k] = MKB.niqob(x[k]); }));
+      sarlavhalar = [];
+      tekis.forEach(x => Object.keys(x).forEach(k => { if (sarlavhalar.indexOf(k) < 0) sarlavhalar.push(k); }));
+      qatorlar = tekis.map(x => sarlavhalar.map(k => x[k] == null ? "" : x[k]));
+      obyektlar = niqob ? tekis : r.map(x => tozaYozuv(t, x));
+    } else {
+      sarlavhalar = t.ustunlar.map(u => u[0]);
+      qatorlar = r.map(x => t.ustunlar.map(u => { let v; try{ v = u[1](x); }catch(_){ v = ""; } v = v == null ? "" : v; return niqob && MAXFIY_NOM.test(u[0]) && v !== "" ? MKB.niqob(v) : v; }));
+      obyektlar = qatorlar.map(qt => Object.fromEntries(qt.map((v, i) => [sarlavhalar[i], v])));
+    }
+    const b = D.bugun(), kun = b.getFullYear() + "-" + String(b.getMonth() + 1).padStart(2, "0") + "-" + String(b.getDate()).padStart(2, "0");
+    const fayl = "mkb-" + t.fayl + (davr !== "hammasi" ? "-" + davr : "") + (barcha ? "-toliq" : "") + "-" + kun + "." + $("ek-format").value;
+    return {t, davr, o, sarlavhalar, qatorlar, obyektlar, fayl, barcha, niqob: niqob && (barcha ? true : t.ustunlar.some(u => MAXFIY_NOM.test(u[0])))};
   }
-  async function meta(){
-    const r = await tayyorla();
-    document.getElementById("hs-meta").textContent = r ? r.qatorlar.length + " ta yozuv · " + r.ustunlar.length + " ta ustun" : "—";
-    const izoh = document.getElementById("ex-davr-izoh");
-    izoh.textContent = r && r.t.davrIzoh ? "Davr " + r.t.davrIzoh + " olinadi" : "";
-    tarjimaQil(izoh);
-  }
-  ["bolim", "davr", "maydon"].forEach(n => forma.elements[n].addEventListener("change", meta));
-  meta();
 
-  function jurnalOqi(){
-    try{ return JSON.parse(localStorage.getItem("mkb4-eksport") || "[]"); }catch(_){ return []; }
+  async function yangila(){
+    const r = tayyor = await tayyorla();
+    if (!r){
+      $("ek-son").textContent = "—";
+      $("ek-korish").innerHTML = MKB.boshHolat("hisobot", "Eksport uchun to'plam yo'q", "Sizning rolingizga ochiq bo'lim topilmadi.");
+      tarjimaQil($("ek-korish")); return;
+    }
+    const davrSel = $("ek-davr");
+    davrSel.disabled = !r.t.sana;
+    if (!r.t.sana) davrSel.value = "hammasi";
+    $("ek-davr-izoh").textContent = !r.t.sana ? "Joriy holat olinadi" : r.o ? D.sanaYoz(r.o[0]) + " – " + D.sanaYoz(r.o[1]) + ", " + (r.t.davrIzoh || "sana bo'yicha") : "Davr " + (r.t.davrIzoh || "sana bo'yicha") + " tanlanadi";
+    $("ek-ustun-izoh").textContent = r.barcha ? "Tizimdagi maydon nomlari bilan, tahlil uchun" : "Ustun nomlari o'zbek tilida";
+    $("ek-kol-izoh").textContent = BOLIM[r.t.bolim];
+    $("ek-son").textContent = MKB.fmt(r.qatorlar.length);
+    $("ek-birlik").innerHTML = "<span>ta yozuv</span> · <span data-tarjimasiz>" + r.sarlavhalar.length + "</span> <span>ta ustun</span>";
+    $("ek-fayl").innerHTML = "<span>Fayl:</span> <span class=\"kod-mono\" data-tarjimasiz>" + esc(r.fayl) + "</span>";
+    $("ek-yukla").disabled = !r.qatorlar.length;
+    $("hs-meta").textContent = ochiq.length + " ta to'plam · " + D.sanaYoz(D.bugun()) + " holatiga";
+    const joy = $("ek-korish");
+    $("ek-korish-soni").textContent = r.qatorlar.length ? (Math.min(5, r.qatorlar.length) + " / " + MKB.fmt(r.qatorlar.length)) : "";
+    if (!r.qatorlar.length){
+      joy.innerHTML = MKB.boshHolat("hisobot", "Yozuv yo'q", D.MANBA === "mahalliy" && r.t.kol !== "YOZUVLAR"
+        ? "Mahalliy reyestrda bu to'plam hali to'ldirilmagan." : r.o ? "Tanlangan davrda yozuv yo'q. Davrni kengaytiring." : "Bu to'plamda hali yozuv yo'q.");
+    } else {
+      const ust = r.sarlavhalar.slice(0, 8);
+      /* Ko'rinishda sarlavhalar kabi holat va tur qiymatlari ham interfeys tilida chiqadi (faqat lug'atdagi aniq kalit).
+         Kod, raqam va xos nom lug'atda yo'q, o'zgarmaydi. "Barcha maydonlar" rejimida xom qiymat ko'rsatiladi. */
+      const qiymat = v => { const m = String(v); return !r.barcha && joriyTil() === "ru" && typeof mkbLugatdan === "function" ? mkbLugatdan(m) : m; };
+      joy.innerHTML = '<div class="ek-korish"><table><thead><tr>' + ust.map(s => "<th" + (r.barcha ? " data-tarjimasiz" : "") + ">" + esc(s) + "</th>").join("") +
+        (r.sarlavhalar.length > ust.length ? '<th><span>yana</span> <span data-tarjimasiz>' + (r.sarlavhalar.length - ust.length) + "</span></th>" : "") + "</tr></thead><tbody>" +
+        r.qatorlar.slice(0, 5).map(qt => "<tr>" + qt.slice(0, 8).map(v => '<td data-tarjimasiz title="' + esc(qiymat(v)) + '">' + esc(qiymat(v)) + "</td>").join("") +
+          (r.sarlavhalar.length > ust.length ? "<td>…</td>" : "") + "</tr>").join("") + "</tbody></table></div>";
+    }
+    tarjimaQil($("ek-forma").parentNode); tarjimaQil(joy); tarjimaQil($("hs-meta").parentNode);
   }
-  function jurnal(){
-    const j = jurnalOqi();
-    const el = document.getElementById("ex-jurnal");
-    el.innerHTML = j.length ?
-      '<div class="karta-bosh"><h2 style="font-size:14px">So\'nggi eksportlar</h2></div>' +
-      j.map(v => '<div style="display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--chiziq-2);font-size:12.5px">' +
-        '<span>' + v.bolim + ' · ' + v.format + (v.soni != null ? ' · ' + v.soni + ' ta yozuv' : '') + '</span><span style="color:var(--iz)">' + v.vaqt + '</span></div>').join("") : "";
-    tarjimaQil(el);
-  }
-  jurnal();
 
   function jsonYukla(nom, obyektlar){
     const a = document.createElement("a");
@@ -212,32 +312,23 @@ document.addEventListener("mkb:tayyor", async () => {
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
-
-  forma.addEventListener("submit", async e => {
-    e.preventDefault();
-    const q = MKB.forma(forma, ["bolim", "format"]);
-    if (!q) return;
+  /* Fayl tuzilayotganda tugma band holatida; tasdiqlash so'ralmaydi */
+  $("ek-yukla").onclick = e => MKB.band(e.currentTarget, async () => {
     const r = await tayyorla();
-    if (!r) return;
-    if (!r.qatorlar.length){
-      MKB.toast("Tanlangan davrda yozuv topilmadi, fayl shakllantirilmadi", "xavf");
-      return;
-    }
-    const sarlavhalar = r.ustunlar.map(u => u[0]);
-    const jadval = r.qatorlar.map(x => r.ustunlar.map(u => { const v = u[1](x); return v == null ? "" : v; }));
-    const kun = new Date();
-    const belgi = kun.getFullYear() + String(kun.getMonth() + 1).padStart(2, "0") + String(kun.getDate()).padStart(2, "0");
-    const nom = "mkb-" + r.t.fayl + (r.davr === "hammasi" ? "" : "-" + r.davr) + "-" + belgi;
-    if (q.format === "json")
-      jsonYukla(nom + ".json", jadval.map(qt => Object.fromEntries(qt.map((v, i) => [sarlavhalar[i], v]))));
-    else MKB.csv(nom + ".csv", sarlavhalar, jadval);
-    const j = jurnalOqi();
-    j.unshift({bolim: r.t.nom, format: q.format.toUpperCase(), soni: jadval.length, vaqt: kun.toLocaleString("uz")});
-    try{ localStorage.setItem("mkb4-eksport", JSON.stringify(j.slice(0, 10))); }catch(_){}
-    MKB.toast(r.t.nom + ": " + jadval.length + " ta yozuv yuklab olindi");
-    jurnal();
+    if (!r || !r.qatorlar.length){ MKB.toast("Tanlangan davrda yozuv yo'q. Fayl tuzilmadi", "xavf"); return; }
+    try{
+      if ($("ek-format").value === "json") jsonYukla(r.fayl, r.obyektlar);
+      else MKB.csv(r.fayl, r.sarlavhalar, r.qatorlar);
+      MKB.toast(r.t.nom + ": " + r.qatorlar.length + " ta yozuv yuklab olindi" + (r.niqob ? ", shaxsiy raqamlar yashirilgan" : ""), "yuklab");
+    }catch(err){ MKB.toast("Fayl tuzilmadi: " + (err && err.message ? err.message : "xato"), "xavf"); }
   });
-});
+  ["ek-kol", "ek-davr", "ek-ustun", "ek-format"].forEach(id => { $(id).onchange = () => {
+    if (id === "ek-kol") history.replaceState(null, "", "?kol=" + sel.value);
+    yangila();
+  }; });
+  await yangila();
+}
+})();
 </script>
 </body>
 </html>

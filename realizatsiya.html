@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Sotuv rejasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.rz-reja{display:flex;flex-direction:column;gap:18px}
+.rz-reja-sonlar{display:flex;flex-wrap:wrap;gap:14px 36px;align-items:flex-end}
+.rz-reja-sonlar .m-yorliq{font-size:13px;color:var(--matn-3)}
+.rz-reja-sonlar .rz-katta{font:500 38px/1.05 var(--shrift-displey);letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.rz-reja-sonlar .rz-orta{font:500 22px/1.1 var(--shrift-displey);letter-spacing:-.025em;font-variant-numeric:tabular-nums}
+.rz-reja-sonlar > div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.rz-iz{height:10px;border-radius:99px;background:var(--band);overflow:hidden}
+.rz-iz > span{display:block;height:100%;border-radius:99px;background:var(--mint-matn)}
+.rz-izoh{font-size:12.5px;color:var(--matn-3);display:flex;gap:8px;align-items:flex-start}
+.rz-izoh .ic{width:15px;height:15px;flex:none;margin-top:1px}
+.rz-filtr{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-left:auto}
+.rz-filtr .kirish{height:42px;padding:0 14px;min-width:0}
+.rz-filtr .kirish select,.rz-filtr .kirish input{font-size:13.5px}
+.rz-filtr .rz-qidir{width:220px}
+.rz-doska{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.rz-ustun{background:var(--plitka);border-radius:var(--r-plitka);padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.rz-ustun-bosh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:2px 2px 4px}
+.rz-ustun-bosh b{font:500 15px var(--shrift-displey);letter-spacing:-.02em}
+.rz-ustun-bosh .soni{font-size:12.5px;color:var(--matn-3)}
+.rz-ustun-bosh .pul{margin-left:auto;font-size:12.5px;color:var(--matn-2)}
+.rz-kart{display:flex;flex-direction:column;gap:6px;background:var(--oq);border-radius:16px;padding:12px 14px;
+  box-shadow:var(--soya-past);transition:transform var(--tez),box-shadow var(--tez);min-width:0}
+.rz-kart:hover{transform:translateY(-1px);box-shadow:var(--soya)}
+.rz-kart:focus-visible{outline:2px solid var(--siyoh);outline-offset:2px}
+.rz-kart > b{font-size:14px;font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.rz-kart .rz-meta{font-size:12px;line-height:1.4;color:var(--matn-3);overflow-wrap:anywhere}
+.rz-kart .rz-meta > span{display:inline-block;max-width:100%}
+.rz-kart .rz-past{display:flex;align-items:center;gap:6px 8px;flex-wrap:wrap}
+.rz-kart .rz-past .pul{margin-left:auto}
+.rz-kart .rz-past .pul{font-size:13.5px}
+.rz-yana{font-size:13px;color:var(--matn-2);padding:8px 4px;display:inline-flex;align-items:center;gap:6px;min-height:40px}
+.rz-yana:hover{color:var(--siyoh)}
+.rz-bosh-ustun{font-size:12.5px;color:var(--matn-3);padding:14px 4px;text-align:center}
+.rz-qatorlar .qator{padding:12px 0}
+.rz-tolov{margin-top:18px}
+.rz-kichik-sarlavha{display:block;font-size:13px;color:var(--matn-3);margin-bottom:8px}
+.rz-asos{flex-basis:100%;font-size:11.5px;color:var(--matn-3);text-align:right}
+.rz-paket-xulosa{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--matn-2);padding:12px 16px;border-radius:var(--r-kichik);background:var(--plitka)}
+.rz-paket-xulosa b{font-weight:500;color:var(--siyoh)}
+.rz-paket-xulosa .xavf,.rz-paket-xulosa .xavf b{color:var(--xavf-matn)}
+@media (max-width:1100px){.rz-doska{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:720px){
+  .rz-doska{grid-template-columns:minmax(0,1fr)}
+  .rz-filtr{margin-left:0;width:100%}
+  .rz-filtr .kirish{flex:1 1 140px;height:44px}
+  .rz-filtr .rz-qidir{width:auto;flex:1 1 100%}
+  .rz-reja-sonlar .rz-katta{font-size:30px}
+}
+</style>
+</head>
+<body data-sahifa="realizatsiya">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><span>Realizatsiya</span></div>
+    <div class="hs-qator"><h1>Sotuv rejasi</h1>
+      <div class="hs-amallar">
+        <button type="button" class="tugma tugma-oq" id="paket-tugma" data-huquq="yoz" data-yozadi data-sayohat="paket-yaratish"><svg class="ic"><use href="#ik-kub"/></svg><span>Paket yaratish</span></button>
+        <a class="tugma tugma-asosiy" href="lotlar.html?yangi=1" data-huquq="yoz" data-sayohat="lot-yaratish"><svg class="ic"><use href="#ik-qoshish"/></svg><span>Lot yaratish</span></a>
+      </div></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="realizatsiya.html" class="faol">Sotuv rejasi</a><a href="lotlar.html">E-auksion lotlari</a><a href="takliflar.html">Takliflar</a><a href="shartnomalar.html">Shartnomalar va to'lovlar</a><a href="ijara.html">Ijara</a></nav>
+
+  <section class="metrika-qator tort" id="kpi" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi"></section>
+
+  <div class="tor-2">
+    <section class="karta" aria-labelledby="reja-sarlavha" data-sayohat="reja">
+      <div class="karta-bosh"><h2 id="reja-sarlavha">Yillik reja va fakt</h2><span class="soni" id="reja-yil" data-tarjimasiz></span></div>
+      <div id="reja-joy"></div>
+    </section>
+    <section class="karta" aria-labelledby="usul-sarlavha" data-sayohat="usullar">
+      <div class="karta-bosh"><h2 id="usul-sarlavha">Sotish usullari</h2><span class="soni">Joriy yil shartnomalari</span></div>
+      <div id="usul-joy"></div>
+      <div id="tolov-joy" class="rz-tolov"></div>
+      <div class="rz-qatorlar" id="usul-boshqa"></div>
+    </section>
+  </div>
+
+  <section class="karta" id="doska-karta" aria-labelledby="doska-sarlavha" data-sayohat="doska">
+    <div class="karta-bosh"><h2 id="doska-sarlavha">Obyektlar bosqichlar bo'yicha</h2><span class="soni" id="doska-soni"></span>
+      <div class="rz-filtr" data-sayohat="doska-filtr">
+        <label class="kirish rz-qidir"><svg class="ic"><use href="#ik-izlash"/></svg><input type="search" id="d-qidir" placeholder="Obyekt, xaridor yoki raqam" aria-label="Doskada qidirish"></label>
+        <label class="kirish"><select id="d-usul" aria-label="Sotish usuli"><option value="">Barcha usullar</option></select></label>
+        <label class="kirish"><select id="d-hudud" aria-label="Hudud"><option value="">Barcha hududlar</option></select></label>
+      </div>
+    </div>
+    <div id="doska"></div>
+  </section>
+
+  <section class="karta" aria-labelledby="paket-sarlavha" data-sayohat="paketlar">
+    <div class="karta-bosh"><h2 id="paket-sarlavha">Tayyor biznes paketlari</h2><span class="soni" id="paket-soni"></span></div>
+    <p class="rz-izoh" style="margin:-8px 0 12px"><svg class="ic"><use href="#ik-info"/></svg><span>Bino va undagi uskunalar bitta lot bo'lib sotiladi (PQ-142, 3-band).</span></p>
+    <div class="rz-qatorlar" id="paketlar"></div>
+  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script>
+(() => {
+  const D = MKB_DATA, esc = MKB.esc, pul = v => MKB.pul(v);
+  const KOL = ["YOZUVLAR", "LOTLAR", "TAKLIFLAR", "SHARTNOMALAR", "IJARA", "PAKETLAR", "TASDIQLAR", "ARXIV"];
+  const oqi = x => D.sanaOqi(x);
+  const bugun = () => { const b = D.bugun(); return new Date(b.getFullYear(), b.getMonth(), b.getDate()); };
+  const yaxlit = n => Math.round(n * 10) / 10;
+  /* KPI uchun: raqam katta, birlik kichik ("27,53" + "mlrd so'm") */
+  const pulK = v => { const t = MKB.pul(v), i = t.indexOf(" "); return i < 0 ? "<span>" + t + "</span>" : '<span data-tarjimasiz>' + t.slice(0, i) + "</span> <small>" + t.slice(i + 1) + "</small>"; };
+  const usulNomi = k => ((D.SOTISH_USULLARI || []).find(u => u.kalit === k) || {}).nom || "—";
+  /* Sotish usuli (qanday sotildi) va to'lov sharti (qanday to'lanadi) alohida o'lchov.
+     Lot orqali sotilgan bo'lsa usul lotdan olinadi, lotsiz bo'lib to'lash to'g'ridan-to'g'ri sotuv hisoblanadi. */
+  const sotuvUsuli = sh => {
+    if (MKB.sotuvUsuli) return MKB.sotuvUsuli(sh);
+    const l = sh.lotId ? (D.LOTLAR || []).find(x => x.id === sh.lotId) : null;
+    const u = l && l.sotishUsuli !== "bolib" ? l.sotishUsuli : sh.sotishUsuli;
+    return !u || u === "bolib" ? "togridan" : u;
+  };
+  const bolibmi = sh => MKB.bolibTolovmi ? MKB.bolibTolovmi(sh) : sh.sotishUsuli === "bolib" || (Array.isArray(sh.jadval) && sh.jadval.length > 0);
+  const CHIP = {"yangi": "chip-info", "korib chiqilmoqda": "chip-sariq", "qo'mitada": "chip-binafsha", "tasdiqlangan": "chip-yashil",
+    "faol": "chip-info", "kechikkan": "chip-xavf", "toliq tolangan": "chip-yashil", "shakllantirilmoqda": "chip-sariq"};
+  const NOM = {"toliq tolangan": "To'liq to'langan", "shakllantirilmoqda": "Shakllantirilmoqda"};
+  const chip = (k, kichik) => (CHIP[k] || NOM[k])
+    ? '<span class="chip ' + (CHIP[k] || "") + (kichik ? " chip-kichik" : "") + '">' + esc(NOM[k] || MKB.holatNomi(k)) + "</span>"
+    : MKB.holatChip(k, kichik);
+  const FAOL_LOT = MKB.FAOL_LOT;
+  const OCHIQ_TK = ["yangi", "korib chiqilmoqda", "qo'mitada", "tasdiqlangan"];
+  const FAOL_SH = ["faol", "kechikkan", "toliq tolangan"];
+
+  function tolov(s){
+    const b = bugun(), j = Array.isArray(s.jadval) ? s.jadval : [];
+    if (s.holat === "yakunlangan") return {tolangan: +s.narx || 0, qoldiq: 0, otganSumma: 0, otgan: 0};
+    const jt = j.filter(x => x.tolandi).reduce((a, x) => a + (+x.summa || 0), 0);
+    const tolangan = yaxlit((+s.avans || 0) + jt);
+    const otgan = j.filter(x => !x.tolandi && oqi(x.sana) && oqi(x.sana) < b);
+    return {tolangan, qoldiq: Math.max(0, yaxlit((+s.narx || 0) - tolangan)),
+      otganSumma: yaxlit(otgan.reduce((a, x) => a + (+x.summa || 0), 0)), otgan: otgan.length,
+      kechikish: otgan.length ? D.kunFarqi(oqi(otgan[0].sana), b) : 0};
+  }
+
+  /* Obyektning sotuv bosqichi. Bir obyekt faqat bitta bosqichda turadi, eng ilg'or hujjat hal qiladi:
+     amaldagi shartnoma > ochiq taklif > faol lot > "Sotuvga tayyorlanmoqda" holati. */
+  function bosqichTop(y, SH, TK, LOT, shTaklif){
+    if (MKB.sotuvBosqichi) return MKB.sotuvBosqichi(y);
+    if (y.holat === "Chiqarildi") return {bosqich: null};
+    const sh = SH.find(s => s.obyektId === y.id && FAOL_SH.indexOf(s.holat) >= 0);
+    if (sh) return {bosqich: "shartnoma", shartnoma: sh};
+    const lot = LOT.find(l => l.obyektId === y.id && FAOL_LOT.indexOf(l.holat) >= 0) || null;
+    const tk = TK.filter(t => t.obyektId === y.id && OCHIQ_TK.indexOf(t.holat) >= 0 && !shTaklif.has(t.id))
+      .sort((a, b) => (+b.summa || 0) - (+a.summa || 0))[0];
+    if (tk) return {bosqich: "taklif", taklif: tk, lot};
+    if (lot) return {bosqich: "lot", lot};
+    if (y.holat === "Sotuvga tayyorlanmoqda") return {bosqich: "tayyorlash"};
+    return {bosqich: null};
+  }
+
+  let doskaMalumot = [], yuklandi = false;
+  function hisobla(){
+    const YOZ = MKB.doira(D.YOZUVLAR || []);
+    const LOT = MKB.doira(D.LOTLAR || []), TK = MKB.doira(D.TAKLIFLAR || []), SH = MKB.doira(D.SHARTNOMALAR || []);
+    const shTaklif = new Set(SH.filter(s => s.holat !== "bekor").map(s => s.taklifId).filter(Boolean));
+    const qatorlar = [];
+    YOZ.forEach(y => {
+      const b = bosqichTop(y, SH, TK, LOT, shTaklif);
+      if (!b.bosqich) return;
+      const sh = b.shartnoma, tk = b.taklif, lot = b.lot;
+      const asos = {y, hudud: y.hudud || "", nom: y.qisqa || y.nom, balans: (y.balans && +y.balans.qiymat) || 0};
+      if (sh) qatorlar.push(Object.assign(asos, {bosqich: "shartnoma", sh, usul: sotuvUsuli(sh), narx: +sh.narx, t: tolov(sh),
+        izlash: [y.id, y.nom, sh.id, sh.xaridor].join(" ")}));
+      else if (tk) qatorlar.push(Object.assign(asos, {bosqich: "taklif", tk, lot, usul: (lot && lot.sotishUsuli) || (y.sotuv && y.sotuv.usul) || "togridan",
+        narx: +tk.summa, izlash: [y.id, y.nom, tk.id, tk.xaridor].join(" ")}));
+      else if (lot) qatorlar.push(Object.assign(asos, {bosqich: "lot", lot, usul: lot.sotishUsuli, narx: +lot.boshlangichNarx,
+        izlash: [y.id, y.nom, lot.id, lot.eauksionLotRaqami].join(" ")}));
+      else {
+        const m = D.muddatHisobi ? D.muddatHisobi(y) : null;
+        qatorlar.push(Object.assign(asos, {bosqich: "tayyorlash", m, usul: (y.sotuv && y.sotuv.usul) || "",
+          narx: asos.balans || null, bahosiz: !(y.qiymat && y.qiymat.bozor), izlash: [y.id, y.nom].join(" ")}));
+      }
+    });
+    return {YOZ, LOT, TK, SH, qatorlar};
+  }
+
+  const ijaradaSoni = YOZ => YOZ.filter(y => y.holat === "Ijarada").length;
+
+  function kpiChiz(h){
+    /* Savdoga chiqarilgan = e'lon qilingan va savdosi o'tkazilmagan lotlar (obyekt holati "Lotda"). E'lon qilinmagan lotlar kirmaydi */
+    const savdoda = h.LOT.filter(l => ["elon", "otkazilmagan"].indexOf(l.holat) >= 0);
+    const elonda = savdoda.filter(l => l.holat === "elon").length, otkLot = savdoda.length - elonda;
+    const qomitada = h.TK.filter(t => t.holat === "qo'mitada");
+    const pasaytirish = MKB.doira(D.TASDIQLAR || []).filter(t => t.holat === "kutilmoqda" && t.tur === "pasaytirish").length;
+    let otgan = 0, otganSoni = 0;
+    h.SH.filter(s => FAOL_SH.indexOf(s.holat) >= 0).forEach(s => { const t = tolov(s); if (t.otganSumma > 0){ otgan += t.otganSumma; otganSoni++; } });
+    const balansJami = yaxlit(h.qatorlar.reduce((a, q) => a + q.balans, 0));
+    const m = (href, yorliq, qiymat, izoh) => '<a class="metrika" href="' + href + '"><span class="m-yorliq">' + yorliq + "</span>" +
+      '<span class="m-qiymat">' + qiymat + "</span>" + '<span class="m-izoh">' + izoh + "</span></a>";
+    document.getElementById("kpi").innerHTML =
+      m("#doska-karta", "Realizatsiyadagi obyektlar", '<span data-tarjimasiz>' + h.qatorlar.length + "</span>",
+        '<span>Balans qiymati</span> <span>' + pul(balansJami) + "</span>") +
+      m("lotlar.html", "Savdoga chiqarilgan lotlar", '<span data-tarjimasiz>' + savdoda.length + "</span>",
+        "<span>E'londa</span> <b data-tarjimasiz>" + elonda + "</b>" + (otkLot ? " · <span>O'tkazilmagan</span> <b data-tarjimasiz>" + otkLot + "</b>" : "")) +
+      m("takliflar.html?holat=" + encodeURIComponent("qo'mitada"), "Qaror kutayotgan takliflar", '<span data-tarjimasiz>' + qomitada.length + "</span>",
+        pasaytirish ? "<span>Narx pasaytirish kutilmoqda</span> <b data-tarjimasiz>" + pasaytirish + "</b>"
+          : qomitada.length ? "<span>" + pul(yaxlit(qomitada.reduce((a, t) => a + (+t.summa || 0), 0))) + "</span>" : "<span>Qaror kutayotgan taklif yo'q</span>") +
+      m("shartnomalar.html?holat=kechikkan", "Muddati o'tgan to'lovlar", (otgan ? pulK(yaxlit(otgan)) : '<span data-tarjimasiz>0</span>'),
+        otganSoni ? '<span>' + otganSoni + " ta shartnoma</span>" : "<span>Kechikish yo'q</span>") +
+      "";
+    /* Obyektlar soni «Realizatsiyadagi obyektlar» kartasida, ijaradagilar «Sotilguncha ijarada» qatorida — sarlavhada takrorlanmaydi */
+    tarjimaQil(document.getElementById("kpi"));
+  }
+
+  function rejaChiz(h){
+    const yil = bugun().getFullYear();
+    document.getElementById("reja-yil").textContent = yil;
+    const yilda = v => { const d = v ? oqi(v) : null; return !!d && d.getFullYear() === yil; };
+    /* Sotilgan: arxivga o'tgan sotuvlar va arxivga o'tmagan amaldagi shartnomalar (boshqaruv paneli bilan bir xil qoida) */
+    const arxivId = new Set((D.ARXIV || []).map(a => a.id));
+    const bu = MKB.doira(D.ARXIV || []).filter(a => yilda(a.sotuvSana)).map(a => ({sana: a.sotuvSana, narx: +a.sotuvNarxi || 0}))
+      .concat(h.SH.filter(s => s.holat !== "bekor" && !arxivId.has(s.obyektId) && yilda(s.sana)).map(s => ({sana: s.sana, narx: +s.narx || 0})));
+    const fakt = yaxlit(bu.reduce((a, s) => a + s.narx, 0));
+    /* Joriy yilda tushgan pul: yil ichida imzolangan shartnoma avansi va yil ichidagi to'langan jadval bandlari */
+    let tushum = 0;
+    h.SH.filter(s => s.holat !== "bekor").forEach(s => {
+      const sd = oqi(s.sana);
+      if (sd && sd.getFullYear() === yil) tushum += +s.avans || 0;
+      (s.jadval || []).forEach(j => { const d = oqi(j.sana); if (j.tolandi && d && d.getFullYear() === yil) tushum += +j.summa || 0; });
+    });
+    tushum = yaxlit(tushum);
+    const rejaMlrd = D.param ? D.param("yillikRejaMlrd") : null;
+    const reja = rejaMlrd != null && +rejaMlrd > 0 ? +rejaMlrd * 1000 : null;
+    const joy = document.getElementById("reja-joy");
+    const oylar = ["Yan", "Fev", "Mar", "Apr", "May", "Iyn", "Iyl", "Avg", "Sen", "Okt", "Noy", "Dek"];
+    const oylik = oylar.map(() => 0);
+    bu.forEach(s => { oylik[oqi(s.sana).getMonth()] += +s.narx || 0; });
+    const foiz = reja ? Math.round(fakt / reja * 100) : null;
+    /* Chiqarilgan = balansdan chiqarilib arxivga o'tgan (to'lov to'liq yopilgan) */
+    const chiq = MKB.doira(D.ARXIV || []).filter(a => oqi(a.sotuvSana) && oqi(a.sotuvSana).getFullYear() === yil);
+    joy.innerHTML = '<div class="rz-reja">' +
+      '<div class="rz-reja-sonlar">' +
+        '<div><span class="m-yorliq">Sotilgan</span><span class="rz-katta">' + pul(fakt) + '</span>' +
+          '<span class="m-izoh" style="font-size:12.5px;color:var(--matn-3)"><b data-tarjimasiz>' + bu.length + "</b> <span>ta aktiv</span></span></div>" +
+        '<div><span class="m-yorliq">Tushum</span><span class="rz-orta">' + pul(tushum) + '</span>' +
+          '<span class="m-izoh" style="font-size:12.5px;color:var(--matn-3)"><span>Kassaga tushgan pul</span></span></div>' +
+        '<div><span class="m-yorliq">Yillik reja</span><span class="rz-orta">' + (reja ? pul(reja) : "<span>Kiritilmagan</span>") + "</span></div>" +
+        (foiz != null ? '<div><span class="m-yorliq">Bajarilishi</span><span class="rz-orta"><span data-tarjimasiz>' + foiz + "%</span></span></div>" : "") +
+      "</div>" +
+      (reja ? '<div class="rz-iz" role="img" aria-label="Reja bajarilishi ' + foiz + ' foiz"><span style="width:' + Math.min(100, foiz) + '%"></span></div>'
+        : '<p class="rz-izoh"><svg class="ic"><use href="#ik-info"/></svg><span>Yillik realizatsiya rejasi parametrlarda kiritilmagan. Reja kiritilgach bajarilish foizi shu yerda ko\'rinadi.</span>' +
+          (MKB.ruxsat("sozlamalar.html") && MKB.rol() === "admin" ? ' <a class="karta-havola" style="white-space:nowrap;flex:none" href="sozlamalar.html">Rejani kiritish</a>' : "") + "</p>") +
+      '<p class="rz-izoh"><svg class="ic"><use href="#ik-info"/></svg><span>' +
+        (chiq.length ? "<span>Joriy yilda balansdan chiqarilgan</span> <b data-tarjimasiz>" + chiq.length + "</b> <span>ta obyekt</span>, <span>" +
+            pul(yaxlit(chiq.reduce((a, x) => a + (+x.sotuvNarxi || 0), 0))) + "</span>. <span>To'lovi to'liq yopilgan shartnomalar arxivga o'tadi.</span>"
+          : "<span>Joriy yilda balansdan chiqarilgan obyekt yo'q.</span> <span>To'lovi to'liq yopilgan shartnomalar arxivga o'tadi.</span>") + "</span>" +
+        (chiq.length ? ' <a class="karta-havola" style="white-space:nowrap;flex:none" href="arxiv.html">Arxiv</a>' : "") + "</p>" +
+      (bu.length ? '<div><span class="m-yorliq" style="font-size:13px;color:var(--matn-3)">Shartnomalar oylar bo\'yicha, mlrd so\'m</span><div id="reja-grafik"></div></div>' : MKB.boshHolat("grafik", "Joriy yilda shartnoma tuzilmagan", "Shartnoma tuzilgach oylar bo'yicha summa shu yerda ko'rinadi")) +
+      "</div>";
+    if (bu.length && window.MKBchizma){
+      MKBchizma.ustun(document.getElementById("reja-grafik"), {qiymatlar: oylik.map(v => Math.round(v) / 1000), yorliqlar: oylar, balandlik: 190,
+        urgu: bugun().getMonth(), oqFormat: v => String(Math.round(v * 10) / 10).replace(".", ","), tooltipFormat: v => pul(v * 1000)});
+    }
+    tarjimaQil(joy);
+  }
+
+  function usulChiz(h){
+    const yil = bugun().getFullYear();
+    const bu = h.SH.filter(s => s.holat !== "bekor" && oqi(s.sana) && oqi(s.sana).getFullYear() === yil);
+    const RANG = {eauksion: "var(--siyoh)", togridan: "var(--info)", bolib: "var(--mint-matn)", lizing: "var(--kok)", biznes: "var(--sariq-matn)", davaktiv: "var(--matn-3)", ijara: "var(--pushti-matn)"};
+    const juft = (D.SOTISH_USULLARI || []).map(u => {
+      const r = bu.filter(s => sotuvUsuli(s) === u.kalit);
+      return [esc(u.nom), yaxlit(r.reduce((a, s) => a + (+s.narx || 0), 0)), RANG[u.kalit], r.length ? r.length + " ta" : ""];
+    }).filter(j => j[1] > 0).sort((a, b) => b[1] - a[1]);
+    const joy = document.getElementById("usul-joy");
+    if (juft.length) MKB.barlar(joy, juft, {format: v => pul(v), href: "shartnomalar.html"});
+    else joy.innerHTML = MKB.boshHolat("savdo", "Joriy yilda shartnoma yo'q", "Usullar kesimi birinchi shartnomadan keyin shakllanadi");
+    tarjimaQil(joy);
+    /* To'lov sharti: usuldan alohida o'lchov */
+    const tJoy = document.getElementById("tolov-joy");
+    if (bu.length){
+      const bolib = bu.filter(bolibmi), toliq = bu.filter(x => !bolibmi(x));
+      const tJuft = [["To'liq to'lov", yaxlit(toliq.reduce((a, x) => a + (+x.narx || 0), 0)), "var(--siyoh)", toliq.length ? toliq.length + " ta" : ""],
+        ["Bo'lib to'lash", yaxlit(bolib.reduce((a, x) => a + (+x.narx || 0), 0)), "var(--mint-matn)", bolib.length ? bolib.length + " ta" : ""]].filter(j => j[1] > 0);
+      tJoy.innerHTML = '<span class="m-yorliq rz-kichik-sarlavha">' + "To'lov sharti" + '</span><div id="tolov-bar"></div>';
+      MKB.barlar(document.getElementById("tolov-bar"), tJuft, {format: v => pul(v), href: "shartnomalar.html"});
+      tarjimaQil(tJoy);
+    } else tJoy.innerHTML = "";
+    const YOZ = h.YOZ;
+    const ijarada = ijaradaSoni(YOZ), davaktiv = YOZ.filter(y => y.holat === "Davaktivga o'tkazilgan").length;
+    const bolib = YOZ.filter(y => y.holat === "Bo'lib to'lashda").length;
+    const q = (href, belgi, ikon, nom, izoh, son) => '<a class="qator" href="' + href + '"><span class="belgi ' + belgi + '"><svg class="ic"><use href="#ik-' + ikon + '"/></svg></span>' +
+      '<span class="matn"><b>' + nom + "</b><span>" + izoh + '</span></span><span class="ong"><b class="pul" data-tarjimasiz>' + son + "</b></span></a>";
+    document.getElementById("usul-boshqa").innerHTML = '<div style="margin-top:14px">' +
+      q("shartnomalar.html?tolov=bolib", "mint", "kalendar", "Bo'lib to'lashda", "Mulk to'lov tugaguncha taqiqda", bolib) +
+      q("ijara.html", "lavanda", "ijara", "Sotilguncha ijarada", "Ijara sotuvga to'sqinlik qilmaydi", ijarada) +
+      q("obyektlar.html?holat=" + encodeURIComponent("Davaktivga o'tkazilgan"), "siyoh", "bank", "Davaktivga o'tkazilgan", "1 yilda sotilmasa bankka qaytariladi", davaktiv) +
+      "</div>";
+    tarjimaQil(document.getElementById("usul-boshqa"));
+  }
+
+  const USTUNLAR = [
+    {k: "tayyorlash", nom: "Sotuvga tayyorlash", asos: "balans qiymati", havola: "obyektlar.html?holat=" + encodeURIComponent("Sotuvga tayyorlanmoqda")},
+    {k: "lot", nom: "Lot", asos: "boshlang'ich narx", havola: "lotlar.html"},
+    {k: "taklif", nom: "Taklif", asos: "taklif summasi", havola: "takliflar.html"},
+    {k: "shartnoma", nom: "Shartnoma", asos: "shartnoma summasi", havola: "shartnomalar.html"},
+  ];
+  const KORINADI = 6;
+  function kartochka(q){
+    const y = q.y;
+    let href = "obyekt.html?id=" + encodeURIComponent(y.id), past = "", narx = q.narx;
+    if (q.bosqich === "tayyorlash"){
+      const m = q.m, mh = m && D.MUDDAT_HOLATLARI ? D.MUDDAT_HOLATLARI[m.holat] : null;
+      past = mh ? '<span class="chip chip-kichik ' + (mh.chip || "") + '">' + esc(mh.nom) + "</span>" : "";
+      if (q.bahosiz) past += '<span class="chip chip-kichik chip-sariq">Baholanmagan</span>';
+    } else if (q.bosqich === "lot"){
+      href = "lot.html?id=" + encodeURIComponent(q.lot.id);
+      past = MKB.holatChip(q.lot.holat, true) + (q.lot.savdoSana && q.lot.holat === "elon" ? '<span class="rz-meta"><span>Savdo</span> <span data-tarjimasiz>' + esc(q.lot.savdoSana) + "</span></span>" : "");
+    } else if (q.bosqich === "taklif"){
+      href = "takliflar.html?id=" + encodeURIComponent(q.tk.id);
+      past = chip(q.tk.holat, true) + '<span class="rz-meta" data-tarjimasiz>' + esc(q.tk.xaridor || "") + "</span>";
+    } else {
+      href = "shartnoma.html?id=" + encodeURIComponent(q.sh.id);
+      past = chip(q.sh.holat, true) + (q.t.kechikish ? '<span class="rz-meta"><b data-tarjimasiz>' + q.t.kechikish + "</b> <span>kun kechikdi</span></span>"
+        : '<span class="rz-meta"><span>To\'langan</span> <span data-tarjimasiz>' + (q.narx ? Math.round(q.t.tolangan / q.narx * 100) : 0) + "%</span></span>");
+    }
+    return '<a class="rz-kart" href="' + href + '"><b data-tarjimasiz>' + esc(q.nom) + "</b>" +
+      '<span class="rz-meta"><span data-tarjimasiz>' + esc(y.id) + "</span> · <span>" + esc(q.hudud) + "</span>" + (q.usul ? " · <span>" + esc(usulNomi(q.usul)) + "</span>" : "") + "</span>" +
+      '<span class="rz-past">' + past + (narx != null ? '<span class="pul">' + pul(narx) + "</span>" : "") + "</span></a>";
+  }
+  function saralash(k, a, b){
+    if (k === "tayyorlash") return ((a.m && a.m.qolganKun) != null ? a.m.qolganKun : 1e9) - ((b.m && b.m.qolganKun) != null ? b.m.qolganKun : 1e9);
+    if (k === "lot") return (oqi(a.lot.savdoSana) || 9e15) - (oqi(b.lot.savdoSana) || 9e15);
+    if (k === "taklif") return (oqi(a.tk.sana) || 0) - (oqi(b.tk.sana) || 0);
+    return (b.t.kechikish || 0) - (a.t.kechikish || 0) || (a.t.qoldiq - b.t.qoldiq);
+  }
+  function doskaChiz(){
+    const qidir = document.getElementById("d-qidir").value.trim().toLowerCase();
+    const usul = document.getElementById("d-usul").value, hudud = document.getElementById("d-hudud").value;
+    const r = doskaMalumot.filter(q => (!usul || q.usul === usul) && (!hudud || q.hudud === hudud) && (!qidir || q.izlash.toLowerCase().indexOf(qidir) >= 0));
+    /* Filtrsiz sonni yuqoridagi karta ko'rsatadi; bu yerda faqat filtr natijasi */
+    document.getElementById("doska-soni").textContent = (usul || hudud || qidir) ? r.length + " / " + doskaMalumot.length : "";
+    const joy = document.getElementById("doska");
+    if (!doskaMalumot.length){
+      joy.innerHTML = MKB.boshHolat("savdo", "Sotuv jarayonida obyekt yo'q",
+        "Obyekt holati «Sotuvga tayyorlanmoqda» bo'lganda yoki unga lot yaratilganda shu yerda ko'rinadi",
+        MKB.huquq("realizatsiya", "yoz") ? '<a class="tugma tugma-asosiy tugma-kichik" href="lotlar.html?yangi=1">Lot yaratish</a>' : "");
+      tarjimaQil(joy);
+      return;
+    }
+    joy.innerHTML = '<div class="rz-doska">' + USTUNLAR.map(u => {
+      const b = r.filter(q => q.bosqich === u.k).sort((x, y) => saralash(u.k, x, y));
+      const summa = yaxlit(b.reduce((a, q) => a + (q.narx || 0), 0));
+      return '<div class="rz-ustun" aria-label="' + esc(u.nom) + '"><div class="rz-ustun-bosh"><b>' + u.nom + '</b><span class="soni" data-tarjimasiz>' + b.length + "</span>" +
+        (summa ? '<span class="pul">' + pul(summa) + '</span><span class="rz-asos">' + u.asos + "</span>" : "") + "</div>" +
+        (b.length ? b.slice(0, KORINADI).map(kartochka).join("") : '<div class="rz-bosh-ustun">Bu bosqichda obyekt yo\'q</div>') +
+        (b.length > KORINADI ? '<a class="rz-yana" href="' + u.havola + '"><span>Yana ' + (b.length - KORINADI) + " ta</span><svg class=\"ic\"><use href=\"#ik-strelka\"/></svg></a>" : "") +
+        "</div>";
+    }).join("") + "</div>";
+    tarjimaQil(joy);
+  }
+
+  /* Paket yozuvida filial yo'q: filial rahbari faqat tarkibi o'z filialidagi paketlarni ko'radi */
+  function paketDoira(royxat){
+    return MKB.doira(royxat).filter(p => {
+      const t = (p.tarkib || []).map(id => D.topish(id)).filter(Boolean);
+      return !t.length || MKB.doira(t).length === t.length;
+    });
+  }
+
+  function paketChiz(){
+    const P = paketDoira(D.PAKETLAR || []).filter(p => p.holat !== "bekor");
+    const soni = document.getElementById("paket-soni");
+    soni.textContent = P.length ? P.length + " ta" : "";
+    tarjimaQil(soni);
+    const joy = document.getElementById("paketlar");
+    if (!P.length){
+      joy.innerHTML = MKB.boshHolat("kub", "Paket yaratilmagan", "Bir hududdagi bino va uskunani bitta lotga birlashtiring",
+        MKB.huquq("realizatsiya", "yoz") ? '<button type="button" class="tugma tugma-oq tugma-kichik" data-paket-yangi>Paket yaratish</button>' : "");
+    } else {
+      joy.innerHTML = P.map(p => {
+        const tarkib = (p.tarkib || []).map(id => D.topish(id)).filter(Boolean);
+        const bozor = tarkib.reduce((a, y) => a + ((y.qiymat && +y.qiymat.bozor) || 0), 0);
+        const lot = (D.LOTLAR || []).find(l => l.paketId === p.id && l.holat !== "bekor");
+        const amal = lot ? '<a class="karta-havola" href="lot.html?id=' + encodeURIComponent(lot.id) + '"><span data-tarjimasiz>' + esc(lot.id) + "</span></a>"
+          : (MKB.huquq("realizatsiya", "yoz") && tarkib.length ? '<a class="tugma tugma-asosiy tugma-kichik" href="lotlar.html?yangi=1&paket=' + encodeURIComponent(p.id) + '">Lot yaratish</a>' : "");
+        return '<div class="qator"><span class="belgi lavanda"><svg class="ic"><use href="#ik-kub"/></svg></span>' +
+          '<span class="matn"><b data-tarjimasiz>' + esc(p.nom) + "</b><span>" +
+            tarkib.map(y => '<a href="obyekt.html?id=' + encodeURIComponent(y.id) + '" data-tarjimasiz>' + esc(y.qisqa || y.nom) + "</a>").join(", ") +
+            (p.investKompaniya ? ' · <span data-tarjimasiz>' + esc(p.investKompaniya) + "</span>" : "") + "</span></span>" +
+          '<span class="ong">' + (bozor ? '<span class="pul">' + pul(yaxlit(bozor)) + "</span>" : "") + chip(p.holat || "shakllantirilmoqda", true) + amal + "</span></div>";
+      }).join("");
+    }
+    tarjimaQil(joy);
+    joy.querySelectorAll("[data-paket-yangi]").forEach(b => b.addEventListener("click", paketYangi));
+  }
+
+  /* Paket: kamida bitta bino va kamida ikki obyekt, bir hududda, faol loti yo'q. Forma tarkib xulosasini jonli ko'rsatadi */
+  function paketYangi(){
+    const band = new Set();
+    (D.PAKETLAR || []).filter(p => p.holat !== "bekor").forEach(p => (p.tarkib || []).forEach(id => band.add(id)));
+    const faolLot = new Set((D.LOTLAR || []).filter(l => FAOL_LOT.indexOf(l.holat) >= 0).map(l => l.obyektId));
+    const nomzod = MKB.doira(D.YOZUVLAR || []).filter(y => ["Balansda", "Sotuvga tayyorlanmoqda"].indexOf(y.holat) >= 0 && !band.has(y.id) && !faolLot.has(y.id));
+    const hududlar = [...new Set(nomzod.map(y => y.hudud).filter(Boolean))].sort((a, b) => a.localeCompare(b, "uz"));
+    if (!hududlar.length){ MKB.toast("Paketga qo'shish mumkin bo'lgan obyekt yo'q", "xavf"); return; }
+    const binomi = y => D.binolimi ? D.binolimi(y) : y.binoli;
+    const parda = MKB.modal("Paket yaratish",
+      '<div class="forma-tor" id="pk-forma">' +
+        '<label class="maydon keng"><span class="maydon-yorliq">Paket nomi <b>*</b></span><span class="kirish"><input name="nom" required minlength="3" maxlength="120" placeholder="Masalan: Tikuv sexi va uskunalar" data-xato="Paket nomini yozing"></span></label>' +
+        '<label class="maydon"><span class="maydon-yorliq">Hudud <b>*</b></span><span class="kirish"><select name="hudud" required>' +
+          hududlar.map(h => '<option value="' + esc(h) + '">' + esc(h) + "</option>").join("") + "</select></span></label>" +
+        '<label class="maydon"><span class="maydon-yorliq">Investitsiya kompaniyasi</span><span class="kirish"><input name="invest" maxlength="120" placeholder="Kiritilmagan"></span></label>' +
+        '<div class="maydon keng"><span class="maydon-yorliq">Paket tarkibi <b>*</b></span><div id="pk-royxat" style="display:flex;flex-direction:column;gap:2px;max-height:260px;overflow:auto"></div>' +
+          '<span class="maydon-izoh">Kamida ikki obyekt, ulardan biri bino bo\'lsin.</span></div>' +
+        '<div class="maydon keng"><div class="rz-paket-xulosa" id="pk-xulosa" aria-live="polite"></div></div>' +
+      "</div>",
+      {okMatn: "Paketni saqlash", async ok(p){
+        const forma = p.querySelector("#pk-forma");
+        const r = MKB.formaTekshir(forma);
+        if (!r) return false;
+        const f = r.qiymatlar;
+        const obyektlar = tanlangan();
+        const xato = obyektlar.length < 2 ? "Paketga kamida ikki obyekt tanlang"
+          : !obyektlar.some(binomi) ? "Paketda kamida bitta bino bo'lsin" : "";
+        if (xato){ MKB.formaXato(forma, xato); return false; }
+        const binolar = obyektlar.filter(binomi);
+        const tartib = binolar.concat(obyektlar.filter(y => binolar.indexOf(y) < 0)).map(y => y.id);
+        let id = null;
+        try{
+          id = await MKB.keyingiId("PAKETLAR", "PK-" + bugun().getFullYear() + "/", 2);
+          await MKBapi.yangi("PAKETLAR", {id, nom: f.nom, tarkib: tartib, investKompaniya: f.invest || null, holat: "shakllantirilmoqda"});
+        }catch(e){ MKB.formaXato(forma, "Paket saqlanmadi: " + (e && e.message ? e.message : "qayta urinib ko'ring")); return false; }
+        MKB.toast("Paket " + id + " saqlandi");
+        paketChiz();
+        return true;
+      }});
+    const hSel = parda.querySelector('[name="hudud"]');
+    const tanlangan = () => [...parda.querySelectorAll("[data-pk]:checked")].map(c => D.topish(c.value)).filter(Boolean);
+    const xulosa = () => {
+      const t = tanlangan(), bino = t.filter(binomi).length;
+      const bozor = yaxlit(t.reduce((a, y) => a + ((y.qiymat && +y.qiymat.bozor) || 0), 0));
+      const balans = yaxlit(t.reduce((a, y) => a + ((y.balans && +y.balans.qiymat) || 0), 0));
+      const bahosiz = t.filter(y => !(y.qiymat && y.qiymat.bozor)).length;
+      const el = parda.querySelector("#pk-xulosa");
+      el.innerHTML = t.length
+        ? "<span><span>Tanlangan</span> <b data-tarjimasiz>" + t.length + "</b></span><span><span>Bino</span> <b data-tarjimasiz>" + bino + "</b></span>" +
+          "<span><span>Balans qiymati</span> <b>" + pul(balans) + "</b></span><span><span>Bozor qiymati</span> <b>" + (bozor ? pul(bozor) : "—") + "</b></span>" +
+          (bahosiz ? '<span class="xavf"><span>Baholanmagan</span> <b data-tarjimasiz>' + bahosiz + "</b></span>" : "")
+        : "<span>Obyektlarni belgilang: xulosa shu yerda hisoblanadi</span>";
+      tarjimaQil(el);
+    };
+    const chizRoyxat = () => {
+      const r = nomzod.filter(y => y.hudud === hSel.value);
+      parda.querySelector("#pk-royxat").innerHTML = r.map(y =>
+        '<label class="qator" style="padding:8px 4px;cursor:pointer"><input type="checkbox" data-pk value="' + esc(y.id) + '">' +
+        '<span class="matn"><b data-tarjimasiz>' + esc(y.qisqa || y.nom) + "</b><span><span data-tarjimasiz>" + esc(y.id) + "</span> · <span>" + esc(y.tur || "") + "</span></span></span>" +
+        '<span class="ong">' + MKB.holatChip(y.holat, true) + "</span></label>").join("");
+      tarjimaQil(parda.querySelector("#pk-royxat"));
+      parda.querySelectorAll("[data-pk]").forEach(c => c.addEventListener("change", xulosa));
+      xulosa();
+    };
+    hSel.addEventListener("change", chizRoyxat);
+    chizRoyxat();
+  }
+
+  function hammasi(){
+    const h = hisobla();
+    doskaMalumot = h.qatorlar;
+    kpiChiz(h);
+    rejaChiz(h);
+    usulChiz(h);
+    const uSel = document.getElementById("d-usul"), hSel = document.getElementById("d-hudud");
+    const uJoriy = uSel.value, hJoriy = hSel.value;
+    uSel.innerHTML = '<option value="">Barcha usullar</option>' + (D.SOTISH_USULLARI || []).filter(u => doskaMalumot.some(q => q.usul === u.kalit))
+      .map(u => '<option value="' + u.kalit + '">' + esc(u.nom) + "</option>").join("");
+    hSel.innerHTML = '<option value="">Barcha hududlar</option>' + [...new Set(doskaMalumot.map(q => q.hudud).filter(Boolean))].sort((a, b) => a.localeCompare(b, "uz"))
+      .map(x => '<option value="' + esc(x) + '">' + esc(x) + "</option>").join("");
+    uSel.value = uJoriy; hSel.value = hJoriy;
+    tarjimaQil(uSel); tarjimaQil(hSel);
+    doskaChiz();
+    paketChiz();
+  }
+
+  MKB.sahifaYukla({
+    joylar: {"kpi": ["karta", 4], "reja-joy": ["qator", 3], "usul-joy": ["qator", 3], "doska": ["karta", 4], "paketlar": ["qator", 2]},
+    xato: "Sotuv rejasini yuklab bo'lmadi",
+    ish: async () => {
+      await MKB.kolYukla(KOL);
+      hammasi();
+      yuklandi = true;
+      if (new URLSearchParams(location.search).get("yangi") === "1" && MKB.huquq("realizatsiya", "yoz")) paketYangi();
+    },
+  });
+  ["d-qidir", "d-usul", "d-hudud"].forEach(id => document.getElementById(id).addEventListener(id === "d-qidir" ? "input" : "change", doskaChiz));
+  document.getElementById("paket-tugma").addEventListener("click", paketYangi);
+  document.addEventListener("mkb:malumot", () => { try{ if (yuklandi) hammasi(); }catch(_){ } });
+})();
+</script>
+</body>
+</html>

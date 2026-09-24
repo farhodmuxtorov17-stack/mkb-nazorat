@@ -3,8 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MKB — Sud majlislari kalendari</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
+<title>MKB — Sud kalendari</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.oy-bosh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.oy-bosh h2{min-width:150px}
+.oy-bosh .ong{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.oy-tor{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.oy-tor .hafta-kun{font-size:12px;color:var(--matn-3);text-align:center;padding:4px 0}
+.kun{all:unset;box-sizing:border-box;cursor:pointer;min-height:74px;border-radius:16px;background:var(--plitka);padding:8px 9px;
+  display:flex;flex-direction:column;gap:5px;min-width:0;transition:background var(--tez),box-shadow var(--tez)}
+.kun:hover{background:var(--oq);box-shadow:var(--soya-past)}
+.kun:focus-visible{box-shadow:0 0 0 2px var(--siyoh)}
+.kun.boshqa{opacity:.38}
+.kun.bugun .kun-son{background:var(--siyoh);color:#fff}
+.kun.tanlangan{box-shadow:0 0 0 2px var(--siyoh);background:var(--oq)}
+.kun-son{font-size:13px;font-weight:500;width:26px;height:26px;border-radius:99px;display:grid;place-items:center}
+.kun-belgi{display:flex;flex-wrap:wrap;gap:3px}
+.kun-belgi i{height:6px;border-radius:99px;flex:0 0 14px;background:var(--lavanda-matn)}
+.kun-belgi i.otgan{background:var(--mint-matn)}
+.kun-belgi i.kechikkan{background:var(--xavf)}
+.kun-soni{font-size:11.5px;color:var(--matn-3)}
+.izohlar{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--matn-3);margin-top:12px}
+.izohlar span{display:inline-flex;align-items:center;gap:6px}
+.izohlar i{width:14px;height:6px;border-radius:99px;display:inline-block}
+.kun-guruh{font:500 13px var(--shrift);color:var(--matn-3);letter-spacing:.02em;margin:14px 0 4px}
+.kun-guruh:first-child{margin-top:0}
+/* Majlis qatorida qarzdor va sud nomi to'liq ko'rinsin: satr kesilmaydi, o'raladi */
+#r-joy .qator .matn > b,#r-joy .qator .matn > span,#hafta-joy .qator .matn > b,#hafta-joy .qator .matn > span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+@media (max-width:720px){.kun{min-height:48px;padding:5px;border-radius:12px;align-items:center}.kun-soni{display:none}
+  .kun-belgi i{flex-basis:6px;width:6px}.oy-tor{gap:4px}}
+</style>
 </head>
 <body data-sahifa="yuridik">
 <div class="qobiq">
@@ -14,58 +43,269 @@
 <main class="kontent">
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><span>Undiruv va sud</span></div>
-    <div class="hs-qator"><h1>Sud majlislari kalendari</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-qator"><h1>Sud kalendari</h1>
+      <div class="hs-amallar"><button type="button" class="tugma tugma-asosiy" id="yangi-majlis" data-huquq="yoz" data-yozadi data-sayohat="yangi"><svg class="ic"><use href="#ik-qoshish"/></svg>Majlis tayinlash</button></div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="undiruv.html">Undiruv doskasi</a><a href="sud-kalendar.html" class="faol">Sud kalendari</a><a href="davo-tayyorlash.html">Da&#39;vo tayyorlash</a></nav>
-  <div id="kalendar" style="display:flex;flex-direction:column;gap:14px"></div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="undiruv.html">Undiruv ishlari</a><a href="sud-kalendar.html" class="faol">Sud kalendari</a><a href="davo-tayyorlash.html">Da&#39;vo tayyorlash</a></nav>
+
+  <section class="karta" id="hafta" aria-labelledby="hafta-h" data-sayohat="hafta">
+    <div class="karta-bosh"><h2 id="hafta-h">Yaqin 7 kun</h2><span class="soni" id="hafta-soni"></span></div>
+    <div id="hafta-joy"></div>
+  </section>
+
+  <section class="metrika-qator uch" id="metrikalar" aria-label="Ko'rsatkichlar" data-sayohat="kpi" hidden>
+    <a class="metrika" href="#royxat" data-korinish="rejada"><span class="m-yorliq">Rejadagi majlislar</span><span class="m-qiymat" id="m-rejada">—</span><span class="m-izoh">bugundan boshlab</span></a>
+    <a class="metrika" href="#royxat" data-korinish="kechikkan"><span class="m-yorliq">Natijasi kiritilmagan</span><span class="m-qiymat" id="m-kech">—</span><span class="m-izoh">o'tgan majlislar</span></a>
+    <a class="metrika" href="#royxat" data-korinish="otgan"><span class="m-yorliq">O'tkazilgan</span><span class="m-qiymat" id="m-otgan">—</span><span class="m-izoh">so'nggi 30 kunda</span></a>
+  </section>
+
+  <div class="tor-2-teng" id="tor">
+    <section class="karta" aria-labelledby="oy-nom" data-sayohat="kalendar">
+      <div class="karta-bosh oy-bosh"><h2 id="oy-nom">—</h2>
+        <div class="ong"><button type="button" class="tugma tugma-oq tugma-kichik tugma-ikonka" id="oy-old" aria-label="Oldingi oy"><svg class="ic"><use href="#ik-chap"/></svg></button>
+          <button type="button" class="tugma tugma-oq tugma-kichik" id="oy-bugun">Bugun</button>
+          <button type="button" class="tugma tugma-oq tugma-kichik tugma-ikonka" id="oy-keyin" aria-label="Keyingi oy"><svg class="ic"><use href="#ik-ong"/></svg></button></div></div>
+      <div class="oy-tor" id="oy"></div>
+      <div class="izohlar"><span><i style="background:var(--lavanda-matn)"></i>Rejada</span><span><i style="background:var(--mint-matn)"></i>O'tkazilgan</span><span><i style="background:var(--xavf)"></i>Natija kiritilmagan</span></div>
+    </section>
+    <section class="karta" id="royxat" aria-labelledby="r-h" data-sayohat="royxat">
+      <div class="karta-bosh"><h2 id="r-h">Oy majlislari</h2><span class="soni" id="r-soni"></span>
+        <button type="button" class="tugma tugma-oq tugma-kichik" id="r-tozala" hidden>Oy ro'yxatiga qaytish</button></div>
+      <div class="kirish" style="margin-bottom:12px" data-sayohat="filtr"><select id="f-adv" aria-label="Advokat bo'yicha saralash"></select></div>
+      <div id="r-joy"></div>
+    </section>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
-  const r = await MKBapi.royxat("SUD_MAJLISLAR");
-  document.getElementById("hs-meta").textContent = r.length + " ta majlis";
-  if (!r.length){
-    const joy = document.getElementById("kalendar");
-    joy.innerHTML = '<section class="karta"><div class="bosh-holat"><svg class="ic"><use href="#i-kalendar"/></svg>' +
-      "<b>Rejada sud majlisi yo'q</b><span>Majlis tayinlanganda shu yerda ko'rinadi</span></div></section>";
-    tarjimaQil(joy);
-    return;
+(async () => {
+  const JOYLAR = {"hafta-joy": ["qator", 3], "oy": ["karta", 1], "r-joy": ["qator", 5]};
+  Object.keys(JOYLAR).forEach(k => { document.getElementById(k).innerHTML = MKB.skelet(JOYLAR[k][1], JOYLAR[k][0] === "qator" ? undefined : JOYLAR[k][0]); });
+  await MKBapi.tayyor;
+  const D = MKB_DATA;
+  const esc = MKB.esc;
+  const bugun = D.bugun();
+  const bugunMatn = D.sanaYoz(bugun);
+  const OYLAR = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+  const HAFTA = ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"];
+  const iso = s => { const d = s instanceof Date ? s : D.sanaOqi(s); return d ? d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") : ""; };
+  const sanaMatn = v => v ? D.sanaYoz(D.sanaOqi(v)) : null;
+  const qolgan = s => { const d = D.sanaOqi(s); return d ? D.kunFarqi(bugun, d) : null; };
+  const kalit = m => String(m.sana || "").split(".").reverse().join("") + (m.soat || "");
+  const p = new URLSearchParams(location.search);
+
+  let ishlar = [], majlislar = [], ishMap = {};
+  let oy = new Date(bugun.getFullYear(), bugun.getMonth(), 1);
+  let tanlanganKun = null, korinish = "oy", advokat = "";
+
+  const kechikkanmi = m => m.holat === "rejada" && qolgan(m.sana) < 0;
+
+  async function yukla(){
+    ishlar = MKB.doira(await MKBapi.royxat("UNDIRUV_ISHLAR"));
+    ishMap = {}; ishlar.forEach(i => { ishMap[i.id] = i; });
+    majlislar = (await MKBapi.royxat("SUD_MAJLISLAR")).filter(m => ishMap[m.ishId]);
+    chiz();
   }
-  const kunlar = {};
-  r.forEach(m => { (kunlar[m.sana] = kunlar[m.sana] || []).push(m); });
-  /* kalendar sana bo'yicha o'sish tartibida chiziladi — massiv tartibi tasodifiy bo'lishi mumkin */
-  const kunTartib = Object.entries(kunlar).sort((a, b) => {
-    const d = n => MKB_DATA.sanaOqi(n) || new Date(8640000000000);
-    return d(a[0]) - d(b[0]);
-  });
-  document.getElementById("kalendar").innerHTML = kunTartib.map(([sana, royxat]) =>
-    '<section class="karta"><div class="karta-bosh">' +
-      '<span style="width:46px;text-align:center;border:1.5px solid var(--siyoh);border-radius:14px;padding:5px 0;flex:none">' +
-        '<b style="display:block;font:500 16px var(--shrift-displey)">' + sana.split("-")[0] + '</b>' +
-        '<span style="font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--iz)">' + sana.split("-")[1].split(",")[0] + '</span></span>' +
-      '<h2>' + sana + '</h2><span class="soni">' + royxat.length + ' ta majlis</span></div>' +
-      royxat.map(m =>
-        '<a href="sud-majlis.html?id=' + encodeURIComponent(m.id) + '" class="qator">' +
-          '<b class="kod-mono" style="flex:none;width:44px">' + m.soat + '</b>' +
-          '<span class="matn"><b>' + m.obyekt + '</b>' +
-          '<span style="font-size:12.5px;color:var(--matn-3)">' + m.sud + ' · ' + m.zal + ' · ' + m.advokat + '</span></span>' +
-          '<span class="chip ' + (m.holat === "rejada" ? "chip-brend\">Rejada" : "chip-yashil\">O'tkazildi") + '</span></a>').join("") +
-    '</section>').join("");
-});
+
+  function chiz(){
+    const rejada = majlislar.filter(m => m.holat === "rejada" && qolgan(m.sana) >= 0);
+    const kech = majlislar.filter(kechikkanmi);
+    const otgan = majlislar.filter(m => m.holat === "otkazildi" && qolgan(m.sana) >= -30 && qolgan(m.sana) <= 0);
+    document.getElementById("metrikalar").hidden = !majlislar.length;
+    document.getElementById("m-rejada").textContent = rejada.length;
+    document.getElementById("m-kech").textContent = kech.length;
+    document.getElementById("m-otgan").textContent = otgan.length;
+    const advlar = [...new Set(majlislar.map(m => m.advokat).filter(Boolean))].sort();
+    const fa = document.getElementById("f-adv");
+    fa.innerHTML = '<option value="">Barcha advokatlar</option>' + advlar.map(a => '<option' + (a === advokat ? " selected" : "") + ">" + esc(a) + "</option>").join("");
+    fa.parentElement.hidden = !advlar.length;
+    haftaChiz();
+    oyChiz();
+    royxatChiz();
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+
+  const korinadi = () => majlislar.filter(m => !advokat || m.advokat === advokat);
+
+  function qator(m){
+    const i = ishMap[m.ishId] || {};
+    const kech = kechikkanmi(m);
+    return '<a class="qator" href="sud-majlis.html?id=' + encodeURIComponent(m.id) + '">' +
+      '<span class="belgi ' + (m.holat === "otkazildi" ? "mint" : kech ? "pushti" : "lavanda") + '">' + ik(m.holat === "otkazildi" ? "tasdiq" : "kalendar") + "</span>" +
+      '<span class="matn"><b data-tarjimasiz>' + esc((i.qarzdor ? i.qarzdor.nom : m.ishId)) + "</b>" +
+      "<span>" + [m.mavzu ? "<span>" + esc(m.mavzu) + "</span>" : "", m.sud ? "<span data-tarjimasiz>" + esc(m.sud) + "</span>" : "",
+        m.zal ? "<span>" + esc(m.zal) + "</span>" : "", m.advokat ? "<span data-tarjimasiz>" + esc(m.advokat) + "</span>" : ""].filter(Boolean).join(" · ") + "</span></span>" +
+      '<span class="ong"><span class="vaqt" data-tarjimasiz>' + esc(m.sana + (m.soat ? " " + m.soat : "")) + "</span>" +
+      (m.holat === "otkazildi" ? '<span class="chip chip-yashil chip-kichik">O\'tkazildi</span>'
+        : kech ? '<span class="chip chip-xavf chip-kichik">Natija kiritilmagan</span>' : '<span class="chip chip-kok chip-kichik">Rejada</span>') + "</span></a>";
+  }
+
+  /* Keyingi 7 kun: natijasi kiritilmaganlar birinchi, keyin kun bo'yicha guruhlangan rejadagi majlislar */
+  function haftaChiz(){
+    const joy = document.getElementById("hafta-joy");
+    const r = korinadi();
+    const kech = r.filter(kechikkanmi).sort((a, b) => kalit(a) < kalit(b) ? -1 : 1);
+    const hafta = r.filter(m => m.holat === "rejada" && qolgan(m.sana) >= 0 && qolgan(m.sana) <= 7).sort((a, b) => kalit(a) < kalit(b) ? -1 : 1);
+    document.getElementById("hafta-soni").innerHTML = hafta.length ? '<b data-tarjimasiz>' + hafta.length + "</b> <span>ta majlis</span>" : "";
+    if (!majlislar.length){
+      joy.innerHTML = MKB.boshHolat("kalendar", D.MANBA === "mahalliy" ? "Sud majlislari hali kiritilmagan" : "Majlis yo'q",
+        ishlar.some(i => i.holat === "faol" && i.sud) ? "Sudga berilgan ish bo'yicha majlis tayinlang." : "Majlis da'vo sudga berilgan ish bo'yicha tayinlanadi.");
+      return;
+    }
+    let html = "";
+    if (kech.length) html += '<p class="kun-guruh">Natijasini kiriting</p>' + kech.map(qator).join("");
+    const kunlar = {};
+    hafta.forEach(m => { (kunlar[m.sana] = kunlar[m.sana] || []).push(m); });
+    Object.keys(kunlar).forEach(s => {
+      const q = qolgan(s), d = D.sanaOqi(s);
+      html += '<p class="kun-guruh">' + (q === 0 ? "<span>Bugun</span>" : q === 1 ? "<span>Ertaga</span>" : "<span>" + HAFTA[d.getDay()] + "</span>") +
+        ' · <span data-tarjimasiz>' + esc(s) + "</span></p>" + kunlar[s].map(qator).join("");
+    });
+    if (!html){
+      /* Bo'sh hafta: katta bo'sh holat o'rniga eng yaqin majlis bir qatorda ko'rsatiladi */
+      const keyingi = r.filter(m => m.holat === "rejada" && qolgan(m.sana) > 7).sort((a, b) => kalit(a) < kalit(b) ? -1 : 1)[0];
+      html = "<p class=\"kun-guruh\">7 kun ichida majlis yo'q</p>" + (keyingi ? '<p class="kun-guruh">Eng yaqin majlis</p>' + qator(keyingi) : "");
+    }
+    joy.innerHTML = html;
+  }
+
+  function oyChiz(){
+    document.getElementById("oy-nom").innerHTML = "<span>" + OYLAR[oy.getMonth()] + "</span> <span data-tarjimasiz>" + oy.getFullYear() + "</span>";
+    const boshi = new Date(oy);
+    const siljish = (boshi.getDay() + 6) % 7;
+    boshi.setDate(1 - siljish);
+    const r = korinadi();
+    const kunlar = {};
+    r.forEach(m => { (kunlar[m.sana] = kunlar[m.sana] || []).push(m); });
+    let html = ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"].map(k => '<span class="hafta-kun">' + k + "</span>").join("");
+    for (let i = 0; i < 42; i++){
+      const d = new Date(boshi); d.setDate(boshi.getDate() + i);
+      if (i === 35 && d.getMonth() !== oy.getMonth()) break;
+      const s = D.sanaYoz(d);
+      const bu = kunlar[s] || [];
+      const cls = ["kun", d.getMonth() !== oy.getMonth() ? "boshqa" : "", s === bugunMatn ? "bugun" : "", s === tanlanganKun ? "tanlangan" : ""].filter(Boolean).join(" ");
+      html += '<button type="button" class="' + cls + '" data-kun="' + s + '" aria-pressed="' + (s === tanlanganKun) + '" aria-label="' + s + (bu.length ? ", " + bu.length + " ta majlis" : "") + '">' +
+        '<span class="kun-son" data-tarjimasiz>' + d.getDate() + "</span>" +
+        (bu.length ? '<span class="kun-belgi">' + bu.slice(0, 4).map(m => '<i class="' + (m.holat === "otkazildi" ? "otgan" : kechikkanmi(m) ? "kechikkan" : "") + '"></i>').join("") + "</span>" +
+          '<span class="kun-soni"><b data-tarjimasiz>' + bu.length + "</b> <span>ta</span></span>" : "") + "</button>";
+    }
+    const el = document.getElementById("oy");
+    el.innerHTML = html;
+    el.querySelectorAll("[data-kun]").forEach(b => b.addEventListener("click", () => {
+      tanlanganKun = tanlanganKun === b.dataset.kun ? null : b.dataset.kun;
+      if (tanlanganKun) korinish = "oy";
+      oyChiz(); royxatChiz(); tarjimaQil(document.querySelector(".kontent"));
+    }));
+  }
+
+  /* O'ng ro'yxat: kalendardagi oy majlislari; kun yoki ko'rsatkich tanlansa shu bo'yicha */
+  function royxatChiz(){
+    const joy = document.getElementById("r-joy");
+    const h = document.getElementById("r-h");
+    let r = korinadi();
+    const oyKalit = oy.getFullYear() + String(oy.getMonth() + 1).padStart(2, "0");
+    if (tanlanganKun){
+      r = r.filter(m => m.sana === tanlanganKun).sort((a, b) => kalit(a) < kalit(b) ? -1 : 1);
+      h.innerHTML = '<span data-tarjimasiz>' + tanlanganKun + "</span>";
+    } else if (korinish === "rejada"){
+      r = r.filter(m => m.holat === "rejada" && qolgan(m.sana) >= 0).sort((a, b) => kalit(a) < kalit(b) ? -1 : 1);
+      h.textContent = "Rejadagi majlislar";
+    } else if (korinish === "kechikkan"){
+      r = r.filter(kechikkanmi).sort((a, b) => kalit(a) < kalit(b) ? -1 : 1);
+      h.textContent = "Natijasi kiritilmagan";
+    } else if (korinish === "otgan"){
+      r = r.filter(m => m.holat === "otkazildi").sort((a, b) => kalit(a) > kalit(b) ? -1 : 1);
+      h.textContent = "O'tkazilgan majlislar";
+    } else {
+      r = r.filter(m => kalit(m).slice(0, 6) === oyKalit).sort((a, b) => kalit(a) < kalit(b) ? -1 : 1);
+      h.innerHTML = "<span>Oy majlislari</span>";
+    }
+    document.getElementById("r-tozala").hidden = !tanlanganKun && korinish === "oy";
+    document.getElementById("r-soni").innerHTML = r.length ? '<b data-tarjimasiz>' + r.length + "</b> <span>ta</span>" : "";
+    if (!majlislar.length){ joy.innerHTML = ""; return; }
+    joy.innerHTML = r.length ? r.slice(0, 40).map(qator).join("") : MKB.boshHolat("kalendar", tanlanganKun ? "Bu kunga majlis tayinlanmagan" : korinish === "oy" ? "Bu oyda majlis yo'q" : "Mos majlis yo'q");
+  }
+
+  const qayta = () => { oyChiz(); royxatChiz(); haftaChiz(); tarjimaQil(document.querySelector(".kontent")); };
+  document.getElementById("f-adv").addEventListener("change", e => { advokat = e.target.value; qayta(); });
+  document.getElementById("oy-old").addEventListener("click", () => { oy.setMonth(oy.getMonth() - 1); qayta(); });
+  document.getElementById("oy-keyin").addEventListener("click", () => { oy.setMonth(oy.getMonth() + 1); qayta(); });
+  document.getElementById("oy-bugun").addEventListener("click", () => { oy = new Date(bugun.getFullYear(), bugun.getMonth(), 1); tanlanganKun = bugunMatn; korinish = "oy"; qayta(); });
+  document.getElementById("r-tozala").addEventListener("click", () => { tanlanganKun = null; korinish = "oy"; qayta(); });
+  document.querySelectorAll("[data-korinish]").forEach(a => a.addEventListener("click", () => { korinish = a.dataset.korinish; tanlanganKun = null; qayta(); }));
+
+  /* ---------- Majlis tayinlash ---------- */
+  function majlisTayinla(){
+    if (!MKB.huquq("yuridik", "yoz")) return;
+    const nomzod = ishlar.filter(i => i.holat === "faol" && i.sud && i.sud.nomi);
+    if (!nomzod.length){
+      MKB.modal("Majlis tayinlab bo'lmaydi", '<p class="tasdiqla-matn">Majlis sudga berilgan faol ish bo\'yicha tayinlanadi. Hozir bunday ish yo\'q: avval da\'vo arizasini ro\'yxatga oling.</p>',
+        {okMatn: "Da'vo tayyorlash", ok: () => { location.href = "davo-tayyorlash.html"; }});
+      return;
+    }
+    const adv = D.ADVOKATLAR || [];
+    const maydon = (nom, yorliq, html, keng, majburiy) => '<div class="maydon' + (keng ? " keng" : "") + '"><label class="maydon-yorliq" for="m-' + nom + '">' + yorliq + (majburiy ? " <b>*</b>" : "") + '</label><div class="kirish">' + html + "</div></div>";
+    const tanlanganSana = tanlanganKun && qolgan(tanlanganKun) >= 0 ? iso(tanlanganKun) : "";
+    const parda = MKB.modal("Sud majlisini tayinlash", '<form class="forma-tor" novalidate>' +
+      maydon("ish", "Undiruv ishi", '<select id="m-ish" name="ish" required data-xato="Undiruv ishini tanlang"><option value="">Tanlang</option>' + nomzod.map(i => '<option value="' + esc(i.id) + '">' + esc(i.id + " — " + (i.qarzdor ? i.qarzdor.nom : "")) + "</option>").join("") + "</select>", true, true) +
+      maydon("sud", "Sud", '<input id="m-sud" name="sud" required data-xato="Sud nomini kiriting" autocomplete="off">', true, true) +
+      maydon("sana", "Sana", '<input id="m-sana" name="sana" type="date" required min="' + iso(bugun) + '" value="' + tanlanganSana + '">', false, true) +
+      maydon("soat", "Vaqt", '<input id="m-soat" name="soat" type="time" required value="10:00">', false, true) +
+      maydon("zal", "Zal", '<input id="m-zal" name="zal" autocomplete="off" placeholder="2-zal">') +
+      maydon("adv", "Advokat", '<select id="m-adv" name="adv"><option value="">Biriktirilmagan</option>' + adv.map(a => '<option value="' + esc(a.id) + '">' + esc(a.ism) + "</option>").join("") + "</select>") +
+      maydon("mavzu", "Mavzu", '<select id="m-mavzu" name="mavzu" required>' + ["Tayyorgarlik majlisi", "Dalillarni o'rganish", "Asosiy muhokama", "Qaror e'lon qilish", "Apellyatsiya majlisi"].map(x => "<option>" + esc(x) + "</option>").join("") + "</select>", true, true) + "</form>",
+    {okMatn: "Tayinlash", ok: async parda => {
+      const f = parda.querySelector("form");
+      const r = MKB.formaTekshir(f, {
+        soat: (v, q) => !majlislar.some(m => m.ishId === q.ish && m.holat === "rejada" && m.sana === q.sana && m.soat === v) || "Shu vaqtga majlis allaqachon tayinlangan",
+      });
+      if (!r) return false;
+      const q = r.qiymatlar;
+      const a = adv.find(x => x.id === q.adv);
+      const i = ishMap[q.ish];
+      try{
+        const id = await MKB.keyingiId("SUD_MAJLISLAR", "SM-" + bugun.getFullYear() + "/", 4);
+        await MKBapi.yangi("SUD_MAJLISLAR", {id, ishId: i.id, sud: q.sud, sana: q.sana, soat: q.soat, zal: q.zal || "",
+          advokatId: a ? a.id : null, advokat: a ? a.ism : "", mavzu: q.mavzu, holat: "rejada", natija: ""});
+        await MKBapi.yangilash("UNDIRUV_ISHLAR", i.id, {tarix: (i.tarix || []).concat([{sana: bugunMatn, voqea: "Sud majlisi tayinlandi", izoh: q.sana + " " + q.soat + ", " + q.mavzu}])});
+      }catch(e){ MKB.formaXato(f, "Majlis tayinlanmadi: " + e.message); return false; }
+      MKB.toast("Majlis " + q.sana + " " + q.soat + " ga tayinlandi");
+      const d = D.sanaOqi(q.sana);
+      oy = new Date(d.getFullYear(), d.getMonth(), 1); tanlanganKun = q.sana;
+      await yukla();
+    }});
+    const ishSel = parda.querySelector("#m-ish");
+    ishSel.addEventListener("change", () => {
+      const i = ishMap[ishSel.value];
+      if (!i) return;
+      parda.querySelector("#m-sud").value = i.sud ? i.sud.nomi : "";
+      parda.querySelector("#m-adv").value = i.advokatId || "";
+    });
+  }
+  document.getElementById("yangi-majlis").addEventListener("click", majlisTayinla);
+
+  if (p.get("kun") && D.sanaOqi(p.get("kun"))){ tanlanganKun = sanaMatn(p.get("kun")); const d = D.sanaOqi(tanlanganKun); oy = new Date(d.getFullYear(), d.getMonth(), 1); }
+  await MKB.sahifaYukla({joylar: JOYLAR, ish: yukla, xato: "Sud majlislarini yuklab bo'lmadi"});
+  /* Buyruqlar oynasidan "Majlis tayinlash": ?yangi=1 formani ochadi */
+  if (p.get("yangi") === "1" && MKB.huquq("yuridik", "yoz") && ishlar.length){
+    history.replaceState(null, "", location.pathname + location.search.replace(/([?&])yangi=1(&|$)/, "$1").replace(/[?&]$/, ""));
+    majlisTayinla();
+  }
+})();
 </script>
 </body>
 </html>

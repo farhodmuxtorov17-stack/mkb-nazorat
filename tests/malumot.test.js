@@ -1,506 +1,705 @@
 "use strict";
 /* ============================================================
-   Прогон проверок ядра данных malumot.js и словаря tarjima.js.
-   Без зависимостей: только node. Запуск из корня репозитория:
+   Ma'lumot qatlami va lug'at tekshiruvi.
+   Faqat node kerak. Ildizdan ishga tushiriladi:
 
        node tests/malumot.test.js
 
-   Метод: тесты строятся от ломающих случаев — границы порогов,
-   деление на ноль, битые ссылки, рассинхрон производных значений.
-   Мутационные тесты группы 6 намеренно ломают загруженные данные
-   и проверяют, что moslikTekshiruvi() это ловит; между такими
-   кейсами модуль перечитывается заново (delete require.cache).
-
-   Характеризационные тесты помечены словом «характеризация»:
-   они фиксируют фактическое (не обязательно желаемое) поведение,
-   чтобы его изменение не прошло незамеченным.
+   Nima tekshiriladi:
+   - balans aktivi modeli: kredit maydonlari yo'q, balans sanasi va qiymati bor;
+   - me'yoriy muddatlar va zaxira: 365 kundan keyin 100%;
+   - undiruv ishlari balans aktivlaridan alohida to'plamda;
+   - suratlar: chizma yo'llari yo'q, rasmTuri 12 kalitdan biri;
+   - namoyish sanalari bugunga nisbatan (qattiq sana yo'q);
+   - mahalliy rejim: sun'iy fixture bilan, haqiqiy reyestr o'qilmaydi;
+   - moslik tekshiruvi: toza ma'lumotda bo'sh, buzilganda qizaradi;
+   - tarjima.js: sintaksis, dublikat, yadro nomlarining ruscha kalitlari.
    ============================================================ */
 
 const path = require("path");
 const fs = require("fs");
 
-const MALUMOT_YOLI = path.join(__dirname, "..", "malumot.js");
-const TARJIMA_YOLI = path.join(__dirname, "..", "tarjima.js");
+const ILDIZ = path.join(__dirname, "..");
+const FAYLLAR = ["malumot.js", "malumot-qoshimcha.js", "malumot-kengaytma.js", "malumot-kirish.js", "malumot-indeks.js"];
+const BUGUN = "2026-09-21";
 
-/* Чистая загрузка модуля данных: malumot.js — IIFE, публикующая
-   window.MKB_DATA, поэтому перед require создаётся новый window. */
-function yukla() {
-  delete require.cache[require.resolve(MALUMOT_YOLI)];
-  global.window = {};
-  require(MALUMOT_YOLI);
+/* Toza yuklash: har safar yangi window, fayllar keshdan olib tashlanadi.
+   muhit: window ga qo'shiladigan qo'shimcha maydonlar (MKB_BUGUN) va global o'zgaruvchilar. */
+function yukla(muhit) {
+  muhit = muhit || {};
+  FAYLLAR.forEach(f => { delete require.cache[require.resolve(path.join(ILDIZ, f))]; });
+  const eski = {};
+  const globallar = muhit.globallar || {};
+  Object.keys(globallar).forEach(k => { eski[k] = global[k]; global[k] = globallar[k]; });
+  global.window = Object.assign({MKB_BUGUN: BUGUN}, muhit.window || {});
+  try {
+    FAYLLAR.forEach(f => require(path.join(ILDIZ, f)));
+  } finally {
+    Object.keys(globallar).forEach(k => { if (eski[k] === undefined) delete global[k]; else global[k] = eski[k]; });
+  }
   return global.window.MKB_DATA;
 }
 
-/* ---------------- мини-раннер ---------------- */
+/* ---------- kichik yurituvchi ---------- */
 const guruhlar = [];
-let joriyGuruh = null;
-function guruh(nom) { joriyGuruh = { nom, testlar: [] }; guruhlar.push(joriyGuruh); }
-function test(nom, fn) { joriyGuruh.testlar.push({ nom, fn }); }
-
-function ok(shart, izoh) {
-  if (!shart) throw new Error(izoh || "условие ложно");
-}
-function eq(haqiqiy, kutilgan, izoh) {
+let joriy = null;
+function guruh(nom) { joriy = {nom, sinovlar: []}; guruhlar.push(joriy); }
+function sinov(nom, fn) { joriy.sinovlar.push({nom, fn}); }
+function ok(shart, xabar) { if (!shart) throw new Error(xabar || "shart bajarilmadi"); }
+function teng(haqiqiy, kutilgan, xabar) {
   if (!Object.is(haqiqiy, kutilgan))
-    throw new Error((izoh ? izoh + ": " : "") +
-      "получено " + JSON.stringify(haqiqiy) + ", ожидалось " + JSON.stringify(kutilgan));
-}
-function yaqin(haqiqiy, kutilgan, chek, izoh) {
-  if (!(Math.abs(haqiqiy - kutilgan) <= chek))
-    throw new Error((izoh ? izoh + ": " : "") +
-      "получено " + haqiqiy + ", ожидалось " + kutilgan + " (допуск " + chek + ")");
+    throw new Error((xabar ? xabar + ": " : "") + JSON.stringify(haqiqiy) + " keldi, " + JSON.stringify(kutilgan) + " kutilgan");
 }
 
-/* Общая «чистая» копия данных для групп 1–5 (они данные не мутируют). */
 const D = yukla();
+const sanaMatn = d => D.sanaYoz(d);
+const bugunDan = n => sanaMatn(D.kunQosh(D.bugun(), n));
 
-/* ============================================================
-   Группа 1. tasnifla() — границы категорий качества.
-   Пороги TASNIF: 0 / 1 / 31 / 91 / 181, правило «с этого дня».
-   Проверяются обе стороны каждого порога — именно там ломаются
-   ошибки вида >= против >.
-   ============================================================ */
-guruh("1. tasnifla(): границы категорий");
-
-test("0 -> yaxshi (0%), 1 -> standart (10%)", () => {
-  eq(D.tasnifla(0).kalit, "yaxshi");
-  eq(D.tasnifla(0).zaxira, 0, "ставка резерва yaxshi");
-  eq(D.tasnifla(1).kalit, "standart");
-  eq(D.tasnifla(1).zaxira, 10, "ставка резерва standart");
-});
-
-test("30 -> standart, 31 -> substandart (25%)", () => {
-  eq(D.tasnifla(30).kalit, "standart");
-  eq(D.tasnifla(31).kalit, "substandart");
-  eq(D.tasnifla(31).zaxira, 25, "ставка резерва substandart");
-});
-
-test("90 -> substandart, 91 -> shubhali (50%)", () => {
-  eq(D.tasnifla(90).kalit, "substandart");
-  eq(D.tasnifla(91).kalit, "shubhali");
-  eq(D.tasnifla(91).zaxira, 50, "ставка резерва shubhali");
-});
-
-test("180 -> shubhali, 181 -> umidsiz (100%)", () => {
-  eq(D.tasnifla(180).kalit, "shubhali");
-  eq(D.tasnifla(181).kalit, "umidsiz");
-  eq(D.tasnifla(181).zaxira, 100, "ставка резерва umidsiz");
-});
-
-test("очень большая просрочка остаётся umidsiz", () => {
-  eq(D.tasnifla(1e6).kalit, "umidsiz");
-  eq(D.tasnifla(Number.MAX_SAFE_INTEGER).kalit, "umidsiz");
-});
-
-test("результат — запись самой таблицы TASNIF (кэллеры читают chip/rang)", () => {
-  ok(D.TASNIF.includes(D.tasnifla(0)), "tasnifla(0) не из TASNIF");
-  ok(D.TASNIF.includes(D.tasnifla(181)), "tasnifla(181) не из TASNIF");
-  ok(typeof D.tasnifla(45).chip === "string" && D.tasnifla(45).chip.length > 0);
-  ok(typeof D.tasnifla(45).rang === "string" && /^#/.test(D.tasnifla(45).rang));
-});
-
-/* ХАРАКТЕРИЗАЦИЯ. Отрицательные дни просрочки — некорректный вход:
-   ни один порог `kunlar >= kundan` не срабатывает, и функция молча
-   возвращает стартовое значение TASNIF[0] («yaxshi»). Валидацию входа
-   она не делает — некорректные kunlar в записях ловит отдельно
-   moslikTekshiruvi() (kunlar <= 0). Тест фиксирует текущий контракт;
-   если в функцию добавят отказ на отрицательных значениях, тест
-   сознательно упадёт и потребует пересмотра. */
-test("характеризация: отрицательные дни дают «yaxshi» (вход не валидируется)", () => {
-  eq(D.tasnifla(-1).kalit, "yaxshi");
-  eq(D.tasnifla(-365).kalit, "yaxshi");
-});
-
-/* ============================================================
-   Группа 2. zaxiraHisobi() — резерв, необеспеченный остаток, покрытие.
-   Функция ПРИВАТНА (в window.MKB_DATA не экспортируется — вопреки
-   описанию в постановке), а случай qarz=0 через данные недостижим.
-   Поэтому исходник функции извлекается из malumot.js балансным
-   сканом скобок и исполняется как есть: тестируется реальный код,
-   а не переписанная копия.
-   ============================================================ */
-guruh("2. zaxiraHisobi(): извлечённая приватная функция");
-
-let zaxiraHisobiKesh = null;
-function zaxiraHisobiOl() {
-  if (zaxiraHisobiKesh) return zaxiraHisobiKesh;
-  const manba = fs.readFileSync(MALUMOT_YOLI, "utf8");
-  const bosh = manba.indexOf("function zaxiraHisobi");
-  ok(bosh !== -1, "в malumot.js не найдена «function zaxiraHisobi»");
-  const och = manba.indexOf("{", bosh);
-  let chuqurlik = 0, oxir = -1;
-  for (let i = och; i < manba.length; i++) {
-    if (manba[i] === "{") chuqurlik++;
-    else if (manba[i] === "}") { chuqurlik--; if (chuqurlik === 0) { oxir = i; break; } }
-  }
-  ok(oxir !== -1, "не найден конец функции zaxiraHisobi");
-  zaxiraHisobiKesh = new Function("return (" + manba.slice(bosh, oxir + 1) + ")")();
-  return zaxiraHisobiKesh;
+/* Sun'iy aktiv: kerakli maydonlar bilan aktivQolip dan o'tadi, hosila maydonlar ulanadi */
+function aktiv(x) {
+  const y = D.aktivQolip(Object.assign({id: "SINOV-1", nom: "Sinov aktivi", turKalit: "noturar", rasmTuri: "ombor"}, x));
+  return D.aktivTayyorla(y);
 }
 
-test("функция извлекается из исходника (private, не в экспортах MKB_DATA)", () => {
-  const zx = zaxiraHisobiOl();
-  eq(typeof zx, "function");
-  eq(zx.length, 3, "ожидается сигнатура (qarzJami, ta'minotBaho, foiz)");
-  eq("zaxiraHisobi" in D, false, "если функцию экспортировали — перевести тесты на прямой вызов");
+/* ============================================================
+   1. Sana
+   ============================================================ */
+guruh("1. Sana: o'qish, yozish, ish kunlari");
+
+sinov("bugun qotirilgan sanaga teng (MKB_BUGUN)", () => {
+  teng(sanaMatn(D.bugun()), "21.09.2026");
 });
 
-test("qarz > baho: необеспеченный остаток равен разнице, покрытие < 100%", () => {
-  const r = zaxiraHisobiOl()(500, 300, 25);
-  eq(r.zaxira, 125, "резерв 25% от всего долга, не от остатка");
-  eq(r.ochiq, 200, "ochiq = 500 - 300");
-  eq(r.qoplash, 60, "покрытие 300/500");
+sinov("sanaOqi barcha qabul qilinadigan shakllarni o'qiydi", () => {
+  ["21.09.2026", "21-09-2026", "21/09/2026", "2026-09-21", "21-sen, 2026", "21 sentabr 2026"].forEach(s => {
+    const d = D.sanaOqi(s);
+    ok(d, s + " o'qilmadi");
+    teng(sanaMatn(d), "21.09.2026", s);
+  });
+  teng(D.sanaOqi(""), null);
+  teng(D.sanaOqi("kiritilmagan"), null);
 });
 
-test("qarz < baho: ochiq строго 0, покрытие > 100%", () => {
-  const r = zaxiraHisobiOl()(300, 500, 10);
-  eq(r.ochiq, 0, "залог покрывает долг — непокрытого остатка нет");
-  eq(r.zaxira, 30);
-  eq(r.qoplash, 167, "round(500/300*100) = 167");
+sinov("sanaYoz dd.mm.yyyy, vaqtYoz dd.mm.yyyy HH:MM", () => {
+  teng(D.sanaYoz(new Date(2026, 0, 5)), "05.01.2026");
+  teng(D.vaqtYoz(new Date(2026, 0, 5, 9, 7)), "05.01.2026 09:07");
 });
 
-test("qarz = 0: нет деления на ноль, все значения конечны", () => {
-  const r = zaxiraHisobiOl()(0, 500, 10);
-  ok(Number.isFinite(r.zaxira) && Number.isFinite(r.ochiq) && Number.isFinite(r.qoplash),
-    "получены неконечные значения: " + JSON.stringify(r));
-  eq(r.qoplash, 0, "защита от деления на ноль обязана дать 0, а не Infinity/NaN");
-  eq(r.zaxira, 0);
-  eq(r.ochiq, 0);
+sinov("kunFarqi kalendar kunlarda, kabisa yilini hisobga oladi", () => {
+  teng(D.kunFarqi("01.03.2027", "01.03.2028"), 366);
+  teng(D.kunFarqi("21.09.2026", "21.09.2026"), 0);
+  teng(D.kunFarqi("22.09.2026", "21.09.2026"), -1);
 });
 
-test("округление до 0.1 млн: 24.9975 -> 25, 49.99 -> 50", () => {
-  const r = zaxiraHisobiOl()(99.99, 50, 25);
-  eq(r.zaxira, 25, "резерв округляется до одной десятой");
-  eq(r.ochiq, 50, "остаток округляется до одной десятой");
-});
-
-test("извлечённая функция совпадает с той, что заполнила запись AK-2025/1187", () => {
-  const y = D.topish("AK-2025/1187");
-  const r = zaxiraHisobiOl()(y.qarz.jami, y.mulk.baho, y.tasnif.zaxira);
-  eq(r.zaxira, y.zaxira);
-  eq(r.ochiq, y.ochiqQoldiq);
-  eq(r.qoplash, y.qoplash);
-  eq(r.qoplash, 108, "4150/3840.4 -> 108%");
+sinov("ish kuni: shanba, yakshanba va bayramlar o'tkazib yuboriladi", () => {
+  ok(!D.ishKunimi("26.09.2026"), "shanba ish kuni emas");
+  ok(!D.ishKunimi("01.09.2026"), "Mustaqillik kuni ish kuni emas");
+  ok(D.ishKunimi("21.09.2026"), "dushanba ish kuni");
+  /* juma + 1 ish kuni = dushanba */
+  teng(sanaMatn(D.ishKuniQosh("25.09.2026", 1)), "28.09.2026");
 });
 
 /* ============================================================
-   Группа 3. pul() и son() — денежное форматирование.
-   Порог млн/млрд — ровно 1000; разделитель дроби — запятая.
+   2. Formatlash
    ============================================================ */
-guruh("3. pul() / son(): форматирование сумм");
+guruh("2. Pul va son formati");
 
-test("999.9 остаётся в млн: «999,9 mln so'm»", () => {
-  eq(D.pul(999.9), "999,9 mln so'm");
+sinov("999,9 mln so'm, 1 mlrd so'm, 1,48 mlrd so'm", () => {
+  teng(D.pul(999.9), "999,9 mln so'm");
+  teng(D.pul(1000), "1 mlrd so'm");
+  teng(D.pul(1480), "1,48 mlrd so'm");
+  teng(D.pul(520), "520 mln so'm");
 });
 
-test("1000 переходит в млрд без хвоста «,00»: «1 mlrd so'm»", () => {
-  eq(D.pul(1000), "1 mlrd so'm");
-});
-
-test("десятичная запятая в обоих режимах: 1480 и 74.2", () => {
-  eq(D.pul(1480), "1,48 mlrd so'm");
-  eq(D.pul(74.2), "74,2 mln so'm");
-});
-
-test("целые млн теряют «,0»: 520 -> «520 mln so'm», 0 -> «0 mln so'm»", () => {
-  eq(D.pul(520), "520 mln so'm");
-  eq(D.pul(0), "0 mln so'm");
-});
-
-/* ХАРАКТЕРИЗАЦИЯ. Срезается только точный хвост «,00»; «1,50» так
-   и остаётся с нулём («1,5 mlrd so'm» было бы короче). Фиксируем как
-   текущее поведение форматтера, чтобы «улучшение» не прошло молча. */
-test("характеризация: 1500 -> «1,50 mlrd so'm» (хвост «,X0» не срезается)", () => {
-  eq(D.pul(1500), "1,50 mlrd so'm");
-});
-
-test("son(): ru-RU запятая и ровно один знак дроби", () => {
-  eq(D.son(100), "100,0", "дробная часть добивается принудительно");
-  eq(D.son(12.55), "12,6", "больше одного знака не остаётся");
-});
-
-test("son(): группировка тысяч пробельным символом (3 840,4)", () => {
-  const s = D.son(3840.4);
-  eq(s.replace(/\s/g, ""), "3840,4", "цифры и запятая");
-  ok(s !== "3840,4", "между 3 и 840 обязан быть разделитель групп ru-RU");
-  ok(/,4$/.test(s), "десятичный разделитель — запятая");
+sinov("bo'sh qiymat tire bilan ko'rsatiladi, soxta nol chiqmaydi", () => {
+  teng(D.pul(null), "—");
+  teng(D.son(undefined), "—");
+  teng(D.fmt(NaN), "—");
 });
 
 /* ============================================================
-   Группа 4. Реестр объектов OBYEKT_INDEKS (Д-8, ТЗ 3.5).
-   Битая ссылка на объект — это «?GR-...» на странице.
+   3. Me'yoriy muddatlar va zaxira
    ============================================================ */
-guruh("4. Реестр объектов: ссылки и имена");
+guruh("3. Muddatlar va zaxira (MB 2696)");
 
-test("реестр собран из всех трёх источников: YOZUVLAR + SOTUV + ARXIV", () => {
-  D.YOZUVLAR.forEach(y => ok(D.OBYEKT_INDEKS[y.id], "нет записи " + y.id));
-  D.SOTUV.forEach(l => ok(D.OBYEKT_INDEKS[l.id], "нет лота " + l.id));
-  D.ARXIV.forEach(a => ok(D.OBYEKT_INDEKS[a.kod], "нет архивного " + a.kod));
+sinov("garovdan olingan mulk: 365 kun o'tgach zaxira 100%", () => {
+  const y = aktiv({balans: {sana: bugunDan(-365), qiymat: 800, qabulAsosi: "sud"}});
+  const z = D.zaxiraHisobi(y);
+  teng(z.toifa, "umidsiz");
+  teng(z.foiz, 100);
+  teng(z.summa, 800, "zaxira balans qiymatiga teng");
+  teng(z.taxminiy, false, "365 kun qoidasi tasdiqlangan, taxminiy emas");
 });
 
-test("каждый obyektId вторичных коллекций разрешается в реестре", () => {
-  const kolleksiyalar = ["HODISALAR", "HUJJATLAR", "XONALAR", "KORIKLAR",
-    "SUGURTALAR", "BAHOLASHLAR", "TASDIQLAR"];
+sinov("364-kun hali umidsiz emas; oraliq stavka taxminiy belgilangan", () => {
+  const y = aktiv({balans: {sana: bugunDan(-364), qiymat: 800, qabulAsosi: "sud"}});
+  const z = D.zaxiraHisobi(y);
+  ok(z.toifa !== "umidsiz", "364-kunda umidsiz bo'ldi");
+  ok(z.foiz < 100, "364-kunda 100%");
+  teng(z.taxminiy, true, "oraliq stavka buxgalteriya tasdig'ida");
+  ok(/buxgalteriya/.test(z.izoh), "izohda buxgalteriya tasdig'i aytilmagan");
+});
+
+sinov("zaxiraToifasi(365, 365) = umidsiz 100%", () => {
+  const t = D.zaxiraToifasi(365, 365);
+  teng(t.kalit, "umidsiz");
+  teng(t.foiz, 100);
+});
+
+sinov("boshqa foydalanilmayotgan mulk: chegara 3 yil (1095 kun)", () => {
+  const y = aktiv({balans: {sana: bugunDan(-400), qiymat: 100, qabulAsosi: "boshqa"}});
+  teng(D.chegaraKuni(y), 1095);
+  ok(D.zaxiraHisobi(y).toifa !== "umidsiz", "400-kunda boshqa mulk umidsiz bo'ldi");
+  const z = D.zaxiraHisobi(aktiv({balans: {sana: bugunDan(-1095), qiymat: 100, qabulAsosi: "boshqa"}}));
+  teng(z.foiz, 100);
+});
+
+sinov("muddatHisobi: 6 oy imtiyoz, 1 yil va 3 yil sanalari", () => {
+  const m = D.muddatHisobi(aktiv({balans: {sana: "10.01.2026", qiymat: 50, qabulAsosi: "sud"}}));
+  teng(m.balansSana, "10.01.2026");
+  teng(m.soliqImtiyozTugash, "10.07.2026");
+  teng(m.umidsizSana, "10.01.2027");
+  teng(m.uchYilSana, sanaMatn(D.kunQosh("10.01.2026", 1095)));
+  teng(m.turganKun, D.kunFarqi("10.01.2026", D.bugun()));
+  teng(m.qolganKun, 365 - m.turganKun);
+});
+
+sinov("muddat holatlari: imtiyozda, xavf-90, umidsiz, 3 yildan oshgan", () => {
+  const h = kun => D.muddatHisobi(aktiv({balans: {sana: bugunDan(-kun), qiymat: 1, qabulAsosi: "sud"}})).holat;
+  teng(h(10), "imtiyozda");
+  teng(h(200), "normal");
+  teng(h(300), "xavf-90");
+  teng(h(365), "umidsiz");
+  teng(h(1095), "3-yildan-oshgan");
+});
+
+sinov("balans sanasi yo'q: halol 'kiritilmagan', soxta raqam yo'q", () => {
+  const y = aktiv({balans: {sana: null, qiymat: 10}});
+  const m = D.muddatHisobi(y);
+  teng(m.holat, "kiritilmagan");
+  teng(m.turganKun, null);
+  const z = D.zaxiraHisobi(y);
+  teng(z.kiritilmagan, true);
+  teng(z.summa, null);
+});
+
+sinov("namoyish reyestrida har bir aktivning zaxirasi muddatga mos", () => {
+  D.YOZUVLAR.forEach(y => {
+    const m = y.muddat, z = y.zaxira;
+    if (m.holat === "chiqarilgan") return;
+    if (m.turganKun >= m.chegaraKun) teng(z.foiz, 100, y.id + " chegaradan o'tgan");
+    else ok(z.foiz < 100, y.id + ": chegaragacha 100% zaxira");
+  });
+});
+
+/* ============================================================
+   4. Balans aktivi modeli
+   ============================================================ */
+guruh("4. YOZUVLAR: balans aktivi modeli");
+
+const KREDIT_MAYDONLARI = ["qarz", "tasnif", "ish", "kredit", "qarzdor", "ochiqQoldiq", "qoplash", "sud"];
+
+sinov("namoyish reyestri to'liq: 267 aktiv, identifikatorlar takrorlanmaydi", () => {
+  teng(D.MANBA, "shartli");
+  ok(D.YOZUVLAR.length >= 200, "aktivlar soni: " + D.YOZUVLAR.length);
+  teng(new Set(D.YOZUVLAR.map(y => y.id)).size, D.YOZUVLAR.length);
+});
+
+sinov("aktivda kredit maydonlari yo'q", () => {
+  const yomon = [];
+  D.YOZUVLAR.forEach(y => KREDIT_MAYDONLARI.forEach(k => { if (y[k] !== undefined) yomon.push(y.id + "." + k); }));
+  teng(yomon.length, 0, "kredit maydonlari: " + yomon.slice(0, 6).join(", "));
+});
+
+sinov("har bir aktivda balans sanasi, balans qiymati va ma'lum holat bor", () => {
+  const holatlar = D.HOLATLAR.map(h => h.nom);
+  D.YOZUVLAR.forEach(y => {
+    ok(D.sanaOqi(y.balans.sana), y.id + ": balans sanasi o'qilmaydi");
+    ok(y.balans.qiymat > 0, y.id + ": balans qiymati yo'q");
+    ok(holatlar.includes(y.holat), y.id + ": noma'lum holat " + y.holat);
+    ok(D.bosqichInfo(y.bosqich), y.id + ": noma'lum bosqich " + y.bosqich);
+  });
+});
+
+sinov("holatlar ro'yxati kelishilgan sakkizta holatdan iborat", () => {
+  teng(D.HOLATLAR.map(h => h.nom).join(" | "),
+    "Balansda | Rasmiylashtirilmoqda | Sotuvga tayyorlanmoqda | Lotda | Ijarada | Bo'lib to'lashda | Davaktivga o'tkazilgan | Chiqarildi");
+});
+
+sinov("rasmTuri 12 kalitdan biri, turKalit unga mos", () => {
+  teng(D.TUR_KALITLAR.length, 12);
+  D.YOZUVLAR.forEach(y => {
+    const t = D.turInfo(y.rasmTuri);
+    ok(t, y.id + ": noma'lum rasmTuri " + y.rasmTuri);
+    teng(y.turKalit, t.turKalit, y.id + " turKalit");
+  });
+});
+
+sinov("suratlarda chizma yo'llari yo'q (.svg, assets/obyekt/)", () => {
+  const yomon = [];
+  D.YOZUVLAR.forEach(y => {
+    const yollar = [y.rasm, y.rasmKichik].concat((y.rasmlar || []).map(r => (r && (r.yol || r.kichik)) || ""));
+    yollar.forEach(r => { if (r && (/\.svg(\?|$)/i.test(r) || r.includes("assets/obyekt/"))) yomon.push(y.id + ": " + r); });
+  });
+  Object.values(D.OBYEKT_INDEKS).forEach(o => {
+    [o.rasm, o.rasmKichik].forEach(r => { if (r && /\.svg(\?|$)|assets\/obyekt\//i.test(r)) yomon.push("indeks " + o.id + ": " + r); });
+  });
+  teng(yomon.length, 0, yomon.slice(0, 5).join("; "));
+});
+
+sinov("namoyish rejimida surat o'rnida almashtiruvchi rasm yo'q", () => {
+  const rasmli = D.YOZUVLAR.filter(y => y.rasm || (y.rasmlar || []).length);
+  teng(rasmli.length, 0, "namoyishda surat: " + rasmli.slice(0, 3).map(y => y.id).join(", "));
+});
+
+sinov("binosiz aktivda maydon, kommunal va kirish nuqtasi yo'q", () => {
+  const binosiz = D.YOZUVLAR.filter(y => !D.binolimi(y));
+  ok(binosiz.length > 0, "namoyishda binosiz aktiv yo'q");
+  binosiz.forEach(y => {
+    teng(y.maydon.foydali + y.maydon.yer + y.maydon.qurilishOsti, 0, y.id + " maydon");
+    teng(y.kommunal.length, 0, y.id + " kommunal");
+    teng(D.maydonMatn(y), "1 dona");
+    teng(D.obyektNuqtalari(y.id).length, 0, y.id + " kirish nuqtalari");
+  });
+});
+
+sinov("baholanmagan belgisi bozor qiymatiga mos", () => {
+  D.YOZUVLAR.forEach(y => teng(y.qiymat.baholanmagan, y.qiymat.bozor == null, y.id));
+});
+
+sinov("namoyish sanalari bugunga nisbatan: bugun o'zgarsa balansda turgan kun o'zgarmaydi", () => {
+  const boshqa = yukla({window: {MKB_BUGUN: "2027-03-10"}});
+  const farq = [];
+  D.YOZUVLAR.forEach(y => {
+    const b = boshqa.topish(y.id);
+    if (!b) { farq.push(y.id + " yo'q"); return; }
+    if (y.muddat.turganKun !== b.muddat.turganKun) farq.push(y.id + ": " + y.muddat.turganKun + " / " + b.muddat.turganKun);
+  });
+  teng(farq.length, 0, "qattiq sana: " + farq.slice(0, 5).join("; "));
+});
+
+/* ============================================================
+   5. Undiruv ishlari alohida to'plamda
+   ============================================================ */
+guruh("5. UNDIRUV_ISHLAR: balansgacha bo'lgan ishlar");
+
+sinov("namoyishda 30–60 ta faol undiruv ishi", () => {
+  const faol = D.UNDIRUV_ISHLAR.filter(i => i.holat !== "yopilgan");
+  ok(faol.length >= 30 && faol.length <= 60, "faol ishlar: " + faol.length);
+});
+
+sinov("undiruv ishi balans reyestriga tushmaydi", () => {
+  D.UNDIRUV_ISHLAR.forEach(i => {
+    ok(!D.OBYEKT_INDEKS[i.id], i.id + " obyekt reyestrida");
+    ok(!D.topish(i.id), i.id + " YOZUVLAR da");
+  });
+});
+
+sinov("ish bosqichi UNDIRUV_BOSQICHLAR dan, oxirgisi balansga qabul", () => {
+  const k = D.UNDIRUV_BOSQICHLAR.map(b => b.kalit);
+  teng(k[k.length - 1], "qabul");
+  D.UNDIRUV_ISHLAR.forEach(i => ok(k.includes(i.bosqich), i.id + ": noma'lum bosqich " + i.bosqich));
+});
+
+sinov("yopilgan ish yangi aktivga, aktiv esa ishga ishora qiladi", () => {
+  const yopiq = D.UNDIRUV_ISHLAR.filter(i => i.aktivId);
+  ok(yopiq.length > 0, "aktivga aylangan ish yo'q");
+  yopiq.forEach(i => {
+    const a = D.topish(i.aktivId);
+    ok(a, i.id + ": aktiv " + i.aktivId + " topilmadi");
+    teng(a.balans.undiruvIshId, i.id, i.aktivId + " undiruvIshId");
+    teng(i.holat, "yopilgan", i.id + " holati");
+  });
+});
+
+sinov("faol ishda aktiv yo'q; sud majlislari mavjud ishga bog'langan", () => {
+  D.UNDIRUV_ISHLAR.filter(i => i.holat !== "yopilgan").forEach(i => ok(!i.aktivId, i.id + " faol, lekin aktivId bor"));
+  const ishlar = new Set(D.UNDIRUV_ISHLAR.map(i => i.id));
+  ["SUD_MAJLISLAR", "RESTRUKTURIZATSIYA", "MULOQOTLAR"].forEach(k =>
+    (D[k] || []).forEach(r => ok(ishlar.has(r.ishId), k + " / " + r.id + ": ish " + r.ishId + " yo'q")));
+});
+
+/* ============================================================
+   6. Obyekt reyestri va havolalar
+   ============================================================ */
+guruh("6. OBYEKT_INDEKS: havolalar va nomlar");
+
+sinov("har bir aktiv reyestrda", () => {
+  D.YOZUVLAR.forEach(y => ok(D.OBYEKT_INDEKS[y.id], y.id));
+});
+
+sinov("ikkilamchi to'plamlardagi obyektId reyestrda topiladi", () => {
   const uzilgan = [];
-  kolleksiyalar.forEach(nom => D[nom].forEach(r => {
-    if (r.obyektId && !D.OBYEKT_INDEKS[r.obyektId]) uzilgan.push(nom + ":" + r.obyektId);
-  }));
-  D.XARITA_NUQTALARI.forEach(n => {
-    if (n.kod && !D.OBYEKT_INDEKS[n.kod]) uzilgan.push("XARITA_NUQTALARI:" + n.kod);
-  });
-  eq(uzilgan.length, 0, "битые ссылки: " + uzilgan.join(", "));
+  ["HODISALAR", "HUJJATLAR", "KORIKLAR", "SUGURTALAR", "BAHOLASHLAR", "TASDIQLAR", "XARAJATLAR", "LOTLAR",
+   "TAKLIFLAR", "SHARTNOMALAR", "IJARA", "QORIQLASH", "KOMMUNAL_ARIZALAR", "INVENTAR", "SOLIQ", "QURILMALAR",
+   "KIRISH_NUQTALARI", "MENING_VAZIFALARIM", "BILDIRISHLAR", "FAYLLAR"].forEach(k =>
+    (D[k] || []).forEach(r => { if (r.obyektId && !D.OBYEKT_INDEKS[r.obyektId]) uzilgan.push(k + ":" + r.obyektId); }));
+  teng(uzilgan.length, 0, uzilgan.slice(0, 6).join(", "));
 });
 
-test("несуществующий id: obyektNomi даёт префикс «?», obyekt() даёт null", () => {
-  eq(D.obyektNomi("AK-9999/0000"), "?AK-9999/0000");
-  eq(D.obyektNomi("AK-9999/0000", true), "?AK-9999/0000", "короткая форма тоже помечается");
-  eq(D.obyekt("AK-9999/0000"), null);
+sinov("mavjud bo'lmagan id: nom '?' bilan belgilanadi, obyekt() null", () => {
+  teng(D.obyektNomi("AK-9999/0000"), "?AK-9999/0000");
+  teng(D.obyekt("AK-9999/0000"), null);
 });
 
-test("короткое и полное имя различаются; без qisqa короткое падает на nom", () => {
-  eq(D.obyektNomi("AK-2025/0934", true), "Navruz Plaza");
-  eq(D.obyektNomi("AK-2025/0934"), "Navruz Plaza, 3-qavat savdo maydoni");
-  /* архивная запись AK-2023/0088 задана без qisqa */
-  eq(D.obyektNomi("AK-2023/0088", true), D.obyektNomi("AK-2023/0088"));
-});
-
-test("joyNomi: разделитель по умолчанию, свой разделитель, без внутренней части", () => {
-  eq(D.joyNomi("AK-2025/0934", "1-qavat"), "Navruz Plaza, 1-qavat");
-  eq(D.joyNomi("AK-2025/0934", "3-qavat", " · "), "Navruz Plaza · 3-qavat");
-  eq(D.joyNomi("AK-2025/0934"), "Navruz Plaza", "без ichki — только короткое имя");
+sinov("qisqa nom va joyNomi", () => {
+  const y = D.topish("AK-2026/4471");
+  teng(D.obyektNomi(y.id, true), y.qisqa);
+  teng(D.joyNomi(y.id, "1-qavat"), y.qisqa + ", 1-qavat");
 });
 
 /* ============================================================
-   Группа 5. Производные поля YOZUVLAR (Д-1, Д-2, Д-7).
-   Формулы — это и есть норматив ТЗ 4.7: категория из дней,
-   резерв из категории, покрытие = залог/долг.
+   7. Moslik tekshiruvi
    ============================================================ */
-guruh("5. Производные значения YOZUVLAR");
+guruh("7. moslikTekshiruvi(): toza ma'lumot va buzishlar");
 
-test("qarz.jami = asosiy + foiz с точностью 0.05 (все записи)", () => {
-  D.YOZUVLAR.forEach(y =>
-    yaqin(y.qarz.jami, y.qarz.asosiy + y.qarz.foiz, 0.05, y.id));
-});
-
-test("tasnif соответствует диапазону дней своей категории (все записи)", () => {
-  D.YOZUVLAR.forEach(y => {
-    const i = D.TASNIF.findIndex(t => t.kalit === y.tasnif.kalit);
-    ok(i !== -1, y.id + ": категория не из TASNIF");
-    ok(y.qarz.kunlar >= D.TASNIF[i].kundan,
-      y.id + ": " + y.qarz.kunlar + " дн. ниже порога «" + y.tasnif.kalit + "»");
-    const keyingi = D.TASNIF[i + 1];
-    ok(!keyingi || y.qarz.kunlar < keyingi.kundan,
-      y.id + ": " + y.qarz.kunlar + " дн. уже в следующей категории");
-  });
-});
-
-test("zaxira = jami * ставка / 100 c округлением до 0.1 (все записи)", () => {
-  D.YOZUVLAR.forEach(y =>
-    eq(y.zaxira, +(y.qarz.jami * y.tasnif.zaxira / 100).toFixed(1), y.id));
-});
-
-test("qoplash = round(baho/jami*100); ochiqQoldiq >= 0 и равен непокрытой части", () => {
-  D.YOZUVLAR.forEach(y => {
-    eq(y.qoplash, Math.round(y.mulk.baho / y.qarz.jami * 100), y.id + " qoplash");
-    ok(y.ochiqQoldiq >= 0, y.id + ": отрицательный непокрытый остаток");
-    eq(y.ochiqQoldiq,
-      +(y.qarz.jami - Math.min(y.mulk.baho, y.qarz.jami)).toFixed(1),
-      y.id + " ochiqQoldiq");
-  });
-});
-
-/* Контрольные точки текущего датасета, посчитанные вручную. Они дают
-   тесту способность падать независимо от формул выше. */
-test("контрольные точки: AK-2026/4471, AK-2026/0141, AK-2025/1187", () => {
-  const a = D.topish("AK-2026/4471");        /* 214 дн. -> umidsiz, 100% */
-  eq(a.qarz.jami, 486.2); eq(a.tasnif.kalit, "umidsiz");
-  eq(a.zaxira, 486.2); eq(a.qoplash, 107); eq(a.ochiqQoldiq, 0);
-
-  const b = D.topish("AK-2026/0141");        /* 34 дн. -> substandart, 25% */
-  eq(b.qarz.jami, 38.6); eq(b.tasnif.kalit, "substandart");
-  eq(b.zaxira, 9.7, "25% от 38.6 — то же число названо в BILDIRISHLAR");
-  /* baho теперь производная от BAHOLASHLAR (155.0 от 12.05.2026),
-     а не устаревшие 620 из карточки: 155/38.6 = 402% */
-  eq(b.qoplash, 402);
-
-  const c = D.topish("AK-2025/1187");        /* 402 дн. -> umidsiz */
-  eq(c.tasnif.kalit, "umidsiz"); eq(c.zaxira, 3840.4); eq(c.ochiqQoldiq, 0);
-});
-
-/* ============================================================
-   Группа 6. moslikTekshiruvi() — сторож согласованности (П-9).
-   Сторож, который не умеет краснеть, бесполезен: каждый кейс
-   ломает свежезагруженные данные и требует ровно одну ошибку
-   с нужным текстом. После мутаций модуль перечитывается.
-   ============================================================ */
-guruh("6. moslikTekshiruvi(): чистые данные и мутации");
-
-test("на текущих данных нарушений нет", () => {
+sinov("namoyish ma'lumotida buzilish yo'q", () => {
   const M = yukla();
-  const xato = M.moslikTekshiruvi();
-  ok(Array.isArray(xato), "ожидался массив");
-  eq(xato.length, 0, "нарушения: " + xato.join(" | "));
+  const x = M.moslikTekshiruvi();
+  teng(x.length, 0, x.slice(0, 5).join(" | "));
 });
 
-test("мутация: рассинхрон qarz.jami (+0.2) ловится с точной диагностикой", () => {
+sinov("balans qiymati olib tashlansa ushlanadi", () => {
   const M = yukla();
-  M.YOZUVLAR[0].qarz.jami += 0.2;
-  const xato = M.moslikTekshiruvi();
-  /* После добавления инварианта №11 мутация jami даёт ДВЕ ошибки:
-     рассинхрон суммы и производный от него рассинхрон резерва —
-     обе точные, обе с id записи. */
-  ok(xato.length >= 1 && xato.length <= 2, "неожиданное число ошибок: " + xato.join(" | "));
-  ok(xato.some(t => /qarz yig'indisi mos emas/.test(t)), "нет ошибки суммы: " + xato.join(" | "));
-  ok(xato.every(t => t.includes(M.YOZUVLAR[0].id)), "ошибка без id записи: " + xato.join(" | "));
+  M.YOZUVLAR[0].balans.qiymat = 0;
+  const x = M.moslikTekshiruvi();
+  ok(x.some(t => t.includes(M.YOZUVLAR[0].id) && /balans qiymati/.test(t)), x.join(" | "));
 });
 
-test("мутация в пределах допуска ±0.05 (+0.04) нарушением не считается", () => {
-  const M = yukla();
-  M.YOZUVLAR[0].qarz.jami += 0.04;
-  eq(M.moslikTekshiruvi().length, 0);
-});
-
-test("мутация: битый obyektId в HODISALAR ловится как «obyekt havolasi uzilgan»", () => {
+sinov("hodisadagi uzilgan obyektId ushlanadi", () => {
   const M = yukla();
   M.HODISALAR[0].obyektId = "AK-0000/0000";
-  const xato = M.moslikTekshiruvi();
-  eq(xato.length, 1, "ошибки: " + xato.join(" | "));
-  ok(/obyekt havolasi uzilgan/.test(xato[0]), "не тот текст: " + xato[0]);
-  ok(xato[0].includes("AK-0000/0000"), "в ошибке нет битого id: " + xato[0]);
-  ok(xato[0].includes(M.HODISALAR[0].kod), "в ошибке нет кода события: " + xato[0]);
+  const x = M.moslikTekshiruvi();
+  teng(x.length, 1, x.join(" | "));
+  ok(/obyekt havolasi uzilgan/.test(x[0]) && x[0].includes("AK-0000/0000"), x[0]);
 });
 
-test("мутация: статус UCHASTKALAR, оторванный от этапа дела, ловится (Д-2)", () => {
+sinov("e'londan savdogacha 30 kundan kam bo'lsa ushlanadi (VM 18)", () => {
   const M = yukla();
-  const u = M.UCHASTKALAR.find(x => x.kod === "AK-2025/0755");
-  ok(u, "в UCHASTKALAR нет участка AK-2025/0755");
-  u.status = "Ta'minotda";                       /* по этапу ijro должно быть «Musodara jarayonida» */
-  const xato = M.moslikTekshiruvi();
-  eq(xato.length, 1, "ошибки: " + xato.join(" | "));
-  ok(/uchastka statusi ish bosqichiga mos emas/.test(xato[0]), "не тот текст: " + xato[0]);
-  ok(xato[0].includes("AK-2025/0755"), "в ошибке нет кода участка: " + xato[0]);
+  const l = M.LOTLAR.find(x => x.elonSana && x.savdoSana);
+  ok(l, "sanali lot yo'q");
+  l.savdoSana = M.sanaYoz(M.kunQosh(l.elonSana, 29));
+  const x = M.moslikTekshiruvi();
+  ok(x.some(t => t.includes(l.id) && /30 kundan kam/.test(t)), x.join(" | "));
+});
+
+sinov("sud majlisi yo'q ishga bog'lansa ushlanadi", () => {
+  const M = yukla();
+  M.SUD_MAJLISLAR[0].ishId = "UI-0000/0000";
+  const x = M.moslikTekshiruvi();
+  ok(x.some(t => /undiruv ishi topilmadi/.test(t)), x.join(" | "));
+});
+
+sinov("chizma yo'li yozilsa ushlanadi", () => {
+  const M = yukla();
+  M.YOZUVLAR[0].rasm = "assets/obyekt/ombor-1.svg";
+  const x = M.moslikTekshiruvi();
+  ok(x.some(t => /haqiqiy surat emas/.test(t)), x.join(" | "));
 });
 
 /* ============================================================
-   Группа 7. tasnifStatistikasi() — срез портфеля по категориям (Д-7).
-   Свежая загрузка: группа 6 оставила данные испорченными.
+   8. Mahalliy rejim (sun'iy fixture)
+   Haqiqiy mahalliy/obyektlar.json o'qilmaydi: XMLHttpRequest o'rniga
+   quyidagi to'qima ikki yozuv beriladi.
    ============================================================ */
-guruh("7. tasnifStatistikasi(): срез по категориям");
+guruh("8. Mahalliy rejim: sun'iy fixture");
 
-const D7 = yukla();
-
-test("ровно 5 категорий, порядок и ставки повторяют TASNIF", () => {
-  const st = D7.tasnifStatistikasi();
-  eq(st.length, D7.TASNIF.length);
-  st.forEach((s, i) => {
-    eq(s.kalit, D7.TASNIF[i].kalit, "порядок категорий");
-    eq(s.foizStavka, D7.TASNIF[i].zaxira, "ставка категории " + s.kalit);
-  });
-});
-
-test("сумма qarz по категориям сходится с jamiQarz(), zaxira — с jamiZaxira()", () => {
-  const st = D7.tasnifStatistikasi();
-  yaqin(st.reduce((a, s) => a + s.qarz, 0), D7.jamiQarz(), 0.05, "qarz");
-  yaqin(st.reduce((a, s) => a + s.zaxira, 0), D7.jamiZaxira(), 0.05, "zaxira");
-});
-
-test("пустые категории присутствуют в срезе с нулевыми суммами", () => {
-  const st = D7.tasnifStatistikasi();
-  const bosh = st.filter(s => s.son === 0);
-  ok(bosh.length > 0, "в текущих данных ожидались пустые категории (yaxshi, standart)");
-  bosh.forEach(s => {
-    eq(s.qarz, 0, "пустая категория " + s.kalit + " с ненулевым долгом");
-    eq(s.zaxira, 0, "пустая категория " + s.kalit + " с ненулевым резервом");
-  });
-  ok(st.some(s => s.kalit === "yaxshi") && st.some(s => s.kalit === "standart"),
-    "категории без записей выпали из среза");
-});
-
-test("количество записей по категориям в сумме равно числу YOZUVLAR", () => {
-  const st = D7.tasnifStatistikasi();
-  eq(st.reduce((a, s) => a + s.son, 0), D7.YOZUVLAR.length);
-});
-
-/* ============================================================
-   Группа 8. tarjima.js — словарь интерфейса (ТЗ 5.3).
-   Дубликат ключа в объектном литерале JS молча затирается,
-   поэтому дубли ищутся построчным разбором исходника, а счётчики
-   текста и рантайма сверяются между собой.
-   ============================================================ */
-guruh("8. tarjima.js: словарь перевода");
-
-let lugatKesh = null;
-function lugatOl() {
-  if (lugatKesh) return lugatKesh;
-  delete require.cache[require.resolve(TARJIMA_YOLI)];
-  global.window = {};
-  require(TARJIMA_YOLI);
-  const lugat = global.window.MKB_LUGAT;
-
-  const qatorlar = fs.readFileSync(TARJIMA_YOLI, "utf8").split(/\r?\n/);
-  const kalitRe = /^\s*"((?:[^"\\]|\\.)*)"\s*:/;
-  const korilgan = new Map();
-  const dublikatlar = [];
-  let matnKalitlar = 0;
-  qatorlar.forEach((qator, i) => {
-    const m = qator.match(kalitRe);
-    if (!m) return;
-    matnKalitlar++;
-    if (korilgan.has(m[1]))
-      dublikatlar.push("строка " + (i + 1) + " повторяет строку " +
-        (korilgan.get(m[1]) + 1) + ": " + JSON.stringify(m[1].slice(0, 60)));
-    else korilgan.set(m[1], i);
-  });
-  lugatKesh = { lugat, matnKalitlar, dublikatlar };
-  return lugatKesh;
+const FIXTURE = {
+  obyektlar: [
+    {id: "SN-0001", nom: "Sinov ombori", manzil: "Sinov ko'chasi, 1", tur: "Noturar bino", turKalit: "noturar",
+     rasmTuri: "ombor", binoli: true, hudud: "SA", tuman: "Sinov tumani", filial: "SA-01", filialNomi: "Sinov filiali",
+     balansSana: "15.02.2026", balansQiymat: 120.5, foydaliMaydon: 340},
+    {id: "SN-0002", nom: "Sinov avtomobili", tur: "Transport vositasi", turKalit: "transport", rasmTuri: "avto",
+     binoli: false, hudud: "TS", balansSana: "2026-05-01", balansQiymat: 95, sotishQiymat: 110, holat: "Sotuvga tayyorlanmoqda"}
+  ],
+  filiallar: [{id: "SA-01", nom: "Sinov filiali", hudud: "SA", turi: "BXM"}]
+};
+function xotira() {
+  const m = new Map();
+  return {getItem: k => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: k => m.delete(k)};
 }
+function mahalliyYukla() {
+  function XHR() {
+    this.status = 0; this.responseText = "";
+    this.open = (_u, url) => { this.url = String(url); };
+    this.send = () => {
+      if (/^mahalliy\/obyektlar\.json/.test(this.url)) { this.status = 200; this.responseText = JSON.stringify(FIXTURE); }
+      else this.status = 404;
+    };
+  }
+  return yukla({globallar: {
+    location: {hostname: "127.0.0.1", search: "", pathname: "/obyektlar.html", href: "http://127.0.0.1/obyektlar.html"},
+    XMLHttpRequest: XHR, localStorage: xotira(), sessionStorage: xotira()
+  }});
+}
+const M8 = mahalliyYukla();
 
-test("модуль парсится и публикует window.MKB_LUGAT (объект)", () => {
-  const { lugat } = lugatOl();
-  ok(lugat && typeof lugat === "object" && !Array.isArray(lugat));
+sinov("fixture o'qiladi, manba 'mahalliy'", () => {
+  teng(M8.MANBA, "mahalliy");
+  teng(M8.YOZUVLAR.length, 2);
 });
 
-test("ключей не меньше 800", () => {
-  const soni = Object.keys(lugatOl().lugat).length;
-  ok(soni >= 800, "ключей всего " + soni);
+sinov("mahalliy yozuvda kredit maydonlari undefined", () => {
+  M8.YOZUVLAR.forEach(y => KREDIT_MAYDONLARI.forEach(k => teng(y[k], undefined, y.id + "." + k)));
 });
 
-test("построчный разбор видит все записи: счётчик текста равен рантайму", () => {
-  const { lugat, matnKalitlar } = lugatOl();
-  /* если появятся многострочные записи, парсер их потеряет,
-     и этот тест потребует его обновить */
-  eq(matnKalitlar, Object.keys(lugat).length);
+sinov("balans sanasi dd.mm.yyyy ga keltiriladi, qiymat saqlanadi", () => {
+  teng(M8.topish("SN-0002").balans.sana, "01.05.2026");
+  teng(M8.topish("SN-0001").balans.qiymat, 120.5);
+  teng(M8.topish("SN-0002").qiymat.bozor, 110);
+  teng(M8.topish("SN-0001").qiymat.baholanmagan, true);
 });
 
-test("дублей ключей нет (построчно, до схлопывания литералом)", () => {
-  const { dublikatlar } = lugatOl();
-  eq(dublikatlar.length, 0, "\n  " + dublikatlar.join("\n  "));
+sinov("aniq koordinata to'qilmaydi: joy.aniq = false", () => {
+  M8.YOZUVLAR.forEach(y => ok(!y.joy || y.joy.aniq === false, y.id + ": to'qima aniq koordinata"));
 });
 
-test("каждое значение — непустая строка", () => {
-  const { lugat } = lugatOl();
-  const yomon = Object.entries(lugat)
-    .filter(([, v]) => typeof v !== "string" || v.trim() === "")
-    .map(([k]) => k);
-  eq(yomon.length, 0, "пустые переводы: " + yomon.join(", "));
+sinov("namoyish to'plamlari mahalliy rejimda bo'sh", () => {
+  ["UNDIRUV_ISHLAR", "SUD_MAJLISLAR", "LOTLAR", "TAKLIFLAR", "SHARTNOMALAR", "HODISALAR", "KORIKLAR", "XARAJATLAR"].forEach(k =>
+    teng((M8[k] || []).length, 0, k));
 });
 
-/* ---------------- исполнение ---------------- */
+sinov("binosiz mahalliy aktivda kommunal va kirish nuqtasi yo'q", () => {
+  const a = M8.topish("SN-0002");
+  teng(a.kommunal.length, 0);
+  teng(M8.obyektNuqtalari(a.id).length, 0);
+});
+
+sinov("mahalliy rejimda moslik tekshiruvi toza", () => {
+  const x = M8.moslikTekshiruvi();
+  teng(x.length, 0, x.join(" | "));
+});
+
+/* ============================================================
+   9. tarjima.js
+   ============================================================ */
+guruh("9. tarjima.js: lug'at");
+
+const TARJIMA = path.join(ILDIZ, "tarjima.js");
+function lugatOl() {
+  delete require.cache[require.resolve(TARJIMA)];
+  global.window = {};
+  require(TARJIMA);
+  return {L: global.window.MKB_LUGAT, Q: global.window.MKB_TARJIMA_QOIDALARI || []};
+}
+const {L, Q} = lugatOl();
+const TARJIMA_OYNA = global.window;
+const apostrof = m => String(m).replace(/[’ʼʻ`´]/g, "'");
+const tarjimasi = m => {
+  const k = String(m).trim();
+  if (L[k] != null || L[apostrof(k)] != null) return true;
+  return Q.some(([q]) => q.test(k));
+};
+
+sinov("modul yuklanadi va obyekt qaytaradi", () => {
+  ok(L && typeof L === "object" && !Array.isArray(L));
+  ok(Array.isArray(Q), "MKB_TARJIMA_QOIDALARI massiv emas");
+});
+
+sinov("kalitlar takrorlanmaydi (qatorma-qator o'qiladi)", () => {
+  const re = /^\s*"((?:[^"\\]|\\.)*)"\s*:/;
+  const bor = new Map(), takror = [];
+  let soni = 0, ichida = false;
+  /* faqat window.MKB_LUGAT = { ... }; bloki: fayldagi boshqa jadvallar (MKB_RU_SON) lug'at emas */
+  fs.readFileSync(TARJIMA, "utf8").split(/\r?\n/).forEach((q, i) => {
+    if (/^window\.MKB_LUGAT\s*=\s*\{/.test(q)){ ichida = true; return; }
+    if (ichida && /^\};/.test(q)){ ichida = false; return; }
+    if (!ichida) return;
+    const m = q.match(re);
+    if (!m) return;
+    soni++;
+    if (bor.has(m[1])) takror.push((i + 1) + "-qator: " + m[1].slice(0, 60));
+    else bor.set(m[1], i);
+  });
+  teng(takror.length, 0, takror.slice(0, 5).join("; "));
+  teng(soni, Object.keys(L).length, "qatorlar va yuklangan kalitlar soni");
+});
+
+sinov("har bir qiymat bo'sh bo'lmagan ruscha matn", () => {
+  const yomon = Object.entries(L).filter(([, v]) => typeof v !== "string" || !v.trim()).map(([k]) => k);
+  teng(yomon.length, 0, yomon.slice(0, 5).join(", "));
+});
+
+sinov("qoidalar: [RegExp, satr yoki funksiya]", () => {
+  Q.forEach((q, i) => ok(q[0] instanceof RegExp && (typeof q[1] === "string" || typeof q[1] === "function"), i + "-qoida"));
+});
+
+sinov("yadro ma'lumotnomalari nomlarining ruscha tarjimasi bor", () => {
+  const nomlar = [];
+  const qosh = (arr, ...m) => (arr || []).forEach(x => m.forEach(k => { if (x && x[k]) nomlar.push(x[k]); }));
+  qosh(D.HOLATLAR, "nom"); qosh(D.BOSQICHLAR, "nom"); qosh(D.UNDIRUV_BOSQICHLAR, "nom");
+  qosh(D.QABUL_ASOSLARI, "nom"); qosh(D.ASOSIY_TURLAR, "nom"); qosh(D.TUR_KALITLAR, "nom");
+  qosh(D.SOTISH_USULLARI, "nom"); qosh(D.LOT_HOLATLARI, "nom"); qosh(D.XARAJAT_TOIFALARI, "nom");
+  qosh(D.QORIQLASH_TURLARI, "nom"); qosh(D.KOMMUNAL_XIZMATLAR, "nom"); qosh(D.ZAXIRA_TOIFALARI, "nom");
+  qosh(Object.values(D.MUDDAT_HOLATLARI), "nom"); qosh(D.QOIDALAR, "nom"); qosh(D.HISOBOTLAR, "nom", "sub");
+  qosh(D.INTEGRATSIYA_HOLATLARI, "nom"); qosh(D.QURILMA_TURLARI, "nom"); qosh(D.QUVVAT_MANBALARI, "nom");
+  qosh(D.ALOQA_KANALLARI, "nom");
+  const yoq = [...new Set(nomlar)].filter(n => !tarjimasi(n));
+  teng(yoq.length, 0, "tarjimasiz: " + yoq.slice(0, 12).join(" | "));
+});
+
+sinov("bo'limlar va navigatsiya bandlari tarjima qilingan", () => {
+  global.window = {};
+  require(path.join(ILDIZ, "yadro", "daraxt.js"));
+  const dar = global.window.MKB_DARAXT, tab = global.window.MKB_OBYEKT_TABLAR || [];
+  const html = s => s.replace(/&#39;/g, "'");
+  const nomlar = [].concat(...Object.values(dar).map(r => r.map(s => html(s.n))), tab.map(t => html(t.n)));
+  const app = fs.readFileSync(path.join(ILDIZ, "yadro", "app.js"), "utf8");
+  for (const m of app.matchAll(/\{kalit: "[a-z]+",\s+yorliq: "([^"]+)"/g)) nomlar.push(m[1]);
+  const yoq = [...new Set(nomlar)].filter(n => !tarjimasi(n));
+  teng(yoq.length, 0, "tarjimasiz: " + yoq.join(" | "));
+});
+
+sinov("pul va sana ko'rinishlari qoidalar bilan o'giriladi", () => {
+  const qolla = m => { for (const [q, a] of Q) if (q.test(m)) return m.replace(q, a); return m; };
+  teng(qolla("1,48 mlrd so'm"), "1,48 млрд сум");
+  teng(qolla("520 mln so'm"), "520 млн сум");
+  teng(qolla("12 kun"), "12 дн.");
+});
+
+sinov("ruscha son bilan ot kelishadi: 1 запись, 24 записи, 131 запись, 11 записей", () => {
+  const qolla = m => { for (const [q, a] of Q) if (q.test(m)) return m.replace(q, a); return m; };
+  teng(qolla("Jami: 131 ta yozuv"), "Итого: 131 запись");
+  teng(qolla("Jami: 24 ta yozuv"), "Итого: 24 записи");
+  teng(qolla("Jami: 11 ta yozuv"), "Итого: 11 записей");
+  teng(qolla("Jami: 112 ta yozuv"), "Итого: 112 записей");
+  teng(qolla("Jami: 473 ta yozuv"), "Итого: 473 записи");
+  teng(qolla("3 ta kechikkan shartnoma"), "3 просроченных договора");
+  ok(qolla("23 ta hisobot · 22.09.2026 holatiga").indexOf("23 отчёта · ") === 0, "23 отчёта");
+  teng(qolla("2026 yil · 4 ta sotuv"), "2026 год · 4 продажи");
+  teng(qolla("2026-yil · 5 ta sotuv"), "2026 год · 5 продаж");
+  teng(qolla("1 234 ta obyekt"), "1 234 объекта");
+  teng(qolla("21 ta yozuv · 3 ta ustun"), "21 запись · 3 столбца");
+  teng(qolla("21 ta obyektda ko'rik kechikkan"), "осмотр просрочен на 21 объекте");
+  const f = TARJIMA_OYNA.ruKop;
+  ok(typeof f === "function", "window.ruKop yo'q");
+  [[0, "c"], [1, "a"], [2, "b"], [4, "b"], [5, "c"], [11, "c"], [12, "c"], [14, "c"], [21, "a"], [22, "b"], [101, "a"], [111, "c"]]
+    .forEach(([n, s]) => teng(f(n, "a", "b", "c"), s, "ruKop(" + n + ")"));
+  /* son alohida elementda: <b>4</b><span>ta hisobot</span> */
+  const g = TARJIMA_OYNA.mkbSonliIbora;
+  ok(typeof g === "function", "window.mkbSonliIbora yo'q");
+  const tugun = son => { const b = {nodeType: 1, textContent: son, lastChild: {nodeType: 3, nodeValue: son}}; return {parentNode: {previousSibling: b}, previousSibling: null}; };
+  teng(g(tugun("4"), "отчётов"), "отчёта");
+  teng(g(tugun("141"), "активов без устройств"), "актив без устройств");
+  teng(g(tugun("12"), "отчётов"), "отчётов");
+  teng(g(tugun("22.09.2026"), "отчётов"), "отчётов", "sana son emas");
+});
+
+sinov("tarjimasiz qism ichidagi o'lchov birliklari o'giriladi, nom o'zgarmaydi", () => {
+  const f = TARJIMA_OYNA.mkbBirlikTarjima;
+  ok(typeof f === "function", "window.mkbBirlikTarjima yo'q");
+  teng(f("312 mln so'm"), "312 млн сум");
+  teng(f("51,47 mlrd so'm · 12%"), "51,47 млрд сум · 12%");
+  teng(f("9 kun"), "9 дн.");
+  teng(f("Toshkent sh., Sanoat ko'chasi, 4"), "Toshkent sh., Sanoat ko'chasi, 4");
+});
+
+sinov("namoyish aktivlarining tur nomi ruscha interfeysda bir xil o'giriladi", () => {
+  /* qisqa nom — aktiv turi ("Sovutish agregati", "Isuzu yuk avtomobili (2021)"). Manzil (raqamli)
+     va faqat brend-modeldan iborat nom ("Chevrolet Cobalt (2022)") xos nom sifatida qoladi.
+     Undiruv ishidan kelgan garov nomi ("Navruz Plaza") ham xos nom. */
+  global.window = TARJIMA_OYNA;
+  const garov = new Set((D.UNDIRUV_ISHLAR || []).map(i => i.garov && String(i.garov.nom).trim()));
+  const qolla = m => { for (const [q, a] of Q) if (q[2] !== "yigma" && q.test(m)) return m.replace(q, a); return null; };
+  const nomlar = [].concat((D.YOZUVLAR || []).map(y => y.qisqa), (D.ARXIV || []).map(y => y.qisqa))
+    .filter(Boolean).map(n => String(n).trim())
+    .filter(n => !garov.has(n) && !/^Chevrolet /.test(n) && !/\d/.test(n.replace(/ \(\d{4}\)$/, "")));
+  const yoq = [...new Set(nomlar)].filter(n => {
+    if (L[n] != null || L[apostrof(n)] != null) return false;
+    const t = qolla(n);
+    return t == null || t === n;
+  });
+  teng(yoq.length, 0, "tarjimasiz tur nomlari: " + yoq.slice(0, 12).join(" | "));
+});
+
+sinov("xodim ismlari kirillchaga o'girilmaydi", () => {
+  const ism = /^[A-Z][a-z']+(?:ov|ova|ev|eva|yev|yeva|iy|bek|jon) [A-Z][a-z']+(?: —.*)?$/;
+  const yomon = Object.entries(L).filter(([k, v]) => ism.test(k) && /^[А-ЯЁ][а-яё]+ [А-ЯЁ]/.test(v)).map(([k]) => k);
+  teng(yomon.length, 0, yomon.join(", "));
+});
+
+sinov("taklif matni jinsga bog'liq fe'lsiz o'giriladi", () => {
+  global.window = TARJIMA_OYNA;
+  const qolla = m => { for (const [q, a] of Q) if (q.test(m)) return m.replace(q, a); return m; };
+  const t = qolla("Qodirova Malika 470 mln so'm taklif qildi. To'g'ridan-to'g'ri sotish taklifi, PQ-142");
+  teng(t, "Qodirova Malika: предложение на 470 млн сум. Предложение о прямой продаже, ПП-142");
+  teng(qolla("Aliyev Bobur 1,2 mlrd so'm taklif qildi."), "Aliyev Bobur: предложение на 1,2 млрд сум.");
+  teng(qolla("MAN tortuvchi (2020)"), "Тягач MAN (2020)");
+  teng(qolla("Chevrolet Cobalt (2022)"), "Chevrolet Cobalt (2022)");
+});
+
+sinov("tarjimasiz qism ichida ham aktiv turi o'giriladi, xos nom va manzil qoladi", () => {
+  global.window = TARJIMA_OYNA;
+  const f = TARJIMA_OYNA.mkbBirlikTarjima;
+  teng(f("Un tortish liniyasi"), "Мукомольная линия");
+  teng(f("Ish markazi, 5-qavat"), "Бизнес-центр, 5-й этаж");
+  teng(f("Qadoqlash liniyasi · AK-2026/0001"), "Упаковочная линия · AK-2026/0001");
+  teng(f("Isuzu yuk avtomobili (2021)"), "Грузовой автомобиль Isuzu (2021)");
+  teng(f("Navruz Plaza"), "Navruz Plaza");
+  teng(f("Chevrolet Cobalt (2022)"), "Chevrolet Cobalt (2022)");
+  const yoq = (TARJIMA_OYNA.MKB_AKTIV_TURLARI || []).filter(t => L[t] == null);
+  teng(yoq.length, 0, "turlar ro'yxatida lug'atsiz nom: " + yoq.join(" | "));
+});
+
+/* ============================================================
+   Namoyish ma'lumotining ichki izchilligi
+   ============================================================ */
+guruh("Izchillik: hisobot suratlari, muddat, hodisa manbasi, hujjatlar");
+
+sinov("oylik MB hisoboti va zaxira surati keyin sotilgan aktivlarni ham sanaydi", () => {
+  const M = yukla();
+  ok((M.MB_HISOBOTLAR || []).length > 0, "MB hisobotlari yo'q");
+  M.MB_HISOBOTLAR.forEach(h => {
+    const q = M.mbHisobotHisobla(h.davr);
+    teng(h.obyektlarSoni, q.obyektlarSoni, h.davr + " obyektlar soni");
+    teng(h.jamiBalansQiymat, q.jamiBalansQiymat, h.davr + " balans qiymati");
+    teng(h.umidsizSoni, q.umidsizSoni, h.davr + " umidsiz soni");
+  });
+  const davr = M.MB_HISOBOTLAR[M.MB_HISOBOTLAR.length - 1].davr;
+  const saqlangan = M.ZAXIRA_TARIX.filter(z => z.davr === davr).length;
+  teng(saqlangan, M.zaxiraTarixHisobla(davr).length, davr + " zaxira surati");
+});
+
+sinov("soliq imtiyozi holati faqat binoli aktivga beriladi", () => {
+  const avto = aktiv({turKalit: "transport", rasmTuri: "avto", balans: {sana: bugunDan(-30), qiymat: 50, qabulAsosi: "sud"}});
+  ok(!D.binolimi(avto), "sinov aktivi binosiz bo'lishi kerak");
+  const m = D.muddatHisobi(avto);
+  ok(m.holat !== "imtiyozda", "binosiz aktiv imtiyozda deb sanaldi");
+  teng(m.soliqImtiyozTugash, null);
+  D.YOZUVLAR.filter(y => D.muddatHisobi(y).holat === "imtiyozda")
+    .forEach(y => ok(D.binolimi(y), y.id + " binosiz, lekin imtiyozda"));
+});
+
+sinov("qurilma manbali hodisa obyektdagi mos qurilmaga bog'langan", () => {
+  const M = yukla();
+  const q = M.HODISALAR.filter(h => h.manba === "qurilma");
+  ok(q.length > 0, "qurilma manbali hodisa yo'q");
+  q.forEach(h => {
+    const qr = h.qurilmaId && M.qurilma(h.qurilmaId);
+    ok(qr, h.id + ": qurilmaId yo'q yoki topilmadi");
+    teng(qr.obyektId, h.obyektId, h.id + " qurilmasi boshqa obyektda");
+  });
+});
+
+sinov("yetishmaydigan hujjat turi bir marta sanaladi", () => {
+  D.YOZUVLAR.slice(0, 120).forEach(y => {
+    const t = D.hujjatToliqligi(y).kerak.map(k => k.tur);
+    teng(new Set(t).size, t.length, y.id + " majburiy hujjatlarda takror");
+  });
+});
+
+/* ---------- ishga tushirish ---------- */
 let otdi = 0, yiqildi = 0;
 for (const g of guruhlar) {
   console.log("\n" + g.nom);
-  for (const t of g.testlar) {
-    try {
-      t.fn();
-      otdi++;
-      console.log("  [OK]   " + t.nom);
-    } catch (e) {
+  for (const t of g.sinovlar) {
+    try { t.fn(); otdi++; console.log("  [OK]   " + t.nom); }
+    catch (e) {
       yiqildi++;
-      console.log("  [FAIL] " + t.nom);
+      console.log("  [XATO] " + t.nom);
       console.log("         " + String(e.message).split("\n").join("\n         "));
     }
   }
 }
-console.log("\nИтог: пройдено " + otdi + ", провалено " + yiqildi +
-  ", всего " + (otdi + yiqildi));
+console.log("\nYakun: o'tdi " + otdi + ", yiqildi " + yiqildi + ", jami " + (otdi + yiqildi));
 if (yiqildi > 0) process.exit(1);

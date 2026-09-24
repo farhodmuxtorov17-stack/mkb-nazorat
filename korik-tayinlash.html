@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ko'rik tayinlash</title>
-<link rel="stylesheet" href="yadro/app.css?v=26091815">
-<style>@media (max-width:1100px){.panel-tor{grid-template-columns:minmax(0,1fr)!important}}</style>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
 </head>
 <body data-sahifa="korik">
 <div class="qobiq">
@@ -14,66 +13,236 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="korik-rejasi.html">Ko'rik nazorati</a><span class="ajratgich">/</span><span>Tayinlash</span></div>
-    <div class="hs-qator"><h1>Ko'rik tayinlash</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-yorliq"><a href="korik-rejasi.html">Ko'rik va inventarizatsiya</a><span class="ajratgich">/</span><span>Ko'rik tayinlash</span></div>
+    <div class="hs-qator"><h1 id="kt-sarlavha">Ko'rik tayinlash</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <section class="karta" style="max-width:720px"><div class="karta-bosh"><h2>Yangi ko'rik</h2></div>
-  <form id="kt-forma" class="forma-tor">
-    <div class="maydon keng"><label class="maydon-yorliq">Obyekt <b>*</b></label>
-      <div class="kirish"><select name="obyektId" id="kt-obyekt"></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Ko'rik turi <b>*</b></label>
-      <div class="kirish"><select name="tur"><option>Rejali</option><option>Navbatdan tashqari</option><option>Qabul ko'rigi</option><option>Nazorat ko'rigi</option></select></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Sana <b>*</b></label>
-      <div class="kirish"><input name="sana" placeholder="kk-oy, yyyy"></div></div>
-    <div class="maydon"><label class="maydon-yorliq">Inspektor <b>*</b></label>
-      <div class="kirish"><select name="inspektor"><option>Sattorov Jasur</option><option>Karimova Feruza</option><option>Yo'ldoshev Sardor</option><option>Tosheva Barno</option></select></div></div>
-    <div class="maydon keng"><label class="maydon-yorliq">Izoh</label>
-      <textarea class="kirish-matn" name="izoh" placeholder="Ko'rik maqsadi va e'tibor beriladigan jihatlar"></textarea></div>
-    <div class="keng" style="display:flex;justify-content:flex-end;gap:10px">
-      <a class="tugma tugma-oq" id="kt-bekor" href="korik-rejasi.html">Bekor qilish</a>
-      <button class="tugma tugma-asosiy" type="submit"><svg class="ic"><use href="#i-korik"/></svg>Rejaga qo'shish</button></div>
-  </form></section>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="korik-rejasi.html">Ko'rik rejasi</a><a href="korik-kechikkan.html">Kechikkanlar</a><a href="korik-tarixi.html">Ko'riklar tarixi</a><a href="korik-tayinlash.html" class="faol" aria-current="page">Ko'rik tayinlash</a><a href="inventarizatsiya.html">Inventarizatsiya</a></nav>
+
+  <div class="tor-2">
+    <section class="karta">
+      <div class="karta-bosh"><h2 id="kt-forma-sarlavha">Yangi ko'rik</h2></div>
+      <div id="kt-natija" hidden></div>
+      <form id="kt-forma" class="forma-tor" novalidate data-sayohat="forma">
+        <div class="maydon keng"><label class="maydon-yorliq" for="kt-obyekt">Obyekt <b>*</b></label>
+          <div class="kirish"><svg class="ic"><use href="#ik-izlash"/></svg><input id="kt-obyekt" name="obyekt" list="kt-obyektlar" autocomplete="off" required data-xato="Obyektni ro'yxatdan tanlang" placeholder="Nomi yoki raqamini yozing"></div>
+          <datalist id="kt-obyektlar"></datalist>
+          <span class="maydon-izoh" id="kt-obyekt-izoh">Ro'yxatdan tanlang</span></div>
+        <div class="maydon"><label class="maydon-yorliq" for="kt-turi">Ko'rik turi <b>*</b></label>
+          <div class="kirish"><select id="kt-turi" name="turi" required><option>Rejali</option><option>Birlamchi</option><option>Navbatdan tashqari</option><option>Sotuv oldi</option></select></div></div>
+        <div class="maydon"><label class="maydon-yorliq" for="kt-sana">Sana <b>*</b></label>
+          <div class="kirish"><input id="kt-sana" name="sana" type="date" required></div>
+          <span class="maydon-izoh" id="kt-sana-izoh"></span></div>
+        <div class="maydon keng"><label class="maydon-yorliq" for="kt-inspektor">Inspektor <b>*</b></label>
+          <div class="kirish"><select id="kt-inspektor" name="inspektor" required data-xato="Inspektorni tanlang"><option value="">Tanlang</option></select></div>
+          <span class="maydon-izoh" id="kt-ins-izoh"></span></div>
+        <div class="maydon keng"><label class="maydon-yorliq" for="kt-izoh">Topshiriq</label>
+          <textarea class="kirish-matn" id="kt-izoh" name="izoh" style="min-height:84px" placeholder="Nimaga e'tibor berish kerak"></textarea></div>
+        <div class="keng" id="kt-takror" hidden></div>
+        <div class="keng" style="display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap">
+          <a class="tugma tugma-oq" href="korik-rejasi.html">Bekor qilish</a>
+          <button class="tugma tugma-asosiy" type="submit" id="kt-saqla" data-yozadi data-saqla data-sayohat="tayinlash"><svg class="ic"><use href="#ik-kalendar"/></svg><span>Tayinlash</span></button>
+        </div>
+      </form>
+    </section>
+    <div class="ustun">
+      <section class="karta">
+        <div class="karta-bosh"><h2>Obyekt</h2></div>
+        <div id="kt-obyekt-karta"></div>
+      </section>
+      <section class="karta" data-sayohat="bandlik">
+        <div class="karta-bosh"><h2>Inspektorlar bandligi</h2><span class="soni">14 kun</span></div>
+        <div id="kt-bandlik"></div>
+      </section>
+    </div>
+  </div>
 </main>
 </div>
 </div>
-<script src="yadro/bino.js?v=26091815"></script>
-<script src="malumot.js?v=26091815"></script>
-<script src="malumot-qoshimcha.js?v=26091815"></script>
-<script src="malumot-kengaytma.js?v=26091815"></script>
-<script src="malumot-kirish.js?v=26091815"></script>
-<script src="malumot-indeks.js?v=26091815"></script>
-<script src="tarjima.js?v=26091815"></script>
-<script src="yadro/ikonlar.js?v=26091815"></script>
-<script src="yadro/daraxt.js?v=26091815"></script>
-<script src="yadro/chizma.js?v=26091815"></script>
-<script src="yadro/qollanma.js?v=26091815"></script>
-<script src="yadro/api.js?v=26091815"></script>
-<script src="yadro/app.js?v=26091815"></script>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
 <script>
-document.addEventListener("mkb:tayyor", async () => {
-  const yoz = await MKBapi.royxat("YOZUVLAR");
-  const oldindan = new URLSearchParams(location.search).get("id");
-  document.getElementById("kt-obyekt").innerHTML = yoz.map(y =>
-    '<option value="' + y.id + '"' + (y.id === oldindan ? " selected" : "") + '>' +
-    y.id + " — " + y.mulk.qisqa + '</option>').join("");
-  /* obyekt kartochkasidan kelingan bo'lsa, o'sha obyektning ko'riklar tabiga qaytiladi */
-  const qaytish = oldindan && yoz.some(y => y.id === oldindan)
-    ? "obyekt-koriklar.html?id=" + encodeURIComponent(oldindan) : "korik-rejasi.html";
-  document.getElementById("kt-bekor").href = qaytish;
-  document.getElementById("kt-forma").addEventListener("submit", async e => {
+(() => {
+  const D = MKB_DATA, esc = MKB.esc;
+  let boshlandi = false;
+  MKB.sahifaYukla({joylar: {"kt-obyekt-karta": ["qator", 3], "kt-bandlik": ["qator", 4]}, xato: "Ko'rik ma'lumotini yuklab bo'lmadi",
+    ish: async () => { await MKB.kolYukla(["KORIKLAR"]); if (!boshlandi){ boshla(); boshlandi = true; } else obyektKartaQayta(); }});
+  let obyektKartaQayta = () => {};
+  function boshla(){
+  const bugun = () => { const b = D.bugun(); return new Date(b.getFullYear(), b.getMonth(), b.getDate()); };
+  const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const b = bugun();
+  const url = new URLSearchParams(location.search);
+  const forma = document.getElementById("kt-forma");
+  const el = id => document.getElementById(id);
+  const davri = y => D.binolimi(y) ? D.param("korikDavriBino") : D.param("korikDavriTransport");
+  const ochiqmi = k => k.holat !== "otkazildi";
+  const kechikkanmi = k => ochiqmi(k) && (k.holat === "kechikkan" || D.sanaOqi(k.sana) < b);
+  const inspektorlar = (D.FOYDLAR || []).filter(f => f.rol === "Ko'rik va xavfsizlik inspektori" && f.faol !== false).map(f => f.nom);
+  const aktivlar = MKB.doira(D.YOZUVLAR.filter(y => y.holat !== "Chiqarildi"));
+  const yorliq = y => y.id + " — " + (y.qisqa || y.nom);
+
+  el("hs-meta").innerHTML = "<span>Bugun</span> <span data-tarjimasiz>" + D.sanaYoz(b) + "</span>";
+  el("kt-obyektlar").innerHTML = aktivlar.map(y => '<option value="' + esc(yorliq(y)) + '">').join("");
+  el("kt-inspektor").innerHTML = '<option value="">Tanlang</option>' + inspektorlar.map(n => "<option>" + esc(n) + "</option>").join("");
+  el("kt-sana").min = iso(b);
+  el("kt-sana").value = iso(D.kunQosh(b, 1));
+
+  /* Tahrirlash rejimi: ?id=KO-... (qayta tayinlash, sanani ko'chirish) */
+  let tahrir = url.get("id") ? (D.KORIKLAR || []).find(k => k.id === url.get("id")) : null;
+  if (tahrir && !ochiqmi(tahrir)){ location.replace("korik-akti.html?id=" + encodeURIComponent(tahrir.id)); return; }
+  if (tahrir && !MKB.doira([tahrir]).length) tahrir = null;
+
+  function tanlanganObyekt(){
+    const v = el("kt-obyekt").value.trim();
+    const id = v.split(" — ")[0];
+    return aktivlar.find(y => y.id === id) || aktivlar.find(y => yorliq(y) === v) || null;
+  }
+  function ochiqKorik(y){
+    return (D.KORIKLAR || []).filter(k => k.obyektId === y.id && ochiqmi(k) && (!tahrir || k.id !== tahrir.id))
+      .sort((a, c) => D.sanaOqi(a.sana) - D.sanaOqi(c.sana))[0] || null;
+  }
+
+  function obyektKarta(){
+    const y = tanlanganObyekt();
+    const joy = el("kt-obyekt-karta"), tk = el("kt-takror");
+    if (!y){ joy.innerHTML = MKB.boshHolat("korik", "Obyekt tanlanmagan", "Nomi yoki raqamini yozing"); tk.hidden = true; tarjimaQil(joy); bandlik(); return; }
+    const kl = (D.KORIKLAR || []).filter(k => k.obyektId === y.id);
+    const oxirgi = kl.filter(k => k.holat === "otkazildi").sort((a, c) => D.sanaOqi(c.sana) - D.sanaOqi(a.sana))[0];
+    const keyingi = oxirgi ? D.kunQosh(D.sanaOqi(oxirgi.sana), davri(y)) : null;
+    joy.innerHTML = '<div class="qator" style="margin-top:-8px">' + MKB.obyektSurati(y, {kichik: true, sinf: "media"}) +
+        '<span class="matn"><b>' + esc(y.qisqa || y.nom) + '</b><span><span class="kod-mono" data-tarjimasiz>' + esc(y.id) + "</span> · <span>" + esc(y.hudud || "") + "</span></span></span></div>" +
+      '<dl class="malumot-royxat">' +
+        "<dt>Davr</dt><dd><span>har</span> <span data-tarjimasiz>" + davri(y) + "</span> <span>kunda</span></dd>" +
+        "<dt>Oxirgi ko'rik</dt><dd>" + (oxirgi ? '<span data-tarjimasiz>' + esc(oxirgi.sana) + "</span>" : "<span>O'tkazilmagan</span>") + "</dd>" +
+        "<dt>Navbatdagi muddat</dt><dd>" + (keyingi ? '<span data-tarjimasiz>' + D.sanaYoz(keyingi) + "</span>" : "<span>Birlamchi ko'rik kerak</span>") + "</dd>" +
+        "<dt>Mas'ul</dt><dd>" + esc(y.masul || "—") + "</dd>" +
+      "</dl>";
+    if (!oxirgi && !tahrir) el("kt-turi").value = "Birlamchi";
+    if (!tahrir && oxirgi && keyingi > b && !url.get("sana")) el("kt-sana").value = iso(keyingi);
+
+    /* Takror tekshiruvi: obyektda ochiq ko'rik bo'lsa yangisi yaratilmaydi, mavjudi ko'chiriladi */
+    const ochiq = ochiqKorik(y);
+    const turi = el("kt-turi").value;
+    if (ochiq && !(turi === "Navbatdan tashqari" && (ochiq.korikTuri || ochiq.tur) !== "Navbatdan tashqari")){
+      tk.hidden = false;
+      tk.innerHTML = '<div class="qator" style="margin:0;background:var(--sariq);border-radius:var(--r-kichik);padding:12px 14px">' +
+        '<span class="belgi" style="background:var(--oq)">' + ik("ogoh") + "</span>" +
+        '<span class="matn"><b>Bu obyektda ochiq ko\'rik bor</b><span><span class="kod-mono" data-tarjimasiz>' + esc(ochiq.id) + "</span> · <span data-tarjimasiz>" + esc(ochiq.sana) + "</span> · <span>" + esc(ochiq.inspektor || "Tayinlanmagan") + "</span>" +
+        (kechikkanmi(ochiq) ? " · <span>kechikkan</span>" : "") + "</span></span></div>" +
+        '<p class="maydon-izoh" style="margin:8px 2px 0">Yangi ko\'rik yaratilmaydi. Saqlansa, mavjud ko\'rik yangi sana va inspektorga ko\'chiriladi.</p>';
+      el("kt-saqla").querySelector("span").textContent = "Ko'rikni ko'chirish";
+      forma.dataset.mavjud = ochiq.id;
+    } else {
+      tk.hidden = true;
+      delete forma.dataset.mavjud;
+      el("kt-saqla").querySelector("span").textContent = tahrir ? "Saqlash" : "Tayinlash";
+    }
+    bandlik();
+    tarjimaQil(el("kt-forma").parentNode);
+    tarjimaQil(joy);
+  }
+
+  function bandlik(){
+    const oxir = D.kunQosh(b, 14);
+    const sana = D.sanaOqi(el("kt-sana").value);
+    const sanaS = sana ? D.sanaYoz(sana) : null;
+    const r = inspektorlar.map(n => {
+      const ochiq = (D.KORIKLAR || []).filter(k => k.inspektor === n && ochiqmi(k));
+      const oraliq = ochiq.filter(k => { const s = D.sanaOqi(k.sana); return s >= b && s <= oxir; }).length;
+      const shuKuni = sanaS ? ochiq.filter(k => k.sana === sanaS).length : 0;
+      return {n, oraliq, kech: ochiq.filter(kechikkanmi).length, shuKuni};
+    });
+    el("kt-bandlik").innerHTML = r.length ? r.map(x =>
+      '<div class="qator"><span class="belgi siyoh">' + esc(x.n.split(" ").map(s => s[0]).join("").slice(0, 2)) + "</span>" +
+      '<span class="matn"><b>' + esc(x.n) + "</b><span><span data-tarjimasiz>" + x.oraliq + "</span> <span>ta ko'rik rejada</span>" +
+      (x.kech ? " · <span data-tarjimasiz>" + x.kech + "</span> <span>ta kechikkan</span>" : "") + "</span></span>" +
+      '<span class="ong">' + (sanaS ? '<span class="chip chip-kichik ' + (x.shuKuni >= 4 ? "chip-xavf" : x.shuKuni ? "chip-sariq" : "chip-oq") + '"><span data-tarjimasiz>' + x.shuKuni + "</span>&nbsp;<span>shu kuni</span></span>" : "") + "</span></div>").join("")
+      : MKB.boshHolat("foyd", "Faol inspektor yo'q", "Foydalanuvchilar bo'limida inspektor rolini bering");
+    const tanl = r.find(x => x.n === el("kt-inspektor").value);
+    el("kt-ins-izoh").textContent = tanl && sanaS ? "Shu kuni " + tanl.shuKuni + " ta ko'rik rejada" : "";
+    const s = D.sanaOqi(el("kt-sana").value);
+    el("kt-sana-izoh").textContent = s && !D.ishKunimi(s) ? "Dam olish yoki bayram kuni" : "";
+    tarjimaQil(el("kt-bandlik"));
+  }
+
+  if (tahrir){
+    const y = D.topish(tahrir.obyektId);
+    el("kt-sarlavha").textContent = "Ko'rikni qayta tayinlash";
+    el("kt-forma-sarlavha").innerHTML = '<span class="kod-mono" data-tarjimasiz>' + esc(tahrir.id) + "</span>";
+    if (y) el("kt-obyekt").value = yorliq(y);
+    el("kt-obyekt").readOnly = true;
+    el("kt-turi").value = tahrir.korikTuri || tahrir.tur || "Rejali";
+    const s = D.sanaOqi(tahrir.sana);
+    el("kt-sana").value = iso(s && s >= b ? s : D.kunQosh(b, 1));
+    if (tahrir.inspektor && inspektorlar.includes(tahrir.inspektor)) el("kt-inspektor").value = tahrir.inspektor;
+  } else if (url.get("obyekt")){
+    const y = aktivlar.find(x => x.id === url.get("obyekt"));
+    if (y) el("kt-obyekt").value = yorliq(y);
+  }
+  ["kt-obyekt", "kt-turi"].forEach(i => el(i).addEventListener("change", obyektKarta));
+  el("kt-obyekt").addEventListener("input", () => { if (tanlanganObyekt()) obyektKarta(); });
+  ["kt-sana", "kt-inspektor"].forEach(i => el(i).addEventListener("change", bandlik));
+  obyektKarta();
+
+  obyektKartaQayta = obyektKarta;
+  const qoriq = MKB.formaQoriqla(forma, {nom: "Ko'rik tayinlash"});
+
+  forma.addEventListener("submit", async e => {
     e.preventDefault();
-    const q = MKB.forma(e.target, ["obyektId", "tur", "sana", "inspektor"]);
-    if (!q) return;
-    /* takrorlanmas raqam: mavjud eng katta tartib raqamidan keyingisi */
-    const bor = await MKBapi.royxat("KORIKLAR");
-    const maks = bor.reduce((m, k) => { const s = /\/(\d+)$/.exec(String(k.id || "")); return s ? Math.max(m, +s[1]) : m; }, 0);
-    const id = "KO-" + new Date().getFullYear() + "/" + String(maks + 1).padStart(4, "0");
-    await MKBapi.yangi("KORIKLAR", {id, obyektId: q.obyektId, tur: q.tur,
-      sana: q.sana, holat: "rejada", inspektor: q.inspektor, izoh: q.izoh || ""});
-    MKB.toast(id + " raqamli ko'rik rejaga kiritildi");
-    setTimeout(() => location.href = q.obyektId === oldindan ? qaytish : "korik-rejasi.html", 700);
+    const r = MKB.formaTekshir(forma, {
+      obyekt: () => tanlanganObyekt() ? true : "Obyektni ro'yxatdan tanlang",
+      sana: v => { const s = D.sanaOqi(v); return s && s >= b ? true : "Rejalashtirilgan sana o'tgan bo'lishi mumkin emas"; },
+    });
+    if (!r) return;
+    const q = r.qiymatlar;
+    const y = tanlanganObyekt();
+    const sana = D.sanaYoz(D.sanaOqi(q.sana));
+    const btn = el("kt-saqla");
+    try{
+      await MKB.band(btn, async () => {
+        let id, xabar;
+        const mavjud = tahrir ? tahrir.id : forma.dataset.mavjud;
+        if (mavjud){
+          const k = (D.KORIKLAR || []).find(x => x.id === mavjud);
+          await MKBapi.yangilash("KORIKLAR", mavjud, {sana, inspektor: q.inspektor, holat: "rejada", korikTuri: q.turi, tur: q.turi,
+            izoh: (k && k.sana !== sana ? "Ko'chirildi: " + k.sana + " → " + sana + ". " : "Qayta tayinlandi. ") + q.izoh});
+          id = mavjud; xabar = "Ko'rik " + id + " yangilandi";
+        } else {
+          id = await MKB.keyingiId("KORIKLAR", "KO-" + b.getFullYear() + "/", 4);
+          await MKBapi.yangi("KORIKLAR", {id, obyektId: y.id, korikTuri: q.turi, tur: q.turi, sana, holat: "rejada", inspektor: q.inspektor,
+            holatBall: null, chekList: [], kamchiliklar: "", xarajatTaklifi: null, keyingiKorikSana: null, xulosa: "", izoh: q.izoh});
+          xabar = "Ko'rik " + id + " tayinlandi";
+        }
+        qoriq.toza();
+        MKB.toast(xabar);
+        forma.hidden = true;
+        const n = el("kt-natija");
+        n.hidden = false;
+        n.innerHTML = '<div class="bosh-holat">' + ik("tasdiq") + "<b>" + (mavjud ? "Ko'rik yangilandi" : "Ko'rik tayinlandi") + "</b>" +
+          '<span><span class="kod-mono" data-tarjimasiz>' + esc(id) + "</span> · <span>" + esc(y.qisqa || y.nom) + "</span> · <span data-tarjimasiz>" + sana + "</span> · <span>" + esc(q.inspektor) + "</span></span>" +
+          '<span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px">' +
+            '<a class="tugma tugma-oq" href="korik-rejasi.html">Rejaga o&#39;tish</a>' +
+            '<a class="tugma tugma-asosiy" href="korik-tayinlash.html">Yana tayinlash</a></span></div>';
+        tarjimaQil(n);
+        bandlik();
+      });
+    }catch(err){
+      MKB.formaXato(forma, "Ko'rik saqlanmadi: " + err.message);
+    }
   });
-});
+  }
+})();
 </script>
 </body>
 </html>
