@@ -32,7 +32,7 @@
 
   <div class="tor-2-teng">
     <section class="karta" aria-label="Eksport sozlamalari">
-      <div class="karta-bosh"><h2>Nimani yuklab olasiz</h2></div>
+      <div class="karta-bosh"><h2 data-ikonka="yuklab">Nimani yuklab olasiz</h2></div>
       <form id="ek-forma" class="forma-tor" novalidate data-sayohat="forma">
         <div class="maydon keng"><label class="maydon-yorliq" for="ek-kol">To'plam <b>*</b></label>
           <div class="kirish"><select id="ek-kol" name="kol"></select></div>
@@ -51,7 +51,7 @@
       <div class="ek-amal"><button type="button" class="tugma tugma-asosiy" id="ek-yukla" data-sayohat="yuklab"><svg class="ic"><use href="#ik-yuklab"/></svg>Faylni yuklab olish</button></div>
     </section>
     <section class="karta" aria-label="Oldindan ko'rish" data-sayohat="korish">
-      <div class="karta-bosh"><h2>Oldindan ko'rish</h2><span class="soni" id="ek-korish-soni"></span></div>
+      <div class="karta-bosh"><h2 data-ikonka="korish">Oldindan ko'rish</h2><span class="soni" id="ek-korish-soni"></span></div>
       <div id="ek-korish"></div>
     </section>
   </div>
@@ -110,7 +110,7 @@ async function boshla(){
         ["Qabul asosi", y => nom("QABUL_ASOSLARI", yol(y, "balans.qabulAsosi"))], ["Asos hujjati", y => [yol(y, "balans.asosHujjat.raqam"), yol(y, "balans.asosHujjat.sana")].filter(Boolean).join(", ")],
         ["Bozor qiymati, mln so'm", y => son(yol(y, "qiymat.bozor"))], ["Tugatish qiymati, mln so'm", y => son(yol(y, "qiymat.tugatish"))], ["Baholash sanasi", k("qiymat.bahoSana")],
         ["Maydon", y => D.maydonMatn ? D.maydonMatn(y) : ""], ["Kadastr raqami", k("huquq.kadastrRaqami")], ["Davlat raqami", k("huquq.davlatRaqami")],
-        ["Balansda, kun", y => muddat(y).turganKun ?? ""], ["Umidsiz toifa sanasi", y => muddat(y).chegaraSana || ""], ["Muddat holati", y => muddat(y).holatNomi || ""],
+        ["Balansda, kun", y => muddat(y).turganKun ?? ""], ["Me'yoriy muddat sanasi", y => muddat(y).chegaraSana || ""], ["Muddat holati", y => muddat(y).holatNomi || ""],
         ["Zaxira toifasi", y => zaxira(y).toifaNomi || ""], ["Zaxira, %", y => son(zaxira(y).foiz)], ["Zaxira, mln so'm", y => son(zaxira(y).summa)],
         ["Qo'riqlash", y => holat(yol(y, "himoya.qoriqlashTuri"))], ["Sotish usuli", y => nom("SOTISH_USULLARI", yol(y, "sotuv.usul"))]]},
     {kol: "HUJJATLAR", bolim: "aktivlar", nom: "Hujjatlar", fayl: "hujjatlar", sana: x => D.sanaOqi(x.sana),
@@ -129,7 +129,7 @@ async function boshla(){
         ["Holat bahosi", k("holatBall")], ["Kamchiliklar", k("kamchiliklar")], ["Xarajat taklifi, mln so'm", x => son(x.xarajatTaklifi)], ["Keyingi ko'rik", k("keyingiKorikSana")], ["Xulosa", k("xulosa")]])},
     {kol: "INVENTAR", bolim: "korik", nom: "Inventar ro'yxati", fayl: "inventar", sana: x => D.sanaOqi(x.oxirgiSanash), davrIzoh: "oxirgi sanash bo'yicha",
       ustunlar: [["Inventar raqami", k("inventarRaqam")]].concat(OBYEKT, [["Nomi", k("nom")], ["Marka", k("marka")], ["Model", k("model")], ["Yil", k("yil")], ["VIN", k("vin")],
-        ["Kilometraj yoki motosoat", k("motosoatYokiKm")], ["Butlik", x => ha(x.butlik)], ["Akkumulyator", k("akkumulyator")], ["Kalitlar", k("kalit")], ["Saqlash joyi", k("saqlashJoyi")],
+        ["Kilometraj yoki motosoat", k("motosoatYokiKm")], ["To'liqligi", x => ha(x.butlik)], ["Akkumulyator", k("akkumulyator")], ["Kalitlar", k("kalit")], ["Saqlash joyi", k("saqlashJoyi")],
         ["Holat bahosi", k("holatBall")], ["Oxirgi sanash", k("oxirgiSanash")]])},
     {kol: "INVENTARIZATSIYALAR", bolim: "korik", nom: "Inventarizatsiyalar", fayl: "inventarizatsiyalar", sana: x => D.sanaOqi(x.sana),
       ustunlar: [["Raqam", k("id")], ["Sana", k("sana")], ["Turi", k("turi")], ["Komissiya", x => (x.komissiya || []).join(", ")], ["Obyektlar", x => (x.obyektlar || []).length],
@@ -155,7 +155,7 @@ async function boshla(){
         ["Ishtirokchilar", k("ishtirokchilarSoni")], ["Qaror raqami", k("qarorRaqami")]])},
     {kol: "TAKLIFLAR", bolim: "realizatsiya", nom: "Takliflar", fayl: "takliflar", sana: x => D.sanaOqi(x.sana),
       ustunlar: [["Taklif", k("id")], ["Sana", k("sana")]].concat(OBYEKT, [["Lot", k("lotId")], ["Xaridor", k("xaridor")], ["Xaridor turi", k("xaridorTuri")], ["Summa, mln so'm", x => son(x.summa)],
-        ["To'lov sharti", k("tolovSharti")], ["AML natijasi", x => holat(x.amlNatija)], ["Affillangan", x => ha(x.affillanganlik)], ["Qaror raqami", k("qarorRaqami")], ["Holat", x => holat(x.holat)]])},
+        ["To'lov sharti", k("tolovSharti")], ["Xaridor tekshiruvi natijasi", x => holat(x.amlNatija)], ["Affillangan", x => ha(x.affillanganlik)], ["Qaror raqami", k("qarorRaqami")], ["Holat", x => holat(x.holat)]])},
     {kol: "SHARTNOMALAR", bolim: "realizatsiya", nom: "Sotuv shartnomalari", fayl: "shartnomalar", sana: x => D.sanaOqi(x.sana),
       ustunlar: [["Shartnoma", k("id")], ["Sana", k("sana")]].concat(OBYEKT, [["Lot", k("lotId")], ["Taklif", k("taklifId")], ["Xaridor", k("xaridor")], ["Narx, mln so'm", x => son(x.narx)],
         ["Avans, mln so'm", x => son(x.avans)], ["Sotish usuli", x => nom("SOTISH_USULLARI", x.sotishUsuli)], ["To'lovlar soni", x => (x.jadval || []).length],
@@ -193,7 +193,7 @@ async function boshla(){
     {kol: "MB_HISOBOTLAR", bolim: "hisobot", nom: "Markaziy bank hisobotlari", fayl: "mb-hisobotlari", sana: x => oyBosh(x.davr), davrIzoh: "hisobot oyi bo'yicha",
       ustunlar: [["Davr", k("davr")], ["Topshirish muddati", k("muddat")], ["Topshirilgan", k("topshirilganSana")], ["Obyektlar soni", k("obyektlarSoni")],
         ["Jami balans qiymati, mln so'm", x => son(x.jamiBalansQiymat)], ["1-darajali kapital, mlrd so'm", x => son(x.kapital1Daraja)], ["Kapitalga nisbati", x => son(x.kapitalgaNisbat)],
-        ["Umidsiz toifada", k("umidsizSoni")], ["Holat", x => holat(x.holat)]]},
+        ["Me'yoriy muddat o'tgan", k("umidsizSoni")], ["Holat", x => holat(x.holat)]]},
     {kol: "TASDIQLAR", bolim: "vazifa", nom: "Qarorlar", fayl: "qarorlar", sana: x => D.sanaOqi(x.sana),
       ustunlar: [["Raqam", k("id")], ["Sana", k("sana")], ["Masala", k("sarlavha")], ["Obyekt kodi", k("obyektId")], ["Manba", k("manbaId")], ["Summa, mln so'm", x => son(x.summa)],
         ["Muallif", k("muallif")], ["Mas'ul", k("masulRol")], ["Javob muddati", k("javobMuddati")], ["Holat", x => holat(x.holat)], ["Qaror sanasi", k("qarorSana")], ["Sabab", k("sabab")]]},

@@ -12,7 +12,7 @@
 .video-panel{min-height:190px}
 .video-panel span{max-width:340px}
 .qadam-bosh{display:flex;align-items:center;gap:10px;margin:18px 0 10px;font-size:13.5px;font-weight:500}
-.qadam-bosh i{font-style:normal;width:24px;height:24px;border-radius:99px;display:grid;place-items:center;background:var(--siyoh);color:var(--oq);font-size:12px;flex:none}
+.qadam-bosh i{font-style:normal;width:24px;height:24px;border-radius:var(--r-pilyula);display:grid;place-items:center;background:var(--siyoh);color:var(--oq);font-size:12px;flex:none}
 .qadam-bosh:first-child{margin-top:0}
 .ruxsat-xulosa{font-size:13px;line-height:1.55;padding:10px 14px;border-radius:14px;background:var(--plitka);margin-top:10px}
 .ruxsat-xulosa.yoq{background:var(--xavf-fon);color:var(--pushti-matn)}
@@ -41,34 +41,34 @@
   <div class="tor-2" id="qr-tor">
     <div class="ustun">
       <section class="karta" id="qr-ochish-karta" hidden aria-labelledby="qr-o-s" data-sayohat="masofadan" data-tur="qurilma-masofadan">
-        <div class="karta-bosh"><h2 id="qr-o-s">Masofadan ochish</h2></div>
+        <div class="karta-bosh"><h2 id="qr-o-s" data-ikonka="nfc">Masofadan ochish</h2></div>
         <div id="qr-ochish"></div>
       </section>
       <section class="karta" aria-labelledby="qr-j-s" data-sayohat="jurnal" data-tur="qurilma-jurnal">
-        <div class="karta-bosh"><h2 id="qr-j-s">Voqealar jurnali</h2><span class="soni" id="qr-j-soni"></span>
+        <div class="karta-bosh"><h2 id="qr-j-s" data-ikonka="jadval-ic">Voqealar jurnali</h2><span class="soni" id="qr-j-soni"></span>
           <a class="karta-havola" id="qr-j-havola" href="kirish-voqealari.html">Barchasi<svg class="ic"><use href="#ik-ong"/></svg></a></div>
         <div id="qr-jurnal"></div>
       </section>
       <section class="karta" aria-labelledby="qr-s-s" data-tur="qurilma-signallar">
-        <div class="karta-bosh"><h2 id="qr-s-s">Signallar</h2><span class="soni" id="qr-s-soni"></span></div>
+        <div class="karta-bosh"><h2 id="qr-s-s" data-ikonka="signal">Signallar</h2><span class="soni" id="qr-s-soni"></span></div>
         <div id="qr-signallar"></div>
       </section>
     </div>
     <div class="ustun">
       <section class="karta" aria-labelledby="qr-m-s" data-tur="qurilma-pasport">
-        <div class="karta-bosh"><h2 id="qr-m-s">Pasport</h2></div>
+        <div class="karta-bosh"><h2 id="qr-m-s" data-ikonka="hujjat">Pasport</h2></div>
         <dl class="malumot-royxat" id="qr-pasport"></dl>
       </section>
       <section class="karta" id="qr-yuz-karta" hidden aria-labelledby="qr-y-s">
-        <div class="karta-bosh"><h2 id="qr-y-s">Yuz bazasi</h2></div>
+        <div class="karta-bosh"><h2 id="qr-y-s" data-ikonka="yuz">Yuz bazasi</h2></div>
         <div id="qr-yuz"></div>
       </section>
       <section class="karta" aria-labelledby="qr-x-s" data-tur="qurilma-servislar">
-        <div class="karta-bosh"><h2 id="qr-x-s">Servis ishlari</h2><span class="soni" id="qr-x-soni"></span></div>
+        <div class="karta-bosh"><h2 id="qr-x-s" data-ikonka="uskuna">Servis ishlari</h2><span class="soni" id="qr-x-soni"></span></div>
         <div id="qr-servislar"></div>
       </section>
       <section class="karta" aria-labelledby="qr-t-s" data-tur="qurilma-tarix">
-        <div class="karta-bosh"><h2 id="qr-t-s">O'zgarishlar tarixi</h2></div>
+        <div class="karta-bosh"><h2 id="qr-t-s" data-ikonka="soat">O'zgarishlar tarixi</h2></div>
         <div id="qr-tarix"></div>
       </section>
     </div>
@@ -413,6 +413,8 @@
 
   function hammasi(){ shapka(); plitkalar(); pasport(); ochishChiz(); jurnal(); signallar(); servislar(); tarix(); }
   hammasi();
+  /* Monitoring markazidan "Eshikni ochish" havolasi bilan kelinsa, shu kartaga olib boriladi */
+  if (location.hash === "#qr-ochish-karta" && !$("qr-ochish-karta").hidden) $("qr-ochish-karta").scrollIntoView();
   const belgi = MKB.yangilanganBelgi("qr-yangi", {avto: 60, yangila: async () => { await MKB.kn.yukla(KOLLAR); q = joriyQ(); shapka(); plitkalar(); jurnal(); signallar(); servislar(); tarix(); }});
   belgi.belgila();
   }

@@ -171,7 +171,7 @@ const UNDIRUV_BOSQICHLAR = [
   {kalit: "qabul",         nom: "Balansga qabul",  rang: "var(--holat-balansda)", chip: "chip-yashil"}
 ];
 
-/* Balansga qabul asosi. garov=true: garovdan olingan mulk, 1 yilda sotilmasa umidsiz.
+/* Balansga qabul asosi. garov=true: garovdan olingan mulk, me'yoriy muddati 1 yil.
    garov=false: bank faoliyatida foydalanilmaydigan boshqa mulk, chegara 3 yil (MB 2696, 20-band). */
 const QABUL_ASOSLARI = [
   {kalit: "sud",       nom: "Sud qarori va ijro varaqasi (MIB)",                  garov: true,  hujjat: "Sud qarori"},
@@ -251,6 +251,10 @@ const QORIQLASH_TURLARI = [
   {kalit: "ichki",   nom: "Bank xodimi nazorati"}
 ];
 
+/* Sug'urta polisi turlari. XICHO — xavfli ishlab chiqarish obyekti javobgarligi sug'urtasi;
+   qisqartma qavs ichida qoladi, chunki polis blankasida shu nom yoziladi. */
+const POLIS_TURLARI = {mulk: "Mol-mulk", OSAGO: "OSAGO", XICHO: "Xavfli obyekt (XICHO)"};
+
 const KOMMUNAL_XIZMATLAR = [
   {kalit: "elektr", nom: "Elektr"},
   {kalit: "gaz",    nom: "Gaz"},
@@ -262,8 +266,8 @@ const KOMMUNAL_HOLATLAR = ["ulangan", "uzilgan", "vaqtincha to'xtatilgan", "mavj
 const MUDDAT_HOLATLARI = {
   "imtiyozda":        {nom: "Soliq imtiyozi davrida",     rang: "var(--muddat-imtiyozda)", chip: "chip-kok"},
   "normal":           {nom: "Me'yor ichida",              rang: "var(--muddat-normal)",    chip: "chip-yashil"},
-  "xavf-90":          {nom: "Umidsizgacha 90 kundan kam",  rang: "var(--muddat-xavf-90)",   chip: "chip-sariq"},
-  "umidsiz":          {nom: "Umidsiz toifa",              rang: "var(--muddat-umidsiz)",   chip: "chip-qizil"},
+  "xavf-90":          {nom: "Muddat tugashiga 90 kundan kam", rang: "var(--muddat-xavf-90)", chip: "chip-sariq"},
+  "umidsiz":          {nom: "Me'yoriy muddat o'tgan",     rang: "var(--muddat-umidsiz)",   chip: "chip-qizil"},
   "3-yildan-oshgan":  {nom: "3 yildan oshgan",            rang: "var(--muddat-3-yil)",     chip: "chip-qizil"},
   "chiqarilgan":      {nom: "Balansdan chiqarilgan",      rang: "var(--muddat-yoq)",       chip: "chip-kul"},
   "kiritilmagan":     {nom: "Balans sanasi kiritilmagan", rang: "var(--muddat-yoq)",       chip: "chip-kul"}
@@ -272,17 +276,17 @@ const MUDDAT_HOLATLARI = {
 /* Zaxira toifalari (MB 2696, 36-band). Oraliq kun chegaralari va stavkalari PARAMETRLAR da,
    ular buxgalteriya tasdig'ini kutadi (taxminiy). Tasdiqlangan qoida bitta: chegaradan keyin 100%. */
 const ZAXIRA_TOIFALARI = [
-  {kalit: "substandart", nom: "Substandart", chip: "chip-kok",    rang: "var(--moviy)"},
+  {kalit: "substandart", nom: "Standartdan past", chip: "chip-kok", rang: "var(--moviy)", meyoriy: "substandart"},
   {kalit: "qoniqarsiz",  nom: "Qoniqarsiz",  chip: "chip-sariq",  rang: "var(--sariq-matn)"},
   {kalit: "shubhali",    nom: "Shubhali",    chip: "chip-tarvuz", rang: "var(--apelsin)"},
-  {kalit: "umidsiz",     nom: "Umidsiz",     chip: "chip-qizil",  rang: "var(--xavf-matn-yorqin)"}
+  {kalit: "umidsiz",     nom: "To'liq zaxira", chip: "chip-qizil", rang: "var(--xavf-matn-yorqin)", meyoriy: "umidsiz"}
 ];
 
 /* Hisob-kitob parametrlari. taxminiy:true — qonun bilan tasdiqlanmagan yoki bankning ichki
    qarorini kutayotgan qiymat; sozlamalarda o'zgartiriladi (MKBapi, to'plam PARAMETRLAR). */
 const PARAMETRLAR = [
-  {id: "umidsizKun",           guruh: "muddat",   nom: "Undiruv natijasida olingan mulk: umidsiz toifagacha", qiymat: 365, birlik: "kun", taxminiy: false, manba: "MB 2696, 20-band"},
-  {id: "uchYilKun",            guruh: "muddat",   nom: "Boshqa foydalanilmayotgan mulk: umidsiz toifagacha", qiymat: 1095, birlik: "kun", taxminiy: false, manba: "MB 2696, 20-band; MB 3441, 6–8-bandlar"},
+  {id: "umidsizKun",           guruh: "muddat",   nom: "Undiruv natijasida olingan mulk: me'yoriy muddat", qiymat: 365, birlik: "kun", taxminiy: false, manba: "MB 2696, 20-band"},
+  {id: "uchYilKun",            guruh: "muddat",   nom: "Boshqa foydalanilmayotgan mulk: me'yoriy muddat", qiymat: 1095, birlik: "kun", taxminiy: false, manba: "MB 2696, 20-band; MB 3441, 6–8-bandlar"},
   {id: "soliqImtiyozOy",       guruh: "muddat",   nom: "Mol-mulk va yer solig'idan imtiyoz", qiymat: 6, birlik: "oy", taxminiy: true, manba: "Prezident farmoni, 2026-yil 28-avgust"},
   {id: "yhxxKun",              guruh: "muddat",   nom: "Transportni YHXXda qayta qayd etish", qiymat: 10, birlik: "kalendar kun", taxminiy: false, manba: "VM 683, 6-band"},
   {id: "birlamchiKorikSoat",   guruh: "muddat",   nom: "Birlamchi ko'rik", qiymat: 72, birlik: "soat", taxminiy: true, manba: "Ichki me'yor"},
@@ -293,12 +297,12 @@ const PARAMETRLAR = [
   /* Ko'rikda kamida shuncha surat: bino — to'rt tomon, kirish, ichki xonalar; transport — to'rt tomon, spidometr, VIN */
   {id: "korikSuratBino",       guruh: "korik",    nom: "Bino ko'rigida kamida surat", qiymat: 6, birlik: "ta", taxminiy: true, manba: "Ichki me'yor"},
   {id: "korikSuratTransport",  guruh: "korik",    nom: "Transport va uskuna ko'rigida kamida surat", qiymat: 6, birlik: "ta", taxminiy: true, manba: "Ichki me'yor"},
-  {id: "zaxiraOraliq1Kun",     guruh: "zaxira",   nom: "Substandart toifa chegarasi", qiymat: 90, birlik: "kun", taxminiy: true, manba: "Buxgalteriya tasdig'ida"},
-  {id: "zaxiraOraliq1Foiz",    guruh: "zaxira",   nom: "Substandart toifa stavkasi", qiymat: 10, birlik: "%", taxminiy: true, manba: "MB 2696, 36-band; buxgalteriya tasdig'ida"},
+  {id: "zaxiraOraliq1Kun",     guruh: "zaxira",   nom: "Standartdan past toifa chegarasi", qiymat: 90, birlik: "kun", taxminiy: true, manba: "Buxgalteriya tasdig'ida"},
+  {id: "zaxiraOraliq1Foiz",    guruh: "zaxira",   nom: "Standartdan past toifa stavkasi", qiymat: 10, birlik: "%", taxminiy: true, manba: "MB 2696, 36-band; buxgalteriya tasdig'ida"},
   {id: "zaxiraOraliq2Kun",     guruh: "zaxira",   nom: "Qoniqarsiz toifa chegarasi", qiymat: 180, birlik: "kun", taxminiy: true, manba: "Buxgalteriya tasdig'ida"},
   {id: "zaxiraOraliq2Foiz",    guruh: "zaxira",   nom: "Qoniqarsiz toifa stavkasi", qiymat: 25, birlik: "%", taxminiy: true, manba: "MB 2696, 36-band; buxgalteriya tasdig'ida"},
   {id: "zaxiraOraliq3Foiz",    guruh: "zaxira",   nom: "Shubhali toifa stavkasi (chegaragacha)", qiymat: 50, birlik: "%", taxminiy: true, manba: "MB 2696, 36-band; buxgalteriya tasdig'ida"},
-  {id: "zaxiraUmidsizFoiz",    guruh: "zaxira",   nom: "Umidsiz toifa stavkasi", qiymat: 100, birlik: "%", taxminiy: false, manba: "MB 2696, 20 va 36-bandlar"},
+  {id: "zaxiraUmidsizFoiz",    guruh: "zaxira",   nom: "To'liq zaxira stavkasi", qiymat: 100, birlik: "%", taxminiy: false, manba: "MB 2696, 20 va 36-bandlar"},
   {id: "hisobvaraqAktiv",      guruh: "zaxira",   nom: "Balans hisobvarag'i", qiymat: "16701", birlik: "", taxminiy: true, manba: "Hisobvaraqlar rejasi, buxgalteriya tasdig'ida"},
   {id: "hisobvaraqZaxira",     guruh: "zaxira",   nom: "Zaxira hisobvarag'i", qiymat: "16799", birlik: "", taxminiy: true, manba: "Hisobvaraqlar rejasi, buxgalteriya tasdig'ida"},
   {id: "kapital1DarajaMlrd",   guruh: "kapital",  nom: "Birinchi darajali regulyativ kapital", qiymat: null, birlik: "mlrd so'm", taxminiy: false, manba: "Bank hisoboti, qo'lda kiritiladi"},
@@ -758,8 +762,10 @@ const QOSHIMCHA_MAYDONLAR = {
   KIRISH_VOQEALARI: {qaror: "object", kartaRaqam: "string"},
   BAHOLASHLAR: {sabab: "string", narx: "number", muddat: "string"},
   /* orinbosar: {login, dan, gacha} — qaror vakolati shu davrda o'rinbosarga o'tadi;
-     sayohatlar: {sayohatId: {holat: "tugadi"|"otkazildi"|"yarim", sana}}. Ikkalasini xodim o'z yozuvida o'zgartiradi */
-  FOYDLAR: {orinbosar: "object", sayohatlar: "object", bildirishSozlama: "object"}
+     sayohatlar: {sayohatId: {holat: "tugadi"|"otkazildi"|"yarim", sana}}. Ikkalasini xodim o'z yozuvida o'zgartiradi;
+     rozilik: {tahrir, hujjatSana, sana, tarix:[{tahrir, hujjatSana, sana}]} — oferta va maxfiylik
+     bildirishnomasi qabul qilingani; kirish sahifasi yozadi, eski tahrirlar tarixda qoladi */
+  FOYDLAR: {orinbosar: "object", sayohatlar: "object", bildirishSozlama: "object", rozilik: "object"}
 };
 /* Tashqi tizimlar bilan ulanish holati (sozlamalar). Tavsif integratsiyalar sahifasida. */
 const INTEGRATSIYALAR = [
@@ -1206,7 +1212,7 @@ const FOYDLAR = [
   {id: "U056789016", nom: "Nazarov Aziz",        rol: "Obyekt menejeri",                 teg: "obyekt",      login: "a.nazarov",   bolim: "Baholash bo'limi", filialKod: null, faol: true, email: "", lavozim: "Baholovchi", tel: "", sana: "16.11.2021", namoyish: true, rasm: "assets/xodim_6.webp"},
   {id: "U056789022", nom: "Qosimova Dilnoza",    rol: "Obyekt menejeri",                 teg: "obyekt",      login: "d.qosimova", bolim: "Realizatsiya bo'limi", filialKod: null, faol: true, email: "", lavozim: "Realizatsiya bo'yicha bosh mutaxassis", tel: "", sana: "01.06.2022", namoyish: true, rasm: "assets/xodim_8.webp"},
   {id: "U056789017", nom: "Sobirov Ulug'bek",    rol: "Obyekt menejeri",                 teg: "obyekt",      login: "u.sobirov",   bolim: "Yuridik departament", filialKod: null, faol: true, email: "", lavozim: "Bosh yurist", tel: "", sana: "19.01.2022", namoyish: true, rasm: "assets/xodim_7.webp"},
-  {id: "U056789023", nom: "Xolmatova Zulfiya",   rol: "Buxgalteriya va risk",            teg: "buxgalteriya", login: "z.xolmatova", bolim: "Buxgalteriya va risk-menejment", filialKod: null, faol: true, email: "", lavozim: "Risk menejeri", tel: "", sana: "15.03.2021", namoyish: true, rasm: "assets/xodim_10.webp"},
+  {id: "U056789023", nom: "Xolmatova Zulfiya",   rol: "Buxgalteriya va risk",            teg: "buxgalteriya", login: "z.xolmatova", bolim: "Buxgalteriya va risklar boshqaruvi", filialKod: null, faol: true, email: "", lavozim: "Risk menejeri", tel: "", sana: "15.03.2021", namoyish: true, rasm: "assets/xodim_10.webp"},
   {id: "U056789024", nom: "Qurbonov Sherzod",    rol: "Ko'rik va xavfsizlik inspektori", teg: "nazorat",     login: "sh.qurbonov", bolim: "Xavfsizlik xizmati", filialKod: null, faol: true, email: "", lavozim: "Xavfsizlik bo'yicha mutaxassis", tel: "", sana: "20.08.2023", namoyish: true, rasm: "assets/xodim_9.webp"},
   {id: "U056789018", nom: "Tosheva Barno",       rol: "Obyekt menejeri",                 teg: "obyekt",      login: "b.tosheva",   bolim: "Muammoli aktivlar bo'limi", filialKod: null, faol: true, email: "", lavozim: "Mutaxassis", tel: "", sana: "22.03.2023", namoyish: true, rasm: "assets/xodim_8.webp"},
   {id: "U056789019", nom: "Ergashev Botir",      rol: "Rahbariyat",                      teg: "rahbariyat",  login: "b.ergashev",  bolim: "Chilonzor BXM", filialKod: "TS-03", faol: true, email: "", lavozim: "Filial boshqaruvchisi", tel: "", sana: "25.05.2024", namoyish: true, rasm: "assets/xodim_9.webp"},
@@ -1245,7 +1251,9 @@ function moslikTekshiruvi() {
     if (y.qiymat && y.qiymat.baholanmagan !== (y.qiymat.bozor == null)) xato.push(y.id + ": baholanmagan belgisi bozor qiymatiga mos emas");
     if (!binolimi(y) && ((y.maydon && (y.maydon.foydali || y.maydon.yer)) || (y.kommunal || []).length))
       xato.push(y.id + ": binosiz aktivda maydon yoki kommunal bor");
-    if (y.rasm && !/^(mahalliy\/|fayllar\/|api\/|\/api\/|data:image|blob:|https?:)/.test(y.rasm)) xato.push(y.id + ": surat manzili haqiqiy surat emas");
+    /* assets/namuna/ — namoyish reyestrining tur bo'yicha namuna fotolari (assets/namuna/MANBA.md).
+       Chizma yoki ikonka yo'li aktiv surati o'rnida turolmaydi. */
+    if (y.rasm && !/^(mahalliy\/|fayllar\/|assets\/namuna\/|api\/|\/api\/|data:image|blob:|https?:)/.test(y.rasm)) xato.push(y.id + ": surat manzili haqiqiy surat emas");
   });
   const idlar = new Set();
   YOZ.forEach(y => { if (idlar.has(y.id)) xato.push(y.id + ": takrorlangan identifikator"); idlar.add(y.id); });
@@ -1326,7 +1334,7 @@ W.MKB_DATA = {
   /* ma'lumotnomalar */
   HOLATLAR, holatInfo, BOSQICHLAR, bosqichInfo, HOLAT_BOSQICH, UNDIRUV_BOSQICHLAR, QABUL_ASOSLARI, qabulAsosiInfo,
   ASOSIY_TURLAR, TUR_KALITLAR, turInfo, binolimi, SOTISH_USULLARI, LOT_HOLATLARI, XARAJAT_TOIFALARI,
-  QORIQLASH_TURLARI, KOMMUNAL_XIZMATLAR, KOMMUNAL_HOLATLAR, MUDDAT_HOLATLARI, ZAXIRA_TOIFALARI,
+  QORIQLASH_TURLARI, KOMMUNAL_XIZMATLAR, KOMMUNAL_HOLATLAR, POLIS_TURLARI, MUDDAT_HOLATLARI, ZAXIRA_TOIFALARI,
   PARAMETRLAR, param, BAYRAMLAR, HUDUD_KODLAR, hududKodi, HUDUD_TOIFA, hududToifasi,
   MAJBURIY_HUJJATLAR, majburiyHujjatlar, SXEMA, QOSHIMCHA_MAYDONLAR, INTEGRATSIYALAR, INTEGRATSIYA_HOLATLARI,
   QURILMA_TURLARI, QUVVAT_MANBALARI, ALOQA_KANALLARI, QURILMA_KATALOG, katalog, HIMOYA_ANDOZALARI, himoyaAndozasi, himoyaAndozaTavsiyasi, himoyaSmetasi,

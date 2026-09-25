@@ -74,7 +74,7 @@ a.hh-nom.tanlangan::before{content:"";display:inline-block;width:7px;height:7px;
   <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">Nazorat indeksi</a><a href="hisobot-hudud.html" class="faol" aria-current="page">Hududlar</a></nav>
 
   <section class="metrika-qator tort" id="hh-kpi" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi"></section>
-  <section class="karta"><div class="karta-bosh"><h2>Hududlar reytingi</h2>
+  <section class="karta"><div class="karta-bosh"><h2 data-ikonka="manzil">Hududlar reytingi</h2>
     <div class="hh-almash" role="group" aria-label="Ko'rsatkich" data-sayohat="filtr">
       <button type="button" data-kor="soni" aria-pressed="true">Aktivlar soni</button>
       <button type="button" data-kor="qiymat" aria-pressed="false">Balans qiymati</button>
@@ -472,7 +472,7 @@ async function boshla(){
   function chiz(){
     const aktivlar = hisobla();
     const jamiQ = aktivlar.reduce((a, y) => a + ((y.balans || {}).qiymat || 0), 0);
-    /* Umidsiz toifa: muddati o'tgan va 3 yildan oshgan birga (zaxira hisobidagi kabi) */
+    /* Me'yoriy muddati o'tganlar: 1 yoki 3 yillik chegaradan oshganlar birga (zaxira hisobidagi kabi) */
     const umidsiz = hududlar.reduce((a, h) => a + h.umidsiz, 0);
     const uchYil = aktivlar.filter(y => D.muddatHisobi(y).holat === "3-yildan-oshgan").length;
     const eng = hududlar.slice().sort((a, b) => b.umidsizUlush - a.umidsizUlush)[0];
@@ -480,14 +480,14 @@ async function boshla(){
     shkalaQur();
     $("hs-meta").textContent = hududlar.length + " ta hudud · " + filiallar.length + " ta filial · " + D.sanaYoz(D.bugun()) + " holatiga";
     $("hh-kpi").innerHTML =
-      '<div class="metrika"><span class="m-yorliq">Hududlar</span><span class="m-qiymat"><span data-tarjimasiz>' + hududlar.length + "</span></span>" +
+      '<div class="metrika" data-ikonka="manzil"><span class="m-yorliq">Hududlar</span><span class="m-qiymat"><span data-tarjimasiz>' + hududlar.length + "</span></span>" +
         '<span class="m-izoh"><b data-tarjimasiz>' + filiallar.length + "</b> <span>ta filialda aktiv bor</span></span></div>" +
-      '<a class="metrika" href="obyektlar.html"><span class="m-yorliq">Aktivlar</span><span class="m-qiymat"><span data-tarjimasiz>' + MKB.fmt(aktivlar.length) + "</span><small>ta</small></span>" +
+      '<a class="metrika" data-ikonka="aktivlar" href="obyektlar.html"><span class="m-yorliq">Aktivlar</span><span class="m-qiymat"><span data-tarjimasiz>' + MKB.fmt(aktivlar.length) + "</span><small>ta</small></span>" +
         '<span class="m-izoh">' + esc(MKB.pul(D.yaxlit(jamiQ, 1))) + "</span></a>" +
-      '<a class="metrika" href="zaxira.html"><span class="m-yorliq">Umidsiz toifada</span><span class="m-qiymat"><span data-tarjimasiz>' + umidsiz + "</span><small>ta</small></span>" +
+      '<a class="metrika" data-ikonka="muddat" href="zaxira.html"><span class="m-yorliq">Me&#39;yoriy muddat o&#39;tgan</span><span class="m-qiymat"><span data-tarjimasiz>' + umidsiz + "</span><small>ta</small></span>" +
         '<span class="m-izoh"><span>aktivlarning</span> <b data-tarjimasiz>' + fMatn(aktivlar.length ? D.yaxlit(umidsiz / aktivlar.length * 100, 1) : null) + "</b>" +
           (uchYil ? ", <span>shundan 3 yildan oshgan</span> <b data-tarjimasiz>" + uchYil + "</b>" : "") + "</span></a>" +
-      '<div class="metrika"><span class="m-yorliq">Umidsiz ulushi eng yuqori</span><span class="m-qiymat" style="font-size:26px"><span data-tarjimasiz>' + (eng ? esc(eng.nom) : "—") + "</span></span>" +
+      '<div class="metrika" data-ikonka="xavf"><span class="m-yorliq">Muddati o&#39;tganlar ulushi eng yuqori</span><span class="m-qiymat" style="font-size:26px"><span data-tarjimasiz>' + (eng ? esc(eng.nom) : "—") + "</span></span>" +
         '<span class="m-izoh">' + (eng ? "<b data-tarjimasiz>" + fMatn(eng.umidsizUlush) + "</b>, <b data-tarjimasiz>" + eng.umidsiz + " / " + eng.son + "</b>" : "") + "</span></div>";
     tarjimaQil($("hh-kpi"));
     xaritaChiz();
@@ -506,9 +506,9 @@ async function boshla(){
         {kalit: "son", nom: "Aktivlar", son: true},
         {kalit: "qiymat", nom: "Balans qiymati", son: true, chiz: h => '<span class="pul">' + esc(MKB.pul(h.qiymat)) + "</span>", csv: h => son(h.qiymat)},
         {kalit: "ulush", nom: "Aktivlardagi ulushi", son: true, chiz: h => fMatn(h.ulush), csv: h => son(h.ulush)},
-        {kalit: "xavf90", nom: "90 kunda umidsiz", son: true},
-        {kalit: "umidsiz", nom: "Umidsiz", son: true},
-        {kalit: "umidsizUlush", nom: "Umidsiz ulushi", son: true, chiz: h => '<span class="chip chip-kichik ' + (h.umidsizUlush >= 50 ? "chip-xavf" : h.umidsizUlush >= 25 ? "chip-sariq" : "chip-yashil") + '">' + fMatn(h.umidsizUlush) + "</span>", csv: h => son(h.umidsizUlush)},
+        {kalit: "xavf90", nom: "90 kunda muddat tugaydi", son: true},
+        {kalit: "umidsiz", nom: "Muddati o'tganlar", son: true},
+        {kalit: "umidsizUlush", nom: "Muddati o'tganlar ulushi", son: true, chiz: h => '<span class="chip chip-kichik ' + (h.umidsizUlush >= 50 ? "chip-xavf" : h.umidsizUlush >= 25 ? "chip-sariq" : "chip-yashil") + '">' + fMatn(h.umidsizUlush) + "</span>", csv: h => son(h.umidsizUlush)},
         /* Xaritadagi uch o'lchov jadvalda ham ustun bo'lib turadi: CSV va chop etish xarita bilan bir xil sonni beradi */
         {kalit: "korik", nom: "Kechikkan ko'rik", son: true},
         {kalit: "himoyasiz", nom: "Qo'riqlanmaydi", son: true},
@@ -525,8 +525,8 @@ async function boshla(){
       ustunlar: [
         {kalit: "nom", nom: "Filial", majburiy: true}, {kalit: "hudud", nom: "Hudud"}, {kalit: "son", nom: "Aktivlar", son: true},
         {kalit: "qiymat", nom: "Balans qiymati", son: true, chiz: h => '<span class="pul">' + esc(MKB.pul(h.qiymat)) + "</span>", csv: h => son(h.qiymat)},
-        {kalit: "umidsiz", nom: "Umidsiz", son: true},
-        {kalit: "umidsizUlush", nom: "Umidsiz ulushi", son: true, chiz: h => fMatn(h.umidsizUlush), csv: h => son(h.umidsizUlush)},
+        {kalit: "umidsiz", nom: "Muddati o'tganlar", son: true},
+        {kalit: "umidsizUlush", nom: "Muddati o'tganlar ulushi", son: true, chiz: h => fMatn(h.umidsizUlush), csv: h => son(h.umidsizUlush)},
         {kalit: "korik", nom: "Kechikkan ko'rik", son: true},
         {kalit: "himoyasiz", nom: "Qo'riqlanmaydi", son: true},
         {kalit: "zaxira", nom: "Zaxira yuki", son: true, chiz: h => '<span class="pul">' + esc(MKB.pul(h.zaxira)) + "</span>", csv: h => son(h.zaxira)},

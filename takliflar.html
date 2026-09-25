@@ -103,7 +103,7 @@
   };
   const filtrlar = () => [
     {kalit: "holatNom", nom: "Holat", variantlar: variantlar("holatNom", HOLATLAR.map(k => MKB.holatNomi(k)))},
-    {kalit: "amlNom", nom: "AML", variantlar: variantlar("amlNom", AML.map(k => MKB.holatNomi(k)))},
+    {kalit: "amlNom", nom: "Xaridor tekshiruvi", variantlar: variantlar("amlNom", AML.map(k => MKB.holatNomi(k)))},
     {kalit: "xaridorTuri", nom: "Xaridor", variantlar: variantlar("xaridorTuri", ["Yuridik shaxs", "Jismoniy shaxs"])},
   ].filter(f => f.variantlar.length > 1 || (jadval && jadval.holat.filtrlar[f.kalit]));
   /* Bironta qatorga mos kelmaydigan tayyor ko'rinish ro'yxatda ko'rsatilmaydi */
@@ -115,8 +115,8 @@
   const korinish = t => (t.holat === "tasdiqlangan" && shartnomasi(t)) ? "shartnoma tuzilgan" : t.holat;
   const obNomi = t => { const o = D.obyekt(t.obyektId) || {}; return o.qisqa || o.nom || t.obyektId; };
   /* Rahbariyatga yuborishdan oldingi shartlar: AML toza, affillangan xaridorda kengash qarori */
-  const yuborishXatosi = t => t.amlNatija === "shubhali" ? "AML tekshiruvi shubhali natija bergan. Taklifni rahbariyat qaroriga yuborib bo'lmaydi."
-    : t.amlNatija !== "toza" ? "AML tekshiruvi tugamagan. Natija «toza» bo'lgach rahbariyat qaroriga yuboriladi."
+  const yuborishXatosi = t => t.amlNatija === "shubhali" ? "Xaridor tekshiruvi (AML) shubhali natija bergan. Taklifni rahbariyat qaroriga yuborib bo'lmaydi."
+    : t.amlNatija !== "toza" ? "Xaridor tekshiruvi (AML) tugamagan. Natija «toza» bo'lgach rahbariyat qaroriga yuboriladi."
     : t.affillanganlik && !t.qarorRaqami ? "Xaridor bank bilan affillangan. Kuzatuv kengashi qarori raqamini kiriting." : "";
 
   function qatorlar(){
@@ -145,7 +145,7 @@
       m({holatNom: MKB.holatNomi("yangi")}, yangi.length, "Yangi takliflar", "<span>Ko'rib chiqilmoqda</span> <b data-tarjimasiz>" + korib.length + "</b>") +
       m({holatNom: MKB.holatNomi("qo'mitada")}, qom.length, "Qarorda", "<span>" + s(qom) + "</span>") +
       m({holatNom: MKB.holatNomi("tasdiqlangan")}, tas.length, "Tasdiqlangan, shartnomasiz", "<span>Shartnoma 10 ish kunida tuziladi</span>") +
-      m({amlNom: MKB.holatNomi("tekshirilmoqda")}, tekshir.length, "AML tekshiruvida", "<span>Shubhali</span> <b data-tarjimasiz>" + shub.length + "</b>");
+      m({amlNom: MKB.holatNomi("tekshirilmoqda")}, tekshir.length, "Xaridor tekshiruvida", "<span>Shubhali</span> <b data-tarjimasiz>" + shub.length + "</b>");
     document.getElementById("kpi").querySelectorAll("[data-f]").forEach(a => a.addEventListener("click", e => {
       e.preventDefault();
       jadval.holat.filtrlar = JSON.parse(a.dataset.f);
@@ -181,7 +181,7 @@
           '<br><span class="rz-sub" data-tarjimasiz>' + esc(t.stirYokiPinfl || "—") + "</span>"},
         {kalit: "summaN", nom: "Summa", son: true, chiz: t => '<span class="pul">' + pul(t.summaN) + '</span><br><span class="rz-sub">' + esc(t.tolovSharti || "") + "</span>"},
         {kalit: "sana", nom: "Sana", tur: "sana", chiz: t => '<span data-tarjimasiz>' + esc(t.sana || "—") + "</span>"},
-        {kalit: "amlNom", nom: "AML", chiz: t => chip(t.amlNatija || "tekshirilmoqda", true)},
+        {kalit: "amlNom", nom: "Xaridor tekshiruvi", chiz: t => chip(t.amlNatija || "tekshirilmoqda", true)},
         {kalit: "holatNom", nom: "Holat", chiz: t => chip(t.korinish, true)},
       ],
       bosilganda: t => panel(t.id),
@@ -221,8 +221,8 @@
     if (t.holat === "qo'mitada" && qr && qr.holat === "kutilmoqda"){
       const havola = '<a href="tasdiqlar.html?id=' + encodeURIComponent(qr.id) + '" data-tarjimasiz>' + esc(qr.id) + "</a>";
       /* AML toza bo'lmasa yadro tasdiqlashga yo'l qo'ymaydi: qaror qiluvchiga sababi va faqat rad etish ko'rsatiladi */
-      const amlXato = t.amlNatija === "shubhali" ? "AML tekshiruvi shubhali natija bergan. Taklifni tasdiqlab bo'lmaydi."
-        : t.amlNatija !== "toza" ? "AML tekshiruvi tugamagan. Natija «toza» bo'lgach tasdiqlash mumkin." : "";
+      const amlXato = t.amlNatija === "shubhali" ? "Xaridor tekshiruvi (AML) shubhali natija bergan. Taklifni tasdiqlab bo'lmaydi."
+        : t.amlNatija !== "toza" ? "Xaridor tekshiruvi (AML) tugamagan. Natija «toza» bo'lgach tasdiqlash mumkin." : "";
       if (MKB.tasdiq.mumkinmi(qr)){
         if (amlXato){ izoh = '<div class="rz-panel-izoh xavf">' + esc(amlXato) + "</div>"; amal += tg("qrad", "Rad etish", "tugma-xavf"); }
         else amal += tg("qrad", "Rad etish", "tugma-oq") + tg("qok", "Taklifni tasdiqlash", "tugma-asosiy", "qaror", "tasdiq");
@@ -293,7 +293,7 @@
   function tekshirModal(t, keyin){
     const parda = MKB.modal("Tekshiruv natijasi",
       '<div class="forma-tor" id="tk-tekshir">' +
-        '<label class="maydon"><span class="maydon-yorliq">AML natijasi <b>*</b></span><span class="kirish"><select name="aml" required>' +
+        '<label class="maydon"><span class="maydon-yorliq">Xaridor tekshiruvi natijasi <b>*</b></span><span class="kirish"><select name="aml" required>' +
           AML.map(k => '<option value="' + esc(k) + '"' + (k === (t.amlNatija || "tekshirilmoqda") ? " selected" : "") + ">" + esc(MKB.holatNomi(k)) + "</option>").join("") + "</select></span></label>" +
         '<label class="rz-belgi"><input type="checkbox" name="affil"' + (t.affillanganlik ? " checked" : "") + '><span>Xaridor bank bilan affillangan</span></label>' +
         '<label class="maydon keng" id="tk-qaror"><span class="maydon-yorliq">Kuzatuv kengashi qarori raqami <b>*</b></span><span class="kirish"><input name="qarorRaqami" maxlength="30" value="' + esc(t.qarorRaqami || "") + '" data-xato="Kengash qarori raqamini kiriting"></span>' +
@@ -328,7 +328,7 @@
       matn: "Taklifni Rahbariyat tasdiqlaydi yoki rad etadi. Qaror kutilayotganda taklif «Qarorda» holatida turadi.",
       tafsilot: [["Taklif", tz(t.id)], ["Xaridor", tz(t.xaridor)], ["Summa", tp(t.summa)]]
         .concat(asos ? [[lot ? "Lot narxiga nisbatan, %" : "Bozor qiymatiga nisbatan, %", Math.round(+t.summa / asos * 100)]] : [])
-        .concat([["To'lov sharti", t.tolovSharti || "—"], ["AML natijasi", MKB.holatNomi(t.amlNatija)], ["Javob muddati", ishKuni(5)]]),
+        .concat([["To'lov sharti", t.tolovSharti || "—"], ["Xaridor tekshiruvi natijasi", MKB.holatNomi(t.amlNatija)], ["Javob muddati", ishKuni(5)]]),
       sabab: {majburiy: false, maks: 400, yorliq: "Rahbariyat uchun izoh", namuna: "Masalan, yagona ishtirokchi, narx bozor qiymatiga teng"},
       okMatn: "Yuborish", bekorMatn: "Orqaga",
       bajar: async ({sabab}) => {

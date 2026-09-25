@@ -6,10 +6,10 @@
 <title>MKB — Sozlamalar</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
-.sz-menyu{display:flex;gap:4px;padding:5px;background:var(--oq);border-radius:999px;box-shadow:var(--soya-past);width:max-content;max-width:100%;
+.sz-menyu{display:flex;gap:4px;padding:5px;background:var(--oq);border-radius:var(--r-pilyula);box-shadow:var(--soya-past);width:max-content;max-width:100%;
   overflow-x:auto;scrollbar-width:none;margin-bottom:22px}
 .sz-menyu::-webkit-scrollbar{display:none}
-.sz-menyu button{display:flex;align-items:center;gap:9px;flex:none;min-height:42px;padding:0 16px;border-radius:999px;
+.sz-menyu button{display:flex;align-items:center;gap:9px;flex:none;min-height:42px;padding:0 16px;border-radius:var(--r-pilyula);
   font-size:14px;color:var(--matn-2);transition:background var(--tez),color var(--tez);white-space:nowrap}
 .sz-menyu button .ic{width:17px;height:17px;flex:none;color:var(--matn-3)}
 .sz-menyu button:hover{background:var(--plitka);color:var(--siyoh)}
@@ -24,7 +24,7 @@
 .sz-tana .seksiya-bosh + .karta-izoh{margin:-10px 0 0}
 .karta-izoh{font-size:13.5px;line-height:1.55;color:var(--matn-3);margin:-8px 0 18px;max-width:720px}
 .profil-bosh{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:22px}
-.profil-bosh .yuz{width:64px;height:64px;border-radius:999px;background:var(--siyoh);color:var(--mint);display:grid;place-items:center;
+.profil-bosh .yuz{width:64px;height:64px;border-radius:var(--r-pilyula);background:var(--siyoh);color:var(--mint);display:grid;place-items:center;
   font:500 20px var(--shrift-displey);overflow:hidden;flex:none}
 .profil-bosh .yuz img{width:100%;height:100%;object-fit:cover}
 .profil-bosh h2{font:500 22px/1.2 var(--shrift-displey);letter-spacing:-.03em}
@@ -42,8 +42,8 @@
 .kunlar{display:flex;gap:4px;flex-wrap:nowrap}
 .qoida-nom b{display:block;font-weight:500;line-height:1.35}
 .qoida-nom > span{display:block;font-size:12.5px;color:var(--matn-3)}
-.kalit-tugma{position:relative;width:44px;height:26px;border-radius:999px;background:var(--chiziq-3);flex:none;transition:background var(--tez)}
-.kalit-tugma::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:999px;background:var(--oq);
+.kalit-tugma{position:relative;width:44px;height:26px;border-radius:var(--r-pilyula);background:var(--chiziq-3);flex:none;transition:background var(--tez)}
+.kalit-tugma::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:var(--r-pilyula);background:var(--oq);
   box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform var(--tez)}
 .kalit-tugma[aria-checked="true"]{background:var(--siyoh)}
 .kalit-tugma[aria-checked="true"]::after{transform:translateX(18px)}
@@ -106,7 +106,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
       <button type="button" data-qism="profil"><svg class="ic"><use href="#ik-foyd"/></svg><span>Profil</span></button>
       <button type="button" data-qism="parol"><svg class="ic"><use href="#ik-qulf"/></svg><span>Parol</span></button>
       <button type="button" data-qism="orinbosar" hidden><svg class="ic"><use href="#ik-foydalar"/></svg><span>O&#39;rinbosar</span></button>
-      <button type="button" data-qism="qoidalar" hidden><svg class="ic"><use href="#ik-qongiroq"/></svg><span>Eskalatsiya qoidalari</span></button>
+      <button type="button" data-qism="qoidalar" hidden><svg class="ic"><use href="#ik-qongiroq"/></svg><span>Yuqoriga o'tkazish qoidalari</span></button>
       <button type="button" data-qism="parametrlar"><svg class="ic"><use href="#ik-sozlama"/></svg><span>Me&#39;yoriy parametrlar</span></button>
       <button type="button" data-qism="shaxsiy"><svg class="ic"><use href="#ik-qalqon"/></svg><span>Shaxsiy ma&#39;lumotlar</span></button>
     </nav>
@@ -122,7 +122,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
           <dl class="malumot-royxat" id="pr-royxat"></dl>
         </div>
         <form class="karta" id="pr-forma" novalidate data-sayohat="aloqa">
-          <div class="karta-bosh"><h2>Aloqa ma&#39;lumotlari</h2></div>
+          <div class="karta-bosh"><h2 data-ikonka="tel">Aloqa ma&#39;lumotlari</h2></div>
           <p class="karta-izoh">Telefon va elektron pochta xodimlar ro&#39;yxatida ko&#39;rinadi.</p>
           <div class="forma-tor">
             <div class="maydon"><label class="maydon-yorliq" for="pr-tel">Telefon</label>
@@ -135,7 +135,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
           </div>
         </form>
         <div class="karta">
-          <div class="karta-bosh"><h2>Ish qulayligi</h2></div>
+          <div class="karta-bosh"><h2 data-ikonka="yordam">Ish qulayligi</h2></div>
           <div class="sozlama-qator" data-sayohat="til">
             <div class="matn"><b>Interfeys tili</b><span>Tanlov shu brauzerda saqlanadi va darhol qo&#39;llanadi.</span></div>
             <div class="almashtirgich" id="til-tanlov" role="group" aria-label="Interfeys tili">
@@ -157,7 +157,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
       <!-- Parol -->
       <section data-qism="parol" hidden>
         <div class="karta">
-          <div class="karta-bosh"><h2>Parolni almashtirish</h2></div>
+          <div class="karta-bosh"><h2 data-ikonka="qulf">Parolni almashtirish</h2></div>
           <div id="parol-namoyish" class="info-qator" hidden><svg class="ic"><use href="#ik-info"/></svg>
             <span><span>Namoyish rejimida parol almashtirilmaydi. Hamma hisob bitta namoyish paroli bilan kiradi:</span> <code data-tarjimasiz id="namoyish-parol"></code>. <span>Server rejimida parol shifrlangan holda saqlanadi.</span></span></div>
           <form id="parol-forma" novalidate hidden data-sayohat="parol">
@@ -184,7 +184,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
       <!-- O'rinbosar -->
       <section data-qism="orinbosar" hidden>
         <div class="karta" data-sayohat="orinbosar">
-          <div class="karta-bosh"><h2>O&#39;rinbosar</h2></div>
+          <div class="karta-bosh"><h2 data-ikonka="foyd">O&#39;rinbosar</h2></div>
           <p class="karta-izoh">Ta&#39;til yoki xizmat safari vaqtida sizga kelgan qarorlarni o&#39;rinbosar tasdiqlaydi yoki rad etadi. Qarorda u sizning nomingizdan ishlagani yoziladi.</p>
           <div id="ob-joriy"></div>
           <form id="ob-forma" novalidate>
@@ -200,15 +200,15 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
           </form>
         </div>
         <div class="karta" id="ob-menga" hidden>
-          <div class="karta-bosh"><h2>Siz o&#39;rinbosar bo&#39;lgan xodimlar</h2></div>
+          <div class="karta-bosh"><h2 data-ikonka="foydalar">Siz o&#39;rinbosar bo&#39;lgan xodimlar</h2></div>
           <ul class="ob-royxat" id="ob-menga-royxat"></ul>
         </div>
       </section>
 
-      <!-- Eskalatsiya qoidalari -->
+      <!-- Yuqoriga o'tkazish qoidalari -->
       <section data-qism="qoidalar" hidden>
-        <div class="seksiya-bosh"><h2>Eskalatsiya qoidalari</h2><span class="soni" id="q-soni"></span></div>
-        <p class="karta-izoh">Muddat yaqinlashganda qoida mas&#39;ul rolga bildirishnoma yoki vazifa yaratadi. Belgilangan kunlarda javob bo&#39;lmasa, masala eskalatsiya roliga o&#39;tadi. Qoidani tahrirlash uchun qatorni bosing.</p>
+        <div class="seksiya-bosh"><h2>Yuqoriga o'tkazish qoidalari</h2><span class="soni" id="q-soni"></span></div>
+        <p class="karta-izoh">Muddat yaqinlashganda qoida mas&#39;ul rolga bildirishnoma yoki vazifa yaratadi. Belgilangan kunlarda javob bo&#39;lmasa, masala yuqori rolga o&#39;tadi. Qoidani tahrirlash uchun qatorni bosing.</p>
         <div id="q-jadval" data-sayohat="qoidalar"></div>
       </section>
 
@@ -222,7 +222,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
       <!-- Shaxsiy ma'lumotlar -->
       <section data-qism="shaxsiy" hidden>
         <div class="karta" data-sayohat="niqob">
-          <div class="karta-bosh"><h2>Eksportda niqoblash</h2></div>
+          <div class="karta-bosh"><h2 data-ikonka="qulf">Eksportda niqoblash</h2></div>
           <div class="sozlama-qator">
             <div class="matn"><b>Telefon, pasport va PINFL raqamlarini yashirish</b>
               <span>Yoqilganda CSV fayl va chop etilgan jadvallarda raqamning o&#39;rtasi yulduzcha bilan almashtiriladi.</span>
@@ -232,7 +232,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
           </div>
         </div>
         <form class="karta" id="sm-forma" novalidate data-sayohat="muddatlar">
-          <div class="karta-bosh"><h2>Saqlash muddatlari</h2></div>
+          <div class="karta-bosh"><h2 data-ikonka="muddat">Saqlash muddatlari</h2></div>
           <p class="karta-izoh">Shaxsga doir ma&#39;lumot ishlov berish maqsadiga erishilgach saqlanmaydi (O&#39;RQ-547). Muddati o&#39;tgan yozuvlar pastdagi bo&#39;limda anonimlashtiriladi.</p>
           <div class="sozlama-qator">
             <div class="matn"><b>Kamera video arxivi</b><span>Bank tartibidagi muddat. U kamera tizimi sozlamasiga qo&#39;lda kiritiladi: bu tizim videoni saqlamaydi va o&#39;chirmaydi.</span></div>
@@ -246,7 +246,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
             <button class="tugma tugma-asosiy" type="submit" id="sm-saqla" data-saqla data-yozadi>Muddatlarni saqlash</button></div>
         </form>
         <div class="karta" id="sm-anonim-karta" data-sayohat="anonim">
-          <div class="karta-bosh"><h2>Muddati o&#39;tgan tashrifchi ma&#39;lumotlari</h2></div>
+          <div class="karta-bosh"><h2 data-ikonka="tashrif">Muddati o&#39;tgan tashrifchi ma&#39;lumotlari</h2></div>
           <div id="sm-anonim"></div>
         </div>
       </section>
@@ -534,7 +534,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
     });
   }
 
-  /* ---------- Eskalatsiya qoidalari (administrator) ---------- */
+  /* ---------- Yuqoriga o'tkazish qoidalari (administrator) ---------- */
   const NATIJA = {bildirish: "Bildirishnoma", vazifa: "Vazifa", ikkalasi: "Bildirishnoma va vazifa"};
   let qJadval = null;
   const qSoni = () => {
@@ -557,13 +557,13 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
       csv: false,
       qidiruv: ["nom", "qabulQiluvchiRol", "manba"],
       qidiruvYozuvi: "Qoida yoki rol",
-      bosh: {sarlavha: "Qoidalar kiritilmagan", izoh: "Eskalatsiya qoidalari ro'yxati bo'sh."},
+      bosh: {sarlavha: "Qoidalar kiritilmagan", izoh: "Yuqoriga o'tkazish qoidalari ro'yxati bo'sh."},
       ustunlar: [
         {kalit: "nom", nom: "Qoida", chiz: q => '<span class="qoida-nom"><b>' + esc(q.nom) + "</b><span>" + esc(q.manba || "") + "</span></span>"},
         {kalit: "kunlar", nom: "Qachon, kun oldin", saralash: false, chiz: q => kunMatn(q.kunlar)},
         {kalit: "natija", nom: "Natija", chiz: q => esc(NATIJA[q.natija] || q.natija || "—")},
         {kalit: "qabulQiluvchiRol", nom: "Mas'ul", chiz: q => esc(q.qabulQiluvchiRol || "—")},
-        {kalit: "eskalatsiyaRol", nom: "Eskalatsiya", chiz: q => q.eskalatsiyaRol
+        {kalit: "eskalatsiyaRol", nom: "Kimga o'tadi", chiz: q => q.eskalatsiyaRol
           ? '<span class="qoida-nom"><b>' + esc(q.eskalatsiyaRol) + "</b><span>" + (q.eskalatsiyaKun
               ? '<span data-tarjimasiz>' + q.eskalatsiyaKun + "</span> <span>kundan keyin</span>" : "<span>Darhol</span>") + "</span></span>"
           : '<span class="son-bosh">Yo&#39;q</span>'},
@@ -606,8 +606,8 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
             '<option value="' + k + '"' + (q.natija === k ? " selected" : "") + ">" + v + "</option>").join("") + "</select></div></div>" +
         '<div class="maydon"><label class="maydon-yorliq" for="qf-rol">Mas&#39;ul rol</label>' +
           '<div class="kirish"><select id="qf-rol" name="qabulQiluvchiRol">' + rolVariant(q.qabulQiluvchiRol) + "</select></div></div>" +
-        '<div class="maydon"><label class="maydon-yorliq" for="qf-esk">Eskalatsiya roli</label>' +
-          '<div class="kirish"><select id="qf-esk" name="eskalatsiyaRol">' + rolVariant(q.eskalatsiyaRol, "Eskalatsiyasiz") + "</select></div></div>" +
+        '<div class="maydon"><label class="maydon-yorliq" for="qf-esk">Kimga o&#39;tkaziladi</label>' +
+          '<div class="kirish"><select id="qf-esk" name="eskalatsiyaRol">' + rolVariant(q.eskalatsiyaRol, "O'tkazilmaydi") + "</select></div></div>" +
         '<div class="maydon"><label class="maydon-yorliq" for="qf-eskkun">Necha kundan keyin</label>' +
           '<div class="kirish"><input id="qf-eskkun" name="eskalatsiyaKun" type="text" data-format="son" min="0" max="365" value="' + (q.eskalatsiyaKun == null ? "" : q.eskalatsiyaKun) + '"></div></div>' +
         '<label class="chekbox keng"><input type="checkbox" name="faol"' + (q.faol !== false ? " checked" : "") + "><span>Qoida faol</span></label>" +

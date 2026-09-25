@@ -11,13 +11,13 @@
     radial-gradient(900px 640px at 12% 0%, var(--fon-issiq) 0%, transparent 58%),
     radial-gradient(800px 620px at 92% 16%, var(--fon-sovuq) 0%, transparent 56%),
     linear-gradient(150deg,var(--fon-issiq) 0%,var(--fon-sovuq) 54%,var(--fon-mint) 100%)}
-.ochiq-karta{width:min(460px,100%);background:var(--oq);border-radius:30px;padding:36px 38px;box-shadow:var(--soya-suzuvchi)}
+.ochiq-karta{width:min(460px,100%);background:var(--oq);border-radius:var(--r-karta);padding:36px 38px;box-shadow:var(--soya-suzuvchi)}
 .ochiq-karta .yorliq{font-size:12.5px;color:var(--matn-3)}
-.ochiq-karta h1{font:500 29px/1.15 var(--shrift-displey);letter-spacing:-.04em;margin:6px 0 8px}
+.ochiq-karta h1{font:500 var(--matn-h1-ochiq)/1.15 var(--shrift-displey);letter-spacing:-.04em;margin:6px 0 8px}
 .ochiq-karta > p{font-size:14px;line-height:1.55;color:var(--matn-3);margin-bottom:22px}
 .ochiq-karta form{display:flex;flex-direction:column;gap:15px}
 .ochiq-karta .tugma[type=submit]{height:50px;justify-content:center}
-.xabar{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:11px 14px;font-size:13.5px;line-height:1.45}
+.xabar{display:flex;gap:10px;align-items:flex-start;border-radius:var(--r-kichik);padding:11px 14px;font-size:13.5px;line-height:1.45}
 .xabar .ic{width:17px;height:17px;flex:none;margin-top:1px}
 .xabar.xato{background:var(--xavf-fon);color:var(--xavf-matn)}
 .xabar.info{background:var(--lavanda);color:var(--lavanda-matn)}
@@ -27,9 +27,9 @@
 .talablar .ic{width:14px;height:14px;opacity:.35}
 .talablar li.bajarildi{color:var(--yashil)}
 .talablar li.bajarildi .ic{opacity:1}
-.pastki{margin-top:18px;font-size:13.5px}
-.pastki a{text-decoration:underline;text-underline-offset:3px}
-@media (max-width:480px){.ochiq-karta{padding:28px 22px;border-radius:26px}.ochiq-karta h1{font-size:25px}}
+.pastki{margin-top:20px;display:flex}
+.pastki .tugma{min-height:46px}
+@media (max-width:480px){.ochiq-karta{padding:28px 22px}.ochiq-karta h1{font-size:25px}}
 </style>
 </head>
 <body data-sahifa="kirish" data-ochiq="1">
@@ -62,7 +62,7 @@
     <div class="xabar ok" id="p-ok" role="status" hidden><svg class="ic"><use href="#ik-tasdiq"/></svg><span>Parol almashtirildi. Keyingi kirishda yangi parolni kiriting.</span></div>
     <button class="tugma tugma-asosiy" type="submit" id="saqla" data-sayohat="saqla" data-yozadi>Parolni saqlash</button>
   </form>
-  <div class="pastki"><a href="kirish.html" id="qaytish">Kirish sahifasiga qaytish</a></div>
+  <div class="pastki"><a class="tugma tugma-oq" href="kirish.html" id="qaytish"><svg class="ic"><use href="#ik-chap"/></svg><span id="qaytish-matn">Kirish sahifasiga qaytish</span></a></div>
 </main></div>
 <script src="tarjima.js?v=26092200"></script>
 <script src="yadro/ikonlar.js?v=26092200"></script>
@@ -76,7 +76,7 @@
   const forma = document.getElementById("parol-forma");
   if (!s){ document.getElementById("sessiyasiz").hidden = false; return; }
   const qaytish = document.getElementById("qaytish");
-  if (MKB.rol()){ qaytish.href = rolBoshSahifasi(MKB.rol()); qaytish.textContent = "Bosh sahifaga qaytish"; }
+  if (MKB.rol()){ qaytish.href = rolBoshSahifasi(MKB.rol()); document.getElementById("qaytish-matn").textContent = "Bosh sahifaga qaytish"; }
   document.getElementById("kim").textContent = s.ism || s.login || "";
   document.getElementById("kim").setAttribute("data-tarjimasiz", "");
   if (rejim !== "server"){ document.getElementById("namoyishda").hidden = false; tarjimaQil(); return; }

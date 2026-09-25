@@ -32,14 +32,14 @@
   <section class="metrika-qator tort" id="hp-kpi" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi"></section>
   <div id="hp-otgan"></div>
   <div class="tor-2">
-    <section class="karta"><div class="karta-bosh"><h2>Balans qiymati dinamikasi</h2><span class="soni">mlrd so'm, oy oxirida</span></div><div id="hp-dinamika"></div></section>
-    <section class="karta"><div class="karta-bosh"><h2>Tasnif toifalari</h2><span class="soni">zaxira, mln so'm</span></div><div id="hp-toifa"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2 data-ikonka="grafik">Balans qiymati dinamikasi</h2><span class="soni">mlrd so'm, oy oxirida</span></div><div id="hp-dinamika"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2 data-ikonka="jadval-ic">Tasnif toifalari</h2><span class="soni">zaxira, mln so'm</span></div><div id="hp-toifa"></div></section>
   </div>
   <div class="tor-2-teng">
-    <section class="karta"><div class="karta-bosh"><h2>Holatlar</h2><span class="soni" id="hp-holat-soni"></span></div><div id="hp-holat"></div></section>
-    <section class="karta"><div class="karta-bosh"><h2>Mulk turlari</h2><span class="soni">soni va balans qiymati</span></div><div id="hp-tur"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2 data-ikonka="jadval-ic">Holatlar</h2><span class="soni" id="hp-holat-soni"></span></div><div id="hp-holat"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2 data-ikonka="kub">Mulk turlari</h2><span class="soni">soni va balans qiymati</span></div><div id="hp-tur"></div></section>
   </div>
-  <section class="karta" id="hp-muddat-karta"><div class="karta-bosh"><h2>Me'yoriy muddatlar</h2><a class="karta-havola" href="muddatlar.html">Muddatlar<svg class="ic"><use href="#ik-ong"/></svg></a></div><div id="hp-muddat"></div></section>
+  <section class="karta" id="hp-muddat-karta"><div class="karta-bosh"><h2 data-ikonka="muddat">Me'yoriy muddatlar</h2><a class="karta-havola" href="muddatlar.html">Muddatlar<svg class="ic"><use href="#ik-ong"/></svg></a></div><div id="hp-muddat"></div></section>
   <section id="hp-jadval" aria-label="Aktivlar ro'yxati" data-sayohat="jadval"></section>
   <section class="chop-varaq" id="chop" aria-hidden="true"></section>
 </main>
@@ -156,20 +156,20 @@ async function boshla(){
     $("hs-meta").textContent = r.length + " ta aktiv · " + sana + " holatiga";
     const baholangan = r.filter(q => q.bozor != null);
     const taxminiy = jami(r.filter(q => q.taxminiy), q => q.zaxira);
-    /* Umidsiz toifa zaxira bo'yicha sanaladi: muddati o'tgan va 3 yildan oshgan birga */
+    /* To'liq zaxira toifasi: 1 yoki 3 yillik me'yoriy muddatdan oshganlar birga */
     const umidsiz = r.filter(q => q.toifa === "umidsiz");
     const uchYil = joriy ? r.filter(q => q.muddat === "3-yildan-oshgan").length : 0;
 
     $("hp-kpi").innerHTML =
-      '<a class="metrika" href="obyektlar.html"><span class="m-yorliq">Balansdagi aktivlar</span><span class="m-qiymat"><span data-tarjimasiz>' + MKB.fmt(r.length) + "</span><small>ta</small></span>" +
-        '<span class="m-izoh"><span>umidsiz toifada</span> <b data-tarjimasiz>' + umidsiz.length + "</b>" +
+      '<a class="metrika" data-ikonka="bino" href="obyektlar.html"><span class="m-yorliq">Balansdagi aktivlar</span><span class="m-qiymat"><span data-tarjimasiz>' + MKB.fmt(r.length) + "</span><small>ta</small></span>" +
+        '<span class="m-izoh"><span>to&#39;liq zaxirada</span> <b data-tarjimasiz>' + umidsiz.length + "</b>" +
           (uchYil ? ", <span>shundan 3 yildan oshgan</span> <b data-tarjimasiz>" + uchYil + "</b>" : "") + "</span></a>" +
-      '<div class="metrika"><span class="m-yorliq">Balans qiymati</span><span class="m-qiymat">' + pulHTML(jami(r, q => q.balans)) + "</span>" +
+      '<div class="metrika" data-ikonka="bank"><span class="m-yorliq">Balans qiymati</span><span class="m-qiymat">' + pulHTML(jami(r, q => q.balans)) + "</span>" +
         '<span class="m-izoh">16701 hisobvarag\'i</span></div>' +
-      '<a class="metrika" href="baholash.html"><span class="m-yorliq">Bozor qiymati</span><span class="m-qiymat">' + (joriy ? pulHTML(jami(baholangan, q => q.bozor)) : "<span>—</span>") + "</span>" +
+      '<a class="metrika" data-ikonka="baholash" href="baholash.html"><span class="m-yorliq">Bozor qiymati</span><span class="m-qiymat">' + (joriy ? pulHTML(jami(baholangan, q => q.bozor)) : "<span>—</span>") + "</span>" +
         '<span class="m-izoh">' + (joriy ? "<span>baholangan</span> <b data-tarjimasiz>" + baholangan.length + "</b> <span>ta, baholanmagan</span> <b data-tarjimasiz>" + (r.length - baholangan.length) + "</b>"
           : "<span>faqat bugungi holat uchun</span>") + "</span></a>" +
-      '<a class="metrika" href="zaxira.html"><span class="m-yorliq">Zaxira</span><span class="m-qiymat">' + pulHTML(jami(r, q => q.zaxira)) + "</span>" +
+      '<a class="metrika" data-ikonka="tarozi" href="zaxira.html"><span class="m-yorliq">Zaxira</span><span class="m-qiymat">' + pulHTML(jami(r, q => q.zaxira)) + "</span>" +
         '<span class="m-izoh">' + (taxminiy ? '<span class="chip chip-kichik chip-sariq">Taxminiy</span> <span>shundan oraliq stavkada</span> <b data-tarjimasiz>' + esc(MKB.pul(taxminiy)) + "</b>, <span>buxgalteriya tasdig'ida</span>" : "<span>MB 2696 bo'yicha</span>") + "</span></a>";
     tarjimaQil($("hp-kpi"));
 
@@ -213,7 +213,7 @@ async function boshla(){
       $("hp-muddat").innerHTML = '<div class="plitkalar">' + ["imtiyozda", "normal", "xavf-90", "umidsiz", "3-yildan-oshgan", "kiritilmagan"].filter(k => ms[k] || k !== "kiritilmagan").map(k =>
         '<a class="plitka" href="obyektlar.html?muddat=' + k + '"><span class="chip chip-kichik ' + ((MH[k] || {}).chip || "") + '">' + esc((MH[k] || {}).nom || k) + "</span>" +
         '<span class="qiymat" data-tarjimasiz>' + (ms[k] || 0) + "</span><span class=\"yorliq\">ta aktiv</span></a>").join("") + "</div>" +
-        ((ms.umidsiz || 0) + (ms["3-yildan-oshgan"] || 0) ? '<p class="hp-muddat-izoh"><span>Umidsiz toifa va 3 yildan oshgan birga:</span> <b data-tarjimasiz>' +
+        ((ms.umidsiz || 0) + (ms["3-yildan-oshgan"] || 0) ? '<p class="hp-muddat-izoh"><span>Me&#39;yoriy muddati o&#39;tganlar va 3 yildan oshganlar birga:</span> <b data-tarjimasiz>' +
           ((ms.umidsiz || 0) + (ms["3-yildan-oshgan"] || 0)) + "</b> <span>ta aktiv. Zaxira shu son bo'yicha hisoblanadi.</span></p>" : "");
     } else {
       $("hp-holat-soni").textContent = "";

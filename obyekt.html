@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyekt kartochkasi</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
-<!-- Plitka so'rovi bilan bankning ichki manzili uchinchi tomonga yetib bormasin -->
-<meta name="referrer" content="no-referrer">
+<!-- Plitka so'rovi bilan bankning ichki manzili uchinchi tomonga yetib bormasin.
+     same-origin: tashqi manzilga havola yuborilmaydi, tizim ichidagi o'tishlar esa saqlanadi —
+     shuning uchun "Orqaga" ro'yxatdagi joyga qaytara oladi. -->
+<meta name="referrer" content="same-origin">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css?v=26092200">
 <style>
 .holat-qator .belgi .ic{width:18px;height:18px}
@@ -14,8 +16,8 @@
 .indeks-band:last-child{border-bottom:none}
 .indeks-band b{font-weight:500;font-size:14px}
 .indeks-band .ib-izoh{font-size:12.5px;color:var(--matn-3);grid-column:1/-1}
-.indeks-band .ib-iz{grid-column:1/-1;height:6px;border-radius:99px;background:var(--band);overflow:hidden}
-.indeks-band .ib-iz i{display:block;height:100%;border-radius:99px}
+.indeks-band .ib-iz{grid-column:1/-1;height:6px;border-radius:var(--r-pilyula);background:var(--band);overflow:hidden}
+.indeks-band .ib-iz i{display:block;height:100%;border-radius:var(--r-pilyula)}
 a.metrika{transition:transform var(--tez),box-shadow var(--tez)}
 a.metrika:hover{transform:translateY(-2px)}
 .metrika .m-qiymat.kichik-qiymat{font-size:24px}
@@ -91,32 +93,32 @@ a.metrika:hover{transform:translateY(-2px)}
   <section class="metrika-qator uch" id="kpi" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi"></section>
 
   <section class="karta" data-sayohat="yol">
-    <div class="karta-bosh"><h2>Aktiv yo'li</h2></div>
+    <div class="karta-bosh"><h2 data-ikonka="bogliq">Aktiv yo'li</h2></div>
     <div id="yol"></div>
   </section>
 
   <div class="tor-2">
     <div class="ustun">
       <section class="karta" data-sayohat="muddat-lenta">
-        <div class="karta-bosh"><h2>Me'yoriy muddatlar</h2><a class="karta-havola" href="obyekt-moliya.html" data-obyekt-havola><span>Zaxira</span><svg class="ic"><use href="#ik-ong"/></svg></a></div>
+        <div class="karta-bosh"><h2 data-ikonka="muddat">Me'yoriy muddatlar</h2><a class="karta-havola" href="obyekt-moliya.html" data-obyekt-havola><span>Zaxira</span><svg class="ic"><use href="#ik-ong"/></svg></a></div>
         <div id="lenta"></div>
       </section>
       <section class="karta">
-        <div class="karta-bosh"><h2>Asosiy ma'lumotlar</h2></div>
+        <div class="karta-bosh"><h2 data-ikonka="info">Asosiy ma'lumotlar</h2></div>
         <dl class="malumot-royxat" id="asosiy"></dl>
       </section>
       <section class="karta" id="joy-karta" data-sayohat="joylashuv">
-        <div class="karta-bosh"><h2>Joylashuv</h2><a class="karta-havola" id="joy-havola" href="xarita.html" hidden><span>Xaritada ko'rish</span><svg class="ic"><use href="#ik-ong"/></svg></a></div>
+        <div class="karta-bosh"><h2 data-ikonka="manzil">Joylashuv</h2><a class="karta-havola" id="joy-havola" href="xarita.html" hidden><span>Xaritada ko'rish</span><svg class="ic"><use href="#ik-ong"/></svg></a></div>
         <div id="joy"></div>
       </section>
     </div>
     <div class="ustun">
       <section class="karta" data-sayohat="holat">
-        <div class="karta-bosh"><h2>Joriy holat</h2></div>
+        <div class="karta-bosh"><h2 data-ikonka="info">Joriy holat</h2></div>
         <div id="holat"></div>
       </section>
       <section class="karta" data-sayohat="indeks">
-        <div class="karta-bosh"><h2>Nazorat indeksi</h2><span class="soni" id="indeks-ball"></span></div>
+        <div class="karta-bosh"><h2 data-ikonka="diagramma">Nazorat indeksi</h2><span class="soni" id="indeks-ball"></span></div>
         <div id="indeks"></div>
       </section>
     </div>

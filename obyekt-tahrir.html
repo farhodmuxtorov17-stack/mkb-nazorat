@@ -46,16 +46,16 @@
 
   <div class="tor-2">
     <section class="karta" data-sayohat="forma">
-      <div class="karta-bosh"><h2>Aktiv ma'lumotlari</h2></div>
+      <div class="karta-bosh"><h2 data-ikonka="aktivlar">Aktiv ma'lumotlari</h2></div>
       <form id="forma" novalidate></form>
     </section>
     <div class="ustun">
       <section class="karta" data-sayohat="ozgarishlar">
-        <div class="karta-bosh"><h2>Saqlanadigan o'zgarishlar</h2><span class="soni" id="ozg-soni"></span></div>
+        <div class="karta-bosh"><h2 data-ikonka="tahrir">Saqlanadigan o'zgarishlar</h2><span class="soni" id="ozg-soni"></span></div>
         <div id="ozgarishlar"></div>
       </section>
       <section class="karta" data-sayohat="oxirgi-tahrirlar">
-        <div class="karta-bosh"><h2>Oxirgi tahrirlar</h2><a class="karta-havola" id="tarix-havola" href="obyekt-tarix.html"><span>Tarix</span><svg class="ic"><use href="#ik-ong"/></svg></a></div>
+        <div class="karta-bosh"><h2 data-ikonka="tahrir">Oxirgi tahrirlar</h2><a class="karta-havola" id="tarix-havola" href="obyekt-tarix.html"><span>Tarix</span><svg class="ic"><use href="#ik-ong"/></svg></a></div>
         <div id="oxirgi"></div>
       </section>
     </div>
@@ -77,8 +77,8 @@
   if (!L || typeof L !== "object") return;
   const Y = {
     "Xaritada belgilash": "Отметить на карте",
-    "Xaritani bosing: metka o'sha nuqtaga qo'yiladi": "Нажмите на карту: метка встанет в эту точку",
-    "Metkani surib aniqlashtiring": "Уточните перетаскиванием метки",
+    "Xaritani bosing: belgi o'sha nuqtaga qo'yiladi": "Нажмите на карту: метка встанет в эту точку",
+    "Belgini surib aniqlashtiring": "Уточните перетаскиванием метки",
     "Nuqta O'zbekiston chegarasidan tashqarida": "Точка за пределами Узбекистана",
     "Nuqta obyekt hududidan tashqarida": "Точка вне региона объекта",
     "Manzildagi tuman topilmadi": "Район из адреса не найден",
@@ -273,7 +273,7 @@ MKB.sahifaYukla({joylar: {forma: ["qator", 8], ozgarishlar: ["qator", 3], oxirgi
       el.className = "ot-holat";
       el.innerHTML = (t ? "<b data-tarjimasiz>" + esc(t.properties[document.documentElement.lang === "ru" ? "nom_ru" : "nom_uz"]) + "</b>"
         : "<span>Manzildagi tuman topilmadi</span>") +
-        " · <span>Xaritani bosing: metka o'sha nuqtaga qo'yiladi</span>";
+        " · <span>Xaritani bosing: belgi o'sha nuqtaga qo'yiladi</span>";
     } else if (!ichkarida(k[0], k[1])){
       el.className = "ot-holat xato";
       el.innerHTML = "<span>Nuqta O'zbekiston chegarasidan tashqarida</span>";
@@ -293,7 +293,7 @@ MKB.sahifaYukla({joylar: {forma: ["qator", 8], ozgarishlar: ["qator", 3], oxirgi
         (nomi ? ' · <b data-tarjimasiz>' + esc(nomi) + "</b>" : "") +
         (boshqa ? " · <span>Nuqta obyekt hududidan tashqarida</span>"
           : tumanBoshqa ? ' · <span>Nuqta manzildagi tumanga tushmadi:</span> <b data-tarjimasiz>' + esc(kutilganNom) + "</b>"
-          : " · <span>Metkani surib aniqlashtiring</span>");
+          : " · <span>Belgini surib aniqlashtiring</span>");
     }
     tarjimaQil(el);
   }

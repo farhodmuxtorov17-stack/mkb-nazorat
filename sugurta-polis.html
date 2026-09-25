@@ -6,8 +6,8 @@
 <title>MKB — Sug'urta polisi</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
-.sp-muddat{height:8px;border-radius:99px;background:var(--plitka);overflow:hidden;margin:14px 0 6px}
-.sp-muddat i{display:block;height:100%;border-radius:99px;background:var(--siyoh)}
+.sp-muddat{height:8px;border-radius:var(--r-pilyula);background:var(--plitka);overflow:hidden;margin:14px 0 6px}
+.sp-muddat i{display:block;height:100%;border-radius:var(--r-pilyula);background:var(--siyoh)}
 .sp-muddat-yorliq{display:flex;justify-content:space-between;font-size:12.5px;color:var(--matn-3)}
 #sp-ildiz > .skelet-royxat,#sp-ildiz > .xato-holat{background:var(--oq);border-radius:var(--r-karta);padding:24px;box-shadow:var(--soya)}
 </style>
@@ -47,7 +47,7 @@
   const b = (() => { const x = D.bugun(); return new Date(x.getFullYear(), x.getMonth(), x.getDate()); })();
   const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   const id = new URLSearchParams(location.search).get("id");
-  const TUR = {mulk: "Mol-mulk", OSAGO: "OSAGO", XICHO: "XICHO"};
+  const TUR = D.POLIS_TURLARI || {mulk: "Mol-mulk", OSAGO: "OSAGO", XICHO: "Xavfli obyekt (XICHO)"};
   const DAVO = {"topshirilgan": ["Topshirilgan", "chip-kok"], "korib chiqilmoqda": ["Ko'rib chiqilmoqda", "chip-sariq"], "tolangan": ["To'langan", "chip-yashil"], "rad etilgan": ["Rad etilgan", "chip-xavf"]};
 
   function chiz(){
@@ -75,7 +75,7 @@
 
     ildiz.innerHTML =
       '<div class="tor-2">' +
-        '<section class="karta"><div class="karta-bosh"><h2><span>' + esc(TUR[p.polisTuri] || p.polisTuri || "") + '</span> <span class="kod-mono" data-tarjimasiz>' + esc(p.polis || p.id) + '</span></h2><span class="chip chip-kichik ' + holat[1] + '">' + esc(holat[0]) + "</span></div>" +
+        '<section class="karta"><div class="karta-bosh"><h2 data-ikonka="sugurta"><span>' + esc(TUR[p.polisTuri] || p.polisTuri || "") + '</span> <span class="kod-mono" data-tarjimasiz>' + esc(p.polis || p.id) + '</span></h2><span class="chip chip-kichik ' + holat[1] + '">' + esc(holat[0]) + "</span></div>" +
           '<div class="qator" style="margin-top:-6px">' + MKB.obyektSurati(y, {kichik: true, sinf: "media"}) +
             '<span class="matn"><b><a href="obyekt.html?id=' + encodeURIComponent(p.obyektId) + '">' + esc(y.qisqa || y.nom || p.obyektId) + '</a></b><span><span class="kod-mono" data-tarjimasiz>' + esc(p.obyektId) + "</span> · <span>" + esc(y.hudud || "") + "</span></span></span></div>" +
           (bosh && tug ? '<div class="sp-muddat"><i style="width:' + ulush + '%"></i></div><div class="sp-muddat-yorliq"><span data-tarjimasiz>' + esc(p.boshlanish) + "</span><span>" +
@@ -88,7 +88,7 @@
             (p.polisTuri === "mulk" ? "<dt>Bozor qiymati</dt><dd>" + (bozor ? '<span data-tarjimasiz>' + esc(MKB.pul(bozor)) + "</span>" + (p.summa < bozor ? ' <span class="chip chip-kichik chip-sariq">sug\'urta summasi past</span>' : "") : "<span>Baholanmagan</span>") + "</dd>" : "") +
           "</dl></section>" +
         '<div class="ustun">' +
-          '<section class="karta" data-sayohat="davolar"><div class="karta-bosh"><h2>Da\'volar</h2><span class="soni" data-tarjimasiz>' + davolar.length + " ta</span>" +
+          '<section class="karta" data-sayohat="davolar"><div class="karta-bosh"><h2 data-ikonka="yuridik">Da\'volar</h2><span class="soni" data-tarjimasiz>' + davolar.length + " ta</span>" +
             (yoza && amalda ? '<button type="button" class="tugma tugma-kichik tugma-oq" id="sp-davo" data-yozadi style="margin-left:auto">' + ik("qoshish") + "<span>Da'vo qo'shish</span></button>" : "") + "</div>" +
             (davolar.length ? davolar.map(d => {
               const h = (D.HODISALAR || []).find(x => x.id === d.hodisaId), s = DAVO[d.holat] || [d.holat || "—", "chip-kul"];
@@ -98,7 +98,7 @@
                 (yoza && ["topshirilgan", "korib chiqilmoqda"].indexOf(d.holat) >= 0 ? '<button type="button" class="tugma tugma-kichik tugma-oq" data-tolandi="' + esc(d.id) + '" data-yozadi>To\'landi</button>' +
                   '<button type="button" class="tugma tugma-kichik tugma-oq" data-rad="' + esc(d.id) + '" data-yozadi>Rad etildi</button>' : "") + "</span></div>";
             }).join("") : MKB.boshHolat("sugurta", "Da'vo yo'q")) + "</section>" +
-          '<section class="karta"><div class="karta-bosh"><h2>Polis nusxasi</h2></div><div id="sp-fayl"></div></section>' +
+          '<section class="karta"><div class="karta-bosh"><h2 data-ikonka="hujjat">Polis nusxasi</h2></div><div id="sp-fayl"></div></section>' +
         "</div></div>";
 
     /* Polis fayli */

@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Xaritada</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
-<!-- Plitka so'rovi bilan bankning ichki manzili uchinchi tomonga yetib bormasin -->
-<meta name="referrer" content="no-referrer">
+<!-- Plitka so'rovi bilan bankning ichki manzili uchinchi tomonga yetib bormasin.
+     same-origin: tashqi manzilga havola yuborilmaydi, tizim ichidagi o'tishlar esa saqlanadi —
+     shuning uchun "Orqaga" ro'yxatdagi joyga qaytara oladi. -->
+<meta name="referrer" content="same-origin">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css?v=26092200">
 </head>
 <body data-sahifa="aktivlar">
@@ -74,8 +76,8 @@
         <ul class="x-legenda" id="x-legenda"></ul>
       </section>
       <section class="karta" data-sayohat="metka">
-        <h3>Metka rangi</h3>
-        <div class="almashtirgich" id="x-belgi-tanlov" role="group" aria-label="Metka rangi"></div>
+        <h3>Belgi rangi</h3>
+        <div class="almashtirgich" id="x-belgi-tanlov" role="group" aria-label="Belgi rangi"></div>
         <ul class="x-legenda" id="x-belgi-legenda"></ul>
       </section>
       <section class="karta" data-sayohat="royxat">
@@ -86,7 +88,7 @@
             <option value="nom">Nomi bo'yicha</option>
             <option value="qiymat">Balans qiymati kamayishi bo'yicha</option>
             <option value="nazorat">Nazorat indeksi o'sishi bo'yicha</option>
-            <option value="muddat">Umidsizgacha qolgan kun bo'yicha</option>
+            <option value="muddat">Muddat tugashiga qolgan kun bo'yicha</option>
           </select><svg class="ic strelka"><use href="#ik-past"/></svg></span>
         </div>
         <div class="x-royxat-joy"><ul class="x-royxat" id="x-royxat" tabindex="-1"></ul></div>
@@ -208,7 +210,7 @@ MKB.sahifaYukla({
   const nazoratDarajasi = y => { const n = D.nazoratIndeksi(y); return n ? n.daraja : "malumotsiz"; };
 
   /* ============================================================
-     2. Metka rangi (legenda bilan) va hudud bo'yalishi (o'lchov)
+     2. Belgi rangi (legenda bilan) va hudud bo'yalishi (o'lchov)
      ============================================================ */
   const NAZORAT_TOIFA = [
     {kalit: "yuqori", nom: "Yuqori nazorat", rang: "var(--yashil)"},
@@ -574,7 +576,7 @@ MKB.sahifaYukla({
       '<div class="xp-qator"><span>Balans qiymati</span><span data-tarjimasiz>' + esc(MKB.pul(y.balans && y.balans.qiymat)) + "</span></div>" +
       '<div class="xp-qator"><span>Balansda turgan muddat</span><span>' +
         (m.kiritilmagan ? "<span>Kiritilmagan</span>" : '<span data-tarjimasiz>' + m.turganKun + "</span> <span>kun</span>") + "</span></div>" +
-      '<div class="xp-qator"><span>Umidsiz toifagacha</span><span class="' + (m.qolganKun <= 0 || m.holat === "umidsiz" ? "kech" : "") + '">' + esc(muddat) + "</span></div>" +
+      '<div class="xp-qator"><span>Me&#39;yoriy muddatgacha</span><span class="' + (m.qolganKun <= 0 || m.holat === "umidsiz" ? "kech" : "") + '">' + esc(muddat) + "</span></div>" +
       '<div class="xp-qator"><span>' + "Qo'riqlash" + '</span><span class="' + (q === "yoq" ? "kech" : "") + '">' + esc(qNom) + "</span></div>" +
       '<div class="xp-qator"><span>' + "Oxirgi ko'rik" + '</span><span class="' + (kechikkan ? "kech" : "") + '">' +
         (kk ? '<span data-tarjimasiz>' + esc(D.sanaYoz(kk.sana)) + "</span>" + (kechikkan ? " <span>(keyingisi kechikkan)</span>" : "") : "<span>O'tkazilmagan</span>") + "</span></div>" +

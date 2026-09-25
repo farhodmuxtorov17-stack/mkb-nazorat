@@ -28,7 +28,7 @@
 .oy-bosh b{font-weight:500;font-size:14.5px}
 .oy-bosh span{font-size:12.5px;color:var(--matn-3);margin-left:auto}
 .oy-son{font:500 28px/1 var(--shrift-displey);letter-spacing:-.03em}
-.oy-iz{height:6px;border-radius:99px;background:var(--oq);overflow:hidden}
+.oy-iz{height:6px;border-radius:var(--r-pilyula);background:var(--oq);overflow:hidden}
 .oy-iz i{display:block;height:100%;background:var(--xavf);border-radius:inherit}
 .oy ul{list-style:none;display:flex;flex-direction:column;gap:3px;font-size:12.5px;margin-top:2px}
 .oy li{display:flex;gap:6px;min-width:0}
@@ -80,7 +80,7 @@
   </div>
   <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="obyektlar.html">Reyestr</a><a href="muddatlar.html" class="faol" aria-current="page">Muddatlar</a><a href="xarita.html">Xaritada</a><a href="qabul-boshlash.html">Balansga qabul</a><a href="rasmiylashtirish.html">Huquqni rasmiylashtirish</a><a href="arxiv.html">Arxiv va chiqim</a></nav>
 
-  <section class="karta otish-karta" id="otish" aria-label="Umidsiz toifaga o'tish" data-sayohat="otish"></section>
+  <section class="karta otish-karta" id="otish" aria-label="Me'yoriy muddat tugashi" data-sayohat="otish"></section>
   <section class="metrika-qator tort" id="metrikalar" aria-label="Muddat ko'rsatkichlari" data-sayohat="kpi"></section>
 
   <section class="ustun" aria-labelledby="royxat-sar">
@@ -95,12 +95,12 @@
   </section>
   <div class="tor-2-teng">
     <section class="karta" aria-labelledby="yosh-sar">
-      <div class="karta-bosh"><h2 id="yosh-sar">Balansda turgan muddat</h2></div>
+      <div class="karta-bosh"><h2 id="yosh-sar" data-ikonka="soat">Balansda turgan muddat</h2></div>
       <div id="yosh-chizma"></div>
       <table class="yosh-jadval" id="yosh-jadval"></table>
     </section>
     <section class="karta" aria-labelledby="meyor-sar" data-sayohat="qoidalar">
-      <div class="karta-bosh"><h2 id="meyor-sar">Hisob qoidalari</h2></div>
+      <div class="karta-bosh"><h2 id="meyor-sar" data-ikonka="info">Hisob qoidalari</h2></div>
       <ul class="meyor-royxat" id="meyorlar"></ul>
     </section>
   </div>
@@ -163,7 +163,7 @@ MKB.sahifaYukla({
     const oyna = n => kelgusi.filter(x => x.qolgan <= n);
     const el = document.getElementById("otish");
     el.innerHTML =
-      '<div class="otish-bosh"><h2>Umidsiz toifaga o&#39;tadi</h2>' +
+      '<div class="otish-bosh"><h2>Me&#39;yoriy muddat tugaydi</h2>' +
         "<p>Chegaraga yetgan obyekt uchun balans qiymatining 100% miqdorida zaxira shakllantiriladi (MB 2696).</p></div>" +
       [30, 60, 90].map(n => {
         const r = oyna(n);
@@ -183,7 +183,7 @@ MKB.sahifaYukla({
   }
 
   function metrikaChiz(){
-    /* Umidsiz toifa: muddati o'tgan va 3 yildan oshgan birga (zaxira hisobidagi kabi) */
+    /* Me'yoriy muddati o'tganlar: 1 yoki 3 yillik chegaradan oshganlar birga (zaxira hisobidagi kabi) */
     const umidsiz = qatorlar.filter(x => x.muddat === "umidsiz" || x.muddat === "3-yildan-oshgan");
     const uchYil = qatorlar.filter(x => x.muddat === "3-yildan-oshgan");
     const imtiyoz = qatorlar.filter(x => x.muddat === "imtiyozda");
@@ -193,7 +193,7 @@ MKB.sahifaYukla({
       '<span class="m-qiymat" data-tarjimasiz>' + MKB.fmt(r.length) + "</span>" +
       '<span class="m-izoh"><span data-tarjimasiz>' + esc(MKB.pul(summa(r))) + "</span>" + (izoh ? " · " + (izoh.startsWith("<") ? izoh : "<span>" + izoh + "</span>") : "") + "</span></a>";
     document.getElementById("metrikalar").innerHTML =
-      m("obyektlar.html?muddat=umidsiz", "Umidsiz toifada", umidsiz, "") +
+      m("obyektlar.html?muddat=umidsiz", "Me'yoriy muddat o'tgan", umidsiz, "") +
       m("obyektlar.html?muddat=3-yildan-oshgan", "3 yildan oshgan", uchYil) +
       m("obyektlar.html?muddat=imtiyozda", "Soliq imtiyozi davrida", imtiyoz, "6 oy") +
       m("#royxat-sar", "1 yildan ortiq balansda", yildan);
@@ -214,7 +214,7 @@ MKB.sahifaYukla({
     {kalit: "balansSana", nom: "Balans sanasi", tur: "sana"},
     {kalit: "filial", nom: "Filial", yashirin: true},
     {kalit: "turgan", nom: "Balansda, kun", son: true, csv: x => x.turgan, chiz: x => MKB.fmt(x.turgan)},
-    {kalit: "chegaraSana", nom: "Umidsiz sanasi", tur: "sana", csv: x => x.chegaraSana, chiz: x => '<span data-tarjimasiz>' + esc(x.chegaraSana || "—") + "</span>" +
+    {kalit: "chegaraSana", nom: "Muddat tugash sanasi", tur: "sana", csv: x => x.chegaraSana, chiz: x => '<span data-tarjimasiz>' + esc(x.chegaraSana || "—") + "</span>" +
       (x.chegaraKun ? '<br><span class="sub" style="font-size:12px;color:var(--matn-3)">' + (x.chegaraKun >= 1095 ? "3 yillik chegara" : "1 yillik chegara") + "</span>" : "")},
     {kalit: "qolgan", nom: "Muddat", son: true, csv: x => x.qolgan, chiz: x => x.qolgan == null ? "—" : x.qolgan > 0
       ? '<span' + (x.qolgan <= 90 ? ' style="color:var(--sariq-matn)"' : "") + '><b data-tarjimasiz>' + MKB.fmt(x.qolgan) + '</b> <span>kun qoldi</span></span>'
@@ -230,7 +230,7 @@ MKB.sahifaYukla({
     const ff = document.getElementById("faol-filtr");
     ff.hidden = !holat.oyna;
     if (holat.oyna){
-      ff.innerHTML = '<span class="chip chip-sariq"><span>Umidsizgacha</span>&nbsp;<b data-tarjimasiz>' + holat.oyna + "</b>&nbsp;<span>kundan kam</span></span>" +
+      ff.innerHTML = '<span class="chip chip-sariq"><span>Muddat tugashiga</span>&nbsp;<b data-tarjimasiz>' + holat.oyna + "</b>&nbsp;<span>kundan kam</span></span>" +
         '<span data-tarjimasiz>' + r.length + "</span><span>ta aktiv</span>" +
         '<button type="button" class="tugma tugma-oq tugma-kichik" id="oyna-tozala"><svg class="ic"><use href="#ik-yopish"/></svg>Filtrni olib tashlash</button>';
       ff.querySelector("#oyna-tozala").addEventListener("click", () => { holat.oyna = null; hammasi(); });
@@ -262,7 +262,7 @@ MKB.sahifaYukla({
     const maks = Math.max(1, ...oylar.map(o => o.r.length));
     const el = document.getElementById("kalendar-joy");
     const jami = oylar.reduce((s, o) => s + o.r.length, 0);
-    el.innerHTML = '<p style="font-size:13.5px;color:var(--matn-3);margin-bottom:14px"><span>Keyingi 12 oyda umidsiz toifaga o&#39;tadigan obyektlar:</span> <b data-tarjimasiz style="color:var(--siyoh)">' + jami + "</b></p>" +
+    el.innerHTML = '<p style="font-size:13.5px;color:var(--matn-3);margin-bottom:14px"><span>Keyingi 12 oyda me&#39;yoriy muddati tugaydigan obyektlar:</span> <b data-tarjimasiz style="color:var(--siyoh)">' + jami + "</b></p>" +
       '<div class="oylar">' + oylar.map(o => {
         o.r.sort((a, b) => a.qolgan - b.qolgan);
         return '<div class="oy' + (o.r.length ? "" : " bosh") + '">' +
@@ -304,7 +304,7 @@ MKB.sahifaYukla({
         "<small><span>" + esc(x.manba || "") + "</span>" + (x.taxminiy ? " · <span>buxgalteriya tasdig&#39;ida</span>" : "") + "</small></span></li>";
     };
     document.getElementById("meyorlar").innerHTML =
-      q("umidsizKun", "kun. Undiruv natijasida olingan mulk shu muddatda sotilmasa, umidsiz toifaga o'tadi.") +
+      q("umidsizKun", "kun. Undiruv natijasida olingan mulk shu muddatda sotilmasa, zaxira 100% bo'ladi (MB 2696: «umidsiz» toifa).") +
       q("uchYilKun", "kun. Bank faoliyatida foydalanilmaydigan boshqa mulk uchun chegara.") +
       q("soliqImtiyozOy", "oy. Balansga olingandan keyin mol-mulk va yer solig'i imtiyozi.");
     tarjimaQil(document.getElementById("meyorlar"));

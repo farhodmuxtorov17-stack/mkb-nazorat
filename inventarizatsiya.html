@@ -19,8 +19,8 @@
 .inv-forma{margin-top:14px;padding:16px;background:var(--plitka);border-radius:var(--r-plitka)}
 .inv-forma .kirish{background:var(--oq)}
 .inv-qoshimcha summary{display:inline-flex;align-items:center;min-height:40px;cursor:pointer;font-size:14px;color:var(--matn-2)}
-.inv-progress{height:10px;border-radius:99px;background:var(--plitka);overflow:hidden;margin-top:12px}
-.inv-progress span{display:block;height:100%;background:var(--siyoh);border-radius:99px;transition:width var(--sekin)}
+.inv-progress{height:10px;border-radius:var(--r-pilyula);background:var(--plitka);overflow:hidden;margin-top:12px}
+.inv-progress span{display:block;height:100%;background:var(--siyoh);border-radius:var(--r-pilyula);transition:width var(--sekin)}
 .inv-skaner{display:flex;gap:10px;flex-wrap:wrap}
 .inv-skaner .kirish{flex:1 1 220px}
 .inv-kamera video{width:100%;max-height:60vh;border-radius:var(--r-plitka);background:#000}
@@ -224,10 +224,10 @@ function qrSvg(matn){
 
     ildiz.innerHTML =
       '<section class="metrika-qator tort" aria-label="Asosiy ko\'rsatkichlar" data-sayohat="kpi">' +
-        '<a class="metrika" href="#iv-royxat"><span class="m-yorliq">Ko\'char mulk birliklari</span><span class="m-qiymat">' + MKB.fmt(inv.length) + '</span><span class="m-izoh"><span>Inventar raqami berilgan</span></span></a>' +
-        '<a class="metrika" href="#iv-s12"><span class="m-yorliq">Inventarizatsiya qamrovi</span><span class="m-qiymat">' + (sanalganUlush == null ? "—" : sanalganUlush + "<small>%</small>") + '</span><span class="m-izoh">' + (inv.length ? '<span data-tarjimasiz>' + s12.length + "</span> <span>ta birlik 12 oyda sanalmagan</span>" : "<span>Inventar ro'yxati bo'sh</span>") + "</span></a>" +
-        '<a class="metrika" href="#iv-olinmagan"><span class="m-yorliq">Inventarga olinmagan</span><span class="m-qiymat">' + MKB.fmt(olinmagan.length) + '</span><span class="m-izoh"><span>Binosiz aktiv, raqam berilmagan</span></span></a>' +
-        '<a class="metrika" href="' + (oxirgiYak ? "inventar-dalolatnoma.html?id=" + encodeURIComponent(oxirgiYak.id) : "#iv-invz") + '"><span class="m-yorliq">Oxirgi kamomad</span><span class="m-qiymat">' + (oxirgiYak ? MKB.fmt(kamSoni(oxirgiYak)) : "—") +
+        '<a class="metrika" data-ikonka="kub" href="#iv-royxat"><span class="m-yorliq">Ko\'char mulk birliklari</span><span class="m-qiymat">' + MKB.fmt(inv.length) + '</span><span class="m-izoh"><span>Inventar raqami berilgan</span></span></a>' +
+        '<a class="metrika" data-ikonka="ombor" href="#iv-s12"><span class="m-yorliq">Inventarizatsiya qamrovi</span><span class="m-qiymat">' + (sanalganUlush == null ? "—" : sanalganUlush + "<small>%</small>") + '</span><span class="m-izoh">' + (inv.length ? '<span data-tarjimasiz>' + s12.length + "</span> <span>ta birlik 12 oyda sanalmagan</span>" : "<span>Inventar ro'yxati bo'sh</span>") + "</span></a>" +
+        '<a class="metrika" data-ikonka="ogoh" href="#iv-olinmagan"><span class="m-yorliq">Inventarga olinmagan</span><span class="m-qiymat">' + MKB.fmt(olinmagan.length) + '</span><span class="m-izoh"><span>Binosiz aktiv, raqam berilmagan</span></span></a>' +
+        '<a class="metrika" data-ikonka="xavf" href="' + (oxirgiYak ? "inventar-dalolatnoma.html?id=" + encodeURIComponent(oxirgiYak.id) : "#iv-invz") + '"><span class="m-yorliq">Oxirgi kamomad</span><span class="m-qiymat">' + (oxirgiYak ? MKB.fmt(kamSoni(oxirgiYak)) : "—") +
           '</span><span class="m-izoh">' + (oxirgiYak ? '<span data-tarjimasiz>' + esc(oxirgiYak.id) + " · " + esc(oxirgiYak.sana) + "</span>" : "<span>Yakunlangan inventarizatsiya yo'q</span>") + "</span></a>" +
       "</section>" +
       (faol ? '<section class="karta inv-navbat"><div class="inv-navbat-matn">' +
@@ -237,7 +237,7 @@ function qrSvg(matn){
           /* Sanashni faqat yozish huquqi bor rol boshlaydi; o'qish roli jarayonni kuzatish uchun ochadi */
           (yoza ? '<a class="tugma tugma-brend" data-sayohat="sanash" href="inventarizatsiya.html?id=' + encodeURIComponent(faol.id) + '">' + ik("skaner") + "<span>" + (faol.holat === "jarayonda" ? "Sanashni davom ettirish" : "Sanashni boshlash") + "</span></a>"
             : '<a class="tugma tugma-oq" href="inventarizatsiya.html?id=' + encodeURIComponent(faol.id) + '">' + ik("skaner") + "<span>Ko'rish</span></a>") + "</section>" : "") +
-      '<section class="karta" id="iv-invz" data-sayohat="royxat"><div class="karta-bosh"><h2>Inventarizatsiyalar</h2><span class="soni" data-tarjimasiz>' + royxat.length + " ta</span></div>" +
+      '<section class="karta" id="iv-invz" data-sayohat="royxat"><div class="karta-bosh"><h2 data-ikonka="ombor">Inventarizatsiyalar</h2><span class="soni" data-tarjimasiz>' + royxat.length + " ta</span></div>" +
         (royxat.length ? royxat.map(z => {
           const nat = z.natijalar || [];
           const jami = (D.INVENTAR || []).filter(x => (z.obyektlar || []).includes(x.obyektId)).length;
@@ -251,19 +251,19 @@ function qrSvg(matn){
         }).join("") : MKB.boshHolat("skaner", "Inventarizatsiya o'tkazilmagan", D.MANBA === "mahalliy" ? "Mahalliy reyestrda inventarizatsiya hali kiritilmagan" : "Yangi inventarizatsiya rejasini tuzing")) +
       "</section>" +
       '<div class="tor-2">' +
-        '<section class="karta" id="iv-royxat" data-sayohat="jadval"><div class="karta-bosh"><h2>Inventar ro\'yxati</h2><span class="soni" data-tarjimasiz>' + inv.length + ' ta</span></div><div id="iv-jadval"></div></section>' +
+        '<section class="karta" id="iv-royxat" data-sayohat="jadval"><div class="karta-bosh"><h2 data-ikonka="ombor">Inventar ro\'yxati</h2><span class="soni" data-tarjimasiz>' + inv.length + ' ta</span></div><div id="iv-jadval"></div></section>' +
         '<div class="ustun">' +
-          '<section class="karta" id="iv-s12"><div class="karta-bosh"><h2>12 oyda sanalmagan</h2><span class="soni" data-tarjimasiz>' + s12.length + " ta</span></div>" +
+          '<section class="karta" id="iv-s12"><div class="karta-bosh"><h2 data-ikonka="soat">12 oyda sanalmagan</h2><span class="soni" data-tarjimasiz>' + s12.length + " ta</span></div>" +
             (s12.length ? s12.slice().sort((a, c) => (D.sanaOqi(a.oxirgiSanash) || 0) - (D.sanaOqi(c.oxirgiSanash) || 0)).slice(0, 6).map(x =>
               '<div class="qator"><span class="belgi pushti">' + ik("soat") + '</span><span class="matn"><b>' + esc(x.nom) + '</b><span><span class="kod-mono" data-tarjimasiz>' + esc(x.inventarRaqam) + "</span> · " +
               (x.oxirgiSanash ? "<span>oxirgi sanash</span> <span data-tarjimasiz>" + esc(x.oxirgiSanash) + "</span>" : "<span>hech sanalmagan</span>") + "</span></span></div>").join("") +
               (s12.length > 6 ? '<p class="maydon-izoh" style="margin:8px 0 0"><span>Yana</span> <b data-tarjimasiz>' + (s12.length - 6) + "</b> <span>ta birlik. Jadvalda «Sanalmagan» filtri bilan ko'ring.</span></p>" : "")
               : inv.length ? MKB.boshHolat("tasdiq", "Barcha birliklar oxirgi 12 oyda sanalgan") : MKB.boshHolat("skaner", "Inventar ro'yxati bo'sh", "Avval binosiz aktivlarga inventar raqami bering")) + "</section>" +
-          '<section class="karta" id="iv-olinmagan"><div class="karta-bosh"><h2>Inventarga olinmagan</h2><span class="soni" data-tarjimasiz>' + olinmagan.length + " ta</span></div>" +
+          '<section class="karta" id="iv-olinmagan"><div class="karta-bosh"><h2 data-ikonka="ogoh">Inventarga olinmagan</h2><span class="soni" data-tarjimasiz>' + olinmagan.length + " ta</span></div>" +
             (olinmagan.length ? olinmagan.slice(0, 5).map(y => '<a class="qator" href="obyekt.html?id=' + encodeURIComponent(y.id) + '"><span class="belgi lavanda">' + ik(y.turKalit === "uskuna" ? "uskuna" : "mashina") + '</span><span class="matn"><b>' + esc(y.qisqa || y.nom) + '</b><span><span class="kod-mono" data-tarjimasiz>' + esc(y.id) + "</span> · <span>" + esc(y.tur || "") + "</span></span></span></a>").join("") +
               (olinmagan.length > 5 ? '<p class="maydon-izoh" style="margin:8px 0 0"><span>Yana</span> <b data-tarjimasiz>' + (olinmagan.length - 5) + "</b> <span>ta aktiv</span></p>" : "") +
               (yoza ? '<button type="button" class="tugma tugma-oq" id="iv-raqam" data-yozadi style="width:100%;margin-top:14px">' + ik("skaner") + "<span>Inventar raqami berish</span></button>" +
-                '<p class="maydon-izoh" style="margin-top:8px">Har bir binosiz aktivga INV raqami va QR kod yoziladi. Butlik va ko\'rsatkichlar birinchi sanashda to\'ldiriladi.</p>' : "")
+                '<p class="maydon-izoh" style="margin-top:8px">Har bir binosiz aktivga INV raqami va QR kod yoziladi. To\'liqligi va ko\'rsatkichlar birinchi sanashda to\'ldiriladi.</p>' : "")
               : MKB.boshHolat("tasdiq", "Barcha binosiz aktivlar inventarda")) + "</section>" +
         "</div></div>";
 
@@ -272,14 +272,14 @@ function qrSvg(matn){
     const jd = MKB.jadval("iv-jadval", {
       qatorlar, saralash: "inventarRaqam", sahifaHajmi: 10,
       qidiruv: ["inventarRaqam", "nom", "obyekt", "obyektId", "vin"], qidiruvYozuvi: "Raqam, nom yoki VIN",
-      filtrlar: [{kalit: "sanash", nom: "12 oy", variantlar: ["Sanalgan", "Sanalmagan"]}, {kalit: "butlikNom", nom: "Butlik", variantlar: ["To'liq", "To'liq emas", "Tekshirilmagan"]}],
+      filtrlar: [{kalit: "sanash", nom: "12 oy", variantlar: ["Sanalgan", "Sanalmagan"]}, {kalit: "butlikNom", nom: "To'liqligi", variantlar: ["To'liq", "To'liq emas", "Tekshirilmagan"]}],
       amallar: '<button type="button" class="tugma tugma-oq tugma-kichik" id="iv-qr">' + ik("skaner") + "<span>QR yorliqlar</span></button>",
       csvNomi: "inventar",
       bosh: {sarlavha: "Inventar ro'yxati bo'sh", izoh: D.MANBA === "mahalliy" ? "Mahalliy reyestrda inventar hali kiritilmagan. Binosiz aktivlarga raqam bering." : "Binosiz aktivlarga inventar raqami bering"},
       ustunlar: [
         {kalit: "inventarRaqam", nom: "Raqam", chiz: x => '<span class="kod-mono" data-tarjimasiz>' + esc(x.inventarRaqam) + "</span>"},
         {kalit: "nom", nom: "Birlik", chiz: x => "<b>" + esc(x.nom) + '</b><br><span style="font-size:12px;color:var(--matn-3)">' + esc(x.obyekt) + "</span>"},
-        {kalit: "butlikNom", nom: "Butlik", chiz: x => '<span class="chip chip-kichik ' + (x.butlik === true ? "chip-yashil" : x.butlik === false ? "chip-xavf" : "chip-kul") + '">' + esc(x.butlikNom) + "</span>"},
+        {kalit: "butlikNom", nom: "To'liqligi", chiz: x => '<span class="chip chip-kichik ' + (x.butlik === true ? "chip-yashil" : x.butlik === false ? "chip-xavf" : "chip-kul") + '">' + esc(x.butlikNom) + "</span>"},
         {kalit: "oxirgiSanash", nom: "Oxirgi sanash", tur: "sana", chiz: x => x.oxirgiSanash ? '<span class="kod-mono' + (x.sanash === "Sanalmagan" ? '" style="color:var(--xavf-matn)' : "") + '" data-tarjimasiz>' + esc(x.oxirgiSanash) + "</span>" : "<span>Sanalmagan</span>"},
       ],
     });
@@ -295,7 +295,7 @@ function qrSvg(matn){
   function raqamBerish(royxat){
     MKB.tasdiqla({
       sarlavha: "Inventar raqami berish",
-      matn: royxat.length + " ta aktivga inventar raqami va QR kod beriladi. Butlik, kalit va ko'rsatkichlar birinchi sanashda kiritiladi.",
+      matn: royxat.length + " ta aktivga inventar raqami va QR kod beriladi. To'liqligi, kalit va ko'rsatkichlar birinchi sanashda kiritiladi.",
       tafsilot: [["Aktivlar", String(royxat.length)]],
       oqibat: royxat.slice(0, 5).map(y => (y.qisqa || y.nom) + " · " + y.id).concat(royxat.length > 5 ? ["va yana " + (royxat.length - 5) + " ta"] : []),
       okMatn: "Raqam berish",
@@ -339,7 +339,7 @@ function qrSvg(matn){
         '<div class="maydon keng"><label class="maydon-yorliq" for="iv-qamrov">Qamrov <b>*</b></label><div class="kirish"><select id="iv-qamrov" name="qamrov" required>' +
           '<option value="s12"' + (qamrov.s12.length ? " selected" : "") + '>12 oyda sanalmaganlar (' + qamrov.s12.length + ")</option>" +
           '<option value="hammasi"' + (qamrov.s12.length ? "" : " selected") + '>Barcha ko\'char mulk (' + qamrov.hammasi.length + ")</option>" +
-          '<option value="butlik">Butligi to\'liq emaslar (' + qamrov.butlik.length + ")</option>" +
+          '<option value="butlik">To\'liq bo\'lmaganlar (' + qamrov.butlik.length + ")</option>" +
           filiallar.map(f => '<option value="f:' + esc(f) + '">' + esc((D.filial(f) || {}).nom || f) + " (" + inv.filter(x => (D.OBYEKT_INDEKS[x.obyektId] || {}).filialKod === f).length + ")</option>").join("") +
         "</select></div></div>" +
         '<fieldset class="maydon keng" style="border:0;padding:0;margin:0" id="iv-komissiya"><legend class="maydon-yorliq" style="margin-bottom:6px">Komissiya a\'zolari <b>*</b> <span class="maydon-izoh">kamida 2 kishi</span></legend>' +
@@ -395,16 +395,16 @@ function qrSvg(matn){
           (!yakun && sanaldi < birliklar.length ? '<p class="maydon-izoh" style="margin:10px 0 0">' + (yoza ? "Yakunlash uchun har bir birlik «Topildi» yoki «Topilmadi» deb belgilanishi kerak."
             : "Birliklarni komissiya a'zolari va ko'rik bo'limi xodimlari sanaydi. Bu sahifada sanash natijasi ko'rinadi.") + "</p>" : "") +
         "</section>" +
-        (!yakun && yoza ? '<section class="karta" data-sayohat="skaner"><div class="karta-bosh"><h2>Birlikni topish</h2></div><div class="inv-skaner">' +
+        (!yakun && yoza ? '<section class="karta" data-sayohat="skaner"><div class="karta-bosh"><h2 data-ikonka="izlash">Birlikni topish</h2></div><div class="inv-skaner">' +
           '<div class="kirish"><svg class="ic"><use href="#ik-skaner"/></svg><input id="iv-kod" inputmode="text" autocomplete="off" placeholder="Inventar raqami yoki QR matni" aria-label="Inventar raqami"></div>' +
           '<button type="button" class="tugma tugma-asosiy" id="iv-top">Topish</button>' +
           ("BarcodeDetector" in window ? '<button type="button" class="tugma tugma-oq" id="iv-kamera">' + ik("kamera") + "<span>Kamera</span></button>" : "") +
           '<button type="button" class="tugma tugma-oq" id="iv-ortiqcha" data-yozadi>' + ik("qoshish") + "<span>Ortiqcha birlik</span></button></div>" +
           ("BarcodeDetector" in window ? "" : '<p class="maydon-izoh" style="margin:10px 0 0">Bu brauzer QR kodni kamera orqali o\'qimaydi. Yorliqdagi raqamni kiriting yoki telefondagi QR o\'quvchidan nusxa oling.</p>') +
           '<div id="iv-kamera-joy" class="inv-kamera"></div></section>' : "") +
-        '<section class="karta"><div class="karta-bosh"><h2>Birliklar</h2><span class="soni" data-tarjimasiz>' + birliklar.length + " ta</span></div>" +
+        '<section class="karta"><div class="karta-bosh"><h2 data-ikonka="kub">Birliklar</h2><span class="soni" data-tarjimasiz>' + birliklar.length + " ta</span></div>" +
           (birliklar.length ? birliklar.map(x => birlikHTML(x)).join("") : MKB.boshHolat("skaner", "Bu obyektlarda inventar birligi yo'q")) + "</section>" +
-        (ortiqcha.length ? '<section class="karta"><div class="karta-bosh"><h2>Ortiqcha aniqlangan</h2><span class="soni" data-tarjimasiz>' + ortiqcha.length + " ta</span></div>" +
+        (ortiqcha.length ? '<section class="karta"><div class="karta-bosh"><h2 data-ikonka="ogoh">Ortiqcha aniqlangan</h2><span class="soni" data-tarjimasiz>' + ortiqcha.length + " ta</span></div>" +
           ortiqcha.map(o => '<div class="qator"><span class="belgi lavanda">' + ik("qoshish") + '</span><span class="matn"><b>' + esc(o.nom) + "</b><span>" + esc(obNomi(o.obyektId)) + (o.izoh ? " · " + esc(o.izoh) : "") + "</span></span></div>").join("") + "</section>" : "");
       ulash();
       tarjimaQil(document.querySelector(".kontent"));
@@ -421,7 +421,7 @@ function qrSvg(matn){
         if (n && ochiq !== x.id) tugmalar.push('<button type="button" class="tugma tugma-kichik tugma-oq" data-tafsilot="' + esc(x.id) + '">' + ik("hujjat") + "<span>" + (n.topildi ? "Holatini yozish" : "Izoh yozish") + "</span></button>");
       }
       const tafsilot = n && n.topildi && (n.butlik != null || n.holatBall) ?
-        "<span>" + (n.butlik === false ? "Butligi to'liq emas" : n.butlik ? "Butligi to'liq" : "") + (n.holatBall ? (n.butlik != null ? " · " : "") + "baho " + n.holatBall : "") + "</span>" : "";
+        "<span>" + (n.butlik === false ? "To'liq emas" : n.butlik ? "To'liq" : "") + (n.holatBall ? (n.butlik != null ? " · " : "") + "baho " + n.holatBall : "") + "</span>" : "";
       return '<div class="inv-birlik' + (ochiq === x.id || belgi === x.id ? " tanlangan" : "") + '" id="b-' + esc(x.id) + '"><div class="inv-bosh">' +
         '<span class="belgi siyoh" style="width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none">' + ik(D.binolimi(D.topish(x.obyektId) || {}) ? "uskuna" : "mashina") + "</span>" +
         '<span class="matn"><b>' + esc(x.nom) + '</b><span><span class="kod-mono" data-tarjimasiz>' + esc(x.inventarRaqam) + "</span> · " + esc(obNomi(x.obyektId)) + "</span>" +

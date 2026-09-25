@@ -16,7 +16,7 @@
 .bl-qator.oqilgan .matn > b{font-weight:400;color:var(--matn-2)}
 .bl-qator.oqilgan .belgi{opacity:.55}
 .bl-qator .ong{align-self:center}
-.bl-nuqta{width:9px;height:9px;border-radius:99px;background:var(--xavf);flex:none}
+.bl-nuqta{width:9px;height:9px;border-radius:var(--r-pilyula);background:var(--xavf);flex:none}
 .bl-oqi{width:40px;height:40px}
 .bl-manba{cursor:pointer}
 .bl-manba[aria-pressed="true"]{background:var(--plitka)}
@@ -174,7 +174,7 @@ async function boshla(){
     }
     const chegara = 40 + h.koproq * 40, korinadi = k.slice(0, chegara);
     const tanlanganQoida = h.qoida ? qoida(h.qoida) : null;
-    let html = '<div class="karta-bosh"><h2>' + (h.filtr === "oqilmagan" ? "O'qilmagan" : "Barcha bildirishnomalar") + '</h2><span class="soni" data-tarjimasiz>' + k.length + "</span>" +
+    let html = '<div class="karta-bosh"><h2 data-ikonka="qongiroq">' + (h.filtr === "oqilmagan" ? "O'qilmagan" : "Barcha bildirishnomalar") + '</h2><span class="soni" data-tarjimasiz>' + k.length + "</span>" +
       (tanlanganQoida ? '<button type="button" class="karta-havola" id="bl-qoida-tozala">' + ik("yopish") + '<span>' + esc(tanlanganQoida.nom) + "</span></button>" : "") + "</div>";
     GURUHLAR.forEach(g => {
       const ichi = korinadi.filter(b => guruh(b) === g[0]);
@@ -205,8 +205,8 @@ async function boshla(){
     const qatorlar = (D.QOIDALAR || []).filter(q => son[q.id]).map(q => ({id: q.id, nom: q.nom, manba: q.manba, faol: q.faol !== false, son: son[q.id] || {jami: 0, yangi: 0}}));
     if (son.HODISA) qatorlar.push({id: "HODISA", nom: "Jiddiy hodisa qayd etildi", manba: "Ichki tartib", faol: true, son: son.HODISA});
     qatorlar.sort((a, b) => b.son.yangi - a.son.yangi || b.son.jami - a.son.jami);
-    if (!qatorlar.length){ joy.innerHTML = '<div class="karta-bosh"><h2>Manbalar</h2></div>' + MKB.boshHolat("sozlama", "Hali ogohlantirish bo'lmagan", "Qoida ishga tushganda manbasi shu yerda ko'rinadi."); tarjimaQil(joy); return; }
-    joy.innerHTML = '<div class="karta-bosh"><h2>Manbalar</h2><span class="soni">nazorat qoidalari</span></div>' +
+    if (!qatorlar.length){ joy.innerHTML = '<div class="karta-bosh"><h2 data-ikonka="bogliq">Manbalar</h2></div>' + MKB.boshHolat("sozlama", "Hali ogohlantirish bo'lmagan", "Qoida ishga tushganda manbasi shu yerda ko'rinadi."); tarjimaQil(joy); return; }
+    joy.innerHTML = '<div class="karta-bosh"><h2 data-ikonka="bogliq">Manbalar</h2><span class="soni">nazorat qoidalari</span></div>' +
       qatorlar.map(q => {
         const [ikon, rang] = BELGI[q.id] || (q.id === "HODISA" ? ["xavf", "pushti"] : ["qongiroq", ""]);
         const qid = q.id === "HODISA" ? "" : q.id;

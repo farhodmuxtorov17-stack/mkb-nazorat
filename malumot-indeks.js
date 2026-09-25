@@ -312,7 +312,7 @@
       if (m.kiritilmagan || m.qolganKun <= 0) return;
       const chegara = q.kunlar.filter(k => m.qolganKun <= k).sort((a, b) => a - b)[0];
       if (chegara == null) return;
-      qosh(q, y.id, kunQosh(m.chegaraSana, -chegara), "Umidsiz toifagacha " + chegara + " kun qoldi",
+      qosh(q, y.id, kunQosh(m.chegaraSana, -chegara), "Me'yoriy muddatgacha " + chegara + " kun qoldi",
         nom(y.id) + ": " + m.chegaraSana + "-dan 100% zaxira talab qilinadi.", "obyekt.html?id=" + encodeURIComponent(y.id),
         m.chegaraSana, chegara <= 30 ? "yuqori" : "orta");
     });
@@ -321,7 +321,7 @@
       const qolgan = kunFarqi(j, s.tugash);
       if (qolgan == null || qolgan < 0 || qolgan > q.kunlar[0]) return;
       qosh(q, s.obyektId, kunQosh(s.tugash, -q.kunlar[0]), "Sug'urta polisi " + qolgan + " kunda tugaydi",
-        nom(s.obyektId) + ": " + s.polis + " (" + s.polisTuri + "), " + s.tugash + " gacha.", "sugurta-polis.html?id=" + encodeURIComponent(s.id), s.tugash, qolgan <= 7 ? "yuqori" : "orta");
+        nom(s.obyektId) + ": " + s.polis + " (" + ((D.POLIS_TURLARI || {})[s.polisTuri] || s.polisTuri) + "), " + s.tugash + " gacha.", "sugurta-polis.html?id=" + encodeURIComponent(s.id), s.tugash, qolgan <= 7 ? "yuqori" : "orta");
     });
     q = qoida("Q-BAHO");
     if (q) YOZ.forEach(y => {

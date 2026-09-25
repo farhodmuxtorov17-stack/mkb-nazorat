@@ -33,12 +33,12 @@
   <div class="tor-3" id="km-xizmatlar" data-tur="kommunal-xizmatlar"></div>
 
   <section class="karta" aria-labelledby="km-a-s" data-tur="kommunal-arizalar">
-    <div class="karta-bosh"><h2 id="km-a-s">Ochiq arizalar</h2><span class="soni" id="km-a-soni"></span></div>
+    <div class="karta-bosh"><h2 id="km-a-s" data-ikonka="hujjat">Ochiq arizalar</h2><span class="soni" id="km-a-soni"></span></div>
     <div id="km-arizalar"></div>
   </section>
 
   <section class="karta" id="obyektlar" aria-labelledby="km-o-s" data-tur="kommunal-obyektlar">
-    <div class="karta-bosh"><h2 id="km-o-s">Obyektlar bo'yicha</h2><span class="soni" id="km-o-soni"></span></div>
+    <div class="karta-bosh"><h2 id="km-o-s" data-ikonka="bino">Obyektlar bo'yicha</h2><span class="soni" id="km-o-soni"></span></div>
     <div id="km-obyektlar"></div>
   </section>
 </main>
@@ -98,7 +98,7 @@
       const qarz = q.reduce((a, x) => a + (+x.avvalgiQarz || 0), 0);
       const ar = ochiq.filter(a => a.xizmat === k).length;
       const son = (h, nom, xavf) => '<a class="xk-son' + (xavf && s(h) ? " xavf" : "") + '" href="kommunal.html?xizmat=' + k + "&holat=" + encodeURIComponent(holatNom(h)) + '#obyektlar"><b data-tarjimasiz>' + s(h) + "</b><span>" + nom + "</span></a>";
-      return '<section class="karta xizmat-karta"><div class="karta-bosh"><h2>' + XIZMAT[k][0] + "</h2>" +
+      return '<section class="karta xizmat-karta"><div class="karta-bosh"><h2 data-ikonka="tomchi">' + XIZMAT[k][0] + "</h2>" +
         '<span class="soni"><b data-tarjimasiz>' + q.length + "</b> <span>ta obyekt</span></span></div>" +
         '<div class="xk-sonlar">' + son("uzilgan", "Uzilgan", true) + son("vaqtincha to'xtatilgan", "To'xtatilgan", false) + son("ulangan", "Ulangan", false) +
           (s("mavjud emas") ? son("mavjud emas", "Tarmoq yo'q", false) : "") + (s("") ? son("", "Kiritilmagan", false) : "") + "</div>" +

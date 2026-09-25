@@ -32,10 +32,80 @@
   }
   const G1 = generator(20260826), G2 = generator(52260921), G3 = generator(63260921);
   const rnd = G1.r, tanla = G1.tanla, oraliq = G1.oraliq;
+  /* G4 faqat namoyish summalarini siljitadi: bozor bahosi va qarz qoplanishi shu oqimdan olinadi.
+     Alohida oqim kerak, chunki G1 dagi ketma-ketlik aktivning turi, hududi, nomi va reyestr
+     raqamini beradi — ular o'zgarmasligi shart, aks holda saqlangan havolalar uziladi. */
+  const {r: r4} = generator(41260925);
+  /* Namoyish summasi bankning haqiqiy kitobiga tushib qolmasin: har aktiv bahosi 0,72-1,18
+     oralig'ida siljiydi, o'rtacha 0,95. Urug' qotirilgan, shuning uchun raqam har ochilishda bir xil. */
+  const bahoSiljit = n => Math.max(12, Math.round(n * (0.72 + r4() * 0.46)));
 
-  /* Surat o'rniga hech narsa qo'yilmaydi. Funksiya eski chizma funksiyasi o'rnida turadi va bitta
-     tasodifiy son iste'mol qiladi: shu sabab keyingi yozuvlarning qiymatlari o'zgarmaydi. */
-  const suratYoq = () => { rnd(); return ""; };
+  /* Eski chizma funksiyasi o'rnida turadi va bitta tasodifiy son iste'mol qiladi: shu sabab
+     keyingi yozuvlarning qiymatlari o'zgarmaydi. Surat quyidagi NAMUNA_SURAT dan beriladi. */
+  const suratOtkaz = () => { rnd(); return ""; };
+
+  /* ---------- Namoyish suratlari ----------
+     assets/namuna/ dagi ochiq litsenziyali fotolar (Wikimedia Commons). Har surat aktivning
+     turiga mos keladi, o'ziga emas: haqiqiy obyekt suratlari faqat mahalliy reyestrda bo'ladi.
+     Ikkinchi qiymat — muallif va litsenziya, u ekranda surat ostida ko'rsatiladi (CC BY va
+     CC BY-SA shuni talab qiladi). To'liq ro'yxat assets/namuna/MANBA.md da. */
+  const NAMUNA_SURAT = {
+    mamuriy: [["mamuriy-1", "Uralsk Review, CC BY 3.0"], ["mamuriy-2", "Jean Housen, CC BY-SA 4.0"], ["mamuriy-3", "Bula.erg, CC BY-SA 4.0"], ["mamuriy-4", "Nikolai Bulykin, CC BY-SA 4.0"], ["mamuriy-5", "Айвик, CC BY-SA 3.0"], ["mamuriy-6", "Шухрат Саъдиев, CC BY-SA 4.0"]],
+    sex: [["sex-1", "Homoatrox, CC BY-SA 4.0"], ["sex-2", "Zoirovna, CC BY-SA 4.0"], ["sex-3", "Шевченко Катерина Володимирівна, CC BY-SA 4.0"], ["sex-4", "Raymond Zoller, CC BY-SA 2.0"], ["sex-5", "Raymond Zoller, CC BY-SA 2.0"]],
+    ferma: [["ferma-1", "Лобачев Владимир, CC BY-SA 3.0"], ["ferma-2", "NVO, CC BY-SA 3.0"], ["ferma-3", "Dor Shabashewitz, CC BY-SA 4.0"], ["ferma-4", "Екатерина Борисова, CC BY-SA 4.0"], ["ferma-5", "Alandislands, CC BY-SA 4.0"], ["ferma-6", "VOLOT, CC BY-SA 4.0"]],
+    issiqxona: [["issiqxona-1", "USDAgov, Public domain"], ["issiqxona-2", "Schlaghecken Josef, CC BY-SA 4.0"], ["issiqxona-3", "MHM55, CC BY-SA 4.0"]],
+    ombor: [["ombor-1", "Aneem faris, CC BY-SA 4.0"], ["ombor-2", "Анатолий Таранцов, CC BY 3.0"], ["ombor-3", "Natalia Senatorova, CC BY-SA 4.0"], ["ombor-4", "Oxfam East Africa, CC BY 2.0"], ["ombor-5", "Natalia Senatorova, CC BY-SA 4.0"]],
+    dokon: [["dokon-1", "Jean Housen, CC BY-SA 4.0"], ["dokon-2", "Jean Housen, CC BY-SA 4.0"], ["dokon-3", "Bekbal, CC BY-SA 4.0"], ["dokon-4", "Peretz Partensky, CC BY-SA 2.0"], ["dokon-5", "Thomas Taylor Hammond, CC BY-SA 4.0"], ["dokon-6", "Jean Housen, CC BY-SA 4.0"]],
+    kopqavat: [["kopqavat-1", "Uralsk Review, CC BY 3.0"], ["kopqavat-2", "Olimidono, CC0"], ["kopqavat-3", "Sigismund von Dobschütz, CC BY-SA 3.0"], ["kopqavat-4", "Uralsk Review, CC BY 3.0"]],
+    uy: [["uy-1", "Nikolai Bulykin, CC BY-SA 4.0"], ["uy-2", "Shuhrataxmedov, CC BY-SA 3.0"], ["uy-3", "upyernoz, CC BY 2.0"], ["uy-4", "Nikolai Bulykin, CC BY-SA 4.0"], ["uy-5", "upyernoz, CC BY 2.0"], ["uy-6", "Adam Jones, CC BY-SA 2.0"]],
+    uskuna: [["uskuna-1", "Unknown photographer, CC BY 3.0"], ["uskuna-2", "Kent Madsen, CC BY-SA 4.0"], ["uskuna-3", "Surya Prakash.S.A., CC BY-SA 3.0"], ["uskuna-4", "NearEMPTiness, CC BY-SA 4.0"], ["uskuna-5", "Carol Carlos, CC BY-SA 4.0"], ["uskuna-6", "Tell Rifaat Information Office, CC BY 3.0"]],
+    /* Transport va texnika: surat markaga ham mos kelishi kerak — yozuvda «Chevrolet Damas»
+       tursa, sedan surati qo'yilmaydi. Uchinchi qiymat — nomdagi model bo'lagi, modeli
+       ro'yxatda yo'q aktiv suratsiz qoladi. Yengil va yuk avtomobil ro'yxatlari alohida:
+       «Yuk avtomobili» turidagi yozuvga sedan surati tushmasligi kerak. */
+    avto: [
+      ["avto-1", "Mosantio, CC BY 4.0", "Nexia"],
+      ["avto-3", "Ilya Plekhanov, CC BY-SA 4.0", "Damas"],
+      ["avto-4", "Matti Blume, CC BY-SA 4.0", "Cobalt"],
+      ["avto-6", "Makizox, CC BY-SA 4.0", "Lacetti"],
+      ["avto-7", "Bull-Doser at English Wikipedia, Public domain", "Spark"],
+      ["avto-9", "Bull-Doser, Public domain", "Tracker"],
+      ["avto-10", "Benespit, CC BY-SA 4.0", "Captiva"],
+      ["avto-11", "Bull-Doser, Public domain", "Equinox"],
+      ["avto-12", "Benespit, CC BY-SA 4.0", "Kia K5"]
+    ],
+    yuk: [
+      ["avto-8", "Benespit, CC BY-SA 4.0", "Labo"],
+      ["avto-13", "Tokumeigakarinoaoshima, CC0", "Isuzu"],
+      ["avto-14", "Oleg Yunakov, CC BY-SA 4.0", "MAN TGS"]
+    ],
+    texnika: [
+      ["texnika-1", "Александр Сигачёв, CC0", "Ekskavator"],
+      ["texnika-2", "Redline, CC BY-SA 3.0", "G'ildirakli"]
+    ]
+  };
+  const NAMUNA_NAVBAT = {};
+  function namunaSurati(rasmTuri, nom) {
+    const b = NAMUNA_SURAT[rasmTuri] || [];
+    if (!b.length) return null;
+    /* Modeli ko'rsatilgan surat faqat shu model yozilgan aktivga tushadi */
+    const r = b.filter(s => !s[2] || String(nom).indexOf(s[2]) >= 0);
+    if (!r.length) return null;
+    /* Navbat model bo'yicha yuritiladi (binolarda — tur bo'yicha). Transport va texnikada har
+       ikkinchi aktiv, binolarda har uchinchisi surat oladi; bitta surat ko'pi bilan ikki aktivda
+       takrorlanadi. Qolganlari suratsiz qoladi: surati hali yuklanmagan aktiv shunday ko'rinadi. */
+    const kalit = rasmTuri + "/" + (r[0][2] || "");
+    const qadam = r[0][2] ? 2 : 3;
+    const n = (NAMUNA_NAVBAT[kalit] = (NAMUNA_NAVBAT[kalit] || 0) + 1);
+    if (n % qadam !== 1 || n > r.length * qadam * 2) return null;
+    const k = (n - 1) / qadam;
+    const s = r[k % r.length];
+    /* «Umumiy surat» belgisi bu yerda qo'yilmaydi: navbat tur va model bo'yicha alohida
+       yuritilgani uchun navbat raqamidan takrorlanishni bilib bo'lmaydi. Belgi reyestr
+       yig'ilib bo'lgach, fayl yo'li bo'yicha haqiqiy sanoqdan qo'yiladi. */
+    return {yol: "assets/namuna/" + s[0] + ".webp", kichik: "assets/namuna/" + s[0] + "-k.webp",
+            manba: "Namuna surati · " + s[1] + " · Wikimedia Commons"};
+  }
 
   /* ---------- Filiallar (namoyish) ---------- */
   const FILIAL_KODLAR = {
@@ -123,10 +193,12 @@
                          "Qurilish materiallari sexi", "Issiqxona majmuasi", "Baliqchilik xo'jaligi binosi", "Quyonchilik fermasi",
                          "Tikuv-trikotaj sexi", "Konserva sexi"],
     "Ombor": ["Omborxona binosi", "Sovutkichli ombor", "Mineral o'g'itlar ombori", "Don saqlash ombori", "Meva-sabzavot ombori"],
-    "Avtotransport": ["Chevrolet Cobalt (2022)", "Isuzu NQR 71 (2021)", "Chevrolet Malibu (2023)", "MAN TGS 26.400 (2020)",
-                      "Chevrolet Damas (2021)", "Dongfeng DFL1160 (2019)", "Chevrolet Nexia 3 (2020)", "Chevrolet Spark (2021)",
-                      "Chevrolet Lacetti (2019)", "Chevrolet Tracker (2022)", "Chevrolet Onix (2023)", "Chevrolet Labo (2022)",
-                      "Chevrolet Captiva (2019)", "Chevrolet Equinox (2021)", "Kia K5 (2022)", "Hyundai HD78 (2021)"]
+    "Avtotransport": ["Chevrolet Cobalt (2022)", "Chevrolet Malibu (2023)", "Chevrolet Damas (2021)", "Chevrolet Nexia 3 (2020)",
+                      "Chevrolet Spark (2021)", "Chevrolet Lacetti (2019)", "Chevrolet Tracker (2022)", "Chevrolet Onix (2023)",
+                      "Chevrolet Captiva (2019)", "Chevrolet Equinox (2021)", "Kia K5 (2022)"],
+    /* Yuk avtomobili turidagi yozuv yengil avtomobil nomini olmasligi kerak */
+    "Yuk avtotransport": ["Isuzu NQR 71 (2021)", "MAN TGS 26.400 (2020)", "Dongfeng DFL1160 (2019)", "Hyundai HD78 (2021)",
+                          "Chevrolet Labo (2022)"]
   };
   const EGA_JIS = ["Karimov Javlon", "Ergasheva Dilnoza", "Yusupova Nodira", "To'xtasinov Sherzod", "Rasulov Otabek", "Islomov Bekzod",
     "Nazarova Malika", "Qodirov Alisher", "Sattorova Gulnoza", "Umarov Doniyor", "Hakimova Zulfiya", "Ochilov Sanjar",
@@ -154,14 +226,15 @@
     const ega = yur ? tanla(EGA_YUR) : tanla(EGA_JIS);
     /* nom navbat bilan beriladi (tasodifiy son baribir olinadi, keyingi qiymatlar ketma-ketligi o'zgarmaydi) */
     rnd();
-    const royxat = NOM_BOSH[t[0]];
-    const nomQisqa = royxat[(NOM_NAVBAT[t[0]] = (NOM_NAVBAT[t[0]] || 0) + 1) % royxat.length];
-    const baho = oraliq(t[4], t[5]);
-    const qoplash = oraliq(58, 260);
+    const nomKalit = t[1] === "yuk" ? "Yuk avtotransport" : t[0];
+    const royxat = NOM_BOSH[nomKalit];
+    const nomQisqa = royxat[(NOM_NAVBAT[nomKalit] = (NOM_NAVBAT[nomKalit] || 0) + 1) % royxat.length];
+    const baho = bahoSiljit(oraliq(t[4], t[5]));
+    const qoplash = Math.round(oraliq(58, 260) * (0.9 + r4() * 0.24));
     const kunlar = oraliq(35, 720);
     const eskiBosq = kunlar > 500 ? tanla([4, 5, 6]) : kunlar > 300 ? tanla([3, 4, 2]) : kunlar > 150 ? tanla([2, 1]) : tanla([0, 1]);
     const maydon = t[3] === "dona" ? null : oraliq(t[2][0], t[2][1]);
-    suratYoq();
+    suratOtkaz();
     oraliq(0, 1); oraliq(0, 1); oraliq(0, 1);                      /* sobiq egasining raqami */
     tanla([0]); oraliq(0, 1); oraliq(0, 1); oraliq(0, 1);           /* telefon */
     oraliq(0, 1); tanla([0]); oraliq(0, 1); tanla([0]);             /* kredit shartnomasi */
@@ -257,6 +330,7 @@
       const qTur = binoli
         ? tanla2(["post", "pult", "pult", "mobil", "avtonom", "avtonom", "ichki", null, null])
         : tanla2(["post", "post", "avtonom", "avtonom", null]);
+      const ns = namunaSurati(rasmTuri, e.nomQisqa);
       const y = D.aktivQolip({
         id, nom: e.nomQisqa + ", " + e.manzilBosh, qisqa: e.nomQisqa,
         tur: D.ASOSIY_TURLAR.find(a => a.kalit === turKalit).nom, turKalit, rasmTuri, binoli,
@@ -279,6 +353,8 @@
           : {bozor: e.baho, tugatish: Math.round(e.baho * (0.72 + r2() * 0.1)), bahoSana: nisbiy(-bahoKun),
              baholovchi: tanla2(["«Baholash Servis» MChJ", "«Expert Baho» MChJ", "«Milliy Baholash Markazi» DUK", "«Aniq Baho» MChJ"])},
         maydon, huquq, kommunal,
+        rasm: ns ? ns.yol : "", rasmKichik: ns ? ns.kichik : "",
+        rasmManba: ns ? ns.manba : null, rasmUmumiy: false,
         himoya: {qoriqlashTuri: qTur, qurilmaSoni: 0, andoza: null},
         sotuv: {holat: holat === "Sotuvga tayyorlanmoqda" ? "tayyorlanmoqda" : holat === "Lotda" ? "lotda" : holat === "Bo'lib to'lashda" ? "sotildi" : holat === "Davaktivga o'tkazilgan" ? "davaktiv" : null,
                 usul: holat === "Lotda" ? "eauksion" : holat === "Bo'lib to'lashda" ? "bolib" : holat === "Davaktivga o'tkazilgan" ? "davaktiv" : holat === "Ijarada" ? "ijara" : null},
@@ -292,6 +368,13 @@
       yangi.push(y);
     }
     yangi.forEach(y => { D.YOZUVLAR.push(y); D.reyestrgaQosh(y, "balans"); });
+    /* Bitta namuna surati ikkita aktivda turishi mumkin. Reyestr yig'ilib bo'lgach, har bir
+       fayl yo'li nechta yozuvda uchraganini sanaymiz va takrorlanganlarining hammasiga
+       «Umumiy surat» belgisini qo'yamiz — shunda rahbariyat bir xil binoni ikki kartochkada
+       ko'rganda buni darrov tushunadi. */
+    const SURAT_SANOQ = {};
+    D.YOZUVLAR.forEach(y => { if (y.rasm) SURAT_SANOQ[y.rasm] = (SURAT_SANOQ[y.rasm] || 0) + 1; });
+    D.YOZUVLAR.forEach(y => { y.rasmUmumiy = !!(y.rasm && SURAT_SANOQ[y.rasm] > 1); });
   }
 
   /* ============================================================
@@ -953,7 +1036,7 @@
      4. Qoidalar (ikki rejimda ham): bildirishnoma va vazifa triggerlari
      ============================================================ */
   const QOIDALAR = [
-    {id: "Q-UMIDSIZ",   trigger: "umidsiz",          nom: "Umidsiz toifagacha qolgan kun", kunlar: [90, 60, 30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 30, faol: true, manba: "MB 2696, 20-band"},
+    {id: "Q-UMIDSIZ",   trigger: "umidsiz",          nom: "Me'yoriy muddatgacha qolgan kun", kunlar: [90, 60, 30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 30, faol: true, manba: "MB 2696, 20-band"},
     {id: "Q-POLIS",     trigger: "polis",            nom: "Sug'urta polisi 30 kunda tugaydi", kunlar: [30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 7, faol: true, manba: "Ichki tartib"},
     {id: "Q-BAHO",      trigger: "baholash",         nom: "Baholash eskirmoqda", kunlar: [30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "Yagona milliy baholash standarti"},
     {id: "Q-KORIK",     trigger: "korik",            nom: "Ko'rik kechikdi", kunlar: [0], natija: "ikkalasi", qabulQiluvchiRol: "Ko'rik va xavfsizlik inspektori", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 7, faol: true, manba: "Ichki me'yor"},

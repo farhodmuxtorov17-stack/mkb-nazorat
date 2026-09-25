@@ -247,9 +247,87 @@ sinov("suratlarda chizma yo'llari yo'q (.svg, assets/obyekt/)", () => {
   teng(yomon.length, 0, yomon.slice(0, 5).join("; "));
 });
 
-sinov("namoyish rejimida surat o'rnida almashtiruvchi rasm yo'q", () => {
-  const rasmli = D.YOZUVLAR.filter(y => y.rasm || (y.rasmlar || []).length);
-  teng(rasmli.length, 0, "namoyishda surat: " + rasmli.slice(0, 3).map(y => y.id).join(", "));
+/* Transport va texnika suratining modeli: yozuvda «Chevrolet Damas» tursa, sedan surati emas,
+   Damas surati qo'yilishi kerak. Ro'yxat malumot-kengaytma.js dagi NAMUNA_SURAT ni takrorlaydi. */
+const MODEL_SURAT = {
+  "avto-1": "Nexia", "avto-3": "Damas", "avto-4": "Cobalt", "avto-6": "Lacetti", "avto-7": "Spark",
+  "avto-8": "Labo", "avto-9": "Tracker", "avto-10": "Captiva", "avto-11": "Equinox", "avto-12": "Kia K5",
+  "avto-13": "Isuzu", "avto-14": "MAN TGS", "texnika-1": "Ekskavator", "texnika-2": "G'ildirakli"
+};
+
+sinov("namoyish surati assets/namuna/ dan olinadi, fayli bor va manbasi ko'rsatilgan", () => {
+  const rasmli = D.YOZUVLAR.filter(y => y.rasm);
+  ok(rasmli.length >= 60 && rasmli.length <= 90, "suratli aktiv soni: " + rasmli.length);
+  const yomon = [];
+  rasmli.forEach(y => {
+    if (!/^assets\/namuna\/[a-z]+-\d+\.webp$/.test(y.rasm)) yomon.push(y.id + ": " + y.rasm);
+    if (!/^assets\/namuna\/[a-z]+-\d+-k\.webp$/.test(y.rasmKichik)) yomon.push(y.id + ": " + y.rasmKichik);
+    /* Surat fayli aktiv turi bilan nomlanadi. Yuk avtomobili suratlari ham avto-* deb
+       nomlangan, lekin ular faqat yuk modellari ro'yxatidan olinadi. */
+    const bosh = y.rasmTuri === "yuk" ? "avto" : y.rasmTuri;
+    if (y.rasm.indexOf("assets/namuna/" + bosh + "-") !== 0) yomon.push(y.id + ": surat turga mos emas");
+    /* Transport va texnikada surat yozuvdagi modelga mos bo'lishi shart */
+    const model = MODEL_SURAT[y.rasm.replace(/^assets\/namuna\/|\.webp$/g, "")];
+    if (model && y.qisqa.indexOf(model) < 0) yomon.push(y.id + ": " + y.qisqa + " uchun " + model + " surati");
+    if (!/Wikimedia Commons$/.test(y.rasmManba || "")) yomon.push(y.id + ": surat manbasi yozilmagan");
+    [y.rasm, y.rasmKichik].forEach(r => { if (!fs.existsSync(path.join(ILDIZ, r))) yomon.push(y.id + ": fayl yo'q " + r); });
+  });
+  teng(yomon.length, 0, yomon.slice(0, 5).join("; "));
+});
+
+/* CC BY va CC BY-SA muallif va litsenziyani surat yonida ko'rsatishni talab qiladi
+   (assets/namuna/MANBA.md). Surat chiqadigan har bir joyda manba qatori ham chiqishi shart. */
+sinov("surat chiqadigan joyda muallif va litsenziya ham ko'rinadi", () => {
+  const app = fs.readFileSync(path.join(ILDIZ, "yadro", "app.js"), "utf8");
+  ok(/function suratManbaQatori\(/.test(app), "suratManbaQatori yordamchisi yo'q");
+  ok(/suratManbasi: suratManbaQatori/.test(app), "MKB.suratManbasi eksport qilinmagan");
+  ok(/suratManbaQatori\(surat \? x\.rasmManba : null/.test(app), "obyekt kartochkasida manba qatori chizilmaydi");
+  ok(/alt="' \+ esc\(suratAlt\(/.test(app), "surat alt matni aktiv turi va hududini bermaydi");
+  const reyestr = fs.readFileSync(path.join(ILDIZ, "obyektlar.html"), "utf8");
+  ok(/MKB\.suratManbasi\(y\.rasmManba\)/.test(reyestr), "reyestr kartochkasida manba qatori yo'q");
+  const css = fs.readFileSync(path.join(ILDIZ, "yadro", "app.css"), "utf8");
+  ok(/\.surat-manba\{/.test(css), "surat-manba uslubi app.css da yo'q");
+});
+
+/* Bitta namuna surati ko'pi bilan ikki aktivda turadi. Shunday har bir yozuvda «Umumiy surat»
+   belgisi bo'lishi shart: aks holda rahbariyat ikki kartochkada bir xil binoni ko'rib, uni
+   haqiqiy surat deb o'ylaydi. */
+sinov("bitta namuna surati bir nechta aktivda bo'lsa, hammasida umumiy belgisi turadi", () => {
+  const sanoq = {};
+  D.YOZUVLAR.filter(y => y.rasm).forEach(y => { sanoq[y.rasm] = (sanoq[y.rasm] || 0) + 1; });
+  const takror = Object.keys(sanoq).filter(k => sanoq[k] > 1);
+  ok(takror.length > 0, "takrorlangan namuna surati yo'q — tekshiruv ma'nosiz");
+  const yomon = [];
+  D.YOZUVLAR.forEach(y => {
+    const kutilgan = !!(y.rasm && sanoq[y.rasm] > 1);
+    if (!!y.rasmUmumiy !== kutilgan) yomon.push(y.id + ": rasmUmumiy=" + !!y.rasmUmumiy + ", kutilgan " + kutilgan);
+  });
+  teng(yomon.length, 0, yomon.slice(0, 5).join("; "));
+});
+
+/* «Yuk avtomobili» turidagi yozuvda yengil avtomobil nomi ham, sedan surati ham bo'lmaydi */
+const YUK_MODEL = ["Isuzu", "MAN TGS", "Dongfeng", "Hyundai HD", "Labo"];
+sinov("yuk avtomobili nomi va surati yengil avtomobilnikidan ajratilgan", () => {
+  const yuk = D.YOZUVLAR.filter(y => y.rasmTuri === "yuk");
+  const avto = D.YOZUVLAR.filter(y => y.rasmTuri === "avto");
+  ok(yuk.length > 0 && avto.length > 0, "namoyishda yuk yoki yengil avtomobil yo'q");
+  const yomon = [];
+  yuk.forEach(y => {
+    if (!YUK_MODEL.some(m => y.qisqa.indexOf(m) >= 0)) yomon.push(y.id + ": yuk emas — " + y.qisqa);
+    if (y.rasm && ["avto-8", "avto-13", "avto-14"].indexOf(y.rasm.replace(/^assets\/namuna\/|\.webp$/g, "")) < 0)
+      yomon.push(y.id + ": yuk suratida yengil avtomobil — " + y.rasm);
+  });
+  avto.forEach(y => {
+    if (YUK_MODEL.some(m => y.qisqa.indexOf(m) >= 0)) yomon.push(y.id + ": yengil avtomobilda yuk nomi — " + y.qisqa);
+  });
+  teng(yomon.length, 0, yomon.slice(0, 5).join("; "));
+});
+
+sinov("namuna suratlarining manbasi MANBA.md da yozilgan", () => {
+  const manba = fs.readFileSync(path.join(ILDIZ, "assets/namuna/MANBA.md"), "utf8");
+  const yollar = [...new Set(D.YOZUVLAR.filter(y => y.rasm).map(y => y.rasm.split("/").pop()))];
+  const yoq = yollar.filter(f => manba.indexOf("`" + f + "`") < 0);
+  teng(yoq.length, 0, "MANBA.md da yo'q: " + yoq.join(", "));
 });
 
 sinov("binosiz aktivda maydon, kommunal va kirish nuqtasi yo'q", () => {
@@ -452,6 +530,11 @@ sinov("balans sanasi dd.mm.yyyy ga keltiriladi, qiymat saqlanadi", () => {
 
 sinov("aniq koordinata to'qilmaydi: joy.aniq = false", () => {
   M8.YOZUVLAR.forEach(y => ok(!y.joy || y.joy.aniq === false, y.id + ": to'qima aniq koordinata"));
+});
+
+sinov("mahalliy yozuvga namoyish namunasi surati qo'yilmaydi", () => {
+  const n = M8.YOZUVLAR.filter(y => (y.rasm || "").indexOf("assets/namuna/") === 0);
+  teng(n.length, 0, "mahalliy yozuvda namuna surati: " + n.map(y => y.id).join(", "));
 });
 
 sinov("namoyish to'plamlari mahalliy rejimda bo'sh", () => {

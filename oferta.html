@@ -12,7 +12,7 @@
     linear-gradient(168deg,var(--fon-sovuq) 0%,var(--fon-sovuq) 50%,var(--fon-mint) 100%)}
 .h-shapka{width:min(820px,100%);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .h-varaq{width:min(820px,100%);background:var(--oq);border-radius:var(--r-karta);box-shadow:var(--soya-suzuvchi);padding:40px 46px 38px}
-.h-varaq h1{font:500 30px/1.16 var(--shrift-displey);letter-spacing:-.035em}
+.h-varaq h1{font:500 var(--matn-h1-ochiq)/1.16 var(--shrift-displey);letter-spacing:-.035em}
 .h-ost{font-size:14px;color:var(--matn-3);margin-top:8px}
 .h-tahrir{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:8px 15px;border-radius:var(--r-pilyula);
   background:var(--plitka);font-size:12.5px;color:var(--matn-2)}
@@ -22,14 +22,14 @@
 .h-band p{margin-top:10px;font-size:14.5px;line-height:1.68;color:var(--matn-2)}
 .h-band ul{margin-top:11px;display:flex;flex-direction:column;gap:9px;list-style:none}
 .h-band li{position:relative;padding-left:21px;font-size:14.5px;line-height:1.62;color:var(--matn-2)}
-.h-band li::before{content:"";position:absolute;left:4px;top:9px;width:6px;height:6px;border-radius:999px;background:var(--matn-4)}
+.h-band li::before{content:"";position:absolute;left:4px;top:9px;width:6px;height:6px;border-radius:var(--r-pilyula);background:var(--matn-4)}
 .h-oyoq{width:min(820px,100%);display:flex;justify-content:center;font-size:13px}
 .h-oyoq a{color:var(--matn-2);text-decoration:underline;text-underline-offset:3px}
 .h-oyoq a:hover{color:var(--siyoh)}
 @media (max-width:560px){
   .h-sahna{padding:16px 14px 30px}
-  .h-varaq{padding:26px 20px 24px;border-radius:24px}
-  .h-varaq h1{font-size:24px}
+  .h-varaq{padding:26px 20px 24px}
+  .h-varaq h1{font-size:25px}
   .h-shapka .tugma{flex:1 1 auto;justify-content:center}
 }
 </style>
@@ -207,13 +207,27 @@
     chiz();
     tarjimaQil();
   });
-  /* Ortga: hujjat tizim ichidan ochilgan bo'lsa — o'sha sahifaga, aks holda kirish sahifasiga */
+  /* Ortga: hujjat yangi ilovada ochilgan bo'lsa — ilovani yopadi, tizim ichidan ochilgan bo'lsa —
+     o'sha sahifaga qaytaradi, aks holda kirish sahifasiga o'tadi */
   const ortga = document.getElementById("ortga");
+  const ortgaMatn = document.getElementById("ortga-matn");
   const kel = document.referrer;
-  if (kel && kel.indexOf(location.origin) === 0 && !/\/(kirish|oferta|maxfiylik)\.html/.test(kel) && history.length > 1){
-    document.getElementById("ortga-matn").textContent = "Orqaga";
+  const ozimiznikidan = !!kel && kel.indexOf(location.origin) === 0;
+  /* Yangi ilovada ochilgan: tarix bo'sh, kelgan sahifa esa shu tizimniki */
+  const yangiIlova = ozimiznikidan && history.length <= 1;
+  if ((window.opener && !window.opener.closed) || yangiIlova){
+    ortgaMatn.textContent = "Oynani yopish";
+    ortga.addEventListener("click", e => {
+      e.preventDefault();
+      window.close();
+      /* Brauzer ilovani yopmasa — hujjat ochilgan sahifaga qaytariladi */
+      setTimeout(() => { if (!window.closed) location.href = kel || ortga.getAttribute("href"); }, 200);
+    });
+  }else if (ozimiznikidan && !/\/(kirish|oferta|maxfiylik)\.html/.test(kel) && history.length > 1){
+    ortgaMatn.textContent = "Orqaga";
     ortga.addEventListener("click", e => { e.preventDefault(); history.back(); });
   }
+  tarjimaQil(ortga);
 })();
 </script>
 </body>

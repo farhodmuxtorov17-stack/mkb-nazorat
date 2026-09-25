@@ -241,7 +241,8 @@ tekshir("har bir ish sahifasi aynan bitta bo'limga tegishli", () => {
   const kop = Object.keys(joy).filter(f => joy[f].length > 1);
   talab(!kop.length, "bir necha bo'limda: " + kop.join(", "));
   const sahifalar = fs.readdirSync(ILDIZ).filter(f => f.endsWith(".html") && !f.startsWith("_") && !/^taqdimot/.test(f));
-  const tashqari = new Set(["index.html", "kirish.html", "parol-tiklash.html", "parol-yangilash.html", "xato-403.html", "xato-404.html"]);
+  const tashqari = new Set(["index.html", "kirish.html", "parol-tiklash.html", "parol-yangilash.html",
+    "oferta.html", "maxfiylik.html", "xato-403.html", "xato-404.html"]);
   const yoq = sahifalar.filter(f => !joy[f] && !tashqari.has(f));
   talab(!yoq.length, "bo'limsiz sahifalar: " + yoq.join(", "));
 });

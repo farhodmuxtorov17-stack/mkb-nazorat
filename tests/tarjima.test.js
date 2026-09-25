@@ -185,6 +185,45 @@ sinov("maydon birligi m² ruschada м² bo'ladi", () => {
   tekshir(xato.length === 0, "maydon birligi (" + xato.length + "):\n  " + xato.join("\n  "));
 });
 
+/* ---------- 5. Sessiyasiz ochiladigan sahifalar ---------- */
+/* Kirish ekrani, ommaviy oferta va maxfiylik bildirishnomasi sessiyasiz ochiladi.
+   Ruscha xodim kirishdan oldin aynan shu matnni o'qib "qabul qilaman" belgisini
+   qo'yadi, shuning uchun bu sahifalarning har bir ko'rinadigan satri lug'atda
+   bo'lishi shart. Brauzerli sinov (tests/tarjima.mjs) sahifani ochib tekshiradi,
+   bu sinov esa brauzersiz, statik belgilash bo'yicha o'shani qaytaradi. */
+const OCHIQ_SAHIFALAR = ["kirish.html", "oferta.html", "maxfiylik.html", "parol-tiklash.html", "parol-yangilash.html"];
+/* Til kodlari, brend nomi va texnik belgilar tarjima qilinmaydi */
+const OCHIQ_ISTISNO = new Set(["UZ", "RU", "MKB", "MKBANK", "Mikrokreditbank", "PDF", "Word", "Excel", "SMS", "OneID", "E-IMZO"]);
+const BELGILAR = {"&#39;": "'", "&amp;": "&", "&quot;": '"', "&lt;": "<", "&gt;": ">", "&nbsp;": " ", "&mdash;": "—", "&ndash;": "–"};
+function korinadiganMatn(fayl){
+  let t = fs.readFileSync(path.join(ILDIZ, fayl), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<svg[\s\S]*?<\/svg>/gi, "").replace(/<title>[\s\S]*?<\/title>/gi, "")
+    .replace(/<!--[\s\S]*?-->/g, "")
+    /* raqam, sana va kod [data-tarjimasiz] ichida turadi: u tekshirilmaydi */
+    .replace(/<([a-z]+)[^>]*\sdata-tarjimasiz[^>]*>[\s\S]*?<\/\1>/gi, "");
+  const och = s => s.replace(/&#39;|&amp;|&quot;|&lt;|&gt;|&nbsp;|&mdash;|&ndash;/g, m => BELGILAR[m]);
+  const chiq = [];
+  let m;
+  const rxT = />([^<>]+)</g;
+  while ((m = rxT.exec(t))){ const k = och(m[1]).trim(); if (k) chiq.push(k); }
+  const rxA = /\s(?:placeholder|title|aria-label|alt|data-toast|data-yorliq|data-xato)="([^"]*)"/g;
+  while ((m = rxA.exec(t))){ const k = och(m[1]).trim(); if (k) chiq.push(k); }
+  return [...new Set(chiq)];
+}
+sinov("sessiyasiz ochiladigan sahifalarning matni lug'atda bor", () => {
+  const xato = [];
+  OCHIQ_SAHIFALAR.forEach(f => {
+    korinadiganMatn(f).forEach(uz => {
+      if (OCHIQ_ISTISNO.has(uz) || !/[A-Za-z]{3}/.test(uz)) return;
+      /* lug'atda ataylab o'zi bilan bir xil yozilgan kalit (login formati kabi) to'g'ri hisoblanadi */
+      if (uz in LUGAT || birXil(uz) in LUGAT) return;
+      if (tarjima(uz) === uz) xato.push(f + " — " + uz);
+    });
+  });
+  tekshir(xato.length === 0, "lug'atda yo'q satr (" + xato.length + "):\n  " + xato.join("\n  "));
+});
+
 /* ---------- Ishga tushirish ---------- */
 let otdi = 0, yiqildi = 0;
 console.log("Lug'at va tarjima qoidalari tekshiruvi\n");

@@ -34,8 +34,8 @@
   </div>
   <section class="metrika-qator tort" id="hx-kpi" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi"></section>
   <div class="tor-2">
-    <section class="karta"><div class="karta-bosh"><h2>Oylar kesimida</h2><span class="soni">mln so'm</span></div><div id="hx-oy"></div></section>
-    <section class="karta"><div class="karta-bosh"><h2>Toifalar</h2><span class="soni">mln so'm</span></div><div id="hx-toifa"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2 data-ikonka="grafik">Oylar kesimida</h2><span class="soni">mln so'm</span></div><div id="hx-oy"></div></section>
+    <section class="karta"><div class="karta-bosh"><h2 data-ikonka="jadval-ic">Toifalar</h2><span class="soni">mln so'm</span></div><div id="hx-toifa"></div></section>
   </div>
   <section aria-label="Filiallar kesimi"><div class="seksiya-bosh" style="margin-bottom:14px"><h2>Filiallar kesimi</h2></div><div id="hx-filiallar"></div></section>
   <section aria-label="Obyektlar kesimi" data-sayohat="jadval"><div class="seksiya-bosh" style="margin-bottom:14px"><h2>Obyektlar kesimi</h2></div><div id="hx-obyektlar"></div></section>
@@ -164,14 +164,14 @@ async function boshla(){
     const yillik = summa / oySoni * 12;
     $("hs-meta").textContent = d.nom + " · " + r.length + " ta yozuv";
     $("hx-kpi").innerHTML =
-      '<div class="metrika"><span class="m-yorliq">Jami xarajat</span><span class="m-qiymat">' + pulHTML(summa) + "</span>" +
+      '<div class="metrika" data-ikonka="pul"><span class="m-yorliq">Jami xarajat</span><span class="m-qiymat">' + pulHTML(summa) + "</span>" +
         '<span class="m-izoh"><b data-tarjimasiz>' + r.length + "</b> <span>ta yozuv,</span> <b data-tarjimasiz>" + new Set(r.map(x => x.obyektId)).size + "</b> <span>ta obyekt</span></span></div>" +
-      '<div class="metrika"><span class="m-yorliq">To\'lanmagan</span><span class="m-qiymat">' + pulHTML(jami(tolanmagan, x => x.summa)) + "</span>" +
+      '<div class="metrika" data-ikonka="xavf"><span class="m-yorliq">To\'lanmagan</span><span class="m-qiymat">' + pulHTML(jami(tolanmagan, x => x.summa)) + "</span>" +
         '<span class="m-izoh"><b data-tarjimasiz>' + tolanmagan.length + "</b> <span>ta hisob-faktura</span></span></div>" +
-      '<div class="metrika"><span class="m-yorliq">Balans qiymatiga nisbati</span><span class="m-qiymat"><span data-tarjimasiz>' +
+      '<div class="metrika" data-ikonka="foiz"><span class="m-yorliq">Balans qiymatiga nisbati</span><span class="m-qiymat"><span data-tarjimasiz>' +
         (balans ? String(D.yaxlit(yillik / balans * 100, 2)).replace(".", ",") : "—") + "</span>" + (balans ? "<small>%</small>" : "") + "</span>" +
         '<span class="m-izoh">yillik hisobda, balansdagi aktivlar bo\'yicha</span></div>' +
-      '<div class="metrika"><span class="m-yorliq">Bir aktivga oylik</span><span class="m-qiymat">' + (faolAktivlar.length ? pulHTML(D.yaxlit(summa / oySoni / faolAktivlar.length, 2)) : "<span>—</span>") + "</span>" +
+      '<div class="metrika" data-ikonka="pul"><span class="m-yorliq">Bir aktivga oylik</span><span class="m-qiymat">' + (faolAktivlar.length ? pulHTML(D.yaxlit(summa / oySoni / faolAktivlar.length, 2)) : "<span>—</span>") + "</span>" +
         '<span class="m-izoh"><span>o\'rtacha,</span> <b data-tarjimasiz>' + oySoni + "</b> <span>oy bo'yicha</span></span></div>";
     tarjimaQil($("hx-kpi"));
 

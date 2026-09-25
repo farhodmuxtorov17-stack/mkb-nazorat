@@ -68,7 +68,7 @@
     g.qiymat += Number(y.balans && y.balans.qiymat) || 0;
     const m = D.muddatHisobi(y).holat;
     if (m === "xavf-90") g.xavf++;
-    /* Umidsiz toifa: muddati o'tgan va 3 yildan oshgan birga (zaxira va hudud hisobotidagi kabi) */
+    /* Me'yoriy muddati o'tganlar: 1 yoki 3 yillik chegaradan oshganlar birga (zaxira va hudud hisobotidagi kabi) */
     if (m === "umidsiz" || m === "3-yildan-oshgan") g.umidsiz++;
     if (m === "3-yildan-oshgan") g.uchYil++;
     if (!y.qiymat || y.qiymat.bozor == null) g.baholanmagan++;
@@ -92,9 +92,9 @@
       '<span>aktivi borlari</span> <b data-tarjimasiz>' + aktivli + "</b>") +
     m("obyektlar.html", "Balansdagi aktivlar", MKB.fmt(jami("son")),
       '<span data-tarjimasiz>' + esc(MKB.pul(jami("qiymat"))) + "</span>") +
-    m("obyektlar.html?muddat=xavf-90", "90 kunda umidsizga o'tadi", MKB.fmt(jami("xavf")),
+    m("obyektlar.html?muddat=xavf-90", "90 kunda muddati tugaydi", MKB.fmt(jami("xavf")),
       "<span>zaxira 100% gacha oshadi</span>") +
-    m("obyektlar.html?muddat=umidsiz", "Umidsiz toifada", MKB.fmt(jami("umidsiz")),
+    m("obyektlar.html?muddat=umidsiz", "Me'yoriy muddat o'tgan", MKB.fmt(jami("umidsiz")),
       (jami("uchYil") ? '<span>shundan 3 yildan oshgan</span> <b data-tarjimasiz>' + jami("uchYil") + "</b>" : "<span>zaxira 100%</span>"));
   /* Filiali ko'rsatilgan hisob: sarlavhada o'z filiali; qolganlar uchun son KPI da (takrorlanmaydi) */
   $("hs-meta").hidden = !fk;
@@ -120,9 +120,9 @@
       {kalit: "son", nom: "Aktivlar", son: true, chiz: q => q.son ? MKB.fmt(q.son) : '<span class="son-bosh">0</span>'},
       {kalit: "qiymat", nom: "Balans qiymati", son: true, csv: q => q.qiymat ? Math.round(q.qiymat * 10) / 10 : 0,
         chiz: q => q.son ? '<span class="pul" data-tarjimasiz>' + esc(MKB.pul(q.qiymat)) + "</span>" : '<span class="son-bosh">—</span>'},
-      {kalit: "xavf", nom: "90 kunda umidsiz", son: true, chiz: q => q.xavf
+      {kalit: "xavf", nom: "90 kunda muddat tugaydi", son: true, chiz: q => q.xavf
         ? '<span class="chip chip-kichik chip-sariq" data-tarjimasiz>' + q.xavf + "</span>" : '<span class="son-bosh">0</span>'},
-      {kalit: "umidsiz", nom: "Umidsiz", son: true, chiz: q => q.umidsiz
+      {kalit: "umidsiz", nom: "Muddati o'tganlar", son: true, chiz: q => q.umidsiz
         ? '<span class="chip chip-kichik chip-xavf" data-tarjimasiz>' + q.umidsiz + "</span>" : '<span class="son-bosh">0</span>'},
       {kalit: "baholanmagan", nom: "Baholanmagan", son: true, chiz: q => q.baholanmagan ? MKB.fmt(q.baholanmagan) : '<span class="son-bosh">0</span>'},
       {kalit: "xodim", nom: "Xodimlar", son: true, chiz: q => q.xodim ? MKB.fmt(q.xodim) : '<span class="son-bosh">0</span>'},

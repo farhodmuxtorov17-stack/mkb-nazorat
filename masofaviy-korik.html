@@ -10,7 +10,7 @@
 .kirish select{width:100%;text-overflow:ellipsis}
 .bosqich{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--chiziq-2);font-size:14px}
 .bosqich:last-child{border-bottom:0}
-.bosqich i{font-style:normal;width:28px;height:28px;border-radius:99px;display:grid;place-items:center;background:var(--plitka);color:var(--matn-3);font-size:12.5px;flex:none}
+.bosqich i{font-style:normal;width:28px;height:28px;border-radius:var(--r-pilyula);display:grid;place-items:center;background:var(--plitka);color:var(--matn-3);font-size:12.5px;flex:none}
 .bosqich.otdi i{background:var(--mint);color:var(--mint-matn)}
 .bosqich.joriy i{background:var(--siyoh);color:var(--oq)}
 .bosqich.joriy{font-weight:500}
@@ -95,8 +95,8 @@
   function royxat(){
     meta();
     $("mk-amallar").innerHTML = "";
-    $("mk-asosiy").innerHTML = '<div class="tor-2"><section class="karta" aria-labelledby="mk-r-s" data-tur="masofaviy-korik-jadval"><div class="karta-bosh"><h2 id="mk-r-s">Sessiyalar</h2></div><div id="mk-jadval"></div></section>' +
-      '<section class="karta" aria-labelledby="mk-f-s" data-tur="masofaviy-korik-rejalashtirish"><div class="karta-bosh"><h2 id="mk-f-s">Ko\'rikni rejalashtirish</h2></div><div id="mk-forma"></div></section></div>';
+    $("mk-asosiy").innerHTML = '<div class="tor-2"><section class="karta" aria-labelledby="mk-r-s" data-tur="masofaviy-korik-jadval"><div class="karta-bosh"><h2 id="mk-r-s" data-ikonka="qulf">Sessiyalar</h2></div><div id="mk-jadval"></div></section>' +
+      '<section class="karta" aria-labelledby="mk-f-s" data-tur="masofaviy-korik-rejalashtirish"><div class="karta-bosh"><h2 id="mk-f-s" data-ikonka="kalendar">Ko\'rikni rejalashtirish</h2></div><div id="mk-forma"></div></section></div>';
     jadval = MKB.jadval("mk-jadval", {qatorlar: qatorlar(), csvNomi: "masofaviy-koriklar",
       qidiruv: ["obyekt", "inspektor", "id"], qidiruvYozuvi: "Obyekt yoki inspektor",
       filtrlar: [{kalit: "holat", nom: "Holat", variantlar: Object.values(HOL).map(h => h[0])}],
@@ -176,7 +176,7 @@
       ? '<button type="button" class="tugma tugma-asosiy" id="mk-keyingi" data-yozadi data-tur="masofaviy-korik-keyingi">' + ik(s.holat === "rejalashtirilgan" ? "ong" : "tasdiq") + "<span>" +
         (s.holat === "rejalashtirilgan" ? "Ko'rikni boshlash" : "Bosqich bajarildi") + "</span></button>" : "";
     $("mk-asosiy").innerHTML = '<div class="tor-2"><div class="ustun">' +
-      '<section class="karta" data-tur="masofaviy-korik-bosqichlar"><div class="karta-bosh"><h2>Bosqichlar</h2></div>' +
+      '<section class="karta" data-tur="masofaviy-korik-bosqichlar"><div class="karta-bosh"><h2 data-ikonka="jadval-ic">Bosqichlar</h2></div>' +
         (s.holat === "jarayonda" ? '<p class="kichik-izoh" id="mk-vaqt" style="margin:0 0 8px"></p>' : "") +
         "<div>" + bq.map((b, i) =>
         '<div class="bosqich' + (i < s.bosqich ? " otdi" : i === s.bosqich && s.holat !== "yakunlandi" ? " joriy" : "") + '"><i>' + (i < s.bosqich ? ik("tasdiq") : i + 1) + "</i><span>" + esc(b) + "</span></div>").join("") + "</div>" +
@@ -187,15 +187,15 @@
           '<p class="kichik-izoh">Ko\'rik kamera ilovasida o\'tkazildi. Tizim video va suratlarni saqlamaydi.</p>' : "") +
         (s.holat === "bekor qilingan" && s.izoh ? '<p class="kichik-izoh">' + esc(s.izoh) + "</p>" : "") +
       "</section>" +
-      (oxirgi && yakunlaydi ? '<section class="karta" data-tur="masofaviy-korik-natija"><div class="karta-bosh"><h2>Ko\'rik natijasi</h2></div><div id="mk-yakun"></div></section>' : "") +
+      (oxirgi && yakunlaydi ? '<section class="karta" data-tur="masofaviy-korik-natija"><div class="karta-bosh"><h2 data-ikonka="korik">Ko\'rik natijasi</h2></div><div id="mk-yakun"></div></section>' : "") +
       '</div><div class="ustun">' +
-      '<section class="karta" data-tur="masofaviy-korik-kameralar"><div class="karta-bosh"><h2>Kameralar</h2><span class="soni"><span data-tarjimasiz>' + kam.length + "</span> <span>ta kamera</span></span></div>" +
+      '<section class="karta" data-tur="masofaviy-korik-kameralar"><div class="karta-bosh"><h2 data-ikonka="kamera">Kameralar</h2><span class="soni"><span data-tarjimasiz>' + kam.length + "</span> <span>ta kamera</span></span></div>" +
         '<div class="video-panel">' + ik("kamera") + "<b>" + (kam.length ? "Video tizimga ulanmagan" : "Kamera ulanmagan") + "</b><span>" +
           (kam.length ? "Kameralarni kamera ilovasida oching va har bir bosqichni shu yerda belgilang." : "Obyektda kamera yo'q. Masofaviy ko'rik o'tkazib bo'lmaydi.") + "</span></div>" +
         (kam.length ? kam.map(q => { const qh = D.qurilmaHolati(q) || {}; return '<a class="qator" href="qurilma.html?id=' + encodeURIComponent(q.id) + '"><span class="belgi ' + (qh.holat === "onlayn" ? "mint" : "pushti") + '">' + ik("kamera") +
           '</span><span class="matn"><b>' + esc(q.model || q.turNomi) + '</b><span><span data-tarjimasiz>' + esc(q.id) + '</span> · <span>Oxirgi signal</span> <span data-tarjimasiz>' + esc(q.oxirgiSignal || "—") + "</span></span></span></a>"; }).join("") : "") +
       "</section>" +
-      '<section class="karta" data-tur="masofaviy-korik-ruxsatlar"><div class="karta-bosh"><h2>Obyektga ruxsatlar</h2><span class="soni" data-tarjimasiz>' + (amaldagi.length || "") + "</span></div>" +
+      '<section class="karta" data-tur="masofaviy-korik-ruxsatlar"><div class="karta-bosh"><h2 data-ikonka="ruxsat">Obyektga ruxsatlar</h2><span class="soni" data-tarjimasiz>' + (amaldagi.length || "") + "</span></div>" +
         (amaldagi.length ? amaldagi.map(r => { const sh = D.shaxs(r.shaxsId) || (D.SHAXSLAR || []).find(x => x.id === r.shaxsId); return '<div class="qator">' + MKB.kn.shaxsSurati(sh) + '<span class="matn"><b>' + esc(sh ? sh.ism : "—") + "</b><span>" + esc(r.usul || "") +
           ' · <span data-tarjimasiz>' + esc(r.tugash || "") + "</span></span></span></div>"; }).join("") : MKB.boshHolat("ruxsat", "Amaldagi ruxsat yo'q")) +
       "</section></div></div>";

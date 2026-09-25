@@ -21,7 +21,7 @@
 .radio-karta b{font-weight:500;font-size:14.5px;display:flex;align-items:center;gap:8px}
 .radio-karta b .ic{width:18px;height:18px}
 .radio-karta span{font-size:12.5px;color:var(--matn-3);line-height:1.4}
-.radio-karta .soni{position:absolute;right:14px;top:14px;font-size:12px;background:var(--band);border-radius:99px;padding:1px 9px;color:var(--matn-2)}
+.radio-karta .soni{position:absolute;right:14px;top:14px;font-size:12px;background:var(--band);border-radius:var(--r-pilyula);padding:1px 9px;color:var(--matn-2)}
 .radio-karta[aria-disabled="true"]{opacity:.5;pointer-events:none}
 .bolim-sar{font:500 15px var(--shrift-displey);margin:4px 0 12px;display:flex;align-items:center;gap:10px}
 .bolim-sar small{font:400 13px var(--shrift);color:var(--matn-3)}
@@ -34,7 +34,7 @@
 .qoshimcha-maydon{margin-top:16px;border-top:1px solid var(--chiziq-2);padding-top:12px}
 .qoshimcha-maydon summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;list-style:none}
 .qoshimcha-maydon summary::-webkit-details-marker{display:none}
-.qoshimcha-maydon summary::before{content:"+";width:26px;height:26px;border-radius:99px;background:var(--plitka);display:grid;place-items:center;font-weight:400}
+.qoshimcha-maydon summary::before{content:"+";width:26px;height:26px;border-radius:var(--r-pilyula);background:var(--plitka);display:grid;place-items:center;font-weight:400}
 .qoshimcha-maydon[open] summary::before{content:"−"}
 .qoshimcha-maydon summary span{font-weight:400;font-size:13px;color:var(--matn-3)}
 #asos-maydon .maydon-xato{margin-top:8px}
@@ -61,7 +61,7 @@
     <div id="usta-qoralama"><input type="hidden" name="usta"></div>
 
     <section class="karta" aria-labelledby="manba-sar" data-sayohat="manba">
-      <div class="karta-bosh"><h2 id="manba-sar">Nima qabul qilinadi</h2></div>
+      <div class="karta-bosh"><h2 id="manba-sar" data-ikonka="info">Nima qabul qilinadi</h2></div>
       <div class="radio-kartalar" id="manbalar"></div>
       <div class="manba-blok" id="blok-ish" hidden style="margin-top:16px">
         <div class="maydon"><label class="maydon-yorliq" for="ish">Undiruv ishi <b>*</b></label>
@@ -78,7 +78,7 @@
     </section>
 
     <section class="karta" aria-labelledby="asos-sar" data-sayohat="asos">
-      <div class="karta-bosh"><h2 id="asos-sar">Qabul asosi</h2></div>
+      <div class="karta-bosh"><h2 id="asos-sar" data-ikonka="hujjat">Qabul asosi</h2></div>
       <div class="maydon" id="asos-maydon"><span class="maydon-yorliq sr-only">Qabul asosi</span><div class="radio-kartalar" id="asoslar" role="radiogroup" aria-labelledby="asos-sar"></div></div>
       <div class="forma-tor" style="margin-top:18px">
         <div class="maydon"><label class="maydon-yorliq" for="asos-raqam"><span id="asos-hujjat-nom">Asos hujjat</span> <span>raqami</span> <b>*</b></label>
@@ -89,7 +89,7 @@
     </section>
 
     <section class="karta" aria-labelledby="obyekt-sar" id="obyekt-blok">
-      <div class="karta-bosh"><h2 id="obyekt-sar">Obyekt ma'lumotlari</h2></div>
+      <div class="karta-bosh"><h2 id="obyekt-sar" data-ikonka="bino">Obyekt ma'lumotlari</h2></div>
       <div class="forma-tor">
         <div class="maydon keng"><label class="maydon-yorliq" for="o-nom">To'liq nomi <b>*</b></label>
           <div class="kirish"><input id="o-nom" name="nom" maxlength="160" required minlength="5" data-xato="Obyekt nomini kiriting" placeholder="Masalan: Ishlab chiqarish sexi, Sanoat ko'chasi 4"></div></div>
@@ -205,7 +205,7 @@
   /* ---------- Asoslar ---------- */
   document.getElementById("asoslar").innerHTML = (D.QABUL_ASOSLARI || []).map(a =>
     '<label class="radio-karta"><input type="radio" name="asos" value="' + a.kalit + '" required data-xato="Qabul asosini tanlang"><b>' + esc(a.nom) + "</b>" +
-    "<span>" + (a.garov ? "Umidsiz toifagacha 1 yil" : "Umidsiz toifagacha 3 yil") + "</span></label>").join("");
+    "<span>" + (a.garov ? "Me'yoriy muddat: 1 yil" : "Me'yoriy muddat: 3 yil") + "</span></label>").join("");
 
   /* ---------- Obyekt maydonlari ---------- */
   const sel = (id, variantlar, bosh) => { document.getElementById(id).innerHTML = (bosh ? '<option value="">' + bosh + "</option>" : "") +

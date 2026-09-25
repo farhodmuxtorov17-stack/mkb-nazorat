@@ -10,12 +10,19 @@
 .metrika-qator button.metrika:hover{transform:translateY(-2px);box-shadow:var(--soya-suzuvchi)}
 .metrika-qator .metrika.tanlangan{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
 .bat{display:inline-flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums}
-.bat i{display:block;width:42px;height:8px;border-radius:99px;background:var(--band);overflow:hidden}
-.bat i s{display:block;height:100%;background:var(--mint-matn);border-radius:99px}
+.bat i{display:block;width:42px;height:8px;border-radius:var(--r-pilyula);background:var(--band);overflow:hidden}
+.bat i s{display:block;height:100%;background:var(--mint-matn);border-radius:var(--r-pilyula)}
 .bat.past i s{background:var(--xavf)}
 .bat.past b{color:var(--pushti-matn)}
 .ob-tanlov select{max-width:260px}
 .qr-model{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lenta-filtr{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.lenta-filtr .pill{height:38px;padding:0 14px;font-size:13px}
+.smeta-jami{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;padding:4px 0 18px}
+.smeta-jami .m-qiymat{font:500 30px/1.1 var(--shrift-displey);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.smeta-jami .izoh{font-size:13px;color:var(--matn-3)}
+.smeta-izoh{font-size:12.5px;color:var(--matn-3);margin-top:14px;line-height:1.6}
+.smeta-yopiq{font-size:13.5px;color:var(--matn-3);line-height:1.6;margin:0}
 </style>
 </head>
 <body data-sahifa="himoya">
@@ -32,6 +39,21 @@
   <nav class="bolim-tablar" data-bir-qator aria-label="Bo'lim ichi"><a href="himoya.html">Monitoring markazi</a><a href="qoriqlash.html">Qo'riqlash</a><a href="kommunal.html">Kommunal</a><a href="qurilmalar.html" class="faol" aria-current="page">Qurilmalar</a><a href="hodisalar.html">Hodisalar</a><a href="tashriflar.html">Tashriflar</a><a href="masofaviy-korik.html">Masofaviy ko'rik</a><a href="ruxsatlar.html">Ruxsatlar</a><a href="kirish-voqealari.html">Signallar</a></nav>
   <section class="metrika-qator tort" id="qr-metrika" aria-label="Qurilmalar holati" data-sayohat="holat" data-tur="qurilmalar-kpi"></section>
   <div id="qr-jadval" data-sayohat="jadval" data-tur="qurilmalar-jadval"></div>
+
+  <section class="karta" id="qr-smeta" aria-labelledby="qr-smeta-s" data-tur="qurilmalar-smeta" style="margin-top:20px">
+    <div class="karta-bosh"><h2 id="qr-smeta-s" data-ikonka="pul">Himoya smetasi</h2>
+      <div class="lenta-filtr" role="group" aria-label="Smeta qamrovi" id="qr-qamrov" hidden>
+        <button type="button" class="pill faol" data-qamrov="qurilmasiz" aria-pressed="true">Qurilmasiz obyektlar</button>
+        <button type="button" class="pill" data-qamrov="hammasi" aria-pressed="false">Barcha aktivlar</button>
+      </div>
+      <button type="button" class="tugma tugma-oq tugma-kichik" id="qr-smeta-t" aria-expanded="false" aria-controls="qr-smeta-tana" style="margin-left:auto" data-tur="qurilmalar-smeta-och"><svg class="ic"><use href="#ik-past"/></svg><span>Smetani ko'rsatish</span></button></div>
+    <p class="smeta-yopiq" id="qr-smeta-yopiq">Qurilmasiz obyektlarni himoyalash uchun jihoz, o'rnatish va aloqa xarajatining taxminiy hisobi.</p>
+    <div id="qr-smeta-tana" hidden>
+      <div class="smeta-jami" id="qr-smeta-jami"></div>
+      <div id="qr-smeta-royxat"></div>
+      <p class="smeta-izoh" id="qr-smeta-izoh"></p>
+    </div>
+  </section>
 </main>
 </div>
 </div>
@@ -165,6 +187,85 @@
     if (obyekt) u.searchParams.set("obyekt", obyekt); else u.searchParams.delete("obyekt");
     history.replaceState(null, "", u);
   }
+  /* ---------- Himoya smetasi: qurilmasiz obyektlarni jihozlash rejasi, so'ralganda ochiladi ---------- */
+  const param = (id, def) => { const v = D.param ? D.param(id) : null; return v == null ? def : v; };
+  let qamrov = "qurilmasiz", smetaJadval = null, smetaOchiq = false;
+  const mln = x => x / 1e6;
+  const oraliq = a => MKB.pul([mln(a[0]), mln(a[1])]);
+  const csvOraliq = a => (Math.round(mln(a[0]) * 10) / 10) + "–" + (Math.round(mln(a[1]) * 10) / 10);
+  function smetaQatorlari(){
+    const obyektlar = MKB.doira(D.YOZUVLAR).filter(y => y.holat !== "Chiqarildi");
+    const qurilmali = new Set(MKB.doira(D.QURILMALAR || []).map(q => q.obyektId));
+    const royxat = qamrov === "qurilmasiz" ? obyektlar.filter(y => !qurilmali.has(y.id)) : obyektlar;
+    const guruh = {};
+    royxat.forEach(y => {
+      const a = D.HIMOYA_ANDOZALARI.find(x => x.id === (y.himoya || {}).andoza) || D.himoyaAndozasi(y);
+      if (!a) return;
+      (guruh[a.id] = guruh[a.id] || {a, obyektlar: []}).obyektlar.push(y);
+    });
+    return Object.values(guruh).map(g => {
+      const s = D.himoyaSmetasi(g.a, g.obyektlar.length);
+      return {id: g.a.id, nom: g.a.nom, qollash: g.a.qollash, soni: g.obyektlar.length, obyektlar: g.obyektlar,
+        jihoz: s.jihoz, ornatish: s.ornatish, aloqa: s.aloqa, jami: s.jami, jamiMin: s.jami[0], tartib: g.a.tartib};
+    }).sort((a, b) => b.jamiMin - a.jamiMin);
+  }
+  function smetaChiz(){
+    if (!smetaOchiq) return;
+    const q = smetaQatorlari();
+    const jami = q.reduce((s, x) => [s[0] + x.jami[0], s[1] + x.jami[1]], [0, 0]);
+    const soni = q.reduce((s, x) => s + x.soni, 0);
+    $("qr-smeta-jami").innerHTML = soni
+      ? '<span class="m-qiymat" data-tarjimasiz>' + oraliq(jami) + "</span>" +
+        '<span class="izoh"><b data-tarjimasiz>' + soni + "</b> <span>ta obyekt</span> · <span>jihoz, o'rnatish va 12 oylik aloqa</span></span>"
+      : "";
+    const cfg = {
+      qatorlar: q, csvNomi: "himoya-smetasi",
+      bosh: {sarlavha: qamrov === "qurilmasiz" ? "Qurilmasiz obyekt yo'q" : "Obyekt yo'q", izoh: "Smeta hisoblanadigan obyekt topilmadi"},
+      ustunlar: [
+        {kalit: "nom", nom: "Andoza", chiz: x => "<b>" + esc(x.nom) + '</b><div class="kod-mono" style="font-weight:400">' + esc(x.qollash || "") + "</div>", csv: x => x.nom},
+        {kalit: "soni", nom: "Obyektlar", son: true},
+        {kalit: "jihoz", nom: "Jihoz", son: true, saralash: false, chiz: x => oraliq(x.jihoz), csv: x => csvOraliq(x.jihoz)},
+        {kalit: "ornatish", nom: "O'rnatish", son: true, saralash: false, chiz: x => oraliq(x.ornatish), csv: x => csvOraliq(x.ornatish)},
+        {kalit: "aloqa", nom: "Aloqa, 12 oy", son: true, chiz: x => MKB.pul(Math.round(mln(x.aloqa) * 10) / 10), csv: x => Math.round(mln(x.aloqa) * 10) / 10},
+        {kalit: "jamiMin", nom: "Jami, mln so'm", son: true, chiz: x => '<b class="pul">' + oraliq(x.jami) + "</b>", csv: x => csvOraliq(x.jami)},
+      ],
+      saralash: "jamiMin", yonalish: -1, sahifaHajmi: 12,
+      bosilganda: x => {
+        const r = x.obyektlar.slice().sort((a, b) => ((b.balans || {}).qiymat || 0) - ((a.balans || {}).qiymat || 0));
+        MKB.yonPanel(x.nom, '<p style="font-size:13.5px;color:var(--matn-3);margin-bottom:12px"><b data-tarjimasiz>' + r.length + "</b> <span>ta obyekt</span> · " +
+          '<span data-tarjimasiz>' + oraliq(x.jami) + "</span></p>" +
+          r.map(y => '<a class="qator" href="obyekt-himoya.html?id=' + encodeURIComponent(y.id) + '"><span class="matn"><b>' + esc(y.qisqa || y.nom) + "</b><span>" +
+            esc(y.hudud || "") + " · " + esc(y.tur || "") + '</span></span><span class="ong"><span class="kod-mono" data-tarjimasiz>' + esc(y.id) + "</span></span></a>").join(""),
+          {yorliq: "Himoya andozasi"});
+      },
+    };
+    if (smetaJadval) smetaJadval.yangila(q); else smetaJadval = MKB.jadval("qr-smeta-royxat", cfg);
+    tarjimaQil($("qr-smeta-jami"));
+    $("qr-smeta-izoh").innerHTML = "<span>Smeta taxminiy. Jihoz narxi katalogdagi oraliqdan olinadi.</span> " +
+      "<span>O'rnatish jihoz narxining</span> <b data-tarjimasiz>" + param("ornatishFoiz", 15) + "%</b><span>.</span> " +
+      "<span>4G aloqa bir qurilma uchun oyiga</span> <b data-tarjimasiz>" + param("aloqaSimOylikMing", 60) + "</b> <span>ming so'm, LoRaWAN shlyuzi obyekt uchun</span> <b data-tarjimasiz>" +
+      param("aloqaLoraOylikMing", 90) + "</b> <span>ming so'm.</span> <span>Narxlar integrator taklifi bilan tekshiriladi.</span>";
+    tarjimaQil($("qr-smeta-izoh"));
+  }
+  function smetaOch(ochiq){
+    smetaOchiq = ochiq;
+    const t = $("qr-smeta-t");
+    t.setAttribute("aria-expanded", String(smetaOchiq));
+    t.querySelector("span").textContent = smetaOchiq ? "Smetani yashirish" : "Smetani ko'rsatish";
+    t.querySelector("use").setAttribute("href", smetaOchiq ? "#ik-yuqori" : "#ik-past");
+    tarjimaQil(t);
+    $("qr-smeta-tana").hidden = !smetaOchiq; $("qr-qamrov").hidden = !smetaOchiq; $("qr-smeta-yopiq").hidden = smetaOchiq;
+    smetaChiz();
+  }
+  $("qr-smeta-t").addEventListener("click", () => smetaOch(!smetaOchiq));
+  document.querySelectorAll("[data-qamrov]").forEach(b => b.addEventListener("click", () => {
+    qamrov = b.dataset.qamrov;
+    document.querySelectorAll("[data-qamrov]").forEach(x => { x.classList.toggle("faol", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+    smetaJadval = null; smetaChiz();
+  }));
+  /* Monitoring markazidagi "himoya smetasi" havolasi shu kartani ochadi */
+  if (location.hash === "#qr-smeta"){ smetaOch(true); $("qr-smeta").scrollIntoView(); }
+
   if (!FILTR[filtr]) filtr = "";
   if (!hamma.length){
     $("qr-metrika").hidden = true;

@@ -49,7 +49,7 @@
     <section class="karta" id="mb-tanlangan" aria-label="Tanlangan davr" data-sayohat="hisobot"></section>
     <div class="ustun">
       <section class="karta" id="mb-muddat" aria-label="Topshirish muddati" data-sayohat="muddat"></section>
-      <section class="karta"><div class="karta-bosh"><h2>Balans qiymati dinamikasi</h2><span class="soni" id="mb-birlik">mlrd so'm</span></div><div id="mb-dinamika"></div></section>
+      <section class="karta"><div class="karta-bosh"><h2 data-ikonka="grafik">Balans qiymati dinamikasi</h2><span class="soni" id="mb-birlik">mlrd so'm</span></div><div id="mb-dinamika"></div></section>
     </div>
   </div>
   <section id="mb-tarix" aria-label="Hisobotlar tarixi" data-sayohat="tarix"></section>
@@ -178,16 +178,16 @@ async function boshla(){
             '<button type="button" class="tugma tugma-asosiy" id="mb-topshir" data-yozadi data-sayohat="topshirish">' + ik("tasdiq") + "Topshirildi deb belgilash</button>" +
           "</div>" : "") +
       (filialKesim ? '<div class="mb-ogoh">' + ik("info") + "<span>Raqamlar faqat filialingiz aktivlari bo'yicha. Bank Markaziy bankka hisobotni butun portfel bo'yicha topshiradi.</span></div>" : "") +
-      (x.dastlabki ? '<div class="mb-ogoh">' + ik("info") + '<span><span class="chip chip-kichik chip-sariq">Taxminiy</span> <span>Davr hali tugamagan. Raqamlar bugungi reyestrdan hisoblangan, umidsiz toifa esa oy oxiriga ko\'ra.</span></span></div>' : "") +
+      (x.dastlabki ? '<div class="mb-ogoh">' + ik("info") + '<span><span class="chip chip-kichik chip-sariq">Taxminiy</span> <span>Davr hali tugamagan. Raqamlar bugungi reyestrdan hisoblangan, me\'yoriy muddat esa oy oxiriga ko\'ra.</span></span></div>' : "") +
       '<section class="metrika-qator ikki mb-kpi">' +
-        '<div class="metrika"><span class="m-yorliq">Obyektlar soni</span><span class="m-qiymat" data-tarjimasiz>' + MKB.fmt(x.obyektlarSoni) + "</span>" +
+        '<div class="metrika" data-ikonka="bino"><span class="m-yorliq">Obyektlar soni</span><span class="m-qiymat" data-tarjimasiz>' + MKB.fmt(x.obyektlarSoni) + "</span>" +
           '<span class="m-izoh">oy oxirida balansda</span></div>' +
-        '<div class="metrika"><span class="m-yorliq">Jami balans qiymati</span><span class="m-qiymat">' + pulHTML(x.jamiBalansQiymat) + "</span>" +
+        '<div class="metrika" data-ikonka="bank"><span class="m-yorliq">Jami balans qiymati</span><span class="m-qiymat">' + pulHTML(x.jamiBalansQiymat) + "</span>" +
           '<span class="m-izoh">16701 hisobvarag\'i</span></div>' +
-        '<div class="metrika"><span class="m-yorliq">1-darajali kapitalga nisbati</span><span class="m-qiymat">' +
+        '<div class="metrika" data-ikonka="foiz"><span class="m-yorliq">1-darajali kapitalga nisbati</span><span class="m-qiymat">' +
           (foiz != null ? "<span data-tarjimasiz>" + String(foiz).replace(".", ",") + "</span><small>%</small>" : "<span>—</span>") + "</span>" +
           '<span class="m-izoh">' + (filialKesim ? "<span>bank bo'yicha hisoblanadi</span>" : kapital ? "<span>kapital</span> <b data-tarjimasiz>" + esc(MKB.pul(kapital * 1000)) + "</b>" : "<span>kapital kiritilmagan</span>") + "</span></div>" +
-        '<div class="metrika"><span class="m-yorliq">Umidsiz toifada</span><span class="m-qiymat" data-tarjimasiz>' + MKB.fmt(x.umidsizSoni) + "</span>" +
+        '<div class="metrika" data-ikonka="muddat"><span class="m-yorliq">Me&#39;yoriy muddat o&#39;tgan</span><span class="m-qiymat" data-tarjimasiz>' + MKB.fmt(x.umidsizSoni) + "</span>" +
           '<span class="m-izoh">100% zaxira talab qilinadi</span></div>' +
       "</section>" +
       (filialKesim ? "" : '<div class="mb-limit">' +
@@ -229,7 +229,7 @@ async function boshla(){
     const topshirilgan = r.filter(x => x.holat === "topshirilgan");
     const vaqtida = topshirilgan.filter(x => x.topshirilganSana && D.sanaOqi(x.topshirilganSana) <= D.sanaOqi(x.muddat)).length;
     const el = $("mb-muddat");
-    el.innerHTML = '<div class="karta-bosh"><h2>' + (kutilgan ? "Topshirilmagan hisobot" : "Keyingi hisobot") + '</h2><span class="soni">' + esc(oyNomi(davr)) + "</span></div>" +
+    el.innerHTML = '<div class="karta-bosh"><h2 data-ikonka="hisobot">' + (kutilgan ? "Topshirilmagan hisobot" : "Keyingi hisobot") + '</h2><span class="soni">' + esc(oyNomi(davr)) + "</span></div>" +
       '<div class="mb-taymer' + (qolgan < 0 ? " xavf" : "") + '">' +
         '<span class="mt-son"><span data-tarjimasiz>' + Math.abs(qolgan) + "</span><small>" + (qolgan < 0 ? "kun kechikdi" : "kun qoldi") + "</small></span>" +
         '<span class="mt-izoh"><span>Muddat</span> <b data-tarjimasiz>' + D.sanaYoz(muddat) + "</b>" + (qolgan >= 0 ? " · <b data-tarjimasiz>" + ish + "</b> <span>ish kuni</span>" : "") + "</span>" +
@@ -274,7 +274,7 @@ async function boshla(){
         {kalit: "jamiBalansQiymat", nom: "Balans qiymati", son: true, chiz: x => '<span class="pul">' + esc(MKB.pul(x.jamiBalansQiymat)) + "</span>", csv: x => son(x.jamiBalansQiymat)},
         {kalit: "kapitalgaNisbat", nom: "Kapitalga nisbati", son: true, chiz: x => x.kapitalgaNisbat != null ? String(D.yaxlit(x.kapitalgaNisbat * 100, 1)).replace(".", ",") + "%" : "—",
           csv: x => x.kapitalgaNisbat != null ? son(x.kapitalgaNisbat * 100) : ""},
-        {kalit: "umidsizSoni", nom: "Umidsiz", son: true},
+        {kalit: "umidsizSoni", nom: "Muddati o'tgan", son: true},
         {kalit: "holatNom", nom: "Holat", chiz: x => chip(x)},
       ],
       filtrlar: [{kalit: "holatNom", nom: "Holat", variantlar: ["Topshirilgan", "Kechikib topshirilgan", "Tayyorlanmoqda", "Muddati o'tgan", "Davr davom etmoqda"]}],
@@ -310,7 +310,7 @@ async function boshla(){
       matn: "Hisobot Markaziy bankka topshirilgan deb qayd etiladi. Raqamlar shu holatda qotadi va keyin qayta hisoblanmaydi.",
       tafsilot: [["Davr", oyNomi(x.davr)], ["Topshirilgan sana", {matn: sana, tarjimasiz: true}], ["Topshirish muddati", {matn: x.muddat || "—", tarjimasiz: true}],
         ["Obyektlar soni", {matn: MKB.fmt(x.obyektlarSoni), tarjimasiz: true}], ["Jami balans qiymati", {matn: MKB.pul(x.jamiBalansQiymat), tarjimasiz: true}],
-        ["Kapitalga nisbati", {matn: foizMatn(x.kapitalgaNisbat), tarjimasiz: true}], ["Umidsiz toifada", {matn: MKB.fmt(x.umidsizSoni), tarjimasiz: true}]],
+        ["Kapitalga nisbati", {matn: foizMatn(x.kapitalgaNisbat), tarjimasiz: true}], ["Me'yoriy muddat o'tgan", {matn: MKB.fmt(x.umidsizSoni), tarjimasiz: true}]],
       oqibat: kech ? ["Muddat o'tgan: hisobot kechikib topshirilgan deb belgilanadi"] : [],
       sabab: {yorliq: "Xat raqami yoki izoh", maks: 160, namuna: "Masalan, 04-12/3381"},
       okMatn: "Topshirildi deb belgilash",
@@ -327,7 +327,7 @@ async function boshla(){
     const patch = {muddat: y.muddat, obyektlarSoni: y.obyektlarSoni, jamiBalansQiymat: y.jamiBalansQiymat,
       kapital1Daraja: y.kapital1Daraja, kapitalgaNisbat: y.kapitalgaNisbat, umidsizSoni: y.umidsizSoni};
     const qatorlar = [["Obyektlar soni", MKB.fmt(x.obyektlarSoni), MKB.fmt(y.obyektlarSoni)], ["Jami balans qiymati", MKB.pul(x.jamiBalansQiymat), MKB.pul(y.jamiBalansQiymat)],
-      ["Kapitalga nisbati", foizMatn(x.kapitalgaNisbat), foizMatn(y.kapitalgaNisbat)], ["Umidsiz toifada", MKB.fmt(x.umidsizSoni), MKB.fmt(y.umidsizSoni)],
+      ["Kapitalga nisbati", foizMatn(x.kapitalgaNisbat), foizMatn(y.kapitalgaNisbat)], ["Me'yoriy muddat o'tgan", MKB.fmt(x.umidsizSoni), MKB.fmt(y.umidsizSoni)],
       ["Topshirish muddati", x.muddat || "—", y.muddat || "—"]].filter(q => q[1] !== q[2]);
     if (!qatorlar.length){ MKB.toast("Raqamlar reyestr bilan mos, o'zgarish yo'q", "info"); return; }
     const res = await MKB.tasdiqla({
@@ -412,7 +412,7 @@ async function boshla(){
       "<dl><dt>Obyektlar soni</dt><dd data-tarjimasiz>" + x.obyektlarSoni + "</dd><dt>Jami balans qiymati</dt><dd data-tarjimasiz>" + esc(MKB.pul(x.jamiBalansQiymat)) + "</dd>" +
       "<dt>1-darajali kapital</dt><dd" + (kapital ? " data-tarjimasiz>" + esc(MKB.pul(kapital * 1000)) : ">kiritilmagan") + "</dd>" +
       "<dt>Kapitalga nisbati</dt><dd" + (nisbat != null ? " data-tarjimasiz>" + String(D.yaxlit(nisbat * 100, 1)).replace(".", ",") + "%" : ">—") + "</dd>" +
-      "<dt>Umidsiz toifada</dt><dd data-tarjimasiz>" + x.umidsizSoni + "</dd></dl>" +
+      "<dt>Me'yoriy muddat o'tgan</dt><dd data-tarjimasiz>" + x.umidsizSoni + "</dd></dl>" +
       "<table><thead><tr>" + ILOVA_USTUN.map(u => "<th>" + esc(u[0]) + "</th>").join("") + "</tr></thead><tbody>" +
       r.map(q => "<tr>" + ILOVA_USTUN.map(u => "<td data-tarjimasiz>" + esc(String(u[1](q))) + "</td>").join("") + "</tr>").join("") + "</tbody></table>" +
       '<div class="cv-imzo"><span>Tuzdi: ____________ <span data-tarjimasiz>' + esc(MKB.kim()) + "</span></span><span>Bosh buxgalter: ____________</span></div>";

@@ -121,7 +121,7 @@
   if (chop) chop.addEventListener("click", () => window.print());
   document.getElementById("id-csv").addEventListener("click", () => {
     MKB.csv("inventar-qaydnoma-" + z.id.replace(/\//g, "-") + ".csv",
-      ["Inventar raqami", "Nomi", "Obyekt", "Hisob bo'yicha", "Haqiqatda", "Farq", "Butlik", "Izoh"],
+      ["Inventar raqami", "Nomi", "Obyekt", "Hisob bo'yicha", "Haqiqatda", "Farq", "To'liqligi", "Izoh"],
       qatorlar.map(q => [q.x.inventarRaqam, q.x.nom, q.x.obyektId, 1, q.haqiqat == null ? "" : q.haqiqat, q.haqiqat == null ? "" : q.haqiqat - 1,
         q.n && q.n.topildi ? (q.n.butlik ? "to'liq" : "to'liq emas") : "", (q.n && q.n.izoh) || ""])
         .concat(ortiqcha.map(o => ["", o.nom, o.obyektId, 0, 1, 1, "", o.izoh || ""])));
@@ -161,7 +161,7 @@
         ? "<span>Hisob ma'lumoti bilan haqiqiy mavjudlik o'rtasida farq aniqlandi.</span> <span>Kamomad bo'yicha hodisa qayd etilgan, javobgar shaxslardan tushuntirish xati olinadi.</span>"
         : "<span>Hisob ma'lumoti haqiqiy mavjudlikka mos keldi. Farq aniqlanmadi.</span>")
       : "<span>Sanash tugagach xulosa shakllanadi.</span>") +
-      (butlikEmas ? " <span>Butligi to'liq bo'lmagan birliklar:</span> <b data-tarjimasiz>" + butlikEmas + "</b>." : "") + "</p>" +
+      (butlikEmas ? " <span>To'liq bo'lmagan birliklar:</span> <b data-tarjimasiz>" + butlikEmas + "</b>." : "") + "</p>" +
     "<h3>Solishtirma qaydnoma</h3>" +
     (qatorlar.length || ortiqcha.length ? '<div class="qaydnoma-oral"><table class="qaydnoma"><thead><tr><th>Inventar raqami</th><th>Nomi va joyi</th><th class="son">Hisobda</th><th class="son">Haqiqatda</th><th class="son">Farq</th><th>Izoh</th></tr></thead><tbody>' +
       qatorlar.map(q => '<tr class="' + (q.holat === "kamomad" ? "kam" : "") + '"><td>' + tdRaqam(q.x.inventarRaqam) + "</td>" +
@@ -169,7 +169,7 @@
         '<td class="son" data-y="Hisobda"><span data-tarjimasiz>1</span></td>' +
         '<td class="son" data-y="Haqiqatda">' + (q.haqiqat == null ? "<span>Sanalmagan</span>" : '<span data-tarjimasiz>' + q.haqiqat + "</span>") + "</td>" +
         '<td class="son" data-y="Farq">' + (q.haqiqat == null ? "—" : q.haqiqat - 1 ? '<b data-tarjimasiz style="color:var(--xavf-matn-yorqin)">−1</b>' : '<span data-tarjimasiz>0</span>') + "</td>" +
-        "<td>" + (q.n && q.n.topildi && q.n.butlik === false ? "<span>Butligi to'liq emas.</span> " : "") + esc((q.n && q.n.izoh) || "") + "</td></tr>").join("") +
+        "<td>" + (q.n && q.n.topildi && q.n.butlik === false ? "<span>To'liq emas.</span> " : "") + esc((q.n && q.n.izoh) || "") + "</td></tr>").join("") +
       ortiqcha.map(o => '<tr class="ort"><td><span>Raqamsiz</span></td><td><b style="font-weight:500">' + esc(o.nom) + "</b><small>" + esc(obNomi(o.obyektId)) + "</small></td>" +
         '<td class="son" data-y="Hisobda"><span data-tarjimasiz>0</span></td><td class="son" data-y="Haqiqatda"><span data-tarjimasiz>1</span></td>' +
         '<td class="son" data-y="Farq"><b data-tarjimasiz>+1</b></td><td><span>Ortiqcha.</span> ' + esc(o.izoh || "") + "</td></tr>").join("") +

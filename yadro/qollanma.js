@@ -43,19 +43,19 @@ window.MKB_QOLLANMA = {
             "Форму заполняет сотрудник подразделения, вы утверждаете её или отклоняете с указанием причины. Если к учётной записи привязан филиал, система показывает только его записи."),
     qadamlar: [
       {nom: X("Kunni «Bugun» blokidan boshlang", "Начните день с блока «Bugun»"),
-       izoh: X("To'rt qator: qaroringizni kutayotgan so'rovlar, kechagi muddati o'tgan ishlar, qiymati pasaygan aktivlar va umidsiz toifaga eng yaqin aktivlar. Qatorni bossangiz, ro'yxat ochiladi.",
-               "Четыре строки: запросы, ждущие вашего решения, дела, просроченные со вчера, активы с упавшей стоимостью и активы ближе всех к безнадёжной категории. Нажмите на строку — откроется список."),
+       izoh: X("To'rt qator: qaroringizni kutayotgan so'rovlar, kechagi muddati o'tgan ishlar, qiymati pasaygan aktivlar va me'yoriy muddati tugashiga eng yaqin aktivlar. Qatorni bossangiz, ro'yxat ochiladi.",
+               "Четыре строки: запросы, ждущие вашего решения, дела, просроченные со вчера, активы с упавшей стоимостью и активы, ближайшие к истечению нормативного срока. Нажмите на строку — откроется список."),
        havola: "panel.html", havolaNomi: X("Boshqaruv paneli", "Панель управления"), rasm: "assets/yordam/rahbariyat-bugun.webp"},
       {nom: X("Qarorlar navbatini bo'shating", "Разберите очередь решений"),
        izoh: X("Har so'rovda asos, summa, muallif va javob muddati bor. «Nima o'zgaradi» bloki qiymat va holatni tasdiqdan oldin va keyin ko'rsatadi. Bir turdagi so'rovlarni birdan tasdiqlash mumkin, balansdan chiqarish bundan mustasno.",
                "В каждом запросе есть основание, сумма, автор и срок ответа. Блок «Nima o'zgaradi» показывает стоимость и статус до и после утверждения. Однотипные запросы можно утвердить сразу, кроме списания."),
        havola: "tasdiqlar.html", havolaNomi: X("Qarorlar", "Решения"), rasm: "assets/yordam/rahbariyat-qaror.webp"},
-      {nom: X("Umidsiz toifa chegarasini kuzating", "Следите за порогом безнадёжной категории"),
-       izoh: X("Undiruvdan olingan mulk balansga olingandan 365 kun, boshqa mulk 1095 kun o'tgach umidsiz toifaga tushadi va zaxira 100% bo'ladi. Chegaraga 90 kun qolgan aktivlar ro'yxat boshida turadi.",
-               "Имущество из взыскания попадает в безнадёжную категорию через 365 дней после приёма на баланс, прочее — через 1095; резерв становится 100%. Активы, которым до порога 90 дней, стоят в начале списка."),
+      {nom: X("Me'yoriy muddat chegarasini kuzating", "Следите за порогом нормативного срока"),
+       izoh: X("Undiruvdan olingan mulk balansga olingandan 365 kun, boshqa mulk 1095 kun o'tgach me'yoriy muddati tugaydi va zaxira 100% bo'ladi. Chegaraga 90 kun qolgan aktivlar ro'yxat boshida turadi.",
+               "Нормативный срок для имущества из взыскания истекает через 365 дней после приёма на баланс, для прочего — через 1095; резерв становится 100%. Активы, которым до порога 90 дней, стоят в начале списка."),
        havola: "muddatlar.html", havolaNomi: X("Me'yoriy muddatlar", "Нормативные сроки"), rasm: "assets/yordam/rahbariyat-muddatlar.webp"},
       {nom: X("Kechikkan ko'riklarni yopdiring", "Добейтесь закрытия просроченных осмотров"),
-       izoh: X("Muddati o'tgan ko'rik aktivning nazorat indeksini pasaytiradi va sizga eskalatsiya bo'ladi. Qatorlarni belgilab, yangi sanani bir amalda qo'ying: sabab tarixda qoladi.",
+       izoh: X("Muddati o'tgan ko'rik aktivning nazorat indeksini pasaytiradi va masala sizga o'tkaziladi. Qatorlarni belgilab, yangi sanani bir amalda qo'ying: sabab tarixda qoladi.",
                "Просроченный осмотр снижает индекс контроля актива и эскалируется вам. Отметьте строки и поставьте новую дату одним действием: причина останется в истории."),
        havola: "korik-kechikkan.html", havolaNomi: X("Kechikkan ko'riklar", "Просроченные осмотры")},
       {nom: X("Sotuv rejasining bajarilishini ko'ring", "Посмотрите выполнение плана продаж"),
@@ -74,7 +74,7 @@ window.MKB_QOLLANMA = {
       X("Filial biriktirilgan bo'lsa — filial aktivlarining saqlanishi va ko'rik rejasi", "При привязке к филиалу — сохранность активов филиала и план осмотров"),
     ],
     meyor: [
-      X("Undiruv natijasida olingan mulk balansga olingandan 365 kun o'tgach umidsiz toifaga o'tadi, zaxira 100% (MB 2696)", "Имущество, полученное при взыскании, через 365 дней после принятия на баланс переходит в безнадёжную категорию, резерв 100% (ЦБ 2696)"),
+      X("Undiruv natijasida olingan mulk balansga olingandan 365 kun o'tgach me'yoriy muddati tugaydi, zaxira 100% (MB 2696: «umidsiz» toifa)", "Имущество, полученное при взыскании, через 365 дней после принятия на баланс исчерпывает нормативный срок, резерв 100% (ЦБ 2696: категория «безнадёжная»)"),
       X("MB hisoboti har oyning 10-sanasigacha topshiriladi", "Отчёт ЦБ сдаётся до 10-го числа каждого месяца"),
       X("E-auksion g'olibi 5 ish kunida to'laydi, shartnoma 10 ish kunida tuziladi (VM 18)", "Победитель электронного аукциона оплачивает в течение 5 рабочих дней, договор заключается в течение 10 рабочих дней (ПКМ 18)"),
       X("Binoli aktiv 90 kunda, transport 30 kunda bir marta ko'rikdan o'tadi", "Актив со зданием осматривается раз в 90 дней, транспорт — раз в 30 дней"),
@@ -85,7 +85,7 @@ window.MKB_QOLLANMA = {
       X("«Qarorlar» sahifasida «Mendan kutilmoqda» ro'yxatini bo'shating", "На странице «Qarorlar» разберите список «Mendan kutilmoqda»"),
     ],
     haftalik: [
-      X("Umidsizga o'tish arafasidagi aktivlar bo'yicha sotuv choralarini so'rang", "Запросите меры по продаже активов, которые вот-вот станут безнадёжными"),
+      X("Me'yoriy muddati tugash arafasidagi aktivlar bo'yicha sotuv choralarini so'rang", "Запросите меры по продаже активов, у которых вот-вот истечёт нормативный срок"),
       X("Kechikkan ko'riklar va muddati o'tgan to'lovlarni ko'ring", "Просмотрите просроченные осмотры и просроченные платежи"),
       X("Sotuv doskasida lotlar va takliflarning harakatini tekshiring", "Проверьте на доске продаж движение лотов и предложений"),
     ],
@@ -187,18 +187,18 @@ window.MKB_QOLLANMA = {
   nazorat: {
     nom: "Ko'rik va xavfsizlik inspektori",
     maqsad: X("Siz aktivning jismoniy holati va himoyasi uchun javob berasiz: rejali va navbatdan tashqari ko'rik, inventarizatsiya, kamera va datchiklar, hodisalar, qo'riqlash shartnomalari hamda obyektga kirish ruxsatlari.",
-            "Вы отвечаете за физическое состояние и охрану актива: плановые и внеочередные осмотры, инвентаризация, камеры и датчики, инциденты, договоры охраны и допуски на объект."),
+            "Вы отвечаете за физическое состояние и охрану актива: плановые и внеочередные осмотры, инвентаризация, камеры и датчики, происшествия, договоры охраны и допуски на объект."),
     qadamlar: [
       {nom: X("Panelingizdan boshlang", "Начните со своей панели"),
        izoh: X("Bugungi va kechikkan ko'riklar, ochiq hodisalar, sug'urtasiz aktivlar va 24 soatdan ortiq aloqasiz qurilmalar bir ekranda. «Mening ko'riklarim» va «Barcha ko'riklar» tanlovi raqamlarga ham ta'sir qiladi.",
-               "Сегодняшние и просроченные осмотры, открытые инциденты, активы без страховки и устройства без связи более 24 часов — на одном экране. Выбор «Mening ko'riklarim» или «Barcha ko'riklar» влияет и на цифры."),
+               "Сегодняшние и просроченные осмотры, открытые происшествия, активы без страховки и устройства без связи более 24 часов — на одном экране. Выбор «Mening ko'riklarim» или «Barcha ko'riklar» влияет и на цифры."),
        havola: "panel-nazorat.html", havolaNomi: X("Panelim", "Моя панель"), rasm: "assets/yordam/nazorat-panel.webp"},
       {nom: X("Ko'rikni joyida o'tkazing", "Проводите осмотр на месте"),
        izoh: X("Chek-listning har bandini belgilang, kamchilikka surat biriktiring, joylashuvni «Aniqlash» bilan yozing. Baho 2 yoki 1 bo'lsa, dalolatnoma yakunlangach hodisa o'zi ochiladi.",
-               "Отметьте каждый пункт чек-листа, к недостатку приложите фото, местоположение запишите кнопкой «Aniqlash». При оценке 2 или 1 после завершения акта инцидент открывается сам."),
+               "Отметьте каждый пункт чек-листа, к недостатку приложите фото, местоположение запишите кнопкой «Aniqlash». При оценке 2 или 1 после завершения акта происшествие открывается само."),
        havola: "korik-rejasi.html", havolaNomi: X("Ko'rik rejasi", "План осмотров"), rasm: "assets/yordam/nazorat-cheklist.webp"},
       {nom: X("Kechikkan ko'riklarni yoping", "Закройте просроченные осмотры"),
-       izoh: X("Muddati o'tgan ko'rik Rahbariyatga eskalatsiya bo'ladi va nazorat indeksini pasaytiradi. O'tkazib bo'lmasa, sababini yozib yangi sanaga ko'chiring.",
+       izoh: X("Muddati o'tgan ko'rik Rahbariyatga o'tkaziladi va nazorat indeksini pasaytiradi. O'tkazib bo'lmasa, sababini yozib yangi sanaga ko'chiring.",
                "Просроченный осмотр эскалируется Руководству и снижает индекс контроля. Если провести нельзя, перенесите на новую дату с указанием причины."),
        havola: "korik-kechikkan.html", havolaNomi: X("Kechikkanlar", "Просроченные")},
       {nom: X("Inventarizatsiya o'tkazing", "Проведите инвентаризацию"),
@@ -209,10 +209,10 @@ window.MKB_QOLLANMA = {
        izoh: X("Aloqasiz qurilmalar, batareyasi 20% dan past datchiklar, so'nggi signallar va qo'riqlanmayotgan aktivlar. Tizim jonli video ko'rsatmaydi: qurilmaning oxirgi signal vaqti turadi.",
                "Устройства без связи, датчики с зарядом ниже 20%, последние сигналы и активы без охраны. Система не показывает живое видео: видно время последнего сигнала устройства."),
        havola: "himoya.html", havolaNomi: X("Monitoring markazi", "Центр мониторинга"), rasm: "assets/yordam/nazorat-markaz.webp"},
-      {nom: X("Hodisani oxirigacha olib boring", "Доведите инцидент до конца"),
+      {nom: X("Hodisani oxirigacha olib boring", "Доведите происшествие до конца"),
        izoh: X("Bosqichlar: Yangi, Tekshiruvda, Bartaraf etilmoqda, Hal qilindi, Yopildi. Hal qilish va yopishda ko'rilgan chora kamida 5 belgi bilan yoziladi; o'g'rilikda IIB arizasi raqami va sanasi kiritiladi.",
                "Этапы: новый, на проверке, устраняется, решён, закрыт. При решении и закрытии принятые меры описываются не короче 5 символов; при краже вносятся номер и дата заявления в ОВД."),
-       havola: "hodisalar.html", havolaNomi: X("Hodisalar", "Инциденты"), rasm: "assets/yordam/nazorat-hodisa.webp"},
+       havola: "hodisalar.html", havolaNomi: X("Hodisalar", "Происшествия"), rasm: "assets/yordam/nazorat-hodisa.webp"},
       {nom: X("Qurilma, qo'riqlash va ruxsatlarni yuriting", "Ведите устройства, охрану и допуски"),
        izoh: X("Qurilma 24 soatdan ortiq jim tursa vazifa ochiladi — servis topshirig'i bering. Qo'riqlash shartnomasini tugashidan 30 kun oldin uzaytiring, 7 kunda tugaydigan ruxsatlarni ko'rib chiqing.",
                "Если устройство молчит больше 24 часов, открывается задача — оформите сервисное задание. Договор охраны продлевайте за 30 дней до окончания, допуски с окончанием через 7 дней пересмотрите."),
@@ -220,7 +220,7 @@ window.MKB_QOLLANMA = {
     ],
     javobgarlik: [
       X("Ko'rik rejasining muddatida bajarilishi va dalolatnomalarning to'liqligi", "Выполнение плана осмотров в срок и полнота актов"),
-      X("Aniqlangan kamchiliklarning hodisa sifatida qayd etilishi va hal qilinishi", "Регистрация найденных недостатков как инцидентов и их устранение"),
+      X("Aniqlangan kamchiliklarning hodisa sifatida qayd etilishi va hal qilinishi", "Регистрация найденных недостатков как происшествий и их устранение"),
       X("Qurilmalarning aloqada bo'lishi va qo'riqlash shartnomalarining uzluksizligi", "Связь с устройствами и непрерывность договоров охраны"),
       X("Obyektga kirish ruxsatlari va tashrif jurnalining to'g'riligi", "Корректность допусков на объект и журнала посещений"),
     ],
@@ -234,7 +234,7 @@ window.MKB_QOLLANMA = {
     kunlik: [
       X("Panelda bugungi ko'riklarni oching va «Ko'rikni boshlash» tugmasini bosing", "Откройте на панели сегодняшние осмотры и нажмите «Ko'rikni boshlash»"),
       X("So'nggi signallar va 24 soatdan ortiq jim qurilmalarni ko'ring", "Просмотрите последние сигналы и устройства, молчащие больше 24 часов"),
-      X("Yangi hodisalarni qabul qiling, mas'ul belgilang va chorani yozing", "Примите новые инциденты, назначьте ответственного и опишите меры"),
+      X("Yangi hodisalarni qabul qiling, mas'ul belgilang va chorani yozing", "Примите новые происшествия, назначьте ответственного и опишите меры"),
       X("Kirish so'rovlarini tasdiqlang yoki sababini yozib rad eting", "Утвердите запросы на доступ или отклоните их с указанием причины"),
     ],
     haftalik: [
@@ -251,7 +251,7 @@ window.MKB_QOLLANMA = {
     mumkin: [
       X("Ko'rik o'tkazadi, dalolatnomani imzolaydi va keyingi ko'rikni tayinlaydi", "Проводит осмотр, подписывает акт и назначает следующий осмотр"),
       X("Inventarizatsiyani boshlaydi, sanaydi va dalolatnomani yakunlaydi", "Начинает, проводит инвентаризацию и завершает акт"),
-      X("Hodisa ochadi, mas'ul belgilaydi, chorani yozadi va yopadi", "Открывает инцидент, назначает ответственного, описывает меры и закрывает его"),
+      X("Hodisa ochadi, mas'ul belgilaydi, chorani yozadi va yopadi", "Открывает происшествие, назначает ответственного, описывает меры и закрывает его"),
       X("Qurilma o'rnatadi, servis topshirig'i beradi, qo'riqlash shartnomasini yuritadi", "Устанавливает устройства, даёт сервисные задания, ведёт договоры охраны"),
       X("Kirish ruxsatini beradi, to'xtatadi va masofadan ochish qarorini asos bilan jurnalga yozadi", "Выдаёт и останавливает допуск, записывает в журнал решение об удалённом открытии с основанием"),
     ],
@@ -265,16 +265,16 @@ window.MKB_QOLLANMA = {
 
   buxgalteriya: {
     nom: "Buxgalteriya va risk",
-    maqsad: X("Siz zaxira, soliq, Markaziy bank hisoboti va shartnoma to'lovlarini yuritasiz. Aktivning balans qiymati va umidsiz toifagacha qolgan muddati shu hisoblarning asosi.",
-            "Вы ведёте резерв, налоги, отчётность для Центрального банка и платежи по договорам. Балансовая стоимость актива и срок до безнадёжной категории — основа этих расчётов."),
+    maqsad: X("Siz zaxira, soliq, Markaziy bank hisoboti va shartnoma to'lovlarini yuritasiz. Aktivning balans qiymati va me'yoriy muddatigacha qolgan vaqti shu hisoblarning asosi.",
+            "Вы ведёте резерв, налоги, отчётность для Центрального банка и платежи по договорам. Балансовая стоимость актива и время до истечения нормативного срока — основа этих расчётов."),
     qadamlar: [
       {nom: X("Moliya panelini oching", "Откройте финансовую панель"),
        izoh: X("Zaxira yuki, chorak solig'i, MB hisobotigacha qolgan kun, kechikkan to'lovlar va tasdiq kutayotgan so'rovlaringiz bir ekranda.",
                "Резервная нагрузка, налог за квартал, дни до отчёта ЦБ, просроченные платежи и ваши запросы, ждущие утверждения, — на одном экране."),
        havola: "panel-moliya.html", havolaNomi: X("Moliya paneli", "Финансовая панель"), rasm: "assets/yordam/buxgalteriya-panel.webp"},
       {nom: X("Zaxira hisobini tekshiring", "Проверьте расчёт резерва"),
-       izoh: X("Toifalar bo'yicha zaxira va umidsiz toifaga o'tadigan aktivlar. Oraliq stavkani siz taklif qilasiz, Rahbariyat tasdiqlaydi; tasdiqlanmaguncha qiymat «Taxminiy» belgisi bilan turadi.",
-               "Резерв по категориям и активы, переходящие в безнадёжную категорию. Промежуточную ставку предлагаете вы, утверждает Руководство; до утверждения значение помечено «Taxminiy»."),
+       izoh: X("Toifalar bo'yicha zaxira va me'yoriy muddati tugayotgan aktivlar. Oraliq stavkani siz taklif qilasiz, Rahbariyat tasdiqlaydi; tasdiqlanmaguncha qiymat «Taxminiy» belgisi bilan turadi.",
+               "Резерв по категориям и активы, у которых истекает нормативный срок. Промежуточную ставку предлагаете вы, утверждает Руководство; до утверждения значение помечено «Taxminiy»."),
        havola: "zaxira.html", havolaNomi: X("Zaxira (MB 2696)", "Резерв (ЦБ 2696)"), rasm: "assets/yordam/buxgalteriya-stavka.webp"},
       {nom: X("Soliq hisobini yuriting", "Ведите налоговый учёт"),
        izoh: X("Mol-mulk solig'i chorak bo'yicha hisoblanadi. Imtiyoz davri 30 kunda tugaydigan aktivlar alohida ko'rsatiladi, sotilgan aktivlar bo'yicha QQS bazasi alohida qatorda.",
@@ -300,7 +300,7 @@ window.MKB_QOLLANMA = {
       X("Shartnoma to'lovlarining jadvalga mos qayd etilishi", "Фиксация платежей по договорам в соответствии с графиком"),
     ],
     meyor: [
-      X("Undiruv natijasida olingan mulk 365 kundan keyin umidsiz toifaga o'tadi, zaxira 100%", "Имущество, полученное при взыскании, через 365 дней переходит в безнадёжную категорию, резерв 100%"),
+      X("Undiruv natijasida olingan mulk 365 kundan keyin me'yoriy muddati tugaydi, zaxira 100%", "Имущество, полученное при взыскании, через 365 дней исчерпывает нормативный срок, резерв 100%"),
       X("Boshqa foydalanilmayotgan mulk uchun chegara 3 yil", "Для прочего неиспользуемого имущества порог — 3 года"),
       X("MB hisoboti har oyning 10-sanasigacha", "Отчёт ЦБ — до 10-го числа каждого месяца"),
       X("Mol-mulk solig'i bo'yicha imtiyoz balansga olingandan 6 oy amal qiladi", "Льгота по налогу на имущество действует 6 месяцев после принятия на баланс"),
@@ -350,10 +350,10 @@ window.MKB_QOLLANMA = {
        izoh: X("To'rt ish roli va administrator: har birining bo'limlardagi huquqi — ko'radi, yozadi, tasdiqlaydi. Xodimga boshqa huquq kerak bo'lsa, mos rolni bering.",
                "Четыре рабочие роли и администратор: права каждой в разделах — видит, пишет, утверждает. Если сотруднику нужны другие права, назначьте подходящую роль."),
        havola: "rollar.html", havolaNomi: X("Rollar", "Роли")},
-      {nom: X("Eskalatsiya qoidalarini sozlang", "Настройте правила эскалации"),
+      {nom: X("Yuqoriga o'tkazish qoidalarini sozlang", "Настройте правила передачи вышестоящему"),
        izoh: X("Muddatdan necha kun oldin kimga bildirishnoma yoki vazifa ketishini va javob bo'lmasa kimga o'tishini belgilang.",
                "Укажите, за сколько дней до срока и кому уходит уведомление или задача и к кому она переходит, если ответа нет."),
-       havola: "sozlamalar.html#qoidalar", havolaNomi: X("Eskalatsiya qoidalari", "Правила эскалации"), rasm: "assets/yordam/admin-qoidalar.webp"},
+       havola: "sozlamalar.html#qoidalar", havolaNomi: X("Yuqoriga o'tkazish qoidalari", "Правила передачи вышестоящему"), rasm: "assets/yordam/admin-qoidalar.webp"},
       {nom: X("Me'yoriy parametrlarni yangilang", "Обновите нормативные параметры"),
        izoh: X("Muddat, zaxira, soliq va savdo hisoblari shu qiymatlardan olinadi. Taxminiy qiymat buxgalteriya tasdiqlagach amalga kiradi.",
                "Из этих значений считаются сроки, резерв, налог и торги. Предварительное значение вступает в силу после утверждения бухгалтерией."),
@@ -365,7 +365,7 @@ window.MKB_QOLLANMA = {
     ],
     javobgarlik: [
       X("Hisoblar, rollar va filial biriktiruvining to'g'riligi", "Правильность учётных записей, ролей и привязки к филиалам"),
-      X("Eskalatsiya qoidalari va me'yoriy parametrlarning dolzarbligi", "Актуальность правил эскалации и нормативных параметров"),
+      X("Yuqoriga o'tkazish qoidalari va me'yoriy parametrlarning dolzarbligi", "Актуальность правил передачи вышестоящему и нормативных параметров"),
       X("Shaxsga doir ma'lumotlarni saqlash muddatlari", "Сроки хранения персональных данных"),
     ],
     meyor: [
@@ -383,14 +383,14 @@ window.MKB_QOLLANMA = {
       X("O'chirilgan yozuvlar ko'rinishida kimning nima o'chirganini ko'ring", "В представлении «O'chirilgan yozuvlar» посмотрите, кто и что удалил"),
     ],
     oylik: [
-      X("Eskalatsiya qoidalari va me'yoriy parametrlarni bank buyruqlari bilan solishtiring", "Сверьте правила эскалации и нормативные параметры с приказами банка"),
+      X("Yuqoriga o'tkazish qoidalari va me'yoriy parametrlarni bank buyruqlari bilan solishtiring", "Сверьте правила передачи вышестоящему и нормативные параметры с приказами банка"),
       X("Muddati o'tgan tashrifchi ma'lumotlarini anonimlashtiring", "Обезличьте данные посетителей с истёкшим сроком хранения"),
     ],
     ekranlar: ["panel.html", "foydalanuvchilar.html", "foydalanuvchi.html", "rollar.html", "filiallar.html", "sozlamalar.html", "amallar-tarixi.html", "integratsiyalar.html"],
     mumkin: [
       X("Hamma bo'limni ko'radi va istalgan yozuvni o'zgartira oladi", "Видит все разделы и может менять любую запись"),
       X("Hisob ochadi, rol beradi, bloklaydi va vaqtinchalik parol o'rnatadi", "Открывает учётные записи, назначает роли, блокирует и выставляет временный пароль"),
-      X("Eskalatsiya qoidalari va me'yoriy parametrlarni o'zgartiradi", "Меняет правила эскалации и нормативные параметры"),
+      X("Yuqoriga o'tkazish qoidalari va me'yoriy parametrlarni o'zgartiradi", "Меняет правила передачи вышестоящему и нормативные параметры"),
       X("O'chirilgan yozuvni tiklaydi", "Восстанавливает удалённую запись"),
     ],
     mumkinEmas: [
@@ -417,11 +417,11 @@ window.MKB_YORDAM = {
     bloklar: [
       B("Bugun", "Сегодня", "To'rt qator: qaroringizni kutayotgan so'rovlar, kechadan beri muddati o'tgan ishlar, qiymati pasaygan obyektlar va eng katta xavflar. Qatorni bossangiz, filtrlangan ro'yxat ochiladi.",
         "Четыре строки: запросы, ждущие вашего решения, дела, просроченные со вчерашнего дня, объекты с упавшей стоимостью и крупнейшие риски. Нажмите на строку, чтобы открыть отфильтрованный список."),
-      B("Asosiy ko'rsatkichlar", "Основные показатели", "Balans qiymati, zaxira yuki, 90 kunda umidsizga o'tadigan aktivlar, yillik reja va oylik saqlash xarajati. Har bir raqam o'z ro'yxatiga olib boradi.",
-        "Балансовая стоимость, резервная нагрузка, активы, которые через 90 дней станут безнадёжными, годовой план и ежемесячные расходы на содержание. Каждая цифра ведёт к своему списку."),
+      B("Asosiy ko'rsatkichlar", "Основные показатели", "Balans qiymati, zaxira yuki, 90 kunda me'yoriy muddati tugaydigan aktivlar, yillik reja va oylik saqlash xarajati. Har bir raqam o'z ro'yxatiga olib boradi.",
+        "Балансовая стоимость, резервная нагрузка, активы, у которых нормативный срок истекает через 90 дней, годовой план и ежемесячные расходы на содержание. Каждая цифра ведёт к своему списку."),
       B("Qarorlar navbati", "Очередь решений", "Muddati eng yaqin so'rovlar. «Tasdiqlash» va «Rad etish» shu yerda ham ishlaydi va «Qarorlar» sahifasidagi oyna bilan bir xil.",
         "Запросы с ближайшим сроком. Кнопки «Tasdiqlash» и «Rad etish» работают и здесь — так же, как на странице «Qarorlar»."),
-      B("Umidsizga o'tish arafasida", "На пороге безнадёжной категории", "Chegaraga eng yaqin aktivlar va 100% zaxiraga o'tganda qo'shiladigan summa.",
+      B("Muddat tugashi arafasida", "На пороге истечения срока", "Chegaraga eng yaqin aktivlar va 100% zaxiraga o'tganda qo'shiladigan summa.",
         "Активы, ближайшие к порогу, и сумма, которая добавится при переходе на резерв 100%."),
       B("Muddat kesimi, realizatsiya voronkasi, hudud kesimi", "Разрез по срокам, воронка реализации, разрез по регионам", "Portfel qayerda to'planganini ko'rsatadi. Bloklarni «Panel bloklarini tanlash» tugmasi bilan yashirish yoki qaytarish mumkin.",
         "Показывают, где сосредоточен портфель. Блоки можно скрыть или вернуть кнопкой «Panel bloklarini tanlash»."),
@@ -468,14 +468,14 @@ window.MKB_YORDAM = {
   "panel-nazorat.html": {
     sarlavha: X("Ko'rik va xavfsizlik paneli", "Панель осмотров и безопасности"),
     nimaUchun: X("Inspektorning ish kuni shu yerdan boshlanadi: bugungi va kechikkan ko'riklar, ochiq hodisalar, nosoz qurilmalar va sug'urtasiz aktivlar.",
-                 "Рабочий день инспектора начинается здесь: сегодняшние и просроченные осмотры, открытые инциденты, неисправные устройства и активы без страховки."),
+                 "Рабочий день инспектора начинается здесь: сегодняшние и просроченные осмотры, открытые происшествия, неисправные устройства и активы без страховки."),
     bloklar: [
       B("Ko'riklar doirasi", "Охват осмотров", "Sizga tayinlangan ko'rik bo'lsa, tepada tanlov chiqadi: «Mening ko'riklarim» — sizga tayinlanganlari, «Barcha ko'riklar» — filialdagi hammasi. Tanlov raqamlarga ham ta'sir qiladi va eslab qolinadi.",
         "Если у вас есть назначенные осмотры, вверху появляется переключатель: «Mening ko'riklarim» — назначенные вам, «Barcha ko'riklar» — все по филиалу. Выбор влияет и на цифры, и запоминается."),
       B("Ko'rsatkichlar qatori", "Строка показателей", "Besh raqam: 7 kundagi rejadagi ko'riklar, kechikkanlar, ochiq hodisalar, sug'urtasiz aktivlar va 24 soatdan ortiq aloqasiz qurilmalar. Har biri o'z ro'yxatini ochadi.",
-        "Пять цифр: плановые осмотры на 7 дней, просроченные, открытые инциденты, активы без страховки и устройства без связи более 24 часов. Каждая открывает свой список."),
+        "Пять цифр: плановые осмотры на 7 дней, просроченные, открытые происшествия, активы без страховки и устройства без связи более 24 часов. Каждая открывает свой список."),
       B("Ko'rik navbati", "Очередь осмотров", "Uch guruh: Kechikkan, Bugun, Rejada. Har qatorda inspektor va qancha kun o'tgani yoki qolgani yozilgan.", "Три группы: Просроченные, Сегодня, По плану. В каждой строке — инспектор и сколько дней прошло или осталось."),
-      B("Ochiq hodisalar", "Открытые инциденты", "Jiddiylik bo'yicha tartiblangan. Hodisani bossangiz, uning sahifasi ochiladi.", "Отсортированы по важности. Нажмите на инцидент, чтобы открыть его страницу."),
+      B("Ochiq hodisalar", "Открытые происшествия", "Jiddiylik bo'yicha tartiblangan. Hodisani bossangiz, uning sahifasi ochiladi.", "Отсортированы по важности. Нажмите на происшествие, чтобы открыть его страницу."),
       B("Qurilma nosozliklari", "Неисправности устройств", "Uzoq aloqasiz va batareyasi past qurilmalar.", "Устройства, долго находящиеся без связи, и устройства с низким зарядом."),
       B("Sug'urtasiz aktivlar", "Активы без страховки", "Talab qilingan polis amalda bo'lmagan aktivlar.", "Активы, у которых нет действующего обязательного полиса."),
     ],
@@ -483,7 +483,7 @@ window.MKB_YORDAM = {
       B("Ko'rikni boshlash", "Начать осмотр", "Eng shoshilinch ko'rikning dalolatnoma formasi ochiladi.", "Открывается форма акта самого срочного осмотра."),
       B("O'tkazish", "Провести", "Tanlangan ko'rikning dalolatnoma formasi ochiladi.", "Открывается форма акта выбранного осмотра."),
     ],
-    xatolar: [X("Kechikkan ko'rik Rahbariyatga eskalatsiya bo'ladi. Ko'rikni o'tkazolmasangiz, «Kechikkanlar» sahifasida sababini yozib ko'chiring", "Просроченный осмотр эскалируется Руководству. Если провести его нельзя, перенесите на странице «Kechikkanlar» с указанием причины")],
+    xatolar: [X("Kechikkan ko'rik Rahbariyatga o'tkaziladi. Ko'rikni o'tkazolmasangiz, «Kechikkanlar» sahifasida sababini yozib ko'chiring", "Просроченный осмотр эскалируется Руководству. Если провести его нельзя, перенесите на странице «Kechikkanlar» с указанием причины")],
     qoidalar: [X("Binoli aktiv 90 kunda, transport 30 kunda bir marta ko'rikdan o'tadi", "Актив со зданием осматривается раз в 90 дней, транспорт — раз в 30 дней")],
     bogliq: ["korik-rejasi.html", "korik-otkazish.html", "hodisalar.html", "sugurta.html"],
   },
@@ -528,8 +528,8 @@ window.MKB_YORDAM = {
     nimaUchun: X("Bank balansidagi barcha aktivlar ro'yxati. Shu yerdan aktivni topasiz, kartochkasini ochasiz, bir nechta aktivga birdan ko'rik yoki vazifa berasiz.",
                  "Список всех активов на балансе банка. Здесь вы находите актив, открываете его карточку и назначаете осмотр или задачу сразу нескольким активам."),
     bloklar: [
-      B("Ko'rsatkichlar", "Показатели", "Balansdagi aktivlar, umidsiz toifadagilar, 90 kunda umidsizga o'tadiganlar va baholanmaganlar. Kartani bossangiz, jadval shu bo'yicha filtrlanadi.", "Активы на балансе, безнадёжные, переходящие в безнадёжные через 90 дней и неоценённые. Нажмите на карточку, чтобы отфильтровать таблицу."),
-      B("Ko'rinish", "Представление", "Tayyor ko'rinishlar: «Umidsizga 90 kun qolgan», «Qo'riqsiz», «Kommunal uzilgan». O'z filtrlaringizni nom berib saqlashingiz mumkin, havolasini hamkasbga yuborsa bo'ladi.", "Готовые представления: «Umidsizga 90 kun qolgan», «Qo'riqsiz», «Kommunal uzilgan». Свои фильтры можно сохранить под именем и отправить коллеге ссылку."),
+      B("Ko'rsatkichlar", "Показатели", "Balansdagi aktivlar, me'yoriy muddati o'tganlar, 90 kunda muddati tugaydiganlar va baholanmaganlar. Kartani bossangiz, jadval shu bo'yicha filtrlanadi.", "Активы на балансе, с истёкшим нормативным сроком, с истечением срока через 90 дней и неоценённые. Нажмите на карточку, чтобы отфильтровать таблицу."),
+      B("Ko'rinish", "Представление", "Tayyor ko'rinishlar: «Muddat tugashiga 90 kun», «Qo'riqsiz», «Kommunal uzilgan». O'z filtrlaringizni nom berib saqlashingiz mumkin, havolasini hamkasbga yuborsa bo'ladi.", "Готовые представления: «Muddat tugashiga 90 kun», «Qo'riqsiz», «Kommunal uzilgan». Свои фильтры можно сохранить под именем и отправить коллеге ссылку."),
       B("Jadval va Kartalar", "Таблица и карточки", "Bir xil ro'yxat ikki ko'rinishda. «Ustunlar» tugmasi bilan kerakli ustunlarni tanlaysiz; CSV faqat ko'rinib turgan ustunlarni oladi.", "Один и тот же список в двух видах. Кнопкой «Ustunlar» выберите нужные столбцы; CSV выгружает только видимые столбцы."),
     ],
     amallar: [
@@ -547,17 +547,17 @@ window.MKB_YORDAM = {
 
   "muddatlar.html": {
     sarlavha: X("Muddatlar", "Сроки"),
-    nimaUchun: X("Har bir aktiv balansda qancha turgani va qachon umidsiz toifaga o'tishi. Umidsiz toifada zaxira balans qiymatining 100% bo'ladi, shuning uchun bu sahifa sotuvni qachon tezlashtirish kerakligini ko'rsatadi.",
-                 "Сколько каждый актив находится на балансе и когда он перейдёт в безнадёжную категорию. В безнадёжной категории резерв равен 100% балансовой стоимости, поэтому страница показывает, когда нужно ускорить продажу."),
+    nimaUchun: X("Har bir aktiv balansda qancha turgani va qachon me'yoriy muddati tugashi. Muddat tugagach zaxira balans qiymatining 100% bo'ladi, shuning uchun bu sahifa sotuvni qachon tezlashtirish kerakligini ko'rsatadi.",
+                 "Сколько каждый актив находится на балансе и когда истечёт его нормативный срок. После истечения срока резерв равен 100% балансовой стоимости, поэтому страница показывает, когда нужно ускорить продажу."),
     bloklar: [
-      B("Umidsiz toifaga o'tadi", "Перейдут в безнадёжную категорию", "30, 60 va 90 kun ichida chegaraga yetadigan aktivlar. «Ro'yxatni ko'rish» jadvalni shu guruh bilan filtrlaydi.", "Активы, которые достигнут порога в течение 30, 60 и 90 дней. «Ro'yxatni ko'rish» фильтрует таблицу по этой группе."),
+      B("Me'yoriy muddat tugaydi", "Истекает нормативный срок", "30, 60 va 90 kun ichida chegaraga yetadigan aktivlar. «Ro'yxatni ko'rish» jadvalni shu guruh bilan filtrlaydi.", "Активы, которые достигнут порога в течение 30, 60 и 90 дней. «Ro'yxatni ko'rish» фильтрует таблицу по этой группе."),
       B("Obyektlar muddati", "Сроки объектов", "Jadvalda qabul sanasi, chegara sanasi va qolgan kun. «Oylar bo'yicha» ko'rinishi qaysi oyda nechta aktiv o'tishini ko'rsatadi.", "В таблице — дата приёма, дата порога и оставшиеся дни. Вид «Oylar bo'yicha» показывает, сколько активов перейдёт в каждом месяце."),
       B("Hisob qoidalari", "Правила расчёта", "Chegaralar qanday hisoblanishi: undiruvdan olingan mulk 365 kun, boshqa mulk 3 yil, soliq imtiyozi 6 oy.", "Как считаются пороги: имущество из взыскания — 365 дней, прочее имущество — 3 года, налоговая льгота — 6 месяцев."),
     ],
     amallar: [B("Qatorni bosish", "Нажать на строку", "Aktiv kartochkasi ochiladi, u yerda keyingi qadam tugmasi turadi.", "Открывается карточка актива, там есть кнопка следующего шага.")],
     xatolar: [X("Balans sanasi kiritilmagan aktiv hisobga kirmaydi. Uni «Balans sanasi kiritilmagan» holatida topib, kartochkada sanani kiriting", "Актив без даты приёма на баланс не попадает в расчёт. Найдите его по статусу «Balans sanasi kiritilmagan» и внесите дату в карточке")],
     qoidalar: [
-      X("Undiruv natijasida olingan mulk 365 kundan keyin umidsiz toifaga o'tadi (MB 2696)", "Имущество, полученное при взыскании, через 365 дней переходит в безнадёжную категорию (ЦБ 2696)"),
+      X("Undiruv natijasida olingan mulk 365 kundan keyin me'yoriy muddati tugaydi (MB 2696: «umidsiz» toifa)", "Имущество, полученное при взыскании, через 365 дней исчерпывает нормативный срок (ЦБ 2696: категория «безнадёжная»)"),
       X("Boshqa foydalanilmayotgan mulk uchun chegara 1095 kun", "Для прочего неиспользуемого имущества порог — 1095 дней"),
     ],
     bogliq: ["zaxira.html", "realizatsiya.html", "obyektlar.html"],
@@ -584,7 +584,7 @@ window.MKB_YORDAM = {
                  "Приём актива на баланс банка проходит в три шага. На первом шаге вы указываете, что принимается, основание приёма и данные объекта."),
     bloklar: [
       B("Nima qabul qilinadi", "Что принимается", "Yangi obyekt, undiruv ishidan (sud qarori ijrosi tugagan) yoki reyestrdagi dalolatnomasiz obyekt.", "Новый объект, объект из дела о взыскании (исполнение решения завершено) или объект из реестра без акта."),
-      B("Qabul asosi", "Основание приёма", "Asos umidsiz toifagacha muddatni belgilaydi: sud qarori, notarial kelishuv va o'zida qoldirish — 1 yil; ixtiyoriy topshirish va boshqa mulk — 3 yil.", "Основание определяет срок до безнадёжной категории: решение суда, нотариальное соглашение и оставление за собой — 1 год; добровольная передача и прочее имущество — 3 года."),
+      B("Qabul asosi", "Основание приёма", "Asos me'yoriy muddatni belgilaydi: sud qarori, notarial kelishuv va o'zida qoldirish — 1 yil; ixtiyoriy topshirish va boshqa mulk — 3 yil.", "Основание определяет нормативный срок: решение суда, нотариальное соглашение и оставление за собой — 1 год; добровольная передача и прочее имущество — 3 года."),
       B("Obyekt ma'lumotlari", "Данные объекта", "Nomi, turi, hududi, mas'ul filial va manzil. Qo'shimcha maydonlar yopiq bo'limda turadi.", "Название, тип, регион, ответственный филиал и адрес. Дополнительные поля — в свёрнутом блоке."),
     ],
     amallar: [
@@ -620,12 +620,12 @@ window.MKB_YORDAM = {
 
   "qabul-tasdiqlash.html": {
     sarlavha: X("Balansga qabul: 3-qadam", "Приём на баланс: шаг 3"),
-    nimaUchun: X("Oxirgi qadam: balans qiymati va sanasi, hisobvaraq va qabul xulosasi. Tizim shu ma'lumotdan umidsiz toifa sanasini va soliq imtiyozi muddatini hisoblaydi.",
-                 "Последний шаг: балансовая стоимость и дата, счёт и итог приёма. По этим данным система рассчитывает дату безнадёжной категории и срок налоговой льготы."),
+    nimaUchun: X("Oxirgi qadam: balans qiymati va sanasi, hisobvaraq va qabul xulosasi. Tizim shu ma'lumotdan me'yoriy muddat sanasini va soliq imtiyozi muddatini hisoblaydi.",
+                 "Последний шаг: балансовая стоимость и дата, счёт и итог приёма. По этим данным система рассчитывает дату истечения нормативного срока и срок налоговой льготы."),
     bloklar: [
       B("Balans ma'lumotlari", "Балансовые данные", "Balans qiymati (mln so'm), qabul sanasi (bugundan keyin bo'lishi mumkin emas) va hisobvaraq.", "Балансовая стоимость (млн сум), дата приёма (не позже сегодняшней) и счёт."),
       B("Qabul xulosasi", "Итог приёма", "Uch qadamda kiritilgan hamma narsa bir joyda: obyekt, asos, hujjatlar, komissiya.", "Всё, что внесено на трёх шагах, в одном месте: объект, основание, документы, комиссия."),
-      B("Muddatlar", "Сроки", "Umidsiz toifa, 3 yil chegarasi va soliq imtiyozi tugaydigan sanalar.", "Даты безнадёжной категории, порога 3 лет и окончания налоговой льготы."),
+      B("Muddatlar", "Сроки", "Me'yoriy muddat, 3 yil chegarasi va soliq imtiyozi tugaydigan sanalar.", "Даты истечения нормативного срока, порога 3 лет и окончания налоговой льготы."),
     ],
     amallar: [
       B("Balansga qabul qilish", "Принять на баланс", "Tasdiqlash oynasi obyekt, qiymat va hujjatlar ro'yxatini ko'rsatadi. Tasdiqlagach aktiv reyestrga yoziladi, 72 soatlik birlamchi ko'rik va rasmiylashtirish vazifalari ochiladi.",
@@ -724,7 +724,7 @@ window.MKB_YORDAM = {
       B("Shapka", "Шапка", "Nomi, raqami, holati, turi va nazorat indeksi. Tablar: Umumiy, Suratlar, Moliya, Hujjatlar, Ko'riklar, Xarajatlar, Kommunal, Himoya, Sotuv, Tarix.", "Название, номер, статус, тип и индекс контроля. Вкладки: Umumiy, Suratlar, Moliya, Hujjatlar, Ko'riklar, Xarajatlar, Kommunal, Himoya, Sotuv, Tarix."),
       B("Keyingi qadam", "Следующий шаг", "Tizim aktiv uchun eng muhim ishni aytadi, masalan «1 ta majburiy hujjat yetishmaydi», va tugma bilan o'sha ishga olib boradi.", "Система называет самое важное дело по активу, например «1 ta majburiy hujjat yetishmaydi», и кнопкой ведёт к нему."),
       B("Aktiv yo'li", "Путь актива", "Yetti bosqich: balansga qabul, huquqni rasmiylashtirish, baholash, sotuvga tayyorlash, lot, shartnoma, balansdan chiqarish. Joriy bosqich ajratilgan.", "Семь этапов: приём, оформление права, оценка, подготовка к продаже, лот, договор, выбытие. Текущий этап выделен."),
-      B("Me'yoriy muddatlar", "Нормативные сроки", "Balansda necha kun turgani, umidsizgacha qolgan kun va 3 yil chegarasi chiziqda.", "Сколько дней на балансе, сколько осталось до безнадёжной категории и порог 3 лет — на шкале."),
+      B("Me'yoriy muddatlar", "Нормативные сроки", "Balansda necha kun turgani, muddat tugashiga qolgan kun va 3 yil chegarasi chiziqda.", "Сколько дней на балансе, сколько осталось до истечения нормативного срока и порог 3 лет — на шкале."),
       B("Nazorat indeksi", "Индекс контроля", "0 dan 100 gacha: ko'rik, sug'urta, baho, hujjatlar, qo'riqlash. Past ball qaysi band bo'yicha ekanini ochib ko'rsatadi.", "От 0 до 100: осмотр, страховка, оценка, документы, охрана. При низком балле видно, по какому пункту."),
     ],
     amallar: [
@@ -842,7 +842,7 @@ window.MKB_YORDAM = {
   "obyekt-himoya.html": {
     sarlavha: X("Obyekt himoyasi", "Охрана объекта"),
     nimaUchun: X("Aktiv qanday qo'riqlanayotgani: qo'riqlash shartnomasi, o'rnatilgan qurilmalar, ochiq hodisalar, tashriflar va himoya komplekti smetasi.",
-                 "Как охраняется актив: договор охраны, установленные устройства, открытые инциденты, посещения и смета комплекта охраны."),
+                 "Как охраняется актив: договор охраны, установленные устройства, открытые происшествия, посещения и смета комплекта охраны."),
     bloklar: [
       B("Qo'riqlash shartnomasi", "Договор охраны", "Amaldagi shartnoma yoki uning yo'qligi.", "Действующий договор или его отсутствие."),
       B("Qurilmalar", "Устройства", "Har qurilmaning turi, quvvati, aloqasi va batareyasi, «Onlayn» faqat haqiqiy signal bo'lsa.", "Тип, питание, связь и заряд каждого устройства; «Onlayn» — только при реальном сигнале."),
@@ -875,7 +875,7 @@ window.MKB_YORDAM = {
   "obyekt-tarix.html": {
     sarlavha: X("Obyekt tarixi", "История объекта"),
     nimaUchun: X("Aktiv bilan bog'liq hamma voqea oy bo'yicha: qabul, ko'rik, xarajat, baholash, hodisa, hujjat va sug'urta.",
-                 "Все события по активу по месяцам: приём, осмотры, расходы, оценка, инциденты, документы и страховка."),
+                 "Все события по активу по месяцам: приём, осмотры, расходы, оценка, происшествия, документы и страховка."),
     bloklar: [B("Voqealar", "События", "Tur bo'yicha filtr: Aktiv, Ko'rik, Xarajat, Baholash, Hodisa, Hujjat, Sug'urta.", "Фильтр по типу: Aktiv, Ko'rik, Xarajat, Baholash, Hodisa, Hujjat, Sug'urta.")],
     amallar: [B("CSV yuklab olish", "Скачать CSV", "Filtrlangan voqealar faylga yoziladi.", "Отфильтрованные события выгружаются в файл.")],
     xatolar: [],
@@ -918,20 +918,21 @@ window.MKB_YORDAM = {
   /* ================= Himoya va monitoring ================= */
   "himoya.html": {
     sarlavha: X("Monitoring markazi", "Центр мониторинга"),
-    nimaUchun: X("Ko'rik va xavfsizlik inspektorining monitoring ekrani. Qurilmalar aloqasi, so'nggi signallar, ochiq hodisalar, masofaviy ko'riklar va qo'riqlanmayotgan obyektlar bir joyda.",
-                 "Экран мониторинга инспектора по осмотрам и безопасности. Связь с устройствами, последние сигналы, открытые инциденты, дистанционные осмотры и объекты без охраны — в одном месте."),
+    nimaUchun: X("Ko'rik va xavfsizlik inspektorining kamera ekrani. Har bir kameradan kelgan oxirgi kadr, batareya va signal vaqti, ochiq hodisalar va masofaviy ko'riklar bir joyda.",
+                 "Экран камер инспектора по осмотрам и безопасности. Последний кадр каждой камеры, заряд и время сигнала, открытые происшествия и дистанционные осмотры — в одном месте."),
     bloklar: [
-      B("Ko'rsatkichlar", "Показатели", "Aloqadagi qurilmalar, 24 soatdan ortiq jim, batareyasi 20% dan past, qo'riqlanmayotgan obyektlar va ochiq hodisalar. Kartani bossangiz, ro'yxat ochiladi.", "Устройства на связи, молчащие больше 24 часов, с зарядом ниже 20%, объекты без охраны и открытые инциденты. Нажмите на карточку, чтобы открыть список."),
+      B("Kameralar holati", "Состояние камер", "To'rt plitka: kadr beradigan kameralar, kadr bermayotganlari, kamerasiz obyektlar va ochiq hodisalar. Plitkani bossangiz, ro'yxat shu holat bo'yicha saralanadi.", "Четыре плитки: камеры, дающие кадр, не дающие кадр, объекты без камеры и открытые происшествия. Нажмите на плитку — список отберётся по этому состоянию."),
+      B("Kameralar ro'yxati", "Список камер", "Har bir kamera kartochkasi va jadvali: obyekt, hudud, kamera, batareya, oxirgi signal, ochiq hodisa va holat. Kadr — kameradan kelgan oxirgi surat, jonli video emas.", "Карточка и таблица по каждой камере: объект, регион, камера, заряд, последний сигнал, открытое происшествие и статус. Кадр — последний снимок с камеры, а не живое видео."),
       B("So'nggi signallar", "Последние сигналы", "Qurilma va kirish signallari vaqt bo'yicha. Filtr: Hammasi, Qurilma, Kirish.", "Сигналы устройств и доступа по времени. Фильтр: Hammasi, Qurilma, Kirish."),
-      B("Uzoq jim turgan qurilmalar", "Долго молчащие устройства", "Oxirgi signal vaqti bilan. Vaqt qurilmadan kelgan haqiqiy qayd.", "С временем последнего сигнала. Время — реальная отметка от устройства."),
-      B("Masofaviy ko'riklar, qo'riqlanmayotgan obyektlar, himoya smetasi", "Дистанционные осмотры, объекты без охраны, смета охраны", "Bugungi va jarayondagi ko'riklar; na shartnoma, na qurilma bo'lmagan obyektlar; komplekt narxi.", "Сегодняшние и текущие осмотры; объекты без договора и без устройств; стоимость комплекта."),
+      B("Masofaviy ko'riklar", "Дистанционные осмотры", "Bugungi va jarayondagi masofaviy ko'riklar. «Barchasi» to'liq ro'yxatni ochadi.", "Сегодняшние и текущие дистанционные осмотры. «Barchasi» открывает полный список."),
+      B("Tahlil qatori", "Строка анализа", "Jim qurilmalar va batareyasi past qurilmalar qurilmalar.html da, qo'riqlanmayotgan obyektlar va himoya smetasi qoriqlash.html da ochiladi.", "Молчащие устройства и устройства с низким зарядом открываются в qurilmalar.html, объекты без охраны и смета охраны — в qoriqlash.html."),
     ],
     amallar: [
       B("Qurilma o'rnatish", "Установить устройство", "Qurilmani ro'yxatga olish formasi ochiladi.", "Открывается форма регистрации устройства."),
-      B("Hodisa qayd etish", "Зарегистрировать инцидент", "Hodisa formasi ochiladi: obyekt, turi, jiddiylik va tavsif.", "Открывается форма инцидента: объект, тип, важность и описание."),
+      B("Hodisa qayd etish", "Зарегистрировать происшествие", "Hodisa formasi ochiladi: obyekt, turi, jiddiylik va tavsif.", "Открывается форма происшествия: объект, тип, важность и описание."),
       B("Yangilash", "Обновить", "Ma'lumot qayta yuklanadi, «Yangilandi» vaqti o'zgaradi.", "Данные загружаются заново, время «Yangilandi» меняется."),
     ],
-    xatolar: [X("«Onlayn» belgisini jonli video deb tushunish. Tizim videoni ko'rsatmaydi, faqat qurilmaning oxirgi signal vaqtini ko'rsatadi", "Понимать отметку «Onlayn» как живое видео. Система не показывает видео, только время последнего сигнала устройства")],
+    xatolar: [X("Kamera kadrini jonli video deb tushunish. Tizim jonli oqim bermaydi: kadr — oxirgi surat, yonida uning vaqti turadi", "Принимать кадр камеры за живое видео. Система не даёт прямой трансляции: кадр — это последний снимок, рядом с ним указано его время")],
     qoidalar: [X("Qurilma 24 soatdan ortiq aloqasiz bo'lsa, vazifa ochiladi", "Если устройство без связи больше 24 часов, открывается задача")],
     bogliq: ["hodisalar.html", "qurilmalar.html", "kirish-voqealari.html", "qoriqlash.html"],
   },
@@ -1040,38 +1041,38 @@ window.MKB_YORDAM = {
   },
 
   "hodisalar.html": {
-    sarlavha: X("Hodisalar", "Инциденты"),
+    sarlavha: X("Hodisalar", "Происшествия"),
     nimaUchun: X("Barcha xavfsizlik hodisalari doskada. Ustunlar hodisaning bosqichi: Yangi, Tekshiruvda, Bartaraf etilmoqda, Hal qilindi, Yopildi.",
-                 "Все инциденты безопасности на доске. Колонки — этапы инцидента: Yangi, Tekshiruvda, Bartaraf etilmoqda, Hal qilindi, Yopildi."),
+                 "Все происшествия безопасности на доске. Колонки — этапы происшествия: Yangi, Tekshiruvda, Bartaraf etilmoqda, Hal qilindi, Yopildi."),
     bloklar: [
       B("Doska", "Доска", "Har karta: sarlavha, obyekt, jiddiylik va mas'ul. Kartani keyingi ustunga surish yoki tugma bilan o'tkazish mumkin.", "Каждая карточка: заголовок, объект, важность и ответственный. Карточку можно перетащить в следующую колонку или перевести кнопкой."),
       B("Filtrlar", "Фильтры", "Holat va jiddiylik; «Boshqa filtrlar» ichida obyekt va manba.", "Статус и важность; в «Boshqa filtrlar» — объект и источник."),
     ],
     amallar: [
-      B("Hodisa qayd etish", "Зарегистрировать инцидент", "Obyekt, tur, jiddiylik va tavsif. Hodisa «Yangi» ustuniga tushadi, yuqori jiddiylikda inspektorga bildirishnoma ketadi.", "Объект, тип, важность и описание. Инцидент попадает в колонку «Yangi», при высокой важности уведомление уходит инспектору."),
-      B("Qabul qilish", "Принять", "Hodisa «Tekshiruvda»ga o'tadi, mas'ul bo'lmasa siz mas'ul bo'lasiz. 8 soniya «Qaytarish» mumkin.", "Инцидент переходит в «Tekshiruvda»; если ответственного нет, им становитесь вы. 8 секунд можно нажать «Qaytarish»."),
+      B("Hodisa qayd etish", "Зарегистрировать происшествие", "Obyekt, tur, jiddiylik va tavsif. Hodisa «Yangi» ustuniga tushadi, yuqori jiddiylikda inspektorga bildirishnoma ketadi.", "Объект, тип, важность и описание. Происшествие попадает в колонку «Yangi», при высокой важности уведомление уходит инспектору."),
+      B("Qabul qilish", "Принять", "Hodisa «Tekshiruvda»ga o'tadi, mas'ul bo'lmasa siz mas'ul bo'lasiz. 8 soniya «Qaytarish» mumkin.", "Происшествие переходит в «Tekshiruvda»; если ответственного нет, им становитесь вы. 8 секунд можно нажать «Qaytarish»."),
       B("Hal qilindi yoki Yopildi ustuniga o'tkazish", "Перевести в «Hal qilindi» или «Yopildi»", "Ko'rilgan chorani yozish majburiy oyna ochiladi.", "Открывается окно, где обязательно описать принятые меры."),
     ],
-    xatolar: [X("Hodisani bosqichlardan sakratib yopish. Bosqichlar ketma-ket o'tkaziladi", "Закрывать инцидент, перескакивая этапы. Этапы проходятся по порядку")],
+    xatolar: [X("Hodisani bosqichlardan sakratib yopish. Bosqichlar ketma-ket o'tkaziladi", "Закрывать происшествие, перескакивая этапы. Этапы проходятся по порядку")],
     qoidalar: [X("Hal qilish va yopishda ko'rilgan chora majburiy yoziladi", "При решении и закрытии принятые меры описываются обязательно")],
     bogliq: ["hodisa.html", "himoya.html", "kirish-hisoboti.html"],
   },
 
   "hodisa.html": {
-    sarlavha: X("Hodisa", "Инцидент"),
+    sarlavha: X("Hodisa", "Происшествие"),
     nimaUchun: X("Bitta hodisaning to'liq varaqasi: bosqich, mas'ul, ko'rilgan chora, dalillar, zarar va sug'urta, vazifalar va o'zgarishlar tarixi.",
-                 "Полная карточка одного инцидента: этап, ответственный, принятые меры, доказательства, ущерб и страховка, задачи и история изменений."),
+                 "Полная карточка одного происшествия: этап, ответственный, принятые меры, доказательства, ущерб и страховка, задачи и история изменений."),
     bloklar: [
       B("Bosqich chizig'i", "Шкала этапов", "Yangi → Tekshiruvda → Bartaraf etilmoqda → Hal qilindi → Yopildi. Keyingi bosqich tugmasi tepada turadi.", "Yangi → Tekshiruvda → Bartaraf etilmoqda → Hal qilindi → Yopildi. Кнопка следующего этапа — сверху."),
-      B("Hodisa ma'lumoti", "Сведения об инциденте", "Obyekt, manzil, qayd vaqti, manba va mas'ul. «Almashtirish» mas'ulni o'zgartiradi.", "Объект, адрес, время регистрации, источник и ответственный. «Almashtirish» меняет ответственного."),
+      B("Hodisa ma'lumoti", "Сведения о происшествии", "Obyekt, manzil, qayd vaqti, manba va mas'ul. «Almashtirish» mas'ulni o'zgartiradi.", "Объект, адрес, время регистрации, источник и ответственный. «Almashtirish» меняет ответственного."),
       B("Ko'rilgan chora", "Принятые меры", "Nima qilingani. «Izoh qo'shish» bilan to'ldiriladi.", "Что сделано. Заполняется через «Izoh qo'shish»."),
       B("Dalil fayllari, zarar va sug'urta, vazifalar", "Доказательства, ущерб и страховка, задачи", "Surat va IIB arizasi nusxasi; sug'urta da'vosi; bog'liq vazifalar.", "Фото и копия заявления в ОВД; страховое требование; связанные задачи."),
     ],
     amallar: [
-      B("Qabul qilish", "Принять", "Hodisa «Tekshiruvda» bo'ladi.", "Инцидент переходит в «Tekshiruvda»."),
-      B("Bartaraf etishga o'tkazish", "Перевести на устранение", "Hodisa «Bartaraf etilmoqda» bo'ladi.", "Инцидент переходит в «Bartaraf etilmoqda»."),
+      B("Qabul qilish", "Принять", "Hodisa «Tekshiruvda» bo'ladi.", "Происшествие переходит в «Tekshiruvda»."),
+      B("Bartaraf etishga o'tkazish", "Перевести на устранение", "Hodisa «Bartaraf etilmoqda» bo'ladi.", "Происшествие переходит в «Bartaraf etilmoqda»."),
       B("Hal qilindi deb belgilash", "Отметить решённым", "Chora matni majburiy. Hal qilish vaqti hisobotga yoziladi.", "Текст мер обязателен. Время решения попадает в отчёт."),
-      B("Hodisani yopish", "Закрыть инцидент", "Chora matni majburiy. Yopilgan hodisani «Qayta ochish» mumkin.", "Текст мер обязателен. Закрытый инцидент можно «Qayta ochish»."),
+      B("Hodisani yopish", "Закрыть происшествие", "Chora matni majburiy. Yopilgan hodisani «Qayta ochish» mumkin.", "Текст мер обязателен. Закрытое происшествие можно «Qayta ochish»."),
       B("Sug'urta da'vosi yaratish", "Создать страховое требование", "Zarar summasi bilan da'vo polisga bog'lanadi.", "Требование с суммой ущерба привязывается к полису."),
       B("Vazifa yaratish", "Создать задачу", "Mas'ulga muddatli vazifa ketadi.", "Ответственному уходит задача со сроком."),
     ],
@@ -1174,7 +1175,7 @@ window.MKB_YORDAM = {
     nimaUchun: X("Bitta voqea: qurilma yozuvi (o'zgarmaydi), operator qarori, shaxs va shu kuni shu obyektdagi boshqa voqealar.",
                  "Одно событие: запись устройства (не меняется), решение оператора, человек и другие события на этом объекте в тот же день."),
     bloklar: [B("Qurilma yozuvi va Operator qarori", "Запись устройства и решение оператора", "Eshik datchigi faqat ochilish faktini yozadi, shaxsni aniqlamaydi.", "Датчик двери фиксирует только факт открытия, человека не определяет.")],
-    amallar: [B("Qaror qayd etish", "Зафиксировать решение", "Natija va izoh yoziladi. Kerak bo'lsa shu yerdan hodisa ochiladi.", "Записываются результат и комментарий. При необходимости отсюда открывается инцидент.")],
+    amallar: [B("Qaror qayd etish", "Зафиксировать решение", "Natija va izoh yoziladi. Kerak bo'lsa shu yerdan hodisa ochiladi.", "Записываются результат и комментарий. При необходимости отсюда открывается происшествие.")],
     xatolar: [],
     qoidalar: [],
     bogliq: ["kirish-voqealari.html", "hodisalar.html"],
@@ -1191,7 +1192,7 @@ window.MKB_YORDAM = {
     ],
     amallar: [
       B("Ko'rikni rejalashtirish", "Запланировать осмотр", "Sessiya rejaga tushadi.", "Сессия попадает в план."),
-      B("Ko'rikni yakunlash", "Завершить осмотр", "Natija ko'rik sifatida saqlanadi. Kamchilik bo'lsa hodisa ochiladi.", "Результат сохраняется как осмотр. При недостатках открывается инцидент."),
+      B("Ko'rikni yakunlash", "Завершить осмотр", "Natija ko'rik sifatida saqlanadi. Kamchilik bo'lsa hodisa ochiladi.", "Результат сохраняется как осмотр. При недостатках открывается происшествие."),
       B("Ko'rikni bekor qilish", "Отменить осмотр", "Tasdiqlash oynasi bilan.", "С окном подтверждения."),
     ],
     xatolar: [X("Masofaviy ko'rikni jonli video deb kutish. Tizim videoni o'zi ko'rsatmaydi: kamera ilovasida ko'rib, natijani shu yerga yozasiz", "Ждать живое видео. Система сама видео не показывает: смотрите в приложении камеры, а результат записывайте здесь")],
@@ -1231,7 +1232,7 @@ window.MKB_YORDAM = {
       B("O'tkazish", "Провести", "Dalolatnoma formasi ochiladi.", "Открывается форма акта."),
     ],
     xatolar: [X("Ko'rikni sababsiz qayta-qayta ko'chirish. Har ko'chirish tarixda qoladi va Rahbariyat ko'radi", "Переносить осмотр снова и снова без причины. Каждый перенос остаётся в истории, его видит Руководство")],
-    qoidalar: [X("Muddati o'tgan ko'rik Rahbariyatga eskalatsiya bo'ladi", "Просроченный осмотр эскалируется Руководству")],
+    qoidalar: [X("Muddati o'tgan ko'rik Rahbariyatga o'tkaziladi", "Просроченный осмотр передаётся Руководству")],
     bogliq: ["korik-rejasi.html", "korik-otkazish.html"],
   },
 
@@ -1272,14 +1273,14 @@ window.MKB_YORDAM = {
     ],
     amallar: [
       B("Dalolatnomani yakunlash", "Завершить акт осмотра", "Tizim suratlar qoidasini tekshiradi. Tasdiqlash oynasidan keyin dalolatnoma imzolanadi, ko'rik o'tkazilgan bo'ladi va dalolatnoma sahifasi ochiladi. 2 yoki 1 baho qo'yilsa, hodisa avtomatik ochiladi.",
-        "Система проверяет правило о фото. После окна подтверждения акт подписывается, осмотр считается проведённым и открывается страница акта. При оценке 2 или 1 инцидент открывается автоматически."),
+        "Система проверяет правило о фото. После окна подтверждения акт подписывается, осмотр считается проведённым и открывается страница акта. При оценке 2 или 1 происшествие открывается автоматически."),
       B("Keyinroq", "Позже", "Forma yopiladi, qoralama shu qurilmada qoladi.", "Форма закрывается, черновик остаётся на этом устройстве."),
     ],
     xatolar: [
       X("Kamchilik belgilab, suratsiz yakunlash: tizim ruxsat bermaydi", "Отметить недостаток и завершить без фото: система не позволит"),
       X("Joylashuvni aniqlamasdan yakunlash. Joylashuv ko'rik obyektda o'tkazilganini tasdiqlaydi va dalolatnomaga yoziladi", "Завершать, не определив местоположение. Оно подтверждает, что осмотр прошёл на объекте, и записывается в акт"),
     ],
-    qoidalar: [X("Nuqsonli yoki avariya holati hodisa sifatida qayd etiladi va inspektorga yuboriladi", "Дефектное или аварийное состояние регистрируется как инцидент и направляется инспектору")],
+    qoidalar: [X("Nuqsonli yoki avariya holati hodisa sifatida qayd etiladi va inspektorga yuboriladi", "Дефектное или аварийное состояние регистрируется как происшествие и направляется инспектору")],
     bogliq: ["korik-akti.html", "korik-rejasi.html", "hodisalar.html"],
   },
 
@@ -1290,7 +1291,7 @@ window.MKB_YORDAM = {
     bloklar: [],
     amallar: [
       B("Chop etish", "Печать", "A4 varaq.", "Лист A4."),
-      B("Hodisani ochish", "Открыть инцидент", "Ko'rik natijasida ochilgan hodisa sahifasi.", "Страница инцидента, открытого по итогам осмотра."),
+      B("Hodisani ochish", "Открыть происшествие", "Ko'rik natijasida ochilgan hodisa sahifasi.", "Страница происшествия, открытого по итогам осмотра."),
     ],
     xatolar: [],
     qoidalar: [X("Imzolangan dalolatnoma o'zgartirilmaydi. Xato bo'lsa, qayta ko'rik tayinlang", "Подписанный акт не меняется. Если есть ошибка, назначьте повторный осмотр")],
@@ -1328,7 +1329,7 @@ window.MKB_YORDAM = {
       B("Chop etish", "Печать", "Dalolatnoma A4 varaqda.", "Акт на листе A4."),
     ],
     xatolar: [],
-    qoidalar: [X("Kamomad bo'yicha hodisa qayd etiladi, javobgar shaxslardan tushuntirish xati olinadi", "По недостаче регистрируется инцидент, от ответственных лиц берётся объяснительная")],
+    qoidalar: [X("Kamomad bo'yicha hodisa qayd etiladi, javobgar shaxslardan tushuntirish xati olinadi", "По недостаче регистрируется происшествие, от ответственных лиц берётся объяснительная")],
     bogliq: ["inventarizatsiya.html"],
   },
 
@@ -1402,8 +1403,8 @@ window.MKB_YORDAM = {
     nimaUchun: X("Balansdagi aktivlar bo'yicha zaxira: toifalar, stavkalar, zaxira yuki dinamikasi va toifalar migratsiyasi. Oraliq stavkalarni Buxgalteriya va risk taklif qiladi, Rahbariyat tasdiqlaydi.",
                  "Резерв по активам на балансе: категории, ставки, динамика резервной нагрузки и миграция категорий. Промежуточные ставки предлагает Бухгалтерия и риски, утверждает Руководство."),
     bloklar: [
-      B("Ko'rsatkichlar", "Показатели", "Zaxira yuki (Taxminiy belgisi bilan, agar stavka tasdiqlanmagan bo'lsa), umidsiz toifa, 90 kunda o'tadiganlar va kapitalga nisbat.", "Резервная нагрузка (с отметкой «Taxminiy», если ставка не утверждена), безнадёжная категория, переходящие через 90 дней и отношение к капиталу."),
-      B("Zaxira stavkalari", "Ставки резерва", "Substandart, Qoniqarsiz, Shubhali va Umidsiz. Tasdiqlanmagan stavka «Taxminiy» chipi bilan.", "Субстандартная, неудовлетворительная, сомнительная и безнадёжная. Неутверждённая ставка — с чипом «Taxminiy»."),
+      B("Ko'rsatkichlar", "Показатели", "Zaxira yuki (Taxminiy belgisi bilan, agar stavka tasdiqlanmagan bo'lsa), me'yoriy muddati o'tganlar, 90 kunda tugaydiganlar va kapitalga nisbat.", "Резервная нагрузка (с отметкой «Taxminiy», если ставка не утверждена), с истёкшим нормативным сроком, истекающие через 90 дней и отношение к капиталу."),
+      B("Zaxira stavkalari", "Ставки резерва", "Standartdan past, Qoniqarsiz, Shubhali va To'liq zaxira. Me'yoriy hujjatdagi nomlari qavs ichida. Tasdiqlanmagan stavka «Taxminiy» chipi bilan.", "Ниже стандартной, неудовлетворительная, сомнительная и полный резерв. Нормативные наименования — в скобках. Неутверждённая ставка — с чипом «Taxminiy»."),
       B("Toifalar migratsiyasi", "Миграция категорий", "Tanlangan oy va bugungi holat solishtiriladi: qancha aktiv og'irlashgan.", "Сравнение выбранного месяца с сегодняшним состоянием: сколько активов ухудшилось."),
     ],
     amallar: [
@@ -1414,7 +1415,7 @@ window.MKB_YORDAM = {
     ],
     xatolar: [X("Taxminiy zaxirani yakuniy raqam deb hisobotga olish. «Taxminiy» chipi bor raqam tasdiqlanmagan", "Брать предварительный резерв в отчёт как окончательный. Цифра с чипом «Taxminiy» не утверждена")],
     qoidalar: [
-      X("Undiruv natijasida olingan mulk 365 kundan, boshqa foydalanilmayotgan mulk 1095 kundan keyin umidsiz toifaga o'tadi, zaxira 100%", "Имущество из взыскания через 365 дней, прочее неиспользуемое через 1095 дней переходит в безнадёжную категорию, резерв 100%"),
+      X("Undiruv natijasida olingan mulk 365 kundan, boshqa foydalanilmayotgan mulk 1095 kundan keyin me'yoriy muddati tugaydi, zaxira 100%", "Имущество из взыскания через 365 дней, прочее неиспользуемое через 1095 дней исчерпывает нормативный срок, резерв 100%"),
       X("Stavka so'rovini yuborgan xodim uni o'zi tasdiqlay olmaydi", "Сотрудник, отправивший запрос по ставке, не может сам его утвердить"),
     ],
     bogliq: ["muddatlar.html", "hisobot-mb.html", "tasdiqlar.html"],
@@ -1472,7 +1473,7 @@ window.MKB_YORDAM = {
 
   "sugurta-yangilash.html": {
     sarlavha: X("Polisni yangilash", "Продление полиса"),
-    nimaUchun: X("Yangi polisni kiritish: obyekt, tur (Mol-mulk, OSAGO, XICHO), raqam, kompaniya, summa, mukofot va muddat.",
+    nimaUchun: X("Yangi polisni kiritish: obyekt, tur (Mol-mulk, OSAGO, Xavfli obyekt), raqam, kompaniya, summa, mukofot va muddat.",
                  "Ввод нового полиса: объект, тип (имущество, ОСАГО, ОСГОР), номер, компания, сумма, премия и срок."),
     bloklar: [],
     amallar: [B("Polisni saqlash", "Сохранить полис", "Polis saqlanadi, mukofot xarajatlar reyestriga yoziladi, aktivning sug'urta bandi yangilanadi.", "Полис сохраняется, премия записывается в реестр расходов, пункт страховки у актива обновляется.")],
@@ -1726,11 +1727,11 @@ window.MKB_YORDAM = {
 
   "hisobot-mb.html": {
     sarlavha: X("MB oylik hisoboti", "Ежемесячный отчёт ЦБ"),
-    nimaUchun: X("Markaziy bankka har oy topshiriladigan hisobot (MB 3441-son nizom, 16-band): oy oxirida balansdagi obyektlar, jami qiymat, 1-darajali kapitalga nisbat va umidsiz toifa.",
-                 "Отчёт, который ежемесячно сдаётся в ЦБ (положение ЦБ № 3441, п. 16): объекты на балансе на конец месяца, общая стоимость, отношение к капиталу первого уровня и безнадёжная категория."),
+    nimaUchun: X("Markaziy bankka har oy topshiriladigan hisobot (MB 3441-son nizom, 16-band): oy oxirida balansdagi obyektlar, jami qiymat, 1-darajali kapitalga nisbat va me'yoriy muddati o'tganlar soni.",
+                 "Отчёт, который ежемесячно сдаётся в ЦБ (положение ЦБ № 3441, п. 16): объекты на балансе на конец месяца, общая стоимость, отношение к капиталу первого уровня и число объектов с истёкшим нормативным сроком."),
     bloklar: [
       B("Hisobot davri", "Отчётный период", "Oy tanlanadi. Joriy oy «dastlabki» deb belgilanadi.", "Выбирается месяц. Текущий месяц отмечен как «dastlabki» (предварительный)."),
-      B("Ko'rsatkichlar", "Показатели", "Obyektlar soni, jami balans qiymati (16701 hisobvarag'i), kapitalga nisbat, umidsiz toifa.", "Число объектов, общая балансовая стоимость (счёт 16701), отношение к капиталу, безнадёжная категория."),
+      B("Ko'rsatkichlar", "Показатели", "Obyektlar soni, jami balans qiymati (16701 hisobvarag'i), kapitalga nisbat, me'yoriy muddati o'tganlar.", "Число объектов, общая балансовая стоимость (счёт 16701), отношение к капиталу, объекты с истёкшим нормативным сроком."),
       B("Muddat", "Срок", "Har oyning 10-sanasigacha; dam olish kuniga to'g'ri kelsa, keyingi ish kuni.", "До 10-го числа каждого месяца; если это выходной, то следующий рабочий день."),
       B("Hisobotlar tarixi", "История отчётов", "Qaysi oy qachon topshirilgani va o'z vaqtida bo'lganmi.", "Какой месяц когда сдан и вовремя ли."),
     ],
@@ -1772,9 +1773,9 @@ window.MKB_YORDAM = {
 
   "hisobot-hudud.html": {
     sarlavha: X("Hududlar kesimi", "Разрез по регионам"),
-    nimaUchun: X("Aktivlar soni, qiymati va umidsiz ulushi hududlar va filiallar bo'yicha. Qaysi hududda xavf to'planganini ko'rsatadi.",
-                 "Число, стоимость и доля безнадёжных активов по регионам и филиалам. Показывает, где сосредоточен риск."),
-    bloklar: [B("Hududlar reytingi va jadvallar", "Рейтинг регионов и таблицы", "Reytingni soni, qiymati yoki umidsiz ulushi bo'yicha saralaysiz.", "Рейтинг сортируется по числу, стоимости или доле безнадёжных.")],
+    nimaUchun: X("Aktivlar soni, qiymati va muddati o'tganlar ulushi hududlar va filiallar bo'yicha. Qaysi hududda xavf to'planganini ko'rsatadi.",
+                 "Число, стоимость и доля активов с истёкшим нормативным сроком по регионам и филиалам. Показывает, где сосредоточен риск."),
+    bloklar: [B("Hududlar reytingi va jadvallar", "Рейтинг регионов и таблицы", "Reytingni soni, qiymati yoki muddati o'tganlar ulushi bo'yicha saralaysiz.", "Рейтинг сортируется по числу, стоимости или доле активов с истёкшим сроком.")],
     amallar: [
       B("Xaritada ko'rish", "Смотреть на карте", "Obyektlar xaritasi ochiladi.", "Открывается карта объектов."),
       B("Chop etish", "Печать", "Hisobot A4 da.", "Отчёт на A4."),
@@ -1787,7 +1788,7 @@ window.MKB_YORDAM = {
   "hisobot-eksport.html": {
     sarlavha: X("Ma'lumot eksporti", "Экспорт данных"),
     nimaUchun: X("Istalgan to'plamni fayl qilib olish: reyestr, hujjatlar, xarajatlar, ko'riklar, lotlar, shartnomalar, hodisalar va boshqalar.",
-                 "Выгрузка любого набора в файл: реестр, документы, расходы, осмотры, лоты, договоры, инциденты и другое."),
+                 "Выгрузка любого набора в файл: реестр, документы, расходы, осмотры, лоты, договоры, происшествия и другое."),
     bloklar: [
       B("Nimani yuklab olasiz", "Что выгружаете", "To'plam, davr, ustunlar (asosiy yoki barcha maydonlar) va format (CSV yoki JSON).", "Набор, период, столбцы (основные или все поля) и формат (CSV или JSON)."),
       B("Oldindan ko'rish", "Предпросмотр", "Birinchi qatorlar, yozuvlar va ustunlar soni, fayl nomi.", "Первые строки, число записей и столбцов, имя файла."),
@@ -1812,8 +1813,8 @@ window.MKB_YORDAM = {
   "kirish-hisoboti.html": {
     sarlavha: X("Himoya hisoboti", "Отчёт по охране"),
     nimaUchun: X("Himoya qamrovi, davrdagi hodisalar, o'rtacha hal qilish vaqti, aloqasiz qurilmalar va rad etilgan kirishlar.",
-                 "Охват охраной, инциденты за период, среднее время решения, устройства без связи и отклонённые входы."),
-    bloklar: [B("Qamrov va Obyektlar kesimida", "Охват и разрез по объектам", "Davr: 7, 30 yoki 90 kun. Hal qilish vaqti hodisa qayd etilgandan «Hal qilindi» yoki «Yopildi» bo'lguncha.", "Период: 7, 30 или 90 дней. Время решения — от регистрации инцидента до статуса «Hal qilindi» или «Yopildi».")],
+                 "Охват охраной, происшествия за период, среднее время решения, устройства без связи и отклонённые входы."),
+    bloklar: [B("Qamrov va Obyektlar kesimida", "Охват и разрез по объектам", "Davr: 7, 30 yoki 90 kun. Hal qilish vaqti hodisa qayd etilgandan «Hal qilindi» yoki «Yopildi» bo'lguncha.", "Период: 7, 30 или 90 дней. Время решения — от регистрации происшествия до статуса «Hal qilindi» или «Yopildi».")],
     amallar: [],
     xatolar: [],
     qoidalar: [],
@@ -1862,8 +1863,8 @@ window.MKB_YORDAM = {
 
   "bildirishnomalar.html": {
     sarlavha: X("Bildirishnomalar", "Уведомления"),
-    nimaUchun: X("Qoidalar yuborgan eslatmalar: umidsizgacha qolgan kun, tugayotgan polis va baho, kechikkan ko'rik, aloqasiz qurilma, soliq imtiyozi.",
-                 "Напоминания от правил: дни до безнадёжной категории, истекающие полис и оценка, просроченный осмотр, устройство без связи, налоговая льгота."),
+    nimaUchun: X("Qoidalar yuborgan eslatmalar: me'yoriy muddatgacha qolgan kun, tugayotgan polis va baho, kechikkan ko'rik, aloqasiz qurilma, soliq imtiyozi.",
+                 "Напоминания от правил: дни до истечения нормативного срока, истекающие полис и оценка, просроченный осмотр, устройство без связи, налоговая льгота."),
     bloklar: [B("Ro'yxat", "Список", "O'qilmagan va Barchasi; kun bo'yicha guruhlangan. Bildirishnomani bossangiz, bog'liq sahifa ochiladi.", "Непрочитанные и все; сгруппированы по дням. Нажмите на уведомление, чтобы открыть связанную страницу.")],
     amallar: [B("Barchasini o'qilgan qilish", "Отметить все прочитанными", "Hammasi o'qilgan bo'ladi, 8 soniya «Qaytarish» mumkin.", "Все становятся прочитанными, 8 секунд можно нажать «Qaytarish».")],
     xatolar: [],
@@ -1874,13 +1875,13 @@ window.MKB_YORDAM = {
   /* ================= Sozlamalar ================= */
   "sozlamalar.html": {
     sarlavha: X("Sozlamalar", "Настройки"),
-    nimaUchun: X("Shaxsiy profil va ish qulayligi hamma uchun. Eskalatsiya qoidalari, me'yoriy parametrlar va shaxsiy ma'lumotlar administratorga (parametrlarni Buxgalteriya ham o'zgartiradi).",
+    nimaUchun: X("Shaxsiy profil va ish qulayligi hamma uchun. Yuqoriga o'tkazish qoidalari, me'yoriy parametrlar va shaxsiy ma'lumotlar administratorga (parametrlarni Buxgalteriya ham o'zgartiradi).",
                  "Личный профиль и удобство работы — для всех. Правила эскалации, нормативные параметры и персональные данные — для администратора (параметры меняет и Бухгалтерия)."),
     bloklar: [
       B("Profil va Aloqa", "Профиль и контакты", "Telefon va elektron pochta xodimlar ro'yxatida ko'rinadi.", "Телефон и почта видны в списке сотрудников."),
       B("Ish qulayligi", "Удобство работы", "Interfeys tili, bildirishnomalar va «Tanishuv sayohatlari»: «Qayta ko'rsatish» hamma sayohatni yana taklif qiladi.", "Язык интерфейса, уведомления и «Tanishuv sayohatlari»: «Qayta ko'rsatish» снова предлагает все туры."),
       B("O'rinbosar", "Заместитель", "Davr va o'rinbosar. Shu davrda o'rinbosar sizning qarorlaringizni qabul qiladi.", "Период и заместитель. В этот период заместитель принимает ваши решения."),
-      B("Eskalatsiya qoidalari va Me'yoriy parametrlar", "Правила эскалации и нормативные параметры", "Muddat qoidalari va hisob parametrlari: zaxira stavkasi, ko'rik davri, savdo muddatlari.", "Правила сроков и параметры расчётов: ставка резерва, период осмотров, сроки торгов."),
+      B("Yuqoriga o'tkazish qoidalari va Me'yoriy parametrlar", "Правила передачи вышестоящему и нормативные параметры", "Muddat qoidalari va hisob parametrlari: zaxira stavkasi, ko'rik davri, savdo muddatlari.", "Правила сроков и параметры расчётов: ставка резерва, период осмотров, сроки торгов."),
     ],
     amallar: [
       B("Saqlash", "Сохранить", "Aloqa ma'lumoti saqlanadi.", "Контакты сохраняются."),
@@ -1935,8 +1936,8 @@ window.MKB_YORDAM = {
 
   "filiallar.html": {
     sarlavha: X("Filiallar", "Филиалы"),
-    nimaUchun: X("Bank filiallari va ularning balansidagi aktivlar: soni, qiymati, umidsizga yaqinlari, baholanmaganlar va xodimlar.",
-                 "Филиалы банка и активы на их балансе: число, стоимость, близкие к безнадёжным, неоценённые и сотрудники."),
+    nimaUchun: X("Bank filiallari va ularning balansidagi aktivlar: soni, qiymati, muddati tugayotganlari, baholanmaganlar va xodimlar.",
+                 "Филиалы банка и активы на их балансе: число, стоимость, близкие к истечению срока, неоценённые и сотрудники."),
     bloklar: [B("Jadval", "Таблица", "Hudud va tur bo'yicha filtr.", "Фильтр по региону и типу.")],
     amallar: [],
     xatolar: [],

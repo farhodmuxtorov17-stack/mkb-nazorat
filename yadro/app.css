@@ -69,12 +69,16 @@
   --shrift:"Outfit","Manrope",system-ui,-apple-system,sans-serif;
   --shrift-displey:"Outfit","Manrope",system-ui,sans-serif;
   --shrift-mono:"Manrope","Outfit",ui-monospace,monospace;
+  /* Sahifa sarlavhalari: bitta ramka — qobiq ichida ham, ochiq sahifalarda ham shu qiymatlar */
+  --matn-h1:34px; --matn-h1-ochiq:28px; --matn-h2:21px; --matn-h3:17px;
   /* O'lchamlar */
   --yon-eni:296px; --shapka-boyi:72px;
   /* Sahna: kontent, shapka va sahifa ustidagi lentalar bitta kenglik va chekinishda turadi */
   --sahna-eni:1520px; --sahna-chekinish:34px;
   /* Fonni o'chirish pardalari: modal va buyruqlar oynasi quyuqroq, suzuvchi panellar yengilroq */
   --parda:rgba(20,16,14,.34); --parda-yengil:rgba(20,16,14,.30); --parda-quyuq:rgba(11,11,10,.55);
+  /* Surat va kadr ustidagi yorliq pardasi: matn suratda ham o'qilishi uchun eng quyug'i */
+  --parda-belgi:rgba(20,16,14,.66);
   --r-pilyula:999px; --r-karta:28px; --r-plitka:22px; --r-kirish:16px; --r-orta:18px; --r-kichik:14px; --r-mitti:11px;
   /* Qorong'i yuza: video va jonli kuzatuv panellari */
   --qora-yuza:#16161A; --qora-matn:#F3F1EC; --qora-matn-2:#A9A59C; --qora-ikonka:#8F8B82;
@@ -168,8 +172,8 @@ p,li,dd{text-wrap:pretty}
   font-size:14px;font-weight:400;color:var(--siyoh);
   transition:background var(--tez),color var(--tez);position:relative;flex:none;
 }
-/* Bo'lim nomi sig'masa ikki qatorga o'raladi, kesilmaydi */
-.yon-band > span{min-width:0;overflow:hidden;display:block;white-space:normal;line-height:1.2;max-height:2.4em}
+/* Bo'lim nomi sig'masa ikki qatorga o'raladi, kesilmaydi (hisoblagich belgisi bundan mustasno) */
+.yon-band > span:not(.yon-son){min-width:0;overflow:hidden;display:block;white-space:normal;line-height:1.2;max-height:2.4em}
 .yon-band:hover{background:var(--band-hover)}
 .yon-band:active{transform:scale(.99)}
 .yon-band .ic{width:19px;height:19px;color:var(--matn-2)}
@@ -234,6 +238,8 @@ p,li,dd{text-wrap:pretty}
 .pill:active{transform:scale(.985)}
 .pill.faol{background:var(--siyoh);color:var(--oq);font-weight:400}
 .pill.faol::before{content:"";width:7px;height:7px;border-radius:var(--r-pilyula);background:var(--oq);flex:none}
+/* Belgili pilyulada nuqta ortiqcha: bo'limni belgining o'zi ko'rsatadi */
+.pill:has(> .ic).faol::before{display:none}
 .pill .ic{width:17px;height:17px;color:var(--matn-2)}
 .pill.faol .ic{color:rgba(255,255,255,.85)}
 .pill .strelka{margin-left:2px;width:15px;height:15px;color:var(--matn-3)}
@@ -316,7 +322,7 @@ p,li,dd{text-wrap:pretty}
 .hs-yorliq a:hover{color:var(--siyoh)}
 .hs-yorliq .ajratgich{color:var(--matn-4)}
 .hs-qator{display:flex;align-items:center;gap:16px;flex-wrap:wrap;min-height:48px} /* 48px = .tugma: tugmasiz sahifada sarlavha va tablar siljimaydi */
-.hs-qator h1{font:500 34px/1.1 var(--shrift-displey);letter-spacing:-.035em;min-width:0;overflow-wrap:anywhere}
+.hs-qator h1{font:500 var(--matn-h1)/1.1 var(--shrift-displey);letter-spacing:-.035em;min-width:0;overflow-wrap:anywhere}
 .hs-meta{font-size:14px;color:var(--matn-3)}
 .hs-amallar{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .hs-yorliq .yangilangan{margin-left:auto}
@@ -786,6 +792,17 @@ button.tanlov:focus-visible{outline:none;box-shadow:0 0 0 2px var(--siyoh),var(-
 .fs-soni{position:absolute;right:8px;bottom:8px;display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 9px;
   border-radius:var(--r-pilyula);background:rgba(11,11,10,.62);color:var(--oq);font-size:12px}
 .fs-soni .ic{width:14px;height:14px}
+/* Namuna surati: aktivning o'z surati emas, tur bo'yicha olingan ko'rgazmali kadr.
+   Yorliq kadrning o'zida turadi — surat ko'ringan joyda manba ham ko'rinadi. */
+.fs-namuna{position:absolute;left:8px;top:8px;display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;
+  border-radius:var(--r-pilyula);background:var(--parda-belgi);color:var(--oq);font-size:11.5px;line-height:1;
+  backdrop-filter:blur(6px);max-width:calc(100% - 16px);overflow:hidden}
+.fs-namuna .ic{width:13px;height:13px;flex:none}
+.fs-namuna > span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Namuna suratining muallifi va litsenziyasi surat yonida ko'rinadi (CC BY sharti) */
+.surat-manba{font-size:11.5px;line-height:1.4;color:var(--matn-3);overflow-wrap:anywhere}
+.foto-shapka .fs-manba{color:rgba(255,255,255,.72);text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.obyekt-karta .surat-manba{margin:6px 16px 0}
 .fs-halqa{display:flex;flex-direction:column;align-items:center;gap:6px;flex:none}
 .fs-halqa > span:last-child{font-size:11.5px;color:rgba(255,255,255,.75)}
 .fs-halqa .halqa .h-iz{stroke:rgba(255,255,255,.18)}
@@ -866,6 +883,8 @@ button.tanlov:focus-visible{outline:none;box-shadow:0 0 0 2px var(--siyoh),var(-
   .fs-fon{display:none}
   .foto-shapka{color:#000;background:#fff;border:1px solid #ddd}
   .foto-shapka::after{display:none}
+  /* Namuna surati yorlig'i qog'ozda ham qoladi: dalolatnomada kadr manbasi ko'rinib tursin */
+  .fs-namuna{background:none;color:#000;border:1px solid #bbb;backdrop-filter:none}
   .foto-shapka .fs-meta{color:#444}
   .hs-qator{min-height:0}
   .galereya{display:none}
@@ -1179,8 +1198,9 @@ a.qator:active{background:var(--band)}
   .izlash-natija{min-width:0}
   .izlash kbd{display:none}
   .shapka-ong{gap:6px;min-width:0}
-  .til-almash{height:40px;padding:4px}
-  .til-almash button{height:32px;padding:0 10px;font-size:12.5px}
+  /* Nishon 40px dan kichik bo'lmaydi: bu kirish ekranidagi yagona tashqi boshqaruv */
+  .til-almash{height:48px;padding:4px}
+  .til-almash button{height:40px;min-width:40px;padding:0 10px;font-size:12.5px}
   .doira-tugma{width:40px;height:40px}
   .doira-tugma .nuqta{top:8px;right:9px}
   .profil{height:40px;padding:0 4px}
@@ -1472,7 +1492,7 @@ main[data-chop="albom"]{page:albom}
 .mkb-metka:focus-visible .mkb-pin{outline:2px solid var(--siyoh);outline-offset:2px;border-radius:14px}
 .mkb-metka.sonik,.mkb-klaster.sonik{opacity:.25}
 /* Hudud metkasi: uzuq chiziqli kontur joy taxminiy ekanini bildiradi, nom xaritada yozilib turadi */
-.mkb-hudud{display:grid;place-items:center;border-radius:999px;background:rgba(255,255,255,.9);
+.mkb-hudud{display:grid;place-items:center;border-radius:var(--r-pilyula);background:rgba(255,255,255,.9);
   border:2px dashed var(--hudud-rang,var(--matn-3));box-shadow:0 2px 8px rgba(11,11,10,.18);
   font:600 14px var(--shrift);color:var(--siyoh);transition:transform var(--tez),background var(--tez),border-color var(--tez)}
 .mkb-hudud b{font-weight:600;font-variant-numeric:tabular-nums}
@@ -1522,15 +1542,15 @@ main[data-chop="albom"]{page:albom}
 /* ---------- Jamlangan metkalar ----------
    Halqa segmentlari guruh ichidagi toifalar ulushini ko'rsatadi, o'rtasida soni. */
 .mkb-klaster{background:none;border:0;cursor:pointer}
-.mkb-klaster .mkb-klaster-halqa{position:absolute;inset:0;border-radius:999px;
+.mkb-klaster .mkb-klaster-halqa{position:absolute;inset:0;border-radius:var(--r-pilyula);
   -webkit-mask:radial-gradient(circle at 50% 50%,transparent 58%,#000 59%);
   mask:radial-gradient(circle at 50% 50%,transparent 58%,#000 59%);
   filter:drop-shadow(0 2px 6px rgba(11,11,10,.28));transition:transform var(--tez)}
-.mkb-klaster b{position:absolute;inset:15%;border-radius:999px;background:var(--oq);display:grid;place-items:center;
+.mkb-klaster b{position:absolute;inset:15%;border-radius:var(--r-pilyula);background:var(--oq);display:grid;place-items:center;
   font:600 13px var(--shrift);font-variant-numeric:tabular-nums;color:var(--siyoh);
   box-shadow:0 1px 4px rgba(11,11,10,.16);transition:transform var(--tez)}
 .mkb-klaster:hover .mkb-klaster-halqa{transform:scale(1.08)}
-.mkb-klaster.bir-joyda b::after{content:"";position:absolute;right:-1px;bottom:-1px;width:9px;height:9px;border-radius:999px;
+.mkb-klaster.bir-joyda b::after{content:"";position:absolute;right:-1px;bottom:-1px;width:9px;height:9px;border-radius:var(--r-pilyula);
   background:var(--siyoh);border:2px solid var(--oq)}
 .mkb-klaster:focus-visible{outline:none}
 .mkb-klaster:focus-visible b{outline:2px solid var(--siyoh);outline-offset:3px}
@@ -1614,7 +1634,7 @@ main[data-chop="albom"]{page:albom}
   padding:9px 8px;border-radius:13px;text-align:left;min-height:56px;transition:background var(--tez)}
 .xarita .x-qator:hover,.xarita .x-qator.yoritilgan{background:var(--plitka)}
 .xarita .x-qator.tanlangan{background:var(--siyoh);color:var(--oq)}
-.xarita .x-qator .nuqta{width:10px;height:10px;border-radius:999px;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
+.xarita .x-qator .nuqta{width:10px;height:10px;border-radius:var(--r-pilyula);flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
 .xarita .x-qator .matn{min-width:0}
 .xarita .x-qator .nom{display:block;font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .xarita .x-qator .tag{display:block;font-size:11.5px;color:var(--matn-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1671,7 +1691,7 @@ main[data-chop="albom"]{page:albom}
     background:var(--oq);border-radius:24px 24px 0 0;padding:12px 16px 26px;
     transform:translateY(105%);transition:transform var(--sekin);box-shadow:var(--soya-suzuvchi)}
   .xarita .x-yon.ochiq{transform:none}
-  .xarita .x-yon::before{content:"";display:block;width:44px;height:5px;border-radius:99px;background:var(--chiziq-3);margin:0 auto 4px;flex:none}
+  .xarita .x-yon::before{content:"";display:block;width:44px;height:5px;border-radius:var(--r-pilyula);background:var(--chiziq-3);margin:0 auto 4px;flex:none}
   .xarita .x-yon .karta{box-shadow:none;padding:6px 0;border-radius:0}
   .xarita .x-yon .karta + .karta{border-top:1px solid var(--chiziq-2)}
   .xarita .x-qator{min-height:60px}

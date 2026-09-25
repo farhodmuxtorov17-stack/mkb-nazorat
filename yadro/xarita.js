@@ -1005,7 +1005,7 @@
         chiziq = L.polyline(nuqtalar, {className: "mkb-olchov", color: rang("var(--siyoh)"), weight: 2, dashArray: "6 5"}).addTo(xarita);
       belgilar.forEach(m => xarita.removeLayer(m));
       belgilar = nuqtalar.map(j => L.circleMarker(j, {radius: 4, color: rang("var(--siyoh)"), weight: 2,
-        fillColor: "#ffffff", fillOpacity: 1}).addTo(xarita));
+        fillColor: rang("var(--oq)"), fillOpacity: 1}).addTo(xarita));
       if (yorliq) { xarita.removeLayer(yorliq); yorliq = null; }
       if (nuqtalar.length > 1) yorliq = L.marker(nuqtalar[nuqtalar.length - 1], {
         interactive: false, keyboard: false,

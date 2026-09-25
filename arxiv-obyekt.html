@@ -108,7 +108,7 @@
   joy.innerHTML =
     '<section class="foto-shapka" aria-label="Obyekt"></section>' +
     '<div class="tor-2">' +
-      '<section class="karta" aria-labelledby="n-sar" data-sayohat="natija"><div class="karta-bosh"><h2 id="n-sar">Iqtisodiy natija</h2></div>' +
+      '<section class="karta" aria-labelledby="n-sar" data-sayohat="natija"><div class="karta-bosh"><h2 id="n-sar" data-ikonka="pul">Iqtisodiy natija</h2></div>' +
         '<div class="natija-royxat">' +
           "<div><span>Tushum</span>" + pul(tushum) + "</div>" +
           '<div class="ayir"><span>Balans qiymati</span>' + pul(balans) + "</div>" +
@@ -119,7 +119,7 @@
           '<div style="border-bottom:0;padding-top:4px"><span><span>Tiklangan zaxira</span><small>Joriy davr daromadiga o&#39;tadi</small></span>' + (zaxira == null ? "<b>—</b>" : pul(zaxira)) + "</div>" +
         "</div></section>" +
       '<div class="ustun">' +
-        '<section class="karta" aria-labelledby="s-sar" data-sayohat="chiqim"><div class="karta-bosh"><h2 id="s-sar">Chiqim</h2></div><dl class="malumot-royxat">' +
+        '<section class="karta" aria-labelledby="s-sar" data-sayohat="chiqim"><div class="karta-bosh"><h2 id="s-sar" data-ikonka="chiqish">Chiqim</h2></div><dl class="malumot-royxat">' +
           kv("Usul", "<span>" + esc(usulNomi(a.sotishUsuli)) + "</span>") +
           kv("Xaridor", matn(a.xaridor)) +
           kv("Chiqim sanasi", matn(a.sotuvSana)) +
@@ -127,7 +127,7 @@
           kv("Lot", a.lotId ? (lot ? '<a class="kod-mono" data-tarjimasiz href="lot.html?id=' + encodeURIComponent(a.lotId) + '">' + esc(a.lotId) + "</a>" : matn(a.lotId)) : "—") +
           (a.izoh ? kv("Asos", matn(a.izoh)) : "") +
         "</dl></section>" +
-        '<section class="karta" aria-labelledby="b-sar"><div class="karta-bosh"><h2 id="b-sar">Balansda</h2></div><dl class="malumot-royxat">' +
+        '<section class="karta" aria-labelledby="b-sar"><div class="karta-bosh"><h2 id="b-sar" data-ikonka="bank">Balansda</h2></div><dl class="malumot-royxat">' +
           kv("Balansga qabul", matn(a.balansSana)) +
           kv("Balansdan chiqish", matn(a.sotuvSana)) +
           kv("Balansda turgan", a.turganKun == null ? "—" : '<b data-tarjimasiz>' + MKB.fmt(a.turganKun) + "</b> <span>kun</span>") +
@@ -136,10 +136,10 @@
         "</dl></section>" +
       "</div></div>" +
     '<div class="tor-2-teng">' +
-      '<section class="karta" aria-labelledby="x-sar"><div class="karta-bosh"><h2 id="x-sar">Xarajatlar tarkibi</h2></div><div id="xarajat-joy"></div></section>' +
-      '<section class="karta" aria-labelledby="h-sar" data-sayohat="hujjatlar"><div class="karta-bosh"><h2 id="h-sar">Hujjatlar</h2><span class="soni" data-tarjimasiz>' + hujjatlar.length + "</span></div><div id=\"hujjat-joy\"></div></section>" +
+      '<section class="karta" aria-labelledby="x-sar"><div class="karta-bosh"><h2 id="x-sar" data-ikonka="diagramma">Xarajatlar tarkibi</h2></div><div id="xarajat-joy"></div></section>' +
+      '<section class="karta" aria-labelledby="h-sar" data-sayohat="hujjatlar"><div class="karta-bosh"><h2 id="h-sar" data-ikonka="hujjat">Hujjatlar</h2><span class="soni" data-tarjimasiz>' + hujjatlar.length + "</span></div><div id=\"hujjat-joy\"></div></section>" +
     "</div>" +
-    (y && Array.isArray(y.tarix) && y.tarix.length ? '<section class="karta" aria-labelledby="t-sar"><div class="karta-bosh"><h2 id="t-sar">Tarix</h2></div><ul class="voqealar">' +
+    (y && Array.isArray(y.tarix) && y.tarix.length ? '<section class="karta" aria-labelledby="t-sar"><div class="karta-bosh"><h2 id="t-sar" data-ikonka="soat">Tarix</h2></div><ul class="voqealar">' +
       y.tarix.slice().reverse().slice(0, 8).map(t => '<li><time data-tarjimasiz>' + esc(t.sana || "") + "</time><div><b>" + esc(t.voqea || "") + "</b><span>" + esc(t.izoh || "") + "</span></div></li>").join("") + "</ul></section>" : "");
   MKB.fotoShapka(a, joy.querySelector(".foto-shapka"));
 

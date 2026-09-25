@@ -12,8 +12,8 @@
 .rz-reja-sonlar .rz-katta{font:500 38px/1.05 var(--shrift-displey);letter-spacing:-.035em;font-variant-numeric:tabular-nums}
 .rz-reja-sonlar .rz-orta{font:500 22px/1.1 var(--shrift-displey);letter-spacing:-.025em;font-variant-numeric:tabular-nums}
 .rz-reja-sonlar > div{display:flex;flex-direction:column;gap:4px;min-width:0}
-.rz-iz{height:10px;border-radius:99px;background:var(--band);overflow:hidden}
-.rz-iz > span{display:block;height:100%;border-radius:99px;background:var(--mint-matn)}
+.rz-iz{height:10px;border-radius:var(--r-pilyula);background:var(--band);overflow:hidden}
+.rz-iz > span{display:block;height:100%;border-radius:var(--r-pilyula);background:var(--mint-matn)}
 .rz-izoh{font-size:12.5px;color:var(--matn-3);display:flex;gap:8px;align-items:flex-start}
 .rz-izoh .ic{width:15px;height:15px;flex:none;margin-top:1px}
 .rz-filtr{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-left:auto}
@@ -76,11 +76,11 @@
 
   <div class="tor-2">
     <section class="karta" aria-labelledby="reja-sarlavha" data-sayohat="reja">
-      <div class="karta-bosh"><h2 id="reja-sarlavha">Yillik reja va fakt</h2><span class="soni" id="reja-yil" data-tarjimasiz></span></div>
+      <div class="karta-bosh"><h2 id="reja-sarlavha" data-ikonka="reja">Yillik reja va fakt</h2><span class="soni" id="reja-yil" data-tarjimasiz></span></div>
       <div id="reja-joy"></div>
     </section>
     <section class="karta" aria-labelledby="usul-sarlavha" data-sayohat="usullar">
-      <div class="karta-bosh"><h2 id="usul-sarlavha">Sotish usullari</h2><span class="soni">Joriy yil shartnomalari</span></div>
+      <div class="karta-bosh"><h2 id="usul-sarlavha" data-ikonka="savdo">Sotish usullari</h2><span class="soni">Joriy yil shartnomalari</span></div>
       <div id="usul-joy"></div>
       <div id="tolov-joy" class="rz-tolov"></div>
       <div class="rz-qatorlar" id="usul-boshqa"></div>
@@ -88,7 +88,7 @@
   </div>
 
   <section class="karta" id="doska-karta" aria-labelledby="doska-sarlavha" data-sayohat="doska">
-    <div class="karta-bosh"><h2 id="doska-sarlavha">Obyektlar bosqichlar bo'yicha</h2><span class="soni" id="doska-soni"></span>
+    <div class="karta-bosh"><h2 id="doska-sarlavha" data-ikonka="jadval-ic">Obyektlar bosqichlar bo'yicha</h2><span class="soni" id="doska-soni"></span>
       <div class="rz-filtr" data-sayohat="doska-filtr">
         <label class="kirish rz-qidir"><svg class="ic"><use href="#ik-izlash"/></svg><input type="search" id="d-qidir" placeholder="Obyekt, xaridor yoki raqam" aria-label="Doskada qidirish"></label>
         <label class="kirish"><select id="d-usul" aria-label="Sotish usuli"><option value="">Barcha usullar</option></select></label>
@@ -99,7 +99,7 @@
   </section>
 
   <section class="karta" aria-labelledby="paket-sarlavha" data-sayohat="paketlar">
-    <div class="karta-bosh"><h2 id="paket-sarlavha">Tayyor biznes paketlari</h2><span class="soni" id="paket-soni"></span></div>
+    <div class="karta-bosh"><h2 id="paket-sarlavha" data-ikonka="portfel">Tayyor biznes paketlari</h2><span class="soni" id="paket-soni"></span></div>
     <p class="rz-izoh" style="margin:-8px 0 12px"><svg class="ic"><use href="#ik-info"/></svg><span>Bino va undagi uskunalar bitta lot bo'lib sotiladi (PQ-142, 3-band).</span></p>
     <div class="rz-qatorlar" id="paketlar"></div>
   </section>
@@ -212,18 +212,18 @@
     let otgan = 0, otganSoni = 0;
     h.SH.filter(s => FAOL_SH.indexOf(s.holat) >= 0).forEach(s => { const t = tolov(s); if (t.otganSumma > 0){ otgan += t.otganSumma; otganSoni++; } });
     const balansJami = yaxlit(h.qatorlar.reduce((a, q) => a + q.balans, 0));
-    const m = (href, yorliq, qiymat, izoh) => '<a class="metrika" href="' + href + '"><span class="m-yorliq">' + yorliq + "</span>" +
+    const m = (href, yorliq, qiymat, izoh, ikon) => '<a class="metrika" href="' + href + '" data-ikonka="' + ikon + '"><span class="m-yorliq">' + yorliq + "</span>" +
       '<span class="m-qiymat">' + qiymat + "</span>" + '<span class="m-izoh">' + izoh + "</span></a>";
     document.getElementById("kpi").innerHTML =
       m("#doska-karta", "Realizatsiyadagi obyektlar", '<span data-tarjimasiz>' + h.qatorlar.length + "</span>",
-        '<span>Balans qiymati</span> <span>' + pul(balansJami) + "</span>") +
+        '<span>Balans qiymati</span> <span>' + pul(balansJami) + "</span>", "bino") +
       m("lotlar.html", "Savdoga chiqarilgan lotlar", '<span data-tarjimasiz>' + savdoda.length + "</span>",
-        "<span>E'londa</span> <b data-tarjimasiz>" + elonda + "</b>" + (otkLot ? " · <span>O'tkazilmagan</span> <b data-tarjimasiz>" + otkLot + "</b>" : "")) +
+        "<span>E'londa</span> <b data-tarjimasiz>" + elonda + "</b>" + (otkLot ? " · <span>O'tkazilmagan</span> <b data-tarjimasiz>" + otkLot + "</b>" : ""), "gavel") +
       m("takliflar.html?holat=" + encodeURIComponent("qo'mitada"), "Qaror kutayotgan takliflar", '<span data-tarjimasiz>' + qomitada.length + "</span>",
         pasaytirish ? "<span>Narx pasaytirish kutilmoqda</span> <b data-tarjimasiz>" + pasaytirish + "</b>"
-          : qomitada.length ? "<span>" + pul(yaxlit(qomitada.reduce((a, t) => a + (+t.summa || 0), 0))) + "</span>" : "<span>Qaror kutayotgan taklif yo'q</span>") +
+          : qomitada.length ? "<span>" + pul(yaxlit(qomitada.reduce((a, t) => a + (+t.summa || 0), 0))) + "</span>" : "<span>Qaror kutayotgan taklif yo'q</span>", "tasdiq") +
       m("shartnomalar.html?holat=kechikkan", "Muddati o'tgan to'lovlar", (otgan ? pulK(yaxlit(otgan)) : '<span data-tarjimasiz>0</span>'),
-        otganSoni ? '<span>' + otganSoni + " ta shartnoma</span>" : "<span>Kechikish yo'q</span>") +
+        otganSoni ? '<span>' + otganSoni + " ta shartnoma</span>" : "<span>Kechikish yo'q</span>", "pul") +
       "";
     /* Obyektlar soni «Realizatsiyadagi obyektlar» kartasida, ijaradagilar «Sotilguncha ijarada» qatorida — sarlavhada takrorlanmaydi */
     tarjimaQil(document.getElementById("kpi"));

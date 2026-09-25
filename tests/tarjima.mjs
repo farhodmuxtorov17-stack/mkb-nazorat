@@ -106,20 +106,33 @@ function yigish() {
   return [...new Set(natija)];
 }
 
+/* Sessiyasiz ochiladigan sahifalar. Sessiya bilan ochilsa kirish.html darhol
+   panelga yo'naltiradi, shuning uchun kirish ekrani va hujjatlar alohida,
+   sessiyasiz ham tekshiriladi: rozilik bloki aynan shu holatda ko'rinadi. */
+const OCHIQ = ["kirish.html", "oferta.html", "maxfiylik.html", "parol-tiklash.html", "parol-yangilash.html"];
+
 const b = await ochish();
 const hisobot = {};
 let jami = 0;
+async function tekshir(nom, manzil) {
+  const xatolar = await b.kor(manzil, 1500);
+  let qolgan = [];
+  try { qolgan = await b.baho("(" + yigish + ")()"); } catch (e) { qolgan = ["! tekshirib bo'lmadi: " + e.message]; }
+  if (xatolar.length) qolgan.push(...xatolar.map(x => "! skript xatosi: " + x));
+  if (qolgan.length) { hisobot[nom] = qolgan; jami += qolgan.length; }
+  process.stdout.write((qolgan.length ? "  [" + String(qolgan.length).padStart(3) + "] " : "  [ OK] ") + nom + "\n");
+}
 try {
   await b.olcham(1440, 900);
   await b.sessiya("ru", arg.rol || "Administrator");
   const idlar = await b.idlar();
-  for (const f of sahifalar) {
-    const xatolar = await b.kor(manzilQur(f, idlar), 1500);
-    let qolgan = [];
-    try { qolgan = await b.baho("(" + yigish + ")()"); } catch (e) { qolgan = ["! tekshirib bo'lmadi: " + e.message]; }
-    if (xatolar.length) qolgan.push(...xatolar.map(x => "! skript xatosi: " + x));
-    if (qolgan.length) { hisobot[f] = qolgan; jami += qolgan.length; }
-    process.stdout.write((qolgan.length ? "  [" + String(qolgan.length).padStart(3) + "] " : "  [ OK] ") + f + "\n");
+  for (const f of sahifalar) await tekshir(f, manzilQur(f, idlar));
+  const ochiq = sahifalar.filter(f => OCHIQ.includes(f));
+  if (ochiq.length) {
+    await b.kor("xato-404.html", 100);
+    await b.baho('localStorage.clear(); localStorage.setItem("mkb-til", "ru"); localStorage.setItem("mkb-manba", "shartli");'
+      + ' sessionStorage.setItem("mkb-mahalliy-yoq", "1"); true');
+    for (const f of ochiq) await tekshir(f + " (sessiyasiz)", f);
   }
 } finally {
   await b.yop();

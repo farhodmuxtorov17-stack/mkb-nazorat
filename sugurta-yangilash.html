@@ -19,13 +19,13 @@
 
   <div class="tor-2">
     <section class="karta">
-      <div class="karta-bosh"><h2>Polis ma'lumotlari</h2></div>
+      <div class="karta-bosh"><h2 data-ikonka="sugurta">Polis ma'lumotlari</h2></div>
       <form id="sy-forma" class="forma-tor" novalidate data-sayohat="forma">
         <div class="maydon keng"><label class="maydon-yorliq" for="sy-obyekt">Obyekt <b>*</b></label>
           <div class="kirish"><svg class="ic"><use href="#ik-izlash"/></svg><input id="sy-obyekt" name="obyekt" list="sy-obyektlar" autocomplete="off" required data-xato="Obyektni ro'yxatdan tanlang" placeholder="Nomi yoki raqamini yozing"></div>
           <datalist id="sy-obyektlar"></datalist><span class="maydon-izoh" id="sy-obyekt-izoh">Ro'yxatdan tanlang</span></div>
         <div class="maydon"><label class="maydon-yorliq" for="sy-tur">Polis turi <b>*</b></label>
-          <div class="kirish"><select id="sy-tur" name="tur" required><option value="mulk">Mol-mulk</option><option value="OSAGO">OSAGO</option><option value="XICHO">XICHO</option></select></div></div>
+          <div class="kirish"><select id="sy-tur" name="tur" required><option value="mulk">Mol-mulk</option><option value="OSAGO">OSAGO</option><option value="XICHO">Xavfli obyekt (XICHO)</option></select></div></div>
         <div class="maydon"><label class="maydon-yorliq" for="sy-raqam">Polis raqami <b>*</b></label>
           <div class="kirish"><input id="sy-raqam" name="raqam" autocomplete="off" required data-xato="Polis raqamini yozing" placeholder="Sug'urtachi bergan raqam"></div></div>
         <div class="maydon keng"><label class="maydon-yorliq" for="sy-kompaniya">Sug'urta kompaniyasi <b>*</b></label>
@@ -54,7 +54,7 @@
       <div id="sy-natija" hidden></div>
     </section>
     <section class="karta">
-      <div class="karta-bosh"><h2 id="sy-ong-sarlavha">Obyekt</h2></div>
+      <div class="karta-bosh"><h2 id="sy-ong-sarlavha" data-ikonka="bino">Obyekt</h2></div>
       <div id="sy-obyekt-tana"></div>
     </section>
   </div>
@@ -87,7 +87,7 @@
   const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   const url = new URLSearchParams(location.search);
   const forma = el("sy-forma");
-  const TUR = {mulk: "Mol-mulk", OSAGO: "OSAGO", XICHO: "XICHO"};
+  const TUR = D.POLIS_TURLARI || {mulk: "Mol-mulk", OSAGO: "OSAGO", XICHO: "Xavfli obyekt (XICHO)"};
   const aktivlar = MKB.doira(D.YOZUVLAR.filter(y => y.holat !== "Chiqarildi"));
   const yorliq = y => y.id + " — " + (y.qisqa || y.nom);
   el("sy-obyektlar").innerHTML = aktivlar.map(y => '<option value="' + esc(yorliq(y)) + '">').join("");

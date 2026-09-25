@@ -15,21 +15,24 @@ body{background:var(--fon-sovuq)}
 .k-ustun{width:min(452px,100%);display:flex;flex-direction:column;align-items:stretch;gap:18px}
 .k-lenta{display:flex;justify-content:flex-end}
 .k-belgi{display:flex;align-items:center;justify-content:center;gap:12px;text-align:left}
-.k-belgi .belgi{width:50px;height:50px;border-radius:15px;background:var(--oq);display:grid;place-items:center;box-shadow:var(--soya-past)}
+.k-belgi .belgi{width:50px;height:50px;border-radius:var(--r-kichik);background:var(--oq);display:grid;place-items:center;box-shadow:var(--soya-past)}
 .k-belgi b{font:500 20px var(--shrift-displey);letter-spacing:-.03em;display:block;line-height:1.15}
 .k-belgi span span{display:block;font-size:12.5px;color:var(--matn-3)}
 .k-karta{background:var(--oq);border-radius:var(--r-karta);box-shadow:var(--soya-suzuvchi);padding:32px 34px 28px}
-.k-karta h1{font:500 28px/1.16 var(--shrift-displey);letter-spacing:-.035em}
+.k-karta h1{font:500 var(--matn-h1-ochiq)/1.16 var(--shrift-displey);letter-spacing:-.035em}
 .k-karta .k-izoh{font-size:13.5px;line-height:1.55;color:var(--matn-3);margin:7px 0 22px}
 .k-karta form{display:flex;flex-direction:column;gap:15px}
 .k-karta .tugma[type=submit]{width:100%;height:54px;font-size:15px;justify-content:center;margin-top:3px}
-.tugma.yopiq{opacity:.45;cursor:not-allowed}
-.koz{flex:none;width:40px;height:40px;margin-right:-8px;border-radius:999px;display:grid;place-items:center;color:var(--matn-3)}
+/* "Hali tayyor emas" ko'rinishi: tugma bosiladi, lekin asosiy qorasidan yengilroq turadi.
+   opacity ishlatilmaydi — oq matn kulrangda o'qilmay qolardi (kontrast 3,1:1) */
+.tugma.yopiq{background:var(--matn-2);box-shadow:none}
+.tugma.yopiq:hover{background:var(--matn-3)}
+.koz{flex:none;width:40px;height:40px;margin-right:-8px;border-radius:var(--r-pilyula);display:grid;place-items:center;color:var(--matn-3)}
 .koz:hover{background:var(--band);color:var(--siyoh)}
 .koz:focus-visible{outline:2px solid var(--siyoh);outline-offset:1px}
-.k-xato{display:flex;gap:9px;align-items:flex-start;background:var(--xavf-fon);color:var(--xavf-matn);border-radius:14px;padding:11px 14px;font-size:13.5px;line-height:1.45}
+.k-xato{display:flex;gap:9px;align-items:flex-start;background:var(--xavf-fon);color:var(--xavf-matn);border-radius:var(--r-kichik);padding:11px 14px;font-size:13.5px;line-height:1.45}
 .k-xato .ic{width:17px;height:17px;flex:none;margin-top:1px}
-.k-eslatma{display:flex;gap:9px;align-items:flex-start;background:var(--lavanda);color:var(--lavanda-matn);border-radius:14px;
+.k-eslatma{display:flex;gap:9px;align-items:flex-start;background:var(--lavanda);color:var(--lavanda-matn);border-radius:var(--r-kichik);
   padding:11px 14px;font-size:13.5px;line-height:1.45;margin-bottom:18px}
 .k-eslatma .ic{width:17px;height:17px;flex:none;margin-top:1px}
 .caps-izoh{display:flex;align-items:flex-start;gap:6px;font-size:13px;line-height:1.4;color:var(--sariq-matn)}
@@ -40,14 +43,19 @@ body{background:var(--fon-sovuq)}
 .rozilik-bosh{font-size:12.5px;line-height:1.45;color:var(--matn-3)}
 .rozilik-belgi{display:flex;align-items:flex-start;gap:11px;cursor:pointer;font-size:13.5px;line-height:1.5;color:var(--matn-2)}
 .rozilik-belgi input{flex:none;width:19px;height:19px;margin-top:1px;accent-color:var(--siyoh);cursor:pointer}
-.rozilik-belgi a{color:var(--siyoh);text-decoration:underline;text-underline-offset:3px}
+.rozilik-havolalar{display:flex;flex-wrap:wrap;align-items:center;gap:5px 18px;padding-left:30px;font-size:13.5px;line-height:1.5}
+.rozilik-havolalar a{color:var(--siyoh);text-decoration:underline;text-underline-offset:3px}
 .rozilik-tahrir{font-size:12px;color:var(--matn-3);padding-left:30px}
-.rozilik-xato{padding-left:30px}
+.rozilik-izoh{display:flex;align-items:flex-start;gap:6px;padding-left:30px;font-size:13px;line-height:1.4;color:var(--matn-3)}
+.rozilik-izoh .ic{width:15px;height:15px;flex:none;margin-top:1px}
+.rozilik-izoh.xato{color:var(--xavf-matn-yorqin)}
 .rozilik-qabul{display:flex;align-items:flex-start;gap:11px;font-size:13px;line-height:1.5;color:var(--matn-3)}
 .rozilik-qabul .ic{width:17px;height:17px;flex:none;margin-top:2px;color:var(--yashil)}
 .rozilik-qabul a{color:var(--siyoh);text-decoration:underline;text-underline-offset:3px}
 .k-past{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;color:var(--matn-3)}
-.k-past a{color:var(--siyoh);text-decoration:underline;text-underline-offset:3px}
+.k-past a,.k-past button{color:var(--siyoh);text-decoration:underline;text-underline-offset:3px}
+.k-past button{font-size:13.5px;min-height:40px}
+.k-past button:focus-visible{outline:2px solid var(--siyoh);outline-offset:2px;border-radius:var(--r-mitti)}
 .namoyish{margin-top:16px;border-top:1px solid var(--chiziq);padding-top:14px}
 .namoyish summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:500;min-height:40px}
 .namoyish summary::-webkit-details-marker{display:none}
@@ -58,7 +66,7 @@ body{background:var(--fon-sovuq)}
 .namoyish .n-izoh code{font:500 12.5px var(--shrift-mono);background:var(--plitka);border-radius:8px;padding:2px 7px;color:var(--siyoh)}
 .hisoblar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .hisoblar button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;min-height:48px;
-  padding:8px 12px;border-radius:14px;background:var(--plitka);transition:background var(--tez)}
+  padding:8px 12px;border-radius:var(--r-kichik);background:var(--plitka);transition:background var(--tez)}
 .hisoblar button:hover{background:var(--band-hover)}
 .hisoblar button:focus-visible{outline:2px solid var(--siyoh);outline-offset:1px}
 .hisoblar button b{font-size:13px;font-weight:500;line-height:1.3}
@@ -70,7 +78,7 @@ body{background:var(--fon-sovuq)}
 .k-oyoq .ajrat{color:var(--matn-4)}
 @media (max-width:480px){
   .k-sahna{padding:18px 14px 24px}
-  .k-karta{padding:26px 20px 22px;border-radius:26px}
+  .k-karta{padding:26px 20px 22px}
   .k-karta h1{font-size:25px}
   .hisoblar{grid-template-columns:minmax(0,1fr)}
 }
@@ -86,6 +94,8 @@ body{background:var(--fon-sovuq)}
       </div>
     </div>
     <div class="k-belgi">
+      <!-- Bank belgisi: yadro/app.js dagi LOGO_SVG bilan bir xil. Ranglar fill atributida xom hex
+           bo'lib qoladi — atributda var() yechilmaydi. Belgi o'zgarsa, ikkala nusxa birga yangilanadi. -->
       <span class="belgi"><svg width="30" height="30" viewBox="0 0 44 44" aria-hidden="true">
         <path d="M4 34 L4 8 L16 19 L16 39 Z" fill="#37A72E"/>
         <path d="M16 19 L28 8 L28 34 L16 39 Z" fill="#8CC63F"/>
@@ -95,7 +105,7 @@ body{background:var(--fon-sovuq)}
     </div>
     <section class="k-karta">
       <h1>Tizimga kirish</h1>
-      <p class="k-izoh">Bankning ichki tizimi. Kirish va har bir o&#39;zgarish amallar tarixiga yoziladi.</p>
+      <p class="k-izoh" id="kirish-izoh">Bankning ichki tizimi. Kirish va har bir o&#39;zgarish amallar tarixiga yoziladi.</p>
       <div class="k-eslatma" id="sabab-qator" role="status" hidden><svg class="ic"><use href="#ik-info"/></svg>
         <span id="sabab-matn">Harakat bo&#39;lmagani uchun sessiya yopildi. Qayta kiring</span></div>
       <form id="kirish-forma" novalidate data-sayohat="forma">
@@ -114,27 +124,30 @@ body{background:var(--fon-sovuq)}
         <div class="rozilik" id="rozilik-blok" hidden>
           <p class="rozilik-bosh">Tizimda bank siri va shaxsga doir ma&#39;lumotlar yuritiladi.</p>
           <label class="rozilik-belgi" for="rozilik">
-            <input type="checkbox" id="rozilik" name="rozilik" aria-describedby="rozilik-tahrir">
-            <span><a href="oferta.html" target="_blank" rel="noopener">Ommaviy oferta va foydalanish shartlari</a>
-              <span>hamda</span>
-              <a href="maxfiylik.html" target="_blank" rel="noopener">maxfiylik bildirishnomasi</a>
-              <span>bilan tanishdim va ularni qabul qilaman</span></span>
+            <input type="checkbox" id="rozilik" name="rozilik" aria-describedby="rozilik-havolalar rozilik-tahrir">
+            <span>Quyidagi hujjatlar bilan tanishdim va ularni qabul qilaman:</span>
           </label>
+          <span class="rozilik-havolalar" id="rozilik-havolalar">
+            <a href="oferta.html" target="_blank" rel="noopener">Ommaviy oferta va foydalanish shartlari</a>
+            <a href="maxfiylik.html" target="_blank" rel="noopener">Maxfiylik bildirishnomasi</a>
+          </span>
           <span class="rozilik-tahrir" id="rozilik-tahrir"><span>Hujjatlar tahriri</span> <b data-tarjimasiz id="rozilik-versiya">—</b></span>
-          <span class="maydon-xato rozilik-xato" id="rozilik-xato" role="alert" hidden><svg class="ic"><use href="#ik-xavf"/></svg><span>Kirish uchun hujjatlarni qabul qiling</span></span>
+          <span class="rozilik-izoh" id="rozilik-xato" role="status"><svg class="ic"><use href="#ik-info"/></svg><span>Kirish uchun hujjatlarni qabul qiling</span></span>
         </div>
         <div class="rozilik" id="rozilik-qabul-blok" hidden>
           <span class="rozilik-qabul"><svg class="ic"><use href="#ik-tasdiq"/></svg>
             <span><span>Foydalanish shartlari va maxfiylik bildirishnomasi qabul qilingan.</span>
               <a href="oferta.html" target="_blank" rel="noopener">Hujjatlarni ochish</a></span></span>
-          <span class="rozilik-tahrir"><span>Tahrir</span> <b data-tarjimasiz id="rozilik-qabul-versiya">—</b></span>
+          <span class="rozilik-tahrir"><span>Tahrir</span> <b data-tarjimasiz id="rozilik-qabul-versiya">—</b> ·
+            <span>qabul qilingan</span> <b data-tarjimasiz id="rozilik-qabul-sana">—</b></span>
         </div>
         <div class="k-xato" id="kirish-xato" role="alert" hidden><svg class="ic"><use href="#ik-xavf"/></svg><span id="kirish-xato-matn"></span></div>
         <button class="tugma tugma-asosiy" type="submit" id="kirish-tugma" data-sayohat="kirish"><span>Kirish</span><svg class="ic"><use href="#ik-ong"/></svg></button>
       </form>
       <div class="k-past">
-        <span>Hisobni administrator ochadi</span>
-        <a href="parol-tiklash.html">Parolni unutdingizmi?</a>
+        <span id="k-past-izoh">Hisobni administrator ochadi</span>
+        <a href="parol-tiklash.html" id="parol-tiklash-havola">Parolni unutdingizmi?</a>
+        <button type="button" id="rad-tugma" hidden>Rad etish va chiqish</button>
       </div>
       <details class="namoyish" id="namoyish" data-sayohat="namoyish" hidden>
         <summary><svg class="ic"><use href="#ik-info"/></svg><span>Namoyish hisoblari</span><svg class="ic strelka"><use href="#ik-past"/></svg></summary>
@@ -144,8 +157,8 @@ body{background:var(--fon-sovuq)}
     </section>
     <div class="k-oyoq">
       <nav aria-label="Hujjatlar">
-        <a href="oferta.html">Ommaviy oferta</a><span class="ajrat" aria-hidden="true">·</span>
-        <a href="maxfiylik.html">Maxfiylik bildirishnomasi</a>
+        <a href="oferta.html" target="_blank" rel="noopener">Ommaviy oferta</a><span class="ajrat" aria-hidden="true">·</span>
+        <a href="maxfiylik.html" target="_blank" rel="noopener">Maxfiylik bildirishnomasi</a>
       </nav>
       <span>Ruxsatsiz kirishga urinish qayd etiladi.</span>
     </div>
@@ -171,13 +184,47 @@ const HUJJAT_TAHRIR = "1.0";
 const HUJJAT_SANA = "25.09.2026";
 const ROZILIK_KALIT = "mkb4-rozilik";
 
-function rozilikOqi(){
-  try{ const r = JSON.parse(localStorage.getItem(ROZILIK_KALIT) || "null"); return r && r.tahrir === HUJJAT_TAHRIR ? r : null; }
-  catch(_){ return null; }
+/* Qabul qilgan hisoblar shu qurilmada, tahrirlar bo'yicha:
+   {tahrirlar: {"1.0": {login: qabul sanasi}, "1.1": {...}}} — eski tahrir yozuvi saqlanadi.
+   Bu faqat qayta so'ramaslik belgisi: haqiqiy to'siq hisob yozuvidagi FOYDLAR.rozilik ga tayanadi. */
+function rozilikBarchasi(){
+  try{
+    const r = JSON.parse(localStorage.getItem(ROZILIK_KALIT) || "null");
+    if (!r || typeof r !== "object") return {tahrirlar: {}};
+    if (r.tahrirlar && typeof r.tahrirlar === "object") return {tahrirlar: r.tahrirlar};
+    /* eski ko'rinish: bitta tahrir — yo'qotmasdan yangi ko'rinishga o'tkaziladi */
+    const eski = r.loginlar && typeof r.loginlar === "object" ? r.loginlar
+      : (r.login ? {[String(r.login).toLowerCase()]: r.sana} : {});
+    return {tahrirlar: r.tahrir ? {[r.tahrir]: eski} : {}};
+  }catch(_){ return {tahrirlar: {}}; }
+}
+function rozilikSaqla(r){ try{ localStorage.setItem(ROZILIK_KALIT, JSON.stringify(r)); }catch(_){ } }
+function rozilikSanasi(login){
+  const l = String(login || "").trim().toLowerCase();
+  if (!l) return null;
+  return (rozilikBarchasi().tahrirlar[HUJJAT_TAHRIR] || {})[l] || null;
 }
 function rozilikYoz(login, sana){
-  try{ localStorage.setItem(ROZILIK_KALIT, JSON.stringify({tahrir: HUJJAT_TAHRIR, hujjatSana: HUJJAT_SANA, sana, login})); }
-  catch(_){ }
+  const l = String(login || "").trim().toLowerCase();
+  if (!l || !sana) return;
+  const r = rozilikBarchasi();
+  (r.tahrirlar[HUJJAT_TAHRIR] = r.tahrirlar[HUJJAT_TAHRIR] || {})[l] = sana;
+  rozilikSaqla(r);
+}
+/* Hisob yozuvida rozilik yo'q bo'lsa, qurilmadagi belgi ham olib tashlanadi */
+function rozilikOchir(login){
+  const l = String(login || "").trim().toLowerCase();
+  const r = rozilikBarchasi();
+  if (!l || !r.tahrirlar[HUJJAT_TAHRIR] || !(l in r.tahrirlar[HUJJAT_TAHRIR])) return;
+  delete r.tahrirlar[HUJJAT_TAHRIR][l];
+  rozilikSaqla(r);
+}
+/* Hisob yozuvidagi rozilik yozuvi joriy tahrirga tegishlimi */
+function rozilikJoriymi(f){ return !!(f && f.rozilik && f.rozilik.tahrir === HUJJAT_TAHRIR); }
+function bugungiSana(){
+  const d = new Date();
+  const ikki = n => String(n).padStart(2, "0");
+  return ikki(d.getDate()) + "." + ikki(d.getMonth() + 1) + "." + d.getFullYear();
 }
 
 (async () => {
@@ -187,7 +234,8 @@ function rozilikYoz(login, sana){
   const xavfsiz = q => (window.MKB_UX_SOF && MKB_UX_SOF.xavfsizQaytish) ? MKB_UX_SOF.xavfsizQaytish(q)
     : /^[a-z0-9-]+\.html(\?[^#\s<>"']*)?$/i.test(String(q || "")) && !/^(kirish|index|xato-)/.test(String(q));
   const manzil = rol => (qaytish && xavfsiz(qaytish) && sahifaRuxsatlimi(qaytish)) ? qaytish : rolBoshSahifasi(rol);
-  if (MKBapi.sessiya() && MKB.rol()){ location.replace(manzil(MKB.rol())); return; }
+  /* Ochiq sessiya ham to'g'ridan-to'g'ri o'tkazilmaydi: avval hisob yozuvidagi rozilik
+     tekshiriladi (quyida, rozilik bloki tayyor bo'lgandan keyin). */
 
   const forma = document.getElementById("kirish-forma");
   const login = document.getElementById("login");
@@ -200,6 +248,9 @@ function rozilikYoz(login, sana){
   const rozilikBlok = document.getElementById("rozilik-blok");
   const rozilikQabul = document.getElementById("rozilik-qabul-blok");
   const rozilikXato = document.getElementById("rozilik-xato");
+  const tugmaMatn = tugma.querySelector("span");
+  const rad = document.getElementById("rad-tugma");
+  let davom = null;               /* ochiq sessiyada faqat rozilik so'ralayotgan holat */
   /* Maydon ostidagi xato (yadro/ux.js); u hali yuklanmagan bo'lsa — umumiy xato qatori */
   const maydonXato = (el, m) => {
     if (MKB.maydonXato){ MKB.maydonXato(el, m); return; }
@@ -257,39 +308,92 @@ function rozilikYoz(login, sana){
   /* ---------- Oferta va maxfiylik bildirishnomasiga rozilik ----------
      Qabul qilingani hisob yozuviga (FOYDLAR.rozilik) yoziladi; shu brauzerda belgisi ham qoladi,
      shuning uchun tahrir o'zgarmaguncha qayta so'ralmaydi. */
-  const eskiRozilik = rozilikOqi();
-  const rozilikKerak = !eskiRozilik;
   document.getElementById("rozilik-versiya").textContent = HUJJAT_TAHRIR + " · " + HUJJAT_SANA;
-  document.getElementById("rozilik-qabul-versiya").textContent = HUJJAT_TAHRIR + " · " + HUJJAT_SANA;
-  rozilikBlok.hidden = !rozilikKerak;
-  rozilikQabul.hidden = rozilikKerak;
-  const rozilikBormi = () => !rozilikKerak || rozilik.checked;
-  const tugmaHolati = () => {
-    const ochiq = rozilikBormi();
-    tugma.classList.toggle("yopiq", !ochiq);
-    tugma.setAttribute("aria-disabled", String(!ochiq));
+  document.getElementById("rozilik-qabul-versiya").textContent = HUJJAT_TAHRIR;
+  /* Shu hisob shu qurilmada joriy tahrirni qabul qilgan bo'lsa, belgi o'rniga qabul qayd qatori chiqadi.
+     Belgi login bo'yicha yuritiladi: login o'zgarsa, rozilik qaytadan so'raladi. */
+  const rozilikBormi = () => !!rozilikSanasi(login.value) || rozilik.checked;
+  let oxirgiLogin = null;
+  const rozilikHolati = () => {
+    const l = login.value.trim().toLowerCase();
+    if (oxirgiLogin !== null && oxirgiLogin !== l) rozilik.checked = false;
+    oxirgiLogin = l;
+    const sana = davom ? null : rozilikSanasi(login.value);
+    if (sana) document.getElementById("rozilik-qabul-sana").textContent = sana;
+    rozilikQabul.hidden = !sana;
+    rozilikBlok.hidden = !!sana;
+    /* Tugma doim bosiladi. O'chirilgan tugma sababni aytolmaydi: shuning uchun sabab
+       rozilik blokida ochiq turadi va tugma unga aria-describedby bilan bog'lanadi. */
+    rozilikXato.hidden = rozilikBlok.hidden || rozilik.checked;
+    if (rozilikXato.hidden) rozilikXato.classList.remove("xato");
+    if (rozilikBlok.hidden) tugma.removeAttribute("aria-describedby");
+    else tugma.setAttribute("aria-describedby", "rozilik-xato");
+    tugma.classList.toggle("yopiq", !rozilikBormi());
   };
-  rozilik.addEventListener("change", () => { rozilikXato.hidden = true; tugmaHolati(); });
-  tugmaHolati();
+  const rozilikXatoKorsat = () => {
+    rozilikXato.hidden = false;
+    rozilikXato.classList.add("xato");
+    tarjimaQil(rozilikXato);
+    rozilik.focus();
+  };
+  rozilik.addEventListener("change", rozilikHolati);
+  ["input", "change", "blur"].forEach(h => login.addEventListener(h, rozilikHolati));
+  rozilikHolati();
 
-  /* Hisob yozuviga rozilik belgisi: maydon yadro sxemasida ruxsat etilgan bo'lsa yoziladi */
-  const rozilikMaydoniBor = () => {
-    const D = window.MKB_DATA || {};
-    return !!((D.QOSHIMCHA_MAYDONLAR || {}).FOYDLAR || {}).rozilik;
-  };
+  /* Rozilikni hisob yozuviga (FOYDLAR.rozilik) yozish — asosiy qayd shu, amallar tarixiga ham tushadi.
+     Qaytaradi: "ok" — yozuvda joriy tahrir bor; "sora" — rozilik hali olinmagan; "xato" — yozib bo'lmadi. */
   const rozilikniYoz = async s => {
-    const bugun = new Date();
-    const ikki = n => String(n).padStart(2, "0");
-    const sana = ikki(bugun.getDate()) + "." + ikki(bugun.getMonth() + 1) + "." + bugun.getFullYear();
-    rozilikYoz(s.login, sana);
-    if (!rozilikMaydoniBor() || !s.id) return;
+    if (!s || !s.id) return "ok";
     const f = await MKBapi.bitta("FOYDLAR", s.id).catch(() => null);
-    if (f && f.rozilik && f.rozilik.tahrir === HUJJAT_TAHRIR) return;
-    await MKBapi.yangilash("FOYDLAR", s.id, {rozilik: {tahrir: HUJJAT_TAHRIR, hujjatSana: HUJJAT_SANA, sana}}).catch(() => null);
+    if (rozilikJoriymi(f)){ rozilikYoz(s.login, f.rozilik.sana || bugungiSana()); return "ok"; }
+    if (!rozilik.checked){ rozilikOchir(s.login); return "sora"; }
+    const sana = bugungiSana();
+    const yangi = {tahrir: HUJJAT_TAHRIR, hujjatSana: HUJJAT_SANA, sana};
+    /* Eski tahrirdagi qabul o'chirilmaydi — tarixga ko'chadi */
+    const tarix = (f && f.rozilik ? [].concat(f.rozilik.tarix || [], [f.rozilik]) : [])
+      .map(q => ({tahrir: q && q.tahrir, hujjatSana: q && q.hujjatSana, sana: q && q.sana}))
+      .filter(q => [q.tahrir, q.hujjatSana, q.sana].every(v => typeof v === "string" && v && v.length <= 40));
+    if (tarix.length) yangi.tarix = tarix.slice(-30);
+    const yozildi = await MKBapi.yangilash("FOYDLAR", s.id, {rozilik: yangi}).then(() => true).catch(() => false);
+    if (!yozildi) return "xato";
+    rozilikYoz(s.login, sana);
+    return "ok";
   };
 
-  /* Namoyish rejimi: hisoblar FOYDLAR dan, faqat faol hisoblar */
-  if (rejim === "snapshot"){
+  /* Ochiq sessiyada hujjat tahriri yangilangan bo'lsa: panelga o'tishdan oldin rozilik so'raladi */
+  function davomRejimi(s){
+    davom = s || null;
+    if (!davom) return;
+    forma.querySelectorAll(".maydon").forEach(m => { m.hidden = true; });
+    login.value = davom.login || "";
+    oxirgiLogin = null;
+    document.getElementById("namoyish").hidden = true;
+    document.querySelector(".k-karta h1").textContent = "Hujjatlarni qabul qilish";
+    document.getElementById("kirish-izoh").textContent = "Hujjatlar yangilandi. Ishni davom ettirish uchun ularni qabul qiling.";
+    rozilikXato.querySelector("span").textContent = "Davom etish uchun hujjatlarni qabul qiling";
+    tugmaMatn.textContent = "Davom etish";
+    document.getElementById("k-past-izoh").hidden = true;
+    document.getElementById("parol-tiklash-havola").hidden = true;
+    rad.hidden = false;
+    rozilikHolati();
+    tarjimaQil(document.querySelector(".k-karta"));
+  }
+  rad.addEventListener("click", () => { MKBapi.chiqish(); location.reload(); });
+
+  /* Ochiq sessiya: hisob yozuvida joriy tahrirga rozilik bo'lsagina panelga o'tkaziladi */
+  const ochiqSessiya = MKBapi.sessiya();
+  if (ochiqSessiya && MKB.rol()){
+    let oqildi = true;
+    const f0 = ochiqSessiya.id ? await MKBapi.bitta("FOYDLAR", ochiqSessiya.id).catch(() => { oqildi = false; return null; }) : null;
+    if (rozilikJoriymi(f0)) rozilikYoz(ochiqSessiya.login, f0.rozilik.sana || bugungiSana());
+    /* Yozuvni o'qib bo'lmasa ish to'xtatilmaydi: rozilik keyingi kirishda so'raladi */
+    if (!oqildi || !ochiqSessiya.id || rozilikJoriymi(f0)){ location.replace(manzil(MKB.rol())); return; }
+    rozilikOchir(ochiqSessiya.login);
+    davomRejimi(ochiqSessiya);
+  }
+
+  /* Namoyish rejimi: hisoblar FOYDLAR dan, faqat faol hisoblar (rozilik so'ralayotganda ko'rsatilmaydi) */
+  if (rejim === "snapshot" && !davom){
     const F = (await MKBapi.royxat("FOYDLAR")).filter(f => f.faol !== false && f.login);
     const tartib = Object.keys(ROL_KALIT);
     const birinchi = {};
@@ -307,7 +411,8 @@ function rozilikYoz(login, sana){
         parol.value = MKBapi.NAMOYISH_PAROL;
         [login, parol].forEach(m => maydonXato(m, null));
         umumiyXato("");
-        (rozilikKerak && !rozilik.checked ? rozilik : tugma).focus();
+        rozilikHolati();
+        (rozilikBormi() ? tugma : rozilik).focus();
       });
       document.getElementById("namoyish").hidden = false;
       tarjimaQil(document.getElementById("namoyish"));
@@ -316,17 +421,20 @@ function rozilikYoz(login, sana){
 
   forma.addEventListener("submit", async e => {
     e.preventDefault();
-    const l = login.value.trim();
     umumiyXato("");
+    /* Ochiq sessiya: login va parol so'ralmaydi, faqat rozilik olinadi */
+    if (davom){
+      if (!rozilik.checked){ rozilikXatoKorsat(); return; }
+      const holat = await MKB.band(tugma, () => rozilikniYoz(davom));
+      if (holat === "ok"){ location.replace(manzil(MKB.rol())); return; }
+      umumiyXato("Rozilik qayd etilmadi. Qayta urinib ko'ring");
+      return;
+    }
+    const l = login.value.trim();
     maydonXato(login, l ? null : "Loginni kiriting");
     maydonXato(parol, parol.value ? null : "Parolni kiriting");
     if (!l || !parol.value){ (!l ? login : parol).focus(); return; }
-    if (!rozilikBormi()){
-      rozilikXato.hidden = false;
-      tarjimaQil(rozilikXato);
-      rozilik.focus();
-      return;
-    }
+    if (!rozilikBormi()){ rozilikXatoKorsat(); return; }
     let s;
     try{
       s = await MKB.band(tugma, () => MKBapi.kirish(l, parol.value));
@@ -338,7 +446,14 @@ function rozilikYoz(login, sana){
     }
     const rol = MKB.rol();
     if (!rol){ MKBapi.chiqish(true); umumiyXato("Hisobingizga rol biriktirilmagan. Administratorga murojaat qiling"); return; }
-    await rozilikniYoz(s || MKBapi.sessiya() || {});
+    const holat = await rozilikniYoz(s || MKBapi.sessiya() || {});
+    if (holat === "sora"){
+      /* Hisob yozuvida joriy tahrirga rozilik yo'q: brauzerdagi belgi to'siq bo'la olmaydi */
+      davomRejimi(MKBapi.sessiya() || s);
+      rozilikXatoKorsat();
+      return;
+    }
+    if (holat === "xato"){ umumiyXato("Rozilik qayd etilmadi. Qayta urinib ko'ring"); return; }
     location.replace(manzil(rol));
   });
 })();

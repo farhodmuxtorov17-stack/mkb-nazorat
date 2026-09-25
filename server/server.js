@@ -652,9 +652,16 @@ function chiqimXatosi(o, s, obyektId){
   return ozi ? "O'z so'rovingizni o'zingiz tasdiqlay olmaysiz" : null;
 }
 
-/* Xodim o'z hisobida faqat shu maydonlarni o'zgartiradi (sozlamalar: aloqa, o'rinbosar, sayohatlar, bildirishnomalar) */
-const OZ_MAYDONLAR = ["tel", "email", "orinbosar", "sayohatlar", "bildirishSozlama"];
+/* Xodim o'z hisobida faqat shu maydonlarni o'zgartiradi
+   (sozlamalar: aloqa, o'rinbosar, sayohatlar, bildirishnomalar; kirish sahifasi: hujjatlarga rozilik) */
+const OZ_MAYDONLAR = ["tel", "email", "orinbosar", "sayohatlar", "bildirishSozlama", "rozilik"];
 const SAYOHAT_HOLAT = ["tugadi", "otkazildi", "yarim"];
+/* Rozilik yozuvi: {tahrir, hujjatSana, sana} va eski tahrirlar tarixi */
+function rozilikQatoriTogrimi(v){
+  if (!oddiyObyektmi(v)) return false;
+  if (Object.keys(v).some(k => !["tahrir", "hujjatSana", "sana"].includes(k))) return false;
+  return ["tahrir", "hujjatSana", "sana"].every(k => typeof v[k] === "string" && v[k].length > 0 && v[k].length <= 40);
+}
 function sanaTogrimi(v){ const m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(String(v || "")); return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null; }
 async function ozYozuvIstisnosi(o, s, req, id){
   const x = (o.D.FOYDLAR || []).find(f => f && String(f.id) === String(id) && !f.__ochirilgan);
@@ -663,7 +670,15 @@ async function ozYozuvIstisnosi(o, s, req, id){
   if (!oddiyObyektmi(t)) return {xato: "o'zgarish obyekt bo'lishi kerak"};
   delete t.id;
   const ortiqcha = Object.keys(t).filter(k => !OZ_MAYDONLAR.includes(k));
-  if (ortiqcha.length) return {xato: "o'z hisobingizda faqat aloqa, o'rinbosar, sayohatlar va bildirishnoma sozlamasi o'zgaradi", kod: 403};
+  if (ortiqcha.length) return {xato: "o'z hisobingizda faqat aloqa, o'rinbosar, sayohatlar, bildirishnoma sozlamasi va hujjatlarga rozilik o'zgaradi", kod: 403};
+  if ("rozilik" in t && t.rozilik !== null){
+    const r = t.rozilik;
+    if (!oddiyObyektmi(r) || Object.keys(r).some(k => !["tahrir", "hujjatSana", "sana", "tarix"].includes(k)) ||
+        !rozilikQatoriTogrimi({tahrir: r.tahrir, hujjatSana: r.hujjatSana, sana: r.sana}))
+      return {xato: "rozilik yozuvi noto'g'ri"};
+    if ("tarix" in r && (!Array.isArray(r.tarix) || r.tarix.length > 30 || !r.tarix.every(rozilikQatoriTogrimi)))
+      return {xato: "rozilik tarixi noto'g'ri"};
+  }
   if ("bildirishSozlama" in t && t.bildirishSozlama !== null){
     const b = t.bildirishSozlama;
     if (!oddiyObyektmi(b) || Object.keys(b).some(k => k !== "olinmaydi") || !Array.isArray(b.olinmaydi) ||

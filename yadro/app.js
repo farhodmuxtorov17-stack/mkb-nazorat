@@ -202,10 +202,11 @@ function birXilApostrof(m){ return m.replace(/[’ʼʻ`´]/g, "'"); }
   if (!Array.isArray(window.MKB_TARJIMA_QOIDALARI)) return;
   const tq = s => typeof window.mkbQism === "function" ? window.mkbQism(s) : s;
   const nom = s => String(s).split(", ").map(tq).join(", ");
-  const POLIS = {mulk: "имущество", OSAGO: "ОСАГО", XICHO: "ОСГОР"};
+  const POLIS = {"Mol-mulk": "имущество", mulk: "имущество", OSAGO: "ОСАГО", "Xavfli obyekt (XICHO)": "Опасный объект (ОСГОР)", XICHO: "ОСГОР"};
   window.MKB_TARJIMA_QOIDALARI.unshift(
     [/^Bildirishnomalar: (\d+) ta o['’ʻʼ`]qilmagan$/, "Уведомления: $1 непрочитанных"],
-    [/^Umidsiz toifagacha (\d+) kun qoldi$/, "До безнадёжной категории осталось $1 дн."],
+    [/^Sizni kutmoqda: (\d+)$/, "Ожидает вас: $1"],
+    [/^Me['’ʻʼ`]yoriy muddatgacha (\d+) kun qoldi$/, "До истечения нормативного срока осталось $1 дн."],
     [/^Sug['’ʻʼ`]urta polisi (\d+) kunda tugaydi$/, "Страховой полис истекает через $1 дн."],
     [/^Baholash (\d+) kunda eskiradi$/, "Оценка устареет через $1 дн."],
     [/^Qurilma (\d+) soatdan beri aloqasiz$/, "Устройство без связи $1 ч"],
@@ -359,8 +360,8 @@ function birXilApostrof(m){ return m.replace(/[’ʼʻ`´]/g, "'"); }
     [/^So['’ʻʼ`]rov (\S+) Rahbariyatga yuborildi$/, "Запрос $1 направлен руководству"],
     [/^Qaror (\S+) ish (\S+) ga kiritildi$/, "Решение $1 внесено в дело $2"],
     [/^Nazorat muddati (\S+) ga belgilandi$/, "Контрольный срок установлен на $1"],
-    [/^Hodisa (\S+) hal qilindi$/, "Инцидент $1 решён"],
-    [/^Hodisa (\S+) yopildi$/, "Инцидент $1 закрыт"],
+    [/^Hodisa (\S+) hal qilindi$/, "Происшествие $1 решено"],
+    [/^Hodisa (\S+) yopildi$/, "Происшествие $1 закрыто"],
     [/^Ariza (\S+) yopildi$/, "Заявка $1 закрыта"],
     [/^Bosqich o['’ʻʼ`]zgaradi: (.+?) → (.+?)\.(?: (.+))?$/, (_, a, b, c) => "Этап изменится: " + tq(a) + " → " + tq(b) + "." + (c ? " " + tq(c) : "")],
     [/^(Rol|Filial) o['’ʻʼ`]zgaradi: (.+?) → (.+?)\.$/, (_, t, a, b) => (t === "Rol" ? "Роль изменится: " : "Филиал изменится: ") + tq(a) + " → " + tq(b) + "."]
@@ -465,7 +466,8 @@ function huquqQolla(joy){
 /* ---------- Ikonka yordamchisi ----------
    Sprite belgilari "ik-" bilan boshlanadi. Ma'lumotdagi "i-bino" kabi eski nomlar ham qabul qilinadi. */
 /* Eski yoki spriteda yo'q nomlar (saqlangan bildirishnomalarda uchraydi) */
-const IK_TAXALLUS = {nom: "hujjat", nfc: "signal", kul: "info", asos: "info", bolg: "qurilma", tarozi: "karta-pul", aktiv: "aktivlar"};
+const IK_TAXALLUS = {nom: "hujjat", kul: "info", asos: "info", bolg: "qurilma", aktiv: "aktivlar",
+  oshish: "foiz", orqa: "orqaga", suv: "tomchi", akkumulyator: "batareya"};
 function ikNomi(nom){
   const n = String(nom || "").replace(/^#?(ik|i)-/, "");
   return IK_TAXALLUS[n] || n;
@@ -491,7 +493,11 @@ function D_(){ return window.MKB_DATA || {}; }
 function namoyishmi(){ return D_().MANBA !== "mahalliy"; }
 
 /* ---------- Qobiq chizish ---------- */
-/* Bank belgisi: kirish.html dagi bilan bir xil */
+/* Bank belgisi: kirish.html:97-100 dagi bilan bir xil uch yo'l va uch rang.
+   Ranglar SVG ning fill atributida xom hex bo'lib turadi — atributda var() yechilmaydi,
+   tokenga almashtirilsa belgi jimgina rangsiz qoladi. Belgi o'zgarsa, ikkala nusxa ham
+   birga yangilanadi; kirish ekranida u sahifa bilan darrov chiziladi, shuning uchun
+   u yerda markupda qoladi. */
 const LOGO_SVG =
   '<svg width="22" height="22" viewBox="0 0 44 44" aria-hidden="true">' +
   '<path d="M4 34 L4 8 L16 19 L16 39 Z" fill="#37A72E"/>' +
@@ -545,6 +551,99 @@ function yonBandlar(rol){
   return r.slice(0, ROL_YON_MAX);
 }
 
+/* ---------- Yon paneldagi hisoblagichlar ----------
+   Bo'lim bandining o'ng chetidagi kichik son: shu xodimni shu bo'limda kutayotgan ishlar.
+   Har bir son haqiqiy yozuvlardan sanaladi (MKBapi to'plamlari, filial doirasi bilan), hech qayerda
+   qo'lda yozilmaydi. Nol bo'lsa belgi umuman chizilmaydi, 99 dan ortig'i "99+" bo'lib ko'rinadi. */
+const YON_SON_CHEK = 99;
+function yonSonlar(){
+  const D = D_(), s = joriySessiya();
+  if (!s || !D || !D.sanaOqi || !D.kunFarqi) return {};
+  const b = MKB.bugun();
+  const B = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+  const oqi = x => D.sanaOqi(x);
+  const otgan = x => { const d = oqi(x); return !!d && d < B; };
+  const bugunYokiOtgan = x => { const d = oqi(x); return !!d && d <= B; };
+  const doira = r => MKB.doira(Array.isArray(r) ? r : []);
+  const r = {};
+  const qosh = (kalit, n) => { if (n > 0) r[kalit] = (r[kalit] || 0) + n; };
+
+  /* Ishlar va qarorlar: shu xodim o'zi hal qila oladigan so'rovlar (o'z so'rovi sanalmaydi) va
+     muddati bugun yoki undan oldin bo'lgan o'z vazifalari (keyinga qoldirilgani sanalmaydi) */
+  if (MKB.tasdiq && typeof MKB.tasdiq.mumkinmi === "function")
+    qosh("ishlar", doira(D.TASDIQLAR).filter(t => t && t.holat === "kutilmoqda" && MKB.tasdiq.mumkinmi(t)).length);
+  qosh("ishlar", doira(D.MENING_VAZIFALARIM).filter(v => v && !v.bajarildi &&
+    (v.ijrochi ? v.ijrochi === s.ism : v.rol === s.rol) &&
+    !(v.qoldirish && oqi(v.qoldirish) > B) && bugunYokiOtgan(v.muddat)).length);
+
+  /* Nazorat va himoya: shu inspektorga tayinlangan kechikkan ko'riklar va shu xodim mas'ul ochiq hodisalar */
+  if (!MKB.kolYopiqmi("KORIKLAR"))
+    qosh("nazorat", doira(D.KORIKLAR).filter(k => k && k.holat !== "otkazildi" && k.inspektor === s.ism &&
+      (k.holat === "kechikkan" || otgan(k.sana))).length);
+  if (typeof D.ochiqHodisami === "function")
+    qosh("nazorat", doira(D.HODISALAR).concat(doira(D.XAVFSIZLIK_HODISALARI))
+      .filter(h => h && h.masul === s.ism && D.ochiqHodisami(h)).length);
+
+  /* Balans aktivlari: shu xodim mas'ul bo'lgan, huquqi hali rasmiylashtirilmagan obyektlar */
+  qosh("aktivlar", doira(D.YOZUVLAR).filter(y => y && y.masul === s.ism && y.holat === "Rasmiylashtirilmoqda").length);
+
+  /* Sotuv va undiruv: ko'rib chiqilmagan yangi takliflar — sotuvda yozish huquqi bor xodimning ishi */
+  if (MKB.huquq("sotuv", "yoz"))
+    qosh("sotuv", doira(D.TAKLIFLAR).filter(t => t && t.holat === "yangi").length);
+
+  /* Sotuv va undiruv: kechikkan to'lovi bor shartnoma va ijara — to'lovni belgilaydigan
+     xodimning navbati (buxgalteriya va sotuvda yozish huquqi bor xodim) */
+  if (MKB.tolovBelgilaydimi && MKB.tolovBelgilaydimi())
+    qosh("sotuv", doira(D.SHARTNOMALAR).filter(sh => sh && (sh.jadval || [])
+        .some(j => j && !j.tolandi && otgan(j.sana))).length +
+      doira(D.IJARA).filter(i => i && (i.tolovlar || []).some(t => t && !t.tolandi)).length);
+
+  /* Qiymat va moliyada hisoblagich yo'q: eskirgan baholash va tugagan polis — portfel bo'yicha
+     turg'un qoldiq, bitta xodimni kutayotgan navbat emas. Baholashni tasdiqlash so'rovi esa
+     "Ishlar va qarorlar" sonida bir marta sanaladi. */
+
+  /* Hisobotlar: topshirilmagan Markaziy bank hisoboti (muddatiga 10 kundan kam qolgan yoki o'tgan) */
+  if (MKB.huquq("hisobot", "yoz") && !MKB.filialXodimi())
+    qosh("hisobot", (D.MB_HISOBOTLAR || []).filter(h => {
+      if (!h || h.holat === "topshirilgan") return false;
+      const d = oqi(h.muddat);
+      return !!d && D.kunFarqi(B, d) <= 10;
+    }).length);
+  return r;
+}
+/* Belgi HTML: ko'rinadigan son tarjima qilinmaydi, ekran o'quvchiga to'liq ibora aytiladi */
+function yonSonHTML(n){
+  if (!(n > 0)) return "";
+  const korinish = n > YON_SON_CHEK ? YON_SON_CHEK + "+" : String(n);
+  return '<span class="yon-son" title="Sizni kutmoqda: ' + n + '"><span aria-hidden="true" data-tarjimasiz>' + korinish +
+    '</span><span class="sr-only">Sizni kutmoqda: ' + n + "</span></span>";
+}
+/* Ommaviy amalda (bir necha o'nlab yozuv) hisob bir marta qayta ishlanadi */
+let yonSonKutish = null;
+function yonSonlariniYangilaKeyin(){
+  if (yonSonKutish) return;
+  yonSonKutish = setTimeout(() => { yonSonKutish = null; yonSonlariniYangila(); }, 150);
+}
+/* Sonlarni joyida yangilaydi: yon panel qayta chizilmaydi, ochilgan guruh ochiq qoladi */
+function yonSonlariniYangila(){
+  const el = document.getElementById("yon");
+  if (!el) return;
+  let sonlar = {};
+  try{ sonlar = yonSonlar(); }catch(_){ sonlar = {}; }
+  el.querySelectorAll(".yon-bandlar [data-bolim]").forEach(band => {
+    const n = sonlar[band.dataset.bolim] || 0;
+    const eski = band.querySelector(".yon-son");
+    const yangi = yonSonHTML(n);
+    if (!yangi){ if (eski) eski.remove(); return; }
+    if (eski && eski.outerHTML === yangi) return;
+    if (eski) eski.remove();
+    band.insertAdjacentHTML("beforeend", yangi);
+    /* bandning o'zidan boshlanadi: tarjimaQil atributlarni faqat ildiz ichidan qidiradi,
+       shuning uchun .yon-son ning title'i ildiz sifatida berilsa o'girilmay qolardi */
+    tarjimaQil(band);
+  });
+}
+
 function yonChiz(){
   const el = document.getElementById("yon");
   if (!el) return;
@@ -553,11 +652,14 @@ function yonChiz(){
   const joriyFayl = faylNomi();
   const daraxt = window.MKB_DARAXT || {};
 
+  let sonlar = {};
+  try{ sonlar = yonSonlar(); }catch(_){ sonlar = {}; }
   /* Yassi band: bir bo'lim — bir havola */
   const bandHTML = b => {
     const ochiq = b.kalit === bolim;
-    return '<a class="yon-band' + (ochiq ? " faol" : "") + '" href="' + b.havola + '"' +
-      (ochiq ? ' aria-current="page"' : "") + ">" + ik(b.ikonka) + "<span>" + b.yorliq + "</span></a>";
+    return '<a class="yon-band' + (ochiq ? " faol" : "") + '" href="' + b.havola + '" data-bolim="' + esc(b.kalit) + '"' +
+      (ochiq ? ' aria-current="page"' : "") + ">" + ik(b.ikonka) + "<span>" + b.yorliq + "</span>" +
+      yonSonHTML(sonlar[b.kalit] || 0) + "</a>";
   };
   /* Pastki blok (Sozlamalar) bugungidek ochiladigan guruh bo'lib qoladi */
   const guruhHTML = (kalit, yorliq, ikonka) => {
@@ -598,6 +700,30 @@ function yonChiz(){
   }));
   const ch = document.getElementById("chiqish-tugma");
   if (ch) ch.addEventListener("click", () => tizimdanChiqish());
+  yonSonlariniUlash();
+}
+
+/* Hisoblagichlar ma'lumot o'zgarganda yangilanadi: har bir MKBapi yozuvidan keyin, sahifaga
+   qaytilganda va yon panel ochilganda. Bir marta ulanadi. */
+let yonSonUlangan = false;
+function yonSonlariniUlash(){
+  if (yonSonUlangan) return;
+  yonSonUlangan = true;
+  if (window.MKBapi) ["yangi", "yangilash", "ochir", "tiklash"].forEach(nom => {
+    const asl = MKBapi[nom];
+    if (typeof asl !== "function" || asl.__yonSon) return;
+    const orama = function(){
+      const p = asl.apply(MKBapi, arguments);
+      if (p && typeof p.then === "function") p.then(() => yonSonlariniYangilaKeyin(), () => {});
+      else yonSonlariniYangilaKeyin();
+      return p;
+    };
+    orama.__yonSon = true;
+    MKBapi[nom] = orama;
+  });
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") yonSonlariniYangila(); });
+  window.addEventListener("pageshow", () => yonSonlariniYangila());
+  document.addEventListener("mkb:rejim", () => yonSonlariniYangila());
 }
 
 /* ?bugun= bilan qotirilgan sana: rejim belgisi yonida eslatma, bosilsa haqiqiy sanaga qaytadi */
@@ -671,15 +797,23 @@ function shapkaChiz(){
   const til = joriyTil();
   const rol = joriyRolKalit();
   const bolim = joriyBolim();
-  const tezkor = BOLIMLAR.filter(b => bolimRuxsatlimi(b.kalit, rol)).slice(0, 3);
+  /* Shapkadagi tezkor pillalar yon panelning o'zidan olinadi: shu rolning birinchi uchta bandi.
+     Shunda shapka va yon panel bitta manbadan keladi — buxgalteriya shapkada "Moliya" ni ko'radi,
+     o'zida umuman yo'q "Nazorat" ni emas. */
+  const tezkor = yonBandlar(rol).slice(0, 3).map(b => {
+    const asos = BOLIMLAR.find(x => x.kalit === b.kalit) || {};
+    const maxsus = BOLIM_YORLIQ_ROL[b.kalit] && BOLIM_YORLIQ_ROL[b.kalit][rol];
+    return {kalit: b.kalit, href: b.havola, yorliq: b.yorliq, qisqa: maxsus || asos.qisqa || b.yorliq, ikonka: b.ikonka};
+  });
 
   el.innerHTML =
     '<button type="button" class="doira-tugma menyu-tugma" id="menyu-tugma" aria-label="Menyu" aria-expanded="false" aria-controls="yon">' + ik("menyu") + "</button>" +
     '<nav class="pill-nav" aria-label="Tezkor bo\'limlar">' +
       tezkor.map(b => {
-        const manzil = b.kalit === "panel" ? rolBoshSahifasi(rol) : b.href;
+        const manzil = b.href;
+        /* Belgi yon paneldagi bo'lim belgisi bilan bir xil: bir qarashda taniladi */
         return '<a class="pill' + (b.kalit === bolim ? " faol" : "") + '" href="' + manzil + '" title="' + esc(b.yorliq) + '"' +
-          (b.kalit === bolim ? ' aria-current="true"' : "") + ">" + b.qisqa + "</a>";
+          (b.kalit === bolim ? ' aria-current="true"' : "") + ">" + ik(b.ikonka) + "<span>" + b.qisqa + "</span></a>";
       }).join("") +
     "</nav>" +
     '<div class="shapka-ong">' +
@@ -987,6 +1121,24 @@ function qongiroqYangila(){
 /* ---------- Obyekt surati: haqiqiy surat yoki halol bo'sh holat ---------- */
 const TUR_BELGI = {mamuriy: "bino", kopqavat: "aktivlar", uy: "uy", dokon: "dokon", sex: "zavod", ombor: "ombor",
   ferma: "ferma", issiqxona: "ferma", uskuna: "uskuna", avto: "avto", yuk: "mashina", texnika: "mashina"};
+/* Surat izohi: alt matni va ko'rinadigan manba qatori.
+   Namuna suratlari ochiq litsenziyali (CC BY, CC BY-SA), muallif va litsenziya ekranda
+   surat yonida turishi shart — assets/namuna/MANBA.md shuni talab qiladi. */
+function suratAlt(m){
+  m = m || {};
+  /* alt atributi tarjimaQil bilan o'girilmaydi, shuning uchun unga faqat ma'lumotdan
+     kelgan (o'z tilida chiziladigan) qiymatlar yoziladi. «Namuna surati» esa surat
+     ostidagi ko'rinadigan manba qatorida turadi. */
+  return [m.qisqa || m.nom || "", m.tur || "", m.hudud || ""].filter(Boolean).join(", ");
+}
+/* rasmManba: "Namuna surati · Muallif, litsenziya · Wikimedia Commons".
+   Matn bitta tugunda qoladi: tarjima.js dagi qoida birinchi bo'lakni o'giradi,
+   muallif va litsenziya o'zgarmaydi (shu sababli muallif ismi lug'atga kalit bo'lmaydi). */
+function suratManbaQatori(manba, sinf){
+  if (!manba) return "";
+  return '<p class="surat-manba' + (sinf ? " " + sinf : "") + '">' + esc(manba) + "</p>";
+}
+
 function suratYoqHTML(tur, o){
   o = o || {};
   const mahalliy = !namoyishmi();
@@ -2000,6 +2152,10 @@ const MKB = {
   bildirish: {oqildimi: b => bildirishOqildimi(b), oqildi: x => bildirishOqildiDeb(x), oqilmaganlar: () => oqilmaganlar(),
     /* {olinmaydi: [qoidaId]} · await MKB.bildirish.sozlamaYoz({olinmaydi}) — o'z yozuviga saqlanadi (server OZ_MAYDONLAR) */
     sozlama: () => bildirishSozlama(), sozlamaYoz: x => bildirishSozlamaYoz(x)},
+  /* Yon paneldagi hisoblagichlar: MKB.yonSonlar() — {bolim: son}, MKB.yonSonYangila() — belgilarni qayta chizadi.
+     MKBapi orqali yozilgandan keyin o'zi yangilanadi; sahifa boshqa yo'l bilan o'zgartirsa shu funksiyani chaqiradi. */
+  yonSonlar: () => { try{ return yonSonlar(); }catch(_){ return {}; } },
+  yonSonYangila: () => yonSonlariniYangila(),
   /* To'lov jadvaliga belgi (IJARA.tolovlar, SHARTNOMALAR.jadval): realizatsiyada yozish huquqi yoki Buxgalteriya va risk
      (server TOLOV_ISTISNO bilan bir xil: buxgalteriya faqat to'lov maydonlari va holatni o'zgartiradi) */
   tolovBelgilaydimi(){ return MKB.huquq("sotuv", "yoz") || joriyRolKalit() === "buxgalteriya"; },
@@ -2128,9 +2284,13 @@ const MKB = {
     const tur = m.rasmTuri || "";
     if (!yol) return suratYoqHTML(tur, {kichik: o.kichik, sinf: o.sinf, id: o.id, obyektId: m.id});
     const man = suratManzili(yol);
+    /* Namuna surati har joyda shunday deb belgilanadi: manba matni (muallif va litsenziya bilan)
+       sichqoncha ostida ko'rinadi, obyekt kartochkasida esa kadr ustiga yorliq chiziladi (fotoShapka). */
+    const manba = m.rasmManba ? esc(m.rasmManba) : "";
     return '<img class="obyekt-surat' + (o.sinf ? " " + esc(o.sinf) : "") + '"' + (o.id ? ' id="' + esc(o.id) + '"' : "") +
+      (manba ? ' title="' + manba + '" data-namuna="1"' : "") +
       (man.fayl ? ' data-fayl="' + esc(man.fayl) + '"' : ' src="' + esc(man.src) + '"') +
-      ' alt="' + esc(m.qisqa || m.nom || "") + '" loading="lazy" decoding="async" data-tur="' + esc(tur) + '"' +
+      ' alt="' + esc(suratAlt(m)) + '" loading="lazy" decoding="async" data-tur="' + esc(tur) + '"' +
       (o.kichik ? ' data-kichik="1"' : "") + (o.sinf ? ' data-sinf="' + esc(o.sinf) + '"' : "") + (m.id ? ' data-obyekt="' + esc(m.id) + '"' : "") +
       ' onerror="MKB.suratYoq(this)" onload="MKB.suratShakli(this)">';
   },
@@ -2148,6 +2308,7 @@ const MKB = {
     if (img && img.naturalHeight > img.naturalWidth * 1.05) img.classList.add("tik");
   },
   suratlar: obyektSuratlari,
+  suratManbasi: suratManbaQatori,
 
   /* Obyekt kartochkasi sarlavhasi: surat, holat, nom, manzil, nazorat indeksi.
      joy — section.foto-shapka (ko'rsatilmasa sahifadagi birinchisi) */
@@ -2182,14 +2343,16 @@ const MKB = {
       const src = man.fayl ? ' data-fayl="' + esc(man.fayl) + '"' : ' src="' + esc(man.src) + '"';
       fon = '<img class="fs-fon"' + src + ' alt="" aria-hidden="true">';
       kadr = '<button type="button" class="fs-surat" data-fs-galereya aria-label="Suratni kattalashtirish">' +
-        '<img' + src + ' alt="' + esc(nom) + '" data-tur="' + esc(x.rasmTuri || "") + '" data-kichik="1" onload="MKB.suratShakli(this)" onerror="MKB.suratYoq(this)">' +
+        '<img' + src + ' alt="' + esc(suratAlt(x)) + '" data-tur="' + esc(x.rasmTuri || "") + '" data-kichik="1" onload="MKB.suratShakli(this)" onerror="MKB.suratYoq(this)">' +
+        (x.rasmManba ? '<span class="fs-namuna" title="' + esc(x.rasmManba) + '">' + ik("foto") + "<span>Namuna surat</span></span>" : "") +
         (obyektSuratlari(x).length > 1 ? '<span class="fs-soni">' + ik("galereya") + obyektSuratlari(x).length + "</span>" : "") + "</button>";
     }
     el.innerHTML = fon +
       '<div class="fs-ich">' + kadr +
         '<div class="fs-matn"><div class="fs-chiplar">' + holat + tur + "</div>" +
           "<h2>" + esc(nom) + "</h2>" +
-          '<div class="fs-meta"><span class="kod-mono" data-tarjimasiz>' + esc(x.id || "") + "</span>" + (manzil ? " · " + esc(manzil) : "") + "</div></div>" +
+          '<div class="fs-meta"><span class="kod-mono" data-tarjimasiz>' + esc(x.id || "") + "</span>" + (manzil ? " · " + esc(manzil) : "") + "</div>" +
+          suratManbaQatori(surat ? x.rasmManba : null, "fs-manba") + "</div>" +
         halqa + "</div>";
     const g = el.querySelector("[data-fs-galereya]");
     if (g) g.addEventListener("click", () => MKB.galereya(x, 0));
@@ -2352,7 +2515,7 @@ const MKB = {
     return {yukla};
   },
 
-  /* Me'yoriy muddatlar lentasi: qabul -> soliq imtiyozi -> umidsiz -> 3 yil */
+  /* Me'yoriy muddatlar lentasi: qabul -> soliq imtiyozi -> me'yoriy muddat -> 3 yil */
   muddatLenta(m){
     const D = D_();
     const h = D.muddatHisobi ? D.muddatHisobi(m) : null;
@@ -2364,15 +2527,15 @@ const MKB = {
     const nuqtalar = [
       {nom: "Balansga qabul", sana: h.balansSana},
       {nom: "Soliq imtiyozi tugaydi", sana: h.soliqImtiyozTugash},
-      {nom: h.chegaraKun >= 1095 ? "1 yil" : "Umidsiz toifa, 100% zaxira", sana: h.umidsizSana, xavf: h.chegaraKun < 1095},
-      {nom: h.chegaraKun >= 1095 ? "Umidsiz toifa, 100% zaxira" : "3 yil", sana: h.uchYilSana, xavf: h.chegaraKun >= 1095},
+      {nom: h.chegaraKun >= 1095 ? "1 yil" : "Me'yoriy muddat tugaydi, zaxira 100%", sana: h.umidsizSana, xavf: h.chegaraKun < 1095},
+      {nom: h.chegaraKun >= 1095 ? "Me'yoriy muddat tugaydi, zaxira 100%" : "3 yil", sana: h.uchYilSana, xavf: h.chegaraKun >= 1095},
     ].filter(n => n.sana);
     const b = joy(bugun);
     const holat = (D.MUDDAT_HOLATLARI || {})[h.holat] || {};
     return '<div class="muddat-lenta">' +
       '<div class="ml-bosh"><span class="chip ' + (holat.chip || "") + '">' + esc(holat.nom || h.holatNomi || "") + "</span>" +
         '<span class="ml-kun">Balansda <b>' + h.turganKun + "</b> kun" +
-        (h.qolganKun > 0 ? " · umidsizgacha <b>" + h.qolganKun + "</b> kun" : "") + "</span></div>" +
+        (h.qolganKun > 0 ? " · muddat tugashiga <b>" + h.qolganKun + "</b> kun" : "") + "</span></div>" +
       '<div class="ml-iz" role="img" aria-label="Muddatlar lentasi">' +
         '<span class="ml-otgan" style="width:' + b + '%"></span>' +
         nuqtalar.map(n => '<i class="ml-nuqta' + (oqi(n.sana) <= bugun ? " otdi" : "") + (n.xavf ? " xavf" : "") + '" style="left:' + joy(oqi(n.sana)) + '%"></i>').join("") +
@@ -2649,6 +2812,138 @@ document.addEventListener("click", e => {
   setTimeout(tekshir, 0);
 }, true);
 
+/* ---------- Belgini markupdan qo'yish ----------
+   data-ikonka="qalqon" — sahifa qaysi belgi kerakligini aytadi, belgini yadro chizadi.
+   Shunda barcha belgilar bitta manbadan (yadro/ikonlar.js) keladi, o'lchami va chizig'i bir xil bo'ladi.
+   Belgi aria-hidden: ma'noni yonidagi matn beradi, belgi uni faqat tezroq topishga yordam beradi. */
+function ikonkalarniQoy(joy){
+  if (!joy || !joy.querySelectorAll) return;
+  const royxat = joy.matches && joy.matches("[data-ikonka]") ? [joy] : [];
+  joy.querySelectorAll("[data-ikonka]").forEach(el => royxat.push(el));
+  royxat.forEach(el => {
+    const nom = el.getAttribute("data-ikonka");
+    if (!nom) return;
+    /* KPI plitkasida belgi yorliq yonida turadi, qolgan joyda elementning o'z boshida */
+    const ichki = el.classList.contains("metrika") ? el.querySelector(".m-yorliq") : el;
+    if (!ichki) return;
+    const bor = ichki.firstElementChild;
+    if (bor && bor.classList.contains("ic")) return;
+    ichki.insertAdjacentHTML("afterbegin", ik(nom, "sarlavha-ic"));
+  });
+}
+
+/* ---------- Yo'lakcha va orqaga qaytish ----------
+   Har bir ichki sahifada sarlavha yonida bitta "Orqaga" tugmasi turadi va foydalanuvchi
+   qayerdan kelgan bo'lsa o'sha yerga qaytaradi:
+     1) shu tizimdagi oldingi sahifa — brauzer tarixi orqali, siljish joyi ham tiklanadi;
+     2) yo'lakchadagi ota sahifa;
+     3) bo'limning bosh sahifasi.
+   Bosh sahifalarda (rol paneli, bo'lim markazi) tugma chizilmaydi: qaytadigan joy yo'q. */
+function yolakchaOtasi(){
+  const y = document.querySelector(".hujjat-shapka .hs-yorliq");
+  if (!y) return null;
+  const a = Array.from(y.querySelectorAll("a[href]"))
+    .filter(x => !x.classList.contains("yangilangan") && !x.classList.contains("sana-belgisi")).pop();
+  if (!a) return null;
+  const h = a.getAttribute("href") || "";
+  if (!h || h[0] === "#") return null;
+  return {href: h, nom: (a.textContent || "").trim()};
+}
+/* Obyekt kartochkasining tablari: ota — o'sha obyektning o'zi, reyestr emas */
+function obyektTabiOtasi(){
+  const fayl = faylNomi();
+  const tablar = (window.MKB_OBYEKT_TABLAR || []).map(t => t.f);
+  if (fayl === "obyekt.html" || tablar.indexOf(fayl) < 0) return null;
+  const id = new URLSearchParams(location.search).get("id");
+  if (!id || !sahifaRuxsatlimi("obyekt.html")) return null;
+  return {href: "obyekt.html?id=" + encodeURIComponent(id), nom: "Obyekt"};
+}
+function otaSahifa(){ return obyektTabiOtasi() || yolakchaOtasi(); }
+/* Brauzer tarixidagi oldingi sahifa shu tizimnikimi. Sessiya, kirish va xato sahifalari
+   o'zi boshqa manzilga yo'naltiradi, shuning uchun ularga qaytarish halqa hosil qiladi */
+function tarixdaOrqaBor(){
+  const r = document.referrer;
+  if (!r || history.length < 2) return false;
+  let u;
+  try{ u = new URL(r, location.href); }catch(_){ return false; }
+  if (u.origin !== location.origin) return false;
+  const papka = p => p.slice(0, p.lastIndexOf("/") + 1);
+  if (papka(u.pathname) !== papka(location.pathname)) return false;
+  const fayl = u.pathname.split("/").pop() || "";
+  if (!/\.html$/.test(fayl) || /^(_|index\.html$|kirish\.html$|xato-|parol-)/.test(fayl)) return false;
+  if (u.pathname === location.pathname && u.search === location.search) return false;
+  return true;
+}
+/* Saqlanmagan forma bo'lsa avval so'raladi (yadro/ux.js, MKB.ketishMumkinmi) */
+MKB.orqaga = async function(){
+  if (MKB.ketishMumkinmi && !(await MKB.ketishMumkinmi())) return;
+  if (tarixdaOrqaBor()){ history.back(); return; }
+  const ota = otaSahifa();
+  if (ota && ota.href){ location.href = ota.href; return; }
+  const rol = joriyRolKalit();
+  location.href = bolimHavolasi(joriyBolim(), rol) || rolBoshSahifasi(rol);
+};
+function orqagaChiz(){
+  const shapka = document.querySelector(".hujjat-shapka");
+  if (!shapka || shapka.querySelector(".orqaga-tugma")) return;
+  const qator = shapka.querySelector(".hs-qator");
+  if (!qator) return;
+  const rol = joriyRolKalit();
+  /* Rol paneli — bosh sahifa: yuqoriga chiqadigan joy yo'q */
+  if (faylNomi() === faylNomi(rolBoshSahifasi(rol))) return;
+  /* Bo'lim markazi ham bosh sahifa. Markaz rolga qarab boshqacha bo'ladi (BOLIM_BOSH_ROL):
+     rahbariyatda "Ishlar" markazi tasdiqlar.html, boshqa rollarda vazifalar.html */
+  const markaz = bolimHavolasi(joriyBolim(), rol);
+  if (markaz && faylNomi() === faylNomi(markaz)) return;
+  /* Yo'lakchada ota havolasi bo'lmasa ham bo'lim markaziga qaytariladi */
+  if (!otaSahifa() && !markaz) return;
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "orqaga-tugma";
+  b.innerHTML = ik("orqaga") + "<span>Orqaga</span>";
+  b.addEventListener("click", () => MKB.orqaga());
+  qator.prepend(b);
+  tarjimaQil(b);
+}
+/* Yo'lakchaning birinchi bandi — bo'lim nomi. Yon paneldagi o'sha belgi qo'yiladi:
+   foydalanuvchi qaysi bo'limda turganini bir qarashda ko'radi */
+function yolakchaBelgisi(){
+  const y = document.querySelector(".hujjat-shapka .hs-yorliq");
+  if (!y || y.querySelector(".yolak-ic")) return;
+  const bir = y.firstElementChild;
+  if (!bir || bir.classList.contains("ajratgich")) return;
+  const kalit = bir.tagName === "A" ? bolimTopish(faylNomi(bir.getAttribute("href"))) : joriyBolim();
+  const ikonka = bolimKanon(kalit) === "sozlama" ? "sozlama"
+    : (BOLIMLAR.find(x => x.kalit === bolimKanon(kalit)) || {}).ikonka;
+  if (!ikonka) return;
+  bir.insertAdjacentHTML("afterbegin", ik(ikonka, "yolak-ic"));
+}
+
+/* ---------- Sahifa holati manzilda ----------
+   Filtr, tab va sehrgar qadami manzilda ko'rinsa, havolani ulashish mumkin bo'ladi va
+   brauzerning "Orqaga" tugmasi foydalanuvchi kutgan ishni qiladi.
+     MKB.urlHolat({holat: "lotda", sahifa: 3})              — manzilni yangilaydi, tarixga yozmaydi
+     MKB.urlHolat({tab: "moliya"}, {tarix: true})           — yangi tarix yozuvi: Orqaga shu yerga qaytaradi
+     MKB.urlHolat({q: null})                                 — parametrni olib tashlaydi
+     MKB.urlOrqaga(p => chiz(p))                             — Orqaga bosilganda qayta chizish */
+MKB.urlHolat = function(qiymatlar, o){
+  const u = new URL(location.href);
+  Object.keys(qiymatlar || {}).forEach(k => {
+    const v = qiymatlar[k];
+    if (v == null || v === "") u.searchParams.delete(k);
+    else u.searchParams.set(k, String(v));
+  });
+  const q = u.searchParams.toString();
+  const manzil = u.pathname.split("/").pop() + (q ? "?" + q : "") + u.hash;
+  if (manzil === faylNomi() + location.search + location.hash) return;
+  history[o && o.tarix ? "pushState" : "replaceState"](null, "", manzil);
+};
+let urlOrqagaFn = null;
+MKB.urlOrqaga = function(fn){ urlOrqagaFn = typeof fn === "function" ? fn : null; };
+window.addEventListener("popstate", () => {
+  if (urlOrqagaFn) urlOrqagaFn(new URLSearchParams(location.search));
+});
+
 /* ---------- Ishga tushirish ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   if (window.MKB_SPRITE && !document.getElementById("mkb-sprite")){
@@ -2659,6 +2954,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.prepend(d);
   }
   ikonkaHavolalari(document.body);
+  ikonkalarniQoy(document.body);
 
   const ochiq = document.body.dataset.ochiq === "1";
   const s = joriySessiya();
@@ -2674,6 +2970,9 @@ document.addEventListener("DOMContentLoaded", () => {
     yonChiz();
     shapkaChiz();
     otishHavolasi();
+    /* Yo'lakchada bo'lim belgisi, sarlavha yonida "Orqaga" */
+    yolakchaBelgisi();
+    orqagaChiz();
   }
 
   /* Rejim belgisi */
@@ -2742,6 +3041,7 @@ document.addEventListener("DOMContentLoaded", () => {
       for (const o of ozg) for (const n of o.addedNodes){
         if (n.nodeType !== 1) continue;
         ikonkaHavolalari(n);
+        ikonkalarniQoy(n);
         if (!ochiq && s) huquqQolla(n);
         faylSuratlariniOch(n.parentNode || n);
       }

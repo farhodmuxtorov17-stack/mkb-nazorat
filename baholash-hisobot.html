@@ -99,7 +99,7 @@
         (t.holat === "kutilmoqda" ? "<span>javob muddati</span> <span data-tarjimasiz>" + esc(t.javobMuddati) + "</span>" + (MKB.tasdiq.ozimi(t) ? " · <span>Siz yuborgansiz. Boshqa xodim tasdiqlaydi</span>" : "") : '<span data-tarjimasiz>' + esc(t.qarorSana || "") + "</span>" + (t.sabab ? " · " + esc(t.sabab) : "")) +
         "</span></span></div></section>" : "") +
       '<div class="tor-2">' +
-        '<section class="karta" data-sayohat="hisobot"><div class="karta-bosh"><h2>' + esc(y.qisqa || y.nom || h.obyektId) + '</h2><span class="chip chip-kichik ' + holat[1] + '">' + esc(holat[0]) + "</span></div>" +
+        '<section class="karta" data-sayohat="hisobot"><div class="karta-bosh"><h2 data-ikonka="bino">' + esc(y.qisqa || y.nom || h.obyektId) + '</h2><span class="chip chip-kichik ' + holat[1] + '">' + esc(holat[0]) + "</span></div>" +
           (h.bozorQiymati != null ? '<div class="bh-raqamlar">' +
             "<div><span>Bozor qiymati</span><b data-tarjimasiz>" + esc(MKB.pul(h.bozorQiymati)) + "</b></div>" +
             "<div><span>Tugatish qiymati</span><b data-tarjimasiz>" + esc(MKB.pul(h.tugatishQiymati)) + "</b></div>" +
@@ -117,8 +117,8 @@
             (h.izoh ? "<dt>Izoh</dt><dd>" + esc(h.izoh) + "</dd>" : "") +
           "</dl></section>" +
         '<div class="ustun">' +
-          '<section class="karta"><div class="karta-bosh"><h2>Fayllar</h2></div><div id="bh-fayllar"></div></section>' +
-          '<section class="karta" data-sayohat="tarix"><div class="karta-bosh"><h2>Baholash tarixi</h2><span class="soni" data-tarjimasiz>' + tarix.length + " ta</span></div>" +
+          '<section class="karta"><div class="karta-bosh"><h2 data-ikonka="hujjat">Fayllar</h2></div><div id="bh-fayllar"></div></section>' +
+          '<section class="karta" data-sayohat="tarix"><div class="karta-bosh"><h2 data-ikonka="baholash">Baholash tarixi</h2><span class="soni" data-tarjimasiz>' + tarix.length + " ta</span></div>" +
             (tarix.length ? tarix.map(x => '<a class="qator" href="baholash-hisobot.html?id=' + encodeURIComponent(x.id) + '"><span class="belgi ' + (x.id === h.id ? "siyoh" : "lavanda") + '">' + ik("baholash") + "</span>" +
               '<span class="matn"><b data-tarjimasiz>' + esc(MKB.pul(x.bozorQiymati)) + "</b><span><span data-tarjimasiz>" + esc(x.sana) + "</span> · " + esc(x.baholovchi || "") + "</span></span></a>").join("")
               : MKB.boshHolat("baholash", "Oldingi baho yo'q")) + "</section>" +

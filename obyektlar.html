@@ -13,7 +13,7 @@
 #jadval-joy.karta-rejim .jadval-orash,#jadval-joy.karta-rejim .jadval-past,#jadval-joy.karta-rejim [data-sayohat="ustunlar"]{display:none}
 #jadval-joy.karta-rejim .jadval-korpus{padding-bottom:6px}
 .filtr-tugma{display:none}
-.filtr-tugma .soni{font-size:12px;background:var(--mint);color:var(--mint-matn);border-radius:99px;padding:1px 8px}
+.filtr-tugma .soni{font-size:12px;background:var(--mint);color:var(--mint-matn);border-radius:var(--r-pilyula);padding:1px 8px}
 .obyekt-karta{position:relative}
 .obyekt-karta h3 a::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit}
 .obyekt-karta h3 a:focus-visible{outline:none}
@@ -146,7 +146,7 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
   }
 
   /* ---------- Tayyor ko'rinishlar (KPI kartalari ham shularni ochadi) ---------- */
-  const K = {umidsiz: "Umidsiz toifada", xavf: "Umidsizga 90 kun qolgan", qoriqsiz: "Qo'riqsiz", baho: "Baholanmagan", kommunal: "Kommunal uzilgan"};
+  const K = {umidsiz: "Me'yoriy muddat o'tgan", xavf: "Muddat tugashiga 90 kun", qoriqsiz: "Qo'riqsiz", baho: "Baholanmagan", kommunal: "Kommunal uzilgan"};
   const tayyorKorinishlar = () => [
     {nom: K.umidsiz, filtrlar: {umidsiz: "ha"}, saralash: "balans", yonalish: -1},
     {nom: K.xavf, filtrlar: {muddatNom: muddatNom("xavf-90")}, saralash: "qolganKun", yonalish: 1},
@@ -172,10 +172,10 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     const el = document.getElementById("metrikalar");
     el.innerHTML =
       m("", "Balansdagi aktivlar", MKB.fmt(jami), '<span data-tarjimasiz>' + esc(MKB.pul(summa(qatorlar))) + "</span>", "kpi-jami") +
-      m(K.umidsiz, "Umidsiz toifada", MKB.fmt(umidsiz.length),
+      m(K.umidsiz, "Me'yoriy muddat o'tgan", MKB.fmt(umidsiz.length),
         '<span data-tarjimasiz>' + esc(MKB.pul(summa(umidsiz))) + "</span>" +
         (uchYil ? ' · <span>shundan 3 yildan oshgan</span> <b data-tarjimasiz>' + uchYil + "</b>" : ""), "kpi-umidsiz") +
-      m(K.xavf, "90 kunda umidsizga o'tadi", MKB.fmt(xavf.length), '<span data-tarjimasiz>' + esc(MKB.pul(summa(xavf))) + "</span>", "kpi-xavf") +
+      m(K.xavf, "90 kunda muddati tugaydi", MKB.fmt(xavf.length), '<span data-tarjimasiz>' + esc(MKB.pul(summa(xavf))) + "</span>", "kpi-xavf") +
       m(K.baho, "Baholanmagan", MKB.fmt(baholanmagan.length), "<span>Bozor qiymati kiritilmagan</span>", "kpi-baho");
     tarjimaQil(el);
   }
@@ -196,7 +196,7 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     const muddat = D.MUDDAT_HOLATLARI[x.muddat] || {};
     let muddatMatn;
     if (x.qolganKun == null) muddatMatn = '<span class="chip chip-kul chip-kichik">Balans sanasi yo&#39;q</span>';
-    else if (x.qolganKun > 0) muddatMatn = '<span class="chip ' + (muddat.chip || "") + ' chip-kichik"><span>Umidsizgacha</span>&nbsp;<b data-tarjimasiz>' + x.qolganKun + "</b>&nbsp;<span>kun</span></span>";
+    else if (x.qolganKun > 0) muddatMatn = '<span class="chip ' + (muddat.chip || "") + ' chip-kichik"><span>Muddat tugashiga</span>&nbsp;<b data-tarjimasiz>' + x.qolganKun + "</b>&nbsp;<span>kun</span></span>";
     else muddatMatn = '<span class="chip ' + (muddat.chip || "") + ' chip-kichik">' + esc(muddat.nom || "") + "</span>";
     const sarlavha = '<h3><a href="obyekt.html?id=' + encodeURIComponent(y.id) + '">' + esc(x.qisqa) + "</a></h3>" +
       '<span class="manzil"><span class="kod-mono" data-tarjimasiz>' + esc(y.id) + "</span> · " + esc(x.manzil || x.hudud) + "</span>";
@@ -214,6 +214,7 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
       '<div class="obyekt-media">' + surat +
         '<div class="beyj-qator">' + MKB.holatChip(y.holat, true) +
           (y.rasmUmumiy ? '<span class="chip chip-oq chip-kichik" title="Surat bir nechta obyekt uchun umumiy">Umumiy surat</span>' : "") + "</div></div>" +
+      MKB.suratManbasi(y.rasmManba) +
       '<div class="obyekt-tana">' + sarlavha + tana + "</div></article>";
   }
   function sahifalashHTML(joriy, jami){
@@ -405,7 +406,7 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     {kalit: "manzil", nom: "Manzil", yashirin: true},
     {kalit: "balansSana", nom: "Balans sanasi", tur: "sana", yashirin: true},
     {kalit: "balansKun", nom: "Balansda, kun", son: true, csv: x => x.balansKun == null ? "" : x.balansKun, chiz: x => x.balansKun == null ? "—" : MKB.fmt(x.balansKun)},
-    {kalit: "qolganKun", nom: "Umidsizgacha, kun", son: true, csv: x => x.qolganKun == null ? "" : x.qolganKun, chiz: x => {
+    {kalit: "qolganKun", nom: "Muddat tugashiga, kun", son: true, csv: x => x.qolganKun == null ? "" : x.qolganKun, chiz: x => {
       if (x.qolganKun == null) return "—";
       const c = (D.MUDDAT_HOLATLARI[x.muddat] || {}).chip || "";
       return x.qolganKun > 0 ? (x.muddat === "xavf-90" ? '<span class="chip chip-sariq chip-kichik" data-tarjimasiz>' + x.qolganKun + "</span>" : MKB.fmt(x.qolganKun))

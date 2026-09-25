@@ -43,7 +43,7 @@
 .qoshimcha-maydon{margin-top:16px;border-top:1px solid var(--chiziq-2);padding-top:12px}
 .qoshimcha-maydon summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;list-style:none}
 .qoshimcha-maydon summary::-webkit-details-marker{display:none}
-.qoshimcha-maydon summary::before{content:"+";width:26px;height:26px;border-radius:99px;background:var(--plitka);display:grid;place-items:center;font-weight:400}
+.qoshimcha-maydon summary::before{content:"+";width:26px;height:26px;border-radius:var(--r-pilyula);background:var(--plitka);display:grid;place-items:center;font-weight:400}
 .qoshimcha-maydon[open] summary::before{content:"2"}
 .qoshimcha-maydon summary span{font-weight:400;font-size:13px;color:var(--matn-3)}
 .tasdiq-info .karta-havola{display:inline-block;margin-top:6px;text-decoration:underline}
@@ -211,7 +211,7 @@
       '<section class="foto-shapka" aria-label="Obyekt"></section>' + holatKarta() +
       (rejim === "yoq" ? "" :
       '<div class="tor-2">' +
-        '<section class="karta" aria-labelledby="asos-sar" data-sayohat="usul"><div class="karta-bosh"><h2 id="asos-sar">Chiqarish asosi</h2></div>' +
+        '<section class="karta" aria-labelledby="asos-sar" data-sayohat="usul"><div class="karta-bosh"><h2 id="asos-sar" data-ikonka="hujjat">Chiqarish asosi</h2></div>' +
           '<form id="chiqim-forma" novalidate>' +
           '<div class="radio-kartalar">' +
             '<label class="radio-karta"' + (shartnomalar.length ? "" : ' aria-disabled="true"') + '><input type="radio" name="asosTur" value="shartnoma"' + (shartnomalar.length && !oqish ? "" : " disabled") + '><b>Shartnoma bo&#39;yicha</b><span>' +
@@ -241,8 +241,8 @@
             "</div></details>" +
           "</form></section>" +
         '<div class="ustun">' +
-          '<section class="karta" aria-labelledby="n-sar" data-sayohat="xulosa"><div class="karta-bosh"><h2 id="n-sar">Moliyaviy natija</h2></div><div class="natija-royxat" id="natija"></div></section>' +
-          '<section class="karta" aria-labelledby="y-sar"><div class="karta-bosh"><h2 id="y-sar">Yopiladigan shartnomalar</h2></div><ul class="yopish-royxat" id="yopish"></ul></section>' +
+          '<section class="karta" aria-labelledby="n-sar" data-sayohat="xulosa"><div class="karta-bosh"><h2 id="n-sar" data-ikonka="pul">Moliyaviy natija</h2></div><div class="natija-royxat" id="natija"></div></section>' +
+          '<section class="karta" aria-labelledby="y-sar"><div class="karta-bosh"><h2 id="y-sar" data-ikonka="hujjat">Yopiladigan shartnomalar</h2></div><ul class="yopish-royxat" id="yopish"></ul></section>' +
         "</div></div>") +
       '<div class="oyoq"><a class="tugma tugma-oq" href="obyekt.html?id=' + encodeURIComponent(y.id) + '">' + (rejim === "sorov" ? "Bekor qilish" : "Obyekt kartasi") + '</a><div class="ong">' +
         (rejim === "sorov" ? '<button type="button" class="tugma tugma-asosiy" id="bajar" data-yozadi data-sayohat="yuborish">' + ik("xat") + "Qaror so&#39;rovini yuborish</button>" : "") +
@@ -470,13 +470,13 @@
     });
     const hammasi = MKB.doira((D.YOZUVLAR || []).filter(o => o.holat !== "Chiqarildi"));
     joy.innerHTML =
-      '<section class="karta" aria-labelledby="t-sar" data-sayohat="nomzodlar"><div class="karta-bosh"><h2 id="t-sar">Chiqimga tayyor obyektlar</h2><span class="soni" data-tarjimasiz>' + r.length + "</span></div>" +
+      '<section class="karta" aria-labelledby="t-sar" data-sayohat="nomzodlar"><div class="karta-bosh"><h2 id="t-sar" data-ikonka="chiqish">Chiqimga tayyor obyektlar</h2><span class="soni" data-tarjimasiz>' + r.length + "</span></div>" +
       (r.length ? '<div class="nomzod-royxat">' + r.map(x => '<a class="qator" href="' + x.href + '">' + MKB.obyektSurati(x.y, {kichik: true, sinf: "media"}) +
           '<div class="matn"><b>' + esc(x.y.qisqa || x.y.nom) + '</b><span><span class="kod-mono" data-tarjimasiz>' + esc(x.y.id) + "</span> · <span>" + esc(x.sabab) + "</span></span></div>" +
           '<div class="ong"><span class="pul" data-tarjimasiz>' + esc(MKB.pul(x.y.balans && x.y.balans.qiymat)) + '</span><span class="chip ' + x.chip[0] + ' chip-kichik">' + x.chip[1] + "</span></div></a>").join("") + "</div>"
         : MKB.boshHolat("arxiv", "Chiqimga tayyor obyekt yo'q", "To'liq to'langan shartnoma, Davaktivga o'tkazilgan obyekt yoki kutilayotgan qaror bo'lsa shu yerda chiqadi.")) +
       "</section>" +
-      (soraydi ? '<section class="karta" aria-labelledby="b-sar"><div class="karta-bosh"><h2 id="b-sar">Boshqa obyektni tanlash</h2></div>' +
+      (soraydi ? '<section class="karta" aria-labelledby="b-sar"><div class="karta-bosh"><h2 id="b-sar" data-ikonka="izlash">Boshqa obyektni tanlash</h2></div>' +
         '<form id="tanla-forma" novalidate><div class="maydon"><label class="maydon-yorliq" for="tanla">Reyestrdagi obyekt</label><div class="kirish"><input id="tanla" name="tanla" type="search" list="tanla-r" placeholder="Id yoki nom" autocomplete="off" required data-xato="Obyektni ro\'yxatdan tanlang"></div>' +
         '<datalist id="tanla-r">' + hammasi.map(o => '<option value="' + esc(o.id) + '">' + esc(o.qisqa || o.nom) + "</option>").join("") + "</datalist>" +
         '<span class="maydon-izoh">Hisobdan chiqarish yoki shartnomasiz sotuv uchun</span></div>' +
