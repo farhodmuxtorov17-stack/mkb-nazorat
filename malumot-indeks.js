@@ -429,7 +429,27 @@
     return natija;
   }
 
+  /* ---------- Ijara to'lovlari: bitta ta'rif (ijara sahifasi, moliya paneli, yon panel hisoblagichi) ---------- */
+  /* "10.2025" davri uchun to'lov sanasi: ijara boshlangan kun shu oyda (28 dan oshmaydi) */
+  function ijaraTolovSanasi(ij, davr) {
+    const m = /^(\d{1,2})\.(\d{4})$/.exec(String(davr || ""));
+    if (!m) return null;
+    const bosh = sanaOqi(ij && ij.boshlanish), kun = bosh ? Math.min(bosh.getDate(), 28) : 1;
+    return new Date(+m[2], +m[1] - 1, kun);
+  }
+  /* Kechikkan ijara oylari: to'lanmagan va to'lov sanasi bugundan oldin. Muddati kelmagan oy kechikkan emas. */
+  function ijaraOtganTolovlar(ij, bugunKun) {
+    const b = bugunKun || (x => new Date(x.getFullYear(), x.getMonth(), x.getDate()))(D.bugun());
+    return (Array.isArray(ij && ij.tolovlar) ? ij.tolovlar : []).filter(t => {
+      if (!t || t.tolandi) return false;
+      const d = ijaraTolovSanasi(ij, t.davr);
+      return !!d && d < b;
+    });
+  }
+
   /* ---------- Hisoblash va eksport ---------- */
+  D.ijaraTolovSanasi = ijaraTolovSanasi;
+  D.ijaraOtganTolovlar = ijaraOtganTolovlar;
   D.hujjatToliqligi = hujjatToliqligi;
   D.nazoratKeshTozala = function () { Object.keys(KESH).forEach(k => delete KESH[k]); };
   D.nazoratIndeksi = indeks;
@@ -441,6 +461,19 @@
   D.balansDinamika = balansDinamika;
   D.qoidaNatijalari = qoidaNatijalari;
   D.balansKunlari = y => { const m = D.muddatHisobi(y); return m.kiritilmagan ? 0 : m.turganKun; };
+  /* Qo'riqlash — bitta ta'rif (panel, monitoring markazi, qo'riqlash, reyestr, hududlar, xarita):
+     obyekt kartasidagi qo'riqlash turi YOKI amaldagi va muddati o'tmagan qo'riqlash shartnomasi YOKI obyektdagi qurilma.
+     Qaytaradi: QORIQLASH_TURLARI kaliti ("post", "pult", ..., faqat qurilma bo'lsa "avtonom") yoki null */
+  D.qoriqlashTuri = function (y, bugun) {
+    if (!y) return null;
+    const t = y.himoya && y.himoya.qoriqlashTuri;
+    if (t) return t;
+    const b = bugun || D.bugun();
+    const q = (D.QORIQLASH || []).find(x => x && x.obyektId === y.id && x.holat === "amalda" && !(D.sanaOqi(x.tugash) && D.sanaOqi(x.tugash) < b));
+    if (q) return q.qoriqlashTuri || "pult";
+    return (D.QURILMALAR || []).some(x => x && x.obyektId === y.id) ? "avtonom" : null;
+  };
+  D.qoriqlanadimi = (y, bugun) => !!D.qoriqlashTuri(y, bugun);
 
   D.PORTFEL = portfelHisobla();
   D.HUDUDLAR = hududKesimi().map(h => [h.nom, String(h.son), "", h.son]);

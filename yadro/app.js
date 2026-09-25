@@ -102,7 +102,9 @@ const SAHIFA_MAXSUS = {
   "foydalanuvchilar.html":   ["admin"],
   "foydalanuvchi.html":      ["admin"],
   "rollar.html":             ["admin"],
-  "integratsiyalar.html":    ["admin"],
+  /* Rahbariyat ko'radi (qaysi tashqi tizim ulangan), holatni faqat sozlamaga yozish huquqi bor rol o'zgartiradi */
+  "integratsiyalar.html":    ["admin", "rahbariyat"],
+  "tizim-holati.html":       ["admin"],
   "amallar-tarixi.html":     ["admin", "rahbariyat"],
   "filiallar.html":          ["admin", "rahbariyat"],
 };
@@ -596,7 +598,8 @@ function yonSonlar(){
   if (MKB.tolovBelgilaydimi && MKB.tolovBelgilaydimi())
     qosh("sotuv", doira(D.SHARTNOMALAR).filter(sh => sh && (sh.jadval || [])
         .some(j => j && !j.tolandi && otgan(j.sana))).length +
-      doira(D.IJARA).filter(i => i && (i.tolovlar || []).some(t => t && !t.tolandi)).length);
+      /* ijara oyi to'lov sanasi o'tgandagina kechikkan (ijara sahifasi bilan bitta ta'rif) */
+      doira(D.IJARA).filter(i => i && D.ijaraOtganTolovlar && D.ijaraOtganTolovlar(i, B).length).length);
 
   /* Qiymat va moliyada hisoblagich yo'q: eskirgan baholash va tugagan polis — portfel bo'yicha
      turg'un qoldiq, bitta xodimni kutayotgan navbat emas. Baholashni tasdiqlash so'rovi esa
@@ -799,7 +802,7 @@ function shapkaChiz(){
   const bolim = joriyBolim();
   /* Shapkadagi tezkor pillalar yon panelning o'zidan olinadi: shu rolning birinchi uchta bandi.
      Shunda shapka va yon panel bitta manbadan keladi — buxgalteriya shapkada "Moliya" ni ko'radi,
-     o'zida umuman yo'q "Nazorat" ni emas. */
+     o'zida umuman yo'q "Nazorat" ni emas. Pillalar faqat yon panel yig'ilgan kenglikda (721–1024 px) ko'rinadi (app.css). */
   const tezkor = yonBandlar(rol).slice(0, 3).map(b => {
     const asos = BOLIMLAR.find(x => x.kalit === b.kalit) || {};
     const maxsus = BOLIM_YORLIQ_ROL[b.kalit] && BOLIM_YORLIQ_ROL[b.kalit][rol];
@@ -1063,14 +1066,47 @@ function izlashUlash(el){
   });
 }
 
-/* Qo'ng'iroq nuqtasi: faqat shu rolga tegishli o'qilmagan bildirishnoma bo'lsa */
+/* Bildirishnoma kimga boradi: qoida yadro/amal.js dagi MKB_BILDIRISH_DOIRA da (sof funksiya, testlar bilan).
+   Rahbariyat obyekt eslatmasini faqat muddatidan 3 kundan ko'p o'tib yopilmaganda ko'radi, administrator biznes xabarini olmaydi. */
+function bildirishKontekst(){
+  const s = joriySessiya(), d = D_();
+  let vazifalar = null;
+  return {rol: joriyRolKalit(), rolNomi: rolNomiKanon(s && s.rol), kanon: rolNomiKanon,
+    bugun: typeof d.bugun === "function" ? d.bugun() : new Date(),
+    qoida: id => (d.QOIDALAR || []).find(q => q && q.id === id) || null,
+    vazifa: id => {
+      if (!vazifalar){ vazifalar = new Map(); (d.MENING_VAZIFALARIM || []).forEach(v => { if (v) vazifalar.set(v.id, v); }); }
+      return vazifalar.get(id) || null;
+    }};
+}
+function bildirishHolati(b, k){
+  if (!b) return null;
+  k = k || bildirishKontekst();
+  if (window.MKB_BILDIRISH_DOIRA) return MKB_BILDIRISH_DOIRA.holat(b, k);
+  /* amal.js yuklanmagan sahifa: faqat o'z roliga yozilgan xabar */
+  return !b.rol || rolNomiKanon(b.rol) === k.rolNomi ? "oz" : null;
+}
+const BILDIRISH_KORINADI = ["oz", "bank", "hodisa", "eskalatsiya"];
+function bildirishRoyxati(){
+  if (!joriySessiya()) return [];
+  const k = bildirishKontekst();
+  return MKB.doira((D_().BILDIRISHLAR || []).filter(b => b && BILDIRISH_KORINADI.indexOf(bildirishHolati(b, k)) >= 0));
+}
+/* Qo'ng'iroq nuqtasi: faqat shu xodimga boradigan o'qilmagan bildirishnoma bo'lsa */
 function oqilmaganlar(){
-  const s = joriySessiya(), rol = joriyRolKalit();
-  if (!s) return [];
-  const hammasi = rol === "admin" || rol === "rahbariyat";
   const olinmaydi = new Set(bildirishSozlama().olinmaydi);
-  return MKB.doira((D_().BILDIRISHLAR || []).filter(b => b && !bildirishOqildimi(b) && (hammasi || !b.rol || rolNomiKanon(b.rol) === rolNomiKanon(s.rol)) &&
-    !(b.qoidaId && olinmaydi.has(b.qoidaId))));
+  return bildirishRoyxati().filter(b => !bildirishOqildimi(b) && !(b.qoidaId && olinmaydi.has(b.qoidaId)));
+}
+/* Haftalik xulosaga tushadigan xabarlar: rahbariyatga alohida bormaydigan obyekt eslatmalari, oxirgi `kun` kun ichida */
+function bildirishXulosa(kun){
+  if (joriyRolKalit() !== "rahbariyat") return [];
+  const k = bildirishKontekst(), chegara = (kun == null ? 7 : kun) * 864e5, bugun = k.bugun;
+  const sanaOqi = window.MKB_TORT_KOZ ? MKB_TORT_KOZ.sanaOqi : (() => null);
+  return MKB.doira((D_().BILDIRISHLAR || []).filter(b => {
+    if (!b || bildirishHolati(b, k) !== "xulosa") return false;
+    const d = sanaOqi(b.sana);
+    return !!d && bugun - d <= chegara && d <= bugun;
+  }));
 }
 /* Xodimning bildirishnoma sozlamasi (FOYDLAR.bildirishSozlama): {olinmaydi: [qoidaId, ...]} — shu qoidalar xabari qo'ng'iroqqa tushmaydi.
    Hodisa kabi qoidasiz xabarlar va vazifalar har doim keladi */
@@ -2149,7 +2185,11 @@ const MKB = {
     return huquqBor(ROL_KALIT[rolNomiKanon(rolNomi)] || ROL_ESKI[rolNomi] || null, bolim, AMAL_HARF[amal || "oqi"] || "o");
   },
   /* Bildirishnoma: MKB.bildirish.oqildimi(b) — joriy xodim uchun; await MKB.bildirish.oqildi(id|b) — o'qilgan deb belgilash */
+  /* royxat() — shu xodimga boradigan barcha xabarlar; holat(b) — "oz" | "bank" | "hodisa" | "eskalatsiya" | "xulosa" | null;
+     otganKun(b) — bog'liq vazifa muddatidan necha kun o'tgan; xulosa(kun) — rahbariyatning haftalik xulosasiga tushadiganlar */
   bildirish: {oqildimi: b => bildirishOqildimi(b), oqildi: x => bildirishOqildiDeb(x), oqilmaganlar: () => oqilmaganlar(),
+    royxat: () => bildirishRoyxati(), holat: b => bildirishHolati(b), xulosa: kun => bildirishXulosa(kun),
+    otganKun: b => window.MKB_BILDIRISH_DOIRA ? MKB_BILDIRISH_DOIRA.otganKun(b, bildirishKontekst()) : null,
     /* {olinmaydi: [qoidaId]} · await MKB.bildirish.sozlamaYoz({olinmaydi}) — o'z yozuviga saqlanadi (server OZ_MAYDONLAR) */
     sozlama: () => bildirishSozlama(), sozlamaYoz: x => bildirishSozlamaYoz(x)},
   /* Yon paneldagi hisoblagichlar: MKB.yonSonlar() — {bolim: son}, MKB.yonSonYangila() — belgilarni qayta chizadi.

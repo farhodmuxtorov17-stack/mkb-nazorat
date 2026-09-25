@@ -47,9 +47,46 @@ SIL OFL 1.1 shriftni ilovaga qo'shib tarqatishga ruxsat beradi; shart — shrift
 sotilmasin va o'zgartirilgan nusxa boshqa nom bilan chiqsin. Ikkala shrift ham
 o'zgartirilmagan holda, Google Fonts nashridan olingan ko'rinishda turadi.
 
+## Rasmlar
+
+| Fayllar | Manba | Litsenziya |
+|---|---|---|
+| `assets/namuna/*.webp` (61 surat va eskizlari) | Wikimedia Commons | CC BY, CC BY-SA, CC0 va jamoat mulki; har surat muallifi va litsenziyasi `assets/namuna/MANBA.md` da, ekranda surat yonida chiqadi |
+| `assets/xodim_*.webp` | loyihaning o'z chizmasi: yuzsiz siluet | cheklovsiz |
+| `assets/yordam/*.webp` | tizimning o'z ekranlari, namoyish ma'lumotida | cheklovsiz |
+
+Namoyish suratlari faqat shartli reyestrda ishlatiladi, bank obyektini ko'rsatmaydi.
+
+## Jonli ochiq manbalar
+
+Monitoring markazidagi "Ulanish namunasi" kartasi, qurilma va obyekt sahifasidagi
+ob-havo bloki tugma bosilgandagina internetga chiqadi. Ularning hech biri bank obyekti
+emas va tashqariga bank ma'lumotini yubormaydi. Batafsil: `assets/jonli/MANBA.md`,
+kameralar ro'yxati `assets/jonli/kameralar.json`.
+
+| Manba | Nima olinadi | Shart |
+|---|---|---|
+| Open-Meteo | harorat, bulut, quyosh nurlanishi, shamol, yog'in | ma'lumot CC BY 4.0; bepul API tijoriy bo'lmagan foydalanish uchun, bankda pullik kalit yoki o'z serveri kerak |
+| NASA POWER | oylik o'rtacha quyosh nurlanishi | erkin foydalaniladi, manba ko'rsatiladi |
+| USGS, Kīlauea kameralari | ikki kamera kadri (JPEG) | AQSh jamoat mulki, manba ko'rsatiladi |
+| test.mosquitto.org, zaxira broker.emqx.io | MQTT sinov xabari | ommaviy sinov brokerlari, kafolatsiz; xabarda bank ma'lumoti yo'q |
+
+Himoyasiz qolgan yoki qidiruvda topilgan kameralar ishlatilmaydi: bu ruxsatsiz kirish.
+
+## O'zimiz yozgan qismlar
+
+SHA-256 (`boshqaruv.js`, `yadro/dalolatnoma.js`), QR kod (`yadro/dalolatnoma.js`),
+.xlsx o'qish va yozish (`yadro/jadval-fayl.js`) va MQTT 3.1.1 mijozi (`yadro/jonli.js`)
+uchinchi tomon kodisiz, ochiq standartlar bo'yicha yozilgan: FIPS 180-4, ISO/IEC 18004,
+ECMA-376, OASIS MQTT 3.1.1. "QR Code" DENSO WAVE INCORPORATED ning ro'yxatdan
+o'tgan tovar belgisi.
+
 ## Nimaga bog'lanmagan
 
-Tizim ish vaqtida hech qanday tashqi CDN, plitka serveri yoki shrift serveriga
-murojaat qilmaydi. Xaritadagi ixtiyoriy ko'cha qatlami faqat sozlamalarda ichki plitka
-serveri manzili ko'rsatilgandagina paydo bo'ladi (`sozlamalar.html`); manzil bo'sh
-bo'lsa tugma umuman chiqmaydi.
+Asosiy ish uchun tizim hech qanday tashqi CDN, plitka serveri yoki shrift serveriga
+murojaat qilmaydi: kutubxona, shrift, chegara va suratlar repoda turadi. Tashqariga
+faqat yuqoridagi jonli ochiq manbalar chiqadi va faqat foydalanuvchi tugmani bosganda;
+tarmoq yopiq bo'lsa blok "Internet yo'q" deb yozadi, sahifaning qolgan qismi ishlaydi.
+Xaritadagi ixtiyoriy ko'cha qatlami faqat sozlamalarda ichki plitka serveri manzili
+ko'rsatilgandagina paydo bo'ladi (`sozlamalar.html`); manzil bo'sh bo'lsa tugma umuman
+chiqmaydi.

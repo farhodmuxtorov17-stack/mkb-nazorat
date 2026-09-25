@@ -15,7 +15,7 @@
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><a href="baholash.html">Qiymat va moliya</a><span class="ajratgich">/</span><span>Sug'urta polislari</span></div>
     <div class="hs-qator"><h1>Sug'urta polislari</h1><span class="hs-meta" id="hs-meta">—</span>
-      <div class="hs-amallar"><a class="tugma tugma-asosiy" href="sugurta-yangilash.html" data-huquq="yoz" data-sayohat="yangi"><svg class="ic"><use href="#ik-qoshish"/></svg><span>Yangi polis</span></a></div></div>
+      <div class="hs-amallar"><button type="button" class="tugma tugma-oq" id="import-tugma" data-huquq="yoz" data-sayohat="import" title="Excel (.xlsx) yoki CSV"><svg class="ic"><use href="#ik-yuklash"/></svg><span>Fayldan import</span></button><a class="tugma tugma-asosiy" href="sugurta-yangilash.html" data-huquq="yoz" data-sayohat="yangi"><svg class="ic"><use href="#ik-qoshish"/></svg><span>Yangi polis</span></a></div></div>
   </div>
   <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="baholash.html">Baholash</a><a href="baholash-buyurtma.html">Baholash buyurtmasi</a><a href="zaxira.html">Zaxira</a><a href="soliq.html">Soliq</a><a href="sugurta.html" class="faol" aria-current="page">Sug'urta polislari</a></nav>
 
@@ -57,6 +57,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/jadval-fayl.js?v=26092200"></script>
 <script>
 (() => {
   const D = MKB_DATA, esc = MKB.esc, el = id => document.getElementById(id);
@@ -171,6 +172,64 @@
   if (f && CH[f]) filtrla(f);
   document.addEventListener("mkb:malumot", () => { try{ chiz(); }catch(_){ } });
   }
+})();
+</script>
+<script>
+/* Polislarni Excel yoki CSV fayldan kiritish: har qator sug'urta formasidagi qoidalar bilan tekshiriladi */
+(() => {
+  const tugma = document.getElementById("import-tugma");
+  if (!tugma) return;
+  tugma.addEventListener("click", () => {
+    const D = MKB_DATA, Y = MKB.importYordam;
+    const TUR = Object.entries(D.POLIS_TURLARI || {mulk: "Mol-mulk", OSAGO: "OSAGO", XICHO: "Xavfli obyekt (XICHO)"});
+    const fayldagi = new Set();
+    const b = Y.bugun();
+    MKB.jadvalImport({
+      sarlavha: "Polislarni fayldan qo'shish", birlik: "polis", faylNomi: "sugurta-polislari-namuna", qaytaYukla: true,
+      ustunlar: [
+        {kalit: "obyekt", nom: "Obyekt ID", majburiy: true}, {kalit: "tur", nom: "Polis turi", majburiy: true},
+        {kalit: "raqam", nom: "Polis raqami", majburiy: true}, {kalit: "kompaniya", nom: "Sug'urta kompaniyasi", majburiy: true},
+        {kalit: "summa", nom: "Sug'urta summasi", majburiy: true, format: "pul"}, {kalit: "mukofot", nom: "Sug'urta mukofoti", majburiy: true, format: "pul"},
+        {kalit: "boshlanish", nom: "Boshlanish sanasi", majburiy: true}, {kalit: "tugash", nom: "Tugash sanasi", majburiy: true},
+      ],
+      namuna: [[(MKB.doira(D.YOZUVLAR || [])[0] || {}).id || "AK-2026/0001", "Mol-mulk", "PL-2026/000123", "O'zbekinvest", "520", "1,84", D.sanaYoz(b), D.sanaYoz(D.oyQosh(b, 12))]],
+      qoidalar: {obyekt: "Reyestr raqami yoki obyektning to'liq nomi", tur: TUR.map(t => t[1]).join(", "), summa: "mln so'm", mukofot: "mln so'm, summadan kichik",
+        boshlanish: "kk.oo.yyyy", tugash: "kk.oo.yyyy, bugundan keyin, boshlanishdan 400 kundan oshmaydi"},
+      tekshir(x){
+        const e = [];
+        const y = Y.obyekt(x.obyekt), t = Y.variant(TUR, x.tur);
+        const bosh = Y.sana(x.boshlanish), tug = Y.sana(x.tugash);
+        if (x.obyekt && !y) e.push("Obyekt topilmadi yoki sizning doirangizda emas: " + x.obyekt);
+        if (x.tur && !t) e.push("Polis turi noma'lum: " + x.tur);
+        if (x.boshlanish && !bosh) e.push("Boshlanish sanasini kk.oo.yyyy ko'rinishida yozing");
+        if (x.tugash && !tug) e.push("Tugash sanasini kk.oo.yyyy ko'rinishida yozing");
+        if (bosh && tug && tug < bosh) e.push("Tugash sanasi boshlanishdan oldin bo'lmasin");
+        if (tug && tug <= b) e.push("Tugash sanasi bugundan keyin bo'lishi kerak");
+        if (bosh && tug && D.kunFarqi(bosh, tug) > 400) e.push("Polis muddati bir yildan oshmasin");
+        if (x.summa != null && !(x.summa > 0)) e.push("Sug'urta summasi 0 dan katta bo'lsin");
+        if (x.mukofot != null && x.summa != null && !(x.mukofot > 0 && x.mukofot < x.summa)) e.push("Mukofot 0 dan katta va sug'urta summasidan kichik bo'lsin");
+        const k = Y.kichik(x.raqam);
+        if (k && (D.SUGURTALAR || []).some(p => Y.kichik(p.polis) === k)) e.push("Bu raqamli polis allaqachon kiritilgan");
+        else if (k && fayldagi.has(k)) e.push("Faylda takrorlangan polis raqami");
+        if (k) fayldagi.add(k);
+        if (y && t && bosh && tug && (D.SUGURTALAR || []).some(p => p.obyektId === y.id && (p.polisTuri || "mulk") === t[0] &&
+            ["amalda", "tugaydi", "rejada"].indexOf(p.holat) >= 0 && D.sanaOqi(p.boshlanish) <= tug && D.sanaOqi(p.tugash) >= bosh))
+          e.push("Bu davrda obyektda amaldagi " + t[1] + " polisi bor");
+        return e;
+      },
+      async saqla(x){
+        const y = Y.obyekt(x.obyekt), t = Y.variant(TUR, x.tur), bosh = Y.sana(x.boshlanish), tug = Y.sana(x.tugash);
+        const yil = b.getFullYear();
+        const id = await MKB.keyingiId("SUGURTALAR", "PL-" + yil + "/", 5);
+        await MKBapi.yangi("SUGURTALAR", {id, obyektId: y.id, polis: x.raqam.trim(), polisTuri: t[0], kompaniya: x.kompaniya.trim(), summa: Math.round(x.summa * 10) / 10,
+          mukofot: Math.round(x.mukofot * 100) / 100, boshlanish: D.sanaYoz(bosh), tugash: D.sanaYoz(tug), holat: bosh > b ? "rejada" : "amalda"});
+        await MKBapi.yangi("XARAJATLAR", {id: await MKB.keyingiId("XARAJATLAR", "XJ-" + yil + "/", 4), obyektId: y.id, toifa: "sugurta", summa: Math.round(x.mukofot * 100) / 100,
+          davr: bosh.getFullYear() + "-" + String(bosh.getMonth() + 1).padStart(2, "0"), sana: D.sanaYoz(bosh), kontragent: x.kompaniya.trim(), hisobFaktura: null,
+          tasdiqlovchi: null, holat: "tolanmagan", izoh: "Polis " + id + ", fayldan kiritildi"});
+      },
+      keyin(n){ if (n && n.saqlandi) MKB.toast(n.saqlandi + " ta polis kiritildi, mukofotlar xarajatga to'lanmagan deb yozildi"); },
+    });
+  });
 })();
 </script>
 </body>

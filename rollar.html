@@ -47,7 +47,7 @@
     <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><span>Rollar</span></div>
     <div class="hs-qator"><h1>Rollar va huquqlar</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html" class="faol" aria-current="page">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="tizim-holati.html">Tizim holati</a><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html" class="faol" aria-current="page">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
 
   <div class="ustun">
     <section class="karta" data-sayohat="matritsa">
@@ -61,7 +61,7 @@
         <span><span class="yoq" aria-hidden="true">—</span><span>Bo&#39;lim yopiq</span></span>
       </div>
       <div class="orash" id="matritsa-joy"></div>
-      <p class="matritsa-izoh">Buxgalteriya va risk Sozlamalarda faqat me&#39;yoriy parametrlarni o&#39;zgartiradi.</p>
+      <p class="matritsa-izoh">Bo&#39;limning bir qismida yozish: Buxgalteriya va risk Sozlamalarda faqat me&#39;yoriy parametrlarni, Sotuvda faqat to&#39;lov belgisini o&#39;zgartiradi; Ko&#39;rik va xavfsizlik inspektori hodisa bo&#39;yicha sug&#39;urta da&#39;vosini ochadi. Ikki imzo qoidasi hamma rolga, administratorga ham amal qiladi: so&#39;rov yuborgan xodim uni o&#39;zi tasdiqlay olmaydi.</p>
     </section>
 
     <section class="karta" data-sayohat="rollar">
@@ -85,6 +85,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="boshqaruv.js?v=26092200"></script>
 <script>
 (async () => {
   const esc = MKB.esc;
@@ -97,15 +98,25 @@
 
   async function chiz(){
     const F = await MKBapi.royxat("FOYDLAR");
+    const B = window.MKB_BOSHQARUV, D = MKB_DATA;
+    const J = B.jurnal(D, await MKBapi.royxat("amallar").catch(() => []));
+    /* Huquqlarni ko'rib chiqish topilmalari rol kesimida */
+    const KOR = B.huquqKorigi(F, {aktivSoni: x => B.masulAktivlar(D, x.nom).length, oxirgiKirish: x => B.oxirgiKirish(x, J),
+      bugun: D.bugun(), jurnalBoshi: B.jurnalBoshi(J)}).filter(k => k.sabablar.length);
+    const korikSoni = nom => KOR.filter(k => k.f.rol === nom).length;
+    const korikOchiq = sahifaRuxsatlimi("foydalanuvchilar.html");
     const joriy = MKB.rol();
     const ROLLAR = Object.entries(ROL_KALIT);                     /* [nom, kalit] */
     const BOL = BOLIMLAR.map(b => ({kalit: b.kalit, nom: b.qisqa || b.yorliq, toliq: b.yorliq}))
       .concat([{kalit: "sozlama", nom: "Sozlamalar", toliq: "Sozlamalar"}]);
     const NOM = {o: "Ko'radi", y: "Yozadi", t: "Tasdiqlaydi"};
     /* Bo'lim huquqidan tashqari qisman yozish: sozlamalar.html dagi PARAM_YOZADI va server PARAMETR_YOZUVCHI */
-    const QISMAN = {buxgalteriya: {sozlama: {harf: "y", matn: "Yozadi: faqat me'yoriy parametrlar"}},
-      /* yadro/app.js va server YARATISH_ISTISNO.KORIKLAR */
-      xavfsizlik: {korik: {harf: "y", matn: "Yozadi: faqat masofaviy ko'rik natijasi"}}};
+    const QISMAN = {
+      buxgalteriya: {sozlama: {harf: "y", matn: "Yozadi: faqat me'yoriy parametrlar"},
+        /* server TOLOV_ISTISNO, mijozda MKB.tolovBelgilaydimi */
+        sotuv: {harf: "y", matn: "Yozadi: faqat to'lov belgisi"}},
+      /* yadro/app.js va server YARATISH_ISTISNO.SUGURTA_DAVOLARI */
+      nazorat: {qiymat: {harf: "y", matn: "Yozadi: faqat hodisa bo'yicha sug'urta da'vosi"}}};
     const HARF = {o: "K", y: "Y", t: "T"};
     const soni = nom => F.filter(f => f.rol === nom && f.faol !== false).length;
     /* Navigatsiya daraxtidagi nom (matn yadro faylidan, HTML ko'rinishida) */
@@ -123,7 +134,8 @@
         const r = ROL_RUXSAT[k];
         const n = soni(nom);
         return '<tr class="' + (k === joriy ? "joriy" : "") + '"><th scope="row"><a href="foydalanuvchilar.html?rol=' + encodeURIComponent(nom) + '">' + esc(nom) + "</a>" +
-          "<span><span data-tarjimasiz>" + n + "</span> <span>ta faol xodim</span></span></th>" +
+          "<span><span data-tarjimasiz>" + n + "</span> <span>ta faol xodim</span>" +
+            (korikSoni(nom) ? ' · <a href="' + (korikOchiq ? "foydalanuvchilar.html?korinish=" + encodeURIComponent("Ko'rib chiqish kerak") : "#") + '" style="color:var(--sariq-matn)"><span data-tarjimasiz>' + korikSoni(nom) + "</span> <span>tasi ko&#39;rib chiqishda</span></a>" : "") + "</span></th>" +
           BOL.map(b => {
             const h = r === null ? "oyt" : ((r || {})[b.kalit] || "");
             if (!h) return '<td><span class="yoq" aria-label="Yopiq">—</span></td>';

@@ -21,23 +21,26 @@ window.MKB_DARAXT = {
   {"f": "xarita.html", "n": "Xaritada"},
   {"f": "qabul-boshlash.html", "n": "Balansga qabul"},
   {"f": "rasmiylashtirish.html", "n": "Huquqni rasmiylashtirish"},
-  {"f": "arxiv.html", "n": "Arxiv va chiqim"}
+  {"f": "arxiv.html", "n": "Arxiv va chiqim"},
+  {"f": "kommunal.html", "n": "Kommunal holat"}
  ],
+ /* Monitoring tasmasi olti tab: Monitoring markazi, Hodisalar, Qurilmalar (ichida signallar), Kirish nazorati
+    (ruxsatlar, tashriflar, kirish voqealari), Ko'rik rejasi, Qo'riqlash. Ko'rik tasmasi: reja, kechikkanlar,
+    tarix, tayinlash, masofaviy ko'rik, inventarizatsiya. */
  "nazorat": [
   {"f": "himoya.html", "n": "Monitoring markazi"},
-  {"f": "korik-rejasi.html", "n": "Ko&#39;rik rejasi"},
-  {"f": "inventarizatsiya.html", "n": "Inventarizatsiya"},
-  {"f": "qurilmalar.html", "n": "Qurilmalar"},
   {"f": "hodisalar.html", "n": "Hodisalar"},
+  {"f": "qurilmalar.html", "n": "Qurilmalar"},
+  {"f": "ruxsatlar.html", "n": "Ruxsatlar"},
+  {"f": "tashriflar.html", "n": "Tashriflar"},
+  {"f": "kirish-voqealari.html", "n": "Signallar va voqealar"},
   {"f": "qoriqlash.html", "n": "Qo&#39;riqlash"},
+  {"f": "korik-rejasi.html", "n": "Ko&#39;rik rejasi"},
   {"f": "korik-kechikkan.html", "n": "Kechikkan ko&#39;riklar"},
   {"f": "korik-tarixi.html", "n": "Ko&#39;riklar tarixi"},
   {"f": "korik-tayinlash.html", "n": "Ko&#39;rik tayinlash"},
   {"f": "masofaviy-korik.html", "n": "Masofaviy ko&#39;rik"},
-  {"f": "kommunal.html", "n": "Kommunal"},
-  {"f": "ruxsatlar.html", "n": "Ruxsatlar"},
-  {"f": "tashriflar.html", "n": "Tashriflar"},
-  {"f": "kirish-voqealari.html", "n": "Signallar"}
+  {"f": "inventarizatsiya.html", "n": "Inventarizatsiya"}
  ],
  "qiymat": [
   {"f": "baholash.html", "n": "Baholash"},
@@ -63,6 +66,7 @@ window.MKB_DARAXT = {
  ],
  "hisobot": [
   {"f": "hisobotlar.html", "n": "Hisobotlar markazi"},
+  {"f": "haftalik.html", "n": "Haftalik xulosa"},
   {"f": "hisobot-portfel.html", "n": "Balans aktivlari"},
   {"f": "hisobot-mb.html", "n": "MB oylik hisoboti"},
   {"f": "hisobot-xarajat.html", "n": "Xarajatlar"},
@@ -74,6 +78,7 @@ window.MKB_DARAXT = {
  ],
  "sozlama": [
   {"f": "sozlamalar.html", "n": "Profil va qoidalar"},
+  {"f": "tizim-holati.html", "n": "Tizim holati"},
   {"f": "foydalanuvchilar.html", "n": "Foydalanuvchilar"},
   {"f": "rollar.html", "n": "Rollar"},
   {"f": "filiallar.html", "n": "Filiallar"},

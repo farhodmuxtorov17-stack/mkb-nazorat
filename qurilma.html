@@ -36,7 +36,7 @@
       <div class="hs-amallar" id="qr-amallar" data-tur="qurilma-amallar"></div></div>
   </div>
 
-  <section class="plitkalar" id="qr-plitkalar" aria-label="Qurilma holati" style="margin-bottom:20px" data-sayohat="holat" data-tur="qurilma-holat"></section>
+  <section class="plitkalar" id="qr-plitkalar" aria-label="Qurilma holati" data-sayohat="holat" data-tur="qurilma-holat"></section>
 
   <div class="tor-2" id="qr-tor">
     <div class="ustun">
@@ -55,6 +55,10 @@
       </section>
     </div>
     <div class="ustun">
+      <section class="karta" id="qr-obhavo-karta" hidden aria-labelledby="qr-oh-s" data-tur="qurilma-obhavo">
+        <div class="karta-bosh"><h2 id="qr-oh-s" data-ikonka="quyosh">Ob-havo va quyosh</h2><span class="chip chip-kichik chip-info">Ochiq ma'lumot, namuna</span></div>
+        <div id="qr-obhavo"></div>
+      </section>
       <section class="karta" aria-labelledby="qr-m-s" data-tur="qurilma-pasport">
         <div class="karta-bosh"><h2 id="qr-m-s" data-ikonka="hujjat">Pasport</h2></div>
         <dl class="malumot-royxat" id="qr-pasport"></dl>
@@ -89,6 +93,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/jonli.js?v=26092200"></script>
 <script>
 (() => {
   const D = MKB_DATA, esc = MKB.esc, $ = id => document.getElementById(id);
@@ -123,7 +128,8 @@
     if (q.holat === "xizmatda") return ["Xizmatda", "chip-info"];
     if (h.holat === "aloqa yo'q") return ["Signal yo'q", "chip-kul"];
     if (h.uzoqOflayn) return ["24 soatdan ortiq jim", "chip-xavf"];
-    return h.holat === "onlayn" ? ["Aloqada", "chip-yashil"] : ["1 soatdan ortiq jim", "chip-sariq"];
+    /* Shlyuz ulanmagan: "aloqada" oxirgi holat qaydi bo'yicha, jonli signal emas */
+    return h.holat === "onlayn" ? ["Qayd bo'yicha aloqada", "chip-yashil"] : ["1 soatdan ortiq jim", "chip-sariq"];
   };
   const soatMatn = s => s == null ? "—" : s >= 48 ? Math.floor(s / 24) + " kun" : s + " soat";
   const qurilmaNomi = () => (q.turNomi || q.tur) + " · " + q.id;
@@ -180,7 +186,7 @@
     $("qr-plitkalar").innerHTML =
       '<div class="plitka">' + ik("soat") + '<span class="yorliq">Oxirgi signal</span><span class="qiymat" data-tarjimasiz>' + esc(q.oxirgiSignal || "—") + "</span></div>" +
       '<div class="plitka">' + ik("signal") + '<span class="yorliq">Aloqa</span><span class="qiymat' + (h.uzoqOflayn ? " qr-xavf" : "") + '">' +
-        (h.holat === "aloqa yo'q" ? "<span>Signal kelmagan</span>" : h.holat === "onlayn" ? "<span>Aloqada</span>" : '<span data-tarjimasiz>' + soatMatn(h.oflaynSoat) + "</span> <span>jim</span>") + "</span></div>" +
+        (h.holat === "aloqa yo'q" ? "<span>Signal kelmagan</span>" : h.holat === "onlayn" ? "<span>Qayd bo'yicha aloqada</span>" : '<span data-tarjimasiz>' + soatMatn(h.signalSoat) + "</span> <span>jim</span>") + "</span></div>" +
       '<div class="plitka">' + ik("zaxira") + '<span class="yorliq">Batareya</span><span class="qiymat' + (h.batareyaPast ? " qr-xavf" : "") + '">' +
         (bat == null ? "<span>Tarmoqdan</span>" : '<span data-tarjimasiz>' + bat + "%</span>") + "</span></div>" +
       '<div class="plitka">' + ik("qurilma") + '<span class="yorliq">Quvvat va aloqa</span><span class="qiymat">' + esc(QUVVAT[q.quvvat] || q.quvvat || "—") + " · " + esc(q.aloqa || "—") + "</span></div>";
@@ -411,7 +417,28 @@
     location.href = "qurilmalar.html?obyekt=" + encodeURIComponent(q.obyektId);
   }
 
-  function hammasi(){ shapka(); plitkalar(); pasport(); ochishChiz(); jurnal(); signallar(); servislar(); tarix(); }
+  /* Ob-havo faqat avtonom quvvatli qurilmaga: harorat akkumulyatorga, quyosh panelga ta'sir qiladi.
+     Koordinata obyektdan (bo'lmasa hudud markazi), tashqariga 0,1° aniqlikda yuboriladi */
+  function obHavo(){
+    if (!MKB.jonli || !q.quvvat || q.quvvat === "tarmoq") return;
+    const y = D.topish(q.obyektId) || {};
+    const hk = (D.HUDUD_KODLAR || {})[y.hududKod] || {};
+    const lat = y.joy && y.joy.lat != null ? y.joy.lat : hk.lat, lng = y.joy && y.joy.lng != null ? y.joy.lng : hk.lng;
+    if (lat == null || lng == null) return;
+    $("qr-obhavo-karta").hidden = false;
+    const yukla = () => MKB.jonli.obHavoBlok($("qr-obhavo"), {lat, lng, quyoshli: q.quvvat === "quyosh+akkumulyator"});
+    /* Tashqi so'rov faqat xodim bosganda ketadi: bepul Open-Meteo tijoriy bo'lmagan foydalanish uchun */
+    if (obHavoOchildi){ yukla(); return; }
+    $("qr-obhavo").innerHTML = '<p style="font-size:13px;line-height:1.6;color:var(--matn-3);margin:0 0 12px"><span>Tugma bosilganda hudud koordinatasi 0,1° aniqlikda Open-Meteo ga yuboriladi.</span> ' +
+      (q.quvvat === "quyosh+akkumulyator" ? "<span>Quyoshli qurilmada panel hisobi uchun NASA POWER ga ham.</span> " : "") +
+      "<span>Bepul API tijoriy bo&#39;lmagan foydalanish uchun (CC BY 4.0). Bank ishida pullik kalit yoki o&#39;z serveri kerak.</span></p>" +
+      '<button type="button" class="tugma tugma-oq tugma-kichik" id="qr-obhavo-ol">' + ik("quyosh") + "<span>Ob-havoni olish</span></button>";
+    $("qr-obhavo-ol").addEventListener("click", () => { obHavoOchildi = true; yukla(); });
+    tarjimaQil($("qr-obhavo"));
+  }
+  let obHavoOchildi = false;
+
+  function hammasi(){ shapka(); plitkalar(); pasport(); ochishChiz(); jurnal(); signallar(); servislar(); tarix(); obHavo(); }
   hammasi();
   /* Monitoring markazidan "Eshikni ochish" havolasi bilan kelinsa, shu kartaga olib boriladi */
   if (location.hash === "#qr-ochish-karta" && !$("qr-ochish-karta").hidden) $("qr-ochish-karta").scrollIntoView();

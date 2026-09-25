@@ -195,12 +195,8 @@ MKB.sahifaYukla({
     const b = OXIRGI_KORIK.get(k.obyektId);
     if (d && (!b || d > b.sana)) OXIRGI_KORIK.set(k.obyektId, {sana: d, yozuv: k});
   });
-  const qoriqlashTuri = y => {
-    const t = y.himoya && y.himoya.qoriqlashTuri;
-    if (t) return t;
-    const q = (D.QORIQLASH || []).find(x => x.obyektId === y.id && x.holat === "amalda");
-    return q && q.qoriqlashTuri ? q.qoriqlashTuri : "yoq";
-  };
+  /* Bitta ta'rif malumot-indeks.js da: faqat qurilmasi bor obyekt "avtonom" turida, panel va reyestr bilan bir xil son */
+  const qoriqlashTuri = y => D.qoriqlashTuri(y, MKB.bugun()) || "yoq";
   const kommunalHolati = y => {
     if (!D.binolimi(y)) return "binosiz";
     const k = (y.kommunal || []).filter(x => x && x.holat && x.holat !== "mavjud emas");

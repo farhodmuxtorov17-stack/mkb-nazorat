@@ -49,10 +49,24 @@
       ["UI-2025/0755", "AK-2023/0755", {nom: "«Bo'ston Agro» fermer xo'jaligi", tur: "Yuridik shaxs"}, "AG-2022/0755", "Agrokredit", 950.0, 890.0, "Toshkent viloyat iqtisodiy sudi", "4-0733/2023"],
       ["UI-2026/0141", "AK-2026/0141", {nom: "Rasulov Otabek Farhodovich", tur: "Jismoniy shaxs"}, "MQ-2025/0141", "Mikroqarz", 40.0, 38.6, null, null]
     ];
-    YOPILGAN.forEach(([id, aktivId, qarzdor, shRaqam, shTur, berilgan, yopilgan, sud, qaror]) => {
+    /* Raqamdagi yil tegishli sanadan olinadi: BUGUN o'zgarsa ham ish, qaror va ijro raqami sanasiga mos qoladi */
+    const yili = s => { const d = D.sanaOqi(s); return d ? d.getFullYear() : null; };
+    const yilQoy = (r, y) => !r || !y ? r : String(r).replace(/\/20\d{2}$/, "/" + y).replace(/^([A-Z]{2})-20\d{2}\//, "$1-" + y + "/");
+    YOPILGAN.forEach(([id0, aktivId, qarzdor, shRaqam, shTur, berilgan, yopilgan, sud, qaror0]) => {
       const a = D.topish(aktivId);
       if (!a) return;
       const qabul = a.balans.sana;
+      /* Asos hujjati (sud qarori yoki ixtiyoriy topshirish) qabuldan oldin; ish undan oldin ochilgan:
+         sud yo'li talabnoma, da'vo va majlislarni o'z ichiga oladi, shuning uchun uzoqroq */
+      const asos = a.balans.asosHujjat.sana || qabul;
+      const ochildi = D.sanaYoz(D.kunQosh(D.sanaOqi(asos), sud ? -240 : -60));
+      const id = "UI-" + yili(ochildi) + "/" + id0.slice(-4);
+      const qaror = qaror0 ? yilQoy(qaror0, yili(asos)) : null;
+      a.balans.undiruvIshId = id;
+      a.balans.asosHujjat.raqam = yilQoy(a.balans.asosHujjat.raqam, yili(asos));
+      const tarix = [{sana: ochildi, voqea: "Ish ochildi", izoh: "Kredit " + shRaqam + " bo'yicha qarz undiruvga o'tkazildi."}];
+      if (qaror) tarix.push({sana: asos, voqea: "Sud qarori qabul qilindi", izoh: qaror});
+      tarix.push({sana: qabul, voqea: "Garov balansga qabul qilindi", izoh: "Aktiv " + aktivId + " yaratildi, ish yopildi."});
       UNDIRUV_ISHLAR.push({
         id, holat: "yopilgan", bosqich: "qabul",
         qarzdor: Object.assign({stirYokiPinfl: null, tel: null}, qarzdor),
@@ -62,9 +76,9 @@
         filial: a.filial, filialKod: a.filialKod, masul: "Sobirov Ulug'bek", advokatId: sud ? "AD-0" + (1 + UNDIRUV_ISHLAR.length % 5) : null,
         sud: sud ? {nomi: sud, ishRaqami: qaror} : null,
         qaror: qaror ? {raqam: qaror, sana: a.balans.asosHujjat.sana} : null,
-        ijro: sud ? {raqam: "IH-" + qaror.split("/")[1] + "/" + id.slice(-4), mibIjrochi: null, sana: a.balans.asosHujjat.sana} : null,
+        ijro: sud ? {raqam: "IH-" + yili(asos) + "/" + id.slice(-4), mibIjrochi: null, sana: asos} : null,
         muddat: null,
-        tarix: [{sana: qabul, voqea: "Garov balansga qabul qilindi", izoh: "Aktiv " + aktivId + " yaratildi, ish yopildi."}],
+        tarix,
         hujjatlar: [],
         aktivId, yopilganSana: qabul
       });
@@ -106,13 +120,19 @@
         const foiz = Math.round(asosiy * (0.06 + rnd() * 0.16) * 10) / 10;
         const bIndeks = BOSQ_TARTIB.indexOf(bosqich);
         const kechikish = [oraliq(35, 90), oraliq(90, 160), oraliq(150, 300), oraliq(260, 420), oraliq(380, 620)][bIndeks];
-        const id = "UI-2026/" + String(500 + n * 7).padStart(4, "0");
+        const ishRaqam = String(500 + n * 7).padStart(4, "0");
         const sud = bIndeks >= 2 ? tanla(SUDLAR) : null;
-        const qarorRaqam = bIndeks >= 3 ? (yur ? "4-" : "2-") + oraliq(1000, 1999) + "/2026" : null;
+        let qarorRaqam = bIndeks >= 3 ? (yur ? "4-" : "2-") + oraliq(1000, 1999) + "/2026" : null;
         const tarix = [{sana: nisbiy(-kechikish + oraliq(25, 35)), voqea: "Yozma ogohlantirish yuborildi", izoh: "Qarzdorga rasmiy talabnoma topshirildi."}];
         if (bIndeks >= 1) tarix.push({sana: nisbiy(-kechikish + oraliq(70, 100)), voqea: "Da'vo arizasi berildi", izoh: ""});
         if (bIndeks >= 2) tarix.push({sana: nisbiy(-kechikish + oraliq(110, 140)), voqea: "Sud ish yuritishni boshladi", izoh: sud});
-        if (bIndeks >= 3) tarix.push({sana: nisbiy(-oraliq(20, 60)), voqea: "Sud qarori qabul qilindi", izoh: qarorRaqam});
+        if (bIndeks >= 3){
+          const qarorSana = nisbiy(-oraliq(20, 60));
+          qarorRaqam = yilQoy(qarorRaqam, yili(qarorSana));
+          tarix.push({sana: qarorSana, voqea: "Sud qarori qabul qilindi", izoh: qarorRaqam});
+        }
+        /* Ish raqamidagi yil ish ochilgan (birinchi qayd) yildan */
+        const id = "UI-" + yili(tarix[0].sana) + "/" + ishRaqam;
         if (bIndeks >= 4) tarix.push({sana: nisbiy(-oraliq(3, 18)), voqea: "Ijro varaqasi MIBga topshirildi", izoh: ""});
         const muddatKun = oraliq(3, 45);
         const MUDDAT_IZOH = ["Talabnomaga javob muddati", "Da'vo arizasini ko'rib chiqish", "Navbatdagi sud majlisi",
@@ -129,9 +149,9 @@
           garov: {nom: garovNom, tur: garovTur, rasmTuri, hudud, manzil: hudud, bahoMln: Math.round((asosiy + foiz) * (0.9 + rnd() * 0.9)),
             garovShartnoma: "GSH-" + oraliq(1000, 9999)},
           filial, filialKod, masul: tanla(YURISTLAR), advokatId: bIndeks >= 1 ? D.ADVOKATLAR[n % D.ADVOKATLAR.length].id : null,
-          sud: sud ? {nomi: sud, ishRaqami: (yur ? "4-" : "2-") + oraliq(100, 999) + "/2026"} : null,
+          sud: sud ? {nomi: sud, ishRaqami: (yur ? "4-" : "2-") + oraliq(100, 999) + "/" + yili(tarix[2].sana)} : null,
           qaror: qarorRaqam ? {raqam: qarorRaqam, sana: tarix[3] ? tarix[3].sana : null} : null,
-          ijro: bIndeks >= 4 ? {raqam: "IH-2026/" + oraliq(1000, 9999), mibIjrochi: tanla(["Karimov A.", "Nazarov B.", "Olimov S."]), sana: tarix[4].sana} : null,
+          ijro: bIndeks >= 4 ? {raqam: "IH-" + yili(tarix[4].sana) + "/" + oraliq(1000, 9999), mibIjrochi: tanla(["Karimov A.", "Nazarov B.", "Olimov S."]), sana: tarix[4].sana} : null,
           muddat: {sana: nisbiy(muddatKun), izoh: MUDDAT_IZOH[bIndeks]},
           tarix,
           hujjatlar: [{tur: "Kredit shartnomasi", nom: "Kredit shartnomasi", sana: null},

@@ -39,6 +39,25 @@
 .vazifa .muddat-q{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 @media (max-width:560px){.vazifa{flex-wrap:wrap}.vazifa .ong{width:100%;justify-content:space-between;padding-left:52px}.vazifa .muddat-q{align-items:flex-start}}
 #hs-sana{margin-right:8px}
+/* ABS bilan solishtirish */
+.abs-forma{display:grid;grid-template-columns:minmax(0,220px) minmax(0,280px) minmax(0,1fr);gap:16px;align-items:start;margin-bottom:18px}
+.abs-forma .maydon{min-width:0}
+.abs-fayl-qator{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.abs-uch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.abs-uch > div{display:flex;flex-direction:column;gap:3px;padding:14px 16px;border-radius:16px;background:var(--plitka);min-width:0}
+.abs-uch small{font-size:12.5px;color:var(--matn-3)}
+.abs-uch b{font:500 20px/1.2 var(--shrift-displey);letter-spacing:-.02em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.abs-uch span{font-size:12.5px;color:var(--matn-3)}
+.abs-uch span b{font:inherit;font-weight:500;color:var(--matn-2)}
+.abs-uch .farq-bor b{color:var(--pushti-matn)}
+.abs-uch .farq-yoq b{color:var(--mint-matn)}
+.abs-farqlar{margin-top:14px}
+.abs-farqlar h3{font-size:13.5px;font-weight:500;margin:12px 0 2px}
+.abs-past{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--chiziq-2)}
+.abs-past .abs-holat{flex:1 1 260px;min-width:0;font-size:13px;color:var(--matn-2);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+@media (max-width:900px){.abs-forma{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.abs-forma > :last-child{grid-column:1 / -1}}
+@media (max-width:640px){.abs-forma,.abs-uch{grid-template-columns:minmax(0,1fr)}.abs-past .tugma{flex:1 1 100%}}
+.chop-varaq .son{text-align:right;white-space:nowrap}
 </style>
 </head>
 <body data-sahifa="panel">
@@ -90,6 +109,12 @@
     </a>
   </section>
 
+  <section class="karta" id="abs-karta" aria-labelledby="v-abs" data-sayohat="abs-solishtirish">
+    <div class="karta-bosh"><h2 id="v-abs" data-ikonka="bank">ABS bilan solishtirish</h2><span class="soni" id="abs-soni"></span>
+      <a class="karta-havola" href="hisobot-mb.html">MB hisoboti<svg class="ic"><use href="#ik-ong"/></svg></a></div>
+    <div id="abs"></div>
+  </section>
+
   <div class="tor-2">
     <section class="karta" aria-labelledby="v-tolov" data-sayohat="tolovlar">
       <div class="karta-bosh"><h2 id="v-tolov" data-ikonka="pul">Kechikkan to'lovlar</h2><span class="soni" id="tolov-soni"></span>
@@ -122,6 +147,7 @@
       <div id="vazifalar"></div>
     </section>
   </div>
+  <section class="chop-varaq" id="chop" aria-hidden="true"></section>
 </main>
 </div>
 </div>
@@ -138,10 +164,11 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="hisobot-davr.js?v=26092200"></script>
 <script>
 (async () => {
   const $ = id => document.getElementById(id);
-  const JOYLAR = {bugun: ["qator", 4], vazifalar: ["qator", 5], stavkalar: ["qator", 4], sorovlar: ["qator", 2],
+  const JOYLAR = {bugun: ["qator", 4], abs: ["karta", 3], vazifalar: ["qator", 5], stavkalar: ["qator", 4], sorovlar: ["qator", 2],
     tolovlar: ["qator", 4], mb: ["qator", 4]};
   Object.keys(JOYLAR).forEach(id => { $(id).innerHTML = MKB.skelet(JOYLAR[id][1]); });
   await MKBapi.tayyor;
@@ -159,7 +186,7 @@
   const pulQ = mln => { const m = /^(.*) (mln|mlrd) so'm$/.exec(MKB.pul(mln)); return m ? [m[1], m[2] + " so'm"] : [MKB.pul(mln), ""]; };
   const pulYoz = (id, mln) => { const [s, b] = pulQ(mln); $(id).textContent = s; if ($(id + "-b")) $(id + "-b").textContent = b; };
 
-  const KOLLAR = ["YOZUVLAR", "PARAMETRLAR", "TASDIQLAR", "SOLIQ", "SHARTNOMALAR", "IJARA", "MB_HISOBOTLAR",
+  const KOLLAR = ["YOZUVLAR", "ARXIV", "PARAMETRLAR", "TASDIQLAR", "SOLIQ", "SHARTNOMALAR", "IJARA", "MB_HISOBOTLAR",
     "MENING_VAZIFALARIM", "ZAXIRA_TARIX"];
   const sessiya = MKBapi.sessiya() || {};
   const ism = sessiya.ism || "";
@@ -235,7 +262,8 @@
     /* ---------- Mol-mulk solig'i: oxirgi chorak ---------- */
     const soliqlar = MKB.doira(D.SOLIQ || []);
     const chorak = soliqlar.map(s => s.davr).sort().pop() || null;
-    const tolanmagan = chorak ? soliqlar.filter(s => s.davr === chorak && s.holat !== "to'langan") : [];
+    /* soliq.html dagi "To'lanmagan" mezoni: summasi 0 bo'lgan hisob (butun chorak imtiyozda) to'lov kutmaydi */
+    const tolanmagan = chorak ? soliqlar.filter(s => s.davr === chorak && s.holat !== "to'langan" && +s.summa > 0) : [];
     const soliqSumma = D.yaxlit(tolanmagan.reduce((a, s) => a + (+s.summa || 0), 0));
     $("k-soliq").textContent = MKB.fmt(tolanmagan.length);
     $("k-soliq-q").textContent = tolanmagan.length ? MKB.pul(soliqSumma) : "—";
@@ -246,15 +274,16 @@
     const kechShartnoma = [];
     shartnomalar.forEach(s => {
       const otgan = (s.jadval || []).filter(j => !j.tolandi && D.sanaOqi(j.sana) && D.sanaOqi(j.sana) < b0);
-      if (otgan.length) kechShartnoma.push({s, otgan, summa: D.yaxlit(otgan.reduce((a, j) => a + (+j.summa || 0), 0)),
+      if (otgan.length) kechShartnoma.push({s, otgan, summa: D.yaxlit(otgan.reduce((a, j) => a + (+j.summa || 0), 0), 2),
         n: qoldi(otgan[0].sana)});
     });
+    /* Ijara: faqat to'lov sanasi o'tgan oylar (ijara sahifasi bilan bitta ta'rif), summalar ikki kasr bilan */
     const kechIjara = [];
     MKB.doira(D.IJARA || []).forEach(i => {
-      const otgan = (i.tolovlar || []).filter(t => !t.tolandi);
-      if (otgan.length) kechIjara.push({i, otgan, summa: D.yaxlit(otgan.reduce((a, t) => a + (+t.summa || 0), 0))});
+      const otgan = D.ijaraOtganTolovlar(i);
+      if (otgan.length) kechIjara.push({i, otgan, summa: D.yaxlit(otgan.reduce((a, t) => a + (+t.summa || 0), 0), 2)});
     });
-    const tolovSumma = D.yaxlit(kechShartnoma.reduce((a, x) => a + x.summa, 0) + kechIjara.reduce((a, x) => a + x.summa, 0));
+    const tolovSumma = D.yaxlit(kechShartnoma.reduce((a, x) => a + x.summa, 0) + kechIjara.reduce((a, x) => a + x.summa, 0), 2);
     $("k-tolov").textContent = MKB.fmt(kechShartnoma.length + kechIjara.length);
     $("tolov-soni").innerHTML = (kechShartnoma.length + kechIjara.length)
       ? son(kechShartnoma.length + kechIjara.length) + " <span>ta shartnoma</span>" : "";
@@ -292,7 +321,7 @@
         '<span class="belgi' + (tx ? " sariq" : " lavanda") + '">' + MKB.ik("zaxira") + "</span>" +
         '<span class="matn"><b>' + e(x.f.nom) + "</b><span>" +
           (kutmoqda ? "<span>Tasdiqda: so'rov</span> <span data-tarjimasiz>" + e(kutmoqda.id) + "</span>"
-            : tx ? "<span>Taxminiy: tasdiqlangach amalga kiradi</span>" : "<span>" + e(x.f.manba || "") + "</span>") +
+            : tx ? '<span class="chip chip-kichik chip-sariq">Taxminiy</span> <span>tasdiqlangach amalga kiradi</span>' : "<span>" + e(x.f.manba || "") + "</span>") +
           (x.k ? " · <span>chegara</span> " + son(x.k.qiymat) + " <span>kun</span>" : "") +
         "</span></span>" +
         '<span class="ong"><span class="qiymat" data-tarjimasiz>' + e(String(x.f.qiymat).replace(".", ",")) + "%</span></span></div>";
@@ -321,14 +350,19 @@
       return '<a class="qator" href="hisobot-mb.html?davr=' + encodeURIComponent(h.davr) + '">' +
         '<span class="belgi' + (top ? " mint" : n != null && n < 0 ? " pushti" : "") + '">' + MKB.ik("hisobot") + "</span>" +
         '<span class="matn"><b>' + oyHTML(h.davr) + "</b><span>" + son(h.obyektlarSoni || 0) + " <span>ta aktiv</span> · " +
-          '<span data-tarjimasiz>' + e(MKB.pul(h.jamiBalansQiymat)) + "</span></span></span>" +
+          '<span data-tarjimasiz>' + e(MKB.pul(h.jamiBalansQiymat)) + "</span>" +
+          (!top && h.id && D.sanaOqi(h.muddat) && oyOxiri(h.davr) < b0 ? " · <span>" + (h.solishtirish && h.solishtirish.sana ? "ABS bilan solishtirilgan" : "ABS bilan solishtirilmagan") + "</span>" : "") +
+          "</span></span>" +
         '<span class="ong">' + (top
           ? '<span class="chip chip-kichik chip-yashil">Topshirilgan</span>'
           : '<span class="vaqt" data-tarjimasiz>' + e(h.muddat || "—") + "</span>" + kunHTML(n)) + "</span></a>";
     }).join("") : MKB.boshHolat("hisobot", "Hisobot davri yo'q");
 
+    /* ---------- ABS bilan solishtirish ---------- */
+    absChiz();
+
     /* ---------- Bugungi brifing ---------- */
-    H = {mb, mbKun, sorov: meniki.length, taxminiySoni, soliq: tolanmagan.length, soliqSumma,
+    H = {mb, mbKun, abs: absKutilgan(), sorov: meniki.length, taxminiySoni, soliq: tolanmagan.length, soliqSumma,
       tolov: kechShartnoma.length + kechIjara.length, tolovSumma, chorak};
     brifingChiz();
     vazifalarChiz();
@@ -347,6 +381,9 @@
       izoh: H.mbKun == null ? "<span>muddat belgilanmagan</span>"
         : H.mbKun < 0 ? '<span class="kamaydi"><span>muddati o\'tdi</span> ' + son(Math.abs(H.mbKun)) + " <span>kun</span></span>"
         : "<span>topshirishga</span> " + son(H.mbKun) + " <span>kun</span> · <span data-tarjimasiz>MB 3441, 16-band</span>"}));
+    if (H.abs) r.push(qator({anker: "brif-abs", ikonka: "bank", diqqat: true, href: "#abs-karta",
+      sarlavha: "<span>ABS bilan solishtirilmagan</span> " + oyHTML(H.abs.davr),
+      izoh: "<span>16701 qoldig'i reyestr bilan solishtirilgach MB hisoboti topshiriladi</span>"}));
     if (H.taxminiySoni) r.push(qator({anker: "brif-stavka", ikonka: "zaxira", diqqat: false, href: "zaxira.html#zx-stavkalar-karta",
       sarlavha: "<span>Tasdiqlanmagan stavka</span> " + son(H.taxminiySoni),
       izoh: "<span>Rahbariyat tasdig'igacha zaxira hisobi taxminiy qoladi</span>"}));
@@ -398,6 +435,221 @@
     const bj = ev.target.closest("[data-bajar]");
     if (bj) bajarildi(bj);
   });
+
+  /* ---------- ABS bilan solishtirish: 16701 hisobvarag'i qoldig'i va reyestr ----------
+     Buxgalteriya oy oxiridagi ABS qoldig'ini qo'lda kiritadi (ABS ulanmagan). Ixtiyoriy analitik ko'chirma (CSV)
+     qaysi aktivda summa yoki sana mos kelmasligini ko'rsatadi. Belgi MB hisobotining shu oy yozuviga tushadi:
+     hisobot-davr.js dagi mbTopshirishTayyormi() shu belgini tekshiradi. */
+  const V = window.MKB_DAVR;
+  const absH = {davr: null, abs: null, kochirma: null, fayl: "", xatolar: [], namuna: false};
+  const belgiYoziladi = () => ((D.SXEMA && D.SXEMA.MB_HISOBOTLAR) || []).indexOf("solishtirish") >= 0;
+  const absYoza = () => MKB.huquq("hisobot", "yoz");
+  const oyOxiri = davr => { const [y, m] = String(davr).split("-").map(Number); return new Date(y, m, 0); };
+  const sonOqi = s => { const t = String(s == null ? "" : s).replace(/[\s ]/g, "").replace(",", "."); return /^-?\d+(\.\d+)?$/.test(t) ? parseFloat(t) : null; };
+  const mln = n => (window.MKB_UX_SOF ? MKB_UX_SOF.sonMatn(n, 3) : String(n)) + " mln so'm";
+  /* Farq ishorasi bilan: +12,5 / −351,3 mln so'm */
+  const mlnF = n => (n > 0 ? "+" : n < 0 ? "−" : "") + mln(Math.abs(n || 0));
+  const TUR_NOM = {"summa": "Summa farq qiladi", "absda-yoq": "ABS ko'chirmasida yo'q", "reyestrda-yoq": "Reyestrda yo'q", "sana": "Balansga olingan sana farq qiladi"};
+  function absDavrlar(){
+    return (D.MB_HISOBOTLAR || []).filter(h => h && h.id && oyOxiri(h.davr) < bugun())
+      .sort((a, b) => String(b.davr).localeCompare(String(a.davr))).slice(0, 12);
+  }
+  /* Belgilanishi kerak bo'lgan oy: topshirilmagan va solishtirilmagan eng eski oy, bo'lmasa oxirgi yopilgan oy */
+  const absKutilgan = () => absDavrlar().filter(h => h.holat !== "topshirilgan" && !(h.solishtirish && h.solishtirish.sana)).pop() || null;
+  function absHisob(){
+    const mb = absDavrlar().find(h => h.davr === absH.davr);
+    if (!mb) return null;
+    const sana = oyOxiri(mb.davr);
+    const reyestr = V.balansdagilar(D, sana, MKB.doira);
+    const rJami = D.yaxlit(reyestr.reduce((a, x) => a + x.qiymat, 0), 3);
+    const farq = absH.abs == null ? null : D.yaxlit(absH.abs - rJami, 3);
+    const sol = absH.kochirma ? V.absSolishtir(reyestr, absH.kochirma) : null;
+    return {mb, sana, reyestr, rJami, farq, sol};
+  }
+  function absChiz(){
+    const joy = $("abs");
+    const davrlar = absDavrlar();
+    if (!davrlar.length){ joy.innerHTML = MKB.boshHolat("bank", "Solishtiriladigan oy yo'q", "Oy yopilgach uning oxiridagi ABS qoldig'i shu yerda solishtiriladi"); $("abs-soni").innerHTML = ""; return; }
+    if (!absH.davr || !davrlar.some(h => h.davr === absH.davr)) absH.davr = (absKutilgan() || davrlar[0]).davr;
+    const yoza = absYoza();
+    joy.innerHTML = '<div class="abs-forma">' +
+      '<label class="maydon"><span class="maydon-yorliq">Oy yakuni</span><span class="kirish"><select id="abs-davr" aria-label="Oy yakuni">' +
+        davrlar.map(h => '<option value="' + e(h.davr) + '"' + (h.davr === absH.davr ? " selected" : "") + ">" + e(D.sanaYoz(oyOxiri(h.davr))) + "</option>").join("") +
+      "</select></span></label>" +
+      (yoza ? '<label class="maydon"><span class="maydon-yorliq">ABS qoldig\'i, 16701, mln so\'m</span><span class="kirish"><input type="text" id="abs-qoldiq" data-format="pul" inputmode="decimal" autocomplete="off" placeholder="Masalan, 353 641,6" value="' +
+          (absH.abs != null ? e(mln(absH.abs).replace(" mln so'm", "")) : "") + '"></span><span class="maydon-izoh">Oy oxiridagi aylanma-saldo qaydnomasidan</span></label>' +
+        '<div class="maydon"><span class="maydon-yorliq">Analitik ko\'chirma, ixtiyoriy</span><span class="abs-fayl-qator">' +
+          '<button type="button" class="tugma tugma-oq tugma-kichik" id="abs-fayl-tugma">' + MKB.ik("yuklash") + "CSV faylni tanlash</button>" +
+          '<input type="file" id="abs-fayl" accept=".csv,text/csv" hidden>' +
+          (D.MANBA !== "mahalliy" ? '<button type="button" class="tugma tugma-oq tugma-kichik" id="abs-namuna">' + MKB.ik("jadval-ic") + "Namoyish ko'chirmasi</button>" : "") +
+        '</span><span class="maydon-izoh" id="abs-fayl-izoh">' + (absH.kochirma
+          ? '<span data-tarjimasiz>' + e(absH.fayl) + "</span> · <b data-tarjimasiz>" + absH.kochirma.length + "</b> <span>qator</span>" +
+            (absH.xatolar.length ? " · <span>o'qilmagan qatorlar:</span> <span data-tarjimasiz>" + e(absH.xatolar.slice(0, 5).join(", ")) + "</span>" : "")
+          : "<span>Ustunlar: reyestr raqami, balansga olingan sana, summa</span>") + "</span></div>"
+        : "") +
+      '</div><div id="abs-natija"></div>';
+    absNatija();
+    $("abs-davr").addEventListener("change", ev => { absH.davr = ev.target.value; absH.abs = null; absH.kochirma = null; absH.fayl = ""; absH.xatolar = []; absH.namuna = false; absChiz(); });
+    if (yoza){
+      $("abs-qoldiq").addEventListener("input", ev => { absH.abs = sonOqi(ev.target.value); absNatija(); });
+      $("abs-fayl-tugma").addEventListener("click", () => $("abs-fayl").click());
+      $("abs-fayl").addEventListener("change", ev => { const f = ev.target.files && ev.target.files[0]; if (f) absFaylOqi(f); ev.target.value = ""; });
+      if ($("abs-namuna")) $("abs-namuna").addEventListener("click", absNamuna);
+    }
+    tarjimaQil(joy);
+  }
+  function absNatija(){
+    const h = absHisob();
+    const joy = $("abs-natija");
+    if (!h || !joy) return;
+    const s = h.mb.solishtirish || null;
+    const yoza = absYoza();
+    const sanaM = D.sanaYoz(h.sana);
+    $("abs-soni").innerHTML = s && s.sana ? '<span class="chip chip-kichik chip-yashil">Solishtirildi</span>'
+      : h.mb.holat === "topshirilgan" ? '<span class="chip chip-kichik chip-kul">Topshirilgan, solishtirilmagan</span>'
+      : '<span class="chip chip-kichik chip-sariq">Solishtirilmagan</span>';
+    const farqQuti = h.farq == null
+      ? '<div><small>Farq: ABS − reyestr</small><b>—</b><span>' + (yoza ? "ABS qoldig'ini kiriting" : "ABS qoldig'ini buxgalteriya kiritadi") + "</span></div>"
+      : '<div class="' + (Math.abs(h.farq) > 0.05 ? "farq-bor" : "farq-yoq") + '"><small>Farq: ABS − reyestr</small><b data-tarjimasiz>' +
+        e(mlnF(h.farq)) + "</b><span>" + (Math.abs(h.farq) > 0.05 ? "Farq izohlanishi kerak" : "Qoldiqlar teng") + "</span></div>";
+    let farqlar = "";
+    if (h.sol){
+      const r = h.sol.royxat;
+      const kochJami = D.yaxlit(h.sol.absJami);
+      const toliqmas = h.farq != null && Math.abs(kochJami - absH.abs) > 0.05;
+      farqlar = '<div class="abs-farqlar">' + (r.length
+        ? Object.keys(TUR_NOM).filter(t => r.some(x => x.tur === t)).map(t => {
+            const g = r.filter(x => x.tur === t);
+            return "<h3><span>" + TUR_NOM[t] + '</span> · <span data-tarjimasiz>' + g.length + "</span></h3>" + g.slice(0, 8).map(x => {
+              const y = D.topish && D.topish(x.id);
+              const nom = y ? (y.qisqa || y.nom) : ((h.reyestr.find(q => q.id === x.id) || {}).nom || "");
+              const ong = t === "sana" ? '<span data-tarjimasiz>' + e(x.reyestrSana || "—") + " → " + e(x.absSana || "—") + "</span>"
+                : '<span data-tarjimasiz>' + e(x.reyestr == null ? "—" : mln(x.reyestr)) + " → " + e(x.abs == null ? "—" : mln(x.abs)) + "</span>";
+              const ichki = '<span class="belgi' + (t === "sana" ? " sariq" : " pushti") + '">' + MKB.ik(t === "sana" ? "kalendar" : "pul") + "</span>" +
+                '<span class="matn"><b data-tarjimasiz>' + e(x.id) + "</b><span>" + e(nom || "Reyestrda topilmadi") + (x.sanaHam ? " · <span>sanasi ham farq qiladi</span>" : "") + "</span></span>" +
+                '<span class="ong">' + ong + "</span>";
+              return y ? '<a class="qator" href="obyekt.html?id=' + encodeURIComponent(x.id) + '">' + ichki + "</a>" : '<div class="qator">' + ichki + "</div>";
+            }).join("") + (g.length > 8 ? '<p class="maydon-izoh"><span>Yana</span> <span data-tarjimasiz>' + (g.length - 8) + "</span> <span>ta: to'liq ro'yxat CSV da</span></p>" : "");
+          }).join("")
+        : MKB.boshHolat("tasdiq", "Ko'chirma reyestr bilan to'liq mos", "Har bir aktivning summasi va balansga olingan sanasi bir xil")) +
+        (toliqmas ? '<p class="maydon-izoh xato"><span>Ko\'chirma jami</span> <span data-tarjimasiz>' + e(mln(kochJami)) + "</span> <span>kiritilgan ABS qoldig'iga teng emas: ko'chirma to'liq emas yoki boshqa sanaga olingan</span></p>" : "") +
+        (absH.namuna ? '<p class="maydon-izoh"><span>Namoyish ko\'chirmasi reyestrdan olingan, to\'rt qatori farqni ko\'rsatish uchun ataylab o\'zgartirilgan.</span></p>' : "") + "</div>";
+    } else if (yoza && h.farq != null && Math.abs(h.farq) > 0.05){
+      farqlar = '<p class="maydon-izoh" style="margin-top:12px">Qaysi aktivda farq borligini ko\'rish uchun ABS dan 16701 hisobvarag\'i bo\'yicha analitik ko\'chirmani yuklang.</p>';
+    }
+    const holat = s && s.sana
+      ? '<span class="chip chip-kichik chip-yashil">Solishtirildi</span> <span data-tarjimasiz>' + e(s.sana) + " · " + e(s.kim || "") + "</span> · <span>ABS</span> <span data-tarjimasiz>" +
+        e(mln(s.absQoldiq)) + "</span> · <span>farq</span> <span data-tarjimasiz>" + e(mlnF(s.farq)) + "</span>" + (s.izoh ? " · <span data-tarjimasiz>" + e(s.izoh) + "</span>" : "")
+      : h.mb.holat === "topshirilgan" ? "<span>MB hisoboti topshirilgan, ABS bilan solishtirish qayd etilmagan</span>"
+      : "<span>MB hisobotini topshirishdan oldin solishtirilgan deb belgilanadi</span>";
+    const tugmalar = (yoza && belgiYoziladi() ? '<button type="button" class="tugma tugma-asosiy" id="abs-belgila" data-yozadi>' + MKB.ik("tasdiq") +
+        (s && s.sana ? "Qayta belgilash" : "Solishtirildi deb belgilash") + "</button>" : "") +
+      (h.farq != null || (s && s.sana) ? '<button type="button" class="tugma tugma-oq" id="abs-chop">' + MKB.ik("chop") + "Dalolatnoma</button>" : "") +
+      (h.sol && h.sol.royxat.length ? '<button type="button" class="tugma tugma-oq" id="abs-csv">' + MKB.ik("csv") + "Farqlar CSV</button>" : "");
+    joy.innerHTML = '<div class="abs-uch">' +
+        '<div><small><span>Reyestr,</span> <span data-tarjimasiz>' + e(sanaM) + '</span></small><b data-tarjimasiz>' + e(mln(h.rJami)) + "</b><span>" + son(h.reyestr.length) + " <span>ta aktiv balansda</span></span></div>" +
+        '<div><small>ABS, 16701</small><b data-tarjimasiz>' + (absH.abs != null ? e(mln(absH.abs)) : s && s.sana ? e(mln(s.absQoldiq)) : "—") + "</b>" +
+          "<span>" + (absH.kochirma ? "<span>Manba: qo'lda, ko'chirma bilan</span>" : "<span>Manba: qo'lda kiritiladi, ABS ulanmagan</span>") + "</span></div>" +
+        (absH.abs == null && s && s.sana ? '<div class="' + (Math.abs(s.farq || 0) > 0.05 ? "farq-bor" : "farq-yoq") + '"><small>Farq: ABS − reyestr</small><b data-tarjimasiz>' + e(mlnF(s.farq)) + "</b><span>Belgilangan paytdagi</span></div>" : farqQuti) +
+      "</div>" + farqlar +
+      '<div class="abs-past"><span class="abs-holat">' + holat + "</span>" + tugmalar + "</div>" +
+      (yoza && !belgiYoziladi() ? '<p class="maydon-izoh" style="margin-top:10px">Belgini tizimda saqlash hali yoqilmagan: MB hisoboti yozuviga «solishtirish» maydoni qo\'shilishi kerak. Hozircha dalolatnomani chop etib, imzolang.</p>' : "");
+    const b = $("abs-belgila"); if (b) b.addEventListener("click", () => absBelgila(b));
+    const c = $("abs-chop"); if (c) c.addEventListener("click", absChop);
+    const v = $("abs-csv"); if (v) v.addEventListener("click", absCsv);
+    tarjimaQil(joy); tarjimaQil($("abs-soni"));
+  }
+  async function absFaylOqi(f){
+    try{
+      const buf = await f.arrayBuffer();
+      let matn;
+      try{ matn = new TextDecoder("utf-8", {fatal: true}).decode(buf); }catch(_){ matn = new TextDecoder("windows-1251").decode(buf); }
+      const qatorlar = window.MKB_UX_SOF && MKB_UX_SOF.csvAjrat ? MKB_UX_SOF.csvAjrat(matn)
+        : matn.replace(/^﻿/, "").split(/\r?\n/).filter(q => q.trim()).map(q => q.split(q.indexOf(";") >= 0 ? ";" : ","));
+      const r = V.absQatorlari(qatorlar);
+      if (r.xato){ MKB.toast("Ko'chirma o'qilmadi: " + r.xato, "xavf"); return; }
+      absH.kochirma = r.qatorlar; absH.xatolar = r.xatolar || []; absH.fayl = f.name; absH.namuna = false;
+      absChiz();
+    }catch(x){ MKB.toast("Ko'chirma o'qilmadi: " + (x && x.message ? x.message : "fayl buzilgan"), "xavf"); }
+  }
+  /* Namoyish rejimi: reyestrdan ko'chirma yasaladi va to'rt qatori o'zgartiriladi, farq ro'yxati qanday ishlashi ko'rinadi */
+  function absNamuna(){
+    const h = absHisob();
+    if (!h || h.reyestr.length < 12) return;
+    const r = h.reyestr.slice().sort((a, b) => String(a.id).localeCompare(String(b.id))).map(x => ({id: x.id, sana: x.sana, summa: x.qiymat}));
+    r[3] = Object.assign({}, r[3], {summa: D.yaxlit(r[3].summa + 12.5)});
+    r[11] = Object.assign({}, r[11], {sana: D.sanaYoz(D.kunQosh(r[11].sana, 1))});
+    const olindi = r.splice(7, 1)[0];
+    r.push({id: "AK-" + h.sana.getFullYear() + "/9990", sana: D.sanaYoz(h.sana), summa: 48.2});
+    absH.kochirma = r; absH.xatolar = []; absH.fayl = "namoyish-16701-" + h.mb.davr + ".csv"; absH.namuna = true;
+    absH.abs = D.yaxlit(r.reduce((a, x) => a + x.summa, 0), 3);
+    absChiz();
+    MKB.toast("Namoyish ko'chirmasi yuklandi: " + olindi.id + " qatori olib tashlangan, uch qatori o'zgartirilgan");
+  }
+  function absBelgila(tugma){
+    const h = absHisob();
+    if (!h) return;
+    if (absH.abs == null){
+      const el = $("abs-qoldiq");
+      if (el){ MKB.maydonXato && MKB.maydonXato(el, "ABS qoldig'ini kiriting"); el.focus(); }
+      return;
+    }
+    const farqBor = Math.abs(h.farq) > 0.05;
+    const nomuvofiq = h.sol ? h.sol.royxat.length : null;
+    const s = MKBapi.sessiya() || {};
+    MKB.tasdiqla({
+      sarlavha: "ABS bilan solishtirishni belgilash",
+      matn: "Belgi " + D.sanaYoz(h.sana) + " holatidagi MB hisobotiga yoziladi. Hisobot shu belgidan keyin topshiriladi.",
+      tafsilot: [["Oy yakuni", {matn: D.sanaYoz(h.sana), tarjimasiz: true}], ["Reyestr", {matn: mln(h.rJami), tarjimasiz: true}],
+        ["ABS, 16701", {matn: mln(absH.abs), tarjimasiz: true}], ["Farq", {matn: mlnF(h.farq), tarjimasiz: true}],
+        ["Manba", absH.kochirma ? "Qo'lda, ko'chirma bilan" : "Qo'lda"]].concat(nomuvofiq != null ? [["Mos kelmagan qatorlar", {matn: String(nomuvofiq), tarjimasiz: true}]] : []),
+      ton: "oddiy",
+      sabab: farqBor ? {majburiy: true, min: 10, maks: 500, yorliq: "Farq izohi", izoh: "Farq sababi va uni kim, qachon bartaraf etishi",
+        namuna: "Masalan, AK-2026/0141 qabul o'tkazmasi ABS da 01.09 sanasi bilan o'tgan"} : undefined,
+      okMatn: "Solishtirildi", bekorMatn: "Orqaga",
+      bajar: ({sabab}) => MKBapi.yangilash("MB_HISOBOTLAR", h.mb.id, {solishtirish: {
+        sana: D.sanaYoz(bugun()) + " " + MKB.soat(), kim: s.ism || MKB.kim(), kimLogin: s.login || null,
+        absQoldiq: absH.abs, reyestr: h.rJami, farq: h.farq, manba: "qo'lda", fayl: absH.kochirma ? absH.fayl : null,
+        nomuvofiq, izoh: sabab || ""}}),
+    }).then(r => {
+      if (!r) return;
+      MKB.toast("ABS bilan solishtirildi: " + D.sanaYoz(h.sana));
+      absH.abs = null; absH.kochirma = null; absH.fayl = ""; absH.namuna = false;
+      chiz();
+    });
+  }
+  function absCsv(){
+    const h = absHisob();
+    if (!h || !h.sol) return;
+    MKB.csv("abs-16701-farqlar-" + h.mb.davr + ".csv", ["Reyestr raqami", "Farq turi", "Reyestr, mln so'm", "ABS, mln so'm", "Reyestr sanasi", "ABS sanasi"],
+      h.sol.royxat.map(x => [x.id, TUR_NOM[x.tur], x.reyestr == null ? "" : x.reyestr, x.abs == null ? "" : x.abs, x.reyestrSana || "", x.absSana || ""]));
+  }
+  /* Solishtirish dalolatnomasi: bitta A4, imzo uchun */
+  function absChop(){
+    const h = absHisob();
+    if (!h) return;
+    const s = h.mb.solishtirish || {};
+    const abs = absH.abs != null ? absH.abs : s.absQoldiq;
+    const farq = absH.abs != null ? h.farq : s.farq;
+    const q = (k, v) => "<dt>" + k + '</dt><dd data-tarjimasiz>' + e(v) + "</dd>";
+    const r = h.sol ? h.sol.royxat : [];
+    $("chop").innerHTML = '<div class="cv-meta"><span>Oy yakuni:</span> <span data-tarjimasiz>' + e(D.sanaYoz(h.sana)) + "</span> · <span>16701 hisobvarag'i</span></div>" +
+      "<dl>" + q("Reyestr bo'yicha", mln(h.rJami) + " · " + h.reyestr.length + " ta") + q("ABS bo'yicha", abs != null ? mln(abs) : "—") +
+        q("Farq: ABS − reyestr", farq != null ? mlnF(farq) : "—") + "<dt>Manba</dt><dd>" + (absH.kochirma || s.fayl ? "Qo'lda, analitik ko'chirma bilan" : "Qo'lda kiritilgan, ABS ulanmagan") + "</dd>" +
+        (s.sana && absH.abs == null ? q("Solishtirildi", s.sana + " · " + (s.kim || "")) + (s.izoh ? q("Farq izohi", s.izoh) : "") : "") + "</dl>" +
+      (r.length ? "<h2>Mos kelmagan qatorlar</h2><table><thead><tr><th>Reyestr raqami</th><th>Farq turi</th><th class=\"son\">Reyestr</th><th class=\"son\">ABS</th><th>Sana: reyestr → ABS</th></tr></thead><tbody>" +
+        r.slice(0, 30).map(x => '<tr><td data-tarjimasiz>' + e(x.id) + "</td><td>" + TUR_NOM[x.tur] + '</td><td class="son" data-tarjimasiz>' + e(x.reyestr == null ? "—" : mln(x.reyestr)) +
+          '</td><td class="son" data-tarjimasiz>' + e(x.abs == null ? "—" : mln(x.abs)) + '</td><td data-tarjimasiz>' + e((x.reyestrSana || "—") + " → " + (x.absSana || "—")) + "</td></tr>").join("") +
+        (r.length > 30 ? '<tr><td colspan="5"><span>Yana</span> <span data-tarjimasiz>' + (r.length - 30) + "</span> <span>ta qator CSV faylda</span></td></tr>" : "") + "</tbody></table>" : "") +
+      '<div class="cv-imzo"><span><span>Solishtirdi:</span> ____________________</span><span><span>Bosh buxgalter:</span> ____________________</span></div>';
+    tarjimaQil($("chop"));
+    const nomQoy = () => { const n = document.querySelector(".chop-sarlavha .cs-nom"); if (n){ n.textContent = "ABS bilan solishtirish dalolatnomasi"; tarjimaQil(n.parentNode); } };
+    document.body.classList.add("chop-faol");
+    window.addEventListener("beforeprint", nomQoy);
+    const tozala = () => { document.body.classList.remove("chop-faol"); window.removeEventListener("afterprint", tozala); window.removeEventListener("beforeprint", nomQoy); };
+    window.addEventListener("afterprint", tozala);
+    window.print();
+  }
 
   /* ---------- Yuklash: skelet, xato va qayta urinish; yangilanish vaqti ---------- */
   let belgi = null;

@@ -6,11 +6,14 @@
 <title>MKB — Integratsiyalar</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
-.int-bosh{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.int-bosh{display:flex;gap:16px 24px;align-items:flex-start;flex-wrap:wrap}
 .int-bosh .matn{flex:1 1 420px;min-width:0}
 .int-bosh h2{font:500 21px/1.25 var(--shrift-displey);letter-spacing:-.03em;margin-bottom:6px}
 .int-bosh p{font-size:14px;line-height:1.6;color:var(--matn-2);max-width:760px}
-.int-bosh .ong{display:flex;gap:8px;flex-wrap:wrap}
+.int-sanoq{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.int-guruh{display:flex;flex-direction:column;gap:14px}
+.int-guruh + .int-guruh{margin-top:12px}
+.int-guruh > h2{font:500 17px/1.3 var(--shrift-displey);letter-spacing:-.02em;color:var(--matn-2)}
 .int-royxat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 @media (max-width:1100px){.int-royxat{grid-template-columns:minmax(0,1fr)}}
 .int{display:flex;flex-direction:column;gap:14px;min-width:0}
@@ -20,21 +23,37 @@
 .int-sar .nom{flex:1;min-width:0}
 .int-sar .nom b{display:block;font:500 16px/1.3 var(--shrift-displey);letter-spacing:-.02em}
 .int-sar .nom span{display:block;font-size:12.5px;color:var(--matn-3)}
+.int-meta{font-size:13px;line-height:1.5;color:var(--matn-3)}
 .int dl{display:grid;grid-template-columns:132px minmax(0,1fr);gap:9px 14px;font-size:13.5px;line-height:1.5}
 .int dt{color:var(--matn-3)}
 .int dd{color:var(--matn-2);min-width:0}
+.int-kerak b{display:block;font-weight:500;font-size:13.5px;margin-bottom:4px}
+.int-kerak ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.55;color:var(--matn-2)}
 .int .hozir{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--plitka);border-radius:16px;
   padding:10px 14px;font-size:13px;color:var(--matn-2);margin-top:auto}
+.int .hozir .m{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1 1 220px}
+.int .hozir .manba{font-weight:500;color:var(--matn-2)}
 .int .hozir a{display:inline-flex;align-items:center;gap:6px;min-height:40px;font-weight:500;color:var(--siyoh)}
 .int .hozir a .ic{width:15px;height:15px}
-@media (max-width:480px){.int dl{grid-template-columns:minmax(0,1fr);gap:2px}.int dd{margin-bottom:8px}}
+.int-admin{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--matn-3)}
+.int-admin .m{flex:1 1 200px;min-width:0}
+.int-sinov{border:1px dashed var(--chiziq-3);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.int-sinov-bosh{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap}
+.int-sinov-bosh b{font-weight:500;font-size:14px}
+.int-sinov p{font-size:13px;line-height:1.55;color:var(--matn-2)}
+.int-sinov .int-manba{font-size:12.5px;color:var(--matn-3)}
+.int-sinov pre{font:400 12px/1.5 var(--shrift-mono);background:var(--plitka);border-radius:10px;padding:8px 10px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.int-sinov dl{grid-template-columns:120px minmax(0,1fr)}
+@media (max-width:480px){.int dl,.int-sinov dl{grid-template-columns:minmax(0,1fr);gap:2px}.int dd{margin-bottom:8px}}
 .int-tafsilot summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:40px;font-size:13.5px;color:var(--matn-2)}
 .int-tafsilot summary::-webkit-details-marker{display:none}
 .int-tafsilot summary .ic{width:16px;height:16px;transition:transform var(--tez)}
 .int-tafsilot[open] summary .ic{transform:rotate(180deg)}
-.int-tafsilot dl{margin-top:6px}
+.int-tafsilot[open] > dl{margin-top:4px}
+.int-tafsilot > .int-kerak{margin-top:12px}
 .qonun{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;line-height:1.55;color:var(--matn-2)}
 .qonun .ic{width:18px;height:18px;flex:none;margin-top:2px;color:var(--matn-3)}
+.modal-izoh{font-size:13px;color:var(--matn-3);line-height:1.5;margin-bottom:14px}
 </style>
 </head>
 <body data-sahifa="sozlama">
@@ -47,23 +66,24 @@
     <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><span>Integratsiyalar</span></div>
     <div class="hs-qator"><h1>Integratsiyalar</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html" class="faol" aria-current="page">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="tizim-holati.html">Tizim holati</a><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html" class="faol" aria-current="page">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
 
   <div class="ustun">
     <section class="karta" data-sayohat="holat">
       <div class="int-bosh">
         <div class="matn">
-          <h2>Tashqi tizimlar hali ulanmagan</h2>
-          <p>Tizim bank ichidagi ma&#39;lumot bilan ishlaydi. Tashqi manbadan keladigan raqam va sanalar hozir tegishli sahifada qo&#39;lda kiritiladi. Har bir ulanish uchun axborot xavfsizligi xizmatining roziligi va ma&#39;lumot beruvchi tashkilot bilan shartnoma kerak.</p>
+          <h2 id="int-sarlavha">—</h2>
+          <p>Ulanmagan tizimning ma&#39;lumoti tegishli sahifada qo&#39;lda kiritiladi, maydon yonida manbasi yoziladi. Har bir ulanish uchun axborot xavfsizligi xizmati xulosasi va ma&#39;lumot beruvchi tashkilot bilan kelishuv kerak.</p>
         </div>
+        <div class="int-sanoq" id="int-sanoq"></div>
       </div>
     </section>
 
-    <div class="int-royxat" id="royxat" data-sayohat="tizimlar"></div>
+    <div id="guruhlar" data-sayohat="tizimlar"></div>
 
     <section class="karta">
       <div class="qonun"><svg class="ic"><use href="#ik-qalqon"/></svg>
-        <span>Kamera yozuvlari, tashrifchi va xaridor ma&#39;lumotlari O&#39;zbekiston hududidagi serverlarda qayta ishlanadi (O&#39;RQ-547, 27-1-modda). Tashqi xizmat tanlanganda bu talab shartnomaga yoziladi. Saqlash muddatlari alohida sahifada belgilanadi: <a href="sozlamalar.html#shaxsiy" style="text-decoration:underline;text-underline-offset:3px">Sozlamalar</a>.</span></div>
+        <span>O&#39;zbekiston fuqarolarining shaxsga doir ma&#39;lumotlari O&#39;zbekiston hududidagi serverlarda qayta ishlanadi (O&#39;RQ-547, 27-1-modda). Tashqi xizmat tanlanganda bu talab shartnomaga yoziladi. Chet eldagi xizmatga (Telegram) faqat shaxsiy ma&#39;lumotsiz xabar ketadi. Saqlash muddatlari: <a href="sozlamalar.html#shaxsiy" style="text-decoration:underline;text-underline-offset:3px">Sozlamalar</a>.</span></div>
     </section>
   </div>
 </main>
@@ -82,70 +102,169 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="boshqaruv.js?v=26092200"></script>
+<script src="yadro/jonli.js?v=26092200"></script>
 <script>
 (async () => {
-  await MKBapi.tayyor;
   const esc = MKB.esc;
   const $ = id => document.getElementById(id);
+  const B = window.MKB_BOSHQARUV;
+  let D, ADMIN, ROYXAT = [];
+  MKB.sahifaYukla({
+    joylar: {"guruhlar": ["karta", 6]},
+    xato: "Integratsiyalar ro'yxatini yuklab bo'lmadi",
+    ish: async () => {
+      D = MKB_DATA;
+      ADMIN = MKB.huquq("sozlama", "yoz");
+      ROYXAT = await MKBapi.royxat("INTEGRATSIYALAR");
+      chiz();
+    },
+  });
+  const HOLATLAR = () => D.INTEGRATSIYA_HOLATLARI || [];
+  const holat = t => B.tizimHolati(t.id, ROYXAT, HOLATLAR());
 
-  /* Holat: "ulanmagan" — ulanish ishlari boshlanmagan. Ulanish boshlanganda "sozlanmoqda" qo'yiladi. */
-  const TIZIMLAR = [
-    {ikonka: "gavel", nom: "E-auksion", egasi: "Elektron onlayn auksionlar savdo platformasi", holat: "ulanmagan",
-     ketadi: "Lot e'loni: aktiv, boshlang'ich narx, zakalat, savdo sanasi.",
-     keladi: "Savdo natijasi: g'olib, yakuniy narx, bayonnoma sanasi, o'tkazilmagan savdo.",
-     usul: "Platforma operatori bilan shartnoma, lot raqami bo'yicha so'rov.",
-     hozir: "Lot raqami va savdo natijasi lot kartochkasida qo'lda kiritiladi.", havola: "lotlar.html", havolaNomi: "Lotlar"},
-    {ikonka: "yer", nom: "Ko'chmas mulk kadastri", egasi: "Ko'chmas mulkka huquqlar davlat reyestri", holat: "ulanmagan",
-     ketadi: "Kadastr raqami.",
-     keladi: "Huquq egasi, qayd sanasi, reyestr ko'chirmasi, taqiq va cheklovlar.",
-     usul: "Idoralararo integratsiya platformasi orqali so'rov.",
-     hozir: "Kadastr raqami, qayd sanasi va taqiqlar qo'lda kiritiladi.", havola: "rasmiylashtirish.html", havolaNomi: "Huquqni rasmiylashtirish"},
-    {ikonka: "mashina", nom: "YHXX", egasi: "Yo'l harakati xavfsizligi xizmati", holat: "ulanmagan",
-     ketadi: "Davlat raqami yoki VIN.",
-     keladi: "Qayd holati, qayta ro'yxatdan o'tkazish sanasi, taqiqlar.",
-     usul: "Idoralararo integratsiya platformasi orqali so'rov.",
-     hozir: "Qayta qayd sanasi qo'lda kiritiladi. 10 kunlik muddatni qoida kuzatadi.", havola: "rasmiylashtirish.html", havolaNomi: "Huquqni rasmiylashtirish"},
-    {ikonka: "bank", nom: "Bank ABS", egasi: "Avtomatlashtirilgan bank tizimi", holat: "ulanmagan",
-     ketadi: "Tizimda hisoblangan zaxira summasi aktivlar kesimida.",
-     keladi: "16701 va zaxira hisobvaraqlari qoldig'i, balansga olish o'tkazmasi.",
-     usul: "Bank ichki tarmog'ida kunlik eksport fayli yoki ichki xizmat.",
-     hozir: "Balans qiymati qabulda kiritiladi. Zaxira tizimda hisoblanadi va ABS bilan qo'lda solishtiriladi.", havola: "zaxira.html", havolaNomi: "Zaxira"},
-    {ikonka: "olov", nom: "Kommunal ta'minotchilar", egasi: "Elektr, gaz va suv ta'minoti korxonalari", holat: "ulanmagan",
-     ketadi: "Shaxsiy hisob raqami.",
-     keladi: "Qarzdorlik, oxirgi ko'rsatkich, ta'minot holati.",
-     usul: "Ta'minotchilarning ochiq xizmatlari yoki to'lov agregatori orqali.",
-     hozir: "Hisoblagich ko'rsatkichi va qarz qo'lda kiritiladi.", havola: "kommunal.html", havolaNomi: "Kommunal holat"},
-    {ikonka: "kamera", nom: "NVR va IoT shlyuzi", egasi: "Kameralar, datchiklar va GPS-trekerlar", holat: "ulanmagan",
-     ketadi: "Qurilma ro'yxati va obyektga bog'lanishi.",
-     keladi: "Qurilma aloqasi, batareya darajasi, signal va xavf holati voqealari.",
-     usul: "Shlyuzdan MQTT yoki HTTPS orqali voqealar oqimi.",
-     hozir: "Qurilmalar ro'yxatga qo'lda olinadi, holati qo'lda yangilanadi.", havola: "qurilmalar.html", havolaNomi: "Qurilmalar"},
-    {ikonka: "xat", nom: "SMS shlyuzi", egasi: "Mobil operator yoki SMS xizmati", holat: "ulanmagan",
-     ketadi: "Xodimlarga muddat, yuqoriga o'tkazish va xavf holati xabarlari.",
-     keladi: "Yetkazilganlik holati.",
-     usul: "SMS xizmati bilan shartnoma, HTTPS orqali yuborish.",
-     hozir: "Bildirishnomalar tizim ichida ko'rsatiladi.", havola: "bildirishnomalar.html", havolaNomi: "Bildirishnomalar"},
-  ];
-  const HOLAT = {ulanmagan: ["Ulanmagan", "chip-kul"], sozlanmoqda: ["Sozlanmoqda", "chip-sariq"]};
+  function chiz(){
+    const h = B.TIZIMLAR.map(holat);
+    const soni = k => h.filter(x => x.kalit === k).length;
+    const ulangan = soni("ulangan");
+    $("hs-meta").innerHTML = '<b data-tarjimasiz>' + B.TIZIMLAR.length + '</b> <span>ta tashqi tizim</span>';
+    $("int-sarlavha").innerHTML = ulangan
+      ? '<span data-tarjimasiz>' + B.TIZIMLAR.length + "</span> <span>ta tizimdan</span> <span data-tarjimasiz>" + ulangan + "</span> <span>tasi ulangan</span>"
+      : "<span>Tashqi tizimlar hali ulanmagan</span>";
+    $("int-sanoq").innerHTML = HOLATLAR().map(x =>
+      '<span class="chip ' + x.chip + '"><span>' + esc(x.nom) + '</span>&nbsp;<b data-tarjimasiz>' + soni(x.kalit) + "</b></span>").join("");
 
-  $("hs-meta").innerHTML = '<b data-tarjimasiz>' + TIZIMLAR.length + '</b> <span>ta tashqi tizim</span>';
+    $("guruhlar").innerHTML = B.TIZIM_GURUHLARI.map(g => {
+      const r = B.TIZIMLAR.filter(t => t.guruh === g.kalit);
+      return r.length ? '<section class="int-guruh"><h2>' + esc(g.nom) + '</h2><div class="int-royxat">' + r.map(karta).join("") + "</div></section>" : "";
+    }).join("");
+    $("guruhlar").querySelectorAll("[data-holat]").forEach(b => b.addEventListener("click", () => holatOzgartir(B.TIZIMLAR.find(t => t.id === b.dataset.holat))));
+    const sinov = $("mqtt-tugma");
+    if (sinov) sinov.addEventListener("click", mqttBoshla);
+    /* Holat saqlanib kartalar qayta chizilganda oxirgi sinov natijasi o'chib ketmaydi */
+    if (mqttNatija && $("mqtt-natija")) $("mqtt-natija").innerHTML = mqttNatija;
+    tarjimaQil(document.querySelector(".kontent"));
+  }
 
-  $("royxat").innerHTML = TIZIMLAR.map(t => {
-    const h = HOLAT[t.holat] || HOLAT.ulanmagan;
+  /* Telefonda karta yig'ilgan holda chiqadi: holat, protokol va qo'lda kiritish qatori ko'rinadi, tafsilot bir bosishda ochiladi */
+  const tor = window.matchMedia("(max-width:720px)").matches;
+  function karta(t){
+    const h = holat(t);
+    const y = h.yozuv || {};
     const ochiq = sahifaRuxsatlimi(t.havola);
-    return '<section class="karta int">' +
-      '<div class="int-sar"><span class="belgi">' + ik(t.ikonka) + '</span><span class="nom"><b>' + esc(t.nom) + "</b><span>" + esc(t.egasi) + "</span></span>" +
-        '<span class="chip chip-kichik ' + h[1] + '">' + h[0] + "</span></div>" +
-      "<dl><dt>Tizimga keladi</dt><dd>" + esc(t.keladi) + "</dd></dl>" +
-      /* Texnik tafsilot kam kerak bo'ladi: yig'ib qo'yiladi */
-      '<details class="int-tafsilot"><summary>' + ik("past", "strelka") + "<span>Texnik tafsilot</span></summary>" +
-        "<dl><dt>Tizimdan ketadi</dt><dd>" + esc(t.ketadi) + "</dd>" +
-        "<dt>Ulanish usuli</dt><dd>" + esc(t.usul) + "</dd></dl></details>" +
-      '<div class="hozir"><span>' + esc(t.hozir) + "</span>" +
+    const meta = [B.YONALISH[t.yonalish], t.protokol, t.kanal].filter(Boolean);
+    return '<section class="karta int" id="t-' + esc(t.id) + '">' +
+      '<div class="int-sar"><span class="belgi">' + ik(t.ikonka) + '</span><span class="nom"><b>' + esc(t.nom) + "</b><span>" + esc(t.javobgar) + "</span></span>" +
+        '<span class="chip chip-kichik ' + h.chip + '">' + esc(h.nom) + "</span></div>" +
+      '<div class="int-meta">' + meta.map(m => "<span>" + esc(m) + "</span>").join(" · ") + "</div>" +
+      '<details class="int-tafsilot"' + (tor ? "" : " open") + '><summary>' + ik("past", "strelka") + "<span>Oqim va ulash shartlari</span></summary>" +
+      "<dl><dt>Tizimga keladi</dt><dd>" + esc(t.keladi) + "</dd><dt>Tizimdan ketadi</dt><dd>" + esc(t.ketadi) + "</dd></dl>" +
+      '<div class="int-kerak"><b>Ulash uchun kerak</b><ul>' + t.kerak.map(k => "<li>" + esc(k) + "</li>").join("") + "</ul></div></details>" +
+      (t.sinov === "mqtt" ? sinovBlok() : "") +
+      (y.masul || y.izoh ? '<div class="int-admin"><span class="m">' +
+        (y.masul ? "<span>Mas&#39;ul:</span> <span data-tarjimasiz>" + esc(y.masul) + "</span>" : "") +
+        (y.izoh ? (y.masul ? " · " : "") + '<span data-tarjimasiz>' + esc(y.izoh) + "</span>" : "") + "</span></div>" : "") +
+      '<div class="hozir"><span class="m"><span class="manba">' + esc(B.manbaMatni(t.id, ROYXAT)) + "</span><span>" + esc(t.qolda) + "</span></span>" +
         (ochiq ? '<a href="' + t.havola + '"><span>' + esc(t.havolaNomi) + "</span>" + ik("ong") + "</a>" : "") + "</div>" +
+      (ADMIN ? '<div class="int-admin"><button type="button" class="tugma tugma-oq tugma-kichik" data-holat="' + esc(t.id) + '" data-yozadi>' + ik("tahrir") + "Holatni o&#39;zgartirish</button></div>" : "") +
       "</section>";
-  }).join("");
-  tarjimaQil(document.querySelector(".kontent"));
+  }
+
+  /* Holat qo'lda yuritiladi: ulanish loyihasi qaysi bosqichda ekanini administrator belgilaydi */
+  function holatOzgartir(t){
+    if (!ADMIN || !t) return;
+    const h = holat(t), y = h.yozuv || {};
+    const tana = '<p class="modal-izoh">Holatni ulanish loyihasi bosqichiga qarab belgilang. &laquo;Ulangan&raquo; faqat ma&#39;lumot tizimga haqiqatda kela boshlagach qo&#39;yiladi.</p>' +
+      '<form class="forma-tor" id="ih" novalidate>' +
+        '<div class="maydon keng"><label class="maydon-yorliq" for="ih-holat">Holat <b>*</b></label>' +
+          '<div class="kirish"><select id="ih-holat" name="holat" required>' + HOLATLAR().map(x =>
+            '<option value="' + esc(x.kalit) + '"' + (x.kalit === (h.saqlangan || h.kalit) ? " selected" : "") + ">" + esc(x.nom) + "</option>").join("") + "</select></div></div>" +
+        /* "Ulangan" dalilsiz saqlanmaydi: birinchi ma'lumot kelgan sana majburiy */
+        '<div class="maydon keng" id="ih-sinxron-joy"' + ((h.saqlangan || h.kalit) === "ulangan" ? "" : " hidden") + '><label class="maydon-yorliq" for="ih-sinxron">Birinchi ma&#39;lumot kelgan sana <b>*</b></label>' +
+          '<div class="kirish"><input id="ih-sinxron" name="sinxron" type="date" max="' + isoSana(D.bugun()) + '" value="' + esc(y.oxirgiSinxron ? isoSana(D.sanaOqi(y.oxirgiSinxron)) : "") + '"></div>' +
+          '<span class="maydon-izoh">Sinxron jurnalidagi birinchi muvaffaqiyatli almashuv sanasi.</span></div>' +
+        '<div class="maydon keng"><label class="maydon-yorliq" for="ih-masul">Mas&#39;ul xodim</label>' +
+          '<div class="kirish"><input id="ih-masul" name="masul" maxlength="80" value="' + esc(y.masul || "") + '" placeholder="Familiya va ism"></div></div>' +
+        '<div class="maydon keng"><label class="maydon-yorliq" for="ih-izoh">Izoh</label>' +
+          '<div class="kirish"><textarea id="ih-izoh" name="izoh" rows="3" maxlength="300" placeholder="Masalan, kelishuv loyihasi AX xizmatida">' + esc(y.izoh || "") + "</textarea></div></div>" +
+      "</form>";
+    MKB.modal("Integratsiya holati: " + t.nom, tana, {okMatn: "Saqlash", async ok(p){
+      const f = p.querySelector("#ih");
+      const r = MKB.formaTekshir(f);
+      if (!r) return false;
+      const patch = {holat: r.qiymatlar.holat, masul: r.qiymatlar.masul || null, izoh: r.qiymatlar.izoh || ""};
+      if (patch.holat === "ulangan"){
+        const s = p.querySelector("#ih-sinxron").value;
+        if (!s){ MKB.formaXato(f, "«Ulangan» uchun birinchi ma'lumot kelgan sanani kiriting"); p.querySelector("#ih-sinxron").focus(); return false; }
+        const [yil, oy, kun] = s.split("-");
+        patch.oxirgiSinxron = kun + "." + oy + "." + yil;
+      }
+      try{
+        if (h.yozuv) await MKBapi.yangilash("INTEGRATSIYALAR", t.id, patch);
+        else await MKBapi.yangi("INTEGRATSIYALAR", Object.assign({id: t.id, nom: t.nom, oxirgiSinxron: null}, patch));
+      }catch(e){ MKB.formaXato(f, e && e.message ? e.message : "Holat saqlanmadi"); return false; }
+      ROYXAT = await MKBapi.royxat("INTEGRATSIYALAR");
+      chiz();
+      const yangi = HOLATLAR().find(x => x.kalit === patch.holat);
+      MKB.toast("Integratsiya holati saqlandi: " + t.nom + ", " + (yangi ? yangi.nom : patch.holat));
+    }});
+    const tanlov = $("ih-holat");
+    if (tanlov) tanlov.addEventListener("change", () => { $("ih-sinxron-joy").hidden = tanlov.value !== "ulangan"; });
+  }
+  const isoSana = d => d ? d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") : "";
+
+  /* ---------- Ommaviy sinov: MQTT orqali qurilma xabari ----------
+     Monitoring markazi va qurilmalar sahifasi bilan bitta mijoz (yadro/jonli.js): bitta broker ro'yxati,
+     bitta xabar sxemasi (mkb.qurilma.voqea/1) va jami 8 soniyalik chegara. Brauzer sinov datchigi nomidan
+     xabar yuboradi va uni obuna orqali qaytarib oladi. Xabarda bank ma'lumoti yo'q. */
+  const MUDDAT = 8000;
+  let mqttNatija = "";
+  function sinovBlok(){
+    return '<div class="int-sinov" data-sayohat="sinov">' +
+      '<div class="int-sinov-bosh"><b>Ommaviy sinov: qurilma xabari qanday keladi</b><span class="chip chip-kichik chip-sariq">Ommaviy namuna, bank qurilmasi emas</span></div>' +
+      "<p>Tugma bosilganda brauzer ommaviy MQTT sinov serveriga sinov datchigi nomidan xabar yuboradi va o&#39;sha xabarni obuna orqali qaytarib oladi. Shlyuz ulanganda qurilma xabari xuddi shu yo&#39;l bilan keladi: datchik, broker, tizim. Monitoring markazidagi «Ulanish namunasi» ham shu kanalni ishlatadi.</p>" +
+      '<div><button type="button" class="tugma tugma-oq tugma-kichik" id="mqtt-tugma">' + ik("signal") + "Sinov xabarini yuborish</button></div>" +
+      '<div id="mqtt-natija" aria-live="polite"></div>' +
+      '<p class="int-manba">Manba: test.mosquitto.org (Eclipse Mosquitto), zaxira: broker.emqx.io. Ikkalasi ham faqat sinov uchun ochiq: xabarni istalgan kishi ko&#39;ra oladi, shuning uchun unda bank ma&#39;lumoti yo&#39;q.</p>' +
+      "</div>";
+  }
+  async function mqttBoshla(){
+    const joy = $("mqtt-natija"), K = MKB.jonli && MKB.jonli.kanal;
+    let natija = null, oxirgiXato = null;
+    await MKB.band($("mqtt-tugma"), async () => {
+      if (!K){ oxirgiXato = new Error("yadro/jonli.js yuklanmadi"); return; }
+      const bosh = Date.now();
+      try{
+        const broker = await K.ulan();
+        natija = await new Promise((ok, rad) => {
+          let v = null;
+          const taymer = setTimeout(() => { ochir(); rad(new Error("xabar qaytmadi")); }, Math.max(1000, MUDDAT - (Date.now() - bosh)));
+          const ochir = K.tingla((tur, x) => {
+            if (tur !== "xabar" || !v || x.voqea.yuborildi !== v.yuborildi || x.voqea.qurilmaId !== v.qurilmaId) return;
+            clearTimeout(taymer); ochir();
+            ok({broker, v, x, mos: JSON.stringify(x.voqea) === JSON.stringify(v)});
+          });
+          try{ v = K.nashr({tur: "eshik-datchigi", hodisa: "Eshik ochildi", jiddiylik: "o'rta"}); }
+          catch(e){ clearTimeout(taymer); ochir(); rad(e); }
+        });
+      }catch(e){ oxirgiXato = e; }
+      finally{ K.uz(); }
+    });
+    if (natija){
+      joy.innerHTML = '<dl class="int-sinov-dl">' +
+        "<dt>Broker</dt><dd><span data-tarjimasiz>" + esc(natija.broker.nom) + "</span></dd>" +
+        '<dt>Qurilma</dt><dd class="kod-mono" data-tarjimasiz>' + esc(natija.v.qurilmaId) + "</dd>" +
+        '<dt>Yuborildi</dt><dd><pre data-tarjimasiz>' + esc(JSON.stringify(natija.v)) + "</pre></dd>" +
+        "<dt>Qaytdi</dt><dd><b data-tarjimasiz>" + Math.max(1, Math.round(natija.x.kechikish)) + "</b> <span>ms dan keyin</span>" +
+          (natija.mos ? ", <span>o&#39;zgarishsiz</span>" : '. <span>Qaytgan matn boshqacha:</span> <pre data-tarjimasiz>' + esc(JSON.stringify(natija.x.voqea)) + "</pre>") + "</dd></dl>";
+    } else {
+      joy.innerHTML = '<div class="info-qator" style="display:flex;gap:10px;font-size:13px;line-height:1.5;color:var(--matn-2)">' + ik("info") +
+        "<span>Ommaviy brokerga 8 soniyada ulanib bo&#39;lmadi yoki xabar qaytmadi. Bank tarmog&#39;i tashqi WebSocket ulanishini (8081 va 8084-portlar) yopgan bo&#39;lishi mumkin. Bu sinov bank qurilmalariga ta&#39;sir qilmaydi.</span></div>";
+      if (oxirgiXato) console.info("MQTT sinovi: " + (oxirgiXato.message || oxirgiXato.tur || oxirgiXato));
+    }
+    tarjimaQil(joy);
+    mqttNatija = joy.innerHTML;
+  }
 })();
 </script>
 </body>

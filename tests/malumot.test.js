@@ -111,6 +111,12 @@ sinov("999,9 mln so'm, 1 mlrd so'm, 1,48 mlrd so'm", () => {
   teng(D.pul(520), "520 mln so'm");
 });
 
+sinov("manfiy summa minus belgisi bilan, o'sha birlikda chiqadi", () => {
+  teng(D.pul(-1234.5), "−1,23 mlrd so'm");
+  teng(D.pul(-37.9), "−37,9 mln so'm");
+  teng(D.pul(-0.01), "0 mln so'm");
+});
+
 sinov("bo'sh qiymat tire bilan ko'rsatiladi, soxta nol chiqmaydi", () => {
   teng(D.pul(null), "—");
   teng(D.son(undefined), "—");
@@ -387,6 +393,28 @@ sinov("yopilgan ish yangi aktivga, aktiv esa ishga ishora qiladi", () => {
     ok(a, i.id + ": aktiv " + i.aktivId + " topilmadi");
     teng(a.balans.undiruvIshId, i.id, i.aktivId + " undiruvIshId");
     teng(i.holat, "yopilgan", i.id + " holati");
+  });
+});
+
+sinov("yopilgan ish: ochilish ≤ qaror ≤ yopilish, raqamdagi yil sana yiliga teng", () => {
+  const yopiq = D.UNDIRUV_ISHLAR.filter(i => i.holat === "yopilgan");
+  ok(yopiq.length > 0, "yopilgan ish yo'q");
+  const t = s => D.sanaOqi(s).getTime(), yil = s => String(D.sanaOqi(s).getFullYear());
+  yopiq.forEach(i => {
+    const ochildi = i.tarix[0].sana;
+    ok(t(ochildi) < t(i.yopilganSana), i.id + ": ochilgan kuni yopilgan");
+    teng(i.id.split("/")[0].slice(3), yil(ochildi), i.id + " raqamidagi yil");
+    if (i.qaror){
+      ok(t(ochildi) <= t(i.qaror.sana) && t(i.qaror.sana) <= t(i.yopilganSana), i.id + ": qaror sanasi ish muddatidan tashqarida");
+      teng(i.qaror.raqam.split("/")[1], yil(i.qaror.sana), i.id + " qaror raqamidagi yil");
+    }
+    if (i.ijro) teng(i.ijro.raqam.slice(3, 7), yil(i.ijro.sana), i.id + " ijro raqamidagi yil");
+  });
+  /* Faol ishlarda ham: ish raqami birinchi qayd yilidan, qaror va ijro raqami o'z sanasi yilidan */
+  D.UNDIRUV_ISHLAR.filter(i => i.holat !== "yopilgan").forEach(i => {
+    teng(i.id.split("/")[0].slice(3), yil(i.tarix[0].sana), i.id + " raqamidagi yil");
+    if (i.qaror && i.qaror.sana) teng(i.qaror.raqam.split("/")[1], yil(i.qaror.sana), i.id + " qaror raqamidagi yil");
+    if (i.ijro && i.ijro.sana) teng(i.ijro.raqam.slice(3, 7), yil(i.ijro.sana), i.id + " ijro raqamidagi yil");
   });
 });
 
@@ -769,6 +797,24 @@ sinov("yetishmaydigan hujjat turi bir marta sanaladi", () => {
     const t = D.hujjatToliqligi(y).kerak.map(k => k.tur);
     teng(new Set(t).size, t.length, y.id + " majburiy hujjatlarda takror");
   });
+});
+
+sinov("qo'riqlanmaydiganlar soni panel, reyestr, hudud va xarita uchun bitta ta'rifdan", () => {
+  const faol = D.YOZUVLAR.filter(y => y.holat !== "Chiqarildi");
+  const b = D.bugun();
+  /* panel.html, qoriqlash.html, himoya.html dagi ta'rif */
+  const shartnoma = new Set((D.QORIQLASH || []).filter(q => q.holat === "amalda" && !(D.sanaOqi(q.tugash) && D.sanaOqi(q.tugash) < b)).map(q => q.obyektId));
+  const qurilmali = new Set((D.QURILMALAR || []).map(q => q.obyektId));
+  const panel = faol.filter(y => !((y.himoya && y.himoya.qoriqlashTuri) || shartnoma.has(y.id) || qurilmali.has(y.id))).length;
+  const umumiy = faol.filter(y => !D.qoriqlanadimi(y, b)).length;
+  teng(umumiy, panel, "D.qoriqlanadimi panel ta'rifidan farq qiladi");
+  /* Hudud kesimidagi jami va xarita qatlamidagi "yoq" toifasi shu songa teng */
+  const hudud = {};
+  faol.forEach(y => { if (!D.qoriqlanadimi(y, b)) hudud[y.hudud] = (hudud[y.hudud] || 0) + 1; });
+  teng(Object.values(hudud).reduce((a, n) => a + n, 0), panel, "hudud kesimi jami");
+  teng(faol.filter(y => (D.qoriqlashTuri(y, b) || "yoq") === "yoq").length, panel, "xarita qatlami");
+  ok(faol.filter(y => D.qoriqlashTuri(y, b) === "avtonom").every(y => qurilmali.has(y.id) || (y.himoya && y.himoya.qoriqlashTuri === "avtonom")),
+    "avtonom turi qurilmasiz obyektga berilgan");
 });
 
 /* ---------- ishga tushirish ---------- */

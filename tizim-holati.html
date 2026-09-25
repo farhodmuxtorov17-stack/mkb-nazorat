@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Tizim holati</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.th-ish{list-style:none;display:flex;flex-direction:column}
+.th-ish li{display:flex;align-items:center;gap:12px 16px;padding:13px 0;flex-wrap:wrap}
+.th-ish li + li{border-top:1px solid var(--chiziq-2)}
+.th-ish li > .ic{width:20px;height:20px;flex:none;color:var(--matn-3)}
+.th-ish li.xavf > .ic{color:var(--xavf-matn-yorqin)}
+.th-ish li.ogoh > .ic{color:var(--sariq-matn)}
+.th-ish .m{flex:1 1 280px;min-width:0}
+.th-ish .m b{display:block;font-weight:500;font-size:14.5px}
+.th-ish .m > span{display:block;font-size:13px;color:var(--matn-3);line-height:1.5}
+.th-yosh{display:flex;flex-direction:column;gap:12px}
+.th-yosh .qator-y{display:grid;grid-template-columns:150px minmax(0,1fr) 56px;gap:12px;align-items:center;font-size:13.5px}
+.th-yosh .chiziq{height:10px;border-radius:6px;background:var(--plitka);overflow:hidden}
+.th-yosh .chiziq i{display:block;height:100%;border-radius:6px}
+.th-yosh .son{text-align:right;font-weight:500}
+.th-izoh{font-size:13px;line-height:1.55;color:var(--matn-3);margin-top:14px}
+.th-manba{font-size:12.5px;color:var(--matn-3);margin-top:8px}
+.th-natija{margin-top:10px;font-size:13.5px;line-height:1.55;color:var(--matn-2)}
+.th-natija b{font-weight:500}
+.th-amal{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.eskirgan{color:var(--sariq-matn)}
+/* Qayd yo'qligi ogohlantirish emas: sariq faqat 30 kundan beri o'zgarmagan to'plamga */
+.qayd-yoq{color:var(--matn-3)}
+.kod-uzun{font:400 12px/1.5 var(--shrift-mono);overflow-wrap:anywhere;color:var(--matn-3)}
+@media (max-width:1100px){.tor-2.th-tor{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:480px){.th-yosh .qator-y{grid-template-columns:minmax(0,1fr) 56px}.th-yosh .chiziq{grid-column:1 / -1;order:3}}
+</style>
+</head>
+<body data-sahifa="sozlama">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><span>Tizim holati</span></div>
+    <div class="hs-qator"><h1>Tizim holati</h1><span class="hs-meta" id="hs-meta">—</span></div>
+  </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="tizim-holati.html" class="faol" aria-current="page">Tizim holati</a><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
+
+  <section class="metrika-qator tort" id="metrikalar" aria-label="Tizim ko'rsatkichlari" data-sayohat="kpi"></section>
+
+  <section class="karta" data-sayohat="keyingi">
+    <div class="karta-bosh"><h2 data-ikonka="vazifa">Administrator e&#39;tibori kerak</h2></div>
+    <div id="ish"></div>
+  </section>
+
+  <div class="tor-2 th-tor">
+    <div class="ustun">
+      <section class="karta" data-sayohat="yangilik">
+        <div class="karta-bosh"><h2 data-ikonka="soat">Ma&#39;lumot yangiligi</h2></div>
+        <p class="th-izoh" style="margin:-8px 0 14px">Har bir to&#39;plamdagi oxirgi o&#39;zgarish amallar tarixidan olinadi. 30 kundan beri o&#39;zgarmagan to&#39;plam sariq bilan belgilanadi.</p>
+        <div id="yangilik"></div>
+      </section>
+    </div>
+    <div class="ustun">
+      <section class="karta" data-sayohat="signal">
+        <div class="karta-bosh"><h2 data-ikonka="signal">Qurilma signallari yoshi</h2><a class="karta-havola" href="qurilmalar.html" id="signal-havola">Qurilmalar</a></div>
+        <div id="signal"></div>
+      </section>
+      <section class="karta" id="nusxa" data-sayohat="nusxa">
+        <div class="karta-bosh"><h2 data-ikonka="yuklab">Eksport va to&#39;liq nusxa</h2></div>
+        <div id="nusxa-joy"></div>
+      </section>
+      <section class="karta" data-sayohat="muhit">
+        <div class="karta-bosh"><h2 data-ikonka="sozlama">Versiya va muhit</h2></div>
+        <dl class="malumot-royxat" id="muhit"></dl>
+        <div class="th-amal"><button type="button" class="tugma tugma-oq tugma-kichik" id="internet-tugma">
+          <svg class="ic"><use href="#ik-tashqi"/></svg><span>Tashqi internetni tekshirish</span></button></div>
+        <div class="th-natija" id="internet-natija" aria-live="polite"></div>
+      </section>
+    </div>
+  </div>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script src="boshqaruv.js?v=26092200"></script>
+<script>
+(async () => {
+  const esc = MKB.esc;
+  const $ = id => document.getElementById(id);
+  const B = window.MKB_BOSHQARUV;
+  let D, rejim, manba, J = [], HAQIQIY = [], INT = [], F = [], P = [], Q = [], belgi = null;
+
+  /* Sahifa administrator uchun: boshqa rolga yopiq */
+  await MKBapi.tayyor;
+  if (MKB.rol() !== "admin"){ location.replace("xato-403.html?sahifa=tizim-holati.html"); return; }
+
+  MKB.sahifaYukla({
+    joylar: {"metrikalar": ["karta", 4], "ish": ["qator", 3], "yangilik": ["jadval"], "signal": ["qator", 4], "nusxa-joy": ["qator", 2], "muhit": ["qator", 5]},
+    xato: "Tizim holatini yuklab bo'lmadi",
+    ish: async () => {
+      D = MKB_DATA; rejim = MKBapi.rejim(); manba = MKBapi.manba();
+      await yukla();
+      chiz();
+      if (!belgi) belgi = MKB.yangilanganBelgi("hs-meta", {yangila: async () => { await yukla(); chiz(); }, avto: 60});
+      else belgi.belgila();
+    },
+  });
+
+  async function yukla(){
+    const ol = k => MKBapi.royxat(k).catch(() => []);
+    [HAQIQIY, INT, F, P, Q] = await Promise.all([ol("amallar"), ol("INTEGRATSIYALAR"), ol("FOYDLAR"), ol("PARAMETRLAR"), ol("QURILMALAR")]);
+    J = B.jurnal(D, HAQIQIY || []);
+  }
+  const bugun = () => D.bugun();
+  const soniMatn = n => '<b data-tarjimasiz>' + MKB.fmt(n) + "</b>";
+
+  /* ---------- Hisob-kitoblar ---------- */
+  function radKirishlar(){
+    const chegara = new Date(Date.now() - 7 * 864e5);
+    return J.filter(a => a.turi === "kirish rad etildi" && (B.sanaOl(a.vaqt) || 0) >= chegara);
+  }
+  /* Qayd bo'yicha holat: panel va qurilmalar sahifasi bilan bir mezon (qayd paytida 24 soatdan ortiq jim yoki nosoz)
+     va qaydning o'zi qanchalik eski (hozirdan). Shlyuz ulanmaguncha ikkalasi alohida ko'rsatiladi */
+  function qaydHolati(){
+    let jim = 0, eng = null;
+    Q.forEach(q => {
+      const h = D.qurilmaHolati ? D.qurilmaHolati(q) : null;
+      if (q.holat === "nosoz" || (h && h.uzoqOflayn)) jim++;
+      if (h && h.qaydSoat != null && (eng == null || h.qaydSoat < eng)) eng = h.qaydSoat;
+    });
+    return {jim, qaydSoat: eng};
+  }
+  /* "5 soat" yoki "3 kun": son tarjimasiz, birlik lug'atdan */
+  const soatHTML = n => n < 24 ? "<b data-tarjimasiz>" + n + "</b> <span>soat</span>" : "<b data-tarjimasiz>" + Math.floor(n / 24) + "</b> <span>kun</span>";
+  function signalYoshi(){
+    const r = {soat: 0, kun: 0, eski: 0, yoq: 0};
+    Q.forEach(q => {
+      const h = D.qurilmaHolati ? D.qurilmaHolati(q) : null;
+      const s = h ? h.signalSoat : null;
+      if (s == null) r.yoq++; else if (s < 1) r.soat++; else if (s < 24) r.kun++; else r.eski++;
+    });
+    return r;
+  }
+  function korik(){
+    return B.huquqKorigi(F, {aktivSoni: x => B.masulAktivlar(D, x.nom).length, oxirgiKirish: x => B.oxirgiKirish(x, J),
+      bugun: bugun(), jurnalBoshi: B.jurnalBoshi(J)}).filter(k => k.sabablar.length);
+  }
+  const intHolat = () => B.TIZIMLAR.map(t => B.tizimHolati(t.id, INT, D.INTEGRATSIYA_HOLATLARI || []));
+
+  function chiz(){
+    metrikalar();
+    ishChiz();
+    yangilikChiz();
+    signalChiz();
+    nusxaChiz();
+    muhitChiz();
+    tarjimaQil(document.querySelector(".kontent"));
+  }
+
+  function metrikalar(){
+    const rad = radKirishlar().length;
+    const ih = intHolat();
+    const ulangan = ih.filter(x => x.kalit === "ulangan").length, sozlanmoqda = ih.filter(x => x.kalit === "sozlanmoqda").length;
+    const qh = qaydHolati();
+    const m = (href, yorliq, qiymat, izoh, ikonka) =>
+      '<a class="metrika" href="' + href + '"' + (ikonka ? ' data-ikonka="' + ikonka + '"' : "") + '><span class="m-yorliq">' + yorliq + '</span>' +
+      '<span class="m-qiymat">' + qiymat + '</span><span class="m-izoh">' + izoh + "</span></a>";
+    $("metrikalar").innerHTML =
+      m("#muhit", "Ish rejimi", rejim === "server" ? "<span>Server</span>" : "<span>Namoyish</span>",
+        manba === "mahalliy" ? "<span>Mahalliy reyestr</span>" : "<span>Shartli ma&#39;lumot</span>") +
+      m("amallar-tarixi.html?davr=7&amal=" + encodeURIComponent("Kirish rad etildi"), "Rad etilgan kirish, 7 kun", '<span data-tarjimasiz>' + rad + "</span>",
+        rad ? "<span>Noto&#39;g&#39;ri login yoki parol</span>" : "<span>Urinish qayd etilmagan</span>") +
+      m("integratsiyalar.html", "Integratsiyalar", '<span data-tarjimasiz>' + ulangan + " / " + B.TIZIMLAR.length + "</span>",
+        sozlanmoqda ? '<span>sozlanmoqda</span> <b data-tarjimasiz>' + sozlanmoqda + "</b>" : "<span>ulangan tizimlar</span>") +
+      m("qurilmalar.html?filtr=oflayn24", "Oxirgi qaydda 24 soatdan ortiq jim", '<span data-tarjimasiz>' + qh.jim + " / " + Q.length + "</span>",
+        qh.qaydSoat == null ? "<span>Qayd kiritilmagan</span>"
+          : '<span>eng yangi qayd</span> ' + soatHTML(qh.qaydSoat) + " <span>oldin</span>");
+  }
+
+  /* Administrator e'tibori: har bandda bitta aniq keyingi qadam */
+  function ishChiz(){
+    const r = [];
+    const k = korik();
+    const bo = B.bo, son = B.son;
+    const blok = k.filter(x => x.sabablar.some(s => s.kod === "blok-aktiv"));
+    if (blok.length){
+      const n = blok.reduce((s, x) => s + x.sabablar.find(q => q.kod === "blok-aktiv").soni, 0);
+      r.push({daraja: "xavf", ikonka: "bloklash", sarlavha: son(n) + " " + bo("ta aktivning mas'uli bloklangan xodim"),
+        izoh: son(blok.map(x => x.f.nom).join(", ")) + ". " + bo("Aktiv kartochkasi va ko'rik dalolatnomasida bloklangan xodim chiqadi."),
+        havola: "foydalanuvchilar.html#korik", tugma: "Aktivlarni o'tkazish"});
+    }
+    const qolgan = k.filter(x => !blok.includes(x));
+    if (qolgan.length) r.push({daraja: "ogoh", ikonka: "foydalar", sarlavha: son(qolgan.length) + " " + bo("ta hisob huquqlarni ko'rib chiqishni kutmoqda"),
+      izoh: qolgan.map(x => son(x.f.nom) + ": " + x.sabablar.map(B.sababHTML).join("; ")).join(". "),
+      havola: "foydalanuvchilar.html?korinish=" + encodeURIComponent("Ko'rib chiqish kerak"), tugma: "Hisoblarni ko'rish"});
+    const kp = P.find(p => p && p.id === "huquqKorikSana");
+    if (!(kp && B.chorakdaMi(kp.qiymat, bugun()))){
+      const c = B.chorak(bugun());
+      r.push({daraja: D.kunFarqi(bugun(), c.oxiri) <= 7 ? "xavf" : "ogoh", ikonka: "qalqon",
+        sarlavha: son(c.c + "-chorak " + c.yil) + " " + bo("uchun huquqlar ko'rib chiqilmagan"),
+        izoh: bo("Muddat:") + " " + son(D.sanaYoz(c.oxiri)) + ". " + bo("Oxirgi ko'rib chiqish:") + " " + (kp && kp.qiymat ? son(kp.qiymat) : bo("qayd etilmagan")) + ".",
+        havola: "foydalanuvchilar.html#korik", tugma: "Ko'rib chiqish"});
+    }
+    const saqlash = B.saqlashJadvali(P).filter(x => !x.saqlangan);
+    if (saqlash.length) r.push({daraja: "ogoh", ikonka: "muddat", sarlavha: son(saqlash.length) + " " + bo("ta saqlash muddati belgilanmagan"),
+      izoh: saqlash.map(x => bo(x.tur)).join(", ") + ". " + bo("Muddat belgilanmaguncha maxfiylik bildirishnomasida raqam chiqmaydi."),
+      havola: "sozlamalar.html#shaxsiy", tugma: "Muddatlarni belgilash"});
+    const qh = qaydHolati();
+    if (qh.jim) r.push({daraja: "ogoh", ikonka: "signal", sarlavha: son(qh.jim) + " " + bo("ta qurilma oxirgi qaydda 24 soatdan ortiq jim"),
+      izoh: bo("Shlyuz ulanmagan: holat qo'lda kiritilgan qayd paytidagi holat.") + (qh.qaydSoat != null ? " " + bo("Eng yangi qayd") + " " + soatHTML(qh.qaydSoat) + " " + bo("oldin kiritilgan.") : ""),
+      havola: "qurilmalar.html?filtr=oflayn24", tugma: "Qurilmalarni ochish"});
+    const rad = radKirishlar();
+    if (rad.length >= 3) r.push({daraja: "ogoh", ikonka: "qulf", sarlavha: bo("7 kunda rad etilgan kirish:") + " " + son(rad.length),
+      izoh: bo("Loginlar:") + " " + son([...new Set(rad.map(a => a.obyektId).filter(Boolean))].join(", ")) + ". " + bo("Bir login ko'p takrorlansa, xodimdan so'rang."),
+      havola: "amallar-tarixi.html?davr=7&amal=" + encodeURIComponent("Kirish rad etildi"), tugma: "Urinishlarni ko'rish"});
+    const nusxa = B.belgiOqi(B.NUSXA_KALIT);
+    const nusxaKun = nusxa && nusxa.vaqt ? D.kunFarqi(nusxa.vaqt, bugun()) : null;
+    if (nusxaKun == null || nusxaKun > 7) r.push({daraja: "ogoh", ikonka: "yuklab",
+      sarlavha: nusxaKun == null ? bo("To'liq nusxa olinmagan") : bo("Oxirgi to'liq nusxa olinganiga, kun:") + " " + son(nusxaKun),
+      izoh: bo("Nusxa barcha to'plamlar va amallar tarixini bitta faylga yig'adi, fayl SHA-256 bilan belgilanadi."), havola: "#nusxa", tugma: "Nusxa olish"});
+    const tartib = {xavf: 0, ogoh: 1};
+    r.sort((a, b) => tartib[a.daraja] - tartib[b.daraja]);
+    $("ish").innerHTML = r.length ? '<ul class="th-ish">' + r.map((x, i) =>
+      '<li class="' + x.daraja + '">' + ik(x.ikonka) + '<span class="m"><b>' + x.sarlavha + "</b><span>" + x.izoh + "</span></span>" +
+      '<a class="tugma ' + (i === 0 ? "tugma-asosiy" : "tugma-oq") + ' tugma-kichik" href="' + x.havola + '">' + esc(x.tugma) + "</a></li>").join("") + "</ul>"
+      : MKB.boshHolat("tasdiq", "E'tibor talab qiladigan narsa yo'q", "Huquqlar ko'rib chiqilgan, muddatlar belgilangan, nusxa yangi.");
+  }
+
+  /* ---------- Ma'lumot yangiligi ---------- */
+  /* Hodisalar sahifasi ikki to'plamni birga ko'rsatadi: bu yerda har biri o'z qatorida, yig'indisi o'sha sahifadagi jamiga teng */
+  const TOPLAMLAR = [["YOZUVLAR", "Aktivlar reyestri"], ["KORIKLAR", "Ko'riklar"], ["HODISALAR", "Xodim qayd etgan hodisalar"],
+    ["XAVFSIZLIK_HODISALARI", "Qurilma hodisalari"], ["TASDIQLAR", "Qarorlar"],
+    ["LOTLAR", "Lotlar"], ["SHARTNOMALAR", "Shartnomalar"], ["BAHOLASHLAR", "Baholash"], ["SUGURTALAR", "Sug'urta polislari"],
+    ["XARAJATLAR", "Xarajatlar"], ["UNDIRUV_ISHLAR", "Undiruv ishlari"], ["QURILMALAR", "Qurilmalar"], ["KIRISH_VOQEALARI", "Kirish voqealari"],
+    ["FOYDLAR", "Foydalanuvchilar"], ["PARAMETRLAR", "Me'yoriy parametrlar"], ["INTEGRATSIYALAR", "Integratsiyalar"]];
+  let yJadval = null;
+  function yangilikChiz(){
+    const qatorlar = TOPLAMLAR.map(([k, nom]) => {
+      const a = J.find(x => x.kolleksiya === k);
+      const d = a ? B.sanaOl(a.vaqt) : null;
+      const kun = d ? D.kunFarqi(d, bugun()) : null;
+      return {id: k, nom, soni: Array.isArray(D[k]) ? D[k].length : 0, vaqt: a ? a.vaqt : "", kim: a ? a.kim : "", kun,
+        t: d ? d.getTime() : 0};
+    }).sort((a, b) => b.t - a.t);
+    const cfg = {
+      id: "tizim-yangilik", qatorlar, sahifaHajmi: 20, csvNomi: "malumot-yangiligi", ustunTanlash: false,
+      ustunlar: [
+        {kalit: "nom", nom: "To'plam", majburiy: true, chiz: x => '<a href="amallar-tarixi.html?kolleksiya=' + encodeURIComponent(x.id) + '">' + esc(x.nom) + "</a>"},
+        {kalit: "soni", nom: "Yozuvlar", son: true, chiz: x => '<span data-tarjimasiz>' + MKB.fmt(x.soni) + "</span>"},
+        {kalit: "vaqt", nom: "Oxirgi o'zgarish", tur: "sana", csv: x => x.vaqt ? x.vaqt + " · " + x.kim : "", chiz: x => x.vaqt
+          ? '<span style="display:flex;flex-direction:column;gap:2px"><span class="' + (x.kun > 30 ? "eskirgan" : "") + '" data-tarjimasiz style="white-space:nowrap">' + esc(x.vaqt) + "</span>" +
+            '<span data-tarjimasiz style="font-size:12.5px;color:var(--matn-3)">' + esc(x.kim) + "</span></span>" : '<span class="qayd-yoq">Qayd yo&#39;q</span>'},
+      ],
+      bosilganda: x => { location.href = "amallar-tarixi.html?kolleksiya=" + encodeURIComponent(x.id); },
+    };
+    if (yJadval) yJadval.yangila(qatorlar); else yJadval = MKB.jadval("yangilik", cfg);
+  }
+
+  /* ---------- Qurilma signallari ---------- */
+  function signalChiz(){
+    const y = signalYoshi(), jami = Q.length || 1;
+    const qator = (nom, n, rang) => '<div class="qator-y"><span>' + nom + '</span><span class="chiziq" aria-hidden="true"><i style="width:' +
+      (n / jami * 100).toFixed(1) + "%;background:" + rang + '"></i></span><span class="son" data-tarjimasiz>' + MKB.fmt(n) + "</span></div>";
+    $("signal").innerHTML = Q.length ? '<div class="th-yosh" role="list" aria-label="Oxirgi signal yoshi">' +
+      qator("1 soatdan yangi", y.soat, "var(--yashil)") + qator("1–24 soat", y.kun, "var(--moviy)") +
+      qator("24 soatdan eski", y.eski, "var(--apelsin)") + qator("Signal qayd etilmagan", y.yoq, "var(--chiziq-3)") + "</div>" +
+      '<p class="th-izoh">Shlyuz hali ulanmagan: oxirgi signal vaqti qurilma kartochkasiga qo&#39;lda kiritilgan qayddan olinadi. Shlyuz ulangach shu jadval jonli voqealardan hisoblanadi.</p>'
+      : MKB.boshHolat("qurilma", "Qurilmalar ro'yxati bo'sh", manba === "mahalliy" ? "Mahalliy reyestrda hali kiritilmagan." : "");
+    $("signal-havola").hidden = !sahifaRuxsatlimi("qurilmalar.html");
+  }
+
+  /* ---------- Eksport va to'liq nusxa ---------- */
+  function nusxaChiz(){
+    const e = B.belgiOqi(B.EKSPORT_KALIT), n = B.belgiOqi(B.NUSXA_KALIT);
+    $("nusxa-joy").innerHTML = '<dl class="malumot-royxat">' +
+      "<dt>Oxirgi eksport</dt><dd>" + (e && e.vaqt ? '<span data-tarjimasiz>' + esc(e.vaqt) + "</span> · <span>" + esc(e.nom || "") + "</span>, " + soniMatn(e.qator || 0) + " <span>qator</span>" : "<span>Qayd etilmagan</span>") + "</dd>" +
+      "<dt>Oxirgi to&#39;liq nusxa</dt><dd>" + (n && n.vaqt ? '<span data-tarjimasiz>' + esc(n.vaqt) + "</span> · " + soniMatn(n.yozuvlar || 0) + " <span>ta yozuv</span>" +
+        '<span class="kod-uzun" style="display:block" data-tarjimasiz>SHA-256 ' + esc(n.sha256 || "") + "</span>" : "<span>Olinmagan</span>") + "</dd></dl>" +
+      '<p class="th-izoh">Sanalar shu brauzerda qayd etiladi: ' + (rejim === "server" ? "server nusxasini server ma&#39;muri alohida oladi." : "namoyish rejimida o&#39;zgarishlar faqat shu brauzerda turadi, nusxa ularni faylga chiqaradi.") + "</p>" +
+      '<div class="th-amal"><button type="button" class="tugma tugma-oq tugma-kichik" id="nusxa-tugma">' + ik("yuklab") + "To&#39;liq nusxani yuklab olish</button></div>";
+    $("nusxa-tugma").addEventListener("click", nusxaOl);
+  }
+  async function nusxaOl(){
+    const tugma = $("nusxa-tugma");
+    /* Haqiqiy reyestr nusxasida bank siri bor: yuklashdan oldin ogohlantiriladi */
+    if (manba === "mahalliy"){
+      const t = await MKB.tasdiqla({sarlavha: "Reyestr nusxasini yuklab olish",
+        matn: "Faylda haqiqiy reyestr va xodimlar ma'lumoti bo'ladi. Uni faqat bank tarmog'idagi himoyalangan papkada saqlang.",
+        ton: "xavfli", okMatn: "Nusxani yuklab olish", bekorMatn: "Orqaga"});
+      if (!t) return;
+    }
+    let natija;
+    try{
+      natija = await MKB.band(tugma, async () => {
+        const toplamlar = {};
+        let yozuvlar = 0;
+        for (const k of B.NUSXA_TOPLAMLARI){
+          try{ const r = await MKBapi.royxat(k); toplamlar[k] = r; yozuvlar += r.length; }catch(_){ toplamlar[k] = null; }
+        }
+        const s = MKBapi.sessiya() || {};
+        const vaqt = D.vaqtYoz(new Date());
+        const matn = JSON.stringify({versiya: MKB.VERSIYA, rejim, manba, vaqt, kim: s.ism || "", toplamlar, amallar: HAQIQIY}, null, 1);
+        const sha = B.sha256(matn);
+        const d = new Date(), ikki = x => String(x).padStart(2, "0");
+        const nom = "mkb-nusxa-" + d.getFullYear() + "-" + ikki(d.getMonth() + 1) + "-" + ikki(d.getDate()) + "-" + ikki(d.getHours()) + ikki(d.getMinutes()) + ".json";
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([matn], {type: "application/json"}));
+        a.download = nom;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        const b = {vaqt, nom, yozuvlar, sha256: sha, hajm: matn.length};
+        B.belgiYoz(B.NUSXA_KALIT, b);
+        return b;
+      });
+    }catch(e){ MKB.toast("Nusxa olinmadi: " + (e && e.message ? e.message : "xato"), "xavf"); return; }
+    MKB.toast("To'liq nusxa yuklab olindi: " + natija.nom, "yuklab");
+    chiz();
+  }
+
+  /* ---------- Versiya va muhit ---------- */
+  async function muhitChiz(){
+    const s = MKBapi.sessiya() || {};
+    const kutish = Math.round(MKBapi.kutishMs() / 60000);
+    const qator = (k, v) => "<dt>" + k + "</dt><dd>" + v + "</dd>";
+    $("muhit").innerHTML =
+      qator("Versiya", '<span class="kod-mono" data-tarjimasiz>' + esc(MKB.VERSIYA || "—") + "</span>") +
+      qator("Ish rejimi", rejim === "server" ? "<span>Server: ma&#39;lumot serverda, jurnal o&#39;chirilmaydi</span>"
+        : "<span>Namoyish: server yo&#39;q, o&#39;zgarishlar shu brauzerda</span>") +
+      qator("Ma&#39;lumot manbasi", manba === "mahalliy" ? "<span>Mahalliy reyestr</span>" : "<span>Shartli namoyish ma&#39;lumoti</span>") +
+      qator("Server", '<span id="salomat">' + (rejim === "server" ? "<span>Tekshirilmoqda</span>" : "<span>Ulanmagan: sahifalar statik xostingdan ochilgan</span>") + "</span>") +
+      qator("Sessiya", '<span data-tarjimasiz>' + kutish + "</span> <span>daqiqa harakatsizlikdan keyin yopiladi, eng ko&#39;pi 8 soat</span>") +
+      qator("Hisob sanasi", '<span data-tarjimasiz>' + D.sanaYoz(bugun()) + "</span>" + (D.BUGUN_QOTIRILGAN ? ' <span class="chip chip-kichik chip-sariq">Qotirilgan</span>' : "")) +
+      qator("Kirgan xodim", '<span data-tarjimasiz>' + esc(s.ism || "—") + "</span>");
+    if (rejim === "server"){
+      try{
+        const t0 = performance.now();
+        const j = await fetch("/api/salomat", {cache: "no-store"}).then(r => r.json());
+        const ms = Math.round(performance.now() - t0);
+        $("salomat").innerHTML = j && j.holat === "ok"
+          ? '<span>Javob berdi,</span> <span data-tarjimasiz>' + ms + " ms</span>" + (j.vaqt ? ' · <span>server soati</span> <span data-tarjimasiz>' + D.vaqtYoz(new Date(j.vaqt)) + "</span>" : "")
+          : "<span>Javob noto&#39;g&#39;ri</span>";
+      }catch(_){ $("salomat").innerHTML = "<span>Javob bermadi</span>"; }
+      tarjimaQil($("salomat"));
+    }
+  }
+
+  /* Tashqi internet: ochiq ob-havo API siga bitta so'rov. Ommaviy namunalar (kamera, MQTT, ob-havo) shunga bog'liq */
+  $("internet-tugma").addEventListener("click", () => MKB.band($("internet-tugma"), async () => {
+    const joy = $("internet-natija");
+    const nazorat = new AbortController();
+    const t = setTimeout(() => nazorat.abort(), 6000);
+    const t0 = performance.now();
+    try{
+      const j = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=69.28&current=temperature_2m&timezone=Asia%2FTashkent",
+        {signal: nazorat.signal, cache: "no-store"}).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+      const ms = Math.round(performance.now() - t0);
+      const h = j && j.current ? j.current : {};
+      joy.innerHTML = "<b>Ochiq.</b> <span>Javob</span> <span data-tarjimasiz>" + ms + " ms</span> <span>dan keyin keldi.</span> " +
+        (h.temperature_2m != null ? "<span>Toshkentda hozir</span> <span data-tarjimasiz>" + String(h.temperature_2m).replace(".", ",") + " °C</span>." : "") +
+        '<div class="th-manba">Ommaviy namuna, bank ma&#39;lumoti emas. Manba: Open-Meteo.com, ma&#39;lumot litsenziyasi CC BY 4.0.</div>';
+    }catch(e){
+      joy.innerHTML = "<b>Yopiq yoki javob yo&#39;q.</b> <span>Bank tarmog&#39;i tashqi so&#39;rovni to&#39;sgan bo&#39;lishi mumkin. Ommaviy namunalar ishlamaydi, tizimning o&#39;zi ishlayveradi.</span>" +
+        '<div class="th-manba">Tekshiruv manzili: api.open-meteo.com (HTTPS, 443-port).</div>';
+    }finally{ clearTimeout(t); }
+    tarjimaQil(joy);
+  }));
+})();
+</script>
+</body>
+</html>

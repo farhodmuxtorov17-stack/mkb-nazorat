@@ -1163,7 +1163,7 @@ window.MKB_YORDAM = {
     sarlavha: X("Signallar va voqealar", "Сигналы и события"),
     nimaUchun: X("Qurilmalardan kelgan hamma yozuv: eshik ochilishi, kirish va rad etilgan kirish, qurilma signallari. Yozuvlar o'zgartirilmaydi, operator faqat qarorini qo'shadi.",
                  "Все записи от устройств: открытие дверей, входы и отклонённые входы, сигналы устройств. Записи не меняются, оператор только добавляет своё решение."),
-    bloklar: [B("Kirish voqealari va Qurilma signallari", "События доступа и сигналы устройств", "Ikki ko'rinish. Filtr: obyekt, usul, yo'nalish, natija.", "Два представления. Фильтр: объект, способ, направление, результат.")],
+    bloklar: [B("Kirish voqealari va Qurilma signallari", "События доступа и сигналы устройств", "Kirish voqealari \"Kirish nazorati\" tabida, ruxsatlar va tashriflar yonida ochiladi. Qurilma signallari \"Qurilmalar\" tabida. Filtr: obyekt, usul, yo'nalish, natija.", "События доступа открываются во вкладке «Контроль доступа», рядом с допусками и посещениями. Сигналы устройств — во вкладке «Устройства». Фильтр: объект, способ, направление, результат.")],
     amallar: [B("Qatorni bosish", "Нажать на строку", "Voqea sahifasi ochiladi, u yerda operator qarorini qayd etasiz.", "Открывается страница события, где вы фиксируете решение оператора.")],
     xatolar: [],
     qoidalar: [],
@@ -1868,7 +1868,12 @@ window.MKB_YORDAM = {
     bloklar: [B("Ro'yxat", "Список", "O'qilmagan va Barchasi; kun bo'yicha guruhlangan. Bildirishnomani bossangiz, bog'liq sahifa ochiladi.", "Непрочитанные и все; сгруппированы по дням. Нажмите на уведомление, чтобы открыть связанную страницу.")],
     amallar: [B("Barchasini o'qilgan qilish", "Отметить все прочитанными", "Hammasi o'qilgan bo'ladi, 8 soniya «Qaytarish» mumkin.", "Все становятся прочитанными, 8 секунд можно нажать «Qaytarish».")],
     xatolar: [],
-    qoidalar: [],
+    qoidalar: [
+      X("Eslatma qoidadagi mas'ul rolga boradi. Obyekt bo'yicha eslatma Rahbariyatga faqat muddatdan keyin qoidadagi kun ichida (kamida 3 kun) yopilmasa o'tadi, qatorda kechikish kuni va ijrochi ko'rinadi",
+        "Напоминание приходит ответственной роли из правила. Руководству напоминание по объекту передаётся, только если исполнитель не закрыл его в течение срока из правила после дедлайна (не меньше 3 дней); в строке видны дни просрочки и исполнитель"),
+      X("Rahbariyat bank darajasidagi xabarni (MB hisoboti) va jiddiy hodisani darhol oladi. Administratorga muddat va nazorat eslatmalari bormaydi",
+        "Руководство сразу получает сообщения уровня банка (отчёт ЦБ) и о серьёзных происшествиях. Администратору напоминания о сроках и контроле не приходят"),
+    ],
     bogliq: ["vazifalar.html", "sozlamalar.html"],
   },
 

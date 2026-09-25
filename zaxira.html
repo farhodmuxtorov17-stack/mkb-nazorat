@@ -237,7 +237,8 @@
     const oxirgi12 = davrlar.filter(d => d !== joriyDavr).slice(-11);
     const dj = el("zx-dinamika");
     if (oxirgi12.length){
-      const mlrd = v => Math.round(v / 100) / 10;
+      /* ikki kasr: jadval va tooltip KPI dagi MKB.pul bilan bir xil sonni ko'rsatadi */
+      const mlrd = v => Math.round(v / 10) / 100;
       const qiymatlar = oxirgi12.map(d => mlrd(surat(d).reduce((a, z) => a + (z.summa || 0), 0))).concat([mlrd(jamiZaxira)]);
       MKBchizma.ustun(dj, {qiymatlar, yorliqlar: oxirgi12.map(davrNom).concat(["joriy"]), balandlik: 220, urgu: qiymatlar.length - 1,
         oqFormat: v => String(Math.round(v)), tooltipFormat: v => MKB.pul(v * 1000)});

@@ -81,6 +81,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/dalolatnoma.js?v=26092200"></script>
 <script>
 (() => {
   const D = MKB_DATA, esc = MKB.esc, pul = v => MKB.pul(v);
@@ -150,6 +151,7 @@
     const am = document.getElementById("amallar");
     am.innerHTML = a;
     am.querySelectorAll("[data-amal]").forEach(b => b.addEventListener("click", () => AMAL[b.dataset.amal](b)));
+    if (k !== "bekor" && MKB.dalolatnoma) MKB.dalolatnoma.tugma(am, "topshirish", {id: s.id});
 
     /* Ko'rsatkichlar */
     const foiz = s.narx > 0 ? Math.round(t.tolangan / s.narx * 100) : 0;

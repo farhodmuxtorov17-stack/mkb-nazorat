@@ -221,13 +221,14 @@ p,li,dd{text-wrap:pretty}
 .sana-belgisi:hover{filter:brightness(.96)}
 
 /* ---------- Shapka: pilyula-tablar ----------
-   1280–1920 da bir qator (72px). Pilyulalar bo'lim qisqa nomi bilan, joriy bo'lim yon panelda.
-   ≤1180 da pilyulalar yashiriladi, ≤1024 da hamburger, ≤720 da qidiruv tugmaga aylanadi. */
+   1280–1920 da bir qator (72px). Yon panel ochiq turgan kenglikda (>1024) pilyulalar ko'rinmaydi: ular yon panelning
+   birinchi uchta bandini takrorlardi. 721–1024 da yon panel yig'iladi va pilyulalar shapkada chiqadi,
+   ≤720 da joy menyu tugmasi va qidiruv tugmasiga qoladi. */
 .shapka{
   min-height:var(--shapka-boyi);display:flex;align-items:center;gap:10px;flex-wrap:nowrap;
   padding:14px var(--sahna-chekinish) 4px;max-width:var(--sahna-eni);width:100%;margin:0 auto;position:relative;z-index:30;
 }
-.pill-nav{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;min-width:0;overflow:hidden}
+.pill-nav{display:none;align-items:center;gap:6px;flex-wrap:nowrap;min-width:0;overflow:hidden}
 .pill{
   display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px;
   border-radius:var(--r-pilyula);background:var(--oq);color:var(--siyoh);
@@ -472,6 +473,7 @@ p,li,dd{text-wrap:pretty}
 .chip-oq{background:var(--band);color:var(--matn-2)}
 :is(.foto-shapka,.obyekt-media,.surat-kadr) .chip-oq{background:rgba(255,255,255,.16);color:var(--oq);backdrop-filter:blur(6px)}
 .chip-kichik{height:28px;padding:0 12px;font-size:12px}
+.chip-kichik > .ic{width:14px;height:14px}
 .kod-mono{font:500 13px var(--shrift-mono);color:var(--matn-3);letter-spacing:-.01em}
 .pul{font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 
@@ -512,6 +514,8 @@ p,li,dd{text-wrap:pretty}
 
 /* ---------- Ko'rinish almashtirgich (Jadval / Kartalar / Oylar, xarita qatlami) ---------- */
 .almashtirgich{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--oq);box-shadow:var(--soya-past);border-radius:var(--r-pilyula)}
+/* Tab ichidagi ko'rinishlar (Kirish nazorati: ruxsatlar, tashriflar, voqealar) tasma ostida, kontent kengligiga cho'zilmaydi */
+.kontent > .almashtirgich{align-self:flex-start;max-width:100%}
 .almashtirgich :is(button,a){display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:var(--r-pilyula);
   font-size:13.5px;color:var(--matn-2);background:none;box-shadow:none;transition:background var(--tez),color var(--tez)}
 .almashtirgich :is(button,a):hover{color:var(--siyoh);background:var(--plitka)}
@@ -573,8 +577,8 @@ button.tanlov:focus-visible{outline:none;box-shadow:0 0 0 2px var(--siyoh),var(-
 .jadval-asbob .izlash{box-shadow:none;background:var(--plitka);min-width:200px;max-width:300px;flex:1 1 220px}
 /* Oq sirt (karta, jadval, modal, yon panel) ichida oq tugma va tanlov soyasiz qoladi: band fon bilan ajraladi.
    Sahifa fonida (gradient) oq + soya ko'rinishi saqlanadi; qora foto-shapkada ham oq qoladi. */
-:is(.karta,.jadval-korpus,.modal,.yon-panel) :is(.tugma-oq,.tanlov,.almashtirgich,.pill:not(.faol),.filtr-pilyula > button:not([aria-pressed="true"])){background:var(--band);box-shadow:none}
-:is(.karta,.jadval-korpus,.modal,.yon-panel) :is(.tugma-oq,.tanlov,.pill:not(.faol),.filtr-pilyula > button:not([aria-pressed="true"])):hover{background:var(--band-hover);box-shadow:none}
+:is(.karta,.jadval-korpus,.modal,.yon-panel,.obyekt-karta,.doska-karta,.sayohat-taklif,.metrika) :is(.tugma-oq,.tanlov,.almashtirgich,.pill:not(.faol),.filtr-pilyula > button:not([aria-pressed="true"])){background:var(--band);box-shadow:none}
+:is(.karta,.jadval-korpus,.modal,.yon-panel,.obyekt-karta,.doska-karta,.sayohat-taklif,.metrika) :is(.tugma-oq,.tanlov,.pill:not(.faol),.filtr-pilyula > button:not([aria-pressed="true"])):hover{background:var(--band-hover);box-shadow:none}
 :is(.karta,.jadval-korpus,.modal,.yon-panel) .almashtirgich :is(button,a):hover{background:var(--band-hover)}
 :is(.karta,.jadval-korpus,.modal,.yon-panel) :is(.tanlov:focus-within,button.tanlov:focus-visible){box-shadow:0 0 0 2px var(--siyoh)}
 :is(.karta,.jadval-korpus,.modal,.yon-panel) .foto-shapka .tugma-oq{background:var(--oq)}
@@ -1165,7 +1169,6 @@ a.qator:active{background:var(--band)}
 }
 @media (max-width:1100px){
   .tor-2,.tor-2-teng,.tor-3{grid-template-columns:minmax(0,1fr)}
-  .pill-nav{display:none}
   .metrika-qator:has(> :nth-child(4):last-child),.metrika-qator.tort{grid-template-columns:repeat(2,minmax(0,1fr))}
   .metrika-qator:has(> :nth-child(3):last-child),.metrika-qator.uch{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
@@ -1180,6 +1183,15 @@ a.qator:active{background:var(--band)}
   /* Suzuvchi menyu — teginish bilan boshqariladi: ichki bandlar ham kamida 40px */
   .yon-ichki a{min-height:40px}
   .menyu-tugma{display:grid}
+  .pill-nav{display:flex}
+}
+/* 721–960: uchta pilla va qidiruv maydoni bir qatorga sig'maydi — qidiruv tugmaga aylanadi (Ctrl+K palitrasini ochadi) */
+@media (max-width:960px){
+  .shapka .izlash{display:none}
+  .shapka .izlash-tugma{display:grid}
+  .shapka.izlash-ochiq .izlash{display:flex;position:absolute;left:24px;right:24px;top:calc(100% + 4px);max-width:none;min-width:0;z-index:95}
+}
+@media (max-width:1024px){
   .yon-parda{position:fixed;inset:0;background:var(--parda-yengil);z-index:39;display:none}
   .yon-parda.ochiq{display:block}
   .izlash{max-width:none}
@@ -1189,6 +1201,7 @@ a.qator:active{background:var(--band)}
   .hs-qator h1{font-size:26px}
   .metrika .m-qiymat{font-size:27px}
   .pill{height:42px;padding:0 16px;font-size:13.5px}
+  .pill-nav{display:none}
   .obyekt-tor{grid-template-columns:minmax(0,1fr)}
   /* Shapka: qidiruv tugmaga aylanadi, o'ng blok siqiladi; jadval va reyestr qidiruvi joyida qoladi */
   .shapka{gap:6px;padding-top:10px}
@@ -1209,7 +1222,7 @@ a.qator:active{background:var(--band)}
   /* Teginish nishonlari kamida 40px */
   .hs-yorliq a{min-height:40px;padding:0 2px}
   .karta-havola{min-height:40px}
-  .tugma-kichik{height:40px}
+  .tugma-kichik,.orqaga-tugma{height:40px}
   .amal-tugma{width:40px;height:40px}
   .sahifalash button{min-width:40px;height:40px}
   .jadval-asbob{padding:16px 16px 12px;gap:8px}
@@ -1715,7 +1728,14 @@ main[data-chop="albom"]{page:albom}
   .chop-sarlavha .cs-logo{display:flex;align-items:center;gap:8px;grid-row:span 3;font-size:13px}
   .chop-sarlavha .cs-nom{font-size:17px;font-weight:600}
   .chop-sarlavha .cs-filtr,.chop-sarlavha .cs-meta{font-size:11px;color:#333}
-  .chop-oyoq{display:flex;justify-content:space-between;position:fixed;left:0;right:0;bottom:0;font-size:9.5px;color:#555;border-top:1px solid #bbb;padding-top:3px}
+  /* Pastki qator @page chekkasida chiqadi (yadro/ux.js chopKuzat): kontentni yopmaydi. Element faqat matn manbai */
+  .chop-oyoq{display:none!important}
+  /* Qog'ozda ekran bezagi va interaktiv elementlar yo'q (UX shartnomasi §12.4); kerakli tugma .chop-korin bilan qoladi */
+  .metrika-qator .metrika{box-shadow:none;border:1px solid #ddd}
+  main :is(.tugma,.karta-havola,.amal-doira):not(.chop-korin){display:none!important}
+  /* Sarlavha bir marta: chop sarlavhasi bor bo'lsa yo'l satri va h1 takrorlanmaydi */
+  .hujjat-shapka .hs-yorliq{display:none}
+  main:has(> .chop-sarlavha) .hs-qator h1{display:none}
   .chip{border:1px solid currentColor}
   a{text-decoration:none;color:inherit}
   .jadval-korpus.yopishqoq .jadval-orash .jadval thead th{position:static}

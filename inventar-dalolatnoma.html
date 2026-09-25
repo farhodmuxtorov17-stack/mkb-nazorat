@@ -5,46 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Inventarizatsiya dalolatnomasi</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
+<link rel="stylesheet" href="yadro/dalolatnoma.css?v=26092200">
 <style>
-.akt{max-width:1040px;width:100%}
-.akt-bosh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 20px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--chiziq)}
-.akt-bosh h2{font:500 22px/1.2 var(--shrift-displey);letter-spacing:-.02em;margin:4px 0 6px}
-.akt-bosh .yorliq{font-size:12.5px;color:var(--matn-3);text-transform:uppercase;letter-spacing:.06em}
-.akt h3{font:500 16px var(--shrift-displey);margin:26px 0 10px}
-.akt p{font-size:14px;line-height:1.55;margin:0}
-.id-jamlama{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:20px}
-.id-jamlama div{padding:14px 16px;border-radius:var(--r-plitka);background:var(--plitka);min-width:0}
-.id-jamlama span{display:block;font-size:12.5px;color:var(--matn-3)}
-.id-jamlama b{font:500 28px/1.1 var(--shrift-displey)}
-.id-jamlama .xavf b{color:var(--xavf-matn-yorqin)}
-.qaydnoma{width:100%;border-collapse:collapse;font-size:13.5px}
-.qaydnoma th{font-weight:500;font-size:12px;color:var(--matn-3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--chiziq)}
-.qaydnoma td{padding:10px;border-bottom:1px solid var(--chiziq);vertical-align:top}
-.qaydnoma td.son,.qaydnoma th.son{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.qaydnoma small{display:block;color:var(--matn-3);font-size:12px}
-.qaydnoma tr.kam td{background:color-mix(in srgb,var(--pushti) 55%,transparent)}
-.qaydnoma tr.ort td{background:color-mix(in srgb,var(--lavanda) 55%,transparent)}
-.qaydnoma-oral{overflow-x:auto;margin:0 -4px;padding:0 4px}
-.akt-imzo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:34px}
-.akt-imzo div{border-top:1px solid var(--matn-3);padding-top:8px;font-size:13px;color:var(--matn-2);min-width:0}
-.akt-imzo small{display:block;color:var(--matn-3)}
-@media (max-width:720px){
-  .id-jamlama{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .akt-imzo{grid-template-columns:minmax(0,1fr)}
-  .qaydnoma thead{display:none}
-  .qaydnoma,.qaydnoma tbody,.qaydnoma tr,.qaydnoma td{display:block;width:100%}
-  .qaydnoma tr{border-bottom:1px solid var(--chiziq);padding:8px 0}
-  .qaydnoma td{border:0;padding:3px 0}
-  .qaydnoma td.son{text-align:left}
-  .qaydnoma td[data-y]::before{content:attr(data-y) ": ";color:var(--matn-3);font-size:12px}
-}
-@media print{
-  .akt{max-width:none;border:0!important}
-  .id-jamlama{grid-template-columns:repeat(4,1fr)}
-  .akt-imzo{grid-template-columns:repeat(3,1fr)}
-  .qaydnoma tr{break-inside:avoid}
-  .qaydnoma-oral{overflow:visible}
-}
+#id-akt > .skelet-royxat{background:var(--oq);border-radius:var(--r-karta);padding:24px;box-shadow:var(--soya);max-width:880px;margin:0 auto;width:100%}
+#id-akt > .karta{max-width:880px;margin:0 auto;width:100%}
 </style>
 </head>
 <body data-sahifa="korik">
@@ -59,7 +23,7 @@
       <div class="hs-amallar" id="id-amallar"></div></div>
   </div>
   <div id="id-xabar" class="chop-yashir"></div>
-  <section class="karta akt" id="id-akt" data-sayohat="akt"><div class="skelet-royxat" aria-busy="true"></div></section>
+  <div id="id-akt" data-sayohat="akt"><div class="skelet-royxat" aria-busy="true"></div></div>
 </main>
 </div>
 </div>
@@ -76,6 +40,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/dalolatnoma.js?v=26092200"></script>
 <script>
 (() => {
   const akt = document.getElementById("id-akt");
@@ -86,8 +51,8 @@
   const z = id ? (D.INVENTARIZATSIYALAR || []).find(x => x.id === id) : null;
   const doirada = z && (!MKB.filialXodimi() || (z.obyektlar || []).some(o => MKB.doira([{obyektId: o}]).length));
   if (!z || !doirada){
-    akt.innerHTML = MKB.boshHolat("skaner", "Inventarizatsiya topilmadi", "Inventarizatsiyani ro'yxatdan tanlang",
-      '<a class="tugma tugma-asosiy" href="inventarizatsiya.html" style="margin-top:12px">Inventarizatsiya</a>');
+    akt.innerHTML = '<section class="karta">' + MKB.boshHolat("skaner", "Inventarizatsiya topilmadi", "Inventarizatsiyani ro'yxatdan tanlang",
+      '<a class="tugma tugma-asosiy" href="inventarizatsiya.html" style="margin-top:12px">Inventarizatsiya</a>') + "</section>";
     tarjimaQil(akt); return;
   }
   const TURI = {yillik: "Yillik", "navbatdan tashqari": "Navbatdan tashqari", rejali: "Rejali"};
@@ -96,8 +61,10 @@
   document.getElementById("hs-meta").textContent = z.id;
   document.title = "MKB — Inventarizatsiya dalolatnomasi " + z.id;
 
-  /* Hisob bo'yicha birliklar: shu inventarizatsiya obyektlaridagi INVENTAR yozuvlari */
-  const birliklar = MKB.doira((D.INVENTAR || []).filter(x => (z.obyektlar || []).includes(x.obyektId)))
+  /* Hisob bo'yicha birliklar: shu inventarizatsiya obyektlaridagi INVENTAR yozuvlari.
+     Dalolatnoma yagona hujjat: filial xodimi ham bosh ofis bilan bir xil to'liq qaydnomani ko'radi,
+     aks holda bir raqamli varaqning sonlari va tekshirish kodi ochgan odamga qarab farq qiladi */
+  const birliklar = (D.INVENTAR || []).filter(x => (z.obyektlar || []).includes(x.obyektId))
     .slice().sort((a, c) => String(a.inventarRaqam).localeCompare(String(c.inventarRaqam)));
   const nat = z.natijalar || [];
   const natija = iid => nat.find(n => n.inventarId === iid);
@@ -133,54 +100,52 @@
       '<span class="belgi mint">' + ik("tasdiq") + '</span><span class="matn"><b>Inventarizatsiya yakunlandi, dalolatnoma saqlandi</b>' +
       (kamomad ? "<span>Kamomad bo'yicha hodisa xavfsizlik xizmatiga yuborildi</span>" : "<span>Farq aniqlanmadi</span>") + "</span></div></section>";
   }
-  if (!yakun){
-    document.getElementById("id-xabar").innerHTML = '<section class="karta" style="background:var(--sariq)"><div class="qator" style="margin:-10px -16px">' +
-      '<span class="belgi" style="background:var(--oq)">' + ik("ogoh") + '</span><span class="matn"><b>Inventarizatsiya yakunlanmagan</b>' +
-      "<span><span>Dalolatnoma loyiha holatida.</span> <span>Sanalmagan birliklar:</span> <b data-tarjimasiz>" + sanalmagan + "</b></span></span></div></section>";
-  }
 
-  const tdRaqam = x => '<span class="kod-mono" data-tarjimasiz>' + esc(x) + "</span>";
-  akt.innerHTML =
-    '<div class="akt-bosh"><div><span class="yorliq">Mikrokreditbank · Inventarizatsiya dalolatnomasi</span>' +
-      "<h2><span>Ko'char mulk inventarizatsiyasi</span> <span data-tarjimasiz>" + esc(z.id) + "</span></h2>" +
-      '<span class="maydon-izoh"><span>' + esc(TURI[z.turi] || z.turi || "") + "</span> · <span data-tarjimasiz>" + (z.obyektlar || []).length + "</span> <span>obyekt</span></span></div>" +
-      '<dl class="malumot-royxat" style="min-width:260px;flex:0 1 340px">' +
-        '<dt>Sana</dt><dd data-tarjimasiz>' + esc(z.sana) + "</dd>" +
-        "<dt>Holati</dt><dd>" + (yakun ? "<span>Yakunlangan</span>" : z.holat === "jarayonda" ? "<span>Sanalmoqda</span>" : "<span>Rejada</span>") + "</dd>" +
-        "<dt>Komissiya</dt><dd>" + esc((z.komissiya || []).join(", ") || "—") + "</dd>" +
-      "</dl></div>" +
-    '<div class="id-jamlama">' +
-      "<div><span>Hisob bo'yicha</span><b data-tarjimasiz>" + birliklar.length + "</b></div>" +
-      "<div><span>Haqiqatda topildi</span><b data-tarjimasiz>" + topildi + "</b></div>" +
-      '<div class="' + (kamomad ? "xavf" : "") + '"><span>Kamomad</span><b data-tarjimasiz>' + kamomad + "</b></div>" +
-      "<div><span>Ortiqcha</span><b data-tarjimasiz>" + ortiqcha.length + "</b></div>" +
-    "</div>" +
-    "<h3>Xulosa</h3>" +
-    "<p>" + (yakun
-      ? (kamomad || ortiqcha.length
-        ? "<span>Hisob ma'lumoti bilan haqiqiy mavjudlik o'rtasida farq aniqlandi.</span> <span>Kamomad bo'yicha hodisa qayd etilgan, javobgar shaxslardan tushuntirish xati olinadi.</span>"
-        : "<span>Hisob ma'lumoti haqiqiy mavjudlikka mos keldi. Farq aniqlanmadi.</span>")
-      : "<span>Sanash tugagach xulosa shakllanadi.</span>") +
-      (butlikEmas ? " <span>To'liq bo'lmagan birliklar:</span> <b data-tarjimasiz>" + butlikEmas + "</b>." : "") + "</p>" +
-    "<h3>Solishtirma qaydnoma</h3>" +
-    (qatorlar.length || ortiqcha.length ? '<div class="qaydnoma-oral"><table class="qaydnoma"><thead><tr><th>Inventar raqami</th><th>Nomi va joyi</th><th class="son">Hisobda</th><th class="son">Haqiqatda</th><th class="son">Farq</th><th>Izoh</th></tr></thead><tbody>' +
-      qatorlar.map(q => '<tr class="' + (q.holat === "kamomad" ? "kam" : "") + '"><td>' + tdRaqam(q.x.inventarRaqam) + "</td>" +
-        '<td><b style="font-weight:500">' + esc(q.x.nom) + "</b><small>" + (obNomi(q.x.obyektId) !== q.x.nom ? esc(obNomi(q.x.obyektId)) + " · " : "") + '<span class="kod-mono" data-tarjimasiz>' + esc(q.x.obyektId) + "</span></small></td>" +
-        '<td class="son" data-y="Hisobda"><span data-tarjimasiz>1</span></td>' +
-        '<td class="son" data-y="Haqiqatda">' + (q.haqiqat == null ? "<span>Sanalmagan</span>" : '<span data-tarjimasiz>' + q.haqiqat + "</span>") + "</td>" +
-        '<td class="son" data-y="Farq">' + (q.haqiqat == null ? "—" : q.haqiqat - 1 ? '<b data-tarjimasiz style="color:var(--xavf-matn-yorqin)">−1</b>' : '<span data-tarjimasiz>0</span>') + "</td>" +
-        "<td>" + (q.n && q.n.topildi && q.n.butlik === false ? "<span>To'liq emas.</span> " : "") + esc((q.n && q.n.izoh) || "") + "</td></tr>").join("") +
-      ortiqcha.map(o => '<tr class="ort"><td><span>Raqamsiz</span></td><td><b style="font-weight:500">' + esc(o.nom) + "</b><small>" + esc(obNomi(o.obyektId)) + "</small></td>" +
-        '<td class="son" data-y="Hisobda"><span data-tarjimasiz>0</span></td><td class="son" data-y="Haqiqatda"><span data-tarjimasiz>1</span></td>' +
-        '<td class="son" data-y="Farq"><b data-tarjimasiz>+1</b></td><td><span>Ortiqcha.</span> ' + esc(o.izoh || "") + "</td></tr>").join("") +
-      "</tbody></table></div>"
-      : '<p class="maydon-izoh">Bu obyektlarda inventar birligi yo\'q.</p>') +
-    '<div class="akt-imzo">' +
-      (z.komissiya || []).map((k, i) => "<div><span>" + (i ? "Komissiya a'zosi" : "Komissiya raisi") + "</span><small>" + esc(k) + "</small></div>").join("") +
-      "<div><span>Moddiy javobgar shaxs</span><small>&nbsp;</small></div>" +
-      "<div><span>Tasdiqladi</span><small>&nbsp;</small></div>" +
-    "</div>";
-  tarjimaQil(document.querySelector(".kontent"));
+  const obyektlar = (z.obyektlar || []).map(oid => D.OBYEKT_INDEKS[oid] || D.topish(oid) || {id: oid});
+  const hududlar = [...new Set(obyektlar.map(o => o.hududToliq || o.hudud).filter(Boolean))];
+  const filiallar = [...new Set(obyektlar.map(o => o.filial).filter(Boolean))];
+  const farqBelgi = n => n == null ? {t: "Sanalmagan"} : n ? {html: '<b data-tarjimasiz>' + (n > 0 ? "+" : "−") + Math.abs(n) + "</b>"} : "0";
+  const komissiya = (z.komissiya || []).map((k, i) => ({rol: i ? "Komissiya a'zosi" : "Komissiya raisi", ism: k}));
+  const model = {
+    tur: "inventar", sarlavha: "Inventarizatsiya dalolatnomasi", raqam: z.id, sana: z.sana,
+    joy: hududlar.length <= 2 ? hududlar.join("; ") : "",
+    filial: filiallar.length === 1 ? filiallar[0] : "",
+    havola: "inventar-dalolatnoma.html?id=" + encodeURIComponent(z.id),
+    bolimlar: [
+      {sarlavha: "Inventarizatsiya", kv: [
+        ["Turi", {t: TURI[z.turi] || z.turi || "—"}], ["Holati", {t: yakun ? "Yakunlangan" : z.holat === "jarayonda" ? "Sanalmoqda" : "Rejada"}],
+        /* Ko'p obyektli inventarizatsiyada ro'yxat qaydnomada: shapka bir qatorda qoladi */
+        ["Obyektlar", obyektlar.length <= 6 ? obyektlar.map(o => (o.qisqa || o.nom || o.id) + " (" + o.id + ")").join("; ") || null
+          : {html: '<span data-tarjimasiz>' + obyektlar.length + "</span> <span>ta obyekt, ro'yxat solishtirma qaydnomada</span>" +
+            (hududlar.length > 2 ? '; <span data-tarjimasiz>' + hududlar.length + "</span> <span>ta hudud</span>" : "")}, {keng: true}],
+      ]},
+      {sarlavha: "Natija", kv: [
+        ["Hisob bo'yicha", String(birliklar.length)], ["Haqiqatda topildi", String(topildi)],
+        ["Kamomad", String(kamomad)], ["Ortiqcha", String(ortiqcha.length)],
+        ["To'liq emas", String(butlikEmas)], ["Sanalmagan", String(sanalmagan)],
+      ]},
+      {sarlavha: "Xulosa", matn: {t: yakun
+        ? (kamomad || ortiqcha.length
+          ? "Hisob ma'lumoti bilan haqiqiy mavjudlik o'rtasida farq aniqlandi. Kamomad bo'yicha hodisa qayd etilgan, javobgar shaxslardan tushuntirish xati olinadi."
+          : "Hisob ma'lumoti haqiqiy mavjudlikka mos keldi. Farq aniqlanmadi.")
+        : "Sanash tugagach xulosa shakllanadi."}},
+      {sarlavha: "Solishtirma qaydnoma", jadval: {ustunlar: ["Inventar raqami", "Nomi va joyi", "Hisobda", "Haqiqatda", "Farq", "Izoh"], son: [2, 3, 4], majburiy: [5],
+        kenglik: ["16%", "", "10%", "11%", "9%", "22%"],
+        qatorlar: qatorlar.map(q => Object.assign([q.x.inventarRaqam, q.x.nom + (obNomi(q.x.obyektId) !== q.x.nom ? " · " + obNomi(q.x.obyektId) : "") + " · " + q.x.obyektId,
+          "1", q.haqiqat == null ? {t: "Sanalmagan"} : String(q.haqiqat), farqBelgi(q.haqiqat == null ? null : q.haqiqat - 1),
+          {html: (q.n && q.n.topildi && q.n.butlik === false ? "<span>To'liq emas.</span> " : "") + '<span data-tarjimasiz>' + esc((q.n && q.n.izoh) || "") + "</span>"}],
+          {sinf: q.holat === "kamomad" ? "kam" : ""}))
+          .concat(ortiqcha.map(o => Object.assign([{t: "Raqamsiz"}, o.nom + " · " + obNomi(o.obyektId), "0", "1", {html: '<b data-tarjimasiz>+1</b>'},
+            {html: "<span>Ortiqcha.</span> " + '<span data-tarjimasiz>' + esc(o.izoh || "") + "</span>"}], {sinf: "ort"}))),
+        bosh: "Bu obyektlarda inventar birligi yo'q"}},
+    ],
+    komissiya: (komissiya.length ? komissiya : [{rol: "Komissiya raisi", ism: ""}, {rol: "Komissiya a'zosi", ism: ""}])
+      .concat([{rol: "Moddiy javobgar shaxs", ism: ""}, {rol: "Tasdiqladi", ism: ""}]),
+    qoralama: yakun ? null : "Inventarizatsiya yakunlanmagan: sanalmagan birliklar bor",
+  };
+  MKB.dalolatnoma.chiz(akt, model);
+  tarjimaQil(document.querySelector(".hujjat-shapka"));
+  tarjimaQil(document.getElementById("id-xabar"));
   }});
 })();
 </script>

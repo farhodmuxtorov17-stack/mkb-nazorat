@@ -5,42 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyekt pasporti</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
+<link rel="stylesheet" href="yadro/dalolatnoma.css?v=26092200">
 <style>
-.pasport{max-width:1040px}
-.ps-bosh{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:2px solid var(--siyoh)}
-.ps-bosh .bank{font-family:var(--shrift-displey);font-size:15px;font-weight:600;letter-spacing:.02em}
-.ps-bosh .bank span{display:block;font-size:12px;font-weight:400;color:var(--matn-3);letter-spacing:0}
-.ps-bosh h2{font-size:24px;margin:14px 0 4px}
-.ps-bosh .ps-nom{font-size:15px;color:var(--matn-2)}
-.ps-bosh .ps-kod{text-align:right;font-size:12.5px;color:var(--matn-3);line-height:1.7}
-.ps-bosh .ps-kod b{display:block;font-size:16px;color:var(--siyoh);font-weight:600}
-.ps-blok h3{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--matn-3);font-weight:600;margin:22px 0 2px}
-.ps-blok .malumot-royxat{font-size:13.5px}
-.ps-blok .malumot-royxat dt{padding:9px 14px 9px 0}
-.ps-blok .malumot-royxat dd{padding:9px 0;overflow-wrap:anywhere}
-.yoq{color:var(--matn-3);font-weight:400;font-style:italic}
-.ps-imzo{display:flex;gap:32px;flex-wrap:wrap;margin-top:30px;padding-top:16px;border-top:1px solid var(--chiziq);font-size:12.5px;color:var(--matn-3)}
-.ps-imzo div{flex:1;min-width:200px}
-.ps-imzo i{display:block;height:28px;border-bottom:1px solid var(--matn-4);margin-bottom:6px}
-@media (max-width:480px){
-  .ps-blok .malumot-royxat{grid-template-columns:minmax(0,1fr)}
-  .ps-blok .malumot-royxat dt{padding:10px 0 2px;border-bottom:none}
-  .ps-blok .malumot-royxat dd{text-align:left;padding:0 0 10px}
-  .ps-bosh .ps-kod{text-align:left}
-}
-@media print{
-  /* Sahifa o'lchami (A4) va "Chop etildi" sarlavhasi yadrodan; bank nomi sarlavhada bor, shuning uchun bu yerda takrorlanmaydi */
-  .hujjat-shapka,.foto-shapka,.ps-bosh .bank,.ps-bosh h2{display:none!important}
-  .ps-bosh .ps-nom{font-size:14px;color:#000;font-weight:600}
-  .pasport{max-width:none;padding:0!important;border:0!important}
-  .pasport .tor-2-teng{grid-template-columns:1fr 1fr;gap:0 22px}
-  .ps-bosh h2{font-size:18px;margin-top:8px}
-  .ps-blok h3{margin-top:10px}
-  .ps-blok .malumot-royxat{font-size:10.5px}
-  .ps-blok .malumot-royxat dt,.ps-blok .malumot-royxat dd{padding:4px 0}
-  .ps-blok .malumot-royxat dt .ic{display:none}
-  .ps-imzo{margin-top:14px}
-}
+#pasport > .skelet-royxat{background:var(--oq);border-radius:var(--r-karta);padding:24px;box-shadow:var(--soya);max-width:880px;margin:0 auto;width:100%}
 </style>
 </head>
 <body data-sahifa="aktivlar">
@@ -58,7 +25,7 @@
       </div></div>
   </div>
 
-  <article class="karta pasport" id="pasport" aria-label="Obyekt pasporti" data-sayohat="pasport"></article>
+  <div id="pasport" data-sayohat="pasport"></div>
 </main>
 </div>
 </div>
@@ -75,33 +42,30 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/dalolatnoma.js?v=26092200"></script>
 <script>
 MKB.sahifaYukla({joylar: {pasport: ["qator", 8]}, xato: "Obyekt pasportini yuklab bo'lmadi", ish: async () => {
   const joy = document.getElementById("pasport");
   if (document.readyState === "loading") await new Promise(r => document.addEventListener("DOMContentLoaded", r));
-  const D = MKB_DATA, esc = MKB.esc, ik = MKB.ik;
+  const D = MKB_DATA;
   const id = new URLSearchParams(location.search).get("id");
   const y = id ? D.topish(id) : null;
   if (!y || !MKB.doira([y]).length){ location.replace("xato-404.html"); return; }
   await MKB.kolYukla(["SUGURTALAR", "QORIQLASH", "QURILMALAR"]);
   const q = encodeURIComponent(y.id);
-  document.getElementById("hs-obyekt").innerHTML = '<a href="obyekt.html?id=' + q + '">' + esc(y.qisqa || y.nom) + "</a>";
+  document.getElementById("hs-obyekt").innerHTML = '<a href="obyekt.html?id=' + q + '">' + MKB.esc(y.qisqa || y.nom) + "</a>";
   document.getElementById("hs-meta").textContent = y.id + (y.filial ? " · " + y.filial : "");
   document.getElementById("orqaga").href = "obyekt.html?id=" + q;
   document.getElementById("chop").onclick = () => window.print();
 
   const bugun = D.bugun();
-  const tj = v => '<span data-tarjimasiz>' + esc(v) + "</span>";
-  const yoq = '<span class="yoq">kiritilmagan</span>';
-  const qiy = v => v == null || v === "" ? yoq : tj(v);
-  const qator = (ikonka, yorliq, qiymat) => "<dt>" + ik(ikonka) + "<span>" + yorliq + "</span></dt><dd>" + qiymat + "</dd>";
-  const blok = (sarlavha, ichki) => '<section class="ps-blok"><h3>' + sarlavha + '</h3><dl class="malumot-royxat">' + ichki + "</dl></section>";
+  const t = v => v == null || v === "" ? null : {t: v};
   const sanaKalit = s => { const d = D.sanaOqi(s); return d ? d.getTime() : 0; };
   const binoli = D.binolimi(y);
   const b = y.balans || {}, h = y.huquq || {}, md = y.maydon || {}, qv = y.qiymat || {};
   const asos = D.qabulAsosiInfo(b.qabulAsosi);
   const z = D.zaxiraHisobi(y);
-  const m2 = v => v > 0 ? tj(MKB.fmt(Math.round(v)) + " m²") : yoq;
+  const m2 = v => v > 0 ? MKB.fmt(Math.round(v)) + " m²" : null;
 
   /* Sug'urta: SUGURTALAR dagi eng oxirgi mos polis */
   const kerakPolis = y.turKalit === "transport" ? "OSAGO" : "mulk";
@@ -110,69 +74,60 @@ MKB.sahifaYukla({joylar: {pasport: ["qator", 8]}, xato: "Obyekt pasportini yukla
   const polisAmalda = polis && D.sanaOqi(polis.tugash) >= bugun;
   const qq = (D.QORIQLASH || []).filter(x => x.obyektId === y.id && x.holat === "amalda" && (!x.tugash || D.sanaOqi(x.tugash) >= bugun))[0];
   const qurilmalar = (D.QURILMALAR || []).filter(x => x.obyektId === y.id);
-  const onlayn = qurilmalar.filter(x => (D.qurilmaHolati ? D.qurilmaHolati(x).holat : x.holat) === "onlayn").length;
-  const taqiqlar = (h.taqiqlar || []).filter(t => t && !t.yechilganSana);
+  const aloqada = qurilmalar.filter(x => D.qurilmaHolati ? D.qurilmaHolati(x).aloqada : x.holat === "onlayn").length;
+  const taqiqlar = (h.taqiqlar || []).filter(x => x && !x.yechilganSana);
   const KOMMUNAL = {ulangan: "Ulangan", uzilgan: "Uzilgan", "vaqtincha to'xtatilgan": "Vaqtincha to'xtatilgan", "mavjud emas": "Mavjud emas"};
+  const suratlar = (MKB.suratlar ? MKB.suratlar(y) : []).filter(s => s.tur !== "sxema").slice(0, 6);
 
-  const umumiy =
-    qator("kub", "Turi", "<span>" + esc(y.tur || "—") + "</span>") +
-    (y.tafsilot ? qator("mashina", "Tavsif", tj(y.tafsilot)) : "") +
-    qator("manzil", "Manzil", qiy(y.manzil || y.hududToliq)) +
-    qator("bank", "Filial", qiy(y.filial)) +
-    qator("info", "Holat", "<span>" + esc(y.holat || "—") + "</span>") +
-    qator("foydalar", "Sobiq egasi", qiy(y.sobiqEga)) +
-    qator("foyd", "Mas'ul saqlovchi", qiy(y.masul));
-  const balans =
-    qator("kalendar", "Balansga qabul sanasi", qiy(b.sana)) +
-    qator("muhr", "Qabul asosi", asos ? "<span>" + esc(asos.nom) + "</span>" : yoq) +
-    qator("hujjat", "Asos hujjati", b.asosHujjat && b.asosHujjat.raqam ? tj("№ " + b.asosHujjat.raqam + (b.asosHujjat.sana ? ", " + b.asosHujjat.sana : "")) : yoq) +
-    qator("pul", "Balans qiymati", b.qiymat ? tj(MKB.pul(b.qiymat)) : yoq) +
-    qator("hisobot", "Hisobvaraq", qiy(b.hisobvaraq)) +
-    qator("baholash", "Bozor qiymati", qv.bozor != null && !qv.baholanmagan ? tj(MKB.pul(qv.bozor) + (qv.bahoSana ? ", " + qv.bahoSana : "")) : "<span>Baholanmagan</span>") +
-    (qv.tugatish ? qator("pasayish", "Tugatish qiymati", tj(MKB.pul(qv.tugatish))) : "") +
-    qator("zaxira", "Zaxira", z && !z.kiritilmagan ? "<span>" + esc(z.toifaNomi || "") + "</span>" + tj(", " + z.foiz + "%, " + MKB.pul(z.summa)) +
-      (z.taxminiy ? ' <span class="yoq">buxgalteriya tasdig\'ida</span>' : "") : yoq);
-  const huquq = binoli
-    ? qator("xarita", "Kadastr raqami", qiy(h.kadastrRaqami)) +
-      qator("kalendar", "Huquq qayd sanasi", qiy(h.qaydSana)) +
-      qator("hujjat", "Reyestrdan ko'chirma", qiy(h.reyestrKochirma)) +
-      qator("yer", "Yer huquqi turi", h.yerHuquqiTuri ? "<span>" + esc(h.yerHuquqiTuri) + "</span>" : yoq) +
-      qator("bloklash", "Taqiqlar", taqiqlar.length ? tj(taqiqlar.map(t => [t.turi, t.organ, t.sana].filter(Boolean).join(", ")).join("; ")) : "<span>Yo'q</span>")
-    : qator("avto", "Davlat raqami", qiy(h.davlatRaqami)) +
-      qator("hujjat", "VIN yoki zavod raqami", qiy(h.vin)) +
-      qator("hujjat", "Texnik pasport", qiy(h.texPasport)) +
-      qator("kalendar", "YHXXda qayd sanasi", qiy(h.yhxxQaydSana)) +
-      qator("bloklash", "Taqiqlar", taqiqlar.length ? tj(String(taqiqlar.length)) : "<span>Yo'q</span>");
-  const maydon = binoli
-    ? qator("yer", "Yer maydoni", m2(md.yer)) + qator("bino", "Qurilish osti", m2(md.qurilishOsti)) + qator("aktivlar", "Foydali maydon", m2(md.foydali))
-    : qator("uskuna", "Soni", "<span>1 dona</span>");
-  const sugurta = polis
-    ? qator("sugurta", "Polis", tj(polis.polis || polis.id)) + qator("bank", "Sug'urtachi", qiy(polis.kompaniya)) +
-      qator("pul", "Sug'urta summasi", polis.summa ? tj(MKB.pul(polis.summa)) : yoq) +
-      qator("kalendar", "Amal qilish muddati", tj((polis.boshlanish || "—") + " – " + (polis.tugash || "—")) + (polisAmalda ? "" : ' <span class="yoq">muddati tugagan</span>'))
-    : qator("sugurta", "Polis", "<span>Sug'urtalanmagan</span>");
-  const kommunal = binoli && (y.kommunal || []).length
-    ? (y.kommunal || []).map(k => qator(k.xizmat === "elektr" ? "signal" : k.xizmat === "gaz" ? "olov" : "yer",
-        ((D.KOMMUNAL_XIZMATLAR.find(x => x.kalit === k.xizmat) || {}).nom || k.xizmat),
-        k.holat ? "<span>" + esc(KOMMUNAL[k.holat] || k.holat) + "</span>" + (k.hisoblagich ? tj(", " + k.hisoblagich) : "") : yoq)).join("")
-    : qator("info", "Kommunal", "<span>Qo'llanmaydi</span>");
-  const himoya =
-    qator("qalqon", "Qo'riqlash", qq ? "<span>" + esc((D.QORIQLASH_TURLARI.find(t => t.kalit === qq.qoriqlashTuri) || {}).nom || qq.qoriqlashTuri) + "</span>" + tj(", " + (qq.ijrochi || "")) : "<span>Qo'riqlanmaydi</span>") +
-    (qq && qq.shartnomaRaqami ? qator("hujjat", "Shartnoma", tj("№ " + qq.shartnomaRaqami + (qq.tugash ? ", " + qq.tugash + " gacha" : ""))) : "") +
-    qator("qurilma", "Qurilmalar onlayn", qurilmalar.length ? tj(onlayn + " / " + qurilmalar.length) : "<span>O'rnatilmagan</span>");
-
-  joy.innerHTML =
-    '<header class="ps-bosh"><div><div class="bank">Mikrokreditbank <span>Balansga olingan mol-mulk</span></div>' +
-      "<h2>Obyekt pasporti</h2>" + '<div class="ps-nom" data-tarjimasiz>' + esc(y.nom) + "</div></div>" +
-      '<div class="ps-kod"><b data-tarjimasiz>' + esc(y.id) + "</b><span>Tuzilgan sana</span> " + tj(D.sanaYoz(bugun)) + "</div></header>" +
-    '<div class="tor-2-teng">' +
-      '<div class="ustun">' + blok("Umumiy ma'lumot", umumiy) + blok(binoli ? "Huquq va kadastr" : "Ro'yxat ma'lumotlari", huquq) + blok("Maydonlar", maydon) + "</div>" +
-      '<div class="ustun">' + blok("Balans va qiymat", balans) + blok("Sug'urta", sugurta) + blok("Kommunal xizmatlar", kommunal) + blok("Himoya", himoya) + "</div>" +
-    "</div>" +
-    '<footer class="ps-imzo"><div><i></i><span>Mas\'ul saqlovchi</span>' + (y.masul ? " " + tj(y.masul) : "") + "</div>" +
-      "<div><i></i><span>Filial boshqaruvchisi</span></div>" +
-      "<div><i></i><span>Tuzdi</span> " + tj(MKB.kim()) + "</div></footer>";
-  tarjimaQil(document.querySelector("main"));
+  const model = {
+    tur: "pasport", sarlavha: "Obyekt pasporti", raqam: y.id, sana: D.sanaYoz(bugun), sanaXeshda: false,
+    joy: y.hududToliq || y.hudud || "", filial: y.filial || "", obyekt: {id: y.id, nom: y.nom},
+    havola: "obyekt-pasport.html?id=" + q,
+    bolimlar: [
+      {sarlavha: "Umumiy ma'lumot", kv: [
+        ["Turi", t(y.tur)], ["Holat", t(y.holat)],
+        y.tafsilot ? ["Tavsif", y.tafsilot, {keng: true}] : null,
+        ["Manzil", y.manzil || y.hududToliq || null, {keng: true}],
+        ["Sobiq egasi", y.sobiqEga || null], ["Mas'ul saqlovchi", y.masul || null],
+      ]},
+      {sarlavha: binoli ? "Huquq va kadastr" : "Ro'yxat ma'lumotlari", kv: binoli ? [
+        ["Kadastr raqami", h.kadastrRaqami || null], ["Huquq qayd sanasi", h.qaydSana || null],
+        ["Reyestrdan ko'chirma", h.reyestrKochirma || null], ["Yer huquqi turi", t(h.yerHuquqiTuri)],
+        ["Taqiqlar", taqiqlar.length ? taqiqlar.map(x => [x.turi, x.organ, x.sana].filter(Boolean).join(", ")).join("; ") : {t: "Yo'q"}, {keng: true}],
+        ["Yer maydoni", m2(md.yer)], ["Qurilish osti", m2(md.qurilishOsti)], ["Foydali maydon", m2(md.foydali)],
+      ] : [
+        ["Davlat raqami", h.davlatRaqami || null], ["VIN yoki zavod raqami", h.vin || null],
+        ["Texnik pasport", h.texPasport || null], ["YHXXda qayd sanasi", h.yhxxQaydSana || null],
+        ["Taqiqlar", taqiqlar.length ? String(taqiqlar.length) : {t: "Yo'q"}],
+      ]},
+      {sarlavha: "Balans va qiymat", kv: [
+        ["Balansga qabul sanasi", b.sana || null], ["Qabul asosi", asos ? {t: asos.nom} : null],
+        ["Asos hujjati", b.asosHujjat && b.asosHujjat.raqam ? "№ " + b.asosHujjat.raqam + (b.asosHujjat.sana ? ", " + b.asosHujjat.sana : "") : null],
+        ["Balans qiymati", b.qiymat ? MKB.pul(b.qiymat) : null], ["Hisobvaraq", b.hisobvaraq || null],
+        ["Bozor qiymati", qv.bozor != null && !qv.baholanmagan ? MKB.pul(qv.bozor) + (qv.bahoSana ? ", " + qv.bahoSana : "") : {t: "Baholanmagan"}],
+        qv.tugatish ? ["Tugatish qiymati", MKB.pul(qv.tugatish)] : null,
+        ["Zaxira", z && !z.kiritilmagan ? {html: "<span>" + MKB.esc(z.toifaNomi || "") + '</span><span data-tarjimasiz>, ' + z.foiz + "%, " + MKB.esc(MKB.pul(z.summa)) + "</span>" +
+          (z.taxminiy ? " <span>(buxgalteriya tasdig'ida)</span>" : "")} : null, {xeshsiz: true}],   /* foiz balansdagi kunlar bilan o'sadi */
+      ]},
+      {sarlavha: "Sug'urta va himoya", kv: [
+        ["Polis", polis ? (polis.polis || polis.id) : {t: "Sug'urtalanmagan"}],
+        polis ? ["Sug'urtachi", polis.kompaniya || null] : null,
+        polis ? ["Sug'urta summasi", polis.summa ? MKB.pul(polis.summa) : null] : null,
+        polis ? ["Amal qilish muddati", {html: '<span data-tarjimasiz>' + MKB.esc((polis.boshlanish || "—") + " – " + (polis.tugash || "—")) + "</span>" + (polisAmalda ? "" : " <span>(muddati tugagan)</span>")}, {xesh: (polis.boshlanish || "") + "/" + (polis.tugash || "")}] : null,
+        ["Qo'riqlash", qq ? {html: "<span>" + MKB.esc((D.QORIQLASH_TURLARI.find(x => x.kalit === qq.qoriqlashTuri) || {}).nom || qq.qoriqlashTuri) + '</span><span data-tarjimasiz>, ' + MKB.esc(qq.ijrochi || "") + "</span>"} : {t: "Qo'riqlanmaydi"}],
+        qq && qq.shartnomaRaqami ? ["Shartnoma", "№ " + qq.shartnomaRaqami + (qq.tugash ? ", " + qq.tugash : "")] : null,
+        ["Qurilmalar aloqada", qurilmalar.length ? aloqada + " / " + qurilmalar.length : {t: "O'rnatilmagan"}, {xesh: qurilmalar.length}],
+      ]},
+      binoli && (y.kommunal || []).length ? {sarlavha: "Kommunal xizmatlar", jadval: {ustunlar: ["Xizmat", "Holat", "Hisoblagich", "Oxirgi ko'rsatkich"], son: [3],
+        qatorlar: (y.kommunal || []).map(k => [{t: ((D.KOMMUNAL_XIZMATLAR.find(x => x.kalit === k.xizmat) || {}).nom || k.xizmat)}, t(KOMMUNAL[k.holat] || k.holat),
+          k.hisoblagich || "—", k.korsatkich != null ? MKB.fmt(k.korsatkich) + (k.korsatkichSana ? " (" + k.korsatkichSana + ")" : "") : "—"])}} : null,
+    ],
+    fotolar: !suratlar.length ? undefined : suratlar.map((s, i) => ({id: String(s.yol || i), html: MKB.obyektSurati({rasm: s.yol, rasmTuri: y.rasmTuri, qisqa: y.qisqa}),
+      izoh: /assets\/namuna\//.test(String(s.yol)) ? {t: "Namuna surati"} : null})),
+    imzoSarlavha: "Imzolar",
+    komissiya: [{rol: "Mas'ul saqlovchi", ism: y.masul || ""}, {rol: "Filial boshqaruvchisi", ism: ""}, {rol: "Tuzdi", ism: MKB.kim() !== "—" ? MKB.kim() : "", xeshsiz: true}],
+  };
+  MKB.dalolatnoma.chiz(joy, model);
 }});
 </script>
 </body>

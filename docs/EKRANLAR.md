@@ -1,6 +1,6 @@
 # Ekranlar reyestri
 
-Jami: **101 ekran**. Qobiq ichida 94 ta, ochiq sahifalar 7 ta.
+Jami: **105 ekran**. Qobiq ichida 96 ta, ochiq sahifalar 9 ta.
 Bo'limlar: **olti ish bo'limi** (`aktivlar`, `nazorat`, `qiymat`, `sotuv`, `ishlar`, `hisobot`), ularning ustida rol paneli (`panel`) va pastki sozlama bloki (`sozlama`).
 Har bir qobiq sahifasi `yadro/daraxt.js` da qayd etilgan: bo'lim markazidan ochiladigan sahifa (`MKB_DARAXT`) yoki bo'limning ichki sahifasi (`MKB_ICHKI`).
 Sahifaning `data-sahifa` kaliti shu bo'lim kalitiga teng yoki `yadro/app.js` dagi `BOLIM_TAXALLUS` orqali unga keltiriladi. Buni `tests/sahifalar.test.js` tekshiradi.
@@ -25,7 +25,7 @@ Hisobotlar bo'limida bundan tashqari **«Bo'lim sahifalari» kartasi** bor (`his
 | Buxgalteriya va risk | Panel · Moliya · Sotuv · Aktivlar · Ishlar · Hisobotlar | `panel-moliya.html` |
 | Administrator | Panel · Qarorlar · Hisobotlar | `panel.html` |
 
-## Ochiq sahifalar (7)
+## Ochiq sahifalar (9)
 
 | Fayl | Ekran | Izoh |
 |---|---|---|
@@ -34,6 +34,8 @@ Hisobotlar bo'limida bundan tashqari **«Bo'lim sahifalari» kartasi** bor (`his
 | `parol-tiklash.html` | Parolni tiklash | qobiqsiz |
 | `parol-yangilash.html` | Parolni almashtirish | qobiqsiz |
 | `taqdimot.html` | Loyiha taqdimoti | qobiqsiz |
+| `oferta.html` | Foydalanish shartlari | qobiqsiz, kirishdan oldin o'qiladi |
+| `maxfiylik.html` | Shaxsga doir ma'lumotlar bildirishnomasi | qobiqsiz; saqlash muddatlarini `sozlamalar.html` dagi jadvaldan oladi |
 | `xato-403.html` | Ruxsat yo'q | qobiqsiz |
 | `xato-404.html` | Sahifa topilmadi | qobiqsiz |
 
@@ -48,7 +50,7 @@ Har bir rol o'z panelidan boshlaydi. Panel — bo'lim emas, rolning bosh sahifas
 | `panel-nazorat.html` | Ko'rik va xavfsizlik paneli | Ko'rik va xavfsizlik inspektori |
 | `panel-moliya.html` | Moliya paneli | Buxgalteriya va risk |
 
-## Balans aktivlari (`aktivlar`, 23)
+## Balans aktivlari (`aktivlar`, 24)
 
 Bo'lim markazi: `obyektlar.html`.
 
@@ -60,6 +62,7 @@ Bo'lim markazi: `obyektlar.html`.
 | `qabul-boshlash.html` | Balansga qabul | bo'lim markazi |
 | `rasmiylashtirish.html` | Huquqni rasmiylashtirish | bo'lim markazi |
 | `arxiv.html` | Arxiv va chiqim | bo'lim markazi |
+| `kommunal.html` | Kommunal holat: elektr, gaz, suv va qarz barcha obyektlar bo'yicha | tasmasiz; panel-obyekt va obyekt kartochkasining «Kommunal» tabidan |
 | `obyekt.html` | Obyekt kartochkasi | ichki sahifa |
 | `obyekt-suratlar.html` | Obyekt suratlari | ichki sahifa |
 | `obyekt-moliya.html` | Obyekt moliyasi | ichki sahifa |
@@ -67,7 +70,7 @@ Bo'lim markazi: `obyektlar.html`.
 | `obyekt-koriklar.html` | Obyekt ko'riklari | ichki sahifa |
 | `obyekt-xarajatlar.html` | Obyekt xarajatlari | ichki sahifa |
 | `obyekt-kommunal.html` | Obyekt kommunal xizmatlari | ichki sahifa |
-| `obyekt-himoya.html` | Obyekt himoyasi | ichki sahifa |
+| `obyekt-himoya.html` | Obyekt himoyasi; hudud ob-havosi va navbatdan tashqari ko'rik asosi | ichki sahifa |
 | `obyekt-sotuv.html` | Obyekt sotuvi | ichki sahifa |
 | `obyekt-tarix.html` | Obyekt tarixi | ichki sahifa |
 | `obyekt-pasport.html` | Obyekt pasporti | ichki sahifa |
@@ -78,30 +81,31 @@ Bo'lim markazi: `obyektlar.html`.
 | `arxiv-obyekt.html` | Arxiv yozuvi | ichki sahifa |
 | `chiqim-tasdiqlash.html` | Balansdan chiqarish | ichki sahifa |
 
-## Nazorat va himoya (`nazorat`, 25)
+## Nazorat va himoya (`nazorat`, 24)
 
 Bo'lim markazi: `himoya.html`. Eski `himoya` va `korik` bo'limlari shu yerga birlashtirildi; sahifalarning `data-sahifa` kaliti o'zgarmadi, `BOLIM_TAXALLUS` ularni `nazorat` ga keltiradi.
 
+Monitoring tasmasi olti tab: Monitoring markazi · Hodisalar · Qurilmalar · Kirish nazorati · Ko'rik rejasi · Qo'riqlash. «Kirish nazorati» ichida uch ko'rinish (`.almashtirgich`): Ruxsatlar, Tashriflar, Kirish voqealari. «Qurilmalar» ichida ikki ko'rinish: Qurilmalar ro'yxati va Signallar (`kirish-voqealari.html?rejim=signal`); daraxtda bu sahifa «Signallar va voqealar» nomi bilan turadi. Ko'rik tasmasi: Ko'rik rejasi · Kechikkanlar · Ko'riklar tarixi · Ko'rik tayinlash · Masofaviy ko'rik · Inventarizatsiya.
+
 | Fayl | Ekran | Joyi |
 |---|---|---|
-| `himoya.html` | Monitoring markazi | bo'lim markazi |
-| `korik-rejasi.html` | Ko'rik rejasi | bo'lim markazi |
-| `inventarizatsiya.html` | Inventarizatsiya | bo'lim markazi |
-| `qurilmalar.html` | Qurilmalar | bo'lim markazi |
-| `hodisalar.html` | Hodisalar | bo'lim markazi |
-| `qoriqlash.html` | Qo'riqlash | bo'lim markazi |
-| `korik-kechikkan.html` | Kechikkan ko'riklar | bo'lim markazi |
-| `korik-tarixi.html` | Ko'riklar tarixi | bo'lim markazi |
-| `korik-tayinlash.html` | Ko'rik tayinlash | bo'lim markazi |
-| `masofaviy-korik.html` | Masofaviy ko'rik | bo'lim markazi |
-| `kommunal.html` | Kommunal | bo'lim markazi |
-| `ruxsatlar.html` | Ruxsatlar | bo'lim markazi |
-| `tashriflar.html` | Tashriflar | bo'lim markazi |
-| `kirish-voqealari.html` | Signallar | bo'lim markazi |
-| `korik-otkazish.html` | Ko'rik o'tkazish | ichki sahifa |
+| `himoya.html` | Monitoring markazi: kamerasi aloqada va jim obyektlar, «Ulanish namunasi» kartasi (pastda, ochiq manbalar) | monitoring tasmasi |
+| `hodisalar.html` | Hodisalar | monitoring tasmasi |
+| `qurilmalar.html` | Qurilmalar: ro'yxat, fayldan import, ommaviy MQTT kanalidagi sinov qurilmasi | monitoring tasmasi |
+| `ruxsatlar.html` | Ruxsatlar | «Kirish nazorati» tabi, birinchi ko'rinish |
+| `tashriflar.html` | Tashriflar | «Kirish nazorati» ko'rinishi |
+| `kirish-voqealari.html` | Kirish voqealari (`?rejim=kirish`) va qurilma signallari (`?rejim=signal`) | «Kirish nazorati» va «Qurilmalar» ko'rinishi |
+| `qoriqlash.html` | Qo'riqlash | monitoring tasmasi |
+| `korik-rejasi.html` | Ko'rik rejasi | monitoring va ko'rik tasmasi |
+| `korik-kechikkan.html` | Kechikkan ko'riklar | ko'rik tasmasi |
+| `korik-tarixi.html` | Ko'riklar tarixi | ko'rik tasmasi |
+| `korik-tayinlash.html` | Ko'rik tayinlash | ko'rik tasmasi |
+| `masofaviy-korik.html` | Masofaviy ko'rik | ko'rik tasmasi |
+| `inventarizatsiya.html` | Inventarizatsiya | ko'rik tasmasi |
+| `korik-otkazish.html` | Ko'rik o'tkazish: bugungi marshrut, kamera bilan surat, suratdagi vaqt va joy | ichki sahifa |
 | `korik-akti.html` | Ko'rik dalolatnomasi | ichki sahifa |
 | `inventar-dalolatnoma.html` | Inventarizatsiya dalolatnomasi | ichki sahifa |
-| `qurilma.html` | Qurilma | ichki sahifa |
+| `qurilma.html` | Qurilma; quyosh yoki akkumulyatordan ishlasa, hudud ob-havosi va zaryad holati | ichki sahifa |
 | `qurilma-ornatish.html` | Qurilma o'rnatish | ichki sahifa |
 | `servis-topshirigi.html` | Servis topshirig'i | ichki sahifa |
 | `hodisa.html` | Hodisa | ichki sahifa |
@@ -156,13 +160,14 @@ Bo'lim markazi: `vazifalar.html`; rahbariyat va administrator uchun band to'g'ri
 | `tasdiqlar.html` | Qarorlar | bo'lim markazi |
 | `bildirishnomalar.html` | Bildirishnomalar | bo'lim markazi |
 
-## Hisobotlar (`hisobot`, 9)
+## Hisobotlar (`hisobot`, 10)
 
-Bo'lim markazi — yagona **hisobot markazi** `hisobotlar.html`. Yon panelda bitta band turadi; qolgan sakkiz sahifa shu markazdagi kartalardan ochiladi.
+Bo'lim markazi — yagona **hisobot markazi** `hisobotlar.html`. Yon panelda bitta band turadi; qolgan to'qqiz sahifa shu markazdagi kartalardan ochiladi.
 
 | Fayl | Ekran | Joyi |
 |---|---|---|
 | `hisobotlar.html` | Hisobotlar markazi | bo'lim markazi |
+| `haftalik.html` | Haftalik xulosa: dushanbadan yakshanbagacha qarorlar, balans harakati, tushum, hodisalar va ko'riklar, o'tgan hafta bilan farq | markazdagi «Rahbariyat uchun» kartasi; bildirishnomalardan havola |
 | `hisobot-portfel.html` | Balans aktivlari | markaz kartasi |
 | `hisobot-hudud.html` | Hududlar kesimi | markaz kartasi |
 | `hisobot-xarajat.html` | Xarajatlar | markaz kartasi |
@@ -172,22 +177,23 @@ Bo'lim markazi — yagona **hisobot markazi** `hisobotlar.html`. Yon panelda bit
 | `hisobot-mb.html` | MB oylik hisoboti | markaz kartasi |
 | `hisobot-eksport.html` | Ma'lumot eksporti | markaz kartasi |
 
-## Sozlamalar (`sozlama`, 8)
+## Sozlamalar (`sozlama`, 9)
 
 Yon panelning pastki bloki. Ish bo'limi emas: hisob, qoida va ma'lumotnomalar.
 
 | Fayl | Ekran | Joyi |
 |---|---|---|
-| `sozlamalar.html` | Profil va qoidalar | pastki blok |
-| `foydalanuvchilar.html` | Foydalanuvchilar | pastki blok |
+| `tizim-holati.html` | Tizim holati: administrator e'tibori kerak bo'lgan ishlar, ma'lumot yangiligi, qurilma signallari yoshi, to'liq nusxa, tashqi internet tekshiruvi | tasmaning birinchi tabi |
+| `sozlamalar.html` | Profil va qoidalar; saqlash muddatlari, anonimlashtirish, xodimning o'z ma'lumoti haqidagi so'rovi | pastki blok |
+| `foydalanuvchilar.html` | Foydalanuvchilar; chorakdagi huquqlarni ko'rib chiqish, aktivlarni boshqa xodimga o'tkazish | pastki blok |
 | `rollar.html` | Rollar | pastki blok |
 | `filiallar.html` | Filiallar | pastki blok |
-| `integratsiyalar.html` | Integratsiyalar | pastki blok |
-| `amallar-tarixi.html` | Amallar tarixi | pastki blok |
+| `integratsiyalar.html` | Integratsiyalar: 15 tashqi tizim, har birining oqimi, ulash sharti va holati; MQTT sinovi | pastki blok |
+| `amallar-tarixi.html` | Amallar tarixi: aktiv bo'yicha filtr, SHA-256 nazorat yig'indili CSV | pastki blok |
 | `qollanma.html` | Qo'llanma | pastki blok |
 | `foydalanuvchi.html` | Foydalanuvchi | ichki sahifa |
 
-`foydalanuvchilar.html`, `foydalanuvchi.html`, `rollar.html` va `integratsiyalar.html` faqat administratorga ochiq; `filiallar.html` va `amallar-tarixi.html` — administrator bilan rahbariyatga (`yadro/app.js`, `SAHIFA_MAXSUS`).
+`foydalanuvchilar.html`, `foydalanuvchi.html`, `rollar.html` va `integratsiyalar.html` faqat administratorga ochiq (`SAHIFA_MAXSUS`); `tizim-holati.html` boshqa rolni o'zi `xato-403.html` ga qaytaradi; `filiallar.html` va `amallar-tarixi.html` — administrator bilan rahbariyatga (`yadro/app.js`, `SAHIFA_MAXSUS`).
 
 ## Obyekt kartochkasi tablari
 
@@ -210,14 +216,67 @@ Soddalashtirishda **birorta sahifa o'chirilmadi**. Yon panelda bandlar soni kama
 
 To'qqizta alohida hisobot sahifasi o'rniga yon panelda bitta **hisobot markazi** turadi; sahifalarning o'zi markazdagi kartalardan ochiladi.
 
-**Ochiq joy: birlashtirilgan bo'limlarda ikkita tasma.** `nazorat` va `sotuv` bo'limlari ikkitadan eski bo'limdan yig'ilgan, lekin tasmalar birlashtirilmagan:
+**Ochiq joy: `sotuv` bo'limida ikkita tasma.** `nazorat` bo'limida masala yopildi: monitoring tasmasi olti tabga qisqardi (Monitoring markazi · Hodisalar · Qurilmalar · Kirish nazorati · Ko'rik rejasi · Qo'riqlash), «Kirish nazorati» ruxsat, tashrif va kirish voqealarini, «Qurilmalar» signallarni ichiga oldi. Ko'rik guruhining besh sahifasi «Ko'rik rejasi» tabidagi ikkinchi tasmada, monitoring markazidan bir bosishda. `sotuv` esa hali ikki eski bo'limdan yig'ilgan:
 
 | Bo'lim | Markaz | Tasmada bor | Tasmada yo'q |
 |---|---|---|---|
-| `nazorat` | `himoya.html` | qo'riqlash, kommunal, qurilmalar, hodisalar, tashriflar, masofaviy ko'rik, ruxsatlar, signallar | `korik-rejasi.html`, `korik-kechikkan.html`, `korik-tarixi.html`, `korik-tayinlash.html`, `inventarizatsiya.html` (ular `korik-rejasi.html` dagi ikkinchi tasmada) |
 | `sotuv` | `realizatsiya.html` | lotlar, takliflar, shartnomalar, ijara | `undiruv.html`, `sud-kalendar.html`, `davo-tayyorlash.html` (ular `undiruv.html` dagi ikkinchi tasmada) |
 
-Ya'ni ko'rik rejasiga `himoya.html` dan, undiruv ishlariga `realizatsiya.html` dan tasma orqali o'tib bo'lmaydi. Ko'rik guruhiga `panel-nazorat.html` va `obyektlar.html` dan havola bor; `undiruv.html` ga esa obyekt menejerining bosh sahifasi `panel-obyekt.html` dan havola yo'q — faqat `Ctrl+K`, ish kartochkasi yoki hisobot orqali ochiladi. «Rolning bosh sahifasidan uch bosishda» shartini to'liq bajarish uchun shu ikki tasmani birlashtirish yoki markazga bo'lim sahifalari kartasini qo'yish kerak.
+Undiruv ishlariga `realizatsiya.html` dan tasma orqali o'tib bo'lmaydi, obyekt menejerining bosh sahifasi `panel-obyekt.html` dan ham havola yo'q: faqat `Ctrl+K`, ish kartochkasi yoki hisobot orqali ochiladi. «Rolning bosh sahifasidan uch bosishda» sharti uchun shu tasmani `realizatsiya.html` tasmasiga qo'shish yoki markazga bo'lim sahifalari kartasini qo'yish kerak.
+
+## Chop etiladigan shakllar (7)
+
+Yettala shakl bitta shablondan chiqadi: `yadro/dalolatnoma.js` va `yadro/dalolatnoma.css`. Varaq A4: raqam, sana va joy; bandlar jadval ko'rinishida; 3×2 fotojadval; komissiya va imzo qatorlari; pastda tekshirish kodi (yozuv mazmunidan SHA-256, 12 belgi) va QR. Chopda breadcrumb, tugmalar, yadroning umumiy sarlavhasi va URL qatori chiqmaydi; varaq raqami va kod `@page` chekkasida. Surat qoidasi yoki tasdiq bajarilmagan varaq «Qoralama» suv belgisi bilan chiqadi, sababi varaq tepasida yoziladi.
+
+| Shakl | Qayerdan chop etiladi | «Qoralama» sharti |
+|---|---|---|
+| Ko'rik dalolatnomasi | `korik-akti.html` | suratlar `korikSuratBino` / `korikSuratTransport` me'yoridan va kamchiliklar sonidan kam |
+| Qabul-topshirish dalolatnomasi | `qabul-dalolatnoma.html` | fotojadval shu me'yordan kam |
+| Inventarizatsiya dalolatnomasi | `inventar-dalolatnoma.html` | sanash yakunlanmagan |
+| Obyekt pasporti | `obyekt-pasport.html` | yo'q (ma'lumotnoma; kod chop etilgan kun holatini tasdiqlaydi) |
+| Balansdan chiqarish dalolatnomasi | `chiqim-tasdiqlash.html` (so'rov bor bo'lsa), `arxiv-obyekt.html` | chiqim so'rovini boshqa xodim tasdiqlamagan |
+| Xaridorga qabul-topshirish dalolatnomasi | `shartnoma.html` | to'lov yakunlanmagan va taqiq qo'yilmagan |
+| Hodisa dalolatnomasi | `hodisa.html` | hodisa hal qilinmagan yoki yopilmagan |
+
+QR havolasi shakl sahifasini `?kod=` bilan ochadi (to'rt yangi shaklda `&dalolatnoma=<tur>` ham). Sahifa kodni joriy yozuvdan qayta hisoblaydi va «Tekshirish kodi mos keladi» yoki «mos kelmaydi» deb yozadi; joriy kod ekranga chiqarilmaydi.
+
+## Sahifaning o'zidan chop etiladigan varaqlar (5)
+
+Bu varaqlar `yadro/dalolatnoma.js` shablonidan emas, sahifaning chop uslubidan chiqadi: tugmalar va yon panel yashiriladi, raqamlar ekrandagi bilan bir manbadan olinadi (`hisobot-davr.js`, `boshqaruv.js`).
+
+| Varaq | Qayerdan | Tarkibi |
+|---|---|---|
+| Haftalik xulosa | `haftalik.html` | hafta ko'rsatkichlari va o'tgan hafta bilan farq, qarorlar, balans harakati, tushum, hodisalar, kechikkan ko'riklar |
+| Kengash uchun hisobot | `panel.html`, «Kengash uchun hisobot» tugmasi | davr (oy, chorak, yil), to'rt jumlali xulosa, ko'rsatkichlar, sotuv zanjiri, kengashdan so'raladigan qarorlar, qo'shimcha masala |
+| ABS bilan solishtirish dalolatnomasi | `panel-moliya.html` | 16701 qoldig'i reyestr va ABS bo'yicha, farq va izohi, mos kelmagan qatorlar, imzolar |
+| Huquqlarni ko'rib chiqish dalolatnomasi | `foydalanuvchilar.html` | hisoblar ro'yxati, topilmalar va chora, administrator va axborot xavfsizligi xizmati imzosi |
+| Xodim haqidagi ma'lumotlar ko'chirmasi | `sozlamalar.html`, xodim so'rovi | hisob ma'lumotlari, oxirgi amallar, saqlash muddatlari |
+
+## Ochiq manbalardagi ulanish namunasi
+
+Tashqi ma'lumot platformaga qanday kelishini bank obyektiga tegmasdan ko'rsatadi. Kod `yadro/jonli.js`; manbalar, shartlar va tekshiruv sanasi `assets/jonli/MANBA.md`; kamera ro'yxati `assets/jonli/kameralar.json`. Har blok «Ommaviy namuna, bank obyekti emas» belgisi, manba nomi va litsenziyasi bilan chiqadi va internetga faqat tugma bosilganda chiqadi. Tarmoq yopiq bo'lsa blok 8 soniyadan keyin «Internet yo'q: jonli namuna ko'rsatilmaydi» deb yozadi, sahifaning qolgan qismi ishlayveradi.
+
+| Sahifa | Blok | Manba |
+|---|---|---|
+| `himoya.html` | «Ulanish namunasi» kartasi: 14 hudud markazi ob-havosi va quyoshli qurilmalarning zaryad holati, MQTT sinov kanali, shahar kamerasi tekshiruvi natijasi | Open-Meteo (CC BY 4.0); `test.mosquitto.org`, zaxira `broker.emqx.io`; `kameralar.json` |
+| `qurilmalar.html` | Sinov qurilmasi: virtual eshik datchigi «Eshik ochildi» yoki «Batareya past» xabarini ommaviy kanalga yuboradi va qaytarib oladi | MQTT sinov brokeri |
+| `qurilma.html`, `obyekt-himoya.html` | Hudud ob-havosi 0,1° aniqlikda; quyoshli qurilmada zaryad holati va kunlik hosil; 24 soatlik prognoz chegaradan o'tsa, navbatdan tashqari ko'rik asosi | Open-Meteo |
+| `integratsiyalar.html` | «Ommaviy sinov: qurilma xabari qanday keladi» | MQTT sinov brokeri |
+| `tizim-holati.html` | «Tashqi internetni tekshirish»: bank tarmog'i tashqi so'rovni o'tkazadimi | Open-Meteo |
+
+Kamera: 25.09.2026 dagi tekshiruvda egasi ommaga ko'rsatish va joylashtirishga ruxsat bergan jonli oqim topilmadi. Karta shuni va rad etilgan manbalarni sababi bilan ko'rsatadi, o'rniga boshqa oqim qo'yilmaydi. Himoyasiz qolgan yoki qidiruvda topilgan kameralar ishlatilmaydi.
+
+## Fayldan import (5 sahifa)
+
+«Fayldan import» tugmasi Excel (.xlsx, birinchi varaq) va CSV ni qabul qiladi, «Namuna fayl» tugmasi ustunlari tayyor .xlsx (ikkinchi varaqda ustun qoidalari) yoki CSV beradi. Qatorlar saqlashdan oldin tekshiriladi, xatoli qator yozilmaydi va rad etilganlar CSV da qaytadi. Oyna yadrodagi `MKB.csvImport`; Excel o'qish va namuna fayl `yadro/jadval-fayl.js` da, tashqi kutubxonasiz.
+
+| Sahifa | Nima kiradi | Kim boshlaydi | To'rt ko'z |
+|---|---|---|---|
+| `obyektlar.html` | aktivlar | aktivlarga yozish huquqi (obyekt menejeri, administrator) | aktiv «Rasmiylashtirilmoqda» holatida kiradi, «Balansda» emas |
+| `sugurta.html` | sug'urta polislari va mukofot xarajati | qiymat bo'limiga yozish huquqi | — |
+| `baholash.html` | baholash natijalari | qiymat bo'limiga yozish huquqi | har qator Rahbariyatga `baho` qaror so'rovi; qiymat tasdiqdan keyin o'zgaradi |
+| `korik-rejasi.html` | rejali ko'riklar | ko'rikka yozish huquqi | — |
+| `qurilmalar.html` | qurilmalar | nazorat bo'limiga yozish huquqi | qurilma birinchi signalgacha «aloqasiz» |
 
 ## Olib tashlangan sahifalar
 

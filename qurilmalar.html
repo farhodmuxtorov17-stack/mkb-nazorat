@@ -34,13 +34,14 @@
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><a href="himoya.html">Nazorat va himoya</a><span class="ajratgich">/</span><span>Qurilmalar</span></div>
     <div class="hs-qator"><h1>Qurilmalar</h1><span class="hs-meta" id="hs-meta"></span><span class="hs-meta" id="qr-yangilandi" data-sayohat="yangilandi" data-tur="qurilmalar-yangilandi" hidden></span>
-      <div class="hs-amallar"><a class="tugma tugma-asosiy" href="qurilma-ornatish.html" data-huquq="yoz" data-tur="qurilmalar-ornatish"><svg class="ic"><use href="#ik-qoshish"/></svg>Qurilma o'rnatish</a></div></div>
+      <div class="hs-amallar"><button type="button" class="tugma tugma-oq" id="import-tugma" data-huquq="yoz" data-sayohat="import" title="Excel (.xlsx) yoki CSV"><svg class="ic"><use href="#ik-yuklash"/></svg><span>Fayldan import</span></button><a class="tugma tugma-asosiy" href="qurilma-ornatish.html" data-huquq="yoz" data-tur="qurilmalar-ornatish"><svg class="ic"><use href="#ik-qoshish"/></svg>Qurilma o'rnatish</a></div></div>
   </div>
-  <nav class="bolim-tablar" data-bir-qator aria-label="Bo'lim ichi"><a href="himoya.html">Monitoring markazi</a><a href="qoriqlash.html">Qo'riqlash</a><a href="kommunal.html">Kommunal</a><a href="qurilmalar.html" class="faol" aria-current="page">Qurilmalar</a><a href="hodisalar.html">Hodisalar</a><a href="tashriflar.html">Tashriflar</a><a href="masofaviy-korik.html">Masofaviy ko'rik</a><a href="ruxsatlar.html">Ruxsatlar</a><a href="kirish-voqealari.html">Signallar</a></nav>
+  <nav class="bolim-tablar" data-bir-qator aria-label="Bo'lim ichi"><a href="himoya.html">Monitoring markazi</a><a href="hodisalar.html">Hodisalar</a><a href="qurilmalar.html" class="faol" aria-current="page">Qurilmalar</a><a href="ruxsatlar.html">Kirish nazorati</a><a href="korik-rejasi.html">Ko'rik rejasi</a><a href="qoriqlash.html">Qo'riqlash</a></nav>
+  <nav class="almashtirgich" aria-label="Qurilmalar ko'rinishi"><a href="qurilmalar.html" aria-current="page">Qurilmalar ro'yxati</a><a href="kirish-voqealari.html?rejim=signal">Signallar</a></nav>
   <section class="metrika-qator tort" id="qr-metrika" aria-label="Qurilmalar holati" data-sayohat="holat" data-tur="qurilmalar-kpi"></section>
   <div id="qr-jadval" data-sayohat="jadval" data-tur="qurilmalar-jadval"></div>
 
-  <section class="karta" id="qr-smeta" aria-labelledby="qr-smeta-s" data-tur="qurilmalar-smeta" style="margin-top:20px">
+  <section class="karta" id="qr-smeta" aria-labelledby="qr-smeta-s" data-tur="qurilmalar-smeta">
     <div class="karta-bosh"><h2 id="qr-smeta-s" data-ikonka="pul">Himoya smetasi</h2>
       <div class="lenta-filtr" role="group" aria-label="Smeta qamrovi" id="qr-qamrov" hidden>
         <button type="button" class="pill faol" data-qamrov="qurilmasiz" aria-pressed="true">Qurilmasiz obyektlar</button>
@@ -54,6 +55,8 @@
       <p class="smeta-izoh" id="qr-smeta-izoh"></p>
     </div>
   </section>
+
+  <p class="maydon-izoh" id="jl-sinov">Qurilma xabari tizimga qanday kelishini ochiq MQTT sinov kanalida ko'rish mumkin: <a href="himoya.html#jl-namuna">Ulanish namunasini ko'rish</a></p>
 </main>
 </div>
 </div>
@@ -70,9 +73,12 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/jadval-fayl.js?v=26092200"></script>
+<script src="yadro/jonli.js?v=26092200"></script>
 <script>
 (() => {
   const D = MKB_DATA, esc = MKB.esc, $ = id => document.getElementById(id);
+  /* Sinov qurilmasi Monitoring markazidagi "Ulanish namunasi" kartasida: bu yerda faqat havola */
   let ulandi = false;
   MKB.sahifaYukla({
     joylar: {"qr-metrika": ["karta", 4], "qr-jadval": ["jadval", 8]},
@@ -90,15 +96,15 @@
   function boshla(){
   const p = new URLSearchParams(location.search);
   const QUVVAT = {"quyosh+akkumulyator": "Quyosh va akkumulyator", "akkumulyator": "Akkumulyator", "tarmoq": "Elektr tarmog'i"};
-  /* Aloqa holati faqat oxirgi signal vaqtidan hisoblanadi: "aloqada" = so'nggi soatda signal kelgan */
-  const HOLAT = {"Aloqada": "chip-yashil", "1 soatdan ortiq jim": "chip-sariq", "24 soatdan ortiq jim": "chip-xavf", "Nosoz": "chip-xavf", "Xizmatda": "chip-info", "Signal yo'q": "chip-kul"};
+  /* Shlyuz ulanmagan: "aloqada" oxirgi holat qaydi bo'yicha, jonli signal emas */
+  const HOLAT = {"Qayd bo'yicha aloqada": "chip-yashil", "1 soatdan ortiq jim": "chip-sariq", "24 soatdan ortiq jim": "chip-xavf", "Nosoz": "chip-xavf", "Xizmatda": "chip-info", "Signal yo'q": "chip-kul"};
   const holatNomi = q => {
     const h = D.qurilmaHolati(q) || {};
     if (q.holat === "nosoz") return "Nosoz";
     if (q.holat === "xizmatda") return "Xizmatda";
     if (h.holat === "aloqa yo'q") return "Signal yo'q";
     if (h.uzoqOflayn) return "24 soatdan ortiq jim";
-    return h.holat === "onlayn" ? "Aloqada" : "1 soatdan ortiq jim";
+    return h.holat === "onlayn" ? "Qayd bo'yicha aloqada" : "1 soatdan ortiq jim";
   };
   let hamma = [], qatorlar = [];
   const hisobla = () => {
@@ -107,7 +113,7 @@
       const h = D.qurilmaHolati(q) || {};
       return {id: q.id, q, tur: q.turNomi || q.tur, model: [q.ishlabChiqaruvchi, q.model].filter(Boolean).join(" "),
         obyektId: q.obyektId, obyekt: MKB.kn.obyektNomi(q.obyektId), quvvat: QUVVAT[q.quvvat] || q.quvvat || "—",
-        batareya: q.batareya == null ? -1 : q.batareya, aloqa: q.aloqa || "—", signal: q.oxirgiSignal || "", soat: h.oflaynSoat,
+        batareya: q.batareya == null ? -1 : q.batareya, aloqa: q.aloqa || "—", signal: q.oxirgiSignal || "", soat: h.signalSoat,
         holat: holatNomi(q), batPast: !!h.batareyaPast};
     });
   };
@@ -116,14 +122,20 @@
   let filtr = p.get("filtr") || "";
   const FILTR = {
     "": ["Jami qurilmalar", () => true, "Barcha obyektlarda"],
-    onlayn: ["Aloqadagi qurilmalar", x => x.holat === "Aloqada", "Oxirgi holat qaydi bo'yicha"],
-    oflayn24: ["24 soatdan ortiq jim", x => x.holat === "24 soatdan ortiq jim" || x.holat === "Nosoz", "Nosozlari bilan birga"],
+    onlayn: ["Aloqadagi qurilmalar", x => x.holat === "Qayd bo'yicha aloqada", "Oxirgi holat qaydi bo'yicha"],
+    oflayn24: ["Oxirgi qaydda 24 soatdan ortiq jim", x => x.holat === "24 soatdan ortiq jim" || x.holat === "Nosoz", "Nosozlari bilan birga"],
     batareya: ["Batareyasi 20% dan past", x => x.batPast, "Almashtirish kerak"],
   };
   const obSet = () => [...new Set(qatorlar.map(x => x.obyektId))].map(id => [id, MKB.kn.obyektYorligi(id)]).sort((a, b) => String(a[1]).localeCompare(String(b[1])));
   let obyekt = p.get("obyekt") || "";
   const tanlangan = () => qatorlar.filter(x => (!obyekt || x.obyektId === obyekt) && FILTR[filtr][1](x));
 
+  const oxirgiQayd = (() => {
+    const d = (D.QURILMALAR || []).map(q => D.sanaOqi(q.holatQayd)).filter(Boolean).sort((a, b) => b - a)[0];
+    if (!d) return "";
+    const ikki = n => String(n).padStart(2, "0");
+    return ikki(d.getDate()) + "." + ikki(d.getMonth() + 1) + " " + ikki(d.getHours()) + ":" + ikki(d.getMinutes());
+  })();
   function metrikaChiz(){
     const baza = qatorlar.filter(x => !obyekt || x.obyektId === obyekt);
     $("qr-metrika").innerHTML = Object.keys(FILTR).map(k => {
@@ -131,7 +143,9 @@
       const xavf = (k === "oflayn24" || k === "batareya") && son > 0;
       return '<button type="button" class="metrika' + (k === filtr ? " tanlangan" : "") + '" data-f="' + k + '" aria-pressed="' + (k === filtr) + '">' +
         '<span class="m-yorliq">' + FILTR[k][0] + '</span><span class="m-qiymat' + (xavf ? " xavf" : "") + '"><span data-tarjimasiz>' + son + "</span>" +
-        (k === "onlayn" ? "<small data-tarjimasiz>/ " + baza.length + "</small>" : "") + '</span><span class="m-izoh">' + FILTR[k][2] + "</span></button>";
+        (k === "onlayn" ? "<small data-tarjimasiz>/ " + baza.length + "</small>" : "") + '</span><span class="m-izoh">' + FILTR[k][2] +
+        /* Aloqa hozirgi signal emas, qayd paytidagi holat: oxirgi qayd vaqti ko'rsatiladi (tizim holati sahifasi bilan bir xil) */
+        (k === "onlayn" && oxirgiQayd ? ' · <span>oxirgi qayd</span> <span data-tarjimasiz>' + esc(oxirgiQayd) + "</span>" : "") + "</span></button>";
     }).join("");
     tarjimaQil($("qr-metrika"));
   }
@@ -280,6 +294,65 @@
   const belgi = MKB.yangilanganBelgi("qr-yangilandi", {avto: 60, yangila: async () => { await MKB.kn.yukla(["QURILMALAR"]); hisobla(); yangila(); }});
   belgi.belgila();
   }
+})();
+</script>
+<script>
+/* Qurilmalarni fayldan kiritish (o'rnatuvchi tashkilotning ro'yxati). Yangi qurilma "oflayn" holatda yoziladi:
+   birinchi haqiqiy signal kelmaguncha u aloqada deb ko'rsatilmaydi */
+(() => {
+  const tugma = document.getElementById("import-tugma");
+  if (!tugma) return;
+  tugma.addEventListener("click", () => {
+    const D = MKB_DATA, Y = MKB.importYordam;
+    const TURLAR = (D.QURILMA_TURLARI || []).map(t => [t.kalit, t.nom]);
+    const ALOQA = [["4G", "4G"], ["LoRaWAN", "LoRaWAN"]];
+    const QUVVAT = [["tarmoq", "Elektr tarmog'i"], ["akkumulyator", "Akkumulyator"], ["quyosh+akkumulyator", "Quyosh va akkumulyator"]];
+    const b = Y.bugun();
+    const fayldagi = new Set();
+    const telTozala = v => String(v || "").replace(/[^\d+]/g, "");
+    MKB.jadvalImport({
+      sarlavha: "Qurilmalarni fayldan qo'shish", birlik: "qurilma", faylNomi: "qurilmalar-namuna", qaytaYukla: true,
+      ustunlar: [
+        {kalit: "obyekt", nom: "Obyekt ID", majburiy: true}, {kalit: "tur", nom: "Qurilma turi", majburiy: true},
+        {kalit: "seriya", nom: "Seriya raqami", majburiy: true}, {kalit: "ishlabChiqaruvchi", nom: "Ishlab chiqaruvchi"},
+        {kalit: "model", nom: "Model"}, {kalit: "ornatilgan", nom: "O'rnatilgan sana", majburiy: true},
+        {kalit: "aloqa", nom: "Aloqa", majburiy: true}, {kalit: "quvvat", nom: "Quvvat manbai", majburiy: true}, {kalit: "sim", nom: "SIM raqami"},
+      ],
+      namuna: [[(MKB.doira(D.YOZUVLAR || [])[0] || {}).id || "AK-2026/0001", "Eshik ochilish datchigi", "SN000123", "Ajax", "DoorProtect", D.sanaYoz(b), "LoRaWAN", "Akkumulyator", ""],
+        [(MKB.doira(D.YOZUVLAR || [])[0] || {}).id || "AK-2026/0001", "4G kamera", "SN000124", "", "", D.sanaYoz(b), "4G", "Quyosh va akkumulyator", "+998 90 000 00 00"]],
+      qoidalar: {obyekt: "Reyestr raqami yoki obyektning to'liq nomi", tur: TURLAR.map(t => t[1]).join(", "), seriya: "Qurilma korpusidagi raqam, takrorlanmaydi",
+        ornatilgan: "kk.oo.yyyy, bugundan keyin emas", aloqa: "4G yoki LoRaWAN", quvvat: QUVVAT.map(q => q[1]).join(", "), sim: "4G qurilma uchun majburiy"},
+      tekshir(x){
+        const e = [];
+        const y = Y.obyekt(x.obyekt), s = Y.sana(x.ornatilgan), a = Y.variant(ALOQA, x.aloqa);
+        if (x.obyekt && !y) e.push("Obyekt topilmadi yoki sizning doirangizda emas: " + x.obyekt);
+        if (x.tur && !Y.variant(TURLAR, x.tur)) e.push("Qurilma turi noma'lum: " + x.tur);
+        if (x.ornatilgan && !s) e.push("O'rnatilgan sanani kk.oo.yyyy ko'rinishida yozing");
+        if (s && s > b) e.push("O'rnatilgan sana bugundan keyin bo'lishi mumkin emas");
+        if (x.aloqa && !a) e.push("Aloqa turi noma'lum: " + x.aloqa);
+        if (x.quvvat && !Y.variant(QUVVAT, x.quvvat)) e.push("Quvvat manbai noma'lum: " + x.quvvat);
+        if (a && a[0] === "4G" && !/^\+?998\d{9}$/.test(telTozala(x.sim))) e.push("4G qurilma uchun SIM raqamini +998 XX XXX XX XX ko'rinishida yozing");
+        const k = Y.kichik(x.seriya);
+        if (k && (D.QURILMALAR || []).some(q => Y.kichik(q.seriya) === k)) e.push("Bu seriya raqamli qurilma allaqachon kiritilgan");
+        else if (k && fayldagi.has(k)) e.push("Faylda takrorlangan seriya raqami");
+        if (k) fayldagi.add(k);
+        return e;
+      },
+      async saqla(x){
+        const y = Y.obyekt(x.obyekt), s = Y.sana(x.ornatilgan), tur = Y.variant(TURLAR, x.tur), aloqa = Y.variant(ALOQA, x.aloqa)[0], quvvat = Y.variant(QUVVAT, x.quvvat)[0];
+        const t = telTozala(x.sim);
+        const id = await MKB.keyingiId("QURILMALAR", "QR-", 4);
+        await MKBapi.yangi("QURILMALAR", {id, obyektId: y.id, kirishNuqtaId: null, shlyuzId: null, tur: tur[0], turNomi: tur[1], katalogId: null,
+          ishlabChiqaruvchi: x.ishlabChiqaruvchi || "", model: x.model || "", seriya: x.seriya.trim(), ornatilgan: D.sanaYoz(s),
+          quvvat, aloqa, simRaqam: aloqa === "4G" ? "+998 " + t.slice(-9, -7) + " " + t.slice(-7, -4) + " " + t.slice(-4, -2) + " " + t.slice(-2) : null,
+          batareya: null, oxirgiSignal: null, oflaynSoat: null, holat: "oflayn", proshivka: null, keyingiXizmat: D.sanaYoz(D.oyQosh(s, 12))});
+        if (MKB.huquq("aktivlar", "yoz") && D.obyektQurilmalari){
+          try{ await MKBapi.yangilash("YOZUVLAR", y.id, {himoya: Object.assign({}, y.himoya, {qurilmaSoni: D.obyektQurilmalari(y.id).length})}); }catch(_){ }
+        }
+      },
+      keyin(n){ if (n && n.saqlandi) MKB.toast(n.saqlandi + " ta qurilma qo'shildi. Birinchi signal kelguncha ular aloqasiz deb ko'rinadi"); },
+    });
+  });
 })();
 </script>
 </body>

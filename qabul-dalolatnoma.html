@@ -5,51 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Qabul dalolatnomasi</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
-<style>
-.varaq{background:#fff;color:#141210;max-width:820px;width:100%;margin:0 auto;padding:48px 56px;border-radius:var(--r-karta);box-shadow:var(--soya);
-  font-size:13.5px;line-height:1.5}
-.varaq .v-bosh{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:1.5px solid #141210;padding-bottom:14px;margin-bottom:18px}
-.varaq .v-bank{font:600 14px var(--shrift-displey);letter-spacing:-.01em}
-.varaq .v-bank small{display:block;font:400 12px var(--shrift);color:#555}
-.varaq .v-raqam{text-align:right;font-size:12.5px;color:#444}
-.varaq h2.v-sar{font:600 19px/1.25 var(--shrift-displey);text-align:center;letter-spacing:.02em;margin:6px 0 2px}
-.varaq .v-sub{text-align:center;color:#444;font-size:13px;margin-bottom:22px}
-.varaq h3{font:600 13.5px var(--shrift-displey);margin:20px 0 8px;letter-spacing:.01em}
-.varaq table{width:100%;border-collapse:collapse;font-size:12.5px}
-.varaq th,.varaq td{border:1px solid #c9c4be;padding:6px 8px;text-align:left;vertical-align:top}
-.varaq th{background:#f4f1ed;font-weight:500}
-.varaq td.son{text-align:right;font-variant-numeric:tabular-nums}
-.varaq .kv{display:grid;grid-template-columns:200px minmax(0,1fr);border-top:1px solid #e3ded8}
-.varaq .kv > *{padding:6px 0;border-bottom:1px solid #e3ded8}
-.varaq .kv dt{color:#555}
-.varaq .izoh{font-size:12px;color:#6b645d;margin-top:6px}
-.varaq .suratlar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.varaq .suratlar figure{aspect-ratio:4/3;border:1px solid #c9c4be;border-radius:6px;overflow:hidden;display:grid;place-items:center;background:#f7f5f2}
-.varaq .suratlar img,.varaq .suratlar .surat-yoq{width:100%;height:100%;object-fit:cover}
-.varaq .imzolar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 32px;margin-top:10px}
-.varaq .imzo{font-size:12.5px}
-.varaq .imzo span{display:block;color:#555}
-.varaq .imzo i{display:block;border-bottom:1px solid #141210;height:30px;margin-bottom:4px}
-.bo-sh{font-style:normal;color:#8a827a}
-@media (max-width:720px){
-  .varaq{padding:24px 18px;font-size:13px}
-  .varaq .kv{grid-template-columns:minmax(0,1fr)}
-  .varaq .kv dt{border-bottom:0;padding-bottom:0}
-  .varaq .suratlar{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .varaq .imzolar{grid-template-columns:minmax(0,1fr)}
-  .varaq .jadval-orash{overflow-x:auto}
-  .varaq .v-bosh{flex-direction:column}
-  .varaq .v-raqam{text-align:left}
-}
-@media print{
-  @page{size:A4;margin:14mm}
-  .hujjat-shapka,.chop-yashir{display:none!important}
-  .varaq{box-shadow:none;border-radius:0;padding:0;max-width:none;font-size:11.5px}
-  .varaq table{font-size:10.5px}
-  .varaq h3{break-after:avoid}
-  .varaq .suratlar figure,.varaq .imzolar{break-inside:avoid}
-}
-</style>
+<link rel="stylesheet" href="yadro/dalolatnoma.css?v=26092200">
 </head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
@@ -82,6 +38,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/dalolatnoma.js?v=26092200"></script>
 <script>
 (async () => {
   const joy = document.getElementById("joy");
@@ -134,8 +91,6 @@
   const ish = b.undiruvIshId ? (D.UNDIRUV_ISHLAR || []).find(i => i.id === b.undiruvIshId) : null;
   document.getElementById("hs-meta").innerHTML = '<span class="kod-mono" data-tarjimasiz>' + esc(act.raqam || "—") + "</span> · <span data-tarjimasiz>" + esc(act.sana || "") + "</span>";
 
-  const bosh = '<em class="bo-sh">kiritilmagan</em>';
-  const qiymatMatn = v => v == null || v === "" ? bosh : '<span data-tarjimasiz>' + esc(String(v)) + "</span>";
   const xizNom = k => ((D.KOMMUNAL_XIZMATLAR || []).find(x => x.kalit === k) || {}).nom || k;
   const transport = y.turKalit === "transport" || y.turKalit === "texnika";
   const hq = y.huquq || {};
@@ -147,79 +102,65 @@
   const azolar = tolliq ? (m.azolar || []) : [];
   const rais = tolliq ? m.rais : null;
 
-  const kv = (k, v) => "<dt>" + k + "</dt><dd>" + v + "</dd>";
-  let h = '<article class="varaq" aria-label="Dalolatnoma">' +
-    '<div class="v-bosh"><div class="v-bank"><span>Mikrokreditbank</span><small>' + esc(fil.nom || y.filial || "") + "</small></div>" +
-      '<div class="v-raqam"><div><span>Reyestr raqami</span> <b class="kod-mono" data-tarjimasiz>' + esc(y.id) + "</b></div>" +
-      '<div><span>Hudud</span> <span data-tarjimasiz>' + esc(y.hududToliq || y.hudud || "") + "</span></div></div></div>" +
-    '<h2 class="v-sar"><span>QABUL-TOPSHIRISH DALOLATNOMASI</span> <span data-tarjimasiz>№ ' + esc(act.raqam || "—") + "</span></h2>" +
-    '<div class="v-sub" data-tarjimasiz>' + esc(act.sana || "") + "</div>" +
+  const H = window.MKB_HUJJAT;
+  const ish2 = ish ? ish.id : null;
+  const hisobQator = x => x.holat === "mavjud emas" ? Object.assign({}, x, {hisoblagich: "", korsatkich: null, plomba: ""}) : x;
+  /* Surat qoidasi ko'rikdagi me'yor bilan bir xil: bino yoki transport uchun PARAMETRLAR dagi son */
+  const kerak = Number(D.param(transport || y.turKalit === "uskuna" ? "korikSuratTransport" : "korikSuratBino")) || 0;
+  const fotolar = suratYollar.map((s, i) => ({id: String(s), html: MKB.obyektSurati({rasm: s, rasmTuri: y.rasmTuri, qisqa: (i + 1) + "-surat"}),
+    izoh: /assets\/namuna\//.test(String(s)) ? {t: "Namuna surati"} : null}));
+  const qoida = H.suratQoidasi(fotolar.length, kerak);
+  const azoRoy = tolliq ? [rais].concat(azolar).filter(Boolean) : [];
+  const lavozim = n => { const f = (D.FOYDLAR || []).find(x => x.nom === n) || {}; return f.lavozim || f.rol || ""; };
 
-    "<h3>1. Obyekt</h3><dl class=\"kv\">" +
-      kv("Nomi", '<span data-tarjimasiz>' + esc(y.nom) + "</span>") +
-      kv("Turi", "<span>" + esc(y.tur || "") + "</span>") +
-      kv("Manzil", '<span data-tarjimasiz>' + esc(y.manzil || "") + "</span>") +
-      (D.binolimi(y) ? kv("Maydon", '<span data-tarjimasiz>' + esc(D.maydonMatn(y)) + "</span>") : "") +
-      (transport ? kv("Davlat raqami", qiymatMatn(hq.davlatRaqami)) + kv("VIN yoki zavod raqami", qiymatMatn(hq.vin)) : "") +
-      kv("Sobiq egasi", qiymatMatn(y.sobiqEga)) +
-      (y.joy && y.joy.aniq ? kv("Koordinata", '<span data-tarjimasiz>' + y.joy.lat + ", " + y.joy.lng + "</span>") : "") +
-    "</dl>" +
+  const model = {
+    tur: "qabul", sarlavha: "Qabul-topshirish dalolatnomasi", raqam: act.raqam || "—", sana: act.sana || "",
+    joy: y.hududToliq || y.hudud || "", filial: fil.nom || y.filial || "", obyekt: {id: y.id, nom: y.qisqa || y.nom},
+    havola: "qabul-dalolatnoma.html?id=" + encodeURIComponent(y.id),
+    bolimlar: [
+      {sarlavha: "Obyekt", kv: [
+        ["Nomi", y.nom, {keng: true}], ["Turi", y.tur ? {t: y.tur} : null], ["Sobiq egasi", y.sobiqEga || null],
+        ["Manzil", y.manzil || null, {keng: true}],
+        D.binolimi(y) ? ["Maydon", D.maydonMatn(y)] : null,
+        transport ? ["Davlat raqami", hq.davlatRaqami || null] : null,
+        transport ? ["VIN yoki zavod raqami", hq.vin || null] : null,
+        y.joy && y.joy.aniq ? ["Koordinata", y.joy.lat + ", " + y.joy.lng] : null,
+      ]},
+      {sarlavha: "Qabul asosi va balans qiymati", kv: [
+        ["Qabul asosi", asos.nom ? {t: asos.nom} : null, {keng: true}],
+        [asos.hujjat || "Asos hujjat", [(m && m.asosRaqam) || (b.asosHujjat && b.asosHujjat.raqam) || "", (m && m.asosSana) || (b.asosHujjat && b.asosHujjat.sana) || ""].filter(Boolean).join(", ") || null],
+        ish2 ? ["Undiruv ishi", ish2] : null,
+        ["Balansga olish sanasi", b.sana || null],
+        ["Balans qiymati", MKB.pul(tolliq ? m.qiymat : b.qiymat)],
+        ["Balans hisobvarag'i", (m && m.hisobvaraq) || b.hisobvaraq || null],
+        ["Yopilgan qarz", (tolliq ? m.yopilganQarz : b.yopilganQarz) != null ? MKB.pul(tolliq ? m.yopilganQarz : b.yopilganQarz) : null],
+        tolliq ? ["Tizimda tuzdi", m.tuzdi || act.yuklagan || null] : null,
+      ]},
+      hisob.length ? {sarlavha: "Hisoblagich ko'rsatkichlari", jadval: {ustunlar: ["Xizmat", "Holati", "Hisoblagich", "Ko'rsatkich", "Plomba"], son: [3],
+        qatorlar: hisob.map(hisobQator).map(x => [{t: xizNom(x.xizmat)}, {t: MKB.holatNomi(x.holat || "—")}, x.hisoblagich || "—",
+          x.korsatkich == null || x.korsatkich === "" ? "—" : MKB.fmt(Number(x.korsatkich)), x.plomba || "—"])}} : null,
+      tolliq
+        ? {sarlavha: "Kalitlar va jihozlar", jadval: {ustunlar: ["№", "Nomi", "Soni", "Holati"], son: [2], majburiy: [3],
+            qatorlar: [["1", {t: "Kalitlar"}, String(m.kalitlar != null ? m.kalitlar : "—"), "—"]]
+              .concat((m.jihozlar || []).map((j, i) => [String(i + 2), j.nom, String(j.soni || 1), j.holati || "—"]))}}
+        : {sarlavha: "Kalitlar va jihozlar", matn: {t: "Kalitlar va jihozlar ro'yxati tizimga kiritilmagan. Varaqda qo'lda to'ldiriladi."}},
+    ],
+    fotolar, fotoKerak: kerak,
+    komissiya: [{rol: "Topshirdi", ism: y.sobiqEga || ""}]
+      .concat(azoRoy.length ? azoRoy.map((n, i) => ({rol: i === 0 ? "Komissiya raisi" : "Komissiya a'zosi", ism: n + (lavozim(n) ? ", " + lavozim(n) : "")}))
+        : [{rol: "Komissiya raisi", ism: ""}, {rol: "Komissiya a'zosi", ism: ""}, {rol: "Komissiya a'zosi", ism: ""}]),
+    qoralama: qoida ? qoida.matn : null,
+  };
 
-    "<h3>2. Qabul asosi va balans qiymati</h3><dl class=\"kv\">" +
-      kv("Qabul asosi", "<span>" + esc(asos.nom || "—") + "</span>") +
-      kv(esc(asos.hujjat || "Asos hujjat"), '<span data-tarjimasiz>' + esc(((m && m.asosRaqam) || (b.asosHujjat && b.asosHujjat.raqam) || "—") +
-        ", " + ((m && m.asosSana) || (b.asosHujjat && b.asosHujjat.sana) || "")) + "</span>") +
-      (ish ? kv("Undiruv ishi", '<span class="kod-mono" data-tarjimasiz>' + esc(ish.id) + "</span>") : "") +
-      kv("Balansga olish sanasi", qiymatMatn(b.sana)) +
-      kv("Balans qiymati", '<span data-tarjimasiz>' + esc(MKB.pul(tolliq ? m.qiymat : b.qiymat)) + "</span>") +
-      kv("Balans hisobvarag'i", qiymatMatn((m && m.hisobvaraq) || b.hisobvaraq)) +
-      kv("Yopilgan qarz", (tolliq ? m.yopilganQarz : b.yopilganQarz) != null ? '<span data-tarjimasiz>' + esc(MKB.pul(tolliq ? m.yopilganQarz : b.yopilganQarz)) + "</span>" : bosh) +
-    "</dl>" +
-
-    "<h3>3. Komissiya</h3>" +
-    (tolliq
-      ? '<div class="jadval-orash"><table><thead><tr><th>F.I.Sh.</th><th>Lavozim</th><th>Komissiyadagi o&#39;rni</th></tr></thead><tbody>' +
-        [rais].concat(azolar).map((n, i) => {
-          const f = (D.FOYDLAR || []).find(x => x.nom === n) || {};
-          return '<tr><td data-tarjimasiz>' + esc(n) + "</td><td>" + esc(f.lavozim || f.rol || "") + "</td><td>" + (i === 0 ? "Rais" : "A&#39;zo") + "</td></tr>";
-        }).join("") + "</tbody></table></div>"
-      : '<p class="izoh">Komissiya tarkibi tizimga kiritilmagan. Imzo qismida qo&#39;lda to&#39;ldiriladi.</p>') +
-
-    (hisob.length ? "<h3>4. Hisoblagich ko&#39;rsatkichlari</h3>" +
-      '<div class="jadval-orash"><table><thead><tr><th>Xizmat</th><th>Holati</th><th>Hisoblagich</th><th>Ko&#39;rsatkich</th><th>Plomba</th></tr></thead><tbody>' +
-      hisob.map(x => x.holat === "mavjud emas" ? Object.assign({}, x, {hisoblagich: "", korsatkich: null, plomba: ""}) : x).map(x => "<tr><td>" + esc(xizNom(x.xizmat)) + "</td><td>" + esc(MKB.holatNomi(x.holat || "—")) + '</td><td data-tarjimasiz>' + esc(x.hisoblagich || "—") +
-        '</td><td class="son" data-tarjimasiz>' + (x.korsatkich == null || x.korsatkich === "" ? "—" : esc(MKB.fmt(Number(x.korsatkich)))) + '</td><td data-tarjimasiz>' + esc(x.plomba || "—") + "</td></tr>").join("") +
-      "</tbody></table></div>" : "") +
-
-    "<h3>" + (hisob.length ? "5" : "4") + ". Kalitlar va jihozlar</h3>" +
-    (tolliq
-      ? '<dl class="kv">' + kv("Topshirilgan kalitlar", '<span data-tarjimasiz>' + esc(String(m.kalitlar)) + "</span> <span>dona</span>") + "</dl>" +
-        ((m.jihozlar || []).length
-          ? '<div class="jadval-orash" style="margin-top:10px"><table><thead><tr><th>№</th><th>Jihoz</th><th>Soni</th><th>Holati</th></tr></thead><tbody>' +
-            m.jihozlar.map((j, i) => '<tr><td data-tarjimasiz>' + (i + 1) + '</td><td data-tarjimasiz>' + esc(j.nom) + '</td><td class="son" data-tarjimasiz>' + esc(String(j.soni || 1)) +
-              '</td><td data-tarjimasiz>' + esc(j.holati || "—") + "</td></tr>").join("") + "</tbody></table></div>"
-          : '<p class="izoh">Obyektda jihoz qayd etilmagan.</p>')
-      : '<p class="izoh">Kalitlar va jihozlar ro&#39;yxati tizimga kiritilmagan.</p>') +
-
-    "<h3>" + (hisob.length ? "6" : "5") + ". Fotojadval</h3>" +
-    (suratYollar.length
-      ? '<div class="suratlar">' + suratYollar.slice(0, 12).map((s, i) => "<figure>" + MKB.obyektSurati({rasm: s, rasmTuri: y.rasmTuri, qisqa: (i + 1) + "-surat"}) + "</figure>").join("") + "</div>" +
-        (suratYollar.length > 12 ? '<p class="izoh"><span>Jami suratlar:</span> <span data-tarjimasiz>' + suratYollar.length + "</span></p>" : "")
-      : '<p class="izoh">Suratlar biriktirilmagan.</p>') +
-
-    "<h3>" + (hisob.length ? "7" : "6") + ". Imzolar</h3>" +
-    '<div class="imzolar">' +
-      '<div class="imzo"><i></i><span>Topshirdi</span><b data-tarjimasiz>' + esc(y.sobiqEga || "") + "</b></div>" +
-      (tolliq
-        ? [rais].concat(azolar).map((n, i) => '<div class="imzo"><i></i><span>' + (i === 0 ? "Komissiya raisi" : "Komissiya a&#39;zosi") + '</span><b data-tarjimasiz>' + esc(n) + "</b></div>").join("")
-        : '<div class="imzo"><i></i><span>Komissiya raisi</span></div><div class="imzo"><i></i><span>Komissiya a&#39;zosi</span></div><div class="imzo"><i></i><span>Komissiya a&#39;zosi</span></div>') +
-    "</div>" +
-    (tolliq ? '<p class="izoh" style="margin-top:18px"><span>Dalolatnomani tizimda tuzdi:</span> <span data-tarjimasiz>' + esc(m.tuzdi || act.yuklagan || "") + "</span></p>" : "") +
-    "</article>";
-
-  if (!tolliq) h = '<p class="chop-yashir maydon-izoh" style="max-width:820px;margin:0 auto 12px">Bu dalolatnoma tizimga fayl sifatida kiritilgan. Komissiya, kalitlar va jihozlar ro&#39;yxati reyestrda yo&#39;q, shu qismlar bo&#39;sh chiqadi.</p>' + h;
-  joy.innerHTML = h;
-  tarjimaQil(joy);
+  if (!tolliq){
+    const iz = document.createElement("p");
+    iz.className = "chop-yashir maydon-izoh";
+    iz.style.cssText = "max-width:880px;margin:0 auto 12px;width:100%";
+    iz.textContent = "Bu dalolatnoma tizimga fayl sifatida kiritilgan. Komissiya, kalitlar va jihozlar ro'yxati reyestrda yo'q, shu qismlar varaqda qo'lda to'ldiriladi.";
+    joy.before(iz);
+    tarjimaQil(iz);
+  }
+  MKB.dalolatnoma.chiz(joy, model);
   const chop = document.getElementById("chop");
   chop.disabled = false;
   chop.addEventListener("click", () => window.print());

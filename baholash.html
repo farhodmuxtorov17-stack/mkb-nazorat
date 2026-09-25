@@ -23,6 +23,7 @@
     <div class="hs-yorliq"><span>Qiymat va moliya</span><span class="ajratgich">/</span><span>Baholash</span></div>
     <div class="hs-qator"><h1>Baholash reyestri</h1><span class="hs-meta" id="hs-meta">—</span>
       <div class="hs-amallar">
+        <button type="button" class="tugma tugma-oq" id="import-tugma" data-huquq="yoz" data-sayohat="import" title="Excel (.xlsx) yoki CSV"><svg class="ic"><use href="#ik-yuklash"/></svg><span>Fayldan import</span></button>
         <a class="tugma tugma-oq" href="baholash-hisobot-kiritish.html" data-huquq="yoz"><svg class="ic"><use href="#ik-hujjat"/></svg><span>Hisobot kiritish</span></a>
         <a class="tugma tugma-asosiy" href="baholash-buyurtma.html" data-huquq="yoz" data-sayohat="buyurtma"><svg class="ic"><use href="#ik-qoshish"/></svg><span>Buyurtma berish</span></a>
       </div></div>
@@ -73,6 +74,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/jadval-fayl.js?v=26092200"></script>
 <script>
 (() => {
   const D = MKB_DATA, esc = MKB.esc, el = id => document.getElementById(id);
@@ -121,7 +123,7 @@
 
     el("hs-meta").innerHTML = "<span data-tarjimasiz>" + MKB.fmt(aktivlar.length) + "</span> <span>ta faol aktiv</span>";
     el("bh-dolzarb").textContent = MKB.fmt(son("Dolzarb"));
-    el("bh-dolzarb-izoh").innerHTML = "<span>Bozor qiymati</span> <span data-tarjimasiz>" + esc(MKB.pul(summa("Dolzarb"))) + "</span>";
+    el("bh-dolzarb-izoh").innerHTML = "<span>Amaldagi baholar bo'yicha bozor qiymati</span> <span data-tarjimasiz>" + esc(MKB.pul(summa("Dolzarb"))) + "</span>";
     el("bh-tugaydi").textContent = MKB.fmt(son("30 kunda tugaydi"));
     el("bh-eski").textContent = MKB.fmt(son("Eskirgan"));
     el("bh-eski-izoh").innerHTML = "<span>Baho</span> <span data-tarjimasiz>" + amalOy + "</span> <span>oydan eski</span>";
@@ -216,6 +218,62 @@
   if (f && jadval && ["Dolzarb", "30 kunda tugaydi", "Eskirgan"].indexOf(f) >= 0){ jadval.holat.filtrlar.holat = f; jadval.yangila(); }
   document.addEventListener("mkb:malumot", () => { try{ chiz(); }catch(_){ } });
   }
+})();
+</script>
+<script>
+/* Baholash natijalarini fayldan kiritish. Har qator "tasdiqda" holatida yoziladi va Rahbariyatga qaror so'rovi ketadi:
+   bozor qiymati obyekt kartochkasiga faqat boshqa xodim tasdiqlagandan keyin o'tadi (to'rt ko'z) */
+(() => {
+  const tugma = document.getElementById("import-tugma");
+  if (!tugma) return;
+  tugma.addEventListener("click", () => {
+    const D = MKB_DATA, Y = MKB.importYordam;
+    const USUL = [["Qiyosiy yondashuv", "Qiyosiy"], ["Daromad yondashuvi", "Daromad"], ["Xarajat yondashuvi", "Xarajat"]];
+    const b = Y.bugun();
+    const amalOy = D.param("bahoAmalOy") || 12;
+    const fayldagi = new Set();
+    const kutilmoqda = oid => (D.TASDIQLAR || []).some(t => t.tur === "baho" && t.holat === "kutilmoqda" && t.obyektId === oid);
+    MKB.jadvalImport({
+      sarlavha: "Baholash natijalarini fayldan qo'shish", birlik: "hisobot", faylNomi: "baholash-natijalari-namuna", qaytaYukla: true,
+      ustunlar: [
+        {kalit: "obyekt", nom: "Obyekt ID", majburiy: true}, {kalit: "raqam", nom: "Hisobot raqami", majburiy: true},
+        {kalit: "sana", nom: "Hisobot sanasi", majburiy: true}, {kalit: "baholovchi", nom: "Baholovchi tashkilot", majburiy: true},
+        {kalit: "litsenziya", nom: "Litsenziya raqami"}, {kalit: "usul", nom: "Baholash yondashuvi", majburiy: true},
+        {kalit: "bozor", nom: "Bozor qiymati", majburiy: true, format: "pul"}, {kalit: "tugatish", nom: "Tugatish qiymati", majburiy: true, format: "pul"},
+      ],
+      namuna: [[(MKB.doira(D.YOZUVLAR || [])[0] || {}).id || "AK-2026/0001", "BH-101/2026", D.sanaYoz(b), "«Namuna Baho» MChJ", "BL-0000", "Qiyosiy yondashuv", "520", "416"]],
+      qoidalar: {obyekt: "Reyestr raqami yoki obyektning to'liq nomi", sana: "kk.oo.yyyy, bugundan keyin emas", usul: USUL.map(u => u[0]).join(", "),
+        bozor: "mln so'm", tugatish: "mln so'm, bozor qiymatidan oshmaydi"},
+      tekshir(x){
+        const e = [];
+        const y = Y.obyekt(x.obyekt), s = Y.sana(x.sana);
+        if (x.obyekt && !y) e.push("Obyekt topilmadi yoki sizning doirangizda emas: " + x.obyekt);
+        if (y && kutilmoqda(y.id)) e.push("Bu obyekt bo'yicha baholash qarori kutilmoqda");
+        if (x.sana && !s) e.push("Hisobot sanasini kk.oo.yyyy ko'rinishida yozing");
+        if (s && s > b) e.push("Hisobot sanasi bugundan keyin bo'lishi mumkin emas");
+        if (x.usul && !Y.variant(USUL, x.usul)) e.push("Baholash yondashuvi noma'lum: " + x.usul);
+        if (x.bozor != null && !(x.bozor > 0)) e.push("Bozor qiymati 0 dan katta bo'lsin");
+        if (x.tugatish != null && x.bozor != null && !(x.tugatish > 0 && x.tugatish <= x.bozor)) e.push("Tugatish qiymati 0 dan katta va bozor qiymatidan oshmasin");
+        const k = y ? y.id : Y.kichik(x.obyekt);
+        if (k && fayldagi.has(k)) e.push("Faylda shu obyekt uchun ikkinchi hisobot");
+        if (k) fayldagi.add(k);
+        return e;
+      },
+      async saqla(x){
+        const y = Y.obyekt(x.obyekt), s = Y.sana(x.sana), usul = Y.variant(USUL, x.usul)[0];
+        const bozor = Math.round(x.bozor * 10) / 10, tugatish = Math.round(x.tugatish * 10) / 10;
+        const id = await MKB.keyingiId("BAHOLASHLAR", "BH-" + b.getFullYear() + "/", 4);
+        await MKBapi.yangi("BAHOLASHLAR", {id, obyektId: y.id, sana: D.sanaYoz(s), hisobotRaqami: x.raqam.trim(), bozorQiymati: bozor, tugatishQiymati: tugatish,
+          avvalgi: y.qiymat && y.qiymat.bozor != null ? y.qiymat.bozor : null, baholovchi: x.baholovchi.trim(), litsenziya: x.litsenziya || null, usul,
+          amalQilishTugash: D.sanaYoz(D.oyQosh(s, amalOy)), holat: "tasdiqda", izoh: "Fayldan kiritildi"});
+        await MKB.tasdiq.sorov({tur: "baho", manbaKol: "BAHOLASHLAR", manbaId: id, obyektId: y.id,
+          sarlavha: "Baholash natijasini tasdiqlash: " + (y.qisqa || y.nom),
+          tavsif: x.baholovchi.trim() + ", hisobot " + x.raqam.trim() + ", bozor qiymati " + MKB.pul(bozor) + ", tugatish qiymati " + MKB.pul(tugatish) + ".",
+          summa: bozor, masulRol: "Rahbariyat", javobIshKuni: 10});
+      },
+      keyin(n){ if (n && n.saqlandi) MKB.toast(n.saqlandi + " ta baholash natijasi kiritildi. Qiymat Rahbariyat tasdig'idan keyin o'zgaradi"); },
+    });
+  });
 })();
 </script>
 </body>

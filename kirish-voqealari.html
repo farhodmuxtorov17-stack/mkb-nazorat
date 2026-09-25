@@ -19,16 +19,15 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="himoya.html">Nazorat va himoya</a><span class="ajratgich">/</span><span>Signallar va voqealar</span></div>
-    <div class="hs-qator"><h1>Signallar va voqealar</h1><span class="hs-meta" id="hs-meta"></span><span class="hs-meta" id="kv-yangilandi" data-sayohat="yangilandi" data-tur="kirish-voqealari-yangilandi" hidden></span>
+    <div class="hs-yorliq"><a href="himoya.html">Nazorat va himoya</a><span class="ajratgich">/</span><a href="ruxsatlar.html" id="kv-ota">Kirish nazorati</a><span class="ajratgich">/</span><span id="kv-yorliq">Kirish voqealari</span></div>
+    <div class="hs-qator"><h1 id="kv-sarlavha">Kirish voqealari</h1><span class="hs-meta" id="hs-meta"></span><span class="hs-meta" id="kv-yangilandi" data-sayohat="yangilandi" data-tur="kirish-voqealari-yangilandi" hidden></span>
       <div class="hs-amallar"><a class="tugma tugma-oq" href="kirish-hisoboti.html" data-tur="kirish-voqealari-hisobot"><svg class="ic"><use href="#ik-hisobot"/></svg>Himoya hisoboti</a></div></div>
   </div>
-  <nav class="bolim-tablar" data-bir-qator aria-label="Bo'lim ichi"><a href="himoya.html">Monitoring markazi</a><a href="qoriqlash.html">Qo'riqlash</a><a href="kommunal.html">Kommunal</a><a href="qurilmalar.html">Qurilmalar</a><a href="hodisalar.html">Hodisalar</a><a href="tashriflar.html">Tashriflar</a><a href="masofaviy-korik.html">Masofaviy ko'rik</a><a href="ruxsatlar.html">Ruxsatlar</a><a href="kirish-voqealari.html" class="faol" aria-current="page">Signallar</a></nav>
+  <nav class="bolim-tablar" data-bir-qator aria-label="Bo'lim ichi" id="kv-tasma"><a href="himoya.html">Monitoring markazi</a><a href="hodisalar.html">Hodisalar</a><a href="qurilmalar.html">Qurilmalar</a><a href="ruxsatlar.html" class="faol">Kirish nazorati</a><a href="korik-rejasi.html">Ko'rik rejasi</a><a href="qoriqlash.html">Qo'riqlash</a></nav>
+  <!-- Bir sahifa, ikki tab: kirish voqealari "Kirish nazorati" ichida, qurilma signallari "Qurilmalar" ichida -->
   <div class="kv-asbob" data-tur="kirish-voqealari-filtr">
-    <div role="group" aria-label="Ko'rinish" style="display:flex;gap:6px">
-      <button type="button" class="pill faol" data-rejim="kirish">Kirish voqealari</button>
-      <button type="button" class="pill" data-rejim="signal">Qurilma signallari</button>
-    </div>
+    <nav class="almashtirgich" id="kv-nav-kirish" aria-label="Kirish nazorati ko'rinishi"><a href="ruxsatlar.html">Ruxsatlar</a><a href="tashriflar.html">Tashriflar</a><a href="kirish-voqealari.html?rejim=kirish" aria-current="page">Kirish voqealari</a></nav>
+    <nav class="almashtirgich" id="kv-nav-signal" aria-label="Qurilmalar ko'rinishi" hidden><a href="qurilmalar.html">Qurilmalar ro'yxati</a><a href="kirish-voqealari.html?rejim=signal" aria-current="page">Signallar</a></nav>
     <label class="tanlov"><span class="t-old">Obyekt:</span><select id="kv-obyekt" aria-label="Obyekt bo'yicha"><option value="">Barchasi</option></select></label>
   </div>
   <div id="kv-jadval" data-tur="kirish-voqealari-jadval"></div>
@@ -51,6 +50,22 @@
 <script>
 (async () => {
   const D = MKB_DATA, esc = MKB.esc, $ = id => document.getElementById(id);
+  /* Rejim yuklanishda aniqlanadi, tasma, ko'rinish tanlovi va sarlavha ma'lumot kelguncha to'g'ri turadi.
+     Qurilma signallari "Qurilmalar" tabining ko'rinishi, kirish voqealari "Kirish nazorati" tabiniki. */
+  const rejim = new URLSearchParams(location.search).get("rejim") === "signal" ? "signal" : "kirish";
+  if (rejim === "signal"){
+    const t = $("kv-tasma");
+    t.querySelector('a[href="ruxsatlar.html"]').classList.remove("faol");
+    t.querySelector('a[href="qurilmalar.html"]').classList.add("faol");
+    $("kv-nav-kirish").hidden = true;
+    $("kv-nav-signal").hidden = false;
+    $("kv-ota").href = "qurilmalar.html";
+    $("kv-ota").textContent = "Qurilmalar";
+    $("kv-yorliq").textContent = "Signallar";
+    $("kv-sarlavha").textContent = "Qurilma signallari";
+    document.title = "MKB — Qurilma signallari";
+    if (typeof tarjimaQil === "function") tarjimaQil(document.querySelector(".hujjat-shapka"));
+  }
   let ulandi = false;
   const yuklandi = await new Promise(hal => MKB.sahifaYukla({
     joylar: {"kv-jadval": ["jadval", 10]},
@@ -69,7 +84,6 @@
   const shaxsTop = id => D.shaxs(id) || (D.SHAXSLAR || []).find(s => s.id === id) || null;
 
   const p = new URLSearchParams(location.search);
-  let rejim = p.get("rejim") === "signal" ? "signal" : "kirish";
   const NAT = {ruxsat: ["Ruxsat berildi", "chip-yashil"], rad: ["Rad etildi", "chip-xavf"], ogohlantirish: ["Ogohlantirish", "chip-sariq"], "qayd etildi": ["Qayd etildi", "chip-kul"]};
   const XH = {ochiq: ["Yangi", "chip-xavf"], tekshiruvda: ["Tekshiruvda", "chip-sariq"], bartaraf: ["Bartaraf etilmoqda", "chip-info"], hal: ["Hal qilindi", "chip-yashil"], yopildi: ["Yopildi", "chip-kul"]};
   const JID = {"yuqori": "Yuqori", "o'rta": "O'rta", "past": "Past"};
@@ -91,7 +105,6 @@
   let jadval = null;
   function chiz(){
     const o = $("kv-obyekt").value;
-    document.querySelectorAll("[data-rejim]").forEach(b => { b.classList.toggle("faol", b.dataset.rejim === rejim); b.setAttribute("aria-pressed", b.dataset.rejim === rejim); });
     jadval = null;
     if (rejim === "kirish"){
       const q = voqealar.filter(v => !o || v.obyektId === o).map(kirishQator);
@@ -134,7 +147,6 @@
     u.searchParams.set("rejim", rejim); if (o) u.searchParams.set("obyekt", o); else u.searchParams.delete("obyekt");
     history.replaceState(null, "", u);
   }
-  document.querySelectorAll("[data-rejim]").forEach(b => b.addEventListener("click", () => { rejim = b.dataset.rejim; chiz(); }));
   $("kv-obyekt").addEventListener("change", chiz);
   chiz();
   const belgi = MKB.yangilanganBelgi("kv-yangilandi", {avto: 60, yangila: async () => {

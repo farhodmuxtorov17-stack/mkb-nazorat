@@ -16,10 +16,11 @@
     <div class="hs-yorliq"><a href="himoya.html">Nazorat va himoya</a><span class="ajratgich">/</span><span>Ko'rik rejasi</span></div>
     <div class="hs-qator"><h1>Ko'rik rejasi</h1><span class="hs-meta" id="hs-meta">—</span>
       <div class="hs-amallar">
+        <button type="button" class="tugma tugma-oq" id="import-tugma" data-huquq="yoz" data-sayohat="import" title="Excel (.xlsx) yoki CSV"><svg class="ic"><use href="#ik-yuklash"/></svg><span>Fayldan import</span></button>
         <a class="tugma tugma-asosiy" href="korik-tayinlash.html" data-huquq="yoz" data-sayohat="tayinlash"><svg class="ic"><use href="#ik-qoshish"/></svg><span>Ko'rik tayinlash</span></a>
       </div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="korik-rejasi.html" class="faol" aria-current="page">Ko'rik rejasi</a><a href="korik-kechikkan.html">Kechikkanlar</a><a href="korik-tarixi.html">Ko'riklar tarixi</a><a href="korik-tayinlash.html">Ko'rik tayinlash</a><a href="inventarizatsiya.html">Inventarizatsiya</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="korik-rejasi.html" class="faol" aria-current="page">Ko'rik rejasi</a><a href="korik-kechikkan.html">Kechikkanlar</a><a href="korik-tarixi.html">Ko'riklar tarixi</a><a href="korik-tayinlash.html">Ko'rik tayinlash</a><a href="masofaviy-korik.html">Masofaviy ko'rik</a><a href="inventarizatsiya.html">Inventarizatsiya</a></nav>
 
   <section class="metrika-qator tort" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi">
     <a class="metrika" data-ikonka="kalendar" href="#kr-jadval"><span class="m-yorliq">Rejadagi ko'riklar</span>
@@ -66,6 +67,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/jadval-fayl.js?v=26092200"></script>
 <script>
 (() => {
   const D = MKB_DATA, esc = MKB.esc;
@@ -233,6 +235,53 @@
     chiz();
   }});
   document.addEventListener("mkb:malumot", () => { try{ chiz(); }catch(_){ } });
+})();
+</script>
+<script>
+/* Ko'rik rejasini fayldan kiritish: har qator "Ko'rik tayinlash" formasi qoidalari bilan tekshiriladi */
+(() => {
+  const tugma = document.getElementById("import-tugma");
+  if (!tugma) return;
+  tugma.addEventListener("click", () => {
+    const D = MKB_DATA, Y = MKB.importYordam;
+    const TURLAR = [["Rejali", "Rejali"], ["Birlamchi", "Birlamchi"], ["Navbatdan tashqari", "Navbatdan tashqari"], ["Sotuv oldi", "Sotuv oldi"]];
+    const b = Y.bugun();
+    const inspektorlar = (D.FOYDLAR || []).filter(f => f.faol !== false && f.rol === "Ko'rik va xavfsizlik inspektori");
+    const inspektor = v => inspektorlar.find(f => Y.kichik(f.nom) === Y.kichik(v)) || null;
+    const fayldagi = new Set();
+    MKB.jadvalImport({
+      sarlavha: "Ko'rik rejasini fayldan qo'shish", birlik: "ko'rik", faylNomi: "korik-rejasi-namuna", qaytaYukla: true,
+      ustunlar: [
+        {kalit: "obyekt", nom: "Obyekt ID", majburiy: true}, {kalit: "turi", nom: "Ko'rik turi", majburiy: true},
+        {kalit: "sana", nom: "Reja sanasi", majburiy: true}, {kalit: "inspektor", nom: "Inspektor"}, {kalit: "izoh", nom: "Topshiriq"},
+      ],
+      namuna: [[(MKB.doira(D.YOZUVLAR || [])[0] || {}).id || "AK-2026/0001", "Rejali", D.sanaYoz(D.kunQosh(b, 7)), (inspektorlar[0] || {}).nom || "", "Tom va tarnovlarni alohida suratga oling"]],
+      qoidalar: {obyekt: "Reyestr raqami yoki obyektning to'liq nomi", turi: TURLAR.map(t => t[0]).join(", "), sana: "kk.oo.yyyy, bugundan oldin emas",
+        inspektor: "Faol inspektorning F.I.Sh.; bo'sh bo'lsa keyin tayinlanadi"},
+      tekshir(x){
+        const e = [];
+        const y = Y.obyekt(x.obyekt), s = Y.sana(x.sana);
+        if (x.obyekt && !y) e.push("Obyekt topilmadi yoki sizning doirangizda emas: " + x.obyekt);
+        if (x.turi && !Y.variant(TURLAR, x.turi)) e.push("Ko'rik turi noma'lum: " + x.turi);
+        if (x.sana && !s) e.push("Reja sanasini kk.oo.yyyy ko'rinishida yozing");
+        if (s && s < b) e.push("Rejalashtirilgan sana o'tgan bo'lishi mumkin emas");
+        if (x.inspektor && !inspektor(x.inspektor)) e.push("Faol inspektor topilmadi: " + x.inspektor);
+        if (y && s && (D.KORIKLAR || []).some(k => k.obyektId === y.id && k.holat !== "otkazildi" && k.sana === D.sanaYoz(s)))
+          e.push("Shu kunga bu obyektda ko'rik rejada bor");
+        const k = y && s ? y.id + "|" + D.sanaYoz(s) : "";
+        if (k && fayldagi.has(k)) e.push("Faylda takrorlangan qator");
+        if (k) fayldagi.add(k);
+        return e;
+      },
+      async saqla(x){
+        const y = Y.obyekt(x.obyekt), s = Y.sana(x.sana), turi = Y.variant(TURLAR, x.turi)[0], ins = x.inspektor ? inspektor(x.inspektor) : null;
+        const id = await MKB.keyingiId("KORIKLAR", "KO-" + b.getFullYear() + "/", 4);
+        await MKBapi.yangi("KORIKLAR", {id, obyektId: y.id, korikTuri: turi, tur: turi, sana: D.sanaYoz(s), holat: "rejada", inspektor: ins ? ins.nom : null,
+          holatBall: null, chekList: [], kamchiliklar: "", xarajatTaklifi: null, keyingiKorikSana: null, xulosa: "", izoh: x.izoh || ""});
+      },
+      keyin(n){ if (n && n.saqlandi) MKB.toast(n.saqlandi + " ta ko'rik rejaga qo'shildi"); },
+    });
+  });
 })();
 </script>
 </body>

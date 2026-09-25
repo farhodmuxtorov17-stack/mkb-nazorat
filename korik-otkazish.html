@@ -20,7 +20,16 @@
 .segment input:focus-visible + span{outline:2px solid var(--siyoh);outline-offset:2px}
 .segment.xato{box-shadow:inset 0 0 0 1.5px var(--xavf)}
 .ko-fotolar{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin-top:12px}
-.ko-fotolar img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r-kichik);background:var(--plitka)}
+.ko-fotolar figure{margin:0;min-width:0}
+.ko-fotolar img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r-kichik);background:var(--plitka);display:block}
+.ko-fotolar figcaption{font-size:12.5px;color:var(--matn-3);margin-top:4px;line-height:1.35}
+.ko-uzoq{color:var(--xavf-matn-yorqin)}
+.ko-kamera{width:100%;justify-content:center;margin-bottom:10px;min-height:48px}
+.ko-marshrut summary{display:flex;align-items:center;gap:8px;min-height:40px;cursor:pointer;font-size:14px;color:var(--matn-2)}
+.ko-marshrut ol{margin:6px 0 0;padding-left:22px;font-size:14px;line-height:1.45}
+.ko-marshrut li{padding:4px 0}
+.ko-marshrut li.joriy{font-weight:600}
+.ko-marshrut small{color:var(--matn-3);font-size:12.5px}
 .ko-qadam{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:var(--r-pilyula);background:var(--siyoh);color:#fff;font-size:13px;flex:none}
 .ko-qoshimcha summary{display:inline-flex;align-items:center;gap:8px;min-height:40px;cursor:pointer;font-size:14px;color:var(--matn-2)}
 .ko-qoshimcha summary:focus-visible{outline:2px solid var(--siyoh);outline-offset:2px;border-radius:var(--r-kichik)}
@@ -59,6 +68,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/dalolatnoma.js?v=26092200"></script>
 <script>
 (() => {
   const D = MKB_DATA, esc = MKB.esc;
@@ -110,7 +120,7 @@
           (kechikish > 0 ? '<span class="chip chip-xavf"><span>Kechikkan</span>&nbsp;<span data-tarjimasiz>' + kechikish + "</span>&nbsp;<span>kun</span></span>" : '<span class="chip chip-kok"><span>Reja</span>&nbsp;<span data-tarjimasiz>' + esc(k.sana) + "</span></span>") +
         "</span></div>" +
       (k.izoh ? '<p class="maydon-izoh" style="margin:12px 0 0"><span>Topshiriq:</span> ' + esc(k.izoh) + "</p>" : "") +
-      '<div id="ko-qoralama-joy" data-sayohat="qoralama"></div>' +
+      '<div id="ko-qoralama-joy" data-sayohat="qoralama"></div><div id="ko-marshrut" data-sayohat="marshrut"></div>' +
     "</section>" +
     '<form id="ko-forma" class="ustun" novalidate>' +
       '<section class="karta" data-sayohat="chek-list"><div class="karta-bosh"><span class="ko-qadam" data-tarjimasiz>1</span><h2>Nazorat bandlari</h2><span class="soni" id="ko-band-soni" data-tarjimasiz></span>' +
@@ -214,48 +224,136 @@
     });
   });
 
-  /* GPS */
-  let gps = null;
-  const masofa = (a, c) => {
-    const R = 6371000, r = x => x * Math.PI / 180;
-    const dl = r(c.lat - a.lat), dn = r(c.lng - a.lng);
-    const h = Math.sin(dl / 2) ** 2 + Math.cos(r(a.lat)) * Math.cos(r(c.lat)) * Math.sin(dn / 2) ** 2;
-    return Math.round(2 * R * Math.asin(Math.sqrt(h)));
-  };
-  document.getElementById("ko-gps").addEventListener("click", () => {
+  /* GPS: "Aniqlash" tugmasi yoki birinchi surat muhri joylashuvni to'ldiradi */
+  const H = window.MKB_HUJJAT;
+  let gps = null, gpsVaqt = 0;
+  const reyestrJoy = y.joy && y.joy.lat != null ? y.joy : null;
+  function gpsKorsat(){
+    const matn = document.getElementById("ko-gps-matn"), iz = document.getElementById("ko-gps-izoh");
+    matn.innerHTML = '<span data-tarjimasiz>' + gps.lat + ", " + gps.lng + "</span>";
+    iz.innerHTML = (gps.aniqlik != null ? "<span>Aniqlik</span> <span data-tarjimasiz>±" + gps.aniqlik + " m</span>" : "<span>Surat ma'lumotidan</span>") +
+      (gps.masofa != null ? " · <span>reyestrdagi nuqtagacha</span> <span data-tarjimasiz>" + H.masofaMatn(gps.masofa) + "</span>" +
+        (reyestrJoy.aniq === false ? " <span>(reyestrda hudud markazi)</span>" : "") : "");
+    tarjimaQil(matn.parentNode);
+  }
+  const joyOl = (vaqtKut) => new Promise(hal => {
+    if (gps && gps.aniqlik != null && Date.now() - gpsVaqt < 300000) return hal(gps);
+    if (!navigator.geolocation) return hal(null);
+    navigator.geolocation.getCurrentPosition(p => {
+      gps = {lat: +p.coords.latitude.toFixed(6), lng: +p.coords.longitude.toFixed(6), aniqlik: Math.round(p.coords.accuracy)};
+      gps.masofa = reyestrJoy ? H.masofa(gps, reyestrJoy) : null;
+      gpsVaqt = Date.now();
+      gpsKorsat();
+      hal(gps);
+    }, err => hal({xato: err.code}), {enableHighAccuracy: true, timeout: vaqtKut || 15000, maximumAge: 60000});
+  });
+  document.getElementById("ko-gps").addEventListener("click", async () => {
     const matn = document.getElementById("ko-gps-matn"), iz = document.getElementById("ko-gps-izoh");
     if (!navigator.geolocation){ matn.textContent = "Qurilma joylashuvni aniqlay olmaydi"; tarjimaQil(matn.parentNode); return; }
     matn.textContent = "Aniqlanmoqda...";
     tarjimaQil(matn.parentNode);
-    navigator.geolocation.getCurrentPosition(p => {
-      gps = {lat: +p.coords.latitude.toFixed(6), lng: +p.coords.longitude.toFixed(6), aniqlik: Math.round(p.coords.accuracy)};
-      if (y.joy && y.joy.lat) gps.masofa = masofa(gps, y.joy);
-      matn.innerHTML = '<span data-tarjimasiz>' + gps.lat + ", " + gps.lng + "</span>";
-      iz.innerHTML = "<span>Aniqlik</span> <span data-tarjimasiz>±" + gps.aniqlik + " m</span>" +
-        (gps.masofa != null ? " · <span>reyestrdagi nuqtagacha</span> <span data-tarjimasiz>" + (gps.masofa >= 1000 ? (gps.masofa / 1000).toFixed(1).replace(".", ",") + " km" : gps.masofa + " m") + "</span>" +
-          (y.joy.aniq === false ? " <span>(reyestrda hudud markazi)</span>" : "") : "");
-      tarjimaQil(matn.parentNode);
-    }, err => {
-      matn.textContent = err.code === 1 ? "Joylashuvga ruxsat berilmadi" : "Joylashuvni aniqlab bo'lmadi";
+    gpsVaqt = 0;
+    const r = await joyOl(15000);
+    if (r && r.xato != null || !r){
+      matn.textContent = r && r.xato === 1 ? "Joylashuvga ruxsat berilmadi" : "Joylashuvni aniqlab bo'lmadi";
       iz.textContent = "Brauzer sozlamalarida joylashuvga ruxsat bering va qayta urining";
       tarjimaQil(matn.parentNode);
-    }, {enableHighAccuracy: true, timeout: 15000, maximumAge: 60000});
+    }
   });
 
-  /* Suratlar: darhol FAYLLAR ga ko'rik yozuvi bilan bog'lanadi (qoralama ularni yo'qotmaydi) */
+  /* Suratlar: darhol FAYLLAR ga ko'rik yozuvi bilan bog'lanadi (qoralama ularni yo'qotmaydi).
+     Har suratga muhr: yuklangan vaqt, suratga olingan vaqt (EXIF) va joy (EXIF GPS yoki telefon joylashuvi), obyektgacha masofa.
+     Muhrlar imzolangunga qadar shu qurilmada saqlanadi, imzoda dalolatnomaga yoziladi */
+  const muhrKalit = MKBapi.kalit("mkb4-muhr:" + k.id);
+  let muhrlar = [];
+  try{ muhrlar = JSON.parse(localStorage.getItem(muhrKalit) || "[]") || []; }catch(_){ muhrlar = []; }
+  const muhrSaqla = () => { try{ localStorage.setItem(muhrKalit, JSON.stringify(muhrlar)); }catch(_){ } };
+  const p2 = n => String(n).padStart(2, "0");
+  const hozir = () => { const d = new Date(); return p2(d.getDate()) + "." + p2(d.getMonth() + 1) + "." + d.getFullYear() + " " + p2(d.getHours()) + ":" + p2(d.getMinutes()); };
+  /* 500 m dan uzoq surat qizil bilan belgilanadi; reyestrda faqat hudud markazi bo'lsa masofa taxminiy */
+  const UZOQ_M = 500, taxJoy = !!reyestrJoy && reyestrJoy.aniq === false;
+  function muhrMatn(m){
+    if (!m) return "";
+    const eski = m.suratVaqti && D.kunFarqi(D.sanaOqi(m.suratVaqti.split(" ")[0]), b);
+    return '<span data-tarjimasiz>' + esc((m.suratVaqti || m.vaqt).split(" ")[1] || "") + "</span>" +
+      (m.masofa != null ? ' · <span' + (taxJoy && m.masofa < 1000 ? "" : " data-tarjimasiz") + ' class="' + (m.masofa > UZOQ_M && !taxJoy ? "ko-uzoq" : "") + '">' + H.masofaMatn(m.masofa, taxJoy) + "</span>" : m.lat != null ? "" : " · <span>joylashuvsiz</span>") +
+      (eski > 1 ? '<br><span class="ko-uzoq"><span>Surat</span> <span data-tarjimasiz>' + eski + "</span> <span>kun oldin olingan</span></span>" : "");
+  }
+  async function muhrla(yozuv, f){
+    let ex = null;
+    try{ if (/jpe?g/i.test(f.type || "")) ex = H.exifOqi(await f.slice(0, 262144).arrayBuffer()); }catch(_){ ex = null; }
+    let joy = ex && ex.lat != null ? {lat: ex.lat, lng: ex.lng, aniqlik: null, manba: "exif"} : null;
+    if (!joy){ const r = await joyOl(8000); if (r && r.lat != null) joy = {lat: r.lat, lng: r.lng, aniqlik: r.aniqlik, manba: "qurilma"}; }
+    const m = {faylId: yozuv.id, vaqt: hozir(), suratVaqti: ex && ex.vaqt || null, lat: joy ? joy.lat : null, lng: joy ? joy.lng : null,
+      aniqlik: joy ? joy.aniqlik : null, manba: joy ? joy.manba : null, masofa: joy && reyestrJoy ? H.masofa(joy, reyestrJoy) : null};
+    muhrlar = muhrlar.filter(x => x.faylId !== yozuv.id).concat([m]);
+    muhrSaqla();
+    if (!gps && joy){ gps = {lat: joy.lat, lng: joy.lng, aniqlik: joy.aniqlik, masofa: m.masofa}; gpsVaqt = joy.manba === "qurilma" ? Date.now() : 0; gpsKorsat(); }
+    return m;
+  }
   const fotoJoy = document.getElementById("ko-fotolar");
   async function fotoQosh(f){
     const u = f.yol && !/^fayllar\//.test(f.yol) ? f.yol : await MKBapi.fayl.url(f.id);
+    const fig = document.createElement("figure");
+    fig.dataset.fayl = f.id;
     const img = document.createElement("img");
     img.alt = f.nom || "Ko'rik surati";
     if (u) img.src = u;
-    fotoJoy.appendChild(img);
+    const cap = document.createElement("figcaption");
+    cap.innerHTML = muhrMatn(muhrlar.find(x => x.faylId === f.id));
+    fig.append(img, cap);
+    fotoJoy.appendChild(fig);
+    tarjimaQil(cap);
   }
-  for (const f of (await MKBapi.fayl.royxat({yozuvId: k.id})).filter(f => /^image\//.test(f.tur || ""))){ fotoSoni++; await fotoQosh(f); }
-  MKB.faylMaydon("#ko-foto", {obyektId: y.id, kolleksiya: "KORIKLAR", yozuvId: k.id, accept: "image/*", kop: true,
+  const mavjudFayllar = (await MKBapi.fayl.royxat({yozuvId: k.id})).filter(f => /^image\//.test(f.tur || ""));
+  for (const f of mavjudFayllar){ fotoSoni++; await fotoQosh(f); }
+  const fm = MKB.faylMaydon("#ko-foto", {obyektId: y.id, kolleksiya: "KORIKLAR", yozuvId: k.id, accept: "image/*", kop: true,
     sarlavha: "Suratlarni shu yerga tashlang yoki tanlang",
-    async yuklandi(f){ fotoSoni++; await fotoQosh(f); fotoHolat(); }});
+    async yuklandi(yozuv, f){
+      fotoSoni++;
+      await fotoQosh(yozuv);
+      fotoHolat();
+      const m = await muhrla(yozuv, f);
+      const cap = fotoJoy.querySelector('figure[data-fayl="' + CSS.escape(yozuv.id) + '"] figcaption');
+      if (cap){ cap.innerHTML = muhrMatn(m); tarjimaQil(cap); }
+    }});
+  /* Telefonda: kamerani to'g'ridan-to'g'ri ochadigan tugma (galereya orqali emas) */
+  if (fm && window.matchMedia && matchMedia("(pointer: coarse)").matches){
+    const kam = document.createElement("label");
+    kam.className = "tugma tugma-oq ko-kamera";
+    kam.innerHTML = ik("foto") + '<span>Kamera bilan suratga olish</span><input type="file" accept="image/*" capture="environment" multiple hidden>';
+    document.getElementById("ko-foto").before(kam);
+    kam.querySelector("input").addEventListener("change", e => { const fl = e.target.files; if (fl && fl.length) fm.yukla(Array.from(fl)); e.target.value = ""; });
+    tarjimaQil(kam);
+  }
   hisob();
+
+  /* Bugungi marshrut: shu inspektorning bugun va kechikkan ko'riklari, eng ko'p kechikkanidan boshlab har safar eng yaqin obyektga */
+  if (k.inspektor){
+    const ochiq = MKB.doira(D.KORIKLAR || []).filter(x => x.holat !== "otkazildi" && x.inspektor === k.inspektor && D.sanaOqi(x.sana) && D.sanaOqi(x.sana) <= b)
+      .sort((p, q) => D.sanaOqi(p.sana) - D.sanaOqi(q.sana));
+    if (!ochiq.some(x => x.id === k.id)) ochiq.push(k);
+    if (ochiq.length > 1){
+      const nuqta = x => { const o = D.topish(x.obyektId) || {}; return Object.assign({korik: x, obyekt: o}, o.joy && o.joy.lat != null ? {lat: o.joy.lat, lng: o.joy.lng, aniq: o.joy.aniq !== false} : {}); };
+      const m = H.marshrut(ochiq.map(nuqta), null);
+      const i = m.findIndex(x => x.nuqta.korik.id === k.id);
+      const jami = m.reduce((s, x) => s + (x.masofa || 0), 0), taxJami = m.some(x => x.taxminiy);
+      const keyingi = m[i + 1];
+      const joy = document.getElementById("ko-marshrut");
+      joy.innerHTML = '<details class="ko-marshrut"><summary>' + ik("xarita") + "<span><span>Bugungi marshrut:</span> <b data-tarjimasiz>" + (i + 1) + " / " + m.length + "</b>" +
+          (jami ? ' · <span data-tarjimasiz>' + H.masofaMatn(jami, taxJami && jami >= 1000) + "</span>" : "") +
+          (keyingi ? " · <span>keyingisi</span> <span data-tarjimasiz>" + esc(keyingi.nuqta.obyekt.qisqa || keyingi.nuqta.obyekt.nom || keyingi.nuqta.korik.obyektId) + "</span>" : "") + "</span></summary>" +
+        "<ol>" + m.map(x => {
+          const o = x.nuqta.obyekt, kx = x.nuqta.korik, bu = kx.id === k.id;
+          return '<li class="' + (bu ? "joriy" : "") + '">' + (bu ? "<span data-tarjimasiz>" + esc(o.qisqa || o.nom || kx.obyektId) + "</span> <small>(<span>shu ko'rik</span>)</small>"
+              : '<a href="korik-otkazish.html?id=' + encodeURIComponent(kx.id) + '" data-tarjimasiz>' + esc(o.qisqa || o.nom || kx.obyektId) + "</a>") +
+            (x.masofa != null ? " <small>· <span" + (x.taxminiy && x.masofa < 1000 ? "" : " data-tarjimasiz") + ">" + H.masofaMatn(x.masofa, x.taxminiy) + "</span></small>" : "") +
+            '<br><small><span data-tarjimasiz>' + esc(kx.id + " · " + kx.sana) + "</span> · <span>" + esc(o.hudud || "") + "</span></small></li>";
+        }).join("") + "</ol>" +
+        '<p class="maydon-izoh" style="margin:6px 0 0">' + "Tartib: eng ko'p kechikkan ko'rikdan boshlab, har safar eng yaqin obyekt. Masofa to'g'ri chiziq bo'yicha." + "</p></details>";
+      tarjimaQil(joy);
+    }
+  }
 
   /* Qoralama: shu qurilmada avtomatik saqlanadi, aloqa uzilsa ham yo'qolmaydi */
   const qoriq = MKB.formaQoriqla(forma, {nom: "Ko'rik dalolatnomasi", qoralama: "korik:" + k.id, holatJoy: "#ko-qoralama-joy",
@@ -319,7 +417,11 @@
       }
     });
     if (!D.binolimi(y) && q.km) chekList.push({band: "Kilometraj yoki motosoat", tur: "hisoblagich", natija: "qayd etildi", qiymat: q.km});
-    if (gps) chekList.push({band: "Joylashuv", tur: "gps", natija: "qayd etildi", lat: gps.lat, lng: gps.lng, aniqlik: gps.aniqlik, masofa: gps.masofa != null ? gps.masofa : null});
+    /* Ko'rik vaqti, joylashuv va surat muhrlari bitta "gps" bandida: boshqa sahifalar uni bitta qator deb ko'rsatadi */
+    const qolganFayllar = new Set([...fotoJoy.querySelectorAll("figure[data-fayl]")].map(f => f.dataset.fayl));
+    const suratMuhr = muhrlar.filter(m => qolganFayllar.has(m.faylId));
+    if (gps || suratMuhr.length) chekList.push(Object.assign({band: "Joylashuv", tur: "gps", natija: gps ? "qayd etildi" : "kiritilmadi", vaqt: hozir(), suratlar: suratMuhr},
+      gps ? {lat: gps.lat, lng: gps.lng, aniqlik: gps.aniqlik, masofa: gps.masofa != null ? gps.masofa : null} : {}));
     const hisobSoni = hisoblagichlar.filter((_, i) => Number.isFinite(q["h" + i])).length;
 
     /* 4. Imzolashdan oldin xulosa */
@@ -375,6 +477,7 @@
     });
     if (!natija) return;
     qoriq.toza();
+    try{ localStorage.removeItem(muhrKalit); }catch(_){ }
     location.href = "korik-akti.html?id=" + encodeURIComponent(k.id) + "&yakunlandi=1" + (hodisa ? "&hodisa=" + encodeURIComponent(hodisa.id) : "");
   });
   }

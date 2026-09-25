@@ -165,8 +165,8 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
   function taymerHTML(x){
     if (x.tur === "Transport"){
       if (x.qolgan == null) return '<span class="chip chip-kul chip-kichik">Balans sanasi yo&#39;q</span>';
-      if (x.qolgan < 0) return '<span class="taymer"><span class="chip chip-xavf chip-kichik"><b data-tarjimasiz>' + (-x.qolgan) + "</b>&nbsp;<span>kun kechikdi</span></span></span>";
-      return '<span class="taymer"><span class="chip ' + (x.qolgan <= 3 ? "chip-sariq" : "chip-kok") + ' chip-kichik"><b data-tarjimasiz>' + x.qolgan + "</b>&nbsp;<span>kun qoldi</span></span></span>";
+      if (x.qolgan < 0) return '<span class="taymer"><span class="chip chip-xavf chip-kichik"><span><b data-tarjimasiz>' + (-x.qolgan) + "</b> <span>kun kechikdi</span></span></span></span>";
+      return '<span class="taymer"><span class="chip ' + (x.qolgan <= 3 ? "chip-sariq" : "chip-kok") + ' chip-kichik"><span><b data-tarjimasiz>' + x.qolgan + "</b> <span>kun qoldi</span></span></span></span>";
     }
     if (x.otgan == null) return '<span class="chip chip-kul chip-kichik">Balans sanasi yo&#39;q</span>';
     return '<span class="taymer"><span><b data-tarjimasiz>' + MKB.fmt(x.otgan) + "</b> <span>kundan beri</span></span><small>Qonuniy muddat yo&#39;q</small></span>";
@@ -178,7 +178,7 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     {kalit: "filial", nom: "Filial"},
     {kalit: "balansSana", nom: "Balans sanasi", tur: "sana"},
     {kalit: "qolgan", nom: "Muddat", son: true, chiz: taymerHTML, csv: x => x.qolgan == null ? "" : x.qolgan},
-    {kalit: "taqiqSoni", nom: "Taqiqlar", son: true, chiz: x => x.taqiqSoni ? '<span class="chip chip-xavf chip-kichik"><b data-tarjimasiz>' + x.taqiqSoni + "</b>&nbsp;<span>ta faol</span></span>" : '<span class="chip chip-yashil chip-kichik">Yo&#39;q</span>'},
+    {kalit: "taqiqSoni", nom: "Taqiqlar", son: true, chiz: x => x.taqiqSoni ? '<span class="chip chip-xavf chip-kichik"><span><b data-tarjimasiz>' + x.taqiqSoni + "</b> <span>ta faol</span></span></span>" : '<span class="chip chip-yashil chip-kichik">Yo&#39;q</span>'},
     {kalit: "amal", nom: "", saralash: false, csv: false, majburiy: true, chiz: x => yozaOladi
       ? '<button type="button" class="tugma tugma-oq tugma-kichik" data-rasm="' + esc(x.id) + '" data-sayohat="rasmiylashtirish">' + ik("tasdiq") + "Rasmiylashtirish</button>" : ""},
   ];

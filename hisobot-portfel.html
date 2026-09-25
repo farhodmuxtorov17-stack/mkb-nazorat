@@ -9,7 +9,6 @@
 .hp-izoh{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:var(--oq);box-shadow:var(--soya-past);font-size:13px;color:var(--matn-2)}
 :is(#hp-holat,#hp-tur) .bar-qator{grid-template-columns:minmax(110px,200px) minmax(0,1fr) auto}
 .hp-izoh .ic{width:18px;height:18px;flex:none;margin-top:1px}
-.hp-muddat-izoh{margin-top:14px;font-size:13px;color:var(--matn-2)}
 @page{size:A4 landscape;margin:12mm}
 </style>
 </head>
@@ -166,7 +165,7 @@ async function boshla(){
           (uchYil ? ", <span>shundan 3 yildan oshgan</span> <b data-tarjimasiz>" + uchYil + "</b>" : "") + "</span></a>" +
       '<div class="metrika" data-ikonka="bank"><span class="m-yorliq">Balans qiymati</span><span class="m-qiymat">' + pulHTML(jami(r, q => q.balans)) + "</span>" +
         '<span class="m-izoh">16701 hisobvarag\'i</span></div>' +
-      '<a class="metrika" data-ikonka="baholash" href="baholash.html"><span class="m-yorliq">Bozor qiymati</span><span class="m-qiymat">' + (joriy ? pulHTML(jami(baholangan, q => q.bozor)) : "<span>—</span>") + "</span>" +
+      '<a class="metrika" data-ikonka="baholash" href="baholash.html"><span class="m-yorliq">Bozor qiymati, oxirgi baho bo&#39;yicha</span><span class="m-qiymat">' + (joriy ? pulHTML(jami(baholangan, q => q.bozor)) : "<span>—</span>") + "</span>" +
         '<span class="m-izoh">' + (joriy ? "<span>baholangan</span> <b data-tarjimasiz>" + baholangan.length + "</b> <span>ta, baholanmagan</span> <b data-tarjimasiz>" + (r.length - baholangan.length) + "</b>"
           : "<span>faqat bugungi holat uchun</span>") + "</span></a>" +
       '<a class="metrika" data-ikonka="tarozi" href="zaxira.html"><span class="m-yorliq">Zaxira</span><span class="m-qiymat">' + pulHTML(jami(r, q => q.zaxira)) + "</span>" +
@@ -210,11 +209,13 @@ async function boshla(){
       r.forEach(q => ms[q.muddat] = (ms[q.muddat] || 0) + 1);
       const MH = D.MUDDAT_HOLATLARI || {};
       $("hp-muddat-karta").hidden = false;
+      /* «Me'yoriy muddat o'tgan» plitkasi 3 yildan oshganlarni ham sanaydi (panel, reyestr va zaxira bilan bir xil),
+         3 yillik plitka shu sonning bir qismi */
+      const msSon = k => k === "umidsiz" ? (ms.umidsiz || 0) + (ms["3-yildan-oshgan"] || 0) : (ms[k] || 0);
+      const msNom = k => k === "3-yildan-oshgan" ? "Shundan 3 yildan oshgan" : ((MH[k] || {}).nom || k);
       $("hp-muddat").innerHTML = '<div class="plitkalar">' + ["imtiyozda", "normal", "xavf-90", "umidsiz", "3-yildan-oshgan", "kiritilmagan"].filter(k => ms[k] || k !== "kiritilmagan").map(k =>
-        '<a class="plitka" href="obyektlar.html?muddat=' + k + '"><span class="chip chip-kichik ' + ((MH[k] || {}).chip || "") + '">' + esc((MH[k] || {}).nom || k) + "</span>" +
-        '<span class="qiymat" data-tarjimasiz>' + (ms[k] || 0) + "</span><span class=\"yorliq\">ta aktiv</span></a>").join("") + "</div>" +
-        ((ms.umidsiz || 0) + (ms["3-yildan-oshgan"] || 0) ? '<p class="hp-muddat-izoh"><span>Me&#39;yoriy muddati o&#39;tganlar va 3 yildan oshganlar birga:</span> <b data-tarjimasiz>' +
-          ((ms.umidsiz || 0) + (ms["3-yildan-oshgan"] || 0)) + "</b> <span>ta aktiv. Zaxira shu son bo'yicha hisoblanadi.</span></p>" : "");
+        '<a class="plitka" href="obyektlar.html?muddat=' + k + '"><span class="chip chip-kichik ' + ((MH[k] || {}).chip || "") + '">' + esc(msNom(k)) + "</span>" +
+        '<span class="qiymat" data-tarjimasiz>' + msSon(k) + "</span><span class=\"yorliq\">ta aktiv</span></a>").join("") + "</div>";
     } else {
       $("hp-holat-soni").textContent = "";
       holatKarta.className = "";

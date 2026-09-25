@@ -204,8 +204,8 @@ async function boshla(){
     const aktivlar = MKB.doira((D.YOZUVLAR || []).filter(y => y.holat !== "Chiqarildi"));
     /* Kechikkan ko'rik va amaldagi qo'riqlash bir marta yig'iladi: har yozuv uchun qayta qidirilmaydi */
     const kechikkan = new Set((D.KORIKLAR || []).filter(k => k.holat === "kechikkan").map(k => k.obyektId));
-    const qoriqlanadi = new Set((D.QORIQLASH || []).filter(x => x.holat === "amalda" && x.qoriqlashTuri).map(x => x.obyektId));
-    const himoyasizmi = y => !((y.himoya && y.himoya.qoriqlashTuri) || qoriqlanadi.has(y.id));
+    /* Bitta ta'rif malumot-indeks.js da (D.qoriqlanadimi): panel, reyestr va xarita bilan bir xil son */
+    const himoyasizmi = y => !D.qoriqlanadimi(y, MKB.bugun());
     const guruh = (kalit, qosh) => {
       const g = {};
       aktivlar.forEach(y => {

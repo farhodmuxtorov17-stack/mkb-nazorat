@@ -2158,8 +2158,38 @@ window.MKB_UX_SOF = (function(){
       o.querySelector("span").textContent = location.pathname.split("/").pop() + location.search;
       document.body.appendChild(o);
       tarjima(b); tarjima(o);
+      oyoqSahifaChekkasiga(o);
     });
-    window.addEventListener("afterprint", () => document.querySelectorAll(".chop-sarlavha, .chop-oyoq").forEach(x => x.remove()));
+    window.addEventListener("afterprint", () => {
+      document.querySelectorAll(".chop-sarlavha, .chop-oyoq").forEach(x => x.remove());
+      if (oyoqKuzat){ oyoqKuzat.disconnect(); oyoqKuzat = null; }
+      const st = document.getElementById("chop-sahifa-oyoq");
+      if (st) st.remove();
+    });
+  }
+  /* Pastki qator varaqning pastki chekkasiga (@page margin qutilari) yoziladi, shuning uchun kontent ustiga
+     tushmaydi va har varaqda raqam bilan chiqadi. Sahifa o'z beforeprint tinglovchisida .chop-oyoq matnini
+     almashtirsa (haftalik, kengash hisoboti), kuzatuvchi uslubni shu zahoti yangilaydi. Dalolatnoma varag'i
+     o'z oyog'ini qo'yadi (yadro/dalolatnoma.js), unga tegilmaydi. */
+  let oyoqKuzat = null;
+  function oyoqSahifaChekkasiga(o){
+    if (document.getElementById("dn-sahifa-oyoq") || document.body.classList.contains("dn-sahifa") || document.body.classList.contains("dn-chop")) return;
+    let st = document.getElementById("chop-sahifa-oyoq");
+    if (!st){ st = document.createElement("style"); st.id = "chop-sahifa-oyoq"; document.head.appendChild(st); }
+    /* @page chekkasiga CSS o'zgaruvchisi yetib bormaydi: shrift va rang xom qiymatda */
+    const sh = 'font:7.5pt "Manrope",sans-serif;color:#555';
+    const q = s => String(s || "").replace(/\s+/g, " ").trim().replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const yoz = () => {
+      const [chap, ong] = Array.from(o.children).map(x => x.textContent);
+      st.textContent = '@media print{@page{@bottom-left{content:"' + q(chap) + '";' + sh + "}" +
+        '@bottom-right{content:"' + q(ong) + " · " + (joriyTilRu() ? "Лист " : "Varaq ") + '" counter(page) " / " counter(pages);' + sh + "}}}";
+    };
+    yoz();
+    if (oyoqKuzat) oyoqKuzat.disconnect();
+    if (typeof MutationObserver === "function"){
+      oyoqKuzat = new MutationObserver(yoz);
+      oyoqKuzat.observe(o, {subtree: true, childList: true, characterData: true});
+    }
   }
   const joriyTilRu = () => typeof joriyTil === "function" && joriyTil() === "ru";
 

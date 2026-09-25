@@ -87,6 +87,24 @@ details.qoshimcha summary::-webkit-details-marker{display:none}
 details.qoshimcha summary .ic{width:16px;height:16px;transition:transform var(--tez)}
 details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
 @media (max-width:720px){.sozlama-qator .muddat-maydon{width:100%}}
+.sm-jadval{display:flex;flex-direction:column}
+.sm-qator{display:grid;grid-template-columns:minmax(0,1.5fr) 150px minmax(0,1.3fr) minmax(0,1.1fr) minmax(0,.9fr);gap:12px 16px;align-items:center;padding:14px 0}
+.sm-qator + .sm-qator{border-top:1px solid var(--chiziq-2)}
+.sm-qator.sarlavha{font-size:12.5px;font-weight:500;color:var(--matn-3);padding-top:0}
+.sm-qator .tur b{display:block;font-weight:500;font-size:14.5px}
+.sm-qator .tur > span:not(.chip){display:block;font-size:12.5px;color:var(--matn-3);line-height:1.45;margin-top:2px}
+.sm-qator .tur .chip{margin-top:6px}
+.sm-qator .kichik{font-size:13px;line-height:1.45;color:var(--matn-2)}
+.sm-qator .sm-yorliq{display:none;font-size:12px;color:var(--matn-3)}
+@media (max-width:900px){.sm-qator{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.sm-qator.sarlavha{display:none}
+  .sm-qator .tur{grid-column:1 / -1}.sm-qator .sm-yorliq{display:block;margin-bottom:4px}}
+@media (max-width:480px){.sm-qator{grid-template-columns:minmax(0,1fr)}}
+.sorov-royxat{list-style:none;display:flex;flex-direction:column}
+.sorov-royxat li{display:flex;align-items:center;gap:10px 14px;padding:12px 0;flex-wrap:wrap}
+.sorov-royxat li + li{border-top:1px solid var(--chiziq-2)}
+.sorov-royxat .m{flex:1 1 240px;min-width:0}
+.sorov-royxat .m b{display:block;font-weight:500}
+.sorov-royxat .m > span{display:block;font-size:13px;color:var(--matn-3)}
 </style>
 </head>
 <body data-sahifa="sozlama">
@@ -99,7 +117,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
     <div class="hs-yorliq"><span>Sozlamalar</span><span class="ajratgich">/</span><span>Profil va qoidalar</span></div>
     <div class="hs-qator"><h1>Sozlamalar</h1></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html" class="faol" aria-current="page">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="tizim-holati.html">Tizim holati</a><a href="sozlamalar.html" class="faol" aria-current="page">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
 
   <div class="sz-tor">
     <nav class="sz-menyu" id="sz-menyu" aria-label="Sozlamalar bo'limlari" data-sayohat="menyu">
@@ -233,15 +251,8 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
         </div>
         <form class="karta" id="sm-forma" novalidate data-sayohat="muddatlar">
           <div class="karta-bosh"><h2 data-ikonka="muddat">Saqlash muddatlari</h2></div>
-          <p class="karta-izoh">Shaxsga doir ma&#39;lumot ishlov berish maqsadiga erishilgach saqlanmaydi (O&#39;RQ-547). Muddati o&#39;tgan yozuvlar pastdagi bo&#39;limda anonimlashtiriladi.</p>
-          <div class="sozlama-qator">
-            <div class="matn"><b>Kamera video arxivi</b><span>Bank tartibidagi muddat. U kamera tizimi sozlamasiga qo&#39;lda kiritiladi: bu tizim videoni saqlamaydi va o&#39;chirmaydi.</span></div>
-            <div class="maydon muddat-maydon"><div class="kirish"><input id="sm-video" name="video" type="text" data-format="son" min="1" max="3650" required data-xato="Muddatni kunda kiriting" aria-label="Kamera arxivi muddati, kun"><span class="kirish-birlik" aria-hidden="true">kun</span></div></div>
-          </div>
-          <div class="sozlama-qator">
-            <div class="matn"><b>Tashrifchi va pudratchi ma&#39;lumotlari</b><span>Pasport, telefon va surat oxirgi tashrif yoki ruxsatdan keyin shu muddat saqlanadi.</span></div>
-            <div class="maydon muddat-maydon"><div class="kirish"><input id="sm-shaxs" name="shaxs" type="text" data-format="son" min="1" max="3650" required data-xato="Muddatni kunda kiriting" aria-label="Tashrifchi ma'lumotlarini saqlash muddati, kun"><span class="kirish-birlik" aria-hidden="true">kun</span></div></div>
-          </div>
+          <p class="karta-izoh">Shaxsga doir ma&#39;lumot ishlov berish maqsadiga erishilgach saqlanmaydi (O&#39;RQ-547). Muddat va asosni administrator belgilaydi, maxfiylik bildirishnomasi shu jadvaldan o&#39;qiydi. Muddati o&#39;tgan tashrifchi yozuvlari pastda anonimlashtiriladi.</p>
+          <div class="sm-jadval" id="sm-jadval"></div>
           <div class="forma-oyoq"><span class="izoh" id="sm-izoh"></span>
             <button class="tugma tugma-asosiy" type="submit" id="sm-saqla" data-saqla data-yozadi>Muddatlarni saqlash</button></div>
         </form>
@@ -249,9 +260,16 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
           <div class="karta-bosh"><h2 data-ikonka="tashrif">Muddati o&#39;tgan tashrifchi ma&#39;lumotlari</h2></div>
           <div id="sm-anonim"></div>
         </div>
+        <div class="karta" id="sm-sorov-karta" data-sayohat="sorovlar">
+          <div class="karta-bosh"><h2 data-ikonka="foyd">Xodim o&#39;z ma&#39;lumotini so&#39;radi</h2>
+            <button type="button" class="tugma tugma-oq tugma-kichik" id="sm-sorov-yangi" data-yozadi style="margin-left:auto"><svg class="ic"><use href="#ik-qoshish"/></svg><span>So&#39;rovni qayd etish</span></button></div>
+          <p class="karta-izoh">Xodim tizimda o&#39;zi haqida nima saqlanayotganini so&#39;rasa, so&#39;rov shu yerda qayd etiladi va administratorga vazifa bo&#39;lib tushadi. Javob sifatida xodimga ko&#39;chirma chop etib beriladi.</p>
+          <div id="sm-sorovlar"></div>
+        </div>
       </section>
     </div>
   </div>
+  <section class="chop-varaq" id="sm-chop" aria-hidden="true"></section>
 </main>
 </div>
 </div>
@@ -268,10 +286,12 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="boshqaruv.js?v=26092200"></script>
 <script>
 (async () => {
   const $ = id => document.getElementById(id);
   const esc = MKB.esc;
+  const BQ = window.MKB_BOSHQARUV;
   /* Skelet: jadvallar va hisob-kitob bloklari ma'lumot kelguncha */
   MKB.sahifaYukla({
     joylar: {"pm-jadval": ["jadval"], "q-jadval": ["jadval"], "sm-anonim": ["qator", 3]},
@@ -638,14 +658,17 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
   const qiymatMatn = p => p.id === "eksportNiqob" ? (p.qiymat ? "<span>Yoqilgan</span>" : "<span>O&#39;chirilgan</span>")
     : p.qiymat == null ? '<span class="chip chip-kichik chip-sariq">kiritilmagan</span>'
     : '<b data-tarjimasiz>' + MKB.fmt(p.qiymat) + "</b>" + (p.birlik ? " <span>" + esc(p.birlik) + "</span>" : "");
-  const pmQatorlar = () => PARAMLAR.map(p => Object.assign({}, p, {guruhNomi: GURUH[p.guruh] || p.guruh, holatNomi: p.taxminiy ? "Taxminiy" : "Tasdiqlangan"}));
+  /* Jurnal sifatida saqlanadigan qiymatlar (oxirgi ko'rib chiqish, oxirgi anonimlashtirish) me'yoriy parametr emas */
+  const pmQatorlar = () => PARAMLAR.filter(p => !BQ.JURNAL_PARAM.includes(p.id))
+    .map(p => Object.assign({}, p, {guruhNomi: GURUH[p.guruh] || p.guruh, holatNomi: p.taxminiy ? "Taxminiy" : "Tasdiqlangan"}));
   const pmSoni = () => {
-    const t = PARAMLAR.filter(p => p.taxminiy).length;
-    $("pm-soni").innerHTML = '<b data-tarjimasiz>' + PARAMLAR.length + "</b> <span>ta,</span> <b data-tarjimasiz>" + t + "</b> <span>tasi taxminiy</span>";
+    const r = pmQatorlar();
+    const t = r.filter(p => p.taxminiy).length;
+    $("pm-soni").innerHTML = '<b data-tarjimasiz>' + r.length + "</b> <span>ta,</span> <b data-tarjimasiz>" + t + "</b> <span>tasi taxminiy</span>";
     tarjimaQil($("pm-soni"));
   };
   $("pm-kim").textContent = PARAM_YOZADI ? "O'zgartirish uchun qatorni bosing." : "Qiymatni administrator yoki buxgalteriya o'zgartiradi.";
-  const shaxsiyParam = p => p.guruh === "shaxsiy" || ["videoSaqlashKun", "shaxsiyMalumotKun", "eksportNiqob"].includes(p.id);
+  const shaxsiyParam = p => p.guruh === "shaxsiy" || p.id === "eksportNiqob" || BQ.SAQLASH.some(x => x.param === p.id);
   const pmJadval = MKB.jadval("pm-jadval", {
     qatorlar: pmQatorlar(),
     sahifaHajmi: 15,
@@ -728,48 +751,68 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
   }
 
   /* ---------- Shaxsiy ma'lumotlar ---------- */
-  const PD = {video: "videoSaqlashKun", shaxs: "shaxsiyMalumotKun", niqob: "eksportNiqob"};
+  const PD = {shaxs: "shaxsiyMalumotKun", niqob: "eksportNiqob"};
   const PD_YANGI = {
-    shaxsiyMalumotKun: {guruh: "shaxsiy", nom: "Tashrifchi va pudratchi ma'lumotlarini saqlash", birlik: "kun", taxminiy: false, manba: "O'RQ-547, ichki tartib"},
     eksportNiqob: {guruh: "shaxsiy", nom: "Eksportda telefon va hujjat raqamlarini yashirish", birlik: "", taxminiy: false, manba: "O'RQ-547"},
+    anonimOxirgi: {guruh: "shaxsiy", nom: "Oxirgi anonimlashtirish", birlik: "ta yozuv", taxminiy: false},
   };
+  BQ.SAQLASH.forEach(x => { PD_YANGI[x.param] = {guruh: "shaxsiy", nom: x.tur + ": saqlash muddati", birlik: "kun", taxminiy: false, manba: x.asos}; });
   const param = id => PARAMLAR.find(p => p.id === id) || null;
-  async function paramYoz(id, qiymat){
-    if (param(id)) return MKBapi.yangilash("PARAMETRLAR", id, {qiymat});
-    return MKBapi.yangi("PARAMETRLAR", Object.assign({id, qiymat}, PD_YANGI[id]));
+  async function paramYoz(id, qiymat, qoshimcha){
+    const patch = Object.assign({qiymat}, qoshimcha || {});
+    if (param(id)) return MKBapi.yangilash("PARAMETRLAR", id, patch);
+    return MKBapi.yangi("PARAMETRLAR", Object.assign({id}, PD_YANGI[id], patch));
   }
   const smForma = $("sm-forma");
   let smQoriq = null;
+  /* Saqlash muddatlari jadvali: kun va asos PARAMETRLAR da; saqlanmagan qatorga tavsiya qo'yiladi */
+  function smJadvalChiz(){
+    const r = BQ.saqlashJadvali(PARAMLAR);
+    const ust = (nom, ichki) => '<div><span class="sm-yorliq">' + nom + "</span>" + ichki + "</div>";
+    $("sm-jadval").innerHTML = '<div class="sm-qator sarlavha"><span>Ma&#39;lumot turi</span><span>Muddat</span><span>Huquqiy asos</span><span>Muddat tugaganda</span><span>Javobgar</span></div>' +
+      r.map(x => '<div class="sm-qator">' +
+        '<div class="tur"><b id="sm-t-' + x.param + '">' + esc(x.tur) + "</b><span>" + esc(x.qamrov) + "</span>" +
+          (x.saqlangan ? "" : '<span class="chip chip-kichik chip-sariq">Tavsiya, hali saqlanmagan</span>') + "</div>" +
+        ust("Muddat", '<div class="maydon"><div class="kirish"><input name="kun-' + x.param + '" type="text" data-format="son" min="1" max="36500" required data-xato="Muddatni kunda kiriting"' +
+          ' value="' + MKB.fmt(x.kun != null ? x.kun : x.tavsiya) + '" aria-label="Saqlash muddati, kun" aria-describedby="sm-t-' + x.param + '"><span class="kirish-birlik" aria-hidden="true">kun</span></div></div>') +
+        ust("Huquqiy asos", '<div class="maydon"><div class="kirish"><input name="asos-' + x.param + '" maxlength="160" required data-xato="Huquqiy asosni yozing" value="' + esc(x.asos) + '" aria-label="Huquqiy asos" aria-describedby="sm-t-' + x.param + '"></div></div>') +
+        ust("Muddat tugaganda", '<span class="kichik">' + esc(x.oxiridaNomi) + "</span>") +
+        ust("Javobgar", '<span class="kichik">' + esc(x.javobgar) + "</span>") +
+      "</div>").join("");
+    if (!ADMIN) smForma.querySelectorAll("#sm-jadval input").forEach(i => { i.readOnly = true; });
+    const yoq = r.filter(x => !x.saqlangan).length;
+    $("sm-izoh").innerHTML = yoq ? BQ.son(yoq) + " " + BQ.bo("ta muddat hali saqlanmagan: tavsiya qiymat qo'yilgan.") : "";
+  }
   function pdChiz(){
-    const v = param(PD.video), sh = param(PD.shaxs), n = param(PD.niqob);
-    $("sm-video").value = v && v.qiymat != null ? MKB.fmt(v.qiymat) : "";
-    $("sm-shaxs").value = sh && sh.qiymat != null ? MKB.fmt(sh.qiymat) : "";
-    $("sm-izoh").textContent = !sh || sh.qiymat == null ? "Tashrifchi ma'lumotlari muddati hali belgilanmagan." : "";
+    const n = param(PD.niqob);
+    smJadvalChiz();
     $("sm-niqob").setAttribute("aria-checked", String(!!(n && n.qiymat)));
     $("sm-niqob-izoh").textContent = ADMIN ? "" : "Sozlamani administrator o'zgartiradi. Hozir: " + (n && n.qiymat ? "yoqilgan." : "o'chirilgan.");
-    if (smQoriq) smQoriq.asos();
+    if (smQoriq){ smQoriq.asos(); setTimeout(() => smQoriq.asos(), 400); }
     anonimChiz();
     tarjimaQil(smForma.closest("section"));
   }
   if (!ADMIN){
-    ["sm-video", "sm-shaxs"].forEach(id => { $(id).readOnly = true; });
     $("sm-saqla").hidden = true;
     $("sm-niqob").disabled = true;
   }
   pdChiz();
-  if (ADMIN) smQoriq = MKB.formaQoriqla(smForma, {nom: "Saqlash muddatlari"});
+  if (ADMIN){
+    smQoriq = MKB.formaQoriqla(smForma, {nom: "Saqlash muddatlari"});
+    /* data-format maydonlari qiymatni bir oz keyin qayta yozadi (1825 → 1 825): asos shundan keyin olinadi */
+    setTimeout(() => smQoriq.asos(), 400);
+  }
   smForma.addEventListener("submit", async e => {
     e.preventDefault();
     if (!ADMIN) return;
     const r = MKB.formaTekshir(smForma);
     if (!r) return;
-    const video = r.qiymatlar.video, shaxs = r.qiymatlar.shaxs;
-    const eski = id => { const p = param(id); return p ? p.qiymat : null; };
-    if (eski(PD.video) === video && eski(PD.shaxs) === shaxs){ MKB.toast("O'zgarish yo'q", "info"); return; }
+    const q = r.qiymatlar;
+    const ozgarish = BQ.saqlashJadvali(PARAMLAR).filter(x => !x.saqlangan || x.kun !== q["kun-" + x.param] || x.asos !== q["asos-" + x.param]);
+    if (!ozgarish.length){ MKB.toast("O'zgarish yo'q", "info"); return; }
     const ok = await formaYoz($("sm-saqla"), smForma, async () => {
-      if (eski(PD.video) !== video) await paramYoz(PD.video, video);
-      if (eski(PD.shaxs) !== shaxs) await paramYoz(PD.shaxs, shaxs);
-    }, "Saqlash muddatlari yangilandi");
+      for (const x of ozgarish) await paramYoz(x.param, q["kun-" + x.param], {manba: q["asos-" + x.param]});
+    }, "Saqlash muddatlari yangilandi: " + ozgarish.map(x => x.tur).join(", "));
     if (ok){ await paramlarYangila(); if (smQoriq) smQoriq.toza(); pdChiz(); }
   });
   /* Niqob: sozlama darhol saqlanadi */
@@ -817,6 +860,7 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
       return;
     }
     nomzodlar = h.royxat;
+    const oxirgi = param("anonimOxirgi");
     joy.innerHTML =
       '<div class="sozlama-qator">' +
         '<div class="matn"><span class="katta-son" data-tarjimasiz>' + nomzodlar.length + "</span>" +
@@ -828,6 +872,8 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
         "<dt>Tashqi shaxslar jami</dt><dd data-tarjimasiz>" + h.jami + "</dd>" +
         "<dt>Anonimlashtirilgan</dt><dd data-tarjimasiz>" + h.anonim + "</dd>" +
         "<dt>Tashrif sanasi yo&#39;q</dt><dd><span data-tarjimasiz>" + h.sanasiz + "</span> <span class=\"son-bosh\">— avtomatik anonimlashtirilmaydi</span></dd>" +
+        "<dt>Oxirgi ishga tushirish</dt><dd>" + (oxirgi && oxirgi.qiymat ? '<span data-tarjimasiz>' + esc(String(oxirgi.manba || "").split(" · ")[0]) + "</span>, <span data-tarjimasiz>" + oxirgi.qiymat + "</span> <span>ta yozuv</span>" +
+          ' · <a href="amallar-tarixi.html?kolleksiya=SHAXSLAR" style="text-decoration:underline;text-underline-offset:3px">Amallar tarixi</a>' : "<span>Hali ishga tushirilmagan</span>") + "</dd>" +
       "</dl></details>";
     const t = $("anonim-tugma");
     if (t) t.addEventListener("click", anonimlash);
@@ -854,9 +900,110 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
         }
       },
     });
-    if (n) MKB.toast(n + " ta yozuv anonimlashtirildi");
+    /* Har bir ishga tushirish alohida qayd: vaqt, soni va asos amallar tarixida PARAMETRLAR o'zgarishi bo'lib qoladi */
+    if (n){
+      try{ await paramYoz("anonimOxirgi", n, {manba: D.vaqtYoz(new Date()) + " · " + String((r && r.sabab) || "").slice(0, 120)}); await paramlarYangila(); }
+      catch(e){ MKB.toast("Anonimlashtirish qaydi yozilmadi: " + (e && e.message ? e.message : "xato"), "xavf"); }
+      MKB.toast(n + " ta yozuv anonimlashtirildi");
+    }
     if (r || n) pdChiz();
   }
+
+  /* ---------- Xodim o'z ma'lumotini so'radi ----------
+     So'rov administratorga vazifa bo'lib tushadi (MENING_VAZIFALARIM), javob — xodim ma'lumotlari ko'chirmasi */
+  const SOROV_OLD = "Shaxsiy ma'lumot so'rovi: ";
+  let VAZ = [];
+  async function sorovlarYukla(){
+    VAZ = (await MKBapi.royxat("MENING_VAZIFALARIM")).filter(v => v && String(v.nom || "").indexOf(SOROV_OLD) === 0);
+    sorovlarChiz();
+  }
+  function sorovlarChiz(){
+    const joy = $("sm-sorovlar");
+    const bugun = D.bugun();
+    const r = VAZ.slice().sort((a, b) => (a.bajarildi === b.bajarildi ? 0 : a.bajarildi ? 1 : -1) || D.kunFarqi(b.sana, a.sana));
+    joy.innerHTML = r.length ? '<ul class="sorov-royxat">' + r.map(v => {
+      const kechikkan = !v.bajarildi && v.muddat && D.kunFarqi(bugun, v.muddat) < 0;
+      const holat = v.bajarildi ? ["Javob berildi", "chip-yashil"] : kechikkan ? ["Muddati o'tgan", "chip-xavf"] : ["Ochiq", "chip-sariq"];
+      return '<li><span class="m"><b data-tarjimasiz>' + esc(v.nom.slice(SOROV_OLD.length)) + "</b><span><span>Qayd etilgan</span> <span data-tarjimasiz>" + esc(v.sana || "—") +
+        "</span> · <span>javob muddati</span> <span data-tarjimasiz>" + esc(v.muddat || "—") + "</span></span></span>" +
+        '<span class="chip chip-kichik ' + holat[1] + '">' + holat[0] + "</span>" +
+        '<button type="button" class="tugma tugma-oq tugma-kichik" data-kochirma="' + esc(v.id) + '">' + ik("chop") + "Ko&#39;chirma</button>" +
+        (!v.bajarildi && ADMIN ? '<button type="button" class="tugma tugma-oq tugma-kichik" data-javob="' + esc(v.id) + '" data-yozadi>' + ik("tasdiq") + "Javob berildi</button>" : "") + "</li>";
+    }).join("") + "</ul>"
+      : MKB.boshHolat("foyd", "So'rov qayd etilmagan", "Xodim og'zaki yoki yozma so'rasa, shu yerda qayd eting: muddat vazifalar ro'yxatida kuzatiladi.");
+    joy.querySelectorAll("[data-kochirma]").forEach(b => b.addEventListener("click", () => kochirma(VAZ.find(v => v.id === b.dataset.kochirma))));
+    joy.querySelectorAll("[data-javob]").forEach(b => b.addEventListener("click", async () => {
+      const v = VAZ.find(x => x.id === b.dataset.javob);
+      try{ await MKB.band(b, () => MKBapi.yangilash("MENING_VAZIFALARIM", v.id, {bajarildi: true})); }
+      catch(e){ MKB.toast("Belgi saqlanmadi: " + (e && e.message ? e.message : "xato"), "xavf"); return; }
+      await sorovlarYukla();
+      MKB.qaytarish("So'rovga javob berildi: " + v.nom.slice(SOROV_OLD.length), {
+        bekor: () => MKBapi.yangilash("MENING_VAZIFALARIM", v.id, {bajarildi: false}),
+        keyin: sorovlarYukla,
+      });
+    }));
+    tarjimaQil(joy);
+  }
+  function sorovQayd(){
+    if (!ADMIN) return;
+    const faol = FOYDLAR.filter(f => f && f.nom).sort((a, b) => String(a.nom).localeCompare(String(b.nom), "uz"));
+    const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    const tana = '<form class="forma-tor" id="sf" novalidate>' +
+      '<div class="maydon keng"><label class="maydon-yorliq" for="sf-kim">Xodim <b>*</b></label>' +
+        '<div class="kirish"><select id="sf-kim" name="kim" required data-xato="Xodimni tanlang"><option value="">Tanlang</option>' +
+          faol.map(f => '<option value="' + esc(f.id) + '">' + esc(f.nom) + " · " + esc(f.login || "") + "</option>").join("") + "</select></div></div>" +
+      '<div class="maydon"><label class="maydon-yorliq" for="sf-sana">So&#39;rov sanasi <b>*</b></label>' +
+        '<div class="kirish"><input id="sf-sana" name="sana" type="date" required max="' + bugunIso + '" value="' + bugunIso + '"></div></div>' +
+      '<div class="maydon"><label class="maydon-yorliq" for="sf-muddat">Javob muddati <b>*</b></label>' +
+        '<div class="kirish"><input id="sf-muddat" name="muddat" type="date" required min="' + bugunIso + '" data-dan="sana" value="' + iso(D.ishKuniQosh(D.bugun(), 10)) + '"></div>' +
+        '<span class="maydon-izoh">Muddatni bankning ichki tartibiga qarab belgilang</span></div>' +
+      "</form>";
+    MKB.modal("So'rovni qayd etish", tana, {okMatn: "So'rovni qayd etish", async ok(p){
+      const f = p.querySelector("#sf");
+      const r = MKB.formaTekshir(f);
+      if (!r) return false;
+      const x = FOYDLAR.find(y => y.id === r.qiymatlar.kim);
+      try{
+        const id = await MKB.keyingiId("MENING_VAZIFALARIM", "VZ-" + D.bugun().getFullYear() + "-", 0);
+        await MKBapi.yangi("MENING_VAZIFALARIM", {id, nom: SOROV_OLD + x.nom, tur: "Boshqa", obyektId: null, kod: "", qoidaId: null,
+          sana: r.qiymatlar.sana, muddat: r.qiymatlar.muddat, ijrochi: s.ism || null, rol: "Administrator", muhimlik: "orta", bajarildi: false});
+      }catch(e){ MKB.formaXato(f, e && e.message ? e.message : "So'rov saqlanmadi"); return false; }
+      MKB.toast("So'rov qayd etildi: " + x.nom + ", " + r.qiymatlar.muddat);
+      await sorovlarYukla();
+    }});
+  }
+  /* Ko'chirma: xodim hisobidagi ma'lumotlar va uning oxirgi 50 ta amali, A4 */
+  async function kochirma(v){
+    if (!v) return;
+    const nom = v.nom.slice(SOROV_OLD.length);
+    const x = FOYDLAR.find(f => f.nom === nom);
+    if (!x){ MKB.toast("Xodim hisobi topilmadi: " + nom, "xavf"); return; }
+    const J = BQ.jurnal(D, await MKBapi.royxat("amallar").catch(() => []));
+    const amallar = J.filter(a => a.kim === x.nom).slice(0, 50);
+    const kir = BQ.oxirgiKirish(x, J), rs = BQ.rolSana(x, J);
+    const qator = (k, q) => "<dt>" + k + "</dt><dd>" + esc(q == null || q === "" ? "—" : String(q)) + "</dd>";
+    const joy = $("sm-chop");
+    joy.innerHTML = "<h1>Xodim haqidagi ma&#39;lumotlar ko&#39;chirmasi</h1>" +
+      '<div class="cv-meta"><span>So&#39;rov:</span> <span data-tarjimasiz>' + esc(v.sana || "") + "</span> · <span>Tuzildi:</span> <span data-tarjimasiz>" + D.sanaYoz(D.bugun()) + "</span></div>" +
+      "<h2>Hisob ma&#39;lumotlari</h2><dl>" + qator("F.I.Sh.", x.nom) + qator("Login", x.login) + qator("Rol", x.rol) + qator("Rol berilgan", rs.sana) +
+        qator("Bo'lim", x.bolim) + qator("Lavozim", x.lavozim) + qator("Telefon", x.tel) + qator("Elektron pochta", x.email) +
+        qator("Hisob ochilgan", x.sana) + qator("Holat", x.faol === false ? "Bloklangan" : "Faol") + qator("Oxirgi kirish", kir ? D.vaqtYoz(kir) : "") + "</dl>" +
+      "<h2>Oxirgi amallar</h2>" + (amallar.length ? "<table><thead><tr><th>Vaqt</th><th>Bo&#39;lim</th><th>Yozuv</th><th>Amal</th></tr></thead><tbody>" +
+        amallar.map(a => "<tr><td>" + esc(a.vaqt) + "</td><td>" + esc(a.kolleksiya || "") + "</td><td>" + esc(a.obyektId || "") + "</td><td>" + esc(a.turi || "") + "</td></tr>").join("") + "</tbody></table>"
+        : "<p>Amallar qayd etilmagan.</p>") +
+      "<h2>Saqlash muddatlari</h2><table><thead><tr><th>Ma&#39;lumot turi</th><th>Muddat, kun</th><th>Muddat tugaganda</th></tr></thead><tbody>" +
+        BQ.saqlashJadvali(PARAMLAR).map(q => "<tr><td>" + esc(q.tur) + "</td><td>" + (q.kun != null ? q.kun : "—") + "</td><td>" + esc(q.oxiridaNomi) + "</td></tr>").join("") + "</tbody></table>" +
+      '<div class="cv-imzo"><span>Berdi (administrator): ____________________</span><span>Oldi (xodim): ____________________</span></div>';
+    tarjimaQil(joy);
+    document.body.classList.add("chop-faol");
+    const tozala = () => { document.body.classList.remove("chop-faol"); joy.innerHTML = ""; window.removeEventListener("afterprint", tozala); };
+    window.addEventListener("afterprint", tozala);
+    window.print();
+  }
+  if (ADMIN){
+    $("sm-sorov-yangi").addEventListener("click", sorovQayd);
+    await sorovlarYukla();
+  } else $("sm-sorov-karta").hidden = true;
 
   tarjimaQil(document.querySelector(".kontent"));
   }

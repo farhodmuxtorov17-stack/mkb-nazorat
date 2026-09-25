@@ -268,14 +268,17 @@
         : '<p class="rz-izoh"><svg class="ic"><use href="#ik-info"/></svg><span>Yillik realizatsiya rejasi parametrlarda kiritilmagan. Reja kiritilgach bajarilish foizi shu yerda ko\'rinadi.</span>' +
           (MKB.ruxsat("sozlamalar.html") && MKB.rol() === "admin" ? ' <a class="karta-havola" style="white-space:nowrap;flex:none" href="sozlamalar.html">Rejani kiritish</a>' : "") + "</p>") +
       '<p class="rz-izoh"><svg class="ic"><use href="#ik-info"/></svg><span>' +
-        (chiq.length ? "<span>Joriy yilda balansdan chiqarilgan</span> <b data-tarjimasiz>" + chiq.length + "</b> <span>ta obyekt</span>, <span>" +
-            pul(yaxlit(chiq.reduce((a, x) => a + (+x.sotuvNarxi || 0), 0))) + "</span>. <span>To'lovi to'liq yopilgan shartnomalar arxivga o'tadi.</span>"
+        (chiq.length ? "<span>Joriy yilda balansdan chiqarilgan</span> <b data-tarjimasiz>" + chiq.length + "</b> <span>ta obyekt</span>, <span>sotuv narxi</span> <span>" +
+            pul(yaxlit(chiq.reduce((a, x) => a + (+x.sotuvNarxi || 0), 0))) + "</span>, <span>balans qiymati</span> <span>" +
+            pul(yaxlit(chiq.reduce((a, x) => a + (+x.balansQiymat || 0), 0))) + "</span>. <span>To'lovi to'liq yopilgan shartnomalar arxivga o'tadi.</span>"
           : "<span>Joriy yilda balansdan chiqarilgan obyekt yo'q.</span> <span>To'lovi to'liq yopilgan shartnomalar arxivga o'tadi.</span>") + "</span>" +
         (chiq.length ? ' <a class="karta-havola" style="white-space:nowrap;flex:none" href="arxiv.html">Arxiv</a>' : "") + "</p>" +
       (bu.length ? '<div><span class="m-yorliq" style="font-size:13px;color:var(--matn-3)">Shartnomalar oylar bo\'yicha, mlrd so\'m</span><div id="reja-grafik"></div></div>' : MKB.boshHolat("grafik", "Joriy yilda shartnoma tuzilmagan", "Shartnoma tuzilgach oylar bo'yicha summa shu yerda ko'rinadi")) +
       "</div>";
     if (bu.length && window.MKBchizma){
-      MKBchizma.ustun(document.getElementById("reja-grafik"), {qiymatlar: oylik.map(v => Math.round(v) / 1000), yorliqlar: oylar, balandlik: 190,
+      /* Hali kelmagan oylar chizilmaydi: nol ustun "sotuv bo'lmadi" degan ma'no beradi */
+      const oxirgiOy = yil === bugun().getFullYear() ? bugun().getMonth() + 1 : 12;
+      MKBchizma.ustun(document.getElementById("reja-grafik"), {qiymatlar: oylik.slice(0, oxirgiOy).map(v => Math.round(v) / 1000), yorliqlar: oylar.slice(0, oxirgiOy), balandlik: 190,
         urgu: bugun().getMonth(), oqFormat: v => String(Math.round(v * 10) / 10).replace(".", ","), tooltipFormat: v => pul(v * 1000)});
     }
     tarjimaQil(joy);

@@ -21,7 +21,7 @@
 .ozg-jadval th,.ozg-jadval td{text-align:left;padding:10px 8px 10px 0;border-bottom:1px solid var(--chiziq-2);vertical-align:top;overflow-wrap:anywhere}
 .ozg-jadval th{font-weight:500;font-size:12.5px;color:var(--matn-3)}
 .ozg-jadval td.eski{color:var(--matn-3)}
-.at-davr{display:flex;align-items:flex-end;gap:12px 16px;flex-wrap:wrap;margin-bottom:16px}
+.at-davr{display:flex;align-items:flex-end;gap:12px 16px;flex-wrap:wrap}
 .at-davr-yorliq{font-size:13.5px;color:var(--matn-3);align-self:center}
 .at-oraliq{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
 .at-oraliq[hidden]{display:none}
@@ -29,6 +29,11 @@
 .at-davr-chop{display:none}
 @media print{.at-davr-chop:not([hidden]){display:block;font-size:11px;color:#333;margin-bottom:8px}}
 @media (max-width:720px){.at-oraliq .maydon{width:calc(50% - 6px)}.at-oraliq .tugma{width:100%;justify-content:center}}
+.at-aktiv{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;font-size:13.5px;color:var(--matn-2)}
+.at-aktiv .chip{gap:6px}
+.at-aktiv .chip a{display:inline-grid;place-items:center;width:28px;height:28px;margin-right:-8px;color:inherit}
+.at-aktiv .chip a .ic{width:14px;height:14px}
+.at-nazorat{font:400 12px/1.5 var(--shrift-mono);overflow-wrap:anywhere;color:var(--matn-3)}
 </style>
 </head>
 <body data-sahifa="sozlama">
@@ -41,10 +46,10 @@
     <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><span>Amallar tarixi</span></div>
     <div class="hs-qator"><h1>Amallar tarixi</h1></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html" class="faol" aria-current="page">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="tizim-holati.html">Tizim holati</a><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html" class="faol" aria-current="page">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
 
   <section class="metrika-qator tort" id="metrikalar" aria-label="Amallar jamlamasi" data-sayohat="kpi"></section>
-  <div id="rejim-izoh" style="margin-top:20px"></div>
+  <div id="rejim-izoh"></div>
   <form class="at-davr chop-yashir" id="at-davr" novalidate data-sayohat="davr" aria-label="Davr">
     <span class="at-davr-yorliq">Davr</span>
     <div class="almashtirgich" role="group" aria-label="Davr">
@@ -61,6 +66,7 @@
     </div>
   </form>
   <p class="at-davr-chop" id="at-davr-chop" hidden></p>
+  <div class="at-aktiv" id="at-aktiv" hidden></div>
   <div id="jadval-joy" data-sayohat="jadval"></div>
 </main>
 </div>
@@ -78,6 +84,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="boshqaruv.js?v=26092200"></script>
 <script>
 (async () => {
   MKB.sahifaYukla({
@@ -91,6 +98,7 @@
   const esc = MKB.esc;
   const $ = id => document.getElementById(id);
   const url = new URLSearchParams(location.search);
+  const B = window.MKB_BOSHQARUV;
 
   const KOLLEKSIYA = {
     SESSIYA: "Kirish va chiqish", YOZUVLAR: "Aktivlar reyestri", HUJJATLAR: "Hujjatlar", FAYLLAR: "Fayllar", ARXIV: "Arxiv",
@@ -105,6 +113,7 @@
     MASOFAVIY_SESSIYALAR: "Masofaviy ko'riklar", XIZMAT_ISHLARI: "Servis ishlari", TASDIQLAR: "Qarorlar", VAZIFALAR: "Vazifalar",
     MENING_VAZIFALARIM: "Vazifalar", BILDIRISHLAR: "Bildirishnomalar", FOYDLAR: "Foydalanuvchilar", FILIALLAR: "Filiallar",
     PARAMETRLAR: "Me'yoriy parametrlar", BAYRAMLAR: "Bayram kunlari", QOIDALAR: "Yuqoriga o'tkazish qoidalari",
+    INTEGRATSIYALAR: "Integratsiyalar",
   };
   const TURI = {
     yangilash: ["O'zgartirildi", "chip-kok"], yaratish: ["Yaratildi", "chip-yashil"], "o'chirish": ["O'chirildi", "chip-xavf"],
@@ -126,6 +135,7 @@
     minimalNarx: "Minimal narx", golib: "G'olib", yakuniyNarx: "Yakuniy narx", xaridor: "Xaridor", stirYokiPinfl: "STIR yoki PINFL",
     polisTuri: "Polis turi", kompaniya: "Sug'urta kompaniyasi", mukofot: "Mukofot", bozorQiymati: "Bozor qiymati", toifa: "Toifa",
     jiddiylik: "Jiddiylik", tavsif: "Tavsif", hodisa: "Hodisa", korikTuri: "Ko'rik turi", inspektor: "Inspektor",
+    voqea: "Oxirgi voqea", holatBall: "Holat bali",
   };
   const MAXFIY = ["tel", "hujjat", "stirYokiPinfl"];
   /* Tizim yozuvlarida maydon o'rnida to'plam kaliti keladi (ZAXIRA_TARIX) — u ham nomi bilan ko'rsatiladi */
@@ -151,13 +161,25 @@
     return s.length > 120 ? s.slice(0, 118) + "…" : s;
   }
 
-  let R = await MKBapi.royxat("amallar");
-  R = (R || []).map((a, i) => Object.assign({}, a, {
+  const HAQIQIY = (await MKBapi.royxat("amallar")) || [];
+  /* Namoyishda jurnal bo'sh boshlanmasin: qaror, ko'rik, hodisa va aktiv tarixidan tiklangan boshlang'ich yozuvlar qo'shiladi */
+  let R = B.jurnal(D, HAQIQIY);
+  const boshSoni = R.length - HAQIQIY.length;
+  /* Yozuv qaysi aktivga tegishli: aktivning o'zi yoki yozuvdagi obyektId */
+  const aktivTop = a => {
+    if (a.aktivId) return a.aktivId;
+    if (!a.obyektId || a.kolleksiya === "SESSIYA") return null;
+    if (a.kolleksiya === "YOZUVLAR") return a.obyektId;
+    const x = (Array.isArray(D[a.kolleksiya]) ? D[a.kolleksiya] : []).find(y => y && y.id === a.obyektId);
+    return x && x.obyektId ? x.obyektId : null;
+  };
+  R = R.map((a, i) => Object.assign({}, a, {
     id: a.id || "AM-" + i,
     kim: a.kim && a.kim !== "-" ? a.kim : "Noma'lum",
     turiNomi: turiNomi(a.turi),
     kolNomi: kolNomi(a.kolleksiya),
     maydonlar: a.ozgarish ? Object.keys(a.ozgarish).map(maydonNomi).join(", ") : "",
+    aktiv: aktivTop(a) || "",
   }));
   /* Bir daqiqada bir xodim bir to'plamda bajargan bir xil amallar (masalan oylik zaxira surati) bitta qatorga yig'iladi */
   const Y = [], guruhlar = {};
@@ -187,12 +209,16 @@
     '</span><span class="m-qiymat" data-tarjimasiz>' + MKB.fmt(son) + '</span><span class="m-izoh">' + izoh + "</span></a>";
   $("metrikalar").innerHTML =
     m("amallar-tarixi.html?davr=bugun", "Bugun", bugungi, '<span>7 kunda</span> <b data-tarjimasiz>' + MKB.fmt(haftalik) + "</b>") +
-    m("amallar-tarixi.html", "Jami yozuv", R.length, rejim === "server" ? "<span>server jurnali</span>" : "<span>shu brauzerda</span>") +
+    m("amallar-tarixi.html", "Jami yozuv", R.length, boshSoni
+      ? "<span>boshlang&#39;ich</span> <b data-tarjimasiz>" + MKB.fmt(boshSoni) + "</b>, <span>" + (rejim === "server" ? "serverda" : "shu brauzerda") + '</span> <b data-tarjimasiz>' + MKB.fmt(HAQIQIY.length) + "</b>"
+      : rejim === "server" ? "<span>server jurnali</span>" : "<span>shu brauzerda</span>") +
     m("amallar-tarixi.html?amal=" + encodeURIComponent(TURI.yangilash[0]), "O'zgartirishlar", ozgarish, '<span>yangi yozuvlar</span> <b data-tarjimasiz>' + MKB.fmt(yaratish) + "</b>") +
     m("amallar-tarixi.html?amal=" + encodeURIComponent(TURI["kirish rad etildi"][0]), "Rad etilgan kirish", rad, "<span>noto&#39;g&#39;ri login yoki parol</span>");
-  if (rejim !== "server"){
-    $("rejim-izoh").innerHTML = '<div class="info-qator">' + ik("info") +
-      "<span>Namoyish rejimida amallar tarixi shu brauzerda yuritiladi va oxirgi 400 ta amal saqlanadi. Server rejimida jurnal serverda yoziladi va o&#39;chirilmaydi.</span></div>";
+  if (rejim !== "server" || boshSoni){
+    $("rejim-izoh").innerHTML = '<div class="info-qator">' + ik("info") + "<span>" +
+      (rejim !== "server" ? "<span>Namoyish rejimida amallar tarixi shu brauzerda yuritiladi va oxirgi 400 ta amal saqlanadi. Server rejimida jurnal serverda yoziladi va o&#39;chirilmaydi.</span>" : "") +
+      (boshSoni ? " <span>Boshlang&#39;ich yozuvlar namoyish ma&#39;lumotidagi qaror, ko&#39;rik, hodisa va aktiv tarixidan oxirgi 30 kun uchun tiklangan.</span>" : "") +
+      "</span></div>";
   }
 
   const ozgQisqa = a => {
@@ -215,6 +241,9 @@
     let href = null;
     if (a.kolleksiya === "YOZUVLAR" && D.topish(a.obyektId)) href = "obyekt.html?id=" + encodeURIComponent(a.obyektId);
     if (a.kolleksiya === "FOYDLAR") href = "foydalanuvchi.html?id=" + encodeURIComponent(a.obyektId);
+    if (a.kolleksiya === "TASDIQLAR") href = "tasdiqlar.html?id=" + encodeURIComponent(a.obyektId);
+    if (a.kolleksiya === "HODISALAR") href = "hodisa.html?id=" + encodeURIComponent(a.obyektId);
+    if (a.kolleksiya === "KORIKLAR") href = "korik-akti.html?id=" + encodeURIComponent(a.obyektId);
     if (a.kolleksiya === "PARAMETRLAR" || a.kolleksiya === "QOIDALAR") href = "sozlamalar.html#" + (a.kolleksiya === "QOIDALAR" ? "qoidalar" : "parametrlar");
     const nom = yozuvNomi(a);
     const t = nom ? '<span data-tarjimasiz>' + esc(nom) + "</span>" : '<span class="kod-mono" data-tarjimasiz>' + esc(a.obyektId) + "</span>";
@@ -239,6 +268,10 @@
     if (davr.tur === "oraliq") return [D.sanaOqi(davr.dan), D.sanaOqi(davr.gacha)];
     return [null, null];
   }
+  /* ?obyekt=AK-... — faqat shu aktivga tegishli amallar (obyekt kartochkasining Tarix tabidan) */
+  let aktivFiltr = url.get("obyekt") || "";
+  const aktivMos = a => !aktivFiltr || a.aktiv === aktivFiltr;
+  const moslar = () => Y.filter(a => davrMos(a) && aktivMos(a));
   const davrMos = a => {
     const [dan, gacha] = davrOraligi();
     if (!dan && !gacha) return true;
@@ -253,11 +286,18 @@
     return (dan ? D.sanaYoz(dan) : "…") + " – " + (gacha ? D.sanaYoz(gacha) : D.sanaYoz(k));
   };
 
+  /* Tiklangan boshlang'ich yozuvning soati yozuv raqamidan olingan, haqiqiy vaqt emas:
+     jadvalda ham, faylda ham u jurnal yozuvidan ajralib turadi */
+  const MANBA_USTUN = {kalit: "manba", nom: "Manba", saralash: false,
+    chiz: a => a.boshlangich ? '<span class="chip chip-kichik chip-kul">Tiklangan</span>' : "<span>Jurnal</span>",
+    csv: a => a.boshlangich ? "Tiklangan: namoyish ma'lumotidan, vaqti taxminiy" : "Jurnal"};
+
   const jadval = MKB.jadval("jadval-joy", {
     id: "amallar-tarixi",
-    qatorlar: Y.filter(davrMos),
-    csvNomi: "amallar-tarixi",
-    amallar: '<button type="button" class="tugma tugma-oq tugma-kichik" data-chop title="Filtrlangan jurnalni chop etish">' + ik("chop") + "Chop etish</button>",
+    qatorlar: moslar(),
+    csv: false,
+    amallar: '<button type="button" class="tugma tugma-oq tugma-kichik" data-at-csv title="Joriy filtr bo&#39;yicha CSV: oxirida yozuvlar soni va SHA-256 nazorat yig&#39;indisi">' + ik("csv") + "CSV</button>" +
+      '<button type="button" class="tugma tugma-oq tugma-kichik" data-chop title="Filtrlangan jurnalni chop etish">' + ik("chop") + "Chop etish</button>",
     korinishlar: {tayyor: [
       {nom: "Rad etilgan kirishlar", filtrlar: {turiNomi: TURI["kirish rad etildi"][0]}},
       {nom: "Foydalanuvchi hisoblari", filtrlar: {kolNomi: KOLLEKSIYA.FOYDLAR}},
@@ -267,6 +307,8 @@
     chizilganda(bolak, el){
       const c = el.querySelector("[data-chop]");
       if (c) c.addEventListener("click", () => window.print());
+      const cv = el.querySelector("[data-at-csv]");
+      if (cv) cv.addEventListener("click", csvYukla);
     },
     sahifaHajmi: 20,
     qidiruv: ["kim", "obyektId", "kolNomi", "turiNomi", "maydonlar"],
@@ -280,6 +322,7 @@
     ustunlar: [
       {kalit: "vaqt", nom: "Vaqt", tur: "sana", majburiy: true, chiz: a => '<span class="at-vaqt" data-tarjimasiz>' + esc(a.vaqt || "—") + "</span>"},
       {kalit: "kim", nom: "Xodim", chiz: a => '<span class="at-kim"><b' + (a.kim === "Tizim" ? "" : " data-tarjimasiz") + '>' + esc(a.kim || "—") + "</b><span>" + esc(a.rol && a.rol !== "-" ? a.rol : "") + "</span></span>"},
+      {kalit: "aktiv", nom: "Aktiv", yashirin: true, chiz: a => a.aktiv ? '<span class="kod-mono" data-tarjimasiz>' + esc(a.aktiv) + "</span>" : "—"},
       {kalit: "turiNomi", nom: "Amal", chiz: a => '<span class="chip chip-kichik ' + ((TURI[a.turi] || [])[1] || "chip-kul") + '">' + esc(a.turiNomi) + "</span>"},
       {kalit: "kolNomi", nom: "Bo'lim"},
       {kalit: "obyektId", nom: "Yozuv", csv: a => a.soni ? a.soni + " ta yozuv" : (a.obyektId || ""),
@@ -287,6 +330,7 @@
       {kalit: "maydonlar", nom: "O'zgarish", saralash: false, chiz: ozgQisqa,
         csv: a => a.ozgarish ? Object.entries(a.ozgarish).map(([k, v]) =>
           maydonNomi(k) + ": " + qiymatMatn(v && v.eski, k, niqobYoqilgan()) + " → " + qiymatMatn(v && v.yangi, k, niqobYoqilgan())).join("; ") : ""},
+      MANBA_USTUN,
     ],
     bosilganda: a => tafsilot(a),
   });
@@ -306,7 +350,7 @@
     davrForma.querySelectorAll("[data-davr]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.davr === davr.tur)));
     oraliq.hidden = davr.tur !== "oraliq";
     if (davr.tur === "oraliq"){ danEl.value = iso(D.sanaOqi(davr.dan)); gachaEl.value = iso(D.sanaOqi(davr.gacha)); }
-    jadval.yangila(Y.filter(davrMos));
+    jadval.yangila(moslar());
     const p = new URLSearchParams(location.search);
     ["davr", "dan", "gacha"].forEach(x => p.delete(x));
     if (davr.tur && davr.tur !== "oraliq") p.set("davr", davr.tur);
@@ -338,6 +382,58 @@
   });
   if (davr.tur) davrQolla();
 
+  function aktivChiz(){
+    const joy = $("at-aktiv");
+    joy.hidden = !aktivFiltr;
+    if (!aktivFiltr){ joy.innerHTML = ""; return; }
+    const y = D.topish ? D.topish(aktivFiltr) : null;
+    joy.innerHTML = "<span>Faqat shu aktiv bo&#39;yicha:</span>" +
+      '<span class="chip chip-kok"><span data-tarjimasiz>' + esc(aktivFiltr + (y ? " · " + (y.qisqa || y.nom) : "")) + "</span>" +
+        '<a href="#" data-aktiv-tozala aria-label="Aktiv filtrini olib tashlash">' + ik("yopish") + "</a></span>" +
+      '<span><b data-tarjimasiz>' + moslar().length + "</b> <span>ta amal</span></span>" +
+      (y && sahifaRuxsatlimi("obyekt-tarix.html") ? '<a class="karta-havola" href="obyekt-tarix.html?id=' + encodeURIComponent(aktivFiltr) + '">Aktiv tarixi</a>' : "");
+    joy.querySelector("[data-aktiv-tozala]").addEventListener("click", e => {
+      e.preventDefault();
+      aktivFiltr = "";
+      const p = new URLSearchParams(location.search); p.delete("obyekt");
+      history.replaceState(null, "", location.pathname + (p.toString() ? "?" + p : "") + location.hash);
+      aktivChiz();
+      jadval.yangila(moslar());
+    });
+    tarjimaQil(joy);
+  }
+  aktivChiz();
+
+  /* CSV: ko'rinayotgan ustunlar, joriy filtr. Oxirgi ikki qator — yozuvlar soni va SHA-256 nazorat yig'indisi
+     (sarlavha va yozuvlar qatori matnidan; BOM va shu ikki qator hisobga kirmaydi).
+     "Manba" ustuni yashirilgan bo'lsa ham faylga tushadi: tiklangan yozuvni haqiqiy jurnaldan ajratib turadi */
+  function csvYukla(){
+    const ust = jadval.korUstunlar().filter(u => u.csv !== false && u.nom);
+    if (!ust.some(u => u.kalit === "manba")) ust.push(MANBA_USTUN);
+    const qiymat = (a, u) => {
+      if (typeof u.csv === "function") return u.csv(a);
+      const v = a[u.kalit];
+      return v == null || typeof v === "object" ? "" : v;
+    };
+    const sarlavhalar = ust.map(u => u.nom);
+    const r = jadval.moslar().map(a => ust.map(u => qiymat(a, u)));
+    const n = B.csvNazorat(sarlavhalar, r);
+    const b = D.bugun();
+    const sana = b.getFullYear() + "-" + String(b.getMonth() + 1).padStart(2, "0") + "-" + String(b.getDate()).padStart(2, "0");
+    MKB.csv("amallar-tarixi-" + sana + ".csv", sarlavhalar, r.concat([["Yozuvlar soni", String(n.soni)], ["SHA-256", n.sha256]]));
+    /* Yig'indining fayldan tashqaridagi nusxasi: shu brauzerdagi oxirgi eksport qaydi */
+    const fl = jadval.holat.filtrlar || {};
+    const filtr = Object.keys(fl).filter(k => fl[k]).map(k => fl[k]).concat(jadval.holat.qidiruv ? [jadval.holat.qidiruv] : []).join("; ");
+    B.belgiYoz(B.EKSPORT_KALIT, {vaqt: D.vaqtYoz(new Date()), nom: "Amallar tarixi", qator: n.soni, kim: (MKBapi.sessiya() || {}).ism || "",
+      sha256: n.sha256, filtr: filtr || null, boshlangich: jadval.moslar().filter(a => a.boshlangich).length});
+    MKB.yonPanel("CSV yuklab olindi", '<dl class="malumot-royxat">' +
+      "<dt>Yozuvlar</dt><dd data-tarjimasiz>" + n.soni + "</dd>" +
+      '<dt>SHA-256</dt><dd class="at-nazorat" data-tarjimasiz>' + n.sha256 + "</dd></dl>" +
+      '<p style="margin-top:16px;font-size:13.5px;line-height:1.55;color:var(--matn-2)">Yig&#39;indi sarlavhadan oxirgi yozuvgacha, shu qatorning oxiri (CRLF) bilan birga olingan. Tekshirish: boshidagi BOM belgisini va oxirgi ikki qatorni olib tashlang, qolgan matndan SHA-256 hisoblang.</p>' +
+      '<p style="margin-top:10px;font-size:13.5px;line-height:1.55;color:var(--matn-2)">Faylni boshqa bo&#39;limga berganda yig&#39;indini alohida yuboring. Fayl ichidagi yig&#39;indini faylni o&#39;zgartirgan odam ham qayta hisoblay oladi.</p>',
+      {yorliq: "Amallar tarixi"});
+  }
+
   function tafsilot(a){
     const o = a.ozgarish ? Object.entries(a.ozgarish) : [];
     const tana =
@@ -346,6 +442,8 @@
         '<dt>Xodim</dt><dd><span' + (a.kim === "Tizim" ? "" : " data-tarjimasiz") + '>' + esc(a.kim || "—") + "</span>" + (a.rol && a.rol !== "-" ? " · <span>" + esc(a.rol) + "</span>" : "") + "</dd>" +
         "<dt>Amal</dt><dd>" + esc(a.turiNomi) + "</dd>" +
         "<dt>Bo&#39;lim</dt><dd>" + esc(a.kolNomi) + "</dd>" +
+        (a.aktiv ? '<dt>Aktiv</dt><dd><a href="amallar-tarixi.html?obyekt=' + encodeURIComponent(a.aktiv) + '" style="text-decoration:underline;text-underline-offset:3px" data-tarjimasiz>' + esc(a.aktiv) + "</a></dd>" : "") +
+        (a.boshlangich ? "<dt>Manba</dt><dd>Boshlang&#39;ich yozuv, namoyish ma&#39;lumotidan tiklangan</dd>" : "") +
         (a.soni ? "<dt>Yozuvlar</dt><dd><b data-tarjimasiz>" + a.soni + "</b> <span>ta</span></dd>"
           : "<dt>Yozuv</dt><dd>" + yozuvHavola(a) + "</dd>") +
       "</dl>" +

@@ -111,12 +111,15 @@ function fmt(n) {
   if (n == null || isNaN(n)) return "—";
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
-/* mln so'm -> "520 mln so'm" yoki "1,48 mlrd so'm" */
+/* mln so'm -> "520 mln so'm" yoki "1,48 mlrd so'm". Manfiy summa minus belgisi bilan va o'sha
+   birlikda: -1234,5 -> "−1,23 mlrd so'm". Yaxlitlangach nol bo'lsa belgi qo'yilmaydi. */
 function pul(mln) {
   if (mln == null || isNaN(mln)) return "—";
-  return mln >= 1000
-    ? (mln / 1000).toFixed(2).replace(".", ",").replace(/,00$/, "") + " mlrd so'm"
-    : (+mln).toFixed(1).replace(".", ",").replace(/,0$/, "") + " mln so'm";
+  const a = Math.abs(+mln);
+  const t = a >= 1000
+    ? (a / 1000).toFixed(2).replace(".", ",").replace(/,00$/, "") + " mlrd so'm"
+    : a.toFixed(1).replace(".", ",").replace(/,0$/, "") + " mln so'm";
+  return (+mln < 0 && !/^0 /.test(t) ? "−" : "") + t;
 }
 function son(n) {
   if (n == null || isNaN(n)) return "—";

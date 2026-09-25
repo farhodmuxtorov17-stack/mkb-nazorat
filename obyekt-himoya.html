@@ -54,6 +54,10 @@
         <div class="karta-bosh"><h2 data-ikonka="qurilma">Qurilmalar</h2><span class="soni" id="qurilma-soni"></span></div>
         <div id="qurilmalar"></div>
       </section>
+      <section class="karta" id="obhavo-karta" aria-labelledby="obhavo-s" data-tur="obyekt-himoya-obhavo">
+        <div class="karta-bosh"><h2 id="obhavo-s" data-ikonka="quyosh">Ob-havo va quyosh</h2><span class="chip chip-kichik chip-info">Ochiq ma'lumot, namuna</span></div>
+        <div id="obhavo"></div>
+      </section>
       <section class="karta" data-sayohat="hodisalar">
         <div class="karta-bosh"><h2 data-ikonka="ogoh">Ochiq hodisalar</h2><span class="soni" id="hodisa-soni"></span><a class="karta-havola" href="hodisalar.html"><span>Hodisalar</span><svg class="ic"><use href="#ik-ong"/></svg></a></div>
         <div id="hodisalar"></div>
@@ -86,6 +90,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/jonli.js?v=26092200"></script>
 <script>
 MKB.sahifaYukla({joylar: {kpi: ["karta", 4], qoriqlash: ["qator", 3], qurilmalar: ["qator", 3], hodisalar: ["qator", 3], smeta: ["qator", 4], tashriflar: ["qator", 3]},
   xato: "Himoya ma'lumotlarini yuklab bo'lmadi", ish: async () => {
@@ -115,7 +120,8 @@ MKB.sahifaYukla({joylar: {kpi: ["karta", 4], qoriqlash: ["qator", 3], qurilmalar
   const sanaKalit = s => { const d = D.sanaOqi(s); return d ? d.getTime() : 0; };
   const soM = v => MKB.pul(Math.round(v / 1e5) / 10);
   const soMOraliq = r => MKB.pul([Math.round(r[0] / 1e5) / 10, Math.round(r[1] / 1e5) / 10]);
-  const QHOLAT = {onlayn: ["Onlayn", "chip-yashil", "mint"], oflayn: ["Oflayn", "chip-xavf", "pushti"], nosoz: ["Nosoz", "chip-xavf", "pushti"],
+  /* Shlyuz ulanmagan: "onlayn" — oxirgi holat qaydi, jonli signal emas */
+  const QHOLAT = {onlayn: ["Qayd bo'yicha aloqada", "chip-yashil", "mint"], oflayn: ["Oflayn", "chip-xavf", "pushti"], nosoz: ["Nosoz", "chip-xavf", "pushti"],
     xizmatda: ["Xizmatda", "chip-sariq", "lavanda"], "aloqa yo'q": ["Aloqa yo'q", "chip-kul", "siyoh"]};
   const QUVVAT = {akkumulyator: "Akkumulyator", "quyosh+akkumulyator": "Quyosh va akkumulyator", quyosh: "Quyosh paneli", tarmoq: "Elektr tarmog'i"};
   let tanlanganAndoza = null;
@@ -127,6 +133,10 @@ MKB.sahifaYukla({joylar: {kpi: ["karta", 4], qoriqlash: ["qator", 3], qurilmalar
     const qurilmalar = (D.QURILMALAR || []).filter(x => x.obyektId === id);
     const holatlar = qurilmalar.map(x => ({x, h: D.qurilmaHolati ? D.qurilmaHolati(x) : {holat: x.holat}}));
     const onlayn = holatlar.filter(o => o.h.holat === "onlayn").length;
+    /* "20.09.2026 15:12" -> "20.09 15:12": eng so'nggi holat qaydi */
+    const oxirgiQayd = holatlar.map(o => o.h.qayd || o.x.oxirgiSignal).filter(Boolean)
+      .sort((a, b) => sanaKalit(b) - sanaKalit(a) || String(b).localeCompare(String(a)))[0] || "";
+    const qisqa = m => { const [s, t] = String(m).split(" "); return s.slice(0, 5) + (t ? " " + t : ""); };
     /* Masofaviy ko'rik faqat 4G kamerasi bor obyektda o'tadi; kamera yo'q bo'lsa, tugma kamera o'rnatishga olib boradi */
     const kameraBor = qurilmalar.some(x => x.tur === "kamera-4G");
     const mk = document.getElementById("masofaviy");
@@ -154,8 +164,9 @@ MKB.sahifaYukla({joylar: {kpi: ["karta", 4], qoriqlash: ["qator", 3], qurilmalar
     document.getElementById("kpi").innerHTML =
       metrika("#qoriqlash", "Qo'riqlash", qKalit ? "<span>" + esc(turNomi(qKalit)) + "</span>" : "<span>Qo'riqlanmaydi</span>",
         faol ? "<span>Tugash</span> " + tj(faol.tugash || "—") : "<span>Amaldagi shartnoma yo'q</span>") +
-      metrika("#qurilmalar", "Qurilmalar onlayn", qurilmalar.length ? tj(onlayn + " / " + qurilmalar.length) : "<span>O'rnatilmagan</span>",
-        qurilmalar.length ? (onlayn === qurilmalar.length ? "<span>Hammasi aloqada</span>" : "<span>Aloqasiz</span>: " + tj(String(qurilmalar.length - onlayn))) : "") +
+      metrika("#qurilmalar", "Qurilmalar aloqada", qurilmalar.length ? tj(onlayn + " / " + qurilmalar.length) : "<span>O'rnatilmagan</span>",
+        qurilmalar.length ? (oxirgiQayd ? "<span>Oxirgi qayd:</span> " + tj(qisqa(oxirgiQayd)) : "<span>Holat qayd etilmagan</span>") +
+          (onlayn < qurilmalar.length ? " · <span>Aloqasiz</span>: " + tj(String(qurilmalar.length - onlayn)) : "") : "") +
       metrika("#hodisalar", "Ochiq hodisalar", tj(String(hodisalar.length)),
         hodisalar.length ? "<span>Oxirgisi</span> " + tj(hodisalar[0].vaqt || "") : "<span>Ochiq hodisa yo'q</span>") +
       metrika("#tashriflar", "Oxirgi tashrif", oxirgiTashrif ? tj(oxirgiTashrif.sana) : "<span>Yo'q</span>",
@@ -231,6 +242,26 @@ MKB.sahifaYukla({joylar: {kpi: ["karta", 4], qoriqlash: ["qator", 3], qurilmalar
     tarjimaQil(document.querySelector("main"));
   }
 
+  /* ---------- Ob-havo: harorat akkumulyatorga, quyosh panelga, prognoz ko'rik rejasiga ta'sir qiladi ----------
+     Koordinata obyektdan, bo'lmasa hudud markazidan; tashqariga 0,1° aniqlikda yuboriladi */
+  function obHavo(){
+    const y = Y(), hk = (D.HUDUD_KODLAR || {})[y.hududKod] || {};
+    const lat = y.joy && y.joy.lat != null ? y.joy.lat : hk.lat, lng = y.joy && y.joy.lng != null ? y.joy.lng : hk.lng;
+    if (!MKB.jonli || lat == null || lng == null){ document.getElementById("obhavo-karta").hidden = true; return; }
+    const quyoshli = (D.QURILMALAR || []).some(x => x.obyektId === id && x.quvvat === "quyosh+akkumulyator");
+    const joy = document.getElementById("obhavo");
+    const yukla = () => MKB.jonli.obHavoBlok(joy, {lat, lng, quyoshli, obyektId: id, korik: true});
+    /* Tashqi so'rov faqat xodim bosganda ketadi: bepul Open-Meteo tijoriy bo'lmagan foydalanish uchun */
+    if (obHavoOchildi){ yukla(); return; }
+    joy.innerHTML = '<p style="font-size:13px;line-height:1.6;color:var(--matn-3);margin:0 0 12px"><span>Tugma bosilganda hudud koordinatasi 0,1° aniqlikda Open-Meteo ga yuboriladi.</span> ' +
+      (quyoshli ? "<span>Quyoshli qurilmada panel hisobi uchun NASA POWER ga ham.</span> " : "") +
+      "<span>Bepul API tijoriy bo&#39;lmagan foydalanish uchun (CC BY 4.0). Bank ishida pullik kalit yoki o&#39;z serveri kerak.</span></p>" +
+      '<button type="button" class="tugma tugma-oq tugma-kichik" id="obhavo-ol">' + ik("quyosh") + "<span>Ob-havoni olish</span></button>";
+    document.getElementById("obhavo-ol").addEventListener("click", () => { obHavoOchildi = true; yukla(); });
+    tarjimaQil(joy);
+  }
+  let obHavoOchildi = false;
+
   /* ---------- Himoya komplekti va smeta ---------- */
   function smetaChiz(){
     const y = Y();
@@ -299,6 +330,7 @@ MKB.sahifaYukla({joylar: {kpi: ["karta", 4], qoriqlash: ["qator", 3], qurilmalar
   }
   document.querySelector(".kontent").addEventListener("click", e => { if (e.target.closest("[data-shartnoma]")) shartnomaOyna(); });
   chiz();
+  obHavo();
 }});
 </script>
 </body>

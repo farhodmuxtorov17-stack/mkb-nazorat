@@ -62,7 +62,7 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     <div class="hs-yorliq"><span>Balans aktivlari</span></div>
     <div class="hs-qator"><h1>Aktivlar reyestri</h1><span class="hs-meta" id="hs-meta" hidden></span>
       <div class="hs-amallar">
-        <button type="button" class="tugma tugma-oq" id="import-tugma" data-sayohat="import" hidden><svg class="ic"><use href="#ik-yuklash"/></svg>CSV fayldan qo'shish</button>
+        <button type="button" class="tugma tugma-oq" id="import-tugma" data-sayohat="import" title="Excel (.xlsx) yoki CSV" hidden><svg class="ic"><use href="#ik-yuklash"/></svg><span>Fayldan import</span></button>
         <a class="tugma tugma-asosiy" href="qabul-boshlash.html" data-huquq="yoz" data-sayohat="qabul"><svg class="ic"><use href="#ik-qoshish"/></svg>Balansga qabul qilish</a>
       </div></div>
   </div>
@@ -94,6 +94,7 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/jadval-fayl.js?v=26092200"></script>
 <script>
 (() => {
   const esc = MKB.esc;
@@ -112,10 +113,8 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     .sort((a, b) => (D.sanaOqi(a.sana) || 0) - (D.sanaOqi(b.sana) || 0))[0] || null;
   /* Kelajakdagi, inspektori belgilangan ko'rik bor: qayta tayinlash shart emas. Kechikkan ko'rik qayta tayinlanadi */
   const rejadaBor = id => { const k = ochiqKorik(id); if (!k || k.holat !== "rejada" || !k.inspektor) return false; const s = D.sanaOqi(k.sana); return !!s && s >= MKB.bugun(); };
-  function qoriqlashBormi(y){
-    if (y.himoya && y.himoya.qoriqlashTuri) return true;
-    return (D.QORIQLASH || []).some(q => q.obyektId === y.id && q.holat === "amalda");
-  }
+  /* Bitta ta'rif malumot-indeks.js da (D.qoriqlanadimi): panel va qo'riqlash sahifasi bilan bir xil son */
+  const qoriqlashBormi = y => D.qoriqlanadimi(y, MKB.bugun());
   function kommunalHolati(y){
     const k = (y.kommunal || []).filter(x => x && x.holat && x.holat !== "mavjud emas");
     if (!k.length) return "";
@@ -503,7 +502,8 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     if (e.target.closest("[data-tanlov-csv]")) tanlanganCsv();
   });
 
-  /* ---------- CSV fayldan aktivlar qo'shish (administrator) ---------- */
+  /* ---------- Excel yoki CSV fayldan aktivlar qo'shish (aktivlarga yozish huquqi: administrator, obyekt menejeri).
+     Import qilingan aktiv "Rasmiylashtirilmoqda" holatida kiradi: balansga qo'lda qabul bilan bir xil yo'l ---------- */
   const kichik = s => String(s || "").trim().toLowerCase().replace(/[‘’ʻʼ`]/g, "'");
   function importOch(){
     const korilgan = new Set((D.YOZUVLAR || []).map(y => kichik(y.nom) + "|" + kichik(y.manzil)));
@@ -512,8 +512,11 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     const hudud = v => { const k = Object.keys(D.HUDUD_KODLAR || {}).find(c => kichik(D.HUDUD_KODLAR[c].nom) === kichik(v) || kichik(D.HUDUD_KODLAR[c].toliq) === kichik(v) || kichik(c) === kichik(v)); return k || null; };
     const filial = v => MKB.doira((D.FILIALLAR || []).map(x => Object.assign({filialKod: x.id}, x))).find(x => kichik(x.id) === kichik(v) || kichik(x.nom) === kichik(v)) || null;
     const asos = v => (D.QABUL_ASOSLARI || []).find(a => kichik(a.kalit) === kichik(v) || kichik(a.nom) === kichik(v)) || null;
-    MKB.csvImport({
-      sarlavha: "Aktivlarni CSV fayldan qo'shish", birlik: "aktiv",
+    MKB.jadvalImport({
+      sarlavha: "Aktivlarni fayldan qo'shish", birlik: "aktiv", faylNomi: "aktivlar-import-namuna",
+      namuna: [["Chilonzor 9-kvartal, 12-uy, 45-xonadon", "Turar joy", "Toshkent shahri", (D.FILIALLAR || [])[0] ? D.FILIALLAR[0].nom : "", "Chilonzor 9-kvartal, 12-uy, 45-xonadon", "15.09.2026", "412,5", "Sud qarori va ijro varaqasi (MIB)", ""]],
+      qoidalar: {tur: (D.ASOSIY_TURLAR || []).map(t => t.nom).join(", "), hudud: "Viloyat yoki shahar nomi", filial: "Filial nomi yoki kodi",
+        balansSana: "kk.oo.yyyy, bugundan keyin emas", balansQiymat: "mln so'm, 0 dan katta", asos: (D.QABUL_ASOSLARI || []).map(a => a.nom).join(", ")},
       ustunlar: [
         {kalit: "nom", nom: "Nomi", majburiy: true}, {kalit: "tur", nom: "Asosiy tur", majburiy: true},
         {kalit: "hudud", nom: "Hudud", majburiy: true}, {kalit: "filial", nom: "Filial", majburiy: true},
@@ -546,9 +549,9 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
         const yangi = {
           id, nom: x.nom, qisqa: x.nom, tur: t.nom, turKalit: t.kalit, rasmTuri, binoli: !!t.binoli,
           hudud: h.nom || "", hududKod: hk, hududToliq: h.toliq || "", tuman: "", manzil: x.manzil, joy: null,
-          filial: fl.nom, filialKod: fl.id, sobiqEga: x.sobiqEga || null, tafsilot: null, holat: "Balansda", bosqich: "baholash",
+          filial: fl.nom, filialKod: fl.id, sobiqEga: x.sobiqEga || null, tafsilot: null, holat: "Rasmiylashtirilmoqda", bosqich: "rasmiylashtirish",
           masul: null, konservatsiya: false, rasm: "", rasmKichik: "", rasmlar: [], rasmManba: null, rasmUmumiy: false,
-          tarix: [{sana: D.sanaYoz(MKB.bugun()), voqea: "CSV fayldan reyestrga kiritildi", izoh: "Kiritdi: " + MKB.kim()}], izoh: "",
+          tarix: [{sana: D.sanaYoz(MKB.bugun()), voqea: "Fayldan reyestrga kiritildi", izoh: "Kiritdi: " + MKB.kim() + ". Huquq hujjatlari rasmiylashtirilgach balansga o'tadi"}], izoh: "",
           balans: {sana, qiymat: Math.round(x.balansQiymat * 10) / 10, hisobvaraq: String(D.param("hisobvaraqAktiv") || ""), qabulAsosi: a ? a.kalit : null,
             asosHujjat: {raqam: null, sana: null}, yopilganQarz: null, ixtiyoriyTopshirish: a ? a.kalit === "ixtiyoriy" : false, undiruvIshId: null},
           qiymat: {bozor: null, tugatish: null, baholanmagan: true, bahoSana: null, baholovchi: null},
@@ -565,9 +568,9 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
       keyin(n){
         document.dispatchEvent(new CustomEvent("mkb:malumot"));
         if (n && n.saqlandi){
-          oxirgiNatija = {tur: "import", soni: n.saqlandi, matn: "ta aktiv CSV fayldan qo'shildi", havola: null};
+          oxirgiNatija = {tur: "import", soni: n.saqlandi, matn: "ta aktiv fayldan qo'shildi, holati «Rasmiylashtirilmoqda»", havola: null};
           natijaLenta();
-          MKB.toast(n.saqlandi + " ta aktiv reyestrga qo'shildi");
+          MKB.toast(n.saqlandi + " ta aktiv reyestrga qo'shildi. Rasmiylashtirish navbatida");
         }
       },
     });
@@ -582,7 +585,7 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     metrikalar();
     kartalarChiz();
     const it = document.getElementById("import-tugma");
-    it.hidden = !(MKB.rol() === "admin" && MKB.huquq("aktivlar", "yoz"));
+    it.hidden = !MKB.huquq("aktivlar", "yoz");
     if (!ulangan){
       ulangan = true;
       it.addEventListener("click", importOch);
@@ -594,7 +597,7 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     xato: "Aktivlar reyestrini yuklab bo'lmadi",
     ish: async () => {
       if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
-      await MKB.kolYukla(["KORIKLAR", "QORIQLASH", "MENING_VAZIFALARIM"]);
+      await MKB.kolYukla(["KORIKLAR", "QORIQLASH", "QURILMALAR", "MENING_VAZIFALARIM"]);
       boshla();
     },
   });

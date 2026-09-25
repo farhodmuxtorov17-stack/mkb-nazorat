@@ -40,7 +40,7 @@
 <main class="kontent">
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><a href="obyektlar.html">Balans aktivlari</a><span class="ajratgich">/</span><a href="arxiv.html">Arxiv va chiqim</a><span class="ajratgich">/</span><span id="yorliq">Yozuv</span></div>
-    <div class="hs-qator"><h1 id="sarlavha">Arxiv yozuvi</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-qator"><h1 id="sarlavha">Arxiv yozuvi</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar" id="dn-amal"></div></div>
   </div>
   <div id="joy" class="ustun"></div>
 </main>
@@ -59,6 +59,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/dalolatnoma.js?v=26092200"></script>
 <script>
 (async () => {
   const joy = document.getElementById("joy");
@@ -142,6 +143,7 @@
     (y && Array.isArray(y.tarix) && y.tarix.length ? '<section class="karta" aria-labelledby="t-sar"><div class="karta-bosh"><h2 id="t-sar" data-ikonka="soat">Tarix</h2></div><ul class="voqealar">' +
       y.tarix.slice().reverse().slice(0, 8).map(t => '<li><time data-tarjimasiz>' + esc(t.sana || "") + "</time><div><b>" + esc(t.voqea || "") + "</b><span>" + esc(t.izoh || "") + "</span></div></li>").join("") + "</ul></section>" : "");
   MKB.fotoShapka(a, joy.querySelector(".foto-shapka"));
+  if (MKB.dalolatnoma) MKB.dalolatnoma.tugma("dn-amal", "chiqim", {arxiv: a.id});
 
   /* Xarajatlar */
   const xj = document.getElementById("xarajat-joy");

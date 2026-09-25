@@ -50,6 +50,46 @@ window.MKB_TORT_KOZ = (function(){
     XATO_OZ: "O'z so'rovingizni o'zingiz tasdiqlay olmaysiz"};
 })();
 
+/* Bildirishnoma kimga boradi (sof qism, DOM va sessiyasiz; qo'ng'iroq, bildirishnomalar sahifasi va testlar shu mantiqni ishlatadi).
+   Xabar o'z roliga yozilgan xodimga boradi. Boshqa rolning obyekt bo'yicha eslatmasi faqat yuqoriga o'tkazilganda keladi:
+   qoidaning eskalatsiyaRol i shu rol, bog'liq vazifa (id "V|" + xabar id) yopilmagan va muddatidan
+   max(3, eskalatsiyaKun) kundan ko'p o'tgan. Rahbariyat bundan tashqari bank darajasidagi xabarni (obyektsiz, masalan MB hisoboti)
+   va jiddiy hodisani ko'radi; qolgan obyekt eslatmalari haftalik xulosaga tushadi. Administrator biznes xabarini olmaydi.
+   holat(b, k) -> "oz" | "bank" | "hodisa" | "eskalatsiya" | "xulosa" | null
+   k = {rol: rol kaliti, rolNomi: xodimning to'liq rol nomi, bugun: Date, qoida: id -> qoida, vazifa: id -> vazifa, kanon: eski rol nomini yangisiga} */
+window.MKB_BILDIRISH_DOIRA = (function(){
+  const ESKALATSIYA_MIN_KUN = 3;
+  const sanaOqi = window.MKB_TORT_KOZ.sanaOqi;
+  const kunBoshi = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  function otganKun(b, k){
+    const v = b && k && k.vazifa ? k.vazifa("V|" + b.id) : null;
+    const m = v && sanaOqi(v.muddat);
+    if (!m || !k.bugun) return null;
+    return Math.round((kunBoshi(k.bugun) - kunBoshi(m)) / 864e5);
+  }
+  function holat(b, k){
+    if (!b || !k) return null;
+    const kn = x => String((k.kanon ? k.kanon(x) : x) || "").trim();
+    const ozi = !b.rol || kn(b.rol) === kn(k.rolNomi);
+    const biznes = !!(b.qoidaId || b.obyektId);
+    if (k.rol === "admin") return !biznes && ozi ? "oz" : null;
+    if (ozi) return "oz";
+    const rahbar = k.rol === "rahbariyat";
+    if (rahbar && !b.obyektId) return "bank";
+    if (rahbar && !b.qoidaId) return "hodisa";
+    const q = b.qoidaId && k.qoida ? k.qoida(b.qoidaId) : null;
+    const xulosa = rahbar ? "xulosa" : null;
+    if (!q || !q.eskalatsiyaRol || kn(q.eskalatsiyaRol) !== kn(k.rolNomi)) return xulosa;
+    const v = k.vazifa ? k.vazifa("V|" + b.id) : null;
+    if (!v || v.bajarildi) return xulosa;
+    const otgan = otganKun(b, k);
+    const chegara = Math.max(ESKALATSIYA_MIN_KUN, Number(q.eskalatsiyaKun) || 0);
+    return otgan != null && otgan > chegara ? "eskalatsiya" : xulosa;
+  }
+  const KORINADI = ["oz", "bank", "hodisa", "eskalatsiya"];
+  return {holat, otganKun, korinadimi: (b, k) => KORINADI.indexOf(holat(b, k)) >= 0, ESKALATSIYA_MIN_KUN};
+})();
+
 (function(){
   "use strict";
   if (!window.MKB || window.MKB.tasdiq) return;

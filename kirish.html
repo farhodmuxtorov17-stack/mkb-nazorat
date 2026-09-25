@@ -38,7 +38,7 @@ body{background:var(--fon-sovuq)}
 .caps-izoh{display:flex;align-items:flex-start;gap:6px;font-size:13px;line-height:1.4;color:var(--sariq-matn)}
 .caps-izoh[hidden]{display:none}
 .caps-izoh .ic{width:15px;height:15px;flex:none;margin-top:1px}
-/* Rozilik: kirishdan oldin oferta va maxfiylik bildirishnomasi qabul qilinadi */
+/* Rozilik: kirishdan oldin foydalanish qoidalari va maxfiylik bildirishnomasi qabul qilinadi */
 .rozilik{display:flex;flex-direction:column;gap:7px;padding:14px 16px;background:var(--plitka);border-radius:var(--r-kirish)}
 .rozilik-bosh{font-size:12.5px;line-height:1.45;color:var(--matn-3)}
 .rozilik-belgi{display:flex;align-items:flex-start;gap:11px;cursor:pointer;font-size:13.5px;line-height:1.5;color:var(--matn-2)}
@@ -128,7 +128,7 @@ body{background:var(--fon-sovuq)}
             <span>Quyidagi hujjatlar bilan tanishdim va ularni qabul qilaman:</span>
           </label>
           <span class="rozilik-havolalar" id="rozilik-havolalar">
-            <a href="oferta.html" target="_blank" rel="noopener">Ommaviy oferta va foydalanish shartlari</a>
+            <a href="oferta.html" target="_blank" rel="noopener">Tizimdan foydalanish qoidalari (ichki nizom)</a>
             <a href="maxfiylik.html" target="_blank" rel="noopener">Maxfiylik bildirishnomasi</a>
           </span>
           <span class="rozilik-tahrir" id="rozilik-tahrir"><span>Hujjatlar tahriri</span> <b data-tarjimasiz id="rozilik-versiya">—</b></span>
@@ -157,7 +157,7 @@ body{background:var(--fon-sovuq)}
     </section>
     <div class="k-oyoq">
       <nav aria-label="Hujjatlar">
-        <a href="oferta.html" target="_blank" rel="noopener">Ommaviy oferta</a><span class="ajrat" aria-hidden="true">·</span>
+        <a href="oferta.html" target="_blank" rel="noopener">Foydalanish qoidalari</a><span class="ajrat" aria-hidden="true">·</span>
         <a href="maxfiylik.html" target="_blank" rel="noopener">Maxfiylik bildirishnomasi</a>
       </nav>
       <span>Ruxsatsiz kirishga urinish qayd etiladi.</span>
@@ -180,7 +180,7 @@ body{background:var(--fon-sovuq)}
 <script>
 /* Hujjatlar tahriri: oferta.html va maxfiylik.html dagi tahrir bilan bir xil.
    Tahrir o'zgarsa, rozilik qaytadan so'raladi. */
-const HUJJAT_TAHRIR = "1.0";
+const HUJJAT_TAHRIR = "1.1";
 const HUJJAT_SANA = "25.09.2026";
 const ROZILIK_KALIT = "mkb4-rozilik";
 
@@ -305,7 +305,7 @@ function bugungiSana(){
   parol.addEventListener("blur", () => { caps.hidden = true; });
   [login, parol].forEach(m => m.addEventListener("input", () => { umumiyXato(""); if (m.getAttribute("aria-invalid") === "true" && m.value) maydonXato(m, null); }));
 
-  /* ---------- Oferta va maxfiylik bildirishnomasiga rozilik ----------
+  /* ---------- Foydalanish qoidalari va maxfiylik bildirishnomasiga rozilik ----------
      Qabul qilingani hisob yozuviga (FOYDLAR.rozilik) yoziladi; shu brauzerda belgisi ham qoladi,
      shuning uchun tahrir o'zgarmaguncha qayta so'ralmaydi. */
   document.getElementById("rozilik-versiya").textContent = HUJJAT_TAHRIR + " · " + HUJJAT_SANA;

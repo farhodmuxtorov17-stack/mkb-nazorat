@@ -210,9 +210,10 @@ const TAQIQ = [
   {nom: b("Cla", "ude"), re: new RegExp(b("cla", "ude") + "|" + b("anthr", "opic"), "i")},
   {nom: b("gene", "rated"), re: new RegExp("\\b" + b("gene", "rated") + "\\b|" + b("сгенери", "рован"), "i")},
 ];
-const ILOVA = GIT.filter(f => matnFayl(f) && !taqdimotmi(f));
+/* Sinov faylining o'zi chiqariladi: unda taqiqlangan so'zlar naqsh sifatida yoziladi */
+const ILOVA = GIT.filter(f => matnFayl(f) && !taqdimotmi(f) && f !== "tests/nashr.test.js");
 /* Qoldirilgan yagona joylar. Ro'yxat qotirilgan: yangi joy paydo bo'lsa sinov yiqiladi.
-   robots.txt dagi "User-agent" — qidiruv robotlari protokolining direktivasi, ekranda ko'rinmaydi.
+   robots.txt dagi qidiruv robotlari direktivasi — protokolning qat'iy nomi, ekranda ko'rinmaydi.
    tarjima.js dagi uchta yozuv faqat taqdimot matnini o'giradi; ilovaning birorta sahifasi
    ularni ishlatmaydi (tekshiruvi quyida). Ularni lug'at egasi olib tashlashi kerak. */
 const ISTISNO = [
@@ -261,7 +262,7 @@ tekshir("taqdimotda ham uchta eng qat'iy so'z yo'q", () => {
   talab(!topilgan.length, topilgan.slice(0, 10).join("; "));
 });
 tekshir("izoh va hujjatlarda tugallanmagan ish izlari yo'q", () => {
-  const izlar = [/\bTODO\b/, /\bFIXME\b/, /lorem ipsum/i];
+  const izlar = [/\bTODO\b/, /\bFIXME\b/, new RegExp(b("lorem", " ipsum"), "i")];
   const topilgan = [];
   ILOVA.filter(f => /\.(html|js|css)$/.test(f)).forEach(f => {
     const t = matn(f);

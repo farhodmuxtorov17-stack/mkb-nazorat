@@ -25,6 +25,19 @@
 .bs-guruh:first-child{margin-top:0}
 #hm-sahifalar .qator{flex-wrap:nowrap}
 #hm-sahifalar .qator .ong{flex:none;color:var(--matn-3)}
+/* Rahbariyat uchun ikki hisobot MB kartasi ostida */
+.hm-rahbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:720px){.hm-rahbar{grid-template-columns:minmax(0,1fr)}}
+.hm-rahbar .karta{display:flex;flex-direction:column;gap:10px}
+.hm-rahbar .karta p{margin:0}
+.hm-rahbar .karta .tugma{align-self:flex-start;margin-top:auto}
+/* Qator amali: CSV va chop etish bitta "Yuklab olish" menyusida */
+.hm-yuklab{position:relative}
+.hm-yuklab > summary{list-style:none;cursor:pointer}
+.hm-yuklab > summary::-webkit-details-marker{display:none}
+.hm-yuklab-menyu{position:absolute;right:0;top:calc(100% + 6px);z-index:5;display:flex;flex-direction:column;gap:4px;min-width:190px;padding:8px;
+  border-radius:16px;background:var(--oq);box-shadow:var(--soya-suzuvchi)}
+.hm-yuklab-menyu .tugma{justify-content:flex-start;width:100%}
 @page{size:A4 landscape;margin:12mm}
 </style>
 </head>
@@ -41,6 +54,7 @@
   <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html" class="faol" aria-current="page">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">Nazorat indeksi</a><a href="hisobot-hudud.html">Hududlar</a></nav>
 
   <section class="karta" id="mb-fokus" aria-label="Markaziy bank hisoboti" data-sayohat="mb"></section>
+  <div class="hm-rahbar" id="hm-rahbar" hidden></div>
 
   <div class="hm-asbob">
     <div class="izlash"><svg class="ic"><use href="#ik-izlash"/></svg><input type="search" id="hm-qidiruv" placeholder="Hisobot nomi bo'yicha qidirish" aria-label="Hisobot nomi bo'yicha qidirish"></div>
@@ -441,17 +455,21 @@ async function boshla(){
             '<span class="ong">' +
               '<span class="vaqt">' + (n == null ? "<span>O'qib bo'lmadi</span>" : bosh ? "<span>Yozuv yo'q</span>" : "<b data-tarjimasiz>" + MKB.fmt(n) + "</b> <span>qator</span>") + "</span>" +
               '<span class="chip chip-kichik ' + (davrga(d) ? "chip-info" : "chip-kul") + '">' + (davrga(d) ? (h.davr === "hammasi" ? "Barcha davr" : "Davr bo'yicha") : "Joriy holat") + "</span>" +
-              '<button type="button" class="tugma tugma-kichik tugma-oq" data-csv="' + d.id + '"' + (bosh ? " disabled" : "") + ">" + ik("csv") + "CSV</button>" +
-              '<button type="button" class="tugma tugma-kichik tugma-oq" data-chop="' + d.id + '"' + (bosh ? " disabled" : "") + ">" + ik("chop") + esc(d.chopYorliq || "Chop etish") + "</button>" +
+              (bosh ? "" : '<details class="hm-yuklab"><summary class="tugma tugma-kichik tugma-oq">' + ik("yuklab") + "<span>Yuklab olish</span></summary>" +
+                '<div class="hm-yuklab-menyu">' +
+                '<button type="button" class="tugma tugma-kichik tugma-oq" data-csv="' + d.id + '">' + ik("csv") + "<span>CSV (Excel)</span></button>" +
+                '<button type="button" class="tugma tugma-kichik tugma-oq" data-chop="' + d.id + '">' + ik("chop") + "<span>" + esc(d.chopYorliq || "Chop etish") + "</span></button></div></details>") +
               (MKB.ruxsat(d.sahifa) ? '<a class="tugma tugma-kichik tugma-oq" href="' + esc(ochishHavola(d)) + '">' + ik("ong") + esc(ochishYorliq(d)) + "</a>" : "") +
             "</span></div>";
         }).join("") + "</section>";
     }).join("");
-    joy.querySelectorAll("[data-csv]").forEach(b => b.addEventListener("click", () => MKB.band(b, () => csvYukla(b.dataset.csv))));
-    joy.querySelectorAll("[data-chop]").forEach(b => b.addEventListener("click", () => MKB.band(b, () => chopEt(b.dataset.chop))));
-    const c1 = joy.querySelector("[data-csv]:not([disabled])"), p1 = joy.querySelector("[data-chop]:not([disabled])");
+    const menyuYop = b => { const m = b.closest("details"); if (m) m.open = false; };
+    joy.querySelectorAll("[data-csv]").forEach(b => b.addEventListener("click", () => { Promise.resolve(MKB.band(b, () => csvYukla(b.dataset.csv))).finally(() => menyuYop(b)); }));
+    joy.querySelectorAll("[data-chop]").forEach(b => b.addEventListener("click", () => { menyuYop(b); MKB.band(b, () => chopEt(b.dataset.chop)); }));
+    /* Bir vaqtda bitta menyu ochiq; menyudan tashqarini bosish yoki Escape uni yopadi */
+    joy.querySelectorAll(".hm-yuklab").forEach(m => m.addEventListener("toggle", () => { if (m.open) joy.querySelectorAll(".hm-yuklab[open]").forEach(x => { if (x !== m) x.open = false; }); }));
+    const c1 = joy.querySelector(".hm-yuklab > summary");
     if (c1) c1.setAttribute("data-sayohat", "csv");
-    if (p1) p1.setAttribute("data-sayohat", "chop");
     tarjimaQil(joy);
   }
 
@@ -484,6 +502,7 @@ async function boshla(){
      Bo'limning barcha sahifalari shu yerda: yon panelda faqat bitta band qoladi, sahifa yo'qolmaydi.
      Ro'yxat MKB_DARAXT bilan solishtiriladi — daraxtga yangi sahifa qo'shilsa, u ham chiqadi. */
   const SAHIFA_IZOH = {
+    "haftalik.html": ["kalendar", "Dushanbadan yakshanbagacha: qarorlar, balans harakati, tushum, hodisalar va ko'riklar, o'tgan hafta bilan farq"],
     "hisobot-portfel.html": ["portfel", "Balansdagi aktivlar, oylik dinamika va zaxira toifalari"],
     "hisobot-hudud.html": ["xarita", "Hududlar va filiallar kesimi, xarita bilan"],
     "hisobot-xarajat.html": ["pul", "Saqlash xarajatlari: toifa, filial va obyekt kesimi"],
@@ -493,22 +512,23 @@ async function boshla(){
     "hisobot-mb.html": ["bank", "Markaziy bankka oylik hisobot: shakl, ilova va chop etish"],
     "hisobot-eksport.html": ["yuklab", "To'plamni CSV yoki JSON ko'rinishida yuklab olish"],
   };
+  /* Tablarda (portfel, MB, xarajat, KPI, hudud), yuqoridagi rahbariyat kartasida (haftalik) va
+     eksport kartasida bor sahifalar bu yerda takrorlanmaydi */
+  const SAHIFA_TAKROR = ["hisobot-portfel.html", "hisobot-mb.html", "hisobot-xarajat.html", "hisobot-kpi.html", "hisobot-hudud.html", "haftalik.html", "hisobot-eksport.html"];
   const SAHIFA_GURUH = [
-    ["Batafsil ko'rinishlar", ["hisobot-portfel.html", "hisobot-hudud.html", "hisobot-xarajat.html", "hisobot-kpi.html", "hisobot-undiruv.html", "kirish-hisoboti.html"]],
-    ["Majburiy hisobot", ["hisobot-mb.html"]],
-    ["Ma'lumot", ["hisobot-eksport.html"]],
+    ["Batafsil ko'rinishlar", ["hisobot-undiruv.html", "kirish-hisoboti.html"]],
   ];
   function sahifalarKartasi(){
     const el = $("hm-sahifalar");
     const daraxt = (window.MKB_DARAXT && MKB_DARAXT.hisobot || []).filter(x => x.f !== "hisobotlar.html");
     const nomi = {}; daraxt.forEach(x => { nomi[x.f] = String(x.n).replace(/&#39;/g, "'"); });
     const guruhlar = SAHIFA_GURUH.map(g => [g[0], g[1].filter(f => nomi[f])]);
-    const qolgan = daraxt.map(x => x.f).filter(f => !SAHIFA_GURUH.some(g => g[1].indexOf(f) >= 0));
+    const qolgan = daraxt.map(x => x.f).filter(f => SAHIFA_TAKROR.indexOf(f) < 0 && !SAHIFA_GURUH.some(g => g[1].indexOf(f) >= 0));
     if (qolgan.length) guruhlar.push(["Boshqa sahifalar", qolgan]);
     const bolim = guruhlar.map(g => [g[0], g[1].filter(f => MKB.ruxsat(f))]).filter(g => g[1].length);
     const soni = bolim.reduce((a, g) => a + g[1].length, 0);
     if (!soni){ el.remove(); return; }
-    el.innerHTML = '<div class="karta-bosh"><h2 data-ikonka="panel">Bo\'lim sahifalari</h2><span class="soni"><span data-tarjimasiz>' + soni + "</span> <span>ta sahifa</span></span></div>" +
+    el.innerHTML = '<div class="karta-bosh"><h2 data-ikonka="panel">Boshqa hisobot sahifalari</h2><span class="soni"><span data-tarjimasiz>' + soni + "</span> <span>ta sahifa</span></span></div>" +
       bolim.map(g => '<h3 class="bs-guruh">' + esc(g[0]) + "</h3>" +
         g[1].map(f => {
           const iz = SAHIFA_IZOH[f] || ["hisobot", ""];
@@ -571,7 +591,25 @@ async function boshla(){
     $("hm-guruhlar").querySelectorAll("[data-guruh]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
     katalog();
   });
+  /* ---------- Rahbariyat uchun: kengash hisoboti va haftalik xulosa sahifa boshida ---------- */
+  function rahbarKartalar(){
+    const el = $("hm-rahbar");
+    const k = [];
+    if (MKB.ruxsat("panel.html")) k.push(["chop", "Kengash uchun hisobot", "Oy, chorak yoki yil bo'yicha bitta A4 varaq: xulosa, oldingi davr bilan farq va kengashdan so'raladigan qarorlar.", "panel.html#kengash", "Hisobotni tayyorlash"]);
+    if (MKB.ruxsat("haftalik.html")) k.push(["kalendar", "Haftalik xulosa", "Dushanbadan yakshanbagacha: qarorlar, balans harakati, tushum, hodisalar va ko'riklar, o'tgan hafta bilan farq.", "haftalik.html", "Xulosani ochish"]);
+    if (!k.length){ el.remove(); return; }
+    el.hidden = false;
+    el.innerHTML = k.map(x => '<section class="karta"><div class="karta-bosh"><h2 data-ikonka="' + x[0] + '">' + x[1] + "</h2></div>" +
+      '<p class="maydon-izoh">' + x[2] + '</p><a class="tugma tugma-oq" href="' + x[3] + '">' + ik("ong") + "<span>" + x[4] + "</span></a></section>").join("");
+    tarjimaQil(el);
+  }
   const yangila = () => { mbFokus(); return katalog(); };
+  rahbarKartalar();
+  document.addEventListener("click", e => { document.querySelectorAll(".hm-yuklab[open]").forEach(m => { if (!m.contains(e.target)) m.open = false; }); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    document.querySelectorAll(".hm-yuklab[open]").forEach(m => { m.open = false; m.querySelector("summary").focus(); });
+  });
   document.addEventListener("mkb:qoidalar", yangila);
   eksportKarta();
   sahifalarKartasi();

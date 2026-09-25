@@ -65,7 +65,7 @@
 <main class="kontent">
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><a href="obyektlar.html">Balans aktivlari</a><span class="ajratgich">/</span><a href="arxiv.html">Arxiv va chiqim</a><span class="ajratgich">/</span><span>Balansdan chiqarish</span></div>
-    <div class="hs-qator"><h1>Balansdan chiqarish</h1><span class="hs-meta" id="hs-meta">—</span></div>
+    <div class="hs-qator"><h1>Balansdan chiqarish</h1><span class="hs-meta" id="hs-meta">—</span><div class="hs-amallar" id="dn-amal"></div></div>
   </div>
   <div id="joy" class="ustun"></div>
 </main>
@@ -84,6 +84,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/dalolatnoma.js?v=26092200"></script>
 <script>
 (async () => {
   const joy = document.getElementById("joy");
@@ -248,6 +249,9 @@
         (rejim === "sorov" ? '<button type="button" class="tugma tugma-asosiy" id="bajar" data-yozadi data-sayohat="yuborish">' + ik("xat") + "Qaror so&#39;rovini yuborish</button>" : "") +
       "</div></div>";
     MKB.fotoShapka(y, joy.querySelector(".foto-shapka"));
+    /* Qaror so'rovi bor bo'lsa dalolatnoma chop etiladi: tasdiqlanguncha "Qoralama" belgisi bilan */
+    document.getElementById("dn-amal").innerHTML = "";
+    if (ts && MKB.dalolatnoma) MKB.dalolatnoma.tugma("dn-amal", "chiqim", {tasdiq: ts.id});
     if (rejim === "yoq"){ tarjimaQil(joy); return; }
 
     const asosTurEl = v => joy.querySelector('[name=asosTur][value="' + v + '"]');

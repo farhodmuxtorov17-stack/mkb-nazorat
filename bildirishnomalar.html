@@ -22,6 +22,12 @@
 .bl-manba[aria-pressed="true"]{background:var(--plitka)}
 .bl-manba .matn > span{white-space:normal}
 .bl-yana{display:flex;justify-content:center;padding-top:14px}
+.bl-qator .matn > .bl-esk{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:6px;-webkit-line-clamp:unset}
+.bl-esk-kim{font-size:12.5px;color:var(--matn-3)}
+.bl-xulosa{display:flex;gap:12px;align-items:flex-start;margin-top:14px;padding:14px 16px;border-radius:var(--r-kichik);background:var(--plitka);font-size:13.5px;line-height:1.5;color:var(--matn-2)}
+.bl-xulosa .ic{flex:none;width:18px;height:18px;margin-top:2px;color:var(--matn-3)}
+.bl-xulosa b{color:var(--siyoh);font-weight:500}
+.bl-xulosa a{color:var(--siyoh);text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
 </style>
 </head>
 <body data-sahifa="vazifa">
@@ -74,7 +80,7 @@
 
 async function boshla(){
   if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
-  const KOLLAR = ["BILDIRISHLAR", "QOIDALAR"];
+  const KOLLAR = ["BILDIRISHLAR", "QOIDALAR", "MENING_VAZIFALARIM"];
   await MKB.kolYukla(KOLLAR);
   const D = MKB_DATA, esc = MKB.esc;
   const s = MKBapi.sessiya() || {};
@@ -87,9 +93,10 @@ async function boshla(){
   const belgi = b => BELGI[b.qoidaId] || (/^HODISA\|/.test(b.id) ? ["xavf", "pushti"] : ["qongiroq", ""]);
   const qoida = id => (D.QOIDALAR || []).find(q => q.id === id) || null;
 
-  /* Qo'ng'iroq bilan bir xil doira: rahbariyat va administrator hammasini, boshqalar o'z roliga tegishlisini ko'radi */
-  const hammasiniKoradi = ["admin", "rahbariyat"].indexOf(MKB.rol()) >= 0;
-  const manba = () => MKB.doira((D.BILDIRISHLAR || []).filter(b => b && (hammasiniKoradi || !b.rol || MKB.rolNomi(b.rol) === MKB.rolNomi(s.rol))));
+  /* Qo'ng'iroq bilan bir xil doira (yadro/amal.js MKB_BILDIRISH_DOIRA): xodim o'z roliga yozilganini ko'radi,
+     rahbariyat obyekt eslatmasini faqat muddatidan 3 kundan ko'p o'tib yopilmaganda oladi */
+  const manba = () => MKB.bildirish.royxat();
+  const rahbar = MKB.rol() === "rahbariyat";
 
   const url = new URLSearchParams(location.search);
   const h = {filtr: url.get("filtr") === "hammasi" ? "hammasi" : "oqilmagan", qoida: url.get("qoida") || "", qidiruv: "", koproq: 0};
@@ -134,9 +141,13 @@ async function boshla(){
     const sarlavha = hv
       ? '<a class="qator-och" href="' + esc(hv) + '" aria-describedby="' + tavsif + '">' + esc(b.sarlavha) + "</a>"
       : '<button type="button" class="qator-och" aria-describedby="' + tavsif + '">' + esc(b.sarlavha) + "</button>";
+    /* Yuqoriga o'tkazilgan eslatma: ijrochi muddatida yopmagan, necha kun o'tgani ko'rinadi */
+    const otgan = MKB.bildirish.holat(b) === "eskalatsiya" ? MKB.bildirish.otganKun(b) : null;
+    const esk = otgan != null ? '<span class="bl-esk"><span class="chip chip-kichik chip-xavf"><span>Kechikish</span> <b data-tarjimasiz>' + otgan + "</b> <span>kun</span></span> " +
+      '<span class="bl-esk-kim"><span>Ijrochi</span>: <span>' + esc(MKB.rolNomi(b.rol) || "") + "</span></span></span>" : "";
     return '<div class="qator bl-qator' + (oq ? " oqilgan" : "") + '" data-id="' + esc(b.id) + '">' +
       '<span class="belgi ' + rang + '">' + ik(ikon) + "</span>" +
-      '<span class="matn"><b>' + sarlavha + "</b>" + (b.matn ? '<span id="' + aid + '-t">' + esc(b.matn) + "</span>" : "") + "</span>" +
+      '<span class="matn"><b>' + sarlavha + "</b>" + (b.matn ? '<span id="' + aid + '-t">' + esc(b.matn) + "</span>" : "") + esk + "</span>" +
       '<span class="ong"><span class="vaqt" id="' + aid + '-v" title="' + esc(b.sana || "") + '">' + vaqtHTML(b) + "</span>" +
         (oq ? "" : '<span class="bl-nuqta" aria-hidden="true"></span><span class="sr-only" id="' + aid + '-h">O\'qilmagan</span><button type="button" class="tugma tugma-oq tugma-ikonka bl-oqi" data-oqi="' + esc(b.id) + '" aria-label="O\'qilgan deb belgilash" title="O\'qilgan deb belgilash">' + ik("tasdiq") + "</button>") +
       "</span></div>";
@@ -145,7 +156,9 @@ async function boshla(){
   function chiz(){
     const r = manba();
     const oqilmagan = r.filter(b => !oqilgan(b));
-    $("hs-meta").textContent = oqilmagan.length ? oqilmagan.length + " ta o'qilmagan" : "Hammasi o'qilgan";
+    /* O'qilmaganlar soni filtr tugmasida turadi, sarlavha yonida takrorlanmaydi */
+    $("hs-meta").textContent = oqilmagan.length ? "" : "Hammasi o'qilgan";
+    $("hs-meta").hidden = !!oqilmagan.length;
     tarjimaQil($("hs-meta").parentNode);
     $("bl-hammasi").hidden = !oqilmagan.length;
     $("bl-filtr").innerHTML = [["oqilmagan", "O'qilmagan", oqilmagan.length], ["hammasi", "Barchasi", r.length]].map(p =>
@@ -160,7 +173,9 @@ async function boshla(){
       .sort((a, b) => (D.sanaOqi(b.sana) || 0) - (D.sanaOqi(a.sana) || 0) || (oqilgan(a) ? 1 : 0) - (oqilgan(b) ? 1 : 0));
     const joy = $("bl-royxat");
     if (!r.length){
-      joy.innerHTML = MKB.boshHolat("qongiroq", "Bildirishnoma yo'q",
+      joy.innerHTML = MKB.rol() === "admin"
+        ? MKB.boshHolat("qongiroq", "Tizim xabari yo'q", "Muddat va nazorat eslatmalari mas'ul rolga boradi, administratorga faqat tizim xabarlari keladi.")
+        : MKB.boshHolat("qongiroq", "Bildirishnoma yo'q",
         D.MANBA === "mahalliy" ? "Mahalliy reyestrda polis, ko'rik va baholash sanalari kiritilgach, qoidalar bo'yicha ogohlantirishlar shu yerga keladi."
           : "Muddat yaqinlashganda yoki nazorat buzilganda qoidalar bo'yicha ogohlantirish keladi.");
       tarjimaQil(joy); return;
@@ -174,7 +189,9 @@ async function boshla(){
     }
     const chegara = 40 + h.koproq * 40, korinadi = k.slice(0, chegara);
     const tanlanganQoida = h.qoida ? qoida(h.qoida) : null;
-    let html = '<div class="karta-bosh"><h2 data-ikonka="qongiroq">' + (h.filtr === "oqilmagan" ? "O'qilmagan" : "Barcha bildirishnomalar") + '</h2><span class="soni" data-tarjimasiz>' + k.length + "</span>" +
+    /* Kartadagi son faqat qidiruv yoki qoida ro'yxatni toraytirganda chiqadi, aks holda u filtr tugmasidagi son bilan bir xil */
+    let html = '<div class="karta-bosh"><h2 data-ikonka="qongiroq">' + (h.filtr === "oqilmagan" ? "O'qilmagan" : "Barcha bildirishnomalar") + "</h2>" +
+      (q || h.qoida ? '<span class="soni" data-tarjimasiz>' + k.length + "</span>" : "") +
       (tanlanganQoida ? '<button type="button" class="karta-havola" id="bl-qoida-tozala">' + ik("yopish") + '<span>' + esc(tanlanganQoida.nom) + "</span></button>" : "") + "</div>";
     GURUHLAR.forEach(g => {
       const ichi = korinadi.filter(b => guruh(b) === g[0]);
@@ -205,7 +222,7 @@ async function boshla(){
     const qatorlar = (D.QOIDALAR || []).filter(q => son[q.id]).map(q => ({id: q.id, nom: q.nom, manba: q.manba, faol: q.faol !== false, son: son[q.id] || {jami: 0, yangi: 0}}));
     if (son.HODISA) qatorlar.push({id: "HODISA", nom: "Jiddiy hodisa qayd etildi", manba: "Ichki tartib", faol: true, son: son.HODISA});
     qatorlar.sort((a, b) => b.son.yangi - a.son.yangi || b.son.jami - a.son.jami);
-    if (!qatorlar.length){ joy.innerHTML = '<div class="karta-bosh"><h2 data-ikonka="bogliq">Manbalar</h2></div>' + MKB.boshHolat("sozlama", "Hali ogohlantirish bo'lmagan", "Qoida ishga tushganda manbasi shu yerda ko'rinadi."); tarjimaQil(joy); return; }
+    if (!qatorlar.length){ joy.innerHTML = '<div class="karta-bosh"><h2 data-ikonka="bogliq">Manbalar</h2></div>' + MKB.boshHolat("sozlama", "Hali ogohlantirish bo'lmagan", "Qoida ishga tushganda manbasi shu yerda ko'rinadi."); xulosaIzoh(joy); tarjimaQil(joy); return; }
     joy.innerHTML = '<div class="karta-bosh"><h2 data-ikonka="bogliq">Manbalar</h2><span class="soni">nazorat qoidalari</span></div>' +
       qatorlar.map(q => {
         const [ikon, rang] = BELGI[q.id] || (q.id === "HODISA" ? ["xavf", "pushti"] : ["qongiroq", ""]);
@@ -216,12 +233,24 @@ async function boshla(){
           '<span class="ong">' + (q.son.yangi ? '<span class="chip chip-kichik chip-xavf" data-tarjimasiz>' + q.son.yangi + "</span>" : "") +
             '<span class="vaqt" data-tarjimasiz>' + q.son.jami + "</span>" + (q.faol ? "" : '<span class="chip chip-kichik chip-kul">O\'chirilgan</span>') + "</span></div>";
       }).join("");
+    xulosaIzoh(joy);
     joy.querySelectorAll("[data-qoida]").forEach(el => {
       const bos = () => { const k = el.dataset.qoida === "HODISA" ? "" : el.dataset.qoida; h.qoida = h.qoida === k ? "" : k; h.filtr = "hammasi"; h.koproq = 0; chiz(); };
       el.addEventListener("click", bos);
       el.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target === el){ e.preventDefault(); bos(); } });
     });
     tarjimaQil(joy);
+  }
+
+  /* Rahbariyat: ijrochilarga ketgan obyekt eslatmalari soni. Ular bu yerga faqat muddatdan 3 kundan ko'p o'tib yopilmasa chiqadi */
+  function xulosaIzoh(joy){
+    if (!rahbar) return;
+    const n = MKB.bildirish.xulosa(7).length;
+    joy.insertAdjacentHTML("beforeend", '<div class="bl-xulosa">' + ik("info") + "<div>" +
+      (n ? "<span>Oxirgi 7 kunda ijrochilarga ketgan obyekt eslatmalari:</span> <b data-tarjimasiz>" + n + "</b>. "
+         : "<span>Oxirgi 7 kunda ijrochilarga obyekt eslatmasi ketmadi.</span> ") +
+      "<span>Muddatdan keyin ijrochi qoidadagi kun ichida (kamida 3 kun) yopmagan eslatma sizga alohida keladi.</span> " +
+      '<a href="haftalik.html">Haftalik xulosa</a></div></div>');
   }
 
   /* ---------- Amallar ---------- */

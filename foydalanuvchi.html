@@ -54,6 +54,9 @@
 .xavfsizlik-qator .matn{flex:1 1 220px;min-width:0}
 .xavfsizlik-qator .matn b{display:block;font-weight:500}
 .xavfsizlik-qator .matn span{display:block;font-size:13px;color:var(--matn-3);line-height:1.5}
+.faollik dd .izoh{display:block;font-size:12.5px;color:var(--matn-3)}
+.faollik dd .eski{color:var(--xavf-matn-yorqin)}
+.faollik-amal{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 </style>
 </head>
 <body data-sahifa="sozlama">
@@ -66,7 +69,7 @@
     <div class="hs-yorliq"><a href="sozlamalar.html">Sozlamalar</a><span class="ajratgich">/</span><a href="foydalanuvchilar.html">Foydalanuvchilar</a><span class="ajratgich">/</span><span id="yorliq-nom" data-tarjimasiz>—</span></div>
     <div class="hs-qator"><h1 id="sarlavha" data-tarjimasiz>—</h1></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html" class="faol">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="tizim-holati.html">Tizim holati</a><a href="sozlamalar.html">Profil va qoidalar</a><a href="foydalanuvchilar.html" class="faol">Foydalanuvchilar</a><a href="rollar.html">Rollar</a><a href="filiallar.html">Filiallar</a><a href="integratsiyalar.html">Integratsiyalar</a><a href="amallar-tarixi.html">Amallar tarixi</a><a href="qollanma.html">Qo&#39;llanma</a></nav>
 
   <div class="tor-2">
     <div class="ustun">
@@ -98,6 +101,12 @@
     </div>
 
     <div class="ustun">
+      <section class="karta faollik" data-sayohat="faollik">
+        <div class="karta-bosh"><h2 data-ikonka="soat">Faollik va mas&#39;uliyat</h2></div>
+        <div id="fk-korik"></div>
+        <dl class="malumot-royxat" id="fk-faollik"></dl>
+        <div class="faollik-amal" id="fk-faollik-amal"></div>
+      </section>
       <section class="karta" data-sayohat="xavfsizlik">
         <div class="karta-bosh"><h2 data-ikonka="qulf">Hisob xavfsizligi</h2></div>
         <div id="fk-xavfsizlik"></div>
@@ -128,14 +137,16 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="boshqaruv.js?v=26092200"></script>
 <script>
 (async () => {
   const esc = MKB.esc;
   const $ = id => document.getElementById(id);
   const id = new URLSearchParams(location.search).get("id");
-  let rejim, D, s, ADMIN, ROLLAR, f, qoriq = null;
+  const B = window.MKB_BOSHQARUV;
+  let rejim, D, s, ADMIN, ROLLAR, f, F = [], J = [], qoriq = null;
   MKB.sahifaYukla({
-    joylar: {"fk-xavfsizlik": ["qator", 2], "fk-huquq": ["qator", 6], "fk-amallar": ["qator", 5]},
+    joylar: {"fk-faollik": ["qator", 3], "fk-xavfsizlik": ["qator", 2], "fk-huquq": ["qator", 6], "fk-amallar": ["qator", 5]},
     xato: "Foydalanuvchi ma'lumotini yuklab bo'lmadi",
     ish: async () => {
       rejim = MKBapi.rejim();
@@ -145,12 +156,48 @@
       ROLLAR = Object.keys(ROL_KALIT);
       f = id ? await MKBapi.bitta("FOYDLAR", id) : null;
       if (!f){ location.replace("xato-404.html"); return; }
+      await jurnalOl();
       chiz();
       qoriq = MKB.formaQoriqla($("fk-forma"), {nom: "Hisob ma'lumotlari"});
       await amallarChiz();
     },
   });
 
+  async function jurnalOl(){
+    const [foyd, a] = await Promise.all([MKBapi.royxat("FOYDLAR"), MKBapi.royxat("amallar").catch(() => [])]);
+    F = foyd;
+    J = B.jurnal(D, a || []);
+  }
+  /* Rol qachondan, oxirgi kirish va amal, mas'ul aktivlar va huquqlarni ko'rib chiqish topilmalari */
+  function faollikChiz(){
+    const kir = B.oxirgiKirish(f, J), amal = B.oxirgiAmal(f, J), rs = B.rolSana(f, J);
+    const aktivlar = B.masulAktivlar(D, f.nom);
+    const k = B.huquqKorigi(F, {aktivSoni: x => B.masulAktivlar(D, x.nom).length, oxirgiKirish: x => B.oxirgiKirish(x, J),
+      bugun: D.bugun(), jurnalBoshi: B.jurnalBoshi(J)}).find(x => x.f.id === f.id);
+    const sb = k ? k.sabablar : [];
+    const kun = kir ? D.kunFarqi(kir, D.bugun()) : null;
+    $("fk-korik").innerHTML = sb.length ? '<div class="info-qator ogoh">' + ik("ogoh") + "<span><b>Ko&#39;rib chiqish kerak.</b> " +
+      sb.map(x => B.sababHTML(x)).join(". ") + ".</span></div>" : "";
+    $("fk-faollik").innerHTML =
+      "<dt>Rol berilgan</dt><dd>" + (rs.sana ? '<span data-tarjimasiz>' + esc(rs.sana) + "</span>" +
+        (rs.manba === "ochilgan" ? '<span class="izoh">Hisob ochilgan kundan beri shu rolda</span>' : "") : "—") + "</dd>" +
+      "<dt>Oxirgi kirish</dt><dd>" + (kir ? '<span data-tarjimasiz>' + esc(D.vaqtYoz(kir)) + "</span>" +
+        (kun != null && kun >= B.KIRMAGAN_KUN ? '<span class="izoh eski"><span data-tarjimasiz>' + kun + "</span> <span>kun oldin</span></span>" : "") : "<span>Qayd etilmagan</span>") + "</dd>" +
+      "<dt>Oxirgi amal</dt><dd>" + (amal ? '<span data-tarjimasiz>' + esc(amal.vaqt) + '</span><span class="izoh"><span data-tarjimasiz>' + esc(amal.obyektId || "") + "</span></span>" : "<span>Qayd etilmagan</span>") + "</dd>" +
+      "<dt>Mas&#39;ul aktivlar</dt><dd><b data-tarjimasiz>" + aktivlar.length + "</b>" +
+        (aktivlar.length ? '<span class="izoh">' + aktivlar.slice(0, 3).map(y => '<a href="obyekt.html?id=' + encodeURIComponent(y.id) + '" data-tarjimasiz style="text-decoration:underline;text-underline-offset:3px">' + esc(y.id) + "</a>").join(", ") +
+          (aktivlar.length > 3 ? " <span>va yana</span> <span data-tarjimasiz>" + (aktivlar.length - 3) + "</span> <span>ta</span>" : "") + "</span>" : "") + "</dd>";
+    $("fk-faollik-amal").innerHTML = ADMIN && aktivlar.length
+      ? '<button type="button" class="tugma ' + (f.faol === false ? "tugma-asosiy" : "tugma-oq") + ' tugma-kichik" id="fk-otkaz" data-yozadi>' + ik("foydalar") + "Aktivlarni o&#39;tkazish</button>" : "";
+    const b = $("fk-otkaz");
+    if (b) b.addEventListener("click", async () => {
+      const r = await B.otkazishDialogi(D, F, f);
+      if (!r) return;
+      MKB.toast("Aktivlar o'tkazildi: " + r.qiymat + ", " + f.nom + " → " + r.qiymatlar.kimga);
+      await qaytaYukla();
+    });
+    tarjimaQil($("fk-faollik").closest(".karta"));
+  }
   const oz = () => f.id === s.id || (f.login && f.login === s.login);
   const filialNomi = kod => { const x = kod ? D.filial(kod) : null; return x ? x.nom : (kod || "Bosh ofis"); };
   const BLOK_OLD = "Bloklash sababi: ";
@@ -199,6 +246,7 @@
     filialIzoh();
     huquqChiz($("fk-rol").value || f.rol);
     xavfsizlikChiz();
+    faollikChiz();
     if (qoriq) qoriq.asos();
     tarjimaQil(document.querySelector(".kontent"));
   }
@@ -265,16 +313,25 @@
   /* Bloklash: xavfli, sabab majburiy. Faollashtirish: oddiy tasdiq */
   async function blokla(){
     const bloklash = f.faol !== false;
+    /* Mas'ul aktivlari bo'lsa, ular shu dialogning o'zida yangi mas'ulga o'tadi: bloklangan xodimda aktiv qolmaydi */
+    const aktivlar = bloklash ? B.masulAktivlar(D, f.nom) : [];
+    const tafsilot = [["Xodim", {matn: f.nom, tarjimasiz: true}], ["Login", {matn: f.login || "—", tarjimasiz: true}], ["Rol", f.rol || "—"]];
+    if (aktivlar.length) tafsilot.push(["Mas'ul aktivlar", {matn: String(aktivlar.length), tarjimasiz: true}]);
     const r = await MKB.tasdiqla(bloklash ? {
       sarlavha: "Hisobni bloklash",
-      matn: f.nom + " tizimga kira olmaydi. Hisob va uning amallar tarixi saqlanib qoladi.",
-      tafsilot: [["Xodim", {matn: f.nom, tarjimasiz: true}], ["Login", {matn: f.login || "—", tarjimasiz: true}], ["Rol", f.rol || "—"]],
+      matn: f.nom + " tizimga kira olmaydi. Hisob va uning amallar tarixi saqlanib qoladi." +
+        (aktivlar.length ? " Xodim mas'ul bo'lgan " + aktivlar.length + " ta aktiv tanlangan xodimga o'tadi." : ""),
+      tafsilot,
+      maydonlar: aktivlar.length ? [{nom: "kimga", yorliq: "Aktivlarning yangi mas'uli", tur: "tanlov", majburiy: true, variantlar: B.masulNomzodlari(D, F, f)}] : undefined,
       oqibat: ["Xodimning ochiq sessiyalari yopiladi", "Sabab hisob kartochkasida va amallar tarixida ko'rinadi"],
       ton: "xavfli",
       sabab: {majburiy: true, min: 5, yorliq: "Bloklash sababi", namuna: "Masalan, xodim bankdan bo'shadi"},
       okMatn: "Hisobni bloklash",
       bekorMatn: "Orqaga",
-      bajar: ({sabab}) => MKBapi.yangilash("FOYDLAR", f.id, {faol: false, izoh: BLOK_OLD + sabab}),
+      bajar: async ({sabab, qiymatlar}) => {
+        if (aktivlar.length) await B.aktivlarniOtkaz(aktivlar, qiymatlar.kimga, (id, patch) => MKBapi.yangilash("YOZUVLAR", id, patch));
+        await MKBapi.yangilash("FOYDLAR", f.id, {faol: false, izoh: BLOK_OLD + sabab});
+      },
     } : {
       sarlavha: "Hisobni faollashtirish",
       matn: f.nom + " o'z logini bilan yana tizimga kira oladi.",
@@ -358,7 +415,7 @@
   async function amallarChiz(){
     const joy = $("fk-amallar");
     let r;
-    try{ r = await MKBapi.royxat("amallar"); }
+    try{ r = B.jurnal(D, await MKBapi.royxat("amallar")); }
     catch(e){ MKB.xatoHolat(joy, "Amallar tarixini yuklab bo'lmadi", amallarChiz); return; }
     r = (r || []).filter(a => a.kim === f.nom || (a.kolleksiya === "FOYDLAR" && a.obyektId === f.id)).slice(0, 8);
     $("fk-tarix-havola").href = "amallar-tarixi.html?q=" + encodeURIComponent(f.nom);
@@ -379,6 +436,7 @@
 
   async function qaytaYukla(){
     f = await MKBapi.bitta("FOYDLAR", f.id) || f;
+    await jurnalOl();
     chiz();
     amallarChiz();
   }

@@ -255,7 +255,11 @@ async function boshla(){
     $("mb-birlik").textContent = birlik;
     tarjimaQil($("mb-birlik").parentNode);
     MKBchizma.maydon(joy.firstChild, {qiymatlar: r.map(x => mln ? Math.round(x.jamiBalansQiymat || 0) : D.yaxlit(x.jamiBalansQiymat / 1000, 1)),
-      yorliqlar: r.map(x => { const m = Number(x.davr.slice(5)); return qisqa[m - 1] || x.davr.slice(5); }),
+      /* 13 oyda bir oy ikki marta keladi: takrorlangan oy yorlig'iga yil qo'shiladi ("sen 25", "sen 26") */
+      yorliqlar: r.map(x => {
+        const oy = x.davr.slice(5), m = Number(oy), y = qisqa[m - 1] || oy;
+        return r.filter(z => z.davr.slice(5) === oy).length > 1 ? y + " " + x.davr.slice(2, 4) : y;
+      }),
       balandlik: 180, oqFormat: v => String(Math.round(v)), tooltipFormat: v => String(v).replace(".", ",") + " " + birlik});
   }
 

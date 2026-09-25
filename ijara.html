@@ -100,13 +100,8 @@
   /* Bironta qatorga mos kelmaydigan tayyor ko'rinish ro'yxatda ko'rsatilmaydi */
   const mosKorinishlar = a => a.filter(v => joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
 
-  /* "10.2025" davri uchun to'lov sanasi: ijara boshlangan kun shu oyda */
-  function tolovSanasi(ij, davr){
-    const m = /^(\d{1,2})\.(\d{4})$/.exec(String(davr || ""));
-    if (!m) return null;
-    const bosh = oqi(ij.boshlanish), kun = bosh ? Math.min(bosh.getDate(), 28) : 1;
-    return new Date(+m[2], +m[1] - 1, kun);
-  }
+  /* "10.2025" davri uchun to'lov sanasi: umumiy ta'rif malumot-indeks.js da (moliya paneli ham shuni ishlatadi) */
+  const tolovSanasi = (ij, davr) => D.ijaraTolovSanasi(ij, davr);
   function hisob(ij){
     const b = bugun(), T = Array.isArray(ij.tolovlar) ? ij.tolovlar : [];
     const otgan = T.filter(t => !t.tolandi && tolovSanasi(ij, t.davr) && tolovSanasi(ij, t.davr) < b);

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Haftalik xulosa</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+/* Hafta tanlovi: oldingi va keyingi hafta, o'rtada sanalar */
+.hx-hafta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hx-hafta .hx-nom{display:flex;flex-direction:column;gap:2px;min-width:0}
+.hx-hafta .hx-nom b{font:500 19px/1.2 var(--shrift-displey);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.hx-hafta .hx-nom span{font-size:12.5px;color:var(--matn-3)}
+.hx-yuborish{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:16px;background:var(--plitka);font-size:13px;color:var(--matn-2);line-height:1.5}
+.hx-yuborish .ic{width:18px;height:18px;flex:none;margin-top:1px;color:var(--matn-3)}
+.hx-yuborish .chip{margin:0 2px}
+/* Taqqoslash jadvali: ko'rsatkich, shu hafta, o'tgan hafta, farq */
+.hx-jadval{display:flex;flex-direction:column}
+.hx-bosh,.hx-q{display:grid;grid-template-columns:minmax(0,1fr) 150px 150px 120px 18px;gap:12px;align-items:center}
+.hx-bosh{width:calc(100% + 32px);margin:0 -16px;padding:0 16px 10px;font-size:12.5px;color:var(--matn-3);box-shadow:inset 0 -1px 0 var(--chiziq-2)}
+.hx-bosh span:not(:first-child){text-align:right}
+.hx-q{width:calc(100% + 32px);margin:0 -16px;padding:14px 16px;border-radius:20px;min-height:64px;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer;transition:background var(--tez)}
+.hx-q + .hx-q{box-shadow:inset 0 1px 0 var(--chiziq-2)}
+.hx-q:hover{background:var(--plitka);box-shadow:none}
+.hx-q:hover + .hx-q{box-shadow:none}
+.hx-q:focus-visible{outline:2px solid var(--siyoh);outline-offset:-2px}
+.hx-q.jim{cursor:default}
+.hx-q.jim:hover{background:none}
+.hx-q .hx-nom{display:flex;flex-direction:column;gap:3px;min-width:0}
+.hx-q .hx-nom > b{font-weight:500;font-size:14.5px}
+.hx-q .hx-nom span{font-size:12.5px;color:var(--matn-3)}
+/* Izoh satridagi son atrofidagi matn o'lchamida qoladi, faqat rangi bilan ajraladi */
+.hx-q .hx-nom span b{font-size:inherit;font-weight:500;color:var(--matn-2)}
+.hx-v{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right;font-variant-numeric:tabular-nums;min-width:0}
+.hx-v b{font-weight:500;font-size:15px}
+.hx-v small{font-size:12.5px;color:var(--matn-3)}
+.hx-v.eski b{font-weight:400;color:var(--matn-2)}
+.hx-farq{font-size:14px;font-weight:500;white-space:nowrap;justify-self:end;text-align:right}
+.hx-farq.yomon{color:var(--pushti-matn)}
+.hx-farq.yaxshi{color:var(--mint-matn)}
+.hx-farq.teng{color:var(--matn-4)}
+.hx-q .strelka{width:18px;height:18px;color:var(--matn-4)}
+.hx-izohlar{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+.yp-royxat .qator{margin:0 -8px;padding:12px 8px}
+.yp-royxat .kamaydi{color:var(--pushti-matn);font-weight:500;white-space:nowrap}
+@media (max-width:900px){.hx-bosh,.hx-q{grid-template-columns:minmax(0,1fr) 120px 120px 96px 18px}}
+/* Telefon: nom ustida, uch qiymat ostida yorliq bilan */
+@media (max-width:640px){
+  .hx-bosh{display:none}
+  .hx-q{grid-template-columns:repeat(3,minmax(0,1fr)) 18px;row-gap:8px}
+  .hx-q .hx-nom{grid-column:1 / -1}
+  .hx-q .strelka{grid-row:1;grid-column:4;align-self:start}
+  .hx-q .hx-nom{grid-column:1 / 4}
+  .hx-v,.hx-farq{align-items:flex-start;text-align:left;justify-self:start}
+  .hx-v::before,.hx-farq::before{content:attr(data-yorliq);display:block;font-size:12px;font-weight:400;color:var(--matn-3);margin-bottom:2px}
+  .hx-farq{display:flex;flex-direction:column}
+}
+/* Bitta A4: tugmalar yashiriladi, qatorlar oddiy jadvalga aylanadi */
+@media print{
+  .hujjat-shapka,.hx-hafta,.hx-yuborish,.hx-q .strelka{display:none!important}
+  .karta{padding:10px 12px!important}
+  .hx-bosh,.hx-q{grid-template-columns:minmax(0,1fr) 125px 125px 125px;gap:10px;font-size:11px;width:100%;margin:0}
+  .hx-bosh{padding:0 0 6px}
+  .hx-bosh span:last-child{display:none}
+  .hx-q{min-height:0;padding:6px 0;border-radius:0;box-shadow:none!important;border-top:1px solid #ccc}
+  .hx-q .hx-nom > b,.hx-v b,.hx-farq{font-size:11.5px}
+  .hx-q .hx-nom span,.hx-v small,.hx-izohlar .maydon-izoh{font-size:9.5px}
+  .kontent{gap:8px}
+}
+</style>
+</head>
+<body data-sahifa="hisobot">
+<div class="qobiq">
+<nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
+<div class="sahna">
+<header class="shapka" id="shapka"></header>
+<main class="kontent">
+  <div class="hujjat-shapka">
+    <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>Haftalik xulosa</span></div>
+    <div class="hs-qator"><h1>Haftalik xulosa</h1><span class="hs-meta" id="hs-meta"></span>
+      <div class="hs-amallar">
+        <button type="button" class="tugma tugma-oq" id="hx-havola"><svg class="ic"><use href="#ik-nusxa"/></svg>Havolani nusxalash</button>
+        <button type="button" class="tugma tugma-oq" id="hx-chop"><svg class="ic"><use href="#ik-chop"/></svg>Chop etish</button>
+      </div></div>
+  </div>
+
+  <p class="hx-yuborish" id="hx-yuborish"><svg class="ic" aria-hidden="true"><use href="#ik-xat"/></svg><span><b>Yuborish:</b> <span>e-pochta, Telegram</span> <span class="chip chip-kichik chip-kul">ulanmagan</span>
+    <span>Ulash uchun bank pochta serveri (SMTP) va Telegram bot kerak. Hozircha havolani nusxalab yuboring yoki varaqni chop eting.</span></span></p>
+
+  <div class="hx-hafta" role="group" aria-label="Hafta">
+    <button type="button" class="tugma tugma-oq tugma-ikonka" id="hx-oldin" aria-label="Oldingi hafta" title="Oldingi hafta"><svg class="ic"><use href="#ik-chap"/></svg></button>
+    <span class="hx-nom" id="hx-nom" data-chop-filtr=""><b data-tarjimasiz>—</b><span></span></span>
+    <button type="button" class="tugma tugma-oq tugma-ikonka" id="hx-keyin" aria-label="Keyingi hafta" title="Keyingi hafta"><svg class="ic"><use href="#ik-ong"/></svg></button>
+  </div>
+
+  <section class="karta" aria-labelledby="hx-sar">
+    <div class="karta-bosh"><h2 id="hx-sar" data-ikonka="kalendar">Hafta ko'rsatkichlari</h2><span class="soni" id="hx-soni"></span></div>
+    <div id="hx-jadval"></div>
+  </section>
+</main>
+</div>
+</div>
+<script src="malumot.js?v=26092200"></script>
+<script src="malumot-qoshimcha.js?v=26092200"></script>
+<script src="malumot-kengaytma.js?v=26092200"></script>
+<script src="malumot-kirish.js?v=26092200"></script>
+<script src="malumot-indeks.js?v=26092200"></script>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/chizma.js?v=26092200"></script>
+<script src="yadro/qollanma.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/amal.js?v=26092200"></script>
+<script src="hisobot-davr.js?v=26092200"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const KOLLAR = ["YOZUVLAR", "ARXIV", "TASDIQLAR", "SHARTNOMALAR", "HODISALAR", "XAVFSIZLIK_HODISALARI", "KORIKLAR", "BAHOLASHLAR", "LOTLAR"];
+  let D, V, e, hafta = null, jurnal = {};
+
+  /* ?hafta=21.09.2026 (istalgan kun) — shu kun tushgan hafta. Bo'lmasa: dushanba kuni o'tgan hafta
+     (yangi hafta endi boshlandi), qolgan kunlari joriy hafta */
+  function boshHafta(){
+    const b = MKB.bugun();
+    const q = V.oqi(new URLSearchParams(location.search).get("hafta"));
+    if (q && q <= b) return V.oraliq("hafta", q);
+    return V.oraliq("hafta", b.getDay() === 1 ? D.kunQosh(b, -7) : b);
+  }
+  const son = n => '<b data-tarjimasiz>' + MKB.fmt(n) + "</b>";
+  const pul = n => e(MKB.pul(D.yaxlit(n || 0)));
+  const nomi = id => { const y = D.topish && D.topish(id); if (y) return y.qisqa || y.nom; const a = (D.ARXIV || []).find(x => x.id === id); return a ? (a.qisqa || a.nom) : id; };
+
+  /* Ko'rsatkichlar. yon: 1 — ko'pi yaxshi, -1 — kami yaxshi, 0 — neytral (rang berilmaydi) */
+  const QATORLAR = [
+    {k: "qarorHal", nom: "Qabul qilingan qarorlar", yon: 0, ikonka: "tasdiq", barchasi: "tasdiqlar.html",
+      qiymat: h => h.qarorHal.length,
+      izoh: h => h.qarorHal.length ? "<span>tasdiqlandi</span> " + son(h.jami.tasdiqlandi) + " · <span>rad etildi</span> " + son(h.jami.radEtildi) : ""},
+    {k: "qarorKutil", nom: "Kutilayotgan qarorlar", yon: -1, ikonka: "soat", barchasi: "tasdiqlar.html",
+      qiymat: h => h.qarorKutil.length,
+      izoh: h => h.jami.kutilOtgan ? '<span class="kamaydi"><span>muddati o\'tgan</span> ' + son(h.jami.kutilOtgan) + "</span>" : "<span>hafta oxirida</span>"},
+    {k: "qabul", nom: "Balansga olingan aktivlar", yon: 0, ikonka: "bino", barchasi: "obyektlar.html",
+      qiymat: h => h.qabul.length, summa: h => h.jami.qabul},
+    {k: "chiqim", nom: "Balansdan chiqarilgan aktivlar", yon: 1, ikonka: "arxiv", barchasi: "arxiv.html",
+      qiymat: h => h.chiqim.length, summa: h => h.jami.chiqim, izoh: h => h.chiqim.length ? "<span>sotuv narxi</span> <span data-tarjimasiz>" + pul(h.jami.chiqimSotuv) + "</span>" : ""},
+    {k: "tushum", nom: "Tushum", yon: 1, ikonka: "pul", barchasi: "shartnomalar.html", pulda: true,
+      qiymat: h => h.jami.tushum, izoh: h => h.tushum.length ? son(h.tushum.length) + " <span>ta to'lov</span>" : "<span>sotuv shartnomalari bo'yicha</span>"},
+    {k: "hodisaYangi", nom: "Yangi hodisalar", yon: -1, ikonka: "signal", barchasi: "hodisalar.html",
+      qiymat: h => h.hodisaYangi.length, izoh: h => { const n = h.hodisaYangi.filter(x => x.jiddiylik === "yuqori").length; return n ? "<span>yuqori jiddiylikda</span> " + son(n) : ""; }},
+    {k: "hodisaYopilgan", nom: "Yopilgan hodisalar", yon: 1, ikonka: "qalqon", barchasi: "hodisalar.html",
+      qiymat: h => h.hodisaYopilgan.length},
+    {k: "korikKech", nom: "Kechikkan ko'riklar", yon: -1, ikonka: "korik", barchasi: "korik-kechikkan.html",
+      qiymat: h => h.korikKech.length,
+      izoh: h => h.korikKech.length ? "<span>hafta oxirida · eng uzoq kechikish</span> " + son(Math.max.apply(null, h.korikKech.map(k => k.kechikish))) + " <span>kun</span>" : "<span>hafta oxirida</span>"},
+    {k: "pasaygan", nom: "Qiymati pasaygan aktivlar", yon: -1, ikonka: "pasayish", barchasi: "baholash.html",
+      qiymat: h => new Set(h.pasaygan.map(x => x.obyektId)).size,
+      izoh: h => h.pasaygan.length ? '<span class="kamaydi" data-tarjimasiz>−' + pul(h.jami.pasayish) + "</span> · <span>baho va lot narxi</span>" : ""},
+  ];
+
+  let H = null, P = null, J = null;
+  function farqHTML(q, a, b){
+    const f = D.yaxlit(a - b, q.pulda ? 1 : 0);
+    const yorliq = ' data-yorliq="Farq"';
+    if (!a && !b) return '<span class="hx-farq teng"' + yorliq + ">—</span>";
+    if (!f) return '<span class="hx-farq teng"' + yorliq + "><span>o'zgarmadi</span></span>";
+    const ton = !q.yon ? "" : (f > 0) === (q.yon > 0) ? " yaxshi" : " yomon";
+    const matn = (f > 0 ? "+" : "−") + (q.pulda ? MKB.pul(Math.abs(f)) : MKB.fmt(Math.abs(f)));
+    return '<span class="hx-farq' + ton + '"' + yorliq + '><span data-tarjimasiz>' + e(matn) + "</span></span>";
+  }
+  const qiymatHTML = (q, h, sinf, yorliq) => {
+    const v = q.qiymat(h);
+    return '<span class="hx-v' + sinf + '" data-yorliq="' + yorliq + '"><b data-tarjimasiz>' + (q.pulda ? pul(v) : MKB.fmt(v)) + "</b>" +
+      (q.summa && v ? '<small data-tarjimasiz>' + pul(q.summa(h)) + "</small>" : "") + "</span>";
+  };
+
+  function chiz(){
+    const j = V.juft(hafta, MKB.bugun());
+    J = j;
+    H = V.harakat(D, j.joriy, MKB.doira, {yopilish: jurnal});
+    P = V.harakat(D, j.oldingi, MKB.doira, {yopilish: jurnal});
+    const raqam = V.raqam(j.joriy);
+    $("hs-meta").innerHTML = '<span data-tarjimasiz>' + e(raqam) + "</span>" + (MKB.filialDoirasi() ? " · <span>Filial doirasida</span>" : "");
+    $("hx-nom").innerHTML = '<b data-tarjimasiz>' + e(V.nomi(hafta)) + "</b><span>" +
+      (j.joriy.qismiy ? "<span>Hafta davom etmoqda:</span> <span data-tarjimasiz>" + e(V.nomi(j.joriy)) + "</span>" : '<span data-tarjimasiz>' + V.haftaRaqami(hafta.dan) + "</span><span>-hafta</span>") + "</span>";
+    $("hx-nom").setAttribute("data-chop-filtr", "Hafta: " + V.nomi(j.joriy));
+    $("hx-keyin").disabled = hafta.gacha >= MKB.bugun();
+    $("hx-soni").innerHTML = "<span>O'tgan hafta:</span> <span data-tarjimasiz>" + e(V.nomi(j.oldingi)) + "</span>";
+
+    const b = V.balansHolati(D, j.joriy.gacha, MKB.doira), bo = V.balansHolati(D, j.oldingi.gacha, MKB.doira);
+    /* O'tgan haftada manba hali yozilmagan bo'lsa, 0 emas "ma'lumot yo'q" (panel.html kengash hisoboti bilan bir qoida) */
+    const MB = V.manbaBoshi ? V.manbaBoshi(D, MKB.doira) : {};
+    const yoqmi = q => !!(V.yozuvYoq && q.k in MB && V.yozuvYoq(MB[q.k], j.oldingi));
+    const yoqBor = QATORLAR.some(yoqmi);
+    const qatorlar = QATORLAR.map(q => {
+      const a = q.qiymat(H), o = q.qiymat(P), yoq = yoqmi(q);
+      const iz = q.izoh ? q.izoh(H) : "";
+      /* Shu haftada yozuv bo'lmasa qator ochilmaydi: bo'sh ro'yxat ko'rsatilmaydi */
+      const teg = a ? 'button type="button"' : "div";
+      return "<" + teg + ' class="hx-q' + (a ? "" : " jim") + '" data-k="' + q.k + '"' + (a ? ' aria-haspopup="dialog"' : "") + ">" +
+        '<span class="hx-nom"><b>' + q.nom + "</b>" + (iz ? "<span>" + iz + "</span>" : "") + "</span>" +
+        qiymatHTML(q, H, "", "Shu hafta") +
+        (yoq ? '<span class="hx-v eski" data-yorliq="O\'tgan hafta"><span>ma\'lumot yo\'q</span></span><span class="hx-farq teng" data-yorliq="Farq">—</span>'
+          : qiymatHTML(q, P, " eski", "O'tgan hafta") + farqHTML(q, a, o)) +
+        (a ? '<svg class="ic strelka" aria-hidden="true"><use href="#ik-ong"/></svg>' : '<span class="strelka" aria-hidden="true"></span>') + "</" + (a ? "button" : "div") + ">";
+    }).join("");
+    const izohlar = [
+      "<span>Hafta oxirida balansda</span> " + son(b.soni) + " <span>ta aktiv</span>, <span data-tarjimasiz>" + pul(b.qiymat) + "</span>" +
+        (bo.qiymat !== b.qiymat || bo.soni !== b.soni ? " (<span>o'tgan hafta</span> " + son(bo.soni) + " <span>ta</span>, <span data-tarjimasiz>" + pul(bo.qiymat) + "</span>)" : "") + ".",
+      "<span>Tushum — shartnoma kunidagi avans va jadval bo'yicha to'langan oylar. ABS ulanmaguncha to'lov kuni jadvaldagi sana deb olinadi.</span>",
+      "<span>Kutilayotgan qarorlar va kechikkan ko'riklar hafta oxiridagi holat bo'yicha sanaladi.</span>",
+    ];
+    if (H.hodisaSanasiz) izohlar.push(son(H.hodisaSanasiz) + " <span>ta yopiq hodisada yopilish vaqti yozilmagan: ular haftalarga taqsimlanmadi.</span>");
+    if (yoqBor) izohlar.push("<span>«Ma'lumot yo'q»: oldingi davr uchun yozuv yo'q, farq hisoblanmaydi.</span>");
+    if (j.joriy.qismiy) izohlar.push("<span>Hafta tugamagan: o'tgan haftaning xuddi shu kunlari bilan solishtiriladi.</span>");
+    $("hx-jadval").innerHTML = '<div class="hx-jadval"><div class="hx-bosh" aria-hidden="true"><span>Ko\'rsatkich</span><span>Shu hafta</span><span>O\'tgan hafta</span><span>Farq</span><span></span></div>' +
+      qatorlar + "</div>" + '<div class="hx-izohlar">' + izohlar.map(x => '<p class="maydon-izoh">' + x + "</p>").join("") + "</div>";
+    tarjimaQil(document.querySelector("main"));
+  }
+
+  /* ---------- Qator ochadigan ro'yxat: shu haftaning aniq yozuvlari ---------- */
+  const havola = (href, ichki) => MKB.ruxsat(href.split("?")[0]) ? '<a class="qator" href="' + href + '">' + ichki + "</a>" : '<div class="qator">' + ichki + "</div>";
+  const qator = (href, belgi, ton, nom, izoh, ong) => havola(href, '<span class="belgi' + (ton ? " " + ton : "") + '">' + MKB.ik(belgi) + "</span>" +
+    '<span class="matn"><b>' + nom + "</b><span>" + izoh + '</span></span><span class="ong">' + ong + "</span>");
+  const sana = s => '<span class="vaqt" data-tarjimasiz>' + e(String(s || "").slice(0, 16)) + "</span>";
+  const TUZ = {
+    qarorHal: t => qator("tasdiqlar.html?id=" + encodeURIComponent(t.id), "tasdiq", t.holat === "tasdiqlangan" ? "mint" : "pushti", e(t.sarlavha || t.id),
+      '<span data-tarjimasiz>' + e(t.id) + "</span>" + (t.summa != null ? ' · <span data-tarjimasiz>' + pul(t.summa) + "</span>" : ""),
+      '<span class="chip chip-kichik ' + (t.holat === "tasdiqlangan" ? "chip-yashil" : "chip-xavf") + '">' + (t.holat === "tasdiqlangan" ? "Tasdiqlandi" : "Rad etildi") + "</span>" + sana(t.qarorSana)),
+    qarorKutil: t => qator("tasdiqlar.html?id=" + encodeURIComponent(t.id), "soat", t.otgan ? "pushti" : "", e(t.sarlavha || t.id),
+      '<span data-tarjimasiz>' + e(t.id) + "</span> · <span>javob muddati</span> <span data-tarjimasiz>" + e(t.javobMuddati || "—") + "</span>",
+      t.otgan ? '<span class="chip chip-kichik chip-xavf">Muddati o\'tgan</span>' : '<span class="chip chip-kichik chip-kul">Kutilmoqda</span>'),
+    qabul: x => qator(x.href, "bino", "mint", e(x.nom), '<span data-tarjimasiz>' + e(x.id) + "</span> · " + sana(x.sana), '<span data-tarjimasiz>' + pul(x.qiymat) + "</span>"),
+    chiqim: x => qator(x.href, "arxiv", "", e(x.nom), '<span data-tarjimasiz>' + e(x.id) + "</span> · " + sana(x.sana),
+      '<span data-tarjimasiz>' + pul(x.qiymat) + " → " + pul(x.sotuv) + "</span>"),
+    tushum: x => qator("shartnoma.html?id=" + encodeURIComponent(x.shartnomaId), "pul", "mint", e(nomi(x.obyektId)),
+      '<span data-tarjimasiz>' + e(x.shartnomaId) + "</span> · <span>" + (x.tur === "avans" ? "avans yoki to'liq to'lov" : "jadval bo'yicha to'lov") + "</span> · " + sana(x.sana),
+      '<span data-tarjimasiz>' + pul(x.summa) + "</span>"),
+    hodisaYangi: h => qator("hodisa.html?id=" + encodeURIComponent(h.id), "signal", h.jiddiylik === "yuqori" ? "pushti" : "", e(h.hodisa || h.sarlavha || h.id),
+      "<span>" + e(nomi(h.obyektId)) + "</span> · " + sana(h.vaqt || h.sana), '<span class="chip chip-kichik chip-kul">' + e(MKB.holatNomi ? MKB.holatNomi(h.holat) : h.holat) + "</span>"),
+    hodisaYopilgan: h => qator("hodisa.html?id=" + encodeURIComponent(h.id), "qalqon", "mint", e(h.hodisa || h.sarlavha || h.id),
+      "<span>" + e(nomi(h.obyektId)) + "</span> · <span>yopildi</span> " + sana(h.yopilganVaqt), ""),
+    korikKech: k => qator("obyekt-koriklar.html?id=" + encodeURIComponent(k.obyektId), "korik", k.kechikish > 30 ? "pushti" : "sariq", e(nomi(k.obyektId)),
+      "<span>" + e(k.tur || k.korikTuri || "Ko'rik") + "</span> · <span>reja</span> " + sana(k.sana) + (k.inspektor ? ' · <span data-tarjimasiz>' + e(k.inspektor) + "</span>" : ""),
+      '<span class="kamaydi"><b data-tarjimasiz>' + k.kechikish + "</b> <span>kun kechikdi</span></span>"),
+    pasaygan: x => qator(x.href, "pasayish", "pushti", e(nomi(x.obyektId)),
+      "<span>" + (x.tur === "baho" ? "Bozor qiymati pasaydi" : "Lot narxi pasaytirildi") + "</span> · " + sana(x.sana),
+      '<span data-tarjimasiz>' + pul(x.eski) + " → " + pul(x.yangi) + '</span><span class="kamaydi" data-tarjimasiz>−' + pul(x.eski - x.yangi) + "</span>"),
+  };
+  function royxatOch(k){
+    const q = QATORLAR.find(x => x.k === k);
+    let r = (H[k] || []).slice();
+    if (k === "korikKech") r.sort((a, b) => b.kechikish - a.kechikish);
+    else if (k === "qarorKutil") r.sort((a, b) => (b.otgan - a.otgan) || ((V.oqi(a.javobMuddati) || 0) - (V.oqi(b.javobMuddati) || 0)));
+    else r.sort((a, b) => (V.oqi(b.qarorSana || b.yopilganVaqt || b.vaqt || b.sana) || 0) - (V.oqi(a.qarorSana || a.yopilganVaqt || a.vaqt || a.sana) || 0));
+    const CHEK = 60;
+    const tana = r.slice(0, CHEK).map(TUZ[k]).join("") +
+      (r.length > CHEK ? '<p class="maydon-izoh" style="margin-top:12px"><span>Yana</span> ' + son(r.length - CHEK) + " <span>ta yozuv</span></p>" : "") +
+      (MKB.ruxsat(q.barchasi) ? '<a class="karta-havola" style="margin-top:14px" href="' + q.barchasi + '"><span>Bo\'limni ochish</span>' + MKB.ik("ong") + "</a>" : "");
+    MKB.yonPanel(q.nom, '<p class="maydon-izoh" style="margin-bottom:8px"><span data-tarjimasiz>' + e(V.nomi(J.joriy)) + "</span> · " + son(r.length) + " <span>ta yozuv</span></p>" +
+      '<div class="yp-royxat">' + (tana || MKB.boshHolat("tasdiq", "Ro'yxat bo'sh")) + "</div>", {yorliq: "Haftalik xulosa"});
+  }
+
+  /* ---------- Chop: bitta A4, pastki qatorda hisobot raqami ---------- */
+  function oyoqQoy(){
+    const o = document.querySelector(".chop-oyoq span");
+    if (o && J){ o.innerHTML = '<span data-tarjimasiz>' + e(V.raqam(J.joriy)) + "</span> · <span>Haftalik xulosa</span>"; tarjimaQil(o); }
+  }
+  /* Yadro chop sarlavhasi va oyog'ini o'z tinglovchisida quradi: shu sahifaniki undan keyin ishlashi kerak */
+  const uxKut = setInterval(() => {
+    if (!window.MKB_UX_TAYYOR || !window.MKB_TAYYOR) return;
+    clearInterval(uxKut);
+    setTimeout(() => window.addEventListener("beforeprint", oyoqQoy), 0);
+  }, 50);
+
+  function urlYoz(){
+    const u = new URL(location.href);
+    u.searchParams.set("hafta", V.sanaYoz(hafta.dan));
+    history.replaceState(history.state, "", u.pathname.split("/").pop() + u.search);
+  }
+  async function havolaNusxa(){
+    /* Havola har doim haftani o'zi bilan olib yuradi: oluvchi yuborilgan haftani ko'radi, ochgan kunidagisini emas */
+    const u = new URL(location.href);
+    u.hash = "";
+    u.searchParams.set("hafta", V.sanaYoz(hafta.dan));
+    const url = u.href;
+    try{ await navigator.clipboard.writeText(url); MKB.toast("Havola nusxalandi: " + V.nomi(J.joriy) + " haftasi"); }
+    catch(_){ MKB.modal("Havolani nusxalash", '<label class="maydon"><span class="maydon-yorliq">Havola</span><span class="kirish"><input type="text" readonly value="' + e(url) + '"></span>' +
+      '<span class="maydon-izoh">Brauzer nusxalashga ruxsat bermadi. Havolani belgilab, Ctrl+C bosing.</span></label>', {okMatn: "Yopish", ok(){}}); }
+  }
+
+  /* Rahbariyat va administrator amallar jurnalini o'qiydi: tizimda yopilgan hodisaning yopilish vaqti shundan olinadi */
+  async function jurnalOqi(){
+    if (!MKB.ruxsat("amallar-tarixi.html")) return {};
+    try{
+      const r = await MKBapi.royxat("amallar") || [];
+      const m = {};
+      r.filter(a => (a.kolleksiya === "HODISALAR" || a.kolleksiya === "XAVFSIZLIK_HODISALARI") && a.ozgarish &&
+        ((a.ozgarish.ustun && a.ozgarish.ustun.yangi === "yopildi") || (a.ozgarish.holat && /^yopildi$/i.test(a.ozgarish.holat.yangi || ""))))
+        .forEach(a => { const k = a.kolleksiya + ":" + a.obyektId; if (!m[k] || V.oqi(a.vaqt) > V.oqi(m[k])) m[k] = a.vaqt; });
+      return m;
+    }catch(_){ return {}; }
+  }
+
+  MKB.sahifaYukla({
+    joylar: {"hx-jadval": ["qator", 9]},
+    xato: "Haftalik xulosani tuzib bo'lmadi. Aloqani tekshirib, qayta urinib ko'ring",
+    ish: async () => {
+      await MKB.kolYukla(KOLLAR);
+      D = MKB_DATA; V = window.MKB_DAVR; e = MKB.esc;
+      if (!V) throw new Error("hisobot-davr.js yuklanmadi");
+      jurnal = await jurnalOqi();
+      if (!hafta) hafta = boshHafta();
+      chiz();
+    },
+  });
+  $("hx-jadval").addEventListener("click", ev => {
+    const b = ev.target.closest(".hx-q[data-k]");
+    if (b && !b.classList.contains("jim")) royxatOch(b.dataset.k);
+  });
+  $("hx-oldin").addEventListener("click", () => { if (!hafta) return; hafta = V.oldingi(hafta); urlYoz(); chiz(); });
+  $("hx-keyin").addEventListener("click", () => { if (!hafta || hafta.gacha >= MKB.bugun()) return; hafta = V.keyingi(hafta); urlYoz(); chiz(); });
+  $("hx-chop").addEventListener("click", () => window.print());
+  $("hx-havola").addEventListener("click", () => { if (J) havolaNusxa(); });
+  document.addEventListener("mkb:qoidalar", () => { try{ if (H) chiz(); }catch(_){ } });
+})();
+</script>
+</body>
+</html>
