@@ -268,7 +268,16 @@ body.umumiy .slayd-quti{display:block}
 /* ---------- 10 yechim matritsasi ---------- */
 .matritsa{position:absolute;left:var(--chap);right:var(--chap);top:404px;bottom:104px;display:grid;
   grid-template-columns:repeat(5,1fr);grid-template-rows:1fr 1fr;gap:20px}
-.mkarta{display:flex;flex-direction:column;border-radius:18px;background:var(--oq);overflow:hidden;
+/* Karta batafsil panelini emas, o'sha yechim slaydini ochadi. Shuning uchun
+   belgisi yashil dumaloq "+" emas, to'q kvadrat strelka: ikki xil harakat
+   ikki xil ko'rinadi. */
+.mkarta::after{content:"";position:absolute;top:10px;right:10px;z-index:3;width:28px;height:28px;border-radius:9px;
+  background-color:rgba(7,18,47,.72);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h13M12 5l7 7-7 7'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:center;background-size:15px;
+  transition:background-color var(--tez),transform var(--tez)}
+.mkarta:hover::after,.mkarta:focus-visible::after{background-color:var(--yashil);transform:translateX(2px)}
+.mkarta{position:relative;display:flex;flex-direction:column;border-radius:18px;background:var(--oq);overflow:hidden;
   box-shadow:inset 0 0 0 1px var(--chiziq);text-align:left;transition:transform var(--tez),box-shadow var(--tez)}
 .mkarta:hover{transform:translateY(-4px);box-shadow:inset 0 0 0 2px var(--yashil),0 22px 40px -28px rgba(7,18,47,.45)}
 .mkarta img{width:100%;height:128px;object-fit:cover}
@@ -319,6 +328,18 @@ html[lang="ru"] #s-matritsa .mkarta img{height:100px}
 .yechim-s .narx .kim{flex:1 1 auto;min-width:0;text-wrap:balance}
 .narx.bor-batafsil .kim{padding-right:42px}
 .narx.bor-batafsil > .bf-belgi{top:23px;right:0}
+/* Narx qatori futer chizig'iga tegib ketmasin: qat'iy oraliqlar 30 px ga qisqartirildi.
+   Matni kalta slaydlarda bo'shliqni .diqqat ning margin-top:auto si qaytarib oladi,
+   shuning uchun ko'rinish o'zgarmaydi; ruscha uzun matnda esa aynan shu 30 px yetadi. */
+.yechim-s .varaq{margin-top:22px;margin-bottom:14px}
+.yechim-s .diqqat{padding:12px 18px}
+.yechim-s .narx{margin-top:12px;padding-top:14px}
+/* Ruscha matn o'zbekchadan uzunroq va bandlar bir satrga o'sadi. Shrift 5% ga
+   kichraytiriladi, narx raqami 48 px ga tushadi — shunda s-y03 va s-y07 da narx
+   qatori futer chizig'idan yuqorida qoladi. */
+html[lang="ru"] .yechim-s .varaq .band p{font-size:19px;line-height:1.4}
+html[lang="ru"] .yechim-s .narx .qiymat{font-size:48px}
+html[lang="ru"] .yechim-s .diqqat{font-size:17px}
 .diqqat.bor-batafsil{padding-right:58px}
 .diqqat.bor-batafsil > .bf-belgi{top:calc(50% - 13px);right:16px}
 .kod{margin-top:14px;padding:12px 16px;border-radius:12px;background:var(--tun);color:#CFE3FF;
@@ -353,6 +374,9 @@ html[lang="ru"] #s-matritsa .mkarta img{height:100px}
 html[lang="ru"] .arx .u.yadro h3{font-size:22px;letter-spacing:-.025em}
 .arx .u.yadro li{padding-top:6px;padding-bottom:6px}
 .arx li.b{grid-template-columns:1fr;padding:10px 12px;border-radius:12px;background:var(--fon)}
+/* Ikona yo'q, lekin qator ustundagi qolgan ikkitasi bilan bir chiziqda turadi:
+   to'ldirilgan kartochka faqat bosiladigan qatorlarda qoladi. */
+.arx li.yoz > div{grid-column:2}
 .oqimlar{position:absolute;left:var(--chap);right:var(--chap);top:884px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .oqimlar > div{padding:16px 20px;border-top:3px solid var(--siyoh)}
 .oqimlar b{font-size:20px;font-weight:800;color:var(--siyoh)}
@@ -464,8 +488,11 @@ html[lang="ru"] #s-narx .diapazon .oq b::after{content:" млн — границ
 .bom td.i{color:var(--matn-3);font-size:17px}
 .chiplar{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto}
 .chiplar span{padding:10px 16px;border-radius:999px;background:var(--oq);box-shadow:inset 0 0 0 1px var(--chiziq-2);font-size:17px;font-weight:700;color:var(--siyoh)}
-.chiplar.bor-batafsil{padding-right:40px}
-.chiplar > .bf-belgi{background:var(--yashil);box-shadow:0 6px 14px -6px rgba(11,125,43,.7)}
+/* Yozuv butun guruhga tegishli, shuning uchun belgi guruh yorlig'i oldida turadi,
+   oxirgi chipdan keyingi bo'sh joyda emas. */
+.chiplar.bor-batafsil{padding-right:0}
+.chiplar > .bf-belgi{position:static;order:-1;flex:none;align-self:center;
+  background:var(--yashil);box-shadow:0 6px 14px -6px rgba(11,125,43,.7)}
 #s-bom .bom td{padding-top:19px;padding-bottom:19px}
 html[lang="ru"] #s-bom .bom{margin-top:26px}
 html[lang="ru"] #s-bom .bom td{padding-top:12px;padding-bottom:12px}
@@ -485,6 +512,13 @@ html[lang="ru"] #s-bom .bom td{padding-top:12px;padding-bottom:12px}
 .ekranlar{position:absolute;left:var(--chap);right:var(--chap);top:400px;bottom:108px;display:grid;
   grid-template-columns:1.3fr 1fr;grid-template-rows:1fr 1fr;gap:22px}
 #s-platforma .ekranlar{top:430px;grid-template-columns:1100px 1fr}
+/* Belgi mokap ramkasining yuqori burchagida soxta interfeysning o'z tugmasidek
+   o'qiladi. Shuning uchun u pastki o'ng burchakka tushadi va oq halqa oladi. */
+#s-platforma .ekranlar figure > .bf-belgi{top:auto;bottom:16px;right:16px;
+  box-shadow:0 0 0 4px rgba(255,255,255,.92),0 8px 18px -8px rgba(11,125,43,.8)}
+body.panel-ochiq #s-platforma .ekranlar figure > .bf-belgi,
+#s-platforma .ekranlar figure > .bf-belgi{opacity:1}
+#s-platforma .ekranlar figure.tanlangan > .bf-belgi{opacity:1}
 #s-platforma .ekr-katta .rb{white-space:nowrap}
 /* RU skrinshotida sarlavha ikki qator: izohlar pastroqda */
 html[lang="ru"] #s-platforma .k1{--y:960 !important}
@@ -564,6 +598,10 @@ tr.bor-batafsil:focus-visible{background:var(--yashil-och);outline:2px solid var
 /* tinch holatda "+" belgilar raqamlardan ko'zni tortmaydi; sichqoncha qimirlasa yoki hover bo'lsa to'liq */
 .slayd .bf-belgi{opacity:.55;transition:opacity var(--tez),transform var(--tez)}
 body.harakat .slayd .bf-belgi,.slayd .bor-batafsil:hover .bf-belgi,.slayd .bor-batafsil:focus-visible .bf-belgi,.slayd .bor-batafsil.tanlangan .bf-belgi{opacity:1}
+/* Panel ochiq turganda faqat o'qilayotgan blokning belgisi to'la yonadi:
+   parda ostidagi qo'shni blokni bosish uni almashtiradi, qaysi biri ochiqligi ko'rinib turadi. */
+body.panel-ochiq .slayd .bf-belgi{opacity:.4}
+body.panel-ochiq .slayd .bor-batafsil.tanlangan .bf-belgi{opacity:1}
 .slayd .bor-batafsil > .bf-belgi,.slayd tr.bor-batafsil td > .bf-belgi{margin:0;max-width:none;padding:0;border:0;
   color:#fff;font:800 18px/1 var(--sh);letter-spacing:0;text-transform:none;display:grid;place-items:center}
 .slayd tr.bor-batafsil td > .bf-belgi{display:inline-grid;font-size:15px;margin-left:12px;vertical-align:-3px}
@@ -741,6 +779,17 @@ body.oqish .boshqaruv{opacity:1;transform:none}
 #s-adapter .ad-jadval td code{font-family:"Cascadia Mono","Consolas",ui-monospace,monospace;font-size:17px;font-weight:600;color:var(--kok);
   background:var(--kok-och);padding:2px 7px;border-radius:6px;white-space:nowrap}
 #s-adapter .ad-jadval .h{text-align:right;padding-right:0}
+/* Qurilma sinfi jadval ostidagi bir qator izoh. Alohida ustun qilinsa kod
+   ustunlari o'raladi va jadval pastdagi quvur blokiga urib ketadi. */
+/* Qurilma sinfi qoidasi jadval ustida turadi: .ad-jadval ham, .ad-past ham
+   absolyut joylashgan, shuning uchun jadval ostiga qo'yilgan qator quvur
+   bloki tagida qolib ketadi. Lid bilan jadval orasida bo'sh joy bor. */
+#s-adapter .ad-qoida{position:absolute;left:var(--chap);right:var(--chap);top:372px;
+  font-size:17px;line-height:1.35;font-weight:600;color:var(--matn-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#s-adapter .ad-qoida b{font-weight:800;color:var(--siyoh)}
+#s-adapter .ad-qoida code{font-family:"Cascadia Mono","Consolas",ui-monospace,monospace;
+  font-size:16px;font-weight:600;color:var(--kok)}
 #s-adapter .ad-jadval td.h{font-size:26px;font-weight:800;letter-spacing:-.02em;color:var(--siyoh);font-variant-numeric:tabular-nums;white-space:nowrap}
 #s-adapter .ad-ha,#s-adapter .ad-qisman{display:inline-block;padding:4px 12px;border-radius:8px;font-size:17px;font-weight:800}
 #s-adapter .ad-ha{background:var(--yashil-och);color:var(--yashil-toq)}
@@ -775,6 +824,9 @@ body.oqish .boshqaruv{opacity:1;transform:none}
 #s-video .vd-yorliq{display:block;font-size:16px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--yashil-toq)}
 #s-video .vd-tab-qator{background:var(--fon)}
 #s-video .vd-panel{margin-top:22px;padding-top:4px}
+/* Belgi tab qatori bilan raqam orasidagi bo'sh joyda emas, raqamning o'zi
+   qatorida turadi: bosiladigani trafik raqami ekani shundan ko'rinadi. */
+#s-video .vd-panel > .bf-belgi{top:60px;right:2px}
 #s-video .vd-son{display:flex;align-items:baseline;gap:14px}
 #s-video .vd-son strong{font-size:132px;line-height:.9;font-weight:800;letter-spacing:-.05em;color:var(--siyoh);font-variant-numeric:tabular-nums}
 #s-video .vd-son span{font-size:40px;font-weight:800;color:var(--matn-2)}
@@ -833,6 +885,7 @@ body.oqish .boshqaruv{opacity:1;transform:none}
 #s-masshtab .msh-server{display:grid;grid-template-columns:auto repeat(4,1fr);align-items:center;gap:0;margin-top:18px;
   padding:16px 28px;border-radius:18px;background:var(--siyoh);color:#fff}
 #s-masshtab .msh-server > b{font-size:15px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7FE09A;padding-right:26px}
+#s-masshtab .msh-server > b em{display:block;max-width:190px;margin-top:5px;font-size:13.5px;font-style:normal;font-weight:600;line-height:1.25;letter-spacing:.01em;text-transform:none;color:rgba(255,255,255,.62)}
 #s-masshtab .msh-server > div{padding:0 22px;border-left:1px solid rgba(255,255,255,.14)}
 #s-masshtab .msh-server strong{display:block;font-size:32px;line-height:1.05;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}
 #s-masshtab .msh-server > div > span{display:block;margin-top:2px;font-size:17px;font-weight:600;color:rgba(255,255,255,.66);white-space:nowrap}
@@ -1245,7 +1298,7 @@ html[lang="ru"] #s-faq .faq-qadam-m b{font-size:27px}
 
 /* Yuklanish: sahifa 300 ms dan sekin ochilsagina ko'rinadi */
 .yuklanish{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:var(--tun);
-  animation:yk-kel .3s ease .3s both;transition:opacity .5s ease}
+  pointer-events:none;animation:yk-kel .3s ease .3s both;transition:opacity .5s ease}
 .yuklanish.ketdi{opacity:0 !important;pointer-events:none}
 .yk-ichi{display:grid;justify-items:center;gap:26px}
 .yk-ichi .belgi{width:220px;height:auto}
@@ -1498,6 +1551,20 @@ body.maruza .batafsil,body.maruza .tq-ishora{display:none !important}
 .rb{line-height:1.2;padding:.5em .85em .55em 1.05em;border-radius:.6em;white-space:nowrap;
   background:rgba(255,255,255,.95);color:var(--siyoh);font-weight:800;letter-spacing:-.01em;
   box-shadow:inset .24em 0 0 var(--yashil),0 .7em 1.6em -.7em rgba(7,18,47,.55)}
+/* .rq butun qatlami pointer-events:none, shuning uchun yozuvlar bosilmas edi.
+   Batafsil yozuvi bor yorliq bosilishni o'ziga qaytaradi va yashil belgi oladi;
+   yozuvi yo'q yorliq oddiy imzoligicha qoladi. */
+.rb.bor-batafsil{pointer-events:auto;cursor:pointer;padding-right:2.5em}
+.rb.bor-batafsil:hover,.rb.bor-batafsil:focus-visible{
+  box-shadow:inset .24em 0 0 var(--yashil),0 0 0 .13em var(--yashil),0 .7em 1.6em -.6em rgba(7,18,47,.6)}
+.rb.bor-batafsil:focus-visible{outline:none}
+.slayd .rb.bor-batafsil.tanlangan{box-shadow:inset .24em 0 0 var(--yashil),0 0 0 .16em var(--yashil)}
+.slayd .rb.bor-batafsil:not(tr) > .bf-belgi{top:50%;right:.5em;margin-top:-.66em;
+  width:1.32em;height:1.32em;min-width:0;padding:0;border-radius:50%;font-size:1em;
+  box-shadow:0 .2em .5em -.2em rgba(11,125,43,.8)}
+.slayd .rb.bor-batafsil:not(tr):hover > .bf-belgi,
+.slayd .rb.bor-batafsil:not(tr):focus-visible > .bf-belgi{padding:0}
+.slayd .rb.bor-batafsil:not(tr) > .bf-belgi::after{content:none}
 .rb em{font-style:normal}
 .rb small{display:block;font-size:.8em;font-weight:600;color:var(--matn-2);margin-top:.1em;letter-spacing:0}
 .rb.m{transform:translateY(-50%)}
@@ -1593,7 +1660,9 @@ body.umumiy .tq-ishora,body.panel-ochiq .tq-ishora{display:none}
 .bq-menyu button:hover{background:rgba(255,255,255,.12);color:#fff}
 .bq-menyu svg{width:17px;height:17px;flex:none}
 
-/* Muqovadagi bir qatorlik eslatma */
+/* Muqovadagi bir qatorlik eslatma; yonida shu slayddagi batafsil soni */
+.muq-qator{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:22px}
+.muq-qator .muq-ishora{margin-top:0}
 .muq-ishora{display:inline-flex;align-self:flex-start;width:fit-content;max-width:100%;align-items:center;gap:11px;margin-top:22px;padding:9px 15px 9px 10px;
   border-radius:16px;background:var(--yashil-och);border:1px solid rgba(19,163,58,.24);
   font-size:17px;font-weight:600;color:var(--yashil-toq)}
@@ -1615,6 +1684,61 @@ body.umumiy .tq-ishora,body.panel-ochiq .tq-ishora{display:none}
 .toliq-sahifa svg{width:19px;height:19px}
 .toliq-sahifa:hover{background:#D5EFDC;transform:translateY(-2px);box-shadow:0 18px 32px -22px rgba(11,125,43,.8)}
 .toliq-sahifa:focus-visible{outline:3px solid var(--yashil);outline-offset:3px}
+/* Yechim slaydlarining tanasi zich: u yerda havola sarlavha qatorining o'ng
+   tomonida, oqimdan tashqarida turadi va hech narsani pastga surmaydi. */
+/* 19- va 37-slaydda kontent bloki 392/430 px dan boshlanadi: havola oddiy
+   oqimda qolsa, uning pastki yarmi ustun kartasi va skrinshot ostida qoladi.
+   Shuning uchun u slayd bosh qatorining o'ng chetiga ko'chiriladi. */
+#s-arx .toliq-sahifa,#s-platforma .toliq-sahifa{position:absolute;right:0;margin:0;width:300px;
+  gap:12px;padding:10px 16px;border-radius:13px}
+#s-arx .toliq-sahifa b,#s-platforma .toliq-sahifa b{font-size:17px}
+#s-arx .toliq-sahifa small,#s-platforma .toliq-sahifa small{margin-top:2px;font-size:13.5px}
+#s-arx .toliq-sahifa i,#s-platforma .toliq-sahifa i{width:29px;height:29px}
+#s-arx .toliq-sahifa svg,#s-platforma .toliq-sahifa svg{width:15px;height:15px}
+#s-arx .toliq-sahifa{top:-6px}
+#s-platforma .toliq-sahifa{top:126px}
+.toliq-sahifa.ixcham{margin-top:18px;gap:12px;padding:10px 16px;border-radius:13px}
+/* Kartaning eni 19- va 37-slayddagi kabi 300 px ga tenglashtirildi: oldingi
+   360 px da ruscha yorliq va sarlavhaning birinchi qatori karta ostiga kirib
+   ketardi. Endi sarlavha ustunida 60 px zaxira qoladi. */
+.yechim-s .toliq-sahifa.ixcham{width:300px;max-width:300px}
+.yechim-s .toliq-sahifa.ixcham b{font-size:17px}
+.yechim-s .toliq-sahifa.ixcham small{margin-top:2px;font-size:13.5px}
+.yechim-s .toliq-sahifa.ixcham i{width:29px;height:29px}
+.yechim-s .toliq-sahifa.ixcham svg{width:15px;height:15px}
+.yechim-s .toliq-sahifa.ixcham{position:absolute;top:-6px;right:0;margin:0;max-width:360px}
+.toliq-sahifa.ixcham b{font-size:17px}
+.toliq-sahifa.ixcham small{margin-top:2px;font-size:13.5px}
+.toliq-sahifa.ixcham i{width:29px;height:29px}
+.toliq-sahifa.ixcham svg{width:15px;height:15px}
 .slayd.tunli .toliq-sahifa{background:rgba(127,224,154,.14);border-color:rgba(127,224,154,.4)}
 .slayd.tunli .toliq-sahifa b{color:#fff}
 .slayd.tunli .toliq-sahifa small{color:rgba(255,255,255,.7)}
+
+/* ---------- Futer chizig'ini tozalash ----------
+   21- va 24-slaydda chap ustun kontenti .tana pastki chegarasidan oshib ketardi
+   va futer yozuvi qorong'i karta ostida qolardi (o'zbekchada 21 px, ruschada ham
+   shuncha). Tik oraliqlar qisqartirildi: matn o'lchami va tuzilma o'zgarmaydi. */
+#s-api .api-json{padding:18px 28px 16px}
+#s-api .api-json pre{margin-top:11px;line-height:1.42}
+#s-api .api-json-izoh{margin-top:11px;padding-top:11px}
+#s-masshtab .msh-olchov > div{padding-top:11px;padding-bottom:11px}
+/* Ruscha 21-slaydda lid ikki qatorga cho'ziladi va izoh bandlari uchinchi
+   qatorga tushadi — chap ustun 21 px ga baland bo'lib qoladi. */
+html[lang="ru"] #s-api .lid{font-size:25px;margin-top:18px}
+html[lang="ru"] #s-api .api-json-izoh{gap:5px 18px}
+html[lang="ru"] #s-api .api-json-izoh span{font-size:16px}
+/* 3-slaydda ruscha kartochka matni uch qatorga chiqadi va uchinchi qator foto
+   tasmasi ostida qolardi ("...мобильное покрытие не" deb uzilib turardi).
+   Tasma 40 px pasaytirildi va matn biroz ixchamlashtirildi — endi qator to'liq. */
+html[lang="ru"] #s-muammo{--band-boy:430px}
+html[lang="ru"] #s-muammo .faktlar > div > span{font-size:18px;line-height:1.4}
+/* 25-slayd: qadam kartochkalari 845 px da tugardi, pastdagi ikki izoh esa 800 px
+   dan (ruschada 772 px dan) boshlanardi — tavsifning ikkinchi qatori izoh
+   kartochkasi ostida ko'rinmay qolardi ("Video domofon operatorga" deb uzilardi).
+   To'r 30 px tepaga ko'chdi, rasm 36 px pasaydi, ruscha izoh ixchamlashtirildi. */
+.qadamlar{top:388px}
+.qadam img{height:188px}
+.qadam .m{padding-bottom:13px}
+html[lang="ru"] .ikki-izoh > div{font-size:18px;line-height:1.42;padding:18px 24px}
+html[lang="ru"] .ikki-izoh b{font-size:21px}

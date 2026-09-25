@@ -1,0 +1,100 @@
+/* ==========================================================================
+   MKBANK — tizim xaritalari (taqdimot/yechim-01…05.html).
+
+   Xarita — bu qutilar zanjiri emas. Unda uchta narsa bo'lishi shart:
+     kontur  — qaysi qurilma qaysi hududda turishi (obyekt, operator, bank),
+     metka   — har bog'lanishda qanday protokol, qaysi port, qancha trafik,
+     bosish  — har tugun o'z batafsilini ochadi va buni ko'rib turish kerak.
+
+   Fayl faqat shu besh sahifaga ulanadi; chuqur.css va taqdimot.css ga
+   tegilmaydi. Rang va shrift o'zgaruvchilari taqdimot.css dan olinadi.
+   ========================================================================== */
+
+/* ---------- Xarita idishi ---------- */
+.c-xarita{background:var(--oq);border-radius:18px;padding:20px 22px 18px;
+  box-shadow:inset 0 0 0 1px var(--chiziq)}
+.c-xarita > svg{width:100%;height:auto;display:block;overflow:visible;
+  font-family:var(--sh);font-variant-numeric:tabular-nums}
+.c-xarita figcaption{margin-top:14px;padding-top:13px;border-top:1px solid var(--chiziq);
+  font-size:14px;color:var(--matn-3);line-height:1.5}
+.c-xarita figcaption b{color:var(--matn-2);font-weight:700}
+
+/* ---------- Afsona: xaritadan oldin, bir qator ---------- */
+.x-afsona{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;
+  margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--chiziq)}
+.x-afsona span{display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:700;color:var(--matn-2);white-space:nowrap}
+.x-afsona span::before{content:"";flex:none;width:14px;height:14px;border-radius:4px;
+  background:var(--k,var(--chiziq-2));box-shadow:inset 0 0 0 1.5px var(--kh,transparent)}
+.x-afsona .x-chiziqli::before{height:0;border-radius:0;width:18px;
+  box-shadow:none;border-top:2.5px solid var(--k)}
+.x-afsona .x-uzuq::before{height:0;border-radius:0;width:18px;
+  box-shadow:none;border-top:2.5px dashed var(--k)}
+.x-afsona .x-bosing{margin-left:auto;color:var(--yashil-toq);background:var(--yashil-och);
+  padding:5px 12px 5px 8px;border-radius:20px}
+.x-afsona .x-bosing::before{width:18px;height:18px;border-radius:50%;box-shadow:none;
+  background:var(--yashil) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 6v12M6 12h12' stroke='%23fff' stroke-width='3.6' stroke-linecap='round'/%3E%3C/svg%3E") center/13px 13px no-repeat}
+
+/* Afsona ranglari matn ichida e'lon qilinadi: style="--k:#13A33A" */
+
+/* ---------- Hudud konturi ---------- */
+.x-zona{fill:none;stroke-width:1.6;stroke-dasharray:9 7;rx:20}
+.x-zona-fon{stroke:none}
+.x-zona-nom{font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.x-zona-izoh{font-size:12.5px;font-weight:700}
+
+/* ---------- Bog'lanish va uning metkasi ---------- */
+.x-bog{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.x-metka{font-size:12.5px;font-weight:700}
+.x-metka-2{font-size:11.5px;font-weight:600}
+.x-metka-fon{fill:#FFFFFF;stroke:rgba(10,27,69,.10);stroke-width:1}
+
+/* ---------- Tugun matnlari ---------- */
+.x-nom{font-size:15.5px;font-weight:800}
+.x-tag{font-size:12.5px;font-weight:600}
+.x-raqam{font-size:13px;font-weight:800}
+.x-mayda{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+
+/* ---------- Bosiladigan tugun: ko'rinadigan taklif ---------- */
+.c-xarita .nuqta{cursor:pointer}
+.c-xarita .nuqta .quti{transition:stroke var(--tez),stroke-width var(--tez),fill var(--tez)}
+.c-xarita .nuqta:hover .quti,
+.c-xarita .nuqta:focus-visible .quti{stroke:#13A33A;stroke-width:2.6;stroke-opacity:1}
+.c-xarita .nuqta.tanlangan .quti{stroke:#13A33A;stroke-width:3;stroke-opacity:1}
+.c-xarita .nuqta:focus-visible{outline:none}
+.c-xarita .nuqta:focus-visible .x-fokus{opacity:1}
+.c-xarita .x-fokus{opacity:0;fill:none;stroke:#0B7D2B;stroke-width:2.4;stroke-dasharray:5 4}
+
+/* Yashil «+» belgisi SVG ichida yozilgan: chuqur.js uni qayta qo'shmaydi.
+   chuqur.css dagi HTML uchun mo'ljallangan qoidalarni bu yerda bekor qilamiz. */
+.c-xarita .bor-batafsil > .bf-belgi{display:inline;position:static;width:auto;min-width:0;
+  border-radius:0;overflow:visible;white-space:normal;opacity:.55;
+  padding:0 !important;box-shadow:none !important}
+.c-xarita .bor-batafsil > .bf-belgi::after{content:none !important}
+.c-xarita .bor-batafsil:hover > .bf-belgi,
+.c-xarita .bor-batafsil:focus-visible > .bf-belgi,
+.c-xarita .bor-batafsil.tanlangan > .bf-belgi{opacity:1}
+
+/* ---------- O'lchov chiziqlari (masofa, balandlik) ---------- */
+.x-olcham{stroke:#98A1B5;stroke-width:1.2;fill:none}
+.x-olcham-matn{font-size:12px;font-weight:700;fill:#6E7891}
+
+/* ---------- Diagramma o'qlari ---------- */
+.x-oq{stroke:rgba(10,27,69,.22);stroke-width:1.2;fill:none}
+.x-panjara{stroke:rgba(10,27,69,.08);stroke-width:1;fill:none}
+.x-oq-matn{font-size:12px;font-weight:700;fill:#6E7891}
+.x-qiymat{font-size:12px;font-weight:800;fill:#0A1B45}
+
+/* ---------- Chop etish ---------- */
+@media print{
+  .c-xarita{break-inside:avoid;box-shadow:inset 0 0 0 1px rgba(10,27,69,.18)}
+  .x-afsona .x-bosing{display:none}
+  .c-xarita .nuqta{cursor:auto}
+}
+
+/* ---------- Tor ekran ---------- */
+@media (max-width:900px){
+  .c-xarita{padding:14px 12px 12px;overflow-x:auto}
+  .c-xarita > svg{min-width:860px}
+  .x-afsona{font-size:12px}
+}

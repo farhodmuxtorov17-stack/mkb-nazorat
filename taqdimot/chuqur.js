@@ -137,6 +137,29 @@
   }
 
   /* --------------------------------------------------- batafsil nuqtalari */
+  /* Xaritadagi tugun SVG ichida turadi va HTML belgisi u yerda ko'rinmaydi:
+     belgi SVG ning o'zida chiziladi. O'rni tugundagi data-belgi="x,y" da. */
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function svgBelgi(el) {
+    if ($(":scope > .bf-svg-belgi", el)) return;
+    var j = (el.getAttribute("data-belgi") || "").split(",");
+    if (j.length !== 2) return;
+    var r = +(el.getAttribute("data-belgi-r") || 13);
+    var g = document.createElementNS(SVGNS, "g");
+    g.setAttribute("class", "bf-svg-belgi");
+    g.setAttribute("aria-hidden", "true");
+    g.setAttribute("transform", "translate(" + (+j[0]) + "," + (+j[1]) + ")");
+    var c = document.createElementNS(SVGNS, "circle");
+    c.setAttribute("r", r);
+    c.setAttribute("class", "bf-svg-doira");
+    var p = document.createElementNS(SVGNS, "path");
+    p.setAttribute("d", "M" + (-r * 0.46) + " 0h" + (r * 0.92) + "M0 " + (-r * 0.46) + "v" + (r * 0.92));
+    p.setAttribute("class", "bf-svg-chiziq");
+    g.appendChild(c);
+    g.appendChild(p);
+    el.appendChild(g);
+  }
+
   function nuqtalarniBelgila() {
     var b = window.MKB_BATAFSIL || {};
     nuqtalar = [];
@@ -148,7 +171,8 @@
         el.setAttribute("role", "button");
         if (!el.hasAttribute("tabindex")) el.tabIndex = 0;
       }
-      if (!$(":scope > .bf-belgi", el) && !$(":scope > td > .bf-belgi", el)) {
+      if (el.ownerSVGElement) svgBelgi(el);
+      else if (!$(":scope > .bf-belgi", el) && !$(":scope > td > .bf-belgi", el)) {
         var i = document.createElement("i");
         i.className = "bf-belgi";
         i.setAttribute("aria-hidden", "true");
@@ -199,7 +223,17 @@
     panelManba = $(".bf-manba", panel);
     panelHisob = $(".bf-hisob", panel);
     panelChuqur = $(".bf-chuqur", panel);
-    $(".bf-parda", panel).addEventListener("click", panelYop);
+    /* Parda ostida boshqa batafsil blok bo'lsa, bosish panelni yopmasdan o'sha
+       blokka almashadi — o'quvchi bloklar bo'ylab bir bosishda yuradi. */
+    $(".bf-parda", panel).addEventListener("click", function (e) {
+      var ost = null;
+      panel.style.pointerEvents = "none";
+      try { ost = document.elementFromPoint(e.clientX, e.clientY); } catch (_) {}
+      panel.style.pointerEvents = "";
+      var blok = ost && ost.closest ? ost.closest("[data-batafsil]") : null;
+      if (blok && !blok.classList.contains("tanlangan")) panelOch(blok);
+      else panelYop();
+    });
     panel.addEventListener("click", function (e) {
       var t = e.target.closest("[data-bf]");
       if (!t) return;
@@ -310,10 +344,14 @@
     ishoraEl.className = "c-ishora";
     ishoraEl.innerHTML = '<i aria-hidden="true">+</i><p>Yashil belgili har bir blok bosiladi</p>' +
       '<button type="button">Tushunarli</button>';
-    document.body.appendChild(ishoraEl);
+    /* Ishora sahifa matni ustida suzmaydi: chuqur sahifada aylantirish bor va
+       suzuvchi yorliq birinchi jadvalning qatorini bekitib qo'yardi. U kirish
+       matnidan keyin, oqim ichida turadi va faqat tugma bilan yopiladi. */
+    var joy = $(".c-kirish .c-lid") || $(".c-kirish h1");
+    if (joy && joy.parentNode) joy.parentNode.insertBefore(ishoraEl, joy.nextSibling);
+    else document.body.appendChild(ishoraEl);
     tarjima(ishoraEl);
     $("button", ishoraEl).addEventListener("click", function () { ishoraYop(true); });
-    setTimeout(function () { ishoraYop(false); }, 9000);
   }
   function ishoraYop(butunlay) {
     if (butunlay) saqla("mkb-chuqur-ishora", "1");

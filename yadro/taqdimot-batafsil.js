@@ -6,7 +6,7 @@ window.MKB_BATAFSIL = window.MKB_BATAFSIL || {};
 /* dasturchiA: s-api, s-adapter, s-video va s-arx, s-savol nuqtalari */
 window.MKB_BATAFSIL = window.MKB_BATAFSIL || {};
 Object.assign(window.MKB_BATAFSIL, {
-  "s-api.sxema": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Hodisa sxemasining har bir maydoni", "tana": "<p>Sxema brenddan mustaqil. Adapter qurilmadan kelgan xom ma'lumotni shu o'nta maydonga keltiradi, xom yozuv esa alohida jadvalda 30 kun saqlanadi: nosozlikni tekshirish uchun kerak, API'ga chiqmaydi.</p>\n<table><tr><th>Maydon</th><th>Qoida</th></tr>\n<tr><td><code>obyekt_id</code></td><td>Reyestrdagi kalit. Adapter uni qurilmalar reyestridan oladi, qurilmadan emas</td></tr>\n<tr><td><code>tur</code></td><td>Yopiq ro'yxat: harakat, eshik, tutun, buzish, batareya_past, aloqa_yoq</td></tr>\n<tr><td><code>vaqt</code></td><td>Qurilma vaqti, ISO-8601, faqat UTC va «Z». Server qabul vaqtini alohida yozadi</td></tr>\n<tr><td><code>ishonch</code></td><td>0 dan 1 gacha. Brend bermasa <code>null</code>, taxmin qo'yilmaydi</td></tr>\n<tr><td><code>kadr_url</code>, <code>klip_url</code></td><td>Ombordagi kalit, ochiq havola emas. Fayl imzoli, qisqa muddatli havola bilan olinadi</td></tr>\n<tr><td><code>sha256</code></td><td>Klipning 64 belgili hex xeshi, qabul paytida hisoblanadi</td></tr></table>\n<h4>Versiya</h4>\n<p>Har xabarda <code>sxema: \"1.0\"</code>. Yangi maydon faqat qo'shiladi, borini o'chirish yoki ma'nosini o'zgartirish <code>/api/v2</code> degani. JSON Schema fayli repozitoriyda turadi va har adapter sinovi unga qarshi o'tadi.</p>\n<p class='ogoh'>Qurilma soati adashishi mumkin. Farq 2 daqiqadan oshsa, server vaqti olinadi va hodisaga <code>vaqt_tuzatildi</code> belgisi qo'yiladi.</p>", "manba": [], "ru": {"yorliq": "Для тимлида", "sarlavha": "Каждое поле схемы события", "tana": "<p>Схема не зависит от бренда. Адаптер сводит сырые данные устройства к этим десяти полям, а сырая запись 30 дней хранится в отдельной таблице: она нужна для разбора сбоев и наружу через API не отдаётся.</p>\n<table><tr><th>Поле</th><th>Правило</th></tr>\n<tr><td><code>obyekt_id</code></td><td>Ключ из реестра. Адаптер берёт его из реестра устройств, а не с самого устройства</td></tr>\n<tr><td><code>tur</code></td><td>Закрытый перечень: движение, дверь, дым, вскрытие, низкий заряд, нет связи</td></tr>\n<tr><td><code>vaqt</code></td><td>Время устройства, ISO-8601, только UTC с «Z». Время приёма сервер пишет отдельно</td></tr>\n<tr><td><code>ishonch</code></td><td>От 0 до 1. Если бренд не отдаёт — <code>null</code>, без догадок</td></tr>\n<tr><td><code>kadr_url</code>, <code>klip_url</code></td><td>Ключ в хранилище, а не публичная ссылка. Файл выдаётся по подписанной краткосрочной ссылке</td></tr>\n<tr><td><code>sha256</code></td><td>Хеш клипа, 64 hex-символа, считается при приёме</td></tr></table>\n<h4>Версионирование</h4>\n<p>В каждом сообщении <code>sxema: \"1.0\"</code>. Новые поля только добавляются; удаление поля или смена его смысла означает <code>/api/v2</code>. JSON Schema лежит в репозитории, тесты каждого адаптера прогоняются против неё.</p>\n<p class='ogoh'>Часы устройства могут уходить. При расхождении больше 2 минут берётся время сервера, а событие получает отметку <code>vaqt_tuzatildi</code>.</p>"}},
+  "s-api.sxema": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Hodisa sxemasining har bir maydoni", "tana": "<p>Sxema brenddan mustaqil. Adapter qurilmadan kelgan xom ma'lumotni shu maydonlarga keltiradi, xom yozuv esa alohida jadvalda 30 kun saqlanadi: nosozlikni tekshirish uchun kerak, API'ga chiqmaydi.</p>\n<table><tr><th>Maydon</th><th>Qoida</th></tr>\n<tr><td><code>sxema</code></td><td>Majburiy. Format nomi va versiyasi: <code>mkb.hodisa.v1</code>. Versiyasiz xabar rad etiladi</td></tr>\n<tr><td><code>hodisa_id</code></td><td>Majburiy, UUIDv7 yoki ULID. Qurilma bermasa adapter yaratadi va qayta yuborishda o'zgartirmaydi. Takror shu kalit bo'yicha tashlanadi</td></tr>\n<tr><td><code>obyekt_id</code></td><td>Reyestrdagi kalit. Adapter uni qurilmalar reyestridan oladi, qurilmadan emas</td></tr>\n<tr><td><code>tur</code></td><td>Yopiq ro'yxat: harakat, eshik, tutun, buzish, batareya_past, aloqa_yoq</td></tr>\n<tr><td><code>vaqt</code></td><td>Qurilma vaqti, ISO-8601, faqat UTC va «Z». Server qabul vaqtini alohida yozadi</td></tr>\n<tr><td><code>ishonch</code></td><td>0 dan 1 gacha. Brend bermasa <code>null</code>, taxmin qo'yilmaydi</td></tr>\n<tr><td><code>kadr_url</code>, <code>klip_url</code></td><td>Ombordagi kalit, ochiq havola emas. Fayl imzoli, qisqa muddatli havola bilan olinadi</td></tr>\n<tr><td><code>sha256</code></td><td>Klipning 64 belgili hex xeshi, qabul paytida hisoblanadi</td></tr></table>\n<h4>Versiya</h4>\n<p>Har xabarda <code>sxema: \"mkb.hodisa.v1\"</code>. Yangi maydon faqat qo'shiladi, borini o'chirish yoki ma'nosini o'zgartirish <code>mkb.hodisa.v2</code> va <code>/api/v2</code> degani. JSON Schema fayli repozitoriyda turadi va har adapter sinovi unga qarshi o'tadi.</p>\n<p class='ogoh'>Qurilma soati adashishi mumkin. Farq 2 daqiqadan oshsa, server vaqti olinadi va hodisaga <code>vaqt_tuzatildi</code> belgisi qo'yiladi.</p>", "manba": [], "ru": {"yorliq": "Для тимлида", "sarlavha": "Каждое поле схемы события", "tana": "<p>Схема не зависит от бренда. Адаптер сводит сырые данные устройства к этим полям, а сырая запись 30 дней хранится в отдельной таблице: она нужна для разбора сбоев и наружу через API не отдаётся.</p>\n<table><tr><th>Поле</th><th>Правило</th></tr>\n<tr><td><code>sxema</code></td><td>Обязательно. Имя и версия формата: <code>mkb.hodisa.v1</code>. Сообщение без версии отклоняется</td></tr>\n<tr><td><code>hodisa_id</code></td><td>Обязательно, UUIDv7 или ULID. Если устройство его не даёт, адаптер создаёт его сам и не меняет при повторной отправке. Дубли отсекаются по этому ключу</td></tr>\n<tr><td><code>obyekt_id</code></td><td>Ключ из реестра. Адаптер берёт его из реестра устройств, а не с самого устройства</td></tr>\n<tr><td><code>tur</code></td><td>Закрытый перечень: движение, дверь, дым, вскрытие, низкий заряд, нет связи</td></tr>\n<tr><td><code>vaqt</code></td><td>Время устройства, ISO-8601, только UTC с «Z». Время приёма сервер пишет отдельно</td></tr>\n<tr><td><code>ishonch</code></td><td>От 0 до 1. Если бренд не отдаёт — <code>null</code>, без догадок</td></tr>\n<tr><td><code>kadr_url</code>, <code>klip_url</code></td><td>Ключ в хранилище, а не публичная ссылка. Файл выдаётся по подписанной краткосрочной ссылке</td></tr>\n<tr><td><code>sha256</code></td><td>Хеш клипа, 64 hex-символа, считается при приёме</td></tr></table>\n<h4>Версионирование</h4>\n<p>В каждом сообщении <code>sxema: \"mkb.hodisa.v1\"</code>. Новые поля только добавляются; удаление поля или смена его смысла означает <code>mkb.hodisa.v2</code> и <code>/api/v2</code>. JSON Schema лежит в репозитории, тесты каждого адаптера прогоняются против неё.</p>\n<p class='ogoh'>Часы устройства могут уходить. При расхождении больше 2 минут берётся время сервера, а событие получает отметку <code>vaqt_tuzatildi</code>.</p>"}},
   "s-api.hodisa": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "POST /hodisa: so'rov, javob va xatolar", "tana": "<p>Adapter hodisani yuboradi va darhol <b>202</b> oladi: hodisa navbatga yozildi, qayta ishlash keyin. Maqsad: navbatgacha p95 300 ms dan kam.</p>\n<pre><code>POST /api/v1/hodisa\nContent-Type: application/json\n(mTLS: CN=adapter-hik-01)\n\n{ \"hodisa_id\": \"7f3c9a2e-...-41d0\",\n  \"obyekt_id\": \"AK-2025/0934\",\n  \"qurilma_id\": \"KAM-0007\",\n  \"tur\": \"harakat\",\n  \"vaqt\": \"2026-09-21T06:30:12Z\", ... }\n\n202 Accepted\n{ \"hodisa_id\": \"7f3c9a2e-...-41d0\", \"holat\": \"qabul\" }</code></pre>\n<h4>Takror</h4>\n<p><code>hodisa_id</code> adapterda yaratiladi. Shu id bilan ikkinchi xabar kelsa, yana 202 qaytadi va <code>\"takror\": true</code> qo'shiladi. 4G uzilib, adapter qayta yuborganda hodisa ikki marta ko'rinmaydi.</p>\n<h4>Xatolar (RFC 9457)</h4>\n<table><tr><th>Kod</th><th>Qachon</th></tr>\n<tr><td class='n'>400</td><td>Sxemaga mos emas; javobda qaysi maydon xato ekani</td></tr>\n<tr><td class='n'>403</td><td>Sertifikat boshqa obyektga tegishli</td></tr>\n<tr><td class='n'>413</td><td>Tana 256 KB dan katta: kadr va klip JSON ichida yuborilmaydi</td></tr>\n<tr><td class='n'>429</td><td>Adapter uchun 50 so'rov/soniya chegarasi, <code>Retry-After</code> bilan</td></tr></table>\n<p>Kadr va klip alohida yuklanadi: adapter imzolangan havola so'raydi va faylni omborga to'g'ridan-to'g'ri qo'yadi.</p>", "manba": [["RFC 9457", "https://www.rfc-editor.org/rfc/rfc9457"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "POST /hodisa: запрос, ответ и ошибки", "tana": "<p>Адаптер отправляет событие и сразу получает <b>202</b>: событие записано в очередь, обработка идёт следом. Цель — p95 до очереди меньше 300 мс.</p>\n<pre><code>POST /api/v1/hodisa\nContent-Type: application/json\n(mTLS: CN=adapter-hik-01)\n\n{ \"hodisa_id\": \"7f3c9a2e-...-41d0\",\n  \"obyekt_id\": \"AK-2025/0934\",\n  \"qurilma_id\": \"KAM-0007\",\n  \"tur\": \"harakat\",\n  \"vaqt\": \"2026-09-21T06:30:12Z\", ... }\n\n202 Accepted\n{ \"hodisa_id\": \"7f3c9a2e-...-41d0\", \"holat\": \"qabul\" }</code></pre>\n<h4>Повторы</h4>\n<p><code>hodisa_id</code> создаёт адаптер. Если второе сообщение приходит с тем же id, снова возвращается 202 с пометкой <code>\"takror\": true</code>. Когда 4G рвётся и адаптер отправляет повторно, событие не задваивается.</p>\n<h4>Ошибки (RFC 9457)</h4>\n<table><tr><th>Код</th><th>Когда</th></tr>\n<tr><td class='n'>400</td><td>Не соответствует схеме; в ответе указано ошибочное поле</td></tr>\n<tr><td class='n'>403</td><td>Сертификат принадлежит другому объекту</td></tr>\n<tr><td class='n'>413</td><td>Тело больше 256 КБ: кадры и клипы внутри JSON не передаются</td></tr>\n<tr><td class='n'>429</td><td>Лимит адаптера 50 запросов/с, с заголовком <code>Retry-After</code></td></tr></table>\n<p>Кадр и клип загружаются отдельно: адаптер запрашивает подписанную ссылку и кладёт файл прямо в хранилище.</p>"}},
   "s-api.holat": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Qurilma holati qayerdan olinadi", "tana": "<pre><code>GET /api/v1/qurilma/KAM-0007/holat\n\n200 OK   ETag: \"h-1130\"\n{ \"qurilma_id\": \"KAM-0007\",\n  \"onlayn\": true,\n  \"last_seen\": \"2026-09-21T06:41:05Z\",\n  \"batareya\": 64, \"signal_dbm\": -89,\n  \"xotira_foiz\": 41, \"harorat_c\": 7,\n  \"manba\": \"mqtt\" }</code></pre>\n<h4>Ma'lumot manbasi</h4>\n<ul><li>MQTT shlyuzi bo'lsa, oxirgi saqlangan (retain) xabar.</li>\n<li>Push bermaydigan brend uchun adapter 5 daqiqada bir so'raydi.</li>\n<li>Batareyali kamera faqat uyg'onganda holat beradi. Panel «oxirgi ma'lum qiymat» va uning vaqtini ko'rsatadi, qiymatni yangidek ko'rsatmaydi.</li></ul>\n<h4>«Aloqada» qanday hisoblanadi</h4>\n<p>Router va shlyuz har 60 soniyada heartbeat yuboradi. <code>last_seen</code> 3 daqiqa yangilanmasa, holat «kechikmoqda», 15 daqiqa yangilanmasa «aloqa yo'q». Batareyali kamera o'zi heartbeat bermaydi: uning qiymatlari Home Hub yoki router orqali, uyg'ongan paytdagi holicha keladi.</p>\n<h4>Ro'yxat uchun</h4>\n<p>Panel 100 ta qurilmani bittalab so'ramaydi: <code>GET /qurilma?holat=aloqa_yoq&amp;kursor=...</code>, sahifada 100 ta. Javob 30 soniya keshlanadi, <code>ETag</code> o'zgarmagan bo'lsa 304 qaytadi.</p>", "manba": [], "ru": {"yorliq": "Для тимлида", "sarlavha": "Откуда берётся состояние устройства", "tana": "<pre><code>GET /api/v1/qurilma/KAM-0007/holat\n\n200 OK   ETag: \"h-1130\"\n{ \"qurilma_id\": \"KAM-0007\",\n  \"onlayn\": true,\n  \"last_seen\": \"2026-09-21T06:41:05Z\",\n  \"batareya\": 64, \"signal_dbm\": -89,\n  \"xotira_foiz\": 41, \"harorat_c\": 7,\n  \"manba\": \"mqtt\" }</code></pre>\n<h4>Источник данных</h4>\n<ul><li>Если есть MQTT-шлюз — последнее сохранённое (retain) сообщение.</li>\n<li>Для брендов без push адаптер опрашивает устройство раз в 5 минут.</li>\n<li>Камера на батарее отдаёт состояние только при пробуждении. Панель показывает «последнее известное значение» и его время, а не выдаёт его за свежее.</li></ul>\n<h4>Как считается «на связи»</h4>\n<p>Роутер и шлюз отправляют heartbeat каждые 60 секунд. Если <code>last_seen</code> не обновлялся 3 минуты, статус — «задерживается», если 15 минут — «нет связи». Камера на батарее сама heartbeat не шлёт: её значения приходят через Home Hub или роутер в том виде, в каком были при последнем пробуждении.</p>\n<h4>Для списков</h4>\n<p>Панель не опрашивает 100 устройств поштучно: <code>GET /qurilma?holat=aloqa_yoq&amp;kursor=...</code>, по 100 на страницу. Ответ кешируется на 30 секунд, при неизменном <code>ETag</code> возвращается 304.</p>"}},
   "s-api.buyruq": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Buyruq ikki marta bajarilmasligi uchun", "tana": "<p>Eshik ochish qaytarib bo'lmaydigan amal. Operator tugmani ikki marta bossa yoki tarmoq javobni yo'qotsa, rele ikki marta ishlamasligi kerak.</p>\n<pre><code>POST /api/v1/buyruq\nIdempotency-Key: 5b1e0c7a-9d2f-4e61-a3b8-0f6c2d9e7a41\n\n{ \"qurilma_id\": \"RELE-0012\",\n  \"amal\": \"eshik_och\",\n  \"muddat_s\": 5,\n  \"sabab\": \"Baholovchi tashrifi\" }\n\n202 Accepted\n{ \"buyruq_id\": \"B-88213\", \"holat\": \"yuborildi\" }</code></pre>\n<h4>Qoidalar</h4>\n<ul><li>Shu kalit 24 soat ichida qayta kelsa, yangi buyruq yaratilmaydi, birinchi javob qaytadi.</li>\n<li>Kalit bir xil, tana boshqa bo'lsa: <b>422</b>.</li>\n<li>Yakuniy holat webhook yoki <code>GET /buyruq/{id}</code> orqali: bajarildi, xato yoki 30 soniyada javob kelmadi.</li>\n<li>Eshik ochish uchun operator oxirgi 60 soniyada shu obyekt videosini ochgan bo'lishi shart.</li>\n<li>Bir operatorga daqiqasiga 10 ta buyruq.</li></ul>\n<p>Har buyruq jurnalga tushadi: kim, qachon, qaysi kadr ko'rilgan va natija.</p>", "manba": [["IETF: Idempotency-Key", "https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/"], ["RFC 9457", "https://www.rfc-editor.org/rfc/rfc9457"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Чтобы команда не выполнилась дважды", "tana": "<p>Открытие двери — необратимое действие. Если оператор нажал кнопку дважды или ответ потерялся в сети, реле не должно сработать второй раз.</p>\n<pre><code>POST /api/v1/buyruq\nIdempotency-Key: 5b1e0c7a-9d2f-4e61-a3b8-0f6c2d9e7a41\n\n{ \"qurilma_id\": \"RELE-0012\",\n  \"amal\": \"eshik_och\",\n  \"muddat_s\": 5,\n  \"sabab\": \"Baholovchi tashrifi\" }\n\n202 Accepted\n{ \"buyruq_id\": \"B-88213\", \"holat\": \"yuborildi\" }</code></pre>\n<h4>Правила</h4>\n<ul><li>Если тот же ключ приходит повторно в течение 24 часов, новая команда не создаётся — возвращается первый ответ.</li>\n<li>Ключ тот же, а тело другое — <b>422</b>.</li>\n<li>Итоговый статус приходит вебхуком или через <code>GET /buyruq/{id}</code>: выполнено, ошибка или нет ответа за 30 секунд.</li>\n<li>Открыть дверь можно, только если оператор смотрел видео этого объекта в последние 60 секунд.</li>\n<li>Не больше 10 команд в минуту на оператора.</li></ul>\n<p>Каждая команда пишется в журнал: кто, когда, какой кадр видел и чем всё закончилось.</p>"}},
@@ -14,16 +14,16 @@ Object.assign(window.MKB_BATAFSIL, {
   "s-api.tarix": {"yorliq": "Texnik izoh", "sarlavha": "Obyekt tarixi: audit va nizo uchun", "tana": "<p>Bitta so'rov obyekt bo'yicha hamma narsani vaqt tartibida qaytaradi: hodisalar, buyruqlar, video sessiyalar va qurilma holatining o'zgarishi. Ichki audit, sug'urta da'vosi yoki sud uchun shu yetadi.</p>\n<pre><code>GET /api/v1/obyekt/AK-2025-0934/tarix\n    ?dan=2026-09-01T00:00:00Z\n    &amp;gacha=2026-09-21T23:59:59Z\n    &amp;tur=hodisa,buyruq&amp;kursor=...\n\n200 OK\n{ \"yozuvlar\": [\n  { \"vaqt\": \"2026-09-21T06:30:12Z\", \"tur\": \"hodisa\",\n    \"qisqa\": \"harakat, KAM-0007\", \"sha256\": \"9f2c41...\" },\n  { \"vaqt\": \"2026-09-21T06:31:40Z\", \"tur\": \"video\",\n    \"kim\": \"operator: n.ismoilova\", \"davomiylik_s\": 94 } ],\n  \"keyingi\": \"c2VxPTQxMjc...\" }</code></pre>\n<ul><li>Sahifada 100 ta yozuv, kursor bilan. Sahifa raqami ishlatilmaydi: yangi yozuv qo'shilganda ro'yxat siljimaydi.</li>\n<li>Yozuv o'zgartirilmaydi va o'chirilmaydi, faqat qo'shiladi.</li>\n<li>Eksport CSV yoki PDF, ichida har klipning SHA-256 xeshi.</li></ul>\n<p class='ogoh'>Saqlash muddatini bank siyosati belgilaydi. Taklif: jurnal 5 yil, oddiy hodisa klipi 90 kun, nizoli holat klipi ish yopilgunicha.</p>", "manba": [], "ru": {"yorliq": "Техническая справка", "sarlavha": "История объекта: для аудита и споров", "tana": "<p>Один запрос возвращает всё по объекту в хронологическом порядке: события, команды, видеосессии и смены состояния устройств. Этого достаточно для внутреннего аудита, страхового случая или суда.</p>\n<pre><code>GET /api/v1/obyekt/AK-2025-0934/tarix\n    ?dan=2026-09-01T00:00:00Z\n    &amp;gacha=2026-09-21T23:59:59Z\n    &amp;tur=hodisa,buyruq&amp;kursor=...\n\n200 OK\n{ \"yozuvlar\": [\n  { \"vaqt\": \"2026-09-21T06:30:12Z\", \"tur\": \"hodisa\",\n    \"qisqa\": \"harakat, KAM-0007\", \"sha256\": \"9f2c41...\" },\n  { \"vaqt\": \"2026-09-21T06:31:40Z\", \"tur\": \"video\",\n    \"kim\": \"operator: n.ismoilova\", \"davomiylik_s\": 94 } ],\n  \"keyingi\": \"c2VxPTQxMjc...\" }</code></pre>\n<ul><li>100 записей на страницу, с курсором. Номера страниц не используются: при появлении новых записей список не сдвигается.</li>\n<li>Записи не изменяются и не удаляются, только добавляются.</li>\n<li>Экспорт в CSV или PDF, с хешем SHA-256 каждого клипа.</li></ul>\n<p class='ogoh'>Срок хранения определяет политика банка. Предложение: журнал 5 лет, клипы обычных событий 90 дней, клипы по спорным случаям — до закрытия дела.</p>"}},
   "s-api.obuna": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Webhook obunasini ochish va boshqarish", "tana": "<p>Tashqi tizim, masalan bankning xavfsizlik xizmati yoki servis pudratchisi, hodisalarni so'rab turmaydi: MKB o'zi yuboradi.</p>\n<pre><code>POST /api/v1/obuna\n{ \"url\": \"https://soc.bank.local/mkb/hook\",\n  \"turlar\": [\"buzish\", \"tutun\", \"aloqa_yoq\"],\n  \"tavsif\": \"Xavfsizlik xizmati navbatchisi\" }\n\n201 Created\n{ \"obuna_id\": \"OB-017\",\n  \"sir\": \"whsec_MfKQ9r8GKYqrTwjUPD8ILPZI...\" }</code></pre>\n<ul><li><code>sir</code> faqat bir marta ko'rsatiladi. Almashtirish: <code>POST /obuna/{id}/kalit</code>, eski kalit 24 soat birga ishlaydi.</li>\n<li>Manzil faqat HTTPS va ruxsat ro'yxatidagi domen. Ichki IP va localhost rad etiladi: bu SSRF hujumidan himoya.</li>\n<li><code>POST /obuna/{id}/sinov</code> sinov xabarini yuboradi, integratsiyani ulash vaqtida kerak.</li>\n<li>Ketma-ket 3 kun xato qaytgan obuna to'xtatiladi, administratorga xabar ketadi.</li></ul>\n<h4>Kim ochadi</h4>\n<p>Obunani faqat administrator roli ochadi. Har obuna nima yuborayotgani ro'yxatda ko'rinadi: bu shaxsiy ma'lumot oqimini nazorat qilish uchun.</p>", "manba": [["Standard Webhooks", "https://github.com/standard-webhooks/standard-webhooks/blob/main/spec/standard-webhooks.md"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Как оформить подписку на вебхуки", "tana": "<p>Внешняя система — например, служба безопасности банка или сервисный подрядчик — не опрашивает события: MKB отправляет их сама.</p>\n<pre><code>POST /api/v1/obuna\n{ \"url\": \"https://soc.bank.local/mkb/hook\",\n  \"turlar\": [\"buzish\", \"tutun\", \"aloqa_yoq\"],\n  \"tavsif\": \"Xavfsizlik xizmati navbatchisi\" }\n\n201 Created\n{ \"obuna_id\": \"OB-017\",\n  \"sir\": \"whsec_MfKQ9r8GKYqrTwjUPD8ILPZI...\" }</code></pre>\n<ul><li><code>sir</code> показывается один раз. Смена ключа — <code>POST /obuna/{id}/kalit</code>, старый ключ работает параллельно ещё 24 часа.</li>\n<li>Адрес — только HTTPS и домен из белого списка. Внутренние IP и localhost отклоняются: это защита от SSRF.</li>\n<li><code>POST /obuna/{id}/sinov</code> шлёт тестовое сообщение — пригодится при подключении.</li>\n<li>Если подписка три дня подряд отвечает ошибкой, она приостанавливается, администратор получает уведомление.</li></ul>\n<h4>Кто оформляет</h4>\n<p>Подписку создаёт только роль администратора. Что именно отправляет каждая подписка, видно в списке: так контролируется поток персональных данных.</p>"}},
   "s-api.webhook": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Qabul qiluvchi imzoni qanday tekshiradi", "tana": "<p>Format Standard Webhooks spetsifikatsiyasidan olingan: tayyor kutubxonalar bor, pudratchi uni noldan yozmaydi.</p>\n<pre><code>webhook-id: msg_2nQx7Rk...\nwebhook-timestamp: 1790059812\nwebhook-signature: v1,K5oZfzN95Z9UVu1EsfQmfVNQ...\n\nimzo = base64( HMAC-SHA256( sir,\n         id + \".\" + timestamp + \".\" + tana ) )</code></pre>\n<h4>Qabul qiluvchi tomonda</h4>\n<ol><li>Vaqt farqini tekshiradi: 5 daqiqadan oshsa, rad etadi. Bu eski xabarni qayta yuborishdan himoya.</li>\n<li>Imzoni o'zi hisoblaydi va doimiy vaqtli taqqoslash bilan solishtiradi.</li>\n<li><code>webhook-id</code> ni saqlaydi. Takror kelsa, qayta ishlamasdan 200 qaytaradi.</li>\n<li>15 soniya ichida 2xx qaytaradi, og'ir ishni navbatga qo'yadi.</li></ol>\n<h4>Qayta urinish</h4>\n<table><tr><th>Urinish</th><th>Kutish</th></tr>\n<tr><td>1–3</td><td class='n'>5 s, 5 daq, 30 daq</td></tr>\n<tr><td>4–7</td><td class='n'>2, 5, 10, 24 soat</td></tr></table>\n<p>Jami taxminan 42 soat. Undan keyin xabar 7 kun saqlanadi va administrator uni qo'lda qayta yuborishi mumkin.</p>", "manba": [["Standard Webhooks", "https://github.com/standard-webhooks/standard-webhooks/blob/main/spec/standard-webhooks.md"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Как получатель проверяет подпись", "tana": "<p>Формат взят из спецификации Standard Webhooks: есть готовые библиотеки, подрядчику не нужно писать проверку с нуля.</p>\n<pre><code>webhook-id: msg_2nQx7Rk...\nwebhook-timestamp: 1790059812\nwebhook-signature: v1,K5oZfzN95Z9UVu1EsfQmfVNQ...\n\nimzo = base64( HMAC-SHA256( sir,\n         id + \".\" + timestamp + \".\" + tana ) )</code></pre>\n<h4>На стороне получателя</h4>\n<ol><li>Проверить расхождение времени: больше 5 минут — отклонить. Это защита от повторной отправки старого сообщения.</li>\n<li>Посчитать подпись самостоятельно и сравнить её функцией сравнения за постоянное время.</li>\n<li>Сохранить <code>webhook-id</code>. Если пришёл повтор — вернуть 200 без повторной обработки.</li>\n<li>Ответить 2xx в течение 15 секунд, тяжёлую работу поставить в очередь.</li></ol>\n<h4>Повторные попытки</h4>\n<table><tr><th>Попытка</th><th>Пауза</th></tr>\n<tr><td>1–3</td><td class='n'>5 с, 5 мин, 30 мин</td></tr>\n<tr><td>4–7</td><td class='n'>2, 5, 10, 24 ч</td></tr></table>\n<p>Всего около 42 часов. Затем сообщение хранится 7 дней, и администратор может отправить его вручную.</p>"}},
-  "s-api.mqtt": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "MQTT: mavzular, ACL va uzilish", "tana": "<p>MQTT obyektdagi shlyuz uchun: 4G ulanishi uzilib-ulanib turadi, broker esa oxirgi holatni saqlaydi va uzilishni o'zi e'lon qiladi.</p>\n<ul><li><b>ACL.</b> Shlyuz sertifikatidagi CN obyekt kodiga teng. Shlyuz faqat <code>mkb/AK-2025-0934/+/hodisa</code>, <code>holat</code> va <code>javob</code> ga yozadi va faqat o'z <code>buyruq</code> mavzusini o'qiydi. Boshqa obyektga yozishga urinish uziladi va jurnalga tushadi.</li>\n<li><b>QoS 1.</b> Xabar kamida bir marta keladi, ya'ni ikki marta ham kelishi mumkin. Platforma <code>hodisa_id</code> bo'yicha saralaydi.</li>\n<li><b>Retain.</b> <code>holat</code> mavzusida oxirgi xabar saqlanadi: panel qayta ishga tushsa, darhol oxirgi holatni oladi.</li>\n<li><b>LWT.</b> Shlyuz ulanganda vasiyat xabarini beradi: <code>{\"onlayn\": false}</code>. Aloqa kutilmaganda uzilsa, broker shu xabarni <code>aloqa</code> mavzusiga o'zi yozadi.</li>\n<li><b>Keepalive 60 soniya.</b> Operator tarmog'i bo'sh ulanishni bir necha daqiqada uzishi mumkin, shu uchun oraliq qisqa.</li></ul>\n<h4>Broker</h4>\n<p>Mosquitto yoki EMQX sinfidagi broker bank serverida. Tanlashda ikki narsa tekshiriladi: klaster rejimi litsenziyasi va mijoz sertifikati bo'yicha ACL qo'llanishi.</p>\n<p class='ogoh'>Mavzuda «/» obyekt kodining ichida bo'lsa, daraxt buziladi. Shuning uchun <code>AK-2025/0934</code> mavzuda <code>AK-2025-0934</code> bo'ladi.</p>", "manba": [["MQTT 5.0 (OASIS)", "https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "MQTT: топики, ACL и обрывы связи", "tana": "<p>MQTT нужен для шлюза на объекте: соединение 4G то рвётся, то восстанавливается, а брокер хранит последнее состояние и сам объявляет об обрыве.</p>\n<ul><li><b>ACL.</b> CN в сертификате шлюза равен коду объекта. Шлюз пишет только в <code>mkb/AK-2025-0934/+/hodisa</code>, <code>holat</code> и <code>javob</code> и читает только свой топик <code>buyruq</code>. Попытка писать в чужой объект обрывает соединение и попадает в журнал.</li>\n<li><b>QoS 1.</b> Сообщение доставляется как минимум один раз, то есть может прийти и дважды. Платформа отсекает дубли по <code>hodisa_id</code>.</li>\n<li><b>Retain.</b> В топике <code>holat</code> хранится последнее сообщение: после перезапуска панель сразу получает актуальное состояние.</li>\n<li><b>LWT.</b> При подключении шлюз оставляет «завещание»: <code>{\"onlayn\": false}</code>. Если связь неожиданно пропадёт, брокер сам опубликует его в топике <code>aloqa</code>.</li>\n<li><b>Keepalive 60 секунд.</b> Сеть оператора может закрывать простаивающее соединение через несколько минут, поэтому интервал короткий.</li></ul>\n<h4>Брокер</h4>\n<p>Брокер класса Mosquitto или EMQX на сервере банка. При выборе проверяются две вещи: лицензия на кластерный режим и поддержка ACL по клиентскому сертификату.</p>\n<p class='ogoh'>Символ «/» внутри кода объекта ломает дерево топиков. Поэтому <code>AK-2025/0934</code> в топике записывается как <code>AK-2025-0934</code>.</p>"}},
+  "s-api.mqtt": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "MQTT: mavzular, ACL va uzilish", "tana": "<p>MQTT obyektdagi shlyuz uchun: 4G ulanishi uzilib-ulanib turadi, broker esa oxirgi holatni saqlaydi va uzilishni o'zi e'lon qiladi.</p>\n<ul><li><b>ACL.</b> Shlyuz sertifikatidagi CN obyekt kodiga teng. Shlyuz faqat <code>mkb/v1/AK-2025-0934/+/hodisa</code>, <code>holat</code> va <code>javob</code> ga yozadi va faqat o'z <code>buyruq</code> mavzusini o'qiydi. Boshqa obyektga yozishga urinish uziladi va jurnalga tushadi.</li>\n<li><b>QoS 1.</b> Xabar kamida bir marta keladi, ya'ni ikki marta ham kelishi mumkin. Platforma <code>hodisa_id</code> bo'yicha saralaydi.</li>\n<li><b>Retain.</b> <code>holat</code> mavzusida oxirgi xabar saqlanadi: panel qayta ishga tushsa, darhol oxirgi holatni oladi.</li>\n<li><b>LWT.</b> Shlyuz ulanganda vasiyat xabarini beradi: <code>{\"onlayn\": false}</code>. Aloqa kutilmaganda uzilsa, broker shu xabarni <code>aloqa</code> mavzusiga o'zi yozadi.</li>\n<li><b>Keepalive 60 soniya.</b> Operator tarmog'i bo'sh ulanishni bir necha daqiqada uzishi mumkin, shu uchun oraliq qisqa.</li></ul>\n<h4>Broker</h4>\n<p>Mosquitto yoki EMQX sinfidagi broker bank serverida. Tanlashda ikki narsa tekshiriladi: klaster rejimi litsenziyasi va mijoz sertifikati bo'yicha ACL qo'llanishi.</p>\n<p class='ogoh'>Mavzuda «/» obyekt kodining ichida bo'lsa, daraxt buziladi. Shuning uchun <code>AK-2025/0934</code> mavzuda <code>AK-2025-0934</code> bo'ladi.</p>", "manba": [["MQTT 5.0 (OASIS)", "https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "MQTT: топики, ACL и обрывы связи", "tana": "<p>MQTT нужен для шлюза на объекте: соединение 4G то рвётся, то восстанавливается, а брокер хранит последнее состояние и сам объявляет об обрыве.</p>\n<ul><li><b>ACL.</b> CN в сертификате шлюза равен коду объекта. Шлюз пишет только в <code>mkb/v1/AK-2025-0934/+/hodisa</code>, <code>holat</code> и <code>javob</code> и читает только свой топик <code>buyruq</code>. Попытка писать в чужой объект обрывает соединение и попадает в журнал.</li>\n<li><b>QoS 1.</b> Сообщение доставляется как минимум один раз, то есть может прийти и дважды. Платформа отсекает дубли по <code>hodisa_id</code>.</li>\n<li><b>Retain.</b> В топике <code>holat</code> хранится последнее сообщение: после перезапуска панель сразу получает актуальное состояние.</li>\n<li><b>LWT.</b> При подключении шлюз оставляет «завещание»: <code>{\"onlayn\": false}</code>. Если связь неожиданно пропадёт, брокер сам опубликует его в топике <code>aloqa</code>.</li>\n<li><b>Keepalive 60 секунд.</b> Сеть оператора может закрывать простаивающее соединение через несколько минут, поэтому интервал короткий.</li></ul>\n<h4>Брокер</h4>\n<p>Брокер класса Mosquitto или EMQX на сервере банка. При выборе проверяются две вещи: лицензия на кластерный режим и поддержка ACL по клиентскому сертификату.</p>\n<p class='ogoh'>Символ «/» внутри кода объекта ломает дерево топиков. Поэтому <code>AK-2025/0934</code> в топике записывается как <code>AK-2025-0934</code>.</p>"}},
   "s-api.mtls": {"yorliq": "Texnik izoh", "sarlavha": "mTLS: sertifikat har shlyuzga alohida", "tana": "<p>Qurilma va adapter parol bilan emas, sertifikat bilan kiradi. Parolni nusxalash mumkin, shlyuz ichida yaratilgan yopiq kalitni esa ko'chirib bo'lmaydi.</p>\n<h4>Hayot sikli</h4>\n<ol><li>Montajda shlyuz o'zida kalit yaratadi va imzolash so'rovini (CSR) beradi.</li>\n<li>Bankning ichki CA'si sertifikatni imzolaydi: CN = obyekt kodi yoki adapter nomi, muddat 1 yil.</li>\n<li>Muddat tugashidan 30 kun oldin shlyuz yangisini o'zi so'raydi, montajchi borishi shart emas.</li>\n<li>Qurilma o'g'irlansa yoki obyekt sotilsa, sertifikat bitta amal bilan bekor qilinadi (CRL yoki OCSP).</li></ol>\n<h4>Kamera haqida</h4>\n<p>Arzon kameralar mijoz sertifikatini qo'llamaydi. Shuning uchun mTLS obyektdagi router yoki shlyuzda tugaydi, kamera esa faqat VPN ichidagi yopiq tarmoqda gaplashadi. Kameraning o'z paroli har obyektda boshqacha va seyfda saqlanadi.</p>\n<h4>Bank qaror qiladi</h4>\n<ul><li>Mavjud korporativ CA ishlatiladimi yoki alohida kichik CA ochiladimi.</li>\n<li>CA kalitini kim saqlaydi: IT xavfsizlik bo'limi, HSM bilan yoki usiz.</li></ul>", "manba": [["RFC 8705", "https://www.rfc-editor.org/rfc/rfc8705"]], "ru": {"yorliq": "Техническая справка", "sarlavha": "mTLS: отдельный сертификат для каждого шлюза", "tana": "<p>Устройства и адаптеры входят не по паролю, а по сертификату. Пароль можно скопировать, а закрытый ключ, созданный внутри шлюза, вынести нельзя.</p>\n<h4>Жизненный цикл</h4>\n<ol><li>При монтаже шлюз сам создаёт ключ и выдаёт запрос на подпись (CSR).</li>\n<li>Внутренний CA банка подписывает сертификат: CN = код объекта или имя адаптера, срок 1 год.</li>\n<li>За 30 дней до истечения шлюз сам запрашивает новый, выезд монтажника не нужен.</li>\n<li>Если устройство украдено или объект продан, сертификат отзывается одним действием (CRL или OCSP).</li></ol>\n<h4>О камерах</h4>\n<p>Недорогие камеры клиентские сертификаты не поддерживают. Поэтому mTLS заканчивается на роутере или шлюзе объекта, а камера общается только внутри закрытой сети VPN. Пароль камеры на каждом объекте свой и хранится в сейфе паролей.</p>\n<h4>Что решает банк</h4>\n<ul><li>Использовать действующий корпоративный CA или завести отдельный небольшой.</li>\n<li>Кто хранит ключ CA: отдел ИБ, с HSM или без.</li></ul>"}},
   "s-api.oidc": {"yorliq": "Texnik izoh", "sarlavha": "Xodim kirishi: AD guruhlari rolga aylanadi", "tana": "<p>Alohida parol bazasi yaratilmaydi. Xodim bank Active Directory hisobi bilan kiradi: AD FS yoki Keycloak OIDC orqali token beradi, platforma faqat tokenni tekshiradi.</p>\n<table><tr><th>AD guruhi</th><th>Rol</th><th>Nima qila oladi</th></tr>\n<tr><td>MKB-Operator</td><td>operator</td><td>Video, buyruq, hodisani yopish</td></tr>\n<tr><td>MKB-Inspektor</td><td>inspektor</td><td>Holat va tarixni ko'rish, servis arizasi</td></tr>\n<tr><td>MKB-Auditor</td><td>auditor</td><td>Faqat o'qish va eksport</td></tr>\n<tr><td>MKB-Admin</td><td>admin</td><td>Qurilma reyestri, obuna, sertifikat</td></tr></table>\n<ul><li>Filial xodimi faqat o'z hududi obyektlarini ko'radi: tokendagi <code>filial</code> maydoni bo'yicha.</li>\n<li>Kirish tokeni 10 daqiqa, keyin yangilanadi. Xodim AD'da bloklansa, 10 daqiqadan keyin tizimga kira olmaydi.</li>\n<li>Eshik ochish uchun ikkinchi omil talab qilinadi.</li>\n<li>Adapter va tashqi tizimlar xodim nomidan emas, o'z xizmat hisobi bilan ishlaydi.</li></ul>\n<p class='ogoh'>Guruh nomlari misol. Aniq ro'yxatni IT xavfsizlik bo'limi tasdiqlaydi.</p>", "manba": [["OpenID Connect Core", "https://openid.net/specs/openid-connect-core-1_0.html"]], "ru": {"yorliq": "Техническая справка", "sarlavha": "Вход сотрудников: группы AD становятся ролями", "tana": "<p>Отдельная база паролей не создаётся. Сотрудник входит учётной записью Active Directory банка: токен выдаёт AD FS или Keycloak по OIDC, платформа только проверяет его.</p>\n<table><tr><th>Группа AD</th><th>Роль</th><th>Что может</th></tr>\n<tr><td>MKB-Operator</td><td>оператор</td><td>Видео, команды, закрытие событий</td></tr>\n<tr><td>MKB-Inspektor</td><td>инспектор</td><td>Просмотр состояния и истории, сервисные заявки</td></tr>\n<tr><td>MKB-Auditor</td><td>аудитор</td><td>Только чтение и экспорт</td></tr>\n<tr><td>MKB-Admin</td><td>администратор</td><td>Реестр устройств, подписки, сертификаты</td></tr></table>\n<ul><li>Сотрудник филиала видит только объекты своего региона — по полю <code>filial</code> в токене.</li>\n<li>Токен доступа живёт 10 минут, затем обновляется. Если сотрудника заблокировали в AD, через 10 минут он в систему уже не попадёт.</li>\n<li>Для открытия двери нужен второй фактор.</li>\n<li>Адаптеры и внешние системы работают не от имени сотрудников, а под своими сервисными учётными записями.</li></ul>\n<p class='ogoh'>Названия групп — пример. Точный перечень утверждает отдел информационной безопасности.</p>"}},
   "s-adapter.hikvision": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Hikvision adapteri: ISAPI yoki HikCentral", "tana": "<p>Ikki yo'l bor. Bank HikCentral sotib olmasa, adapter kameraga ISAPI orqali o'zi ulanadi. HikCentral bo'lsa, adapter uning OpenAPI'siga ulanadi va kameralar bilan bevosita gaplashmaydi.</p>\n<h4>ISAPI yo'li</h4>\n<pre><code>video:   rtsp://KAM:554/Streaming/Channels/101  (asosiy)\n         rtsp://KAM:554/Streaming/Channels/102  (sub)\nhodisa:  GET /ISAPI/Event/notification/alertStream\n         Accept: multipart/mixed, Digest auth</code></pre>\n<p><code>alertStream</code> ochiq turadigan HTTP ulanish. Kamera har hodisani uning ichida alohida qism qilib yuboradi, rasm bo'lsa ikkinchi qism bo'lib keladi. Adapter chegaralovchi qatorni o'qiydi, qismlarni yig'adi va ulanish uzilsa, 1 soniyadan 60 soniyagacha kutish bilan qayta ulanadi.</p>\n<h4>HikCentral yo'li</h4>\n<p>HikCentral Professional OpenAPI hodisa turlariga obuna beradi. Hujjat va kalit Hikvision TPP portalida ro'yxatdan o'tgandan keyin beriladi, OpenAPI moduli litsenziyasi smetaga alohida qator bo'lib kiradi.</p>\n<h4>Yetkazuvchidan so'raladi</h4>\n<ul><li>Quyosh-4G modeli past quvvat rejimida <code>alertStream</code> ulanishini ushlab turadimi yoki faqat Hik-Connect bulutiga xabar beradimi.</li>\n<li>ISAPI proshivkada yoqilganmi, bulut (P2P) o'chirilsa nima ishlamay qoladi.</li></ul>\n<p>Baho, bitta dasturchi: ISAPI 3 hafta, HikCentral bilan 4 hafta.</p>", "manba": [["Hikvision TPP: ISAPI", "https://tpp.hikvision.com/download/ISAPI_OTAP"], ["Hikvision TPP: HikCentral OpenAPI", "https://tpp.hikvision.com/tpp/HCPIntegration"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Адаптер Hikvision: ISAPI или HikCentral", "tana": "<p>Есть два пути. Если банк не покупает HikCentral, адаптер сам подключается к камере по ISAPI. Если HikCentral есть, адаптер работает с его OpenAPI и к камерам напрямую не обращается.</p>\n<h4>Путь через ISAPI</h4>\n<pre><code>video:   rtsp://KAM:554/Streaming/Channels/101  (основной)\n         rtsp://KAM:554/Streaming/Channels/102  (суб)\nhodisa:  GET /ISAPI/Event/notification/alertStream\n         Accept: multipart/mixed, Digest auth</code></pre>\n<p><code>alertStream</code> — постоянно открытое HTTP-соединение. Камера отправляет каждое событие отдельной частью, картинка приходит следующей частью. Адаптер читает разделитель, собирает части и при обрыве переподключается с паузой от 1 до 60 секунд.</p>\n<h4>Путь через HikCentral</h4>\n<p>HikCentral Professional OpenAPI даёт подписку на типы событий. Документацию и ключи выдают после регистрации на портале Hikvision TPP; лицензия модуля OpenAPI идёт в смету отдельной строкой.</p>\n<h4>Что спросить у поставщика</h4>\n<ul><li>Держит ли солнечная 4G-модель соединение <code>alertStream</code> в режиме экономии или шлёт события только в облако Hik-Connect.</li>\n<li>Включён ли ISAPI в прошивке и что перестанет работать при отключении облака (P2P).</li></ul>\n<p>Оценка на одного разработчика: ISAPI — 3 недели, с HikCentral — 4 недели.</p>"}},
   "s-adapter.dahua": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Dahua adapteri: eventManager va DSS", "tana": "<pre><code>video:  rtsp://KAM:554/cam/realmonitor?channel=1&amp;subtype=0\n        (subtype=1 — sub-oqim)\nhodisa: GET /cgi-bin/eventManager.cgi\n        ?action=attach&amp;codes=[All]&amp;heartbeat=5\n        Digest auth</code></pre>\n<p>Mantiq Hikvision'ga o'xshaydi: ochiq HTTP ulanish, ichida matnli bloklar. <code>heartbeat=5</code> kamerani har 5 soniyada «tirikman» deb yozishga majbur qiladi. Adapter shu belgini kutadi: 15 soniya kelmasa, ulanish o'lik deb hisoblanadi va qayta ochiladi.</p>\n<h4>Hodisa kodlari</h4>\n<p><code>VideoMotion</code>, <code>AlarmLocal</code>, <code>VideoBlind</code>, aqlli tahlil kodlari. Adapterda kodlar jadvali bor: kod → <code>tur</code>. Jadvalda yo'q kod xom jadvalga yoziladi va ogohlantirish beradi, jim tashlab yuborilmaydi.</p>\n<h4>DSS yo'li</h4>\n<p>DSS Pro'ning integratsiya platformasi API, SDK va ONVIF orqali ochiladi. To'liq API hujjati Dahua hamkorlik portalida ro'yxatdan o'tganga beriladi.</p>\n<h4>Yetkazuvchidan so'raladi</h4>\n<ul><li>Quyosh-4G komplekti uyqu rejimida HTTP API'ga javob beradimi.</li>\n<li>HTTP API versiyasi va proshivka yangilanganda kodlar o'zgarishi.</li></ul>\n<p class='ogoh'>Hikvision va Dahua adapterlari kodining taxminan yarmi umumiy: multipart o'qish, qayta ulanish, Digest. Ikkinchisi birinchisidan tezroq yoziladi.</p>\n<p>Baho: 3–4 hafta, Hikvision'dan keyin 2–3 hafta.</p>", "manba": [["Dahua: Integration with DSS", "https://www.dahuasecurity.com/products/software/ecosystem/integration-with-dss"], ["Dahua Partner Alliances", "https://depp.dahuasecurity.com/integration"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Адаптер Dahua: eventManager и DSS", "tana": "<pre><code>video:  rtsp://KAM:554/cam/realmonitor?channel=1&amp;subtype=0\n        (subtype=1 — субпоток)\nhodisa: GET /cgi-bin/eventManager.cgi\n        ?action=attach&amp;codes=[All]&amp;heartbeat=5\n        Digest auth</code></pre>\n<p>Логика как у Hikvision: открытое HTTP-соединение с текстовыми блоками внутри. <code>heartbeat=5</code> заставляет камеру каждые 5 секунд сообщать «жива». Адаптер ждёт этот сигнал: если его нет 15 секунд, соединение считается мёртвым и открывается заново.</p>\n<h4>Коды событий</h4>\n<p><code>VideoMotion</code>, <code>AlarmLocal</code>, <code>VideoBlind</code>, коды интеллектуальной аналитики. В адаптере есть таблица «код → <code>tur</code>». Неизвестный код пишется в сырую таблицу и поднимает предупреждение, а не молча отбрасывается.</p>\n<h4>Путь через DSS</h4>\n<p>Интеграционная платформа DSS Pro открывается через API, SDK и ONVIF. Полную документацию по API выдают после регистрации на партнёрском портале Dahua.</p>\n<h4>Что спросить у поставщика</h4>\n<ul><li>Отвечает ли солнечный 4G-комплект на HTTP API в спящем режиме.</li>\n<li>Версия HTTP API и меняются ли коды при обновлении прошивки.</li></ul>\n<p class='ogoh'>Примерно половина кода адаптеров Hikvision и Dahua общая: разбор multipart, переподключение, Digest. Второй пишется быстрее первого.</p>\n<p>Оценка: 3–4 недели, после Hikvision — 2–3 недели.</p>"}},
-  "s-adapter.reolink": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Reolink adapteri: Home Hub orqali", "tana": "<p>Batareyali Reolink kamerasi o'zi RTSP bermaydi. Oqim Home Hub orqali olinadi va u yerda qat'iy chegara bor.</p>\n<pre><code>rtsp://HUB:554/Preview_01_sub    (kanal 1, sub-oqim)\nrtsp://HUB:554/Preview_01_main\nPOST /cgi-bin/api.cgi?cmd=Login   → token\nPOST /cgi-bin/api.cgi?cmd=...&amp;token=...</code></pre>\n<h4>Cheklovlar</h4>\n<ul><li>Home Hub orqali har ko'rish sessiyasi 5 daqiqagacha. Keyin kamera uxlaydi, RTSP uziladi. Adapter oqimni qayta so'raydi, panel foydalanuvchiga buni ko'rsatadi.</li>\n<li>Uxlayotgan kamerani uyg'otish vaqt oladi: birinchi kadr darhol chiqmaydi.</li>\n<li>HTTP API hujjati ommaviy emas, ishlab chiqaruvchi so'rov bo'yicha beradi. Proshivka yangilanishi buyruqlarni o'zgartirishi mumkin.</li></ul>\n<h4>Hodisa</h4>\n<p>ONVIF hodisa obunasini qo'llaydigan modelda PullPoint ishlatiladi. Qolganida adapter harakat holatini API orqali so'rab turadi. So'rov oralig'i batareyani yeydi, shuning uchun uni pilotda o'lchab tanlaymiz.</p>\n<p class='ogoh'>Reolink uy va kichik ofis uchun yechim (01). Kamera −10 °C gacha ishlaydi, qishda bino ichiga qo'yiladi.</p>\n<p>Baho: 2–3 hafta.</p>", "manba": [["Reolink: Introduction to RTSP", "https://support.reolink.com/articles/900000630706-Introduction-to-RTSP/"], ["Reolink: 3rd-party software", "https://support.reolink.com/articles/360004441753-Can-Reolink-Battery-Powered-Cameras-Work-with-3rd-Party-Software/"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Адаптер Reolink: через Home Hub", "tana": "<p>Камера Reolink на батарее сама RTSP не отдаёт. Поток берётся через Home Hub, и там жёсткий предел.</p>\n<pre><code>rtsp://HUB:554/Preview_01_sub    (канал 1, субпоток)\nrtsp://HUB:554/Preview_01_main\nPOST /cgi-bin/api.cgi?cmd=Login   → token\nPOST /cgi-bin/api.cgi?cmd=...&amp;token=...</code></pre>\n<h4>Ограничения</h4>\n<ul><li>Через Home Hub каждая сессия просмотра длится до 5 минут. Потом камера засыпает, RTSP обрывается. Адаптер запрашивает поток заново, панель показывает это пользователю.</li>\n<li>Разбудить спящую камеру — это время: первый кадр появляется не сразу.</li>\n<li>Документация HTTP API не публичная, производитель выдаёт её по запросу. Обновление прошивки может изменить команды.</li></ul>\n<h4>События</h4>\n<p>На моделях с подпиской на события ONVIF используется PullPoint. На остальных адаптер опрашивает состояние движения через API. Частый опрос съедает батарею, поэтому интервал подбираем замерами на пилоте.</p>\n<p class='ogoh'>Reolink — решение для дома и небольшого офиса (01). Камера работает до −10 °C, зимой её ставят внутри здания.</p>\n<p>Оценка: 2–3 недели.</p>"}},
+  "s-adapter.reolink": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Reolink adapteri: Home Hub orqali", "tana": "<p>Batareyali Reolink kamerasi o'zi RTSP bermaydi. Oqim Home Hub orqali olinadi va u yerda qat'iy chegara bor.</p>\n<pre><code>rtsp://HUB:554/h264Preview_01_sub    (kanal 1, sub-oqim)\nrtsp://HUB:554/h264Preview_01_main\nPOST /cgi-bin/api.cgi?cmd=Login   → token\nPOST /cgi-bin/api.cgi?cmd=...&amp;token=...</code></pre>\n<h4>Cheklovlar</h4>\n<ul><li>Home Hub orqali har ko'rish sessiyasi 5 daqiqagacha. Keyin kamera uxlaydi, RTSP uziladi. Adapter oqimni qayta so'raydi, panel foydalanuvchiga buni ko'rsatadi.</li>\n<li>Uxlayotgan kamerani uyg'otish vaqt oladi: birinchi kadr darhol chiqmaydi.</li>\n<li>HTTP API hujjati ommaviy emas, ishlab chiqaruvchi so'rov bo'yicha beradi. Proshivka yangilanishi buyruqlarni o'zgartirishi mumkin.</li></ul>\n<h4>Hodisa</h4>\n<p>ONVIF hodisa obunasini qo'llaydigan modelda PullPoint ishlatiladi. Qolganida adapter harakat holatini API orqali so'rab turadi. So'rov oralig'i batareyani yeydi, shuning uchun uni pilotda o'lchab tanlaymiz.</p>\n<p class='ogoh'>Reolink uy va kichik ofis uchun yechim (01). Kamera −10 °C gacha ishlaydi, qishda bino ichiga qo'yiladi.</p>\n<p>Baho: 2–3 hafta.</p>", "manba": [["Reolink: Introduction to RTSP", "https://support.reolink.com/articles/900000630706-Introduction-to-RTSP/"], ["Reolink: 3rd-party software", "https://support.reolink.com/articles/360004441753-Can-Reolink-Battery-Powered-Cameras-Work-with-3rd-Party-Software/"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Адаптер Reolink: через Home Hub", "tana": "<p>Камера Reolink на батарее сама RTSP не отдаёт. Поток берётся через Home Hub, и там жёсткий предел.</p>\n<pre><code>rtsp://HUB:554/h264Preview_01_sub    (канал 1, субпоток)\nrtsp://HUB:554/h264Preview_01_main\nPOST /cgi-bin/api.cgi?cmd=Login   → token\nPOST /cgi-bin/api.cgi?cmd=...&amp;token=...</code></pre>\n<h4>Ограничения</h4>\n<ul><li>Через Home Hub каждая сессия просмотра длится до 5 минут. Потом камера засыпает, RTSP обрывается. Адаптер запрашивает поток заново, панель показывает это пользователю.</li>\n<li>Разбудить спящую камеру — это время: первый кадр появляется не сразу.</li>\n<li>Документация HTTP API не публичная, производитель выдаёт её по запросу. Обновление прошивки может изменить команды.</li></ul>\n<h4>События</h4>\n<p>На моделях с подпиской на события ONVIF используется PullPoint. На остальных адаптер опрашивает состояние движения через API. Частый опрос съедает батарею, поэтому интервал подбираем замерами на пилоте.</p>\n<p class='ogoh'>Reolink — решение для дома и небольшого офиса (01). Камера работает до −10 °C, зимой её ставят внутри здания.</p>\n<p>Оценка: 2–3 недели.</p>"}},
   "s-adapter.ajax": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Ajax: hubda ochiq lokal API yo'q", "tana": "<p>Ajax hubi bilan to'g'ridan-to'g'ri gaplashadigan ochiq lokal API yo'q. Tanlov ikki yo'l orasida.</p>\n<h4>1. SIA DC-09, bulutsiz</h4>\n<p>Hub hodisani bankning qabul qiluvchisiga o'zi yuboradi, Ajax Cloud orqali emas. Buning uchun hub proshivkasi OS Malevich 2.7 yoki yangiroq bo'lishi kerak. Sozlash Ajax ilovasida: kuzatuv stansiyasi, protokol SIA DC-09, asosiy va zaxira IP.</p>\n<ul><li>MKB tomonida DC-09 qabul qiluvchi yoziladi: TCP yoki UDP, shifrlash kaliti bilan.</li>\n<li>Faqat hodisa kodlari keladi. Hubdan foto tasdiq bu yo'l bilan uzatilmaydi, shuning uchun video alohida IP kameradan olinadi.</li></ul>\n<h4>2. Enterprise API, bulut orqali</h4>\n<p>Hub sozlamalari, hodisalar lentasi, qo'riqlash rejimi va rele boshqaruvi. Lekin Ajax uni minglab tizimga xizmat qiladigan yirik xavfsizlik kompaniyalariga beradi. Bank 267 obyekt bilan bu shartga to'g'ri kelmasligi mumkin.</p>\n<h4>Bank qaror qiladi</h4>\n<ul><li>Buyruq (rele, qo'riqlash rejimi) kerakmi. Kerak bo'lmasa, DC-09 yetadi.</li>\n<li>Qo'riqlash departamenti pulti ham ulanadimi: hub ikkinchi manzilga ham hodisa yubora oladi.</li></ul>\n<p>Baho: DC-09 qabul qiluvchi 2–3 hafta.</p>", "manba": [["Ajax: SIA DC-09", "https://support.ajax.systems/en/how-to-use-sia-for-cms-connection/"], ["Ajax: Enterprise API", "https://ajax.systems/blog/enterprise-api/"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Ajax: открытого локального API на хабе нет", "tana": "<p>Открытого локального API для прямой работы с хабом Ajax нет. Выбирать приходится из двух путей.</p>\n<h4>1. SIA DC-09, без облака</h4>\n<p>Хаб сам отправляет события на приёмник банка, минуя Ajax Cloud. Нужна прошивка хаба OS Malevich 2.7 или новее. Настройка в приложении Ajax: станция мониторинга, протокол SIA DC-09, основной и резервный IP.</p>\n<ul><li>На стороне MKB пишется приёмник DC-09: TCP или UDP, с ключом шифрования.</li>\n<li>Приходят только коды событий. Фотоподтверждение с хаба этим путём не передаётся, поэтому видео берётся с отдельной IP-камеры.</li></ul>\n<h4>2. Enterprise API, через облако</h4>\n<p>Настройки хаба, лента событий, режим охраны и управление реле. Но Ajax выдаёт его крупным охранным компаниям, обслуживающим тысячи систем. Банк с 267 объектами под это условие может не подойти.</p>\n<h4>Что решает банк</h4>\n<ul><li>Нужны ли команды (реле, режим охраны). Если нет — достаточно DC-09.</li>\n<li>Подключать ли пульт Департамента охраны: хаб умеет слать события и на второй адрес.</li></ul>\n<p>Оценка: приёмник DC-09 — 2–3 недели.</p>"}},
   "s-adapter.milesight": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Milesight: shlyuzning o'zida tarmoq serveri", "tana": "<p>UG65 shlyuzi ichida LoRaWAN tarmoq serveri bor. Tashqi server kerak emas: shlyuz datchik paketini dekodlaydi va tayyor JSON'ni MQTT yoki HTTP(S) orqali yuboradi.</p>\n<pre><code>Uplink (datchik → MKB):  mkb/AK-2025-0934/lorawan/uplink\nDownlink (MKB → datchik): mkb/AK-2025-0934/lorawan/downlink/$deveui\nTLS, mijoz sertifikati, QoS 1, retain, Last Will</code></pre>\n<h4>Adapter nima qiladi</h4>\n<ul><li>Brokerga obuna bo'ladi, <code>devEUI</code> ni reyestr orqali <code>qurilma_id</code> ga o'giradi.</li>\n<li>Datchik maydonlarini sxemaga keltiradi: eshik → <code>eshik</code>, tutun → <code>tutun</code>, batareya foizi → <code>batareya</code>.</li>\n<li>Shlyuz uzilsa, Last Will xabari «aloqa yo'q» hodisasiga aylanadi.</li></ul>\n<h4>Nega eng arzon</h4>\n<p>Protokol ochiq va hujjatlashtirilgan, video yo'q. Dekoder shlyuzda ishlaydi, adapterga faqat nomlarni moslash qoladi.</p>\n<div class='raqamlar'><div><b>2000+</b><span>datchik bitta shlyuzda</span></div><div><b>−40…70 °C</b><span>shlyuz ish harorati</span></div><div><b>1–2</b><span>hafta ish</span></div></div>", "manba": [["Milesight UG65 User Guide", "https://resource.milesight.com/milesight/iot/document/ug65-user-guide-en.pdf"], ["Milesight UG MQTT API", "https://resource.milesight.com/milesight/iot/document/ug-mqtt-api-documentation-en.pdf"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Milesight: сетевой сервер прямо в шлюзе", "tana": "<p>Внутри шлюза UG65 есть сетевой сервер LoRaWAN. Внешний сервер не нужен: шлюз декодирует пакет датчика и отправляет готовый JSON по MQTT или HTTP(S).</p>\n<pre><code>Uplink (датчик → MKB):  mkb/AK-2025-0934/lorawan/uplink\nDownlink (MKB → датчик): mkb/AK-2025-0934/lorawan/downlink/$deveui\nTLS, клиентский сертификат, QoS 1, retain, Last Will</code></pre>\n<h4>Что делает адаптер</h4>\n<ul><li>Подписывается на брокер и через реестр переводит <code>devEUI</code> в <code>qurilma_id</code>.</li>\n<li>Приводит поля датчика к схеме: дверь → <code>eshik</code>, дым → <code>tutun</code>, заряд → <code>batareya</code>.</li>\n<li>При обрыве шлюза сообщение Last Will превращается в событие «нет связи».</li></ul>\n<h4>Почему это самый дешёвый адаптер</h4>\n<p>Протокол открытый и документированный, видео нет. Декодер работает на шлюзе, адаптеру остаётся только сопоставить названия.</p>\n<div class='raqamlar'><div><b>2000+</b><span>датчиков на один шлюз</span></div><div><b>−40…70 °C</b><span>рабочая температура шлюза</span></div><div><b>1–2</b><span>недели работы</span></div></div>"}},
   "s-adapter.onvif": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "ONVIF: umumiy adapter, lekin sinov shart", "tana": "<p>ONVIF brend adapteri yo'q kameralar uchun zaxira yo'l. U standart, lekin har ishlab chiqaruvchi uni o'zicha to'liq yoki qisman bajaradi.</p>\n<table><tr><th>Profil</th><th>Bizga nima beradi</th></tr>\n<tr><td>S</td><td>Video oqim manzili, PTZ, oddiy hodisalar</td></tr>\n<tr><td>T</td><td>H.265, harakat va buzish hodisalari, HTTPS</td></tr>\n<tr><td>G</td><td>Kamera ichidagi SD yozuvni qidirish va yuklab olish</td></tr>\n<tr><td>M</td><td>Tahlil metama'lumoti: odam, mashina, obyekt</td></tr></table>\n<h4>Hodisa olish</h4>\n<p>PullPoint obunasi: adapter <code>CreatePullPointSubscription</code> chaqiradi, keyin <code>PullMessages</code> bilan navbatdagi xabarlarni o'zi tortib oladi. Kamera adapterga ulanmaydi, shuning uchun NAT va 4G ortida ham ishlaydi.</p>\n<h4>Xarid shartiga yoziladi</h4>\n<ul><li>Model onvif.org saytidagi mos mahsulotlar ro'yxatida S va T profili bilan bo'lishi.</li>\n<li>Pilotdan oldin har model bizning sinov to'plamidan o'tadi: oqim, hodisa, vaqt sinxroni, qayta ulanish.</li></ul>\n<p class='ogoh'>«ONVIF qo'llaydi» degan yozuv yetarli emas. Profil va mos kelish hujjati so'raladi.</p>\n<p>Baho: 3–4 hafta, keyin har yangi model uchun 2–3 kun sinov.</p>", "manba": [["ONVIF Profiles", "https://www.onvif.org/profiles/"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "ONVIF: универсальный адаптер, но с проверкой", "tana": "<p>ONVIF — запасной путь для камер, под которые нет брендового адаптера. Это стандарт, но каждый производитель реализует его полностью или частично.</p>\n<table><tr><th>Профиль</th><th>Что даёт нам</th></tr>\n<tr><td>S</td><td>Адрес видеопотока, PTZ, простые события</td></tr>\n<tr><td>T</td><td>H.265, события движения и вскрытия, HTTPS</td></tr>\n<tr><td>G</td><td>Поиск и выгрузка записи с SD-карты камеры</td></tr>\n<tr><td>M</td><td>Метаданные аналитики: человек, машина, объект</td></tr></table>\n<h4>Получение событий</h4>\n<p>Подписка PullPoint: адаптер вызывает <code>CreatePullPointSubscription</code>, затем сам забирает сообщения через <code>PullMessages</code>. Камера к адаптеру не подключается, поэтому схема работает и за NAT, и через 4G.</p>\n<h4>Что прописать в условиях закупки</h4>\n<ul><li>Модель есть в списке совместимых продуктов на onvif.org с профилями S и T.</li>\n<li>До пилота каждая модель проходит наш тестовый набор: поток, события, синхронизация времени, переподключение.</li></ul>\n<p class='ogoh'>Надписи «поддерживает ONVIF» недостаточно. Запрашиваются профиль и документ о соответствии.</p>\n<p>Оценка: 3–4 недели, затем 2–3 дня тестов на каждую новую модель.</p>"}},
-  "s-adapter.quvur": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Adapter ichidagi to'rt bosqich", "tana": "<ol><li><b>Qabul.</b> Push bor joyda obuna (alertStream, eventManager, MQTT, DC-09), yo'q joyda so'rov. Uzilishda qayta ulanish oralig'i 1 soniyadan 60 soniyagacha oshadi.</li>\n<li><b>Normallashtirish.</b> Brend kodi → <code>tur</code>, qurilma raqami → <code>qurilma_id</code>, mahalliy vaqt → UTC. Noma'lum kod xom jadvalga tushadi va ogohlantirish beradi.</li>\n<li><b>Takrorni tashlash.</b> Kalit: brendning hodisa raqami, u bo'lmasa <code>qurilma_id + tur + vaqt</code> soniyagacha. Kalit 10 daqiqa keshda saqlanadi. Kamera bir harakatga ketma-ket 5 xabar yuborsa, operator bittasini ko'radi.</li>\n<li><b>Shinaga.</b> Hodisa navbatga yoziladi va shundan keyingina manbaga «qabul» deyiladi. Navbat: NATS, RabbitMQ yoki Kafka, jamoa qaysi birini yuritishiga qarab.</li></ol>\n<h4>Kechikkan hodisa</h4>\n<p>Aloqa tiklanganda shlyuz saqlangan hodisalarni yuboradi. Ular <code>kechikkan: true</code> bilan keladi: panel ularni tarixga yozadi, lekin operatorga signal sifatida ko'rsatmaydi. Aks holda bir soatlik uzilishdan keyin operatorga 200 ta eski signal yog'iladi.</p>\n<h4>Kuzatuv</h4>\n<p>Har adapter o'lchov beradi: soniyadagi hodisa, xato, qayta ulanish, navbat uzunligi. Adapter 5 daqiqa jim bo'lsa, navbatchiga xabar ketadi.</p>", "manba": [], "ru": {"yorliq": "Для тимлида", "sarlavha": "Четыре этапа внутри адаптера", "tana": "<ol><li><b>Приём.</b> Где есть push — подписка (alertStream, eventManager, MQTT, DC-09), где нет — опрос. При обрыве пауза переподключения растёт от 1 до 60 секунд.</li>\n<li><b>Нормализация.</b> Код бренда → <code>tur</code>, номер устройства → <code>qurilma_id</code>, местное время → UTC. Неизвестный код уходит в сырую таблицу и поднимает предупреждение.</li>\n<li><b>Отсев дублей.</b> Ключ — номер события бренда, а если его нет — <code>qurilma_id + tur + vaqt</code> с точностью до секунды. Ключ хранится в кеше 10 минут. Камера шлёт 5 сообщений подряд на одно движение — оператор видит одно.</li>\n<li><b>В шину.</b> Событие пишется в очередь, и только после этого источнику отвечают «принято». Очередь — NATS, RabbitMQ или Kafka, в зависимости от того, что команда умеет сопровождать.</li></ol>\n<h4>Запоздавшие события</h4>\n<p>После восстановления связи шлюз досылает сохранённые события. Они приходят с <code>kechikkan: true</code>: панель пишет их в историю, но не показывает оператору как тревогу. Иначе после часового обрыва на оператора обрушатся 200 старых сигналов.</p>\n<h4>Наблюдаемость</h4>\n<p>Каждый адаптер отдаёт метрики: события в секунду, ошибки, переподключения, длина очереди. Если адаптер молчит 5 минут, дежурный получает уведомление.</p>"}},
+  "s-adapter.quvur": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Adapter ichidagi to'rt bosqich", "tana": "<ol><li><b>Qabul.</b> Push bor joyda obuna (alertStream, eventManager, MQTT, DC-09), yo'q joyda so'rov. Uzilishda qayta ulanish oralig'i 1 soniyadan 60 soniyagacha oshadi.</li>\n<li><b>Normallashtirish.</b> Brend kodi → <code>tur</code>, qurilma raqami → <code>qurilma_id</code>, mahalliy vaqt → UTC. Noma'lum kod xom jadvalga tushadi va ogohlantirish beradi.</li>\n<li><b>Takrorni tashlash.</b> Asosiy kalit — <code>hodisa_id</code>: adapter uni bir marta yaratadi va qayta yuborishda o'zgartirmaydi. Brend o'z raqamini bersa, u ham shu kalitga aylantiriladi. <code>qurilma_id + tur + vaqt</code> bo'yicha 10 daqiqalik oyna faqat zaxira: aloqa tiklanganda navbatdagi o'nlab xabar bir vaqtda kelganda oyna ularni noto'g'ri yopishtirib yuborardi. Kamera bir harakatga ketma-ket 5 xabar yuborsa, operator bittasini ko'radi.</li>\n<li><b>Shinaga.</b> Hodisa navbatga yoziladi va shundan keyingina manbaga «qabul» deyiladi. Navbat: NATS, RabbitMQ yoki Kafka, jamoa qaysi birini yuritishiga qarab.</li></ol>\n<h4>Kechikkan hodisa</h4>\n<p>Aloqa tiklanganda shlyuz saqlangan hodisalarni yuboradi. Ular <code>kechikkan: true</code> bilan keladi: panel ularni tarixga yozadi, lekin operatorga signal sifatida ko'rsatmaydi. Aks holda bir soatlik uzilishdan keyin operatorga 200 ta eski signal yog'iladi.</p>\n<h4>Orqa bosim</h4>\n<p>Viloyatda aloqa olti soatdan keyin tiklansa, o'nlab shlyuz navbatini bir vaqtda bo'shatadi. Shuning uchun shlyuz saqlangan hodisalarni darhol emas, 0 dan 120 soniyagacha tasodifiy kechikishdan keyin va soniyasiga beshtadan yuboradi. Gateway <code>429</code> bilan <code>Retry-After</code> qaytarsa, adapter urinishni to'xtatadi va navbatni diskda ushlab turadi. Shina to'lib qolsa, adapter manbaga «qabul» demaydi: hodisa kameraning yoki shlyuzning o'zida qoladi. Bosim shu tariqa zanjirning quyi bo'g'iniga tushadi va bitta hodisa ham yo'qolmaydi.</p>\n<h4>Kuzatuv</h4>\n<p>Har adapter o'lchov beradi: soniyadagi hodisa, xato, qayta ulanish, navbat uzunligi. Adapter 5 daqiqa jim bo'lsa, navbatchiga xabar ketadi.</p>", "manba": [], "ru": {"yorliq": "Для тимлида", "sarlavha": "Четыре этапа внутри адаптера", "tana": "<ol><li><b>Приём.</b> Где есть push — подписка (alertStream, eventManager, MQTT, DC-09), где нет — опрос. При обрыве пауза переподключения растёт от 1 до 60 секунд.</li>\n<li><b>Нормализация.</b> Код бренда → <code>tur</code>, номер устройства → <code>qurilma_id</code>, местное время → UTC. Неизвестный код уходит в сырую таблицу и поднимает предупреждение.</li>\n<li><b>Отсев дублей.</b> Основной ключ — <code>hodisa_id</code>: адаптер создаёт его один раз и не меняет при переотправке. Если бренд даёт свой номер, он тоже преобразуется в этот ключ. Окно 10 минут по <code>qurilma_id + tur + vaqt</code> остаётся только резервом: при восстановлении связи десятки накопленных сообщений приходят разом, и окно склеивало бы их неверно. Камера шлёт 5 сообщений подряд на одно движение — оператор видит одно.</li>\n<li><b>В шину.</b> Событие пишется в очередь, и только после этого источнику отвечают «принято». Очередь — NATS, RabbitMQ или Kafka, в зависимости от того, что команда умеет сопровождать.</li></ol>\n<h4>Запоздавшие события</h4>\n<p>После восстановления связи шлюз досылает сохранённые события. Они приходят с <code>kechikkan: true</code>: панель пишет их в историю, но не показывает оператору как тревогу. Иначе после часового обрыва на оператора обрушатся 200 старых сигналов.</p>\n<h4>Обратное давление</h4>\n<p>Когда в области связь возвращается через шесть часов, десятки шлюзов начинают выгружать очередь одновременно. Поэтому шлюз отправляет накопленное не сразу, а после случайной паузы от 0 до 120 секунд и не быстрее пяти событий в секунду. Если gateway ответил <code>429</code> с заголовком <code>Retry-After</code>, адаптер прекращает попытки и держит очередь на диске. Когда переполнена шина, адаптер не подтверждает приём источнику: событие остаётся в камере или в шлюзе. Давление так уходит вниз по цепочке, и ни одно событие не теряется.</p>\n<h4>Наблюдаемость</h4>\n<p>Каждый адаптер отдаёт метрики: события в секунду, ошибки, переподключения, длина очереди. Если адаптер молчит 5 минут, дежурный получает уведомление.</p>"}},
   "s-adapter.sinov": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Adapter qachon qabul qilinadi", "tana": "<p>Adapter kod yozilgani uchun emas, uch sinovdan o'tgani uchun qabul qilinadi.</p>\n<h4>1. Shartnoma testi</h4>\n<p>Adapter chiqargan har xabar JSON Schema'ga qarshi tekshiriladi. Sxema o'zgarsa, eski adapterlarning hammasi CI'da qayta sinaladi.</p>\n<h4>2. Yozib olingan hodisalar</h4>\n<p>Pilot obyektidan haqiqiy oqim yoziladi: HTTP multipart, MQTT xabarlari, DC-09 paketlari. Keyin adapter shu yozuvlarda qurilmasiz sinaladi. Proshivka yangilansa, yangi yozuv olinadi va farq ko'rinadi.</p>\n<h4>3. Pilotda bir hafta</h4>\n<table><tr><th>Mezon</th><th>Chegara</th></tr>\n<tr><td>Yo'qolgan hodisa</td><td class='n'>0</td></tr>\n<tr><td>Ikki marta ko'ringan hodisa</td><td class='n'>1% dan kam</td></tr>\n<tr><td>4G uzilgandan keyin qayta ulanish</td><td class='n'>60 s dan tez</td></tr>\n<tr><td>Adapterdan panelgacha, p95</td><td class='n'>5 s dan kam</td></tr></table>\n<h4>Yuklama</h4>\n<p>Simulyator 100 obyekt va 400 qurilmani taqlid qiladi: har biri kuniga 30 hodisa, soat 07:00 da hammasi birdaniga. Navbat va baza shu cho'qqini ushlashi kerak.</p>\n<p class='ogoh'>Chegaralar taklif. Yakuniy qiymatlar pilot natijasi bilan SLA'ga yoziladi.</p>", "manba": [], "ru": {"yorliq": "Для тимлида", "sarlavha": "Когда адаптер считается принятым", "tana": "<p>Адаптер принимают не за то, что код написан, а за то, что он прошёл три проверки.</p>\n<h4>1. Контрактные тесты</h4>\n<p>Каждое сообщение адаптера проверяется против JSON Schema. При изменении схемы все прежние адаптеры заново прогоняются в CI.</p>\n<h4>2. Записанные события</h4>\n<p>С пилотного объекта записывается реальный трафик: HTTP multipart, сообщения MQTT, пакеты DC-09. Затем адаптер тестируется на этих записях без устройства. После обновления прошивки делается новая запись, и разница видна сразу.</p>\n<h4>3. Неделя на пилоте</h4>\n<table><tr><th>Критерий</th><th>Порог</th></tr>\n<tr><td>Потерянные события</td><td class='n'>0</td></tr>\n<tr><td>Задвоенные события</td><td class='n'>меньше 1%</td></tr>\n<tr><td>Переподключение после обрыва 4G</td><td class='n'>быстрее 60 с</td></tr>\n<tr><td>От адаптера до панели, p95</td><td class='n'>меньше 5 с</td></tr></table>\n<h4>Нагрузка</h4>\n<p>Симулятор изображает 100 объектов и 400 устройств: по 30 событий в сутки на каждое, а в 07:00 все разом. Очередь и база должны выдержать этот пик.</p>\n<p class='ogoh'>Пороги — предложение. Итоговые значения вносятся в SLA по результатам пилота.</p>"}},
   "s-video.kamera": {"yorliq": "Montajchi uchun", "sarlavha": "Kamerada ikki oqim sozlanadi", "tana": "<p>Kamera bir vaqtda ikki oqim beradi. Montajchi ikkalasini ham sozlab ketadi, standart zavod sozlamasi qoldirilmaydi.</p>\n<table><tr><th>Oqim</th><th>Qayerga</th><th>Sozlama</th></tr>\n<tr><td>Asosiy</td><td>SD karta</td><td>H.265, 1080p yoki 4 MP, 2 Mbit/s</td></tr>\n<tr><td>Sub</td><td>Operatorga jonli</td><td>H.264, 640×360 yoki 720p, 512 kbit/s</td></tr></table>\n<h4>Nega sub-oqim H.264</h4>\n<p>Brauzerlarning hammasi H.264'ni o'qiydi. H.265 WebRTC orqali hamma joyda ochilmaydi, uni o'girish esa serverda protsessor yeydi.</p>\n<h4>Montajda tekshiriladi</h4>\n<ul><li>Kalit kadr oralig'i 2 soniya: jonli video tez ochiladi.</li>\n<li>Ovoz o'chirilgan: trafik va maxfiylik.</li>\n<li>Vaqt NTP bo'yicha, mintaqa UTC+5. Kamera soati 2 daqiqadan ko'p adashsa, hodisa vaqti tuzatiladi va belgilanadi.</li>\n<li>Bulut (P2P) va UPnP o'chirilgan, zavod paroli almashtirilgan.</li>\n<li>4G yuqoriga tezligi joyida o'lchanadi. 1 Mbit/s dan past bo'lsa, sub-oqim 384 kbit/s ga tushiriladi.</li></ul>\n<p class='ogoh'>Batareyali kamera uxlaydi: oqim uyg'otilgandan keyin boshlanadi, birinchi kadr bir necha soniya kutiladi.</p>", "manba": [], "ru": {"yorliq": "Для монтажника", "sarlavha": "В камере настраиваются два потока", "tana": "<p>Камера одновременно отдаёт два потока. Монтажник настраивает оба, заводские значения не оставляются.</p>\n<table><tr><th>Поток</th><th>Куда</th><th>Настройка</th></tr>\n<tr><td>Основной</td><td>SD-карта</td><td>H.265, 1080p или 4 Мп, 2 Мбит/с</td></tr>\n<tr><td>Суб</td><td>Оператору в живом режиме</td><td>H.264, 640×360 или 720p, 512 кбит/с</td></tr></table>\n<h4>Почему субпоток H.264</h4>\n<p>H.264 читают все браузеры. H.265 через WebRTC открывается не везде, а перекодирование нагружает процессор сервера.</p>\n<h4>Что проверить при монтаже</h4>\n<ul><li>Интервал ключевых кадров 2 секунды: живое видео открывается быстро.</li>\n<li>Звук выключен: трафик и приватность.</li>\n<li>Время по NTP, часовой пояс UTC+5. Если часы камеры уходят больше чем на 2 минуты, время события исправляется и помечается.</li>\n<li>Облако (P2P) и UPnP отключены, заводской пароль заменён.</li>\n<li>Скорость 4G на отдачу замеряется на месте. Если меньше 1 Мбит/с, субпоток снижается до 384 кбит/с.</li></ul>\n<p class='ogoh'>Камера на батарее спит: поток начинается после пробуждения, первого кадра приходится ждать несколько секунд.</p>"}},
   "s-video.shlyuz": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Media shlyuz: oqim faqat tomoshabin bor paytda", "tana": "<p>Shlyuz kameradan RTSP oladi va uni kodlamasdan WebRTC yoki HLS ga qayta o'raydi. O'girish yo'q, shuning uchun protsessorga yuk kam.</p>\n<h4>MediaMTX misoli</h4>\n<pre><code>paths:\n  KAM-0007:\n    source: rtsp://10.20.7.11:554/Streaming/Channels/102\n    sourceOnDemand: yes     # tomoshabin kelganda ulanadi\nauthMethod: jwt\nauthJWTJWKS: https://api.mkb.local/.well-known/jwks.json</code></pre>\n<ul><li><code>sourceOnDemand</code>: kameraga faqat birinchi tomoshabin kelganda ulanadi, oxirgisi ketgach uziladi.</li>\n<li>JWT: shlyuz <code>/video/sessiya</code> bergan tokenni o'zi tekshiradi, har so'rovda API'ga murojaat qilmaydi.</li></ul>\n<h4>MediaMTX yoki go2rtc</h4>\n<p>Ikkalasi ham MIT litsenziyasida, bepul va kodi ochiq. MediaMTX yozish, arxivdan ijro va boshqaruv API'siga kuchli. go2rtc yengilroq, turli manbalarni yaxshi tushunadi. Pilotda bittasi tanlanadi, ikkinchisi zaxira.</p>\n<h4>Joylashuv va hajm</h4>\n<p>Bank data-markazida, VPN ichida, ikki nusxa. Kodlashsiz qayta o'rash yengil: bir necha o'nlab oqimga 4 vCPU'li virtual mashina yetishi kutiladi. Aniq son pilotda yuklama sinovi bilan o'lchanadi.</p>", "manba": [["MediaMTX", "https://github.com/bluenviron/mediamtx"], ["go2rtc", "https://github.com/AlexxIT/go2rtc"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Медиашлюз: поток есть, только пока есть зритель", "tana": "<p>Шлюз берёт RTSP с камеры и без перекодирования переупаковывает его в WebRTC или HLS. Перекодирования нет, поэтому нагрузка на процессор небольшая.</p>\n<h4>Пример для MediaMTX</h4>\n<pre><code>paths:\n  KAM-0007:\n    source: rtsp://10.20.7.11:554/Streaming/Channels/102\n    sourceOnDemand: yes     # подключаться при появлении зрителя\nauthMethod: jwt\nauthJWTJWKS: https://api.mkb.local/.well-known/jwks.json</code></pre>\n<ul><li><code>sourceOnDemand</code>: шлюз подключается к камере только с первым зрителем и отключается после ухода последнего.</li>\n<li>JWT: шлюз сам проверяет токен, выданный <code>/video/sessiya</code>, и не обращается к API на каждый запрос.</li></ul>\n<h4>MediaMTX или go2rtc</h4>\n<p>Оба под лицензией MIT, бесплатные, с открытым кодом. MediaMTX силён в записи, воспроизведении архива и API управления. go2rtc легче и хорошо понимает разнородные источники. На пилоте выбирается один, второй остаётся запасным.</p>\n<h4>Размещение и мощность</h4>\n<p>В дата-центре банка, внутри VPN, в двух экземплярах. Переупаковка без перекодирования лёгкая: на несколько десятков потоков ожидаемо хватит ВМ с 4 vCPU. Точную цифру даст нагрузочный тест на пилоте.</p>"}},
@@ -45,7 +45,7 @@ Object.assign(window.MKB_BATAFSIL, {
   "s-savol.park1": {"yorliq": "Rahbariyat uchun", "sarlavha": "Yuzta kamera: operator nimani ko'radi", "tana": "<p>Jadval tartibi holat bo'yicha: avval «aloqa yo'q», keyin «batareya past», keyin qolgani. Muammosiz obyektlar ro'yxat oxirida turadi va operatorni chalg'itmaydi.</p>\n<h4>Holatlar qanday belgilanadi</h4>\n<ul><li><b>Aloqada:</b> oxirgi yurak urishi kutilgan oraliqda keldi.</li>\n<li><b>Batareya past:</b> 20% dan kam. Servis arizasi o'zi ochiladi.</li>\n<li><b>Aloqa yo'q:</b> 15 daqiqa davomida xabar kelmadi. Operator oxirgi kadrga qaraydi va kerak bo'lsa inspektor yuboradi.</li></ul>\n<h4>Operator yuklamasi</h4>\n<p>Taxminiy hisob: obyektga kuniga 3–5 hodisa bo'lsa, 100 obyektdan 300–500 ta keladi. Qoidalar ish vaqtidagi eshikni va takrorlarni olib tashlaydi, operatorga kuniga bir necha o'nta signal qoladi. Buni navbatchi smenasi ko'taradi. Aniq son pilotda o'lchanadi.</p>\n<div class='raqamlar'><div><b>1</b><span>ekran, 100 ta kartochka</span></div><div><b>0</b><span>doimiy video oqimi</span></div></div>\n<p>Kartochkani bosish obyekt sahifasini ochadi: oxirgi kadr, hodisalar tarixi va «videoni ochish» tugmasi.</p>", "manba": [], "ru": {"yorliq": "Для руководства", "sarlavha": "Сто камер: что видит оператор", "tana": "<p>Таблица сортируется по состоянию: сначала «нет связи», потом «низкий заряд», затем остальные. Объекты без проблем стоят в конце списка и не отвлекают оператора.</p>\n<h4>Как определяются состояния</h4>\n<ul><li><b>На связи:</b> последний heartbeat пришёл в ожидаемый интервал.</li>\n<li><b>Низкий заряд:</b> меньше 20%. Сервисная заявка открывается автоматически.</li>\n<li><b>Нет связи:</b> 15 минут без сообщений. Оператор смотрит последний кадр и при необходимости направляет инспектора.</li></ul>\n<h4>Нагрузка на оператора</h4>\n<p>Оценка: если на объект приходится 3–5 событий в сутки, со 100 объектов придёт 300–500. Правила отсекают открытия дверей в рабочее время и дубли, у оператора остаётся несколько десятков тревог в сутки. Это по силам дежурной смене. Точную цифру даст пилот.</p>\n<div class='raqamlar'><div><b>1</b><span>экран, 100 карточек</span></div><div><b>0</b><span>непрерывных видеопотоков</span></div></div>\n<p>Клик по карточке открывает страницу объекта: последний кадр, история событий и кнопка «открыть видео».</p>"}},
   "s-savol.tunfakt1": {"yorliq": "Texnik izoh", "sarlavha": "80 mVt va 1,85–7 Vt: farq qayerdan", "tana": "<p>Raqamlar Hikvision DS-2XS2T41G1-ID/4G quyosh-4G kamerasining datasheet'idan: kutishda 80 mVt, odatiy ishda 1,85 Vt, eng ko'pi 7 Vt.</p>\n<table><tr><th>Rejim</th><th>Quvvat</th><th>Sutkada</th></tr>\n<tr><td>Kutish</td><td class='n'>0,08 Vt</td><td class='n'>1,9 Vt·soat</td></tr>\n<tr><td>Doimiy ish</td><td class='n'>1,85 Vt</td><td class='n'>44,4 Vt·soat</td></tr>\n<tr><td>Eng ko'p yuklama</td><td class='n'>7 Vt</td><td class='n'>168 Vt·soat</td></tr></table>\n<p>Doimiy ish kutishdan kamida 23 barobar ko'p energiya oladi. Dekabrda Toshkentda quyosh kuniga 1,62 kVt·soat/m², iyundagidan 4,7 marta kam. Kichik panel bunday sarfni qishda qoplamaydi.</p>\n<h4>Xulosa loyiha uchun</h4>\n<ul><li>Kamera hodisada uyg'onadi, kadr va klipni yuboradi, yana uxlaydi.</li>\n<li>Jonli video operator so'raganda, qisqa muddatga.</li>\n<li>Akkumulyator zaryadi 0…45 °C da: qishda panel bo'lsa ham zaryad to'xtashi mumkin.</li></ul>\n<p class='ogoh'>Boshqa model tanlansa, bu hisob uning datasheet'i bilan qayta qilinadi: kutish va ish rejimi sarfi talab qilinadi.</p>", "manba": [], "ru": {"yorliq": "Техническая справка", "sarlavha": "80 мВт и 1,85–7 Вт: откуда разница", "tana": "<p>Цифры из datasheet солнечной 4G-камеры Hikvision DS-2XS2T41G1-ID/4G: в ожидании 80 мВт, в обычной работе 1,85 Вт, максимум 7 Вт.</p>\n<table><tr><th>Режим</th><th>Мощность</th><th>За сутки</th></tr>\n<tr><td>Ожидание</td><td class='n'>0,08 Вт</td><td class='n'>1,9 Вт·ч</td></tr>\n<tr><td>Постоянная работа</td><td class='n'>1,85 Вт</td><td class='n'>44,4 Вт·ч</td></tr>\n<tr><td>Пиковая нагрузка</td><td class='n'>7 Вт</td><td class='n'>168 Вт·ч</td></tr></table>\n<p>Постоянная работа требует минимум в 23 раза больше энергии, чем ожидание. В декабре в Ташкенте солнце даёт 1,62 кВт·ч/м² в сутки — в 4,7 раза меньше, чем в июне. Небольшая панель зимой такой расход не покроет.</p>\n<h4>Вывод для проекта</h4>\n<ul><li>Камера просыпается по событию, отправляет кадр и клип и снова засыпает.</li>\n<li>Живое видео — по запросу оператора и ненадолго.</li>\n<li>Заряд аккумулятора — при 0…45 °C: зимой он может остановиться даже при наличии панели.</li></ul>\n<p class='ogoh'>Если выбрана другая модель, расчёт повторяется по её datasheet: запрашивается потребление в ожидании и в работе.</p>"}},
   "s-savol.tunfakt2": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Home Hub'ning 5 daqiqalik chegarasi", "tana": "<p>Reolink rasmiy yordam sahifasiga ko'ra, Home Hub orqali batareyali Wi-Fi kameraning har ko'rish sessiyasi 5 daqiqagacha davom etadi. Keyin kamera uyquga ketadi va RTSP ulanishi uziladi. Davom ettirish uchun oqim qayta so'raladi.</p><p>Home Hub Pro monitoriga ulanganda esa chegara 3 daqiqa.</p>\n<h4>Dasturda qanday hisobga olinadi</h4>\n<ul><li>Media shlyuz uzilishni xato deb emas, kutilgan holat deb qabul qiladi.</li>\n<li>Panel operatorga qolgan vaqtni ko'rsatadi va «uzaytirish» tugmasini beradi.</li>\n<li>Uyquda turgan kamerani uyg'otish vaqt oladi: panel kutish belgisini ko'rsatadi.</li></ul>\n<h4>Nega bu yomon emas</h4>\n<p>Cheklov batareyani tejash uchun qo'yilgan. Bizning model baribir hodisaga qurilgan: operator voqeani ko'rish, qaror qilish va eshik buyrug'i uchun odatda bir necha daqiqa sarflaydi.</p>\n<p class='ogoh'>Uzoq kuzatuv kerak bo'lgan obyektga Reolink emas, doimiy quvvatli yechim tanlanadi: LiFePO4 shkafi yoki klaster.</p>", "manba": [["Reolink: Introduction to RTSP", "https://support.reolink.com/articles/900000630706-Introduction-to-RTSP/"]], "ru": {"yorliq": "Для тимлида", "sarlavha": "Пятиминутный предел Home Hub", "tana": "<p>По официальной справке Reolink, через Home Hub каждая сессия просмотра камеры на батарее с Wi-Fi длится до 5 минут. Затем камера засыпает, соединение RTSP рвётся. Чтобы продолжить, поток запрашивается заново.</p><p>При подключении к монитору Home Hub Pro предел — 3 минуты.</p>\n<h4>Как это учитывается в ПО</h4>\n<ul><li>Медиашлюз воспринимает обрыв не как ошибку, а как ожидаемое состояние.</li>\n<li>Панель показывает оператору оставшееся время и кнопку «продлить».</li>\n<li>Разбудить спящую камеру — это время: панель показывает ожидание.</li></ul>\n<h4>Почему это не страшно</h4>\n<p>Ограничение введено ради экономии батареи. Наша модель и так строится на событиях: чтобы увидеть происходящее, принять решение и дать команду на дверь, оператору обычно хватает нескольких минут.</p>\n<p class='ogoh'>Для объекта, где нужно долгое наблюдение, выбирают не Reolink, а решение с постоянным питанием: шкаф LiFePO4 или кластер.</p>"}},
-  "s-savol.tunfakt3": {"yorliq": "Rahbariyat uchun", "sarlavha": "Xarid sharti: brend emas, mezon", "tana": "<p>Tender shartiga brend nomi emas, tekshiriladigan talablar yoziladi. Shunda Hikvision, Dahua va boshqalar bir-biri bilan raqobatlashadi.</p>\n<table><tr><th>Mezon</th><th>Qanday tekshiriladi</th></tr>\n<tr><td>ONVIF S yoki T</td><td>onvif.org dagi mos mahsulotlar ro'yxati</td></tr>\n<tr><td>Ochiq API</td><td>Hujjat taklif bilan birga topshiriladi</td></tr>\n<tr><td>Joyida yozuv</td><td>SD yoki NVR, aloqasiz 7 kun</td></tr>\n<tr><td>−20 °C</td><td>Datasheet va sertifikat; akkumulyator zaryadlash harorati alohida</td></tr>\n<tr><td>Bulutsiz ishlash</td><td>P2P o'chirilganda sinovdan o'tadi</td></tr>\n<tr><td>Yangilanish</td><td>Proshivka va zaiflik tuzatish siyosati</td></tr></table>\n<h4>Yangi mahsulotlar</h4>\n<p>Ugreen SynCare kabi yangi tizimlar kuzatiladi, lekin hali sotuvda yo'q: yetkazish 2027-yil yanvarda e'lon qilingan. Ishlash harorati e'lon qilinmagan. Sotuvga chiqqach, shu jadval bo'yicha baholanadi.</p>\n<p class='ogoh'>Yuzni tanish yoqilsa, O'RQ-1125 bo'yicha biometrik ma'lumot O'zbekistonda saqlanadi: xorijiy bulutga tayanadigan mahsulot bu funksiya bilan olinmaydi.</p>\n<p>Har mezon ball emas, «o'tdi yoki o'tmadi». Bittasidan o'tmagan model narxidan qat'i nazar olinmaydi.</p>", "manba": [["ONVIF Profiles", "https://www.onvif.org/profiles/"]], "ru": {"yorliq": "Для руководства", "sarlavha": "Условие закупки: не бренд, а критерии", "tana": "<p>В тендер пишется не название бренда, а проверяемые требования. Тогда Hikvision, Dahua и другие конкурируют между собой.</p>\n<table><tr><th>Критерий</th><th>Как проверяется</th></tr>\n<tr><td>ONVIF S или T</td><td>Список совместимых продуктов на onvif.org</td></tr>\n<tr><td>Открытый API</td><td>Документация прикладывается к предложению</td></tr>\n<tr><td>Локальная запись</td><td>SD или NVR, 7 дней без связи</td></tr>\n<tr><td>−20 °C</td><td>Datasheet и сертификат; температура заряда аккумулятора отдельно</td></tr>\n<tr><td>Работа без облака</td><td>Проверка с отключённым P2P</td></tr>\n<tr><td>Обновления</td><td>Политика прошивок и исправления уязвимостей</td></tr></table>\n<h4>Новые продукты</h4>\n<p>Новые системы вроде Ugreen SynCare отслеживаются, но в продаже их ещё нет: поставки объявлены на январь 2027 года. Рабочая температура не опубликована. После выхода в продажу продукт оценивается по этой же таблице.</p>\n<p class='ogoh'>Если включено распознавание лиц, по O'RQ-1125 биометрические данные хранятся в Узбекистане: продукт, завязанный на зарубежное облако, с этой функцией не берётся.</p>\n<p>Каждый критерий оценивается не баллами, а по принципу «прошёл или нет». Модель, не прошедшая хотя бы один, не берётся независимо от цены.</p>"}},
+  "s-savol.tunfakt3": {"yorliq": "Rahbariyat uchun", "sarlavha": "Xarid sharti: brend emas, mezon", "tana": "<p>Tender shartiga tekshiriladigan talablar yoziladi. Shunda Hikvision, Dahua va boshqalar bir-biri bilan raqobatlashadi.</p>\n<table><tr><th>Mezon</th><th>Qanday tekshiriladi</th></tr>\n<tr><td>ONVIF S yoki T</td><td>onvif.org dagi mos mahsulotlar ro'yxati</td></tr>\n<tr><td>Ochiq API</td><td>Hujjat taklif bilan birga topshiriladi</td></tr>\n<tr><td>Joyida yozuv</td><td>SD yoki NVR, aloqasiz 7 kun</td></tr>\n<tr><td>−20 °C</td><td>Datasheet va sertifikat; akkumulyator zaryadlash harorati alohida</td></tr>\n<tr><td>Bulutsiz ishlash</td><td>P2P o'chirilganda sinovdan o'tadi</td></tr>\n<tr><td>Yangilanish</td><td>Proshivka va zaiflik tuzatish siyosati</td></tr></table>\n<h4>Yangi mahsulotlar</h4>\n<p>Ugreen SynCare kabi yangi tizimlar kuzatiladi, lekin hali sotuvda yo'q: yetkazish 2027-yil yanvarda e'lon qilingan. Ishlash harorati e'lon qilinmagan. Sotuvga chiqqach, shu jadval bo'yicha baholanadi.</p>\n<p class='ogoh'>Yuzni tanish yoqilsa, O'RQ-1125 bo'yicha biometrik ma'lumot O'zbekistonda saqlanadi: xorijiy bulutga tayanadigan mahsulot bu funksiya bilan olinmaydi.</p>\n<p>Har mezon «o'tdi yoki o'tmadi» bo'yicha baholanadi. Bittasidan o'tmagan model narxidan qat'i nazar olinmaydi.</p>", "manba": [["ONVIF Profiles", "https://www.onvif.org/profiles/"]], "ru": {"yorliq": "Для руководства", "sarlavha": "Условие закупки: не бренд, а критерии", "tana": "<p>В тендер пишется не название бренда, а проверяемые требования. Тогда Hikvision, Dahua и другие конкурируют между собой.</p>\n<table><tr><th>Критерий</th><th>Как проверяется</th></tr>\n<tr><td>ONVIF S или T</td><td>Список совместимых продуктов на onvif.org</td></tr>\n<tr><td>Открытый API</td><td>Документация прикладывается к предложению</td></tr>\n<tr><td>Локальная запись</td><td>SD или NVR, 7 дней без связи</td></tr>\n<tr><td>−20 °C</td><td>Datasheet и сертификат; температура заряда аккумулятора отдельно</td></tr>\n<tr><td>Работа без облака</td><td>Проверка с отключённым P2P</td></tr>\n<tr><td>Обновления</td><td>Политика прошивок и исправления уязвимостей</td></tr></table>\n<h4>Новые продукты</h4>\n<p>Новые системы вроде Ugreen SynCare отслеживаются, но в продаже их ещё нет: поставки объявлены на январь 2027 года. Рабочая температура не опубликована. После выхода в продажу продукт оценивается по этой же таблице.</p>\n<p class='ogoh'>Если включено распознавание лиц, по O'RQ-1125 биометрические данные хранятся в Узбекистане: продукт, завязанный на зарубежное облако, с этой функцией не берётся.</p>\n<p>Каждый критерий оценивается не баллами, а по принципу «прошёл или нет». Модель, не прошедшая хотя бы один, не берётся независимо от цены.</p>"}},
   "s-savol.kod1": {"yorliq": "Jamoa rahbarlari uchun", "sarlavha": "Bitta hodisa: kameradan panelgacha", "tana": "<p>Slayddagi misol qisqartirilgan. To'liq sxemada <code>hodisa_id</code>, <code>vaqt</code>, <code>klip_url</code> va <code>sha256</code> ham bor.</p>\n<pre><code>POST /api/v1/hodisa\n{ \"hodisa_id\": \"7f3c9a2e-...-41d0\",\n  \"obyekt_id\": \"AK-2025/0934\",\n  \"qurilma_id\": \"KAM-0007\",\n  \"tur\": \"harakat\",\n  \"vaqt\": \"2026-09-21T06:30:12Z\",\n  \"batareya\": 64, \"signal_dbm\": -89,\n  \"kadr_url\": \"dalil/0007/063012.jpg\" }\n→ 202 { \"holat\": \"qabul\" }</code></pre>\n<h4>Vaqt chizig'i</h4>\n<table><tr><th>Bosqich</th><th>Kutilgan vaqt</th></tr>\n<tr><td>Kamera uyg'onadi va kadr oladi</td><td class='n'>1–3 s</td></tr>\n<tr><td>4G orqali adapterga</td><td class='n'>1–2 s</td></tr>\n<tr><td>Normallashtirish va navbat</td><td class='n'>0,3 s dan kam</td></tr>\n<tr><td>Panelda kartochka yangilanadi</td><td class='n'>1 s dan kam</td></tr></table>\n<p>Jami bir necha soniya. Pilot mezoni: p95 5 soniyadan kam. Vaqtlar taxmin, pilotda o'lchanadi.</p>\n<p>Barcha maydonlar <a data-slayd=\"#s-api\" href=\"#\">«API» slaydida</a>.</p>\n<p class='ogoh'>Eng sekin qism kamera uyg'onishi va 4G. Signal −105 dBm dan past bo'lsa, vaqt bir necha barobar oshadi.</p>", "manba": [], "ru": {"yorliq": "Для тимлида", "sarlavha": "Одно событие: от камеры до панели", "tana": "<p>Пример на слайде сокращён. В полной схеме есть также <code>hodisa_id</code>, <code>vaqt</code>, <code>klip_url</code> и <code>sha256</code>.</p>\n<pre><code>POST /api/v1/hodisa\n{ \"hodisa_id\": \"7f3c9a2e-...-41d0\",\n  \"obyekt_id\": \"AK-2025/0934\",\n  \"qurilma_id\": \"KAM-0007\",\n  \"tur\": \"harakat\",\n  \"vaqt\": \"2026-09-21T06:30:12Z\",\n  \"batareya\": 64, \"signal_dbm\": -89,\n  \"kadr_url\": \"dalil/0007/063012.jpg\" }\n→ 202 { \"holat\": \"qabul\" }</code></pre>\n<h4>Хронология</h4>\n<table><tr><th>Этап</th><th>Ожидаемое время</th></tr>\n<tr><td>Камера просыпается и делает кадр</td><td class='n'>1–3 с</td></tr>\n<tr><td>По 4G до адаптера</td><td class='n'>1–2 с</td></tr>\n<tr><td>Нормализация и очередь</td><td class='n'>меньше 0,3 с</td></tr>\n<tr><td>Обновление карточки в панели</td><td class='n'>меньше 1 с</td></tr></table>\n<p>Итого несколько секунд. Критерий пилота — p95 меньше 5 секунд. Времена оценочные, на пилоте замеряются.</p>\n<p>Все поля — на <a data-slayd=\"#s-api\" href=\"#\">слайде «API»</a>.</p>\n<p class='ogoh'>Самые медленные звенья — пробуждение камеры и 4G. При сигнале ниже −105 дБм время вырастает в разы.</p>"}}
 });
 
@@ -105,12 +105,12 @@ Object.assign(window.MKB_BATAFSIL, {
   "s-masshtab.dalil": {
     yorliq: "Moliya va huquq",
     sarlavha: "Kadr va klip: hajm, muddat, qonun",
-    tana: "<p>Disk hajmini deyarli butunlay dalil fayllari belgilaydi. Hisob obyekt kesimida: kuniga taxminan 36 MB kadr va klip. Bu 23-slayddagi kamera hisobiga mos keladi: bitta kamera kuniga 26 MB, obyektda o'rtacha 1–2 kamera, datchiklar kadr bermaydi. Saqlash muddati 90 kun.</p><table><tr><th>Obyekt</th><th>Kuniga</th><th>90 kunda</th><th>Xom disk</th></tr><tr><td>100</td><td class='n'>3,6 GB</td><td class='n'>0,32 TB</td><td class='n'>1 TB</td></tr><tr><td>300</td><td class='n'>10,8 GB</td><td class='n'>0,97 TB</td><td class='n'>3 TB</td></tr><tr><td>1 000</td><td class='n'>36 GB</td><td class='n'>3,24 TB</td><td class='n'>8 TB</td></tr></table><p>Xom disk foydali hajmdan taxminan 2 barobar katta: MinIO fayllarni erasure coding bilan bo'laklab yozadi va bitta disk yoki server ishdan chiqsa ham ma'lumot yo'qolmaydi.</p><h4>Nega bank ichida</h4><ul><li>O'RQ-1125: biometrik ma'lumot O'zbekistonda saqlanadi. Yuzni tanish yoqilsa, kadrning o'zi biometrik ma'lumotga aylanadi.</li><li>Oddiy videoni shartlar bilan chetda saqlash mumkin, lekin ikki xil tartib yuritish qimmatroq.</li></ul><h4>Qaror kerak</h4><ul><li>90 kun yetadimi yoki sug'urta va sud uchun uzoqroq kerakmi.</li><li>Hodisaga «dalil» belgisi qo'yilsa, fayl Object Lock bilan qulflanadi va 90 kundan keyin ham o'chmaydi.</li></ul>",
+    tana: "<p>Disk hajmini deyarli butunlay dalil fayllari belgilaydi va u obyektga emas, kameraga bog'lanadi. 23-slayd bo'yicha bitta kamera markazga kuniga 26 MB beradi; yechim sahifalari obyektga ikkitadan to'rttagacha kamera qo'yadi, shuning uchun hisob o'rtacha 2,5 kameraga olib boriladi — obyektiga 65 MB. Datchiklar kadr bermaydi. Saqlash muddati 90 kun.</p><table><tr><th>Obyekt</th><th>Kamera</th><th>Kuniga</th><th>90 kunda</th><th>Xom disk</th></tr><tr><td>100</td><td class='n'>250</td><td class='n'>6,5 GB</td><td class='n'>0,59 TB</td><td class='n'>1,5 TB</td></tr><tr><td>300</td><td class='n'>750</td><td class='n'>19,5 GB</td><td class='n'>1,76 TB</td><td class='n'>4 TB</td></tr><tr><td>1 000</td><td class='n'>2 500</td><td class='n'>65 GB</td><td class='n'>5,85 TB</td><td class='n'>12 TB</td></tr></table><p>Xom disk foydali hajmdan taxminan 2 barobar katta: MinIO fayllarni erasure coding bilan bo'laklab yozadi va bitta disk yoki server ishdan chiqsa ham ma'lumot yo'qolmaydi.</p><h4>Nega bank ichida</h4><ul><li>O'RQ-1125: biometrik ma'lumot O'zbekistonda saqlanadi. Yuzni tanish yoqilsa, kadrning o'zi biometrik ma'lumotga aylanadi.</li><li>Oddiy videoni shartlar bilan chetda saqlash mumkin, lekin ikki xil tartib yuritish qimmatroq.</li></ul><h4>Qaror kerak</h4><ul><li>90 kun yetadimi yoki sug'urta va sud uchun uzoqroq kerakmi.</li><li>Hodisaga «dalil» belgisi qo'yilsa, fayl Object Lock bilan qulflanadi va 90 kundan keyin ham o'chmaydi.</li></ul><p class='ogoh'>O'chirishni har kecha ishlaydigan lifecycle qoidasi bajaradi. U to'xtasa, disk jurnalda bitta xato qoldirmasdan to'ladi: shuning uchun monitoring sutkada o'chirilgan bayt hajmini va Object Lock bilan qulflangan fayllar ulushini alohida ko'rsatadi. Bu ulush 10 foizdan oshsa, 90 kunlik hisob to'g'ri kelmay qoladi va disk rejasi qayta ko'riladi.</p>",
     manba: [["MinIO: erasure coding", "https://docs.min.io/community/minio-object-store/operations/concepts/erasure-coding.html"]],
     ru: {
       yorliq: "Финансы и право",
       sarlavha: "Кадры и клипы: объём, срок, закон",
-      tana: "<p>Объём дисков почти полностью определяют файлы-доказательства. Расчёт в разрезе объекта: около 36 МБ кадров и клипов в сутки. Это согласуется с расчётом по камере на слайде 23: одна камера — 26 МБ в сутки, на объекте в среднем 1–2 камеры, датчики кадров не дают. Срок хранения 90 дней.</p><table><tr><th>Объектов</th><th>В сутки</th><th>За 90 дней</th><th>Сырой диск</th></tr><tr><td>100</td><td class='n'>3,6 ГБ</td><td class='n'>0,32 ТБ</td><td class='n'>1 ТБ</td></tr><tr><td>300</td><td class='n'>10,8 ГБ</td><td class='n'>0,97 ТБ</td><td class='n'>3 ТБ</td></tr><tr><td>1 000</td><td class='n'>36 ГБ</td><td class='n'>3,24 ТБ</td><td class='n'>8 ТБ</td></tr></table><p>Сырой диск примерно вдвое больше полезного объёма: MinIO пишет файлы частями с erasure coding, и данные переживают отказ диска или сервера.</p><h4>Почему внутри банка</h4><ul><li>ЗРУ-1125: биометрические данные хранятся в Узбекистане. Если включить распознавание лиц, сам кадр становится биометрией.</li><li>Обычное видео при соблюдении условий можно хранить за рубежом, но вести два режима дороже.</li></ul><h4>Нужно решение</h4><ul><li>Хватит ли 90 дней или для страховой и суда нужен больший срок.</li><li>Если событию присвоена метка «доказательство», файл блокируется через Object Lock и не удаляется по истечении 90 дней.</li></ul>"
+      tana: "<p>Объём дисков почти полностью определяют файлы-доказательства, и считать их надо не по объектам, а по камерам. По слайду 23 одна камера отдаёт в центр 26 МБ в сутки; страницы решений ставят на объект от двух до четырёх камер, поэтому расчёт ведётся по средним 2,5 камерам — 65 МБ на объект. Датчики кадров не дают. Срок хранения 90 дней.</p><table><tr><th>Объектов</th><th>Камер</th><th>В сутки</th><th>За 90 дней</th><th>Сырой диск</th></tr><tr><td>100</td><td class='n'>250</td><td class='n'>6,5 ГБ</td><td class='n'>0,59 ТБ</td><td class='n'>1,5 ТБ</td></tr><tr><td>300</td><td class='n'>750</td><td class='n'>19,5 ГБ</td><td class='n'>1,76 ТБ</td><td class='n'>4 ТБ</td></tr><tr><td>1 000</td><td class='n'>2 500</td><td class='n'>65 ГБ</td><td class='n'>5,85 ТБ</td><td class='n'>12 ТБ</td></tr></table><p>Сырой диск примерно вдвое больше полезного объёма: MinIO пишет файлы частями с erasure coding, и данные переживают отказ диска или сервера.</p><h4>Почему внутри банка</h4><ul><li>ЗРУ-1125: биометрические данные хранятся в Узбекистане. Если включить распознавание лиц, сам кадр становится биометрией.</li><li>Обычное видео при соблюдении условий можно хранить за рубежом, но вести два режима дороже.</li></ul><h4>Нужно решение</h4><ul><li>Хватит ли 90 дней или для страховой и суда нужен больший срок.</li><li>Если событию присвоена метка «доказательство», файл блокируется через Object Lock и не удаляется по истечении 90 дней.</li></ul><p class='ogoh'>Удаление выполняет ночное правило жизненного цикла. Если оно остановится, диск заполнится, не оставив в журнале ни одной ошибки: поэтому мониторинг отдельно показывает, сколько байт удалено за сутки и какая доля файлов заблокирована Object Lock. Когда эта доля переходит 10 процентов, расчёт на 90 дней перестаёт сходиться и план по дискам пересматривается.</p>"
     }
   },
 
@@ -129,12 +129,12 @@ Object.assign(window.MKB_BATAFSIL, {
   "s-masshtab.server": {
     yorliq: "Texnik izoh",
     sarlavha: "Serverlar: har ustun uchun tarkib",
-    tana: "<p>Hisob bank ma'lumot markazidagi virtual mashinalar uchun. Protsessorni hodisa oqimi emas, media shlyuz va baza yeydi.</p><table><tr><th>Rol</th><th>100</th><th>300</th><th>1 000</th></tr><tr><td>Ilova: gateway, adapter, broker</td><td class='n'>1 × 8/16</td><td class='n'>2 × 8/16</td><td class='n'>3 × 8/16</td></tr><tr><td>PostgreSQL</td><td class='n'>1 × 8/32</td><td class='n'>2 × 8/32</td><td class='n'>2 × 16/64</td></tr><tr><td>Media shlyuz</td><td class='n'>1 × 8/16</td><td class='n'>1 × 8/16</td><td class='n'>2 × 8/16</td></tr><tr><td>MinIO</td><td class='n'>media bilan</td><td class='n'>1 × 8/16</td><td class='n'>4 × 4/8</td></tr><tr><td>Monitoring</td><td class='n'>ilova bilan</td><td class='n'>ilova bilan</td><td class='n'>1 × 8/16</td></tr></table><p>Format: VM soni × vCPU/GB RAM. 100 ustunida MinIO media shlyuz bilan bitta VM'da turadi.</p><h4>Hisobga kirmagan</h4><ul><li>Test muhiti: ishchi muhitning taxminan uchdan biri.</li><li>Zaxira nusxa uchun alohida disk yoki ikkinchi maydon.</li><li>1 000 ustunida Kubernetes: ilova qismini qayta qurmasdan nusxa qo'shiladi.</li></ul><p class='ogoh'>Raqamlar hisob-kitobga asoslangan taxmin. Pilotda yuk sinovi o'tkazilib, 300 ustuni tasdiqlanadi yoki tuzatiladi.</p>",
+    tana: "<p>Hisob bank ma'lumot markazidagi virtual mashinalar uchun. Sizing obyektlar soniga emas, uchta o'lchovga bog'langan: media shlyuz — bir vaqtdagi oqim soniga (40 oqim taxminan 8 vCPU), adapter ishchilari — hodisa/s ga, baza — kuniga yoziladigan telemetriya qatoriga. 1 000 obyektda bu 14 hodisa/s va 40 ta bir vaqtdagi WebRTC sessiyasini beradi.</p><table><tr><th>Rol</th><th>100</th><th>300</th><th>1 000</th></tr><tr><td>Ilova: gateway, adapter, broker</td><td class='n'>1 × 8/16</td><td class='n'>2 × 8/16</td><td class='n'>3 × 8/16</td></tr><tr><td>PostgreSQL</td><td class='n'>1 × 8/32</td><td class='n'>2 × 8/32</td><td class='n'>2 × 16/64</td></tr><tr><td>Media shlyuz</td><td class='n'>1 × 8/16</td><td class='n'>1 × 8/16</td><td class='n'>2 × 8/16</td></tr><tr><td>MinIO</td><td class='n'>media bilan</td><td class='n'>1 × 8/16</td><td class='n'>4 × 4/8</td></tr><tr><td>Monitoring</td><td class='n'>ilova bilan</td><td class='n'>ilova bilan</td><td class='n'>1 × 8/16</td></tr></table><p>Format: VM soni × vCPU/GB RAM. 100 ustunida MinIO media shlyuz bilan bitta VM'da turadi.</p><h4>Hisobga kirmagan</h4><ul><li>Test muhiti: ishchi muhitning taxminan uchdan biri.</li><li>Zaxira nusxa uchun alohida disk yoki ikkinchi maydon.</li><li>1 000 ustunida Kubernetes: ilova qismini qayta qurmasdan nusxa qo'shiladi.</li></ul><p class='ogoh'>Jadvaldagi raqamlar cho'qqi yuklamaga uch barobar zaxira bilan olingan: 14 hodisa/s bitta PostgreSQL nusxasi uchun sezilmaydigan yuk, shuning uchun zaxira ataylab konservativ qo'yilgan. Pilotda yuk sinovi o'tkazilib, 300 ustuni tasdiqlanadi yoki pastga tushiriladi.</p>",
     manba: [],
     ru: {
       yorliq: "Техническая справка",
       sarlavha: "Серверы: состав по каждому сценарию",
-      tana: "<p>Расчёт для виртуальных машин в дата-центре банка. Процессор нагружает не поток событий, а медиашлюз и база.</p><table><tr><th>Роль</th><th>100</th><th>300</th><th>1 000</th></tr><tr><td>Приложение: gateway, адаптеры, брокер</td><td class='n'>1 × 8/16</td><td class='n'>2 × 8/16</td><td class='n'>3 × 8/16</td></tr><tr><td>PostgreSQL</td><td class='n'>1 × 8/32</td><td class='n'>2 × 8/32</td><td class='n'>2 × 16/64</td></tr><tr><td>Медиашлюз</td><td class='n'>1 × 8/16</td><td class='n'>1 × 8/16</td><td class='n'>2 × 8/16</td></tr><tr><td>MinIO</td><td class='n'>с медиашлюзом</td><td class='n'>1 × 8/16</td><td class='n'>4 × 4/8</td></tr><tr><td>Мониторинг</td><td class='n'>с приложением</td><td class='n'>с приложением</td><td class='n'>1 × 8/16</td></tr></table><p>Формат: число ВМ × vCPU/ГБ RAM. В сценарии на 100 объектов MinIO живёт на одной ВМ с медиашлюзом.</p><h4>Не вошло в расчёт</h4><ul><li>Тестовая среда: примерно треть от рабочей.</li><li>Отдельный диск или вторая площадка для резервных копий.</li><li>На 1 000 объектов — Kubernetes: экземпляры приложения добавляются без перестройки.</li></ul><p class='ogoh'>Цифры — расчётная оценка. На пилоте проводим нагрузочный тест и подтверждаем или корректируем сценарий на 300 объектов.</p>"
+      tana: "<p>Расчёт для виртуальных машин в дата-центре банка. Сайзинг привязан не к числу объектов, а к трём величинам: медиашлюз — к числу одновременных потоков (40 потоков — примерно 8 vCPU), рабочие адаптера — к событиям в секунду, база — к числу строк телеметрии в сутки. На 1 000 объектов это 14 событий/с и 40 одновременных сессий WebRTC.</p><table><tr><th>Роль</th><th>100</th><th>300</th><th>1 000</th></tr><tr><td>Приложение: gateway, адаптеры, брокер</td><td class='n'>1 × 8/16</td><td class='n'>2 × 8/16</td><td class='n'>3 × 8/16</td></tr><tr><td>PostgreSQL</td><td class='n'>1 × 8/32</td><td class='n'>2 × 8/32</td><td class='n'>2 × 16/64</td></tr><tr><td>Медиашлюз</td><td class='n'>1 × 8/16</td><td class='n'>1 × 8/16</td><td class='n'>2 × 8/16</td></tr><tr><td>MinIO</td><td class='n'>с медиашлюзом</td><td class='n'>1 × 8/16</td><td class='n'>4 × 4/8</td></tr><tr><td>Мониторинг</td><td class='n'>с приложением</td><td class='n'>с приложением</td><td class='n'>1 × 8/16</td></tr></table><p>Формат: число ВМ × vCPU/ГБ RAM. В сценарии на 100 объектов MinIO живёт на одной ВМ с медиашлюзом.</p><h4>Не вошло в расчёт</h4><ul><li>Тестовая среда: примерно треть от рабочей.</li><li>Отдельный диск или вторая площадка для резервных копий.</li><li>На 1 000 объектов — Kubernetes: экземпляры приложения добавляются без перестройки.</li></ul><p class='ogoh'>Цифры — расчётная оценка. На пилоте проводим нагрузочный тест и подтверждаем или корректируем сценарий на 300 объектов.</p>"
     }
   },
 
@@ -165,12 +165,12 @@ Object.assign(window.MKB_BATAFSIL, {
   "s-masshtab.broker": {
     yorliq: "Jamoa rahbarlari uchun",
     sarlavha: "RabbitMQ yoki Kafka: qaror bank standartida",
-    tana: "<p>Broker adapter bilan iste'molchilar orasida turadi. Baza yoki xabarnoma xizmati to'xtasa, hodisa yo'qolmaydi, navbatda kutadi.</p><table><tr><th></th><th>RabbitMQ</th><th>Kafka</th></tr><tr><td>Bizning yuk</td><td>100 xabar/s gacha: yetarli</td><td>100 xabar/s gacha: yetarli</td></tr><tr><td>Kuchli tomoni</td><td>Yo'naltirish, dead-letter, sodda ekspluatatsiya</td><td>Uzoq saqlash, tarixni qayta o'qish</td></tr><tr><td>Klaster</td><td>3 tugun, quorum navbat</td><td>3 broker, replikatsiya 3</td></tr></table><h4>Qanday tanlanadi</h4><ul><li>Bankda qaysi biri ishlab turgan va uni kim kuzatadi — shu hal qiladi. Ikkinchi broker yangi ekspluatatsiya xarajati.</li><li>Hech biri bo'lmasa, RabbitMQ: bizning hajmda Kafka ortiqcha murakkablik.</li></ul><h4>Kelishuvlar</h4><ul><li>Xabar kaliti <code>obyekt_id</code>: bitta obyekt hodisalari tartib bilan qayta ishlanadi.</li><li>Uch marta qayta ishlanmagan xabar dead-letter navbatiga tushadi va navbatchiga ko'rinadi.</li><li>Navbat 10 000 xabardan oshsa, Grafana ogohlantiradi.</li></ul>",
+    tana: "<p>Broker adapter bilan iste'molchilar orasida turadi. Baza yoki xabarnoma xizmati to'xtasa, hodisa yo'qolmaydi, navbatda kutadi.</p><table><tr><th></th><th>RabbitMQ</th><th>Kafka</th></tr><tr><td>Bizning yuk</td><td>100 xabar/s gacha: yetarli</td><td>100 xabar/s gacha: yetarli</td></tr><tr><td>Kuchli tomoni</td><td>Yo'naltirish, dead-letter, sodda ekspluatatsiya</td><td>Uzoq saqlash, tarixni qayta o'qish</td></tr><tr><td>Klaster</td><td>3 tugun, quorum navbat</td><td>3 broker, replikatsiya 3</td></tr></table><h4>Qanday tanlanadi</h4><ul><li>Bankda qaysi biri ishlab turgan va uni kim kuzatadi — shu hal qiladi. Ikkinchi broker yangi ekspluatatsiya xarajati.</li><li>Hech biri bo'lmasa, RabbitMQ: bizning hajmda Kafka ortiqcha murakkablik.</li></ul><h4>Kelishuvlar</h4><ul><li>Xabar kaliti <code>obyekt_id</code>: bitta obyekt hodisalari tartib bilan qayta ishlanadi.</li><li>Uch marta qayta ishlanmagan xabar dead-letter navbatiga tushadi va navbatchiga ko'rinadi.</li><li>Navbat 10 000 xabardan oshsa, Grafana ogohlantiradi.</li><li>Qattiq chegara — 100 000 xabar. Unga yetganda broker yangi nashrni rad etadi, adapter esa diskdagi o'z navbatiga o'tadi: kechikish oshadi, hodisa yo'qolmaydi.</li></ul>",
     manba: [],
     ru: {
       yorliq: "Для тимлида",
       sarlavha: "RabbitMQ или Kafka: решает стандарт банка",
-      tana: "<p>Брокер стоит между адаптерами и потребителями. Если база или сервис уведомлений остановились, событие не теряется, а ждёт в очереди.</p><table><tr><th></th><th>RabbitMQ</th><th>Kafka</th></tr><tr><td>Наша нагрузка</td><td>до 100 сообщ./с: достаточно</td><td>до 100 сообщ./с: достаточно</td></tr><tr><td>Сильная сторона</td><td>маршрутизация, dead-letter, простая эксплуатация</td><td>долгое хранение, повторное чтение истории</td></tr><tr><td>Кластер</td><td>3 узла, quorum-очереди</td><td>3 брокера, репликация 3</td></tr></table><h4>Как выбрать</h4><ul><li>Решает то, какой из них уже работает в банке и кто его сопровождает. Второй брокер — новые расходы на эксплуатацию.</li><li>Если нет ни одного — RabbitMQ: на наших объёмах Kafka даёт лишнюю сложность.</li></ul><h4>Договорённости</h4><ul><li>Ключ сообщения — <code>obyekt_id</code>: события одного объекта обрабатываются по порядку.</li><li>Сообщение, трижды не обработанное, уходит в dead-letter-очередь и видно дежурному.</li><li>Если очередь превышает 10 000 сообщений, Grafana подаёт сигнал.</li></ul>"
+      tana: "<p>Брокер стоит между адаптерами и потребителями. Если база или сервис уведомлений остановились, событие не теряется, а ждёт в очереди.</p><table><tr><th></th><th>RabbitMQ</th><th>Kafka</th></tr><tr><td>Наша нагрузка</td><td>до 100 сообщ./с: достаточно</td><td>до 100 сообщ./с: достаточно</td></tr><tr><td>Сильная сторона</td><td>маршрутизация, dead-letter, простая эксплуатация</td><td>долгое хранение, повторное чтение истории</td></tr><tr><td>Кластер</td><td>3 узла, quorum-очереди</td><td>3 брокера, репликация 3</td></tr></table><h4>Как выбрать</h4><ul><li>Решает то, какой из них уже работает в банке и кто его сопровождает. Второй брокер — новые расходы на эксплуатацию.</li><li>Если нет ни одного — RabbitMQ: на наших объёмах Kafka даёт лишнюю сложность.</li></ul><h4>Договорённости</h4><ul><li>Ключ сообщения — <code>obyekt_id</code>: события одного объекта обрабатываются по порядку.</li><li>Сообщение, трижды не обработанное, уходит в dead-letter-очередь и видно дежурному.</li><li>Если очередь превышает 10 000 сообщений, Grafana подаёт сигнал.</li><li>Жёсткий предел — 100 000 сообщений. На нём брокер отказывает в публикации, а адаптер уходит на собственную очередь на диске: задержка растёт, событие не теряется.</li></ul>"
     }
   },
 
@@ -1457,7 +1457,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-korik.alo": {
   "yorliq": "Montajchi uchun",
   "sarlavha": "−90 dBm dan yaxshi: SIM yetadi",
-  "tana": "<p>RSRP — LTE tayanch signalining kuchi. −90 dBm dan yuqori qiymat baza stansiyasi yaqinligini bildiradi: kamera ichki antenna bilan ishlaydi, operator jonli videoni ochganda oqim uzilmaydi.</p><h4>O'lchash tartibi</h4><ul><li>O'lchov kamera turadigan nuqtada, 3–4 m balandlikda olinadi. Yerda olingan qiymat 5–10 dB yomonroq chiqadi.</li><li>Har operator SIM-kartasi bilan uch marta o'lchanadi, har safar kamida bir daqiqa kutiladi.</li><li>Asbob: LTE router yoki signal ko'rsatadigan servis ilovasi. RSRP va SINR alohida yoziladi.</li></ul><h4>Qaror</h4><p>Eng kuchli operatorning SIM-kartasi qo'yiladi. Ikkinchi o'rindagi operator zaxira sifatida ko'rik shakliga yoziladi: ikki SIM'li router qo'yilsa, u ishga tushadi.</p><h4>Ko'rik shakliga yoziladi</h4><p>Operator, RSRP, SINR, o'lchov vaqti va balandligi. Bir operator bir necha marta o'lchangan bo'lsa, eng yomon qiymat olinadi: loyiha o'rtacha emas, yomon kun uchun quriladi.</p><p class='ogoh'>Bir martalik o'lchov kafolat emas. Kechqurun tarmoq yuklanganda SINR tushadi, shuning uchun pilot obyektlarda o'lchov kunduzi va kechqurun qaytariladi.</p>",
+  "tana": "<p>RSRP — LTE tayanch signalining kuchi. −90 dBm dan yuqori qiymat baza stansiyasi yaqinligini bildiradi: kamera ichki antenna bilan ishlaydi, operator jonli videoni ochganda oqim uzilmaydi.</p><h4>O'lchash tartibi</h4><ul><li>O'lchov kamera turadigan nuqtada, 3–4 m balandlikda olinadi. Yerda olingan qiymat 5–10 dB yomonroq chiqadi.</li><li>Har operator SIM-kartasi bilan uch marta o'lchanadi, har safar kamida bir daqiqa kutiladi.</li><li>Asbob: LTE router yoki signal ko'rsatadigan servis ilovasi. RSRP va SINR alohida yoziladi.</li></ul><h4>Qaror</h4><p>Eng kuchli operatorning SIM-kartasi qo'yiladi. Ikkinchi o'rindagi operator zaxira sifatida ko'rik shakliga yoziladi: ikki SIM'li router qo'yilsa, u ishga tushadi.</p><h4>Ko'rik shakliga yoziladi</h4><p>Operator, RSRP, SINR, o'lchov vaqti va balandligi. Bir operator bir necha marta o'lchangan bo'lsa, eng yomon qiymat olinadi: loyiha eng yomon kun uchun quriladi.</p><p class='ogoh'>Bir martalik o'lchov kafolat emas. Kechqurun tarmoq yuklanganda SINR tushadi, shuning uchun pilot obyektlarda o'lchov kunduzi va kechqurun qaytariladi.</p>",
   "manba": [
    [
     "Simology: RSRP, RSRQ, SINR",
@@ -1473,7 +1473,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-korik.yaxshi": {
   "yorliq": "Montajchi uchun",
   "sarlavha": "−90…−105 dBm: hodisa yetadi, video cheklanadi",
-  "tana": "<p>Bu oraliqda hodisa, kadr va telemetriya ishonchli yetib boradi. Doimiy jonli videoda bitreyt tushadi va oqim uziladi. Shuning uchun bunday obyektda nazorat hodisaga quriladi: harakat bo'lsa kadr va 10–20 soniyalik klip keladi, jonli video operator ochganda yoqiladi.</p><h4>Umumiy ma'lumotnoma shkalasi</h4><table><tr><th>RSRP, dBm</th><th>Baho</th></tr><tr><td>−65 … −75</td><td>A'lo</td></tr><tr><td>−75 … −85</td><td>Yaxshi</td></tr><tr><td>−85 … −95</td><td>O'rtacha</td></tr><tr><td>−95 … −105</td><td>Past</td></tr><tr><td>−105 … −115</td><td>Juda past</td></tr><tr><td>−115 dan past</td><td>Xizmat yo'q</td></tr></table><p>Loyiha shkalasi ma'lumotnomadan yumshoqroq: bizga keng kanal emas, hodisa kerak. Chegaralar pilotda o'lchangan paket yo'qotishi bilan tasdiqlanadi yoki suriladi.</p><h4>Montajchi uchun amaliy qoida</h4><ul><li>Kamera klip sifatini «hodisa» profilida 1–2 Mbit/s ga cheklaydi.</li><li>Jonli videoning ikkinchi oqimi (sub-stream) past sifatda ochiladi.</li><li>Ikki SIM'li routerda ikkinchi operator ham shu oraliqda bo'lsa, zaxira sifatida qoldiriladi.</li></ul>",
+  "tana": "<p>Bu oraliqda hodisa, kadr va telemetriya ishonchli yetib boradi. Doimiy jonli videoda bitreyt tushadi va oqim uziladi. Shuning uchun bunday obyektda nazorat hodisaga quriladi: harakat bo'lsa kadr va 10–20 soniyalik klip keladi, jonli video operator ochganda yoqiladi.</p><h4>Umumiy ma'lumotnoma shkalasi</h4><table><tr><th>RSRP, dBm</th><th>Baho</th></tr><tr><td>−65 … −75</td><td>A'lo</td></tr><tr><td>−75 … −85</td><td>Yaxshi</td></tr><tr><td>−85 … −95</td><td>O'rtacha</td></tr><tr><td>−95 … −105</td><td>Past</td></tr><tr><td>−105 … −115</td><td>Juda past</td></tr><tr><td>−115 dan past</td><td>Xizmat yo'q</td></tr></table><p>Loyiha shkalasi ma'lumotnomadan yumshoqroq: bizga hodisa o'tadigan kanal yetadi. Chegaralar pilotda o'lchangan paket yo'qotishi bilan tasdiqlanadi yoki suriladi.</p><h4>Montajchi uchun amaliy qoida</h4><ul><li>Kamera klip sifatini «hodisa» profilida 1–2 Mbit/s ga cheklaydi.</li><li>Jonli videoning ikkinchi oqimi (sub-stream) past sifatda ochiladi.</li><li>Ikki SIM'li routerda ikkinchi operator ham shu oraliqda bo'lsa, zaxira sifatida qoldiriladi.</li></ul>",
   "manba": [
    [
     "Simology: RSRP, RSRQ, SINR",
@@ -1505,7 +1505,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-korik.yoq": {
   "yorliq": "Montajchi uchun",
   "sarlavha": "Qamrov yo'q: uchta muqobil yo'l",
-  "tana": "<p>−115 dBm dan past qiymatda LTE ishonchli emas. Tanlov obyekt qiymati va qo'shnilariga bog'liq.</p><table><tr><th>Yo'l</th><th>Qachon mos</th></tr><tr><td>LoRaWAN datchiklari, Yechim 06</td><td>Ochiq joyda taxminan 2–5 km ichida LTE bor nuqta topilsa. Shlyuz o'sha yerga, datchiklar obyektga</td></tr><tr><td>Klaster radio ko'prigi, Yechim 10</td><td>Qo'shni obyektda aloqa va quvvat bor, orada to'g'ri ko'rinish</td></tr><tr><td>Sun'iy yo'ldosh terminali</td><td>Qimmat aktiv, atrofda aloqa yo'q. Terminal modeliga qarab 25–100 Vt oladi, quyosh hisobi alohida</td></tr></table><p>Uchala holatda ham asos jonli video emas, hodisa va kadr. Video joyida SD karta yoki NVR'ga yoziladi va servis tashrifida olinadi.</p><p>Bunday obyekt uchun qabul testi ham boshqacha: jonli video tekshiruvi o'rniga hodisaning shlyuz yoki yo'ldosh orqali kelish vaqti o'lchanadi.</p><p class='ogoh'>Sun'iy yo'ldosh terminalidan foydalanish uchun ruxsat va litsenziya masalasi yuridik bo'lim bilan oldindan kelishiladi.</p>",
+  "tana": "<p>−115 dBm dan past qiymatda LTE ishonchli emas. Tanlov obyekt qiymati va qo'shnilariga bog'liq.</p><table><tr><th>Yo'l</th><th>Qachon mos</th></tr><tr><td>LoRaWAN datchiklari, Yechim 06</td><td>Ochiq joyda taxminan 2–5 km ichida LTE bor nuqta topilsa. Shlyuz o'sha yerga, datchiklar obyektga</td></tr><tr><td>Klaster radio ko'prigi, Yechim 10</td><td>Qo'shni obyektda aloqa va quvvat bor, orada to'g'ri ko'rinish</td></tr><tr><td>Sun'iy yo'ldosh terminali</td><td>Qimmat aktiv, atrofda aloqa yo'q. Terminal modeliga qarab 25–100 Vt oladi, quyosh hisobi alohida</td></tr></table><p>Uchala holatda ham asos — hodisa va kadr. Video joyida SD karta yoki NVR'ga yoziladi va servis tashrifida olinadi.</p><p>Bunday obyekt uchun qabul testi ham boshqacha: jonli video tekshiruvi o'rniga hodisaning shlyuz yoki yo'ldosh orqali kelish vaqti o'lchanadi.</p><p class='ogoh'>Sun'iy yo'ldosh terminalidan foydalanish uchun ruxsat va litsenziya masalasi yuridik bo'lim bilan oldindan kelishiladi.</p>",
   "manba": [],
   "ru": {
    "yorliq": "Для монтажника",
@@ -1548,7 +1548,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-korik.nuqta": {
   "yorliq": "Montajchi uchun",
   "sarlavha": "O'rnatish nuqtasi: balandlik, masofa va asos",
-  "tana": "<p>Nuqta uchta shartga javob beradi: kirgan odamning yuzi taniladi, qurilmaga qo'l yetmaydi, servisda narvon bilan yetish mumkin.</p><ul><li><b>Balandlik 3–4 m.</b> Pastroqda qurilmani burish yoki sindirish oson, balandroqda yuz kadrga tepadan tushadi.</li><li><b>Eshikgacha 5–10 m.</b> Kirgan odam kadrda bir necha soniya turadi.</li><li><b>Quyoshga qarshi emas.</b> Past qishki quyosh kadrni oqartirib yuboradi.</li><li><b>Asos:</b> g'isht, beton yoki metall ustun. Shifer, gipsokarton va yog'och karniz yaroqsiz.</li><li><b>Kabel yo'li</b> o'lchanadi: kamera, akkumulyator qutisi va antenna orasidagi masofa smetaga kiradi.</li></ul><p>Har nuqta platformadagi «Ko'rik o'tkazish» shaklida fotoga belgilanadi. Montaj brigadasi aynan shu joyni topadi, qayta qidirmaydi.</p><p>Ko'char mulk uchun nuqta boshqa: transport va texnikaga kamera emas, plomba va GPS kuzatuvchi qo'yiladi. Ko'rikda uning yashirin joyi va antennaning osmonni ko'rishi tekshiriladi.</p>",
+  "tana": "<p>Nuqta uchta shartga javob beradi: kirgan odamning yuzi taniladi, qurilmaga qo'l yetmaydi, servisda narvon bilan yetish mumkin.</p><ul><li><b>Balandlik 3–4 m.</b> Pastroqda qurilmani burish yoki sindirish oson, balandroqda yuz kadrga tepadan tushadi.</li><li><b>Eshikgacha 5–10 m.</b> Kirgan odam kadrda bir necha soniya turadi.</li><li><b>Quyoshga qarshi emas.</b> Past qishki quyosh kadrni oqartirib yuboradi.</li><li><b>Asos:</b> g'isht, beton yoki metall ustun. Shifer, gipsokarton va yog'och karniz yaroqsiz.</li><li><b>Kabel yo'li</b> o'lchanadi: kamera, akkumulyator qutisi va antenna orasidagi masofa smetaga kiradi.</li></ul><p>Har nuqta platformadagi «Ko'rik o'tkazish» shaklida fotoga belgilanadi. Montaj brigadasi aynan shu joyni topadi, qayta qidirmaydi.</p><p>Ko'char mulk uchun nuqta boshqa: transport va texnikaga plomba va GPS kuzatuvchi qo'yiladi. Ko'rikda uning yashirin joyi va antennaning osmonni ko'rishi tekshiriladi.</p>",
   "manba": [],
   "ru": {
    "yorliq": "Для монтажника",
@@ -1691,7 +1691,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-quvvat.panel": {
   "yorliq": "Texnik izoh",
   "sarlavha": "Nega aynan 1,62 va 0,7",
-  "tana": "<p><b>1,62</b> — Toshkentda dekabrda gorizontal yuzaga tushadigan kunlik quyosh energiyasi, kVt·soat/m². Uni «to'liq quyosh soati» deb o'qish mumkin: panel kuniga 1,62 soat nominal quvvatda ishlaganga teng. Iyunda bu 7,60.</p><p>55° qiyalikdagi panelga dekabrda gorizontal yuzadan ko'proq energiya tushadi. Bu farq ataylab zaxira sifatida qoldiriladi: bulutli haftalar, qor va chang uchun.</p><h4>0,7 ga nima kiradi</h4><ul><li>Panel harorati va eskirishi.</li><li>Chang va qor qatlami.</li><li>Zaryad kontrolleri va kabel yo'qotishi. PWM kontrollerda yo'qotish MPPT'dan ancha katta.</li><li>Akkumulyatorning zaryad-razryad samaradorligi.</li></ul><p>Iyun uchun xuddi shu formula 7,60 bilan hisoblanadi va panel 4,7 barobar kichik chiqadi. Zavod komplektlari ko'pincha shunday tanlanadi, shuning uchun tenderda panel quvvati alohida tekshiriladi.</p><p class='ogoh'>Panel standart qatordan yuqoriga tanlanadi: 64 Vt chiqsa, 80 Vt olinadi. Shartnomaga MPPT kontroller yoziladi.</p>",
+  "tana": "<p><b>1,62</b> — Toshkentda dekabrda gorizontal yuzaga tushadigan kunlik quyosh energiyasi, kVt·soat/m². Uni «to'liq quyosh soati» deb o'qish mumkin: panel kuniga 1,62 soat nominal quvvatda ishlaganga teng. Iyunda bu 7,60.</p><p>55° qiyalikdagi panelga dekabrda gorizontal yuzadan ko'proq energiya tushadi. Bu farq ataylab zaxira sifatida qoldiriladi: bulutli haftalar, qor va chang uchun.</p><h4>0,7 ga nima kiradi</h4><ul><li>Panel harorati va eskirishi.</li><li>Chang va qor qatlami.</li><li>Zaryad kontrolleri va kabel yo'qotishi. PWM kontrollerda yo'qotish MPPT'dan ancha katta.</li><li>Akkumulyatorning zaryad-razryad samaradorligi.</li></ul><h4>Nega kunlik yukning o'zi yetmaydi</h4><p>Kechasi va bulutli kunda yuk akkumulyatordan olinadi. Panel faqat kunlik yukni qoplasa, bo'shagan blokni to'ldirishga hech narsa qolmaydi: birinchi uzoq bulutli davrdan keyin obyekt o'chadi va o'zi qaytib tirilmaydi. Shuning uchun formulaga tiklash a'zosi qo'shilgan — akkumulyator sig'imi 10 kunga bo'linadi va kunlik yukka qo'shiladi.</p><p>3 Vt doimiy yuk misolida: kunlik ehtiyoj 72 Vt·soat, 5 kunlik blok 450 Vt·soat, tiklash ulushi 45 Vt·soat. Panel (72 + 45) ÷ 1,134 = 104 Vt. Tiklash a'zosisiz 64 Vt chiqardi — bu panel blokni hech qachon to'ldirmaydi.</p><p>Iyun uchun xuddi shu formula 7,60 bilan hisoblanadi va panel 4,7 barobar kichik, 22 Vt chiqadi. Zavod komplektlari ko'pincha shunday tanlanadi, shuning uchun tenderda panel quvvati alohida tekshiriladi.</p><p class='ogoh'>Panel standart qatordan yuqoriga tanlanadi: 104 Vt chiqsa, 120 Vt olinadi. Shartnomaga MPPT kontroller yoziladi.</p>",
   "manba": [
    [
     "Renogy: panel qiyaligi",
@@ -1701,7 +1701,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
   "ru": {
    "yorliq": "Техническая справка",
    "sarlavha": "Почему именно 1,62 и 0,7",
-   "tana": "<p><b>1,62</b> — суточная солнечная энергия на горизонтальную поверхность в Ташкенте в декабре, кВт·ч/м². Её можно читать как «пиковые солнечные часы»: панель будто работает 1,62 часа в сутки на номинальной мощности. В июне — 7,60.</p><p>На панель с наклоном 55° в декабре приходит больше энергии, чем на горизонталь. Эта разница сознательно оставлена в запас: на облачные недели, снег и пыль.</p><h4>Что входит в 0,7</h4><ul><li>Нагрев и старение панели.</li><li>Пыль и снег.</li><li>Потери в контроллере заряда и кабеле. У PWM-контроллера они заметно выше, чем у MPPT.</li><li>КПД заряда-разряда аккумулятора.</li></ul><p>Для июня та же формула с 7,60 даёт панель в 4,7 раза меньше. Заводские комплекты часто подобраны именно так, поэтому в тендере мощность панели проверяется отдельно.</p><p class='ogoh'>Панель выбирается из стандартного ряда с округлением вверх: вышло 64 Вт — берём 80 Вт. В договор вписывается MPPT-контроллер.</p>"
+   "tana": "<p><b>1,62</b> — суточная солнечная энергия на горизонтальную поверхность в Ташкенте в декабре, кВт·ч/м². Её можно читать как «пиковые солнечные часы»: панель будто работает 1,62 часа в сутки на номинальной мощности. В июне — 7,60.</p><p>На панель с наклоном 55° в декабре приходит больше энергии, чем на горизонталь. Эта разница сознательно оставлена в запас: на облачные недели, снег и пыль.</p><h4>Что входит в 0,7</h4><ul><li>Нагрев и старение панели.</li><li>Пыль и снег.</li><li>Потери в контроллере заряда и кабеле. У PWM-контроллера они заметно выше, чем у MPPT.</li><li>КПД заряда-разряда аккумулятора.</li></ul><h4>Почему одной суточной нагрузки мало</h4><p>Ночью и в пасмурный день нагрузка идёт от аккумулятора. Если панель покрывает только суточную нагрузку, на дозаряд севшего блока не остаётся ничего: после первого долгого пасмурного периода объект гаснет и сам уже не поднимается. Поэтому в формуле есть член восстановления — ёмкость аккумулятора делится на 10 дней и прибавляется к суточной нагрузке.</p><p>На примере постоянных 3 Вт: суточная потребность 72 Вт·ч, блок на 5 дней 450 Вт·ч, доля восстановления 45 Вт·ч. Панель (72 + 45) ÷ 1,134 = 104 Вт. Без члена восстановления вышло бы 64 Вт — такая панель никогда не дозарядит блок.</p><p>Для июня та же формула с 7,60 даёт панель в 4,7 раза меньше, 22 Вт. Заводские комплекты часто подобраны именно так, поэтому в тендере мощность панели проверяется отдельно.</p><p class='ogoh'>Панель выбирается из стандартного ряда с округлением вверх: вышло 104 Вт — берём 120 Вт. В договор вписывается MPPT-контроллер.</p>"
   }
  },
  "s-quvvat.akb": {
@@ -1729,12 +1729,12 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-quvvat.p3": {
   "yorliq": "Montajchi uchun",
   "sarlavha": "1-profil: hodisali 4G kamera",
-  "tana": "<p>Bitta quyosh-4G kamera, video faqat hodisada va operator ochganda. Binolarning ko'pchiligi uchun asosiy profil.</p><table><tr><th>Ko'rsatkich</th><th>Dekabr</th><th>Iyun</th></tr><tr><td>Kunlik ehtiyoj</td><td class='n'>72 Vt·soat</td><td class='n'>72 Vt·soat</td></tr><tr><td>Quyosh soati</td><td class='n'>1,62</td><td class='n'>7,60</td></tr><tr><td>Kerakli panel</td><td class='n'>64 Vt</td><td class='n'>14 Vt</td></tr></table><p>Iyunga tanlangan 14 Vt panel dekabrda kuniga taxminan 16 Vt·soat beradi, ya'ni ehtiyojning 22%. Akkumulyator bir-ikki haftada tugaydi va kamera bahorgacha jim qoladi.</p><h4>Tender sharti</h4><ul><li>Komplekt paneli va akkumulyator sig'imi raqam bilan yoziladi.</li><li>Zavod paneli kichik bo'lsa, qo'shimcha panel ulash imkoniyati.</li><li>Akkumulyator 5 kunlik avtonomiyaga: 450 Vt·soat dan kam emas.</li></ul><p>Panel va blok narxi farqi kichik: 64 Vt o'rniga 80 Vt panel olish komplekt narxini sezilarli oshirmaydi, lekin qishki uzilishlarni yo'qotadi.</p>",
+  "tana": "<p>Bitta quyosh-4G kamera, video faqat hodisada va operator ochganda. Binolarning ko'pchiligi uchun asosiy profil.</p><table><tr><th>Ko'rsatkich</th><th>Dekabr</th><th>Iyun</th></tr><tr><td>Kunlik ehtiyoj</td><td class='n'>72 Vt·soat</td><td class='n'>72 Vt·soat</td></tr><tr><td>Quyosh soati</td><td class='n'>1,62</td><td class='n'>7,60</td></tr><tr><td>Blokni tiklash ulushi</td><td class='n'>45 Vt·soat</td><td class='n'>45 Vt·soat</td></tr><tr><td>Kerakli panel</td><td class='n'>104 Vt</td><td class='n'>22 Vt</td></tr></table><p>Iyunga tanlangan 22 Vt panel dekabrda kuniga taxminan 25 Vt·soat beradi, ya'ni kunlik ehtiyojning uchdan biri. Akkumulyator bir-ikki haftada tugaydi va kamera bahorgacha jim qoladi.</p><h4>Tender sharti</h4><ul><li>Komplekt paneli va akkumulyator sig'imi raqam bilan yoziladi.</li><li>Zavod paneli kichik bo'lsa, qo'shimcha panel ulash imkoniyati.</li><li>Akkumulyator 5 kunlik avtonomiyaga: 450 Vt·soat dan kam emas.</li><li>Panel quvvati kunlik yuk va blokni 10 kunda tiklashga hisoblanadi.</li></ul><p>Panel va blok narxi farqi kichik: 104 Vt o'rniga 120 Vt panel olish komplekt narxini sezilarli oshirmaydi, lekin qishki uzilishlarni yo'qotadi.</p>",
   "manba": [],
   "ru": {
    "yorliq": "Для монтажника",
    "sarlavha": "Профиль 1: 4G-камера по событиям",
-   "tana": "<p>Одна солнечная 4G-камера, видео только по событию и когда его открывает оператор. Основной профиль для большинства зданий.</p><table><tr><th>Показатель</th><th>Декабрь</th><th>Июнь</th></tr><tr><td>Суточная потребность</td><td class='n'>72 Вт·ч</td><td class='n'>72 Вт·ч</td></tr><tr><td>Солнечные часы</td><td class='n'>1,62</td><td class='n'>7,60</td></tr><tr><td>Нужная панель</td><td class='n'>64 Вт</td><td class='n'>14 Вт</td></tr></table><p>Подобранная по июню панель на 14 Вт в декабре даёт около 16 Вт·ч в сутки — 22% потребности. Аккумулятор садится за одну-две недели, и камера молчит до весны.</p><h4>Условие тендера</h4><ul><li>Мощность панели и ёмкость аккумулятора указываются цифрами.</li><li>Если штатная панель мала — возможность подключить дополнительную.</li><li>Аккумулятор на 5 суток автономии: не меньше 450 Вт·ч.</li></ul><p>Разница в цене панели и блока невелика: панель на 80 Вт вместо 64 Вт почти не меняет цену комплекта, но снимает зимние отключения.</p>"
+   "tana": "<p>Одна солнечная 4G-камера, видео только по событию и когда его открывает оператор. Основной профиль для большинства зданий.</p><table><tr><th>Показатель</th><th>Декабрь</th><th>Июнь</th></tr><tr><td>Суточная потребность</td><td class='n'>72 Вт·ч</td><td class='n'>72 Вт·ч</td></tr><tr><td>Солнечные часы</td><td class='n'>1,62</td><td class='n'>7,60</td></tr><tr><td>Доля на восстановление блока</td><td class='n'>45 Вт·ч</td><td class='n'>45 Вт·ч</td></tr><tr><td>Нужная панель</td><td class='n'>104 Вт</td><td class='n'>22 Вт</td></tr></table><p>Подобранная по июню панель на 14 Вт в декабре даёт около 16 Вт·ч в сутки — 22% потребности. Аккумулятор садится за одну-две недели, и камера молчит до весны.</p><h4>Условие тендера</h4><ul><li>Мощность панели и ёмкость аккумулятора указываются цифрами.</li><li>Если штатная панель мала — возможность подключить дополнительную.</li><li>Аккумулятор на 5 суток автономии: не меньше 450 Вт·ч.</li></ul><p>Разница в цене панели и блока невелика: панель на 80 Вт вместо 64 Вт почти не меняет цену комплекта, но снимает зимние отключения.</p>"
   }
  },
  "s-quvvat.p9": {
@@ -1762,12 +1762,12 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-quvvat.hisob": {
   "yorliq": "Montajchi uchun",
   "sarlavha": "Kalkulyator ko'rikda qanday ishlatiladi",
-  "tana": "<p>Kalkulyator slayddagi uchta formulani bajaradi: o'rtacha quvvat va quyoshsiz kunlar kiritiladi, panel va akkumulyator chiqadi.</p><ul><li>Quyosh soati 1,62 va yo'qotish 0,7 o'zgarmaydi: hisob doim dekabrga.</li><li>Razryad chuqurligi 0,8, kuchlanish 12,8 V.</li><li>Natija yuqoriga yaxlitlanadi, keyin standart qatordan tanlanadi: panel 50, 80, 100, 150, 200 Vt; blok 20, 40, 50, 100, 120 A·soat.</li></ul><h4>Ko'rikda</h4><p>Montajchi yuklama ro'yxatini tuzadi, o'rtacha quvvatni kiritadi va natijani ko'rik shakliga yozadi. Panel 250 Vt dan yoki blok 150 A·soat dan oshsa, obyekt shkaf yoki elektrga ulash variantiga o'tadi.</p><p class='ogoh'>Kalkulyator soya va panel yo'nalishini hisobga olmaydi. Soya tushadigan joyda natija haqiqatga to'g'ri kelmaydi.</p>",
+  "tana": "<p>Kalkulyator slayddagi uchta formulani bajaradi: o'rtacha quvvat va quyoshsiz kunlar kiritiladi, panel va akkumulyator chiqadi.</p><ul><li>Quyosh soati 1,62 va yo'qotish 0,7 o'zgarmaydi: hisob doim dekabrga.</li><li>Razryad chuqurligi 0,8, kuchlanish 12,8 V.</li><li>Panel ikki ulushdan yig'iladi: kunlik yuk va akkumulyatorni 10 kunda tiklash. Tiklash ulushisiz panel blokni hech qachon to'ldirmaydi.</li><li>Natija yuqoriga yaxlitlanadi, keyin standart qatordan tanlanadi: panel 50, 80, 100, 150, 200 Vt; blok 20, 40, 50, 100, 120 A·soat.</li></ul><h4>Ko'rikda</h4><p>Montajchi yuklama ro'yxatini tuzadi, o'rtacha quvvatni kiritadi va natijani ko'rik shakliga yozadi. Panel 250 Vt dan yoki blok 150 A·soat dan oshsa, obyekt shkaf yoki elektrga ulash variantiga o'tadi.</p><p class='ogoh'>Kalkulyator soya va panel yo'nalishini hisobga olmaydi. Soya tushadigan joyda natija haqiqatga to'g'ri kelmaydi.</p>",
   "manba": [],
   "ru": {
    "yorliq": "Для монтажника",
    "sarlavha": "Как пользоваться калькулятором при обследовании",
-   "tana": "<p>Калькулятор выполняет три формулы со слайда: вводятся средняя мощность и число дней без солнца, на выходе — панель и аккумулятор.</p><ul><li>Солнечные часы 1,62 и потери 0,7 не меняются: расчёт всегда на декабрь.</li><li>Глубина разряда 0,8, напряжение 12,8 В.</li><li>Результат округляется вверх, затем выбирается из стандартного ряда: панели 50, 80, 100, 150, 200 Вт; блоки 20, 40, 50, 100, 120 А·ч.</li></ul><h4>При обследовании</h4><p>Монтажник составляет список нагрузки, вводит среднюю мощность и записывает результат в форму обследования. Если панель больше 250 Вт или блок больше 150 А·ч, объект переводится на шкаф или подключение к сети.</p><p class='ogoh'>Калькулятор не учитывает тень и ориентацию панели. Там, где есть тень, результат не соответствует реальности.</p>"
+   "tana": "<p>Калькулятор выполняет три формулы со слайда: вводятся средняя мощность и число дней без солнца, на выходе — панель и аккумулятор.</p><ul><li>Солнечные часы 1,62 и потери 0,7 не меняются: расчёт всегда на декабрь.</li><li>Глубина разряда 0,8, напряжение 12,8 В.</li><li>Мощность панели складывается из двух долей: суточная нагрузка и восстановление аккумулятора за 10 дней. Без второй доли панель никогда не дозарядит блок.</li><li>Результат округляется вверх, затем выбирается из стандартного ряда: панели 50, 80, 100, 150, 200 Вт; блоки 20, 40, 50, 100, 120 А·ч.</li></ul><h4>При обследовании</h4><p>Монтажник составляет список нагрузки, вводит среднюю мощность и записывает результат в форму обследования. Если панель больше 250 Вт или блок больше 150 А·ч, объект переводится на шкаф или подключение к сети.</p><p class='ogoh'>Калькулятор не учитывает тень и ориентацию панели. Там, где есть тень, результат не соответствует реальности.</p>"
   }
  },
  "s-qabul.video": {
@@ -1784,7 +1784,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-qabul.aloqasiz": {
   "yorliq": "Montajchi uchun",
   "sarlavha": "4–6 tekshiruv: aloqa yo'qligida",
-  "tana": "<p>Bu test tizimning asosiy va'dasini tekshiradi: internet uzilganda dalil yo'qolmaydi.</p><ol><li>SIM-karta routerdan 30 daqiqaga olinadi. Shu vaqtda montajchi uch marta kadr oldidan o'tadi va eshikni ochadi.</li><li>SIM qaytariladi. 15 daqiqa ichida uchala hodisa platformaga keladi. Vaqti yuborilgan payt emas, hodisa sodir bo'lgan payt bo'yicha.</li><li>Quvvat bir daqiqaga uziladi. Qurilma o'zi yuklanadi, VPN ko'tariladi va qo'l tegmasdan «aloqada» holatiga qaytadi.</li></ol><p>Platforma buferdan kelgan hodisalarni «kechikib keldi» belgisi bilan ko'rsatadi: operator ular jonli emasligini ko'radi.</p><p>Test uchun jami 50–60 daqiqa ajratiladi. Bank xodimi shu vaqtda platformada hodisalar oqimini kuzatadi va natijani qabul shakliga belgilaydi.</p><p class='ogoh'>Hodisa yo'qolsa yoki vaqti yuborilgan paytga almashsa, qurilma sozlamasi yoki adapter qaytariladi. Bu testdan o'tmagan model loyihaga kirmaydi.</p>",
+  "tana": "<p>Bu test tizimning asosiy va'dasini tekshiradi: internet uzilganda dalil yo'qolmaydi.</p><ol><li>SIM-karta routerdan 30 daqiqaga olinadi. Shu vaqtda montajchi uch marta kadr oldidan o'tadi va eshikni ochadi.</li><li>SIM qaytariladi. 15 daqiqa ichida uchala hodisa platformaga keladi. Vaqt hodisa sodir bo'lgan payt bo'yicha yoziladi.</li><li>Quvvat bir daqiqaga uziladi. Qurilma o'zi yuklanadi, VPN ko'tariladi va qo'l tegmasdan «aloqada» holatiga qaytadi.</li></ol><p>Platforma buferdan kelgan hodisalarni «kechikib keldi» belgisi bilan ko'rsatadi: operator ular jonli emasligini ko'radi.</p><p>Test uchun jami 50–60 daqiqa ajratiladi. Bank xodimi shu vaqtda platformada hodisalar oqimini kuzatadi va natijani qabul shakliga belgilaydi.</p><p class='ogoh'>Hodisa yo'qolsa yoki vaqti yuborilgan paytga almashsa, qurilma sozlamasi yoki adapter qaytariladi. Bu testdan o'tmagan model loyihaga kirmaydi.</p>",
   "manba": [],
   "ru": {
    "yorliq": "Для монтажника",
@@ -1817,7 +1817,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-qabul.kritik": {
   "yorliq": "Moliya va huquq",
   "sarlavha": "Kritik nosozlik: 4, 24 va 48 soat",
-  "tana": "<p>Kritik nosozlik — obyekt platformada ko'rinmaydi: last_seen 1 soatdan eski, video yo'q yoki quvvat tugagan. Bunday obyekt amalda nazoratsiz. Obyektdagi yagona kamera yoki kirish nazorati ishlamasa ham kritik hisoblanadi.</p><h4>Hudud toifasi</h4><table><tr><th>Toifa</th><th>Ta'rif</th><th>Kelish</th></tr><tr><td>Shahar</td><td>Toshkent va viloyat markazlari</td><td class='n'>4 soat</td></tr><tr><td>Tuman</td><td>Viloyat markazidan 150 km gacha</td><td class='n'>24 soat</td></tr><tr><td>Chekka</td><td>150 km dan uzoq yoki tog'li hudud</td><td class='n'>48 soat</td></tr></table><p>Muddat platformadagi avtomatik ogohlantirishdan hisoblanadi, bankning qo'ng'irog'idan emas. Kelgandan keyin 4 soat ichida obyekt ishlashi yoki qurilma zaxiradan almashtirilishi kerak.</p><p class='ogoh'>Har obyektning toifasi shartnoma ilovasida ro'yxat bilan beriladi. Toifa bo'yicha nizo keyin emas, imzolashda hal qilinadi.</p>",
+  "tana": "<p>Kritik nosozlik — obyekt platformada ko'rinmaydi: last_seen 1 soatdan eski, video yo'q yoki quvvat tugagan. Bunday obyekt amalda nazoratsiz. Obyektdagi yagona kamera yoki kirish nazorati ishlamasa ham kritik hisoblanadi.</p><h4>Hudud toifasi</h4><table><tr><th>Toifa</th><th>Ta'rif</th><th>Kelish</th></tr><tr><td>Shahar</td><td>Toshkent va viloyat markazlari</td><td class='n'>4 soat</td></tr><tr><td>Tuman</td><td>Viloyat markazidan 150 km gacha</td><td class='n'>24 soat</td></tr><tr><td>Chekka</td><td>150 km dan uzoq yoki tog'li hudud</td><td class='n'>48 soat</td></tr></table><p>Muddat platformadagi avtomatik ogohlantirishdan hisoblanadi, bankning qo'ng'irog'idan emas. Kelgandan keyin 4 soat ichida obyekt ishlashi yoki qurilma zaxiradan almashtirilishi kerak.</p><p class='ogoh'>Har obyektning toifasi shartnoma ilovasida ro'yxat bilan beriladi. Toifa bo'yicha nizo imzolash paytida hal qilinadi.</p>",
   "manba": [],
   "ru": {
    "yorliq": "Финансы и право",
@@ -1828,7 +1828,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-qabul.oddiy": {
   "yorliq": "Moliya va huquq",
   "sarlavha": "Oddiy nosozlik: 2, 3 va 5 ish kuni",
-  "tana": "<p>Obyekt ko'rinib turadi, lekin bitta qurilma ishlamaydi yoki sifat tushgan: kamera loyqa, bitta datchik jim, signal pasaygan.</p><ul><li>Masofadan birinchi yordam 4 soat ichida: qayta yuklash, sozlama, proshivka.</li><li>Yordam bermasa, tashrif keyingi rejali marshrutga qo'shiladi. Shuning uchun muddat ish kunida o'lchanadi.</li><li>Bir obyektda 30 kun ichida ikkinchi marta bir xil nosozlik takroriy hisoblanadi va KPI'ga tushadi.</li></ul><p>Muddatlar alohida tashrifni emas, marshrutni hisobga oladi: bitta mashina bir kunda 4–6 obyektni aylanadi va servis narxi shu bilan pasayadi.</p><p>Har ariza platformadagi «Servis topshirig'i» orqali ochiladi va yopiladi. Yopishda montajchi sabab, bajarilgan ish va almashtirilgan qism seriya raqamini yozadi.</p>",
+  "tana": "<p>Obyekt ko'rinib turadi, lekin bitta qurilma ishlamaydi yoki sifat tushgan: kamera loyqa, bitta datchik jim, signal pasaygan.</p><ul><li>Masofadan birinchi yordam 4 soat ichida: qayta yuklash, sozlama, proshivka.</li><li>Yordam bermasa, tashrif keyingi rejali marshrutga qo'shiladi. Shuning uchun muddat ish kunida o'lchanadi.</li><li>Bir obyektda 30 kun ichida ikkinchi marta bir xil nosozlik takroriy hisoblanadi va KPI'ga tushadi.</li></ul><p>Muddatlar marshrutni hisobga oladi: bitta mashina bir kunda 4–6 obyektni aylanadi va servis narxi shu bilan pasayadi.</p><p>Har ariza platformadagi «Servis topshirig'i» orqali ochiladi va yopiladi. Yopishda montajchi sabab, bajarilgan ish va almashtirilgan qism seriya raqamini yozadi.</p>",
   "manba": [],
   "ru": {
    "yorliq": "Финансы и право",
@@ -1872,7 +1872,7 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
  "s-shart.shart1": {
   "yorliq": "Montajchi uchun",
   "sarlavha": "Quvvat: ko'rikda nima aniqlanadi",
-  "tana": "<p>Quvvat manbasini brend emas, yuklama, quyosh va servis imkoni tanlaydi.</p><ol><li>Yuklama, ya'ni qurilmalarning o'rtacha quvvati. 5 Vt gacha — batareyali kamera yoki kichik quyosh komplekti. 5–15 Vt — quyosh ustuni. 15 Vt dan ko'p — shkaf yoki elektrga ulash.</li><li>Quyosh: janub tomoni ochiqmi, dekabrda soya tushmaydimi.</li><li>Servis: obyektga qancha tez-tez borish mumkin.</li></ol><table><tr><th>Manba</th><th>Odatiy qurilma</th><th>Tuzoq</th></tr><tr><td>Batareya</td><td>Reolink, Ajax datchiklari</td><td>Qattiq sovuqqa chidamaydi</td></tr><tr><td>Quyosh-4G</td><td>Hikvision, Dahua komplekti</td><td>Panel yozga hisoblangan</td></tr><tr><td>LiFePO4 shkaf</td><td>12, 24, 48 V bloklar va BMS</td><td>0 °C dan past zaryad</td></tr><tr><td>Ko'chma stansiya</td><td>1–4 kVt·soat</td><td>Almashtirish jadvali buzilsa, o'chadi</td></tr><tr><td>Yoqilg'i elementi</td><td>EFOY, metanol</td><td>Kartrij logistikasi</td></tr></table><p>Qaror ko'rik shaklida yoziladi va keyingi slaydlardagi quvvat hisobi bilan tekshiriladi.</p>",
+  "tana": "<p>Quvvat manbasini yuklama, quyosh va servis imkoni tanlaydi.</p><ol><li>Yuklama, ya'ni qurilmalarning o'rtacha quvvati. 5 Vt gacha — batareyali kamera yoki kichik quyosh komplekti. 5–15 Vt — quyosh ustuni. 15 Vt dan ko'p — shkaf yoki elektrga ulash.</li><li>Quyosh: janub tomoni ochiqmi, dekabrda soya tushmaydimi.</li><li>Servis: obyektga qancha tez-tez borish mumkin.</li></ol><table><tr><th>Manba</th><th>Odatiy qurilma</th><th>Tuzoq</th></tr><tr><td>Batareya</td><td>Reolink, Ajax datchiklari</td><td>Qattiq sovuqqa chidamaydi</td></tr><tr><td>Quyosh-4G</td><td>Hikvision, Dahua komplekti</td><td>Panel yozga hisoblangan</td></tr><tr><td>LiFePO4 shkaf</td><td>12, 24, 48 V bloklar va BMS</td><td>0 °C dan past zaryad</td></tr><tr><td>Ko'chma stansiya</td><td>1–4 kVt·soat</td><td>Almashtirish jadvali buzilsa, o'chadi</td></tr><tr><td>Yoqilg'i elementi</td><td>EFOY, metanol</td><td>Kartrij logistikasi</td></tr></table><p>Qaror ko'rik shaklida yoziladi va keyingi slaydlardagi quvvat hisobi bilan tekshiriladi.</p>",
   "manba": [],
   "ru": {
    "yorliq": "Для монтажника",
@@ -1966,13 +1966,13 @@ Object.assign(window.MKB_BATAFSIL = window.MKB_BATAFSIL || {}, {
   },
   "s-iqtisod.komplekt": {
     yorliq: "Rahbariyat uchun",
-    sarlavha: "Yiliga 7,4 mln so'm nimalardan yig'iladi",
-    tana: "<p>Masofaviy nazoratning narxi uch qismdan iborat. Hisob 100 obyekt va o'rtacha 10 mln so'mlik komplekt uchun.</p><table><tr><th>Qism</th><th>Bir obyekt, yiliga</th></tr><tr><td>Komplekt: 10 mln so'm 5 yilga bo'lingan</td><td class='n'>2,0 mln</td></tr><tr><td>SIM va trafik, taxminan 100 ming so'm oyiga</td><td class='n'>1,2 mln</td></tr><tr><td>Servis: chorakda bir profilaktik tashrif, akkumulyator va ta'mir zaxirasi</td><td class='n'>1,8 mln</td></tr><tr><td>Operatorlar markazi ulushi: 240 mln so'm / 100</td><td class='n'>2,4 mln</td></tr><tr><td><b>Jami</b></td><td class='n'>7,4 mln</td></tr></table><h4>Nega 5 yil</h4><p>Kamera va router 5–7 yil ishlaydi, obyekt esa bir yil ichida sotilishi kerak. Komplekt sotilgan obyektdan olinib, keyingisiga o'rnatiladi. Shuning uchun narx bitta obyektga emas, jihozning xizmat muddatiga bo'linadi.</p><h4>Markaz</h4><p>Sutkalik operator posti: 4 operator, har biriga 4,5 mln so'm va 12% ijtimoiy soliq. Bu xarajat obyektlar soniga bog'liq emas. 267 obyektda ulush 0,9 mln so'mgacha tushadi.</p><p class='ogoh'>7,4 mln ga platforma jamoasi, serverlar va jihoz sug'urtasi kirmaydi: ular dastur byudjetida alohida qator. Markaz ulushi faqat navbatchi operatorlar.</p><p class='ogoh'>SIM va servis narxlari taxminiy. Aniq qiymat operatorning korporativ tarifi va integrator bilan tuzilgan SLA'dan keyin chiqadi.</p>",
+    sarlavha: "Yiliga 5,9 mln so'm nimalardan yig'iladi",
+    tana: "<p>Masofaviy nazoratning narxi to'rt qatordan yig'iladi. Hisob slayddagi kalkulyatorning standart qiymatlarida: 267 obyekt va o'rtacha 10 mln so'mlik komplekt.</p><table><tr><th>Qism</th><th>Bir obyekt, yiliga</th></tr><tr><td>Komplekt: 10 mln so'm 5 yilga bo'lingan</td><td class='n'>2,0 mln</td></tr><tr><td>SIM va trafik, taxminan 100 ming so'm oyiga</td><td class='n'>1,2 mln</td></tr><tr><td>Servis: chorakda bir profilaktik tashrif, akkumulyator va ta'mir zaxirasi</td><td class='n'>1,8 mln</td></tr><tr><td>Operatorlar markazi ulushi: 240 mln so'm / 267</td><td class='n'>0,9 mln</td></tr><tr><td><b>Jami</b></td><td class='n'>5,9 mln</td></tr></table><h4>Nega 5 yil</h4><p>Kamera va router 5–7 yil ishlaydi, obyekt esa bir yil ichida sotilishi kerak. Komplekt sotilgan obyektdan olinib, keyingisiga o'rnatiladi. Shuning uchun narx bitta obyektga emas, jihozning xizmat muddatiga bo'linadi.</p><h4>Markaz</h4><p>Sutkalik operator posti: 4 operator, har biriga 4,5 mln so'm va 12% ijtimoiy soliq. Bu xarajat obyektlar soniga bog'liq emas va shuning uchun bitta obyektga tushadigan ulush obyektlar soni bilan teskari o'zgaradi: 100 obyektda 2,4 mln, 267 obyektda 0,9 mln so'm. Pilotning birinchi yilida jami shu sabab 7,4 mln ga yaqin turadi.</p><p class='ogoh'>5,9 mln ga platforma jamoasi, serverlar va jihoz sug'urtasi kirmaydi: ular dastur byudjetida alohida qator. Markaz ulushi faqat navbatchi operatorlar.</p><p class='ogoh'>SIM va servis narxlari taxminiy. Aniq qiymat operatorning korporativ tarifi va integrator bilan tuzilgan SLA'dan keyin chiqadi.</p>",
     manba: [],
     ru: {
       yorliq: "Для руководства",
-      sarlavha: "Из чего складываются 7,4 млн сумов в год",
-      tana: "<p>Стоимость удалённого контроля состоит из трёх частей. Расчёт — на 100 объектов при среднем комплекте за 10 млн сумов.</p><table><tr><th>Часть</th><th>Один объект в год</th></tr><tr><td>Комплект: 10 млн сумов на 5 лет</td><td class='n'>2,0 млн</td></tr><tr><td>SIM и трафик, около 100 тыс. сумов в месяц</td><td class='n'>1,2 млн</td></tr><tr><td>Сервис: профилактический выезд раз в квартал, резерв на аккумулятор и ремонт</td><td class='n'>1,8 млн</td></tr><tr><td>Доля операторского центра: 240 млн / 100</td><td class='n'>2,4 млн</td></tr><tr><td><b>Итого</b></td><td class='n'>7,4 млн</td></tr></table><h4>Почему 5 лет</h4><p>Камера и роутер служат 5–7 лет, а объект нужно продать в течение года. После продажи комплект снимают и ставят на следующий объект. Поэтому цена делится не на один объект, а на срок службы оборудования.</p><h4>Центр</h4><p>Круглосуточный пост: 4 оператора по 4,5 млн сумов плюс 12% социального налога. Эти расходы не зависят от числа объектов. При 267 объектах доля падает до 0,9 млн сумов.</p><p class='ogoh'>В 7,4 млн не входят команда платформы, серверы и страхование оборудования: это отдельные строки бюджета программы. Доля центра — только дежурные операторы.</p><p class='ogoh'>Цены на SIM и сервис оценочные. Точные цифры появятся после корпоративного тарифа оператора и SLA с интегратором.</p>"
+      sarlavha: "Из чего складываются 5,9 млн сумов в год",
+      tana: "<p>Стоимость удалённого контроля складывается из четырёх строк. Расчёт — на значениях калькулятора по умолчанию: 267 объектов и средний комплект за 10 млн сумов.</p><table><tr><th>Часть</th><th>Один объект в год</th></tr><tr><td>Комплект: 10 млн сумов на 5 лет</td><td class='n'>2,0 млн</td></tr><tr><td>SIM и трафик, около 100 тыс. сумов в месяц</td><td class='n'>1,2 млн</td></tr><tr><td>Сервис: профилактический выезд раз в квартал, резерв на аккумулятор и ремонт</td><td class='n'>1,8 млн</td></tr><tr><td>Доля операторского центра: 240 млн / 267</td><td class='n'>0,9 млн</td></tr><tr><td><b>Итого</b></td><td class='n'>5,9 млн</td></tr></table><h4>Почему 5 лет</h4><p>Камера и роутер служат 5–7 лет, а объект нужно продать в течение года. После продажи комплект снимают и ставят на следующий объект. Поэтому цена делится не на один объект, а на срок службы оборудования.</p><h4>Центр</h4><p>Круглосуточный пост: 4 оператора по 4,5 млн сумов плюс 12% социального налога. Этот расход не зависит от числа объектов, поэтому доля на один объект меняется обратно числу объектов: при 100 — 2,4 млн, при 267 — 0,9 млн сумов. Именно поэтому в первый год пилота итог держится около 7,4 млн.</p><p class='ogoh'>В 5,9 млн не входят команда платформы, серверы и страхование оборудования: это отдельные строки бюджета программы. Доля центра — только дежурные операторы.</p><p class='ogoh'>Цены на SIM и сервис оценочные. Точные цифры появятся после корпоративного тарифа оператора и SLA с интегратором.</p>"
     }
   },
   "s-iqtisod.tejash": {
@@ -2483,16 +2483,16 @@ Object.assign(window.MKB_BATAFSIL, {
 "s-y01.band3": {
   yorliq: "Jamoa rahbarlari uchun",
   sarlavha: "RTSP va HTTP API: adapter nima qiladi",
-  tana: "<h4>Video</h4><pre><code>rtsp://user:pass@10.8.0.12:554/Preview_01_main\nrtsp://user:pass@10.8.0.12:554/Preview_01_sub</code></pre>" +
+  tana: "<h4>Video</h4><pre><code>rtsp://user:pass@10.8.0.12:554/h264Preview_01_main\nrtsp://user:pass@10.8.0.12:554/h264Preview_01_sub</code></pre>" +
     "<p>Kanal raqami 1 dan boshlanadi, API esa kanalni 0 dan qaytaradi: URL tuzishda 1 qo'shiladi. Uxlab turgan kamera uyg'onishi uchun vaqt kerak, RTSP so'rovida kutish vaqti kamida 20 soniya qo'yiladi.</p>" +
     "<h4>Hodisalar</h4><p>Hub HTTP API'si <code>/api.cgi?cmd=...</code> ko'rinishida ishlaydi: <code>GetMdState</code> harakatni, <code>GetAiState</code> odam va mashinani qaytaradi. Ochiq manbali Reolink integratsiyalari hodisani avval TCP push yoki ONVIF push bilan oladi, bo'lmasa 5 soniyalik so'rovga o'tadi. Bizning adapter ham shu tartibda ishlaydi.</p>" +
-    "<h4>Cheklov va uni aylanib o'tish</h4><ul><li>Batareyali kamera sessiyasi taxminan 5 daqiqadan keyin uziladi. Adapter uzilishni xato emas, normal holat deb biladi va operator so'rasa oqimni qayta so'raydi.</li><li>Holat so'rovi kamerani uyg'otmaydi: hub kameraning oxirgi holatini beradi.</li><li>Hodisa kelganda adapter klipni hub'dagi microSD'dan oladi, jonli oqimni kutmaydi.</li></ul>" +
+    "<h4>Cheklov va uni aylanib o'tish</h4><ul><li>Batareyali kamera sessiyasi taxminan 5 daqiqadan keyin uziladi. Adapter uzilishni normal holat deb biladi va operator so'rasa oqimni qayta so'raydi.</li><li>Holat so'rovi kamerani uyg'otmaydi: hub kameraning oxirgi holatini beradi.</li><li>Hodisa kelganda adapter klipni hub'dagi microSD'dan oladi, jonli oqimni kutmaydi.</li></ul>" +
     "<p class='ogoh'>Reolink API'ning rasmiy hujjati to'liq emas, buyruqlar mikrodastur versiyasiga qarab o'zgaradi. Pilotda hub mikrodasturi bir versiyada qotiriladi va yangilanish avval test hub'da sinaladi.</p>",
   manba: [M.reoRtsp, M.haReo],
   ru: {
     yorliq: "Для тимлидов",
     sarlavha: "RTSP и HTTP API: что делает адаптер",
-    tana: "<h4>Видео</h4><pre><code>rtsp://user:pass@10.8.0.12:554/Preview_01_main\nrtsp://user:pass@10.8.0.12:554/Preview_01_sub</code></pre>" +
+    tana: "<h4>Видео</h4><pre><code>rtsp://user:pass@10.8.0.12:554/h264Preview_01_main\nrtsp://user:pass@10.8.0.12:554/h264Preview_01_sub</code></pre>" +
       "<p>Номер канала в URL начинается с 1, а API отдаёт каналы с 0, поэтому при сборке URL прибавляется единица. Спящей камере нужно время на пробуждение: таймаут RTSP-запроса — не меньше 20 секунд.</p>" +
       "<h4>События</h4><p>HTTP API хаба работает через <code>/api.cgi?cmd=...</code>: <code>GetMdState</code> возвращает движение, <code>GetAiState</code> — человека и машину. Открытые интеграции Reolink сначала пробуют TCP push или ONVIF push и только потом переходят на опрос раз в 5 секунд. Наш адаптер работает в том же порядке.</p>" +
       "<h4>Ограничение и обход</h4><ul><li>Сессия батарейной камеры рвётся примерно через 5 минут. Адаптер считает это штатной ситуацией и запрашивает поток заново, если оператор продолжает смотреть.</li><li>Опрос состояния не будит камеру: хаб отдаёт её последнее известное состояние.</li><li>По событию адаптер забирает клип с microSD хаба и не ждёт живого потока.</li></ul>" +
@@ -3084,7 +3084,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<tr><td>MotionCam</td><td>Koridor, ombor kirishi</td><td>Harakat va surat seriyasi</td></tr>" +
     "<tr><td>FireProtect 2</td><td>Har xona shipi</td><td>Tutun, harorat, variantga qarab is gazi</td></tr>" +
     "<tr><td>IP kamera</td><td>Asosiy kirish</td><td>Hodisadan keyin video tasdiq</td></tr></table>" +
-    "<h4>Video tasdiq ikki yo'l bilan</h4><ul><li><b>MotionCam surati.</b> Kamera kerak emas, energiya kam. Surat 640×480 gacha, eng past sifatda 7 soniyagacha, eng yuqorisida 20 soniyagacha yetkaziladi.</li><li><b>RTSP kamera.</b> Hub'ga 25 tagacha kamera ulanadi. Kamera doim yoqiq bo'lsa, qo'shimcha quvvat kerak.</li></ul>" +
+    "<h4>Video tasdiq ikki yo'l bilan</h4><ul><li><b>MotionCam surati.</b> Kamera talab qilinmaydi, energiya kam ketadi. Surat 640×480 gacha, eng past sifatda 7 soniyagacha, eng yuqorisida 20 soniyagacha yetkaziladi.</li><li><b>RTSP kamera.</b> Hub'ga 25 tagacha kamera ulanadi. Kamera doim yoqiq bo'lsa, qo'shimcha quvvat kerak.</li></ul>" +
     "<h4>Obyekt uchun odatiy to'plam</h4><p>Hub, 2 ta DoorProtect, 2 ta MotionCam, har xonaga FireProtect 2, ichki sirena. Hub 100 tagacha qurilmani oladi, kichik obyektda zaxira katta.</p>" +
     "<p class='ogoh'>Signal masofasini o'rnatishdan oldin tekshiring: qalin devorli omborda ReX 2 radio kengaytirgichi kerak bo'lishi mumkin. Ilova har datchik uchun signal kuchini ko'rsatadi.</p>",
   manba: [M.ajHub, M.ajCam],
@@ -3334,7 +3334,7 @@ Object.assign(window.MKB_BATAFSIL, {
     yorliq: "Jamoa rahbarlari uchun",
     sarlavha: "MQTT mavzulari va hodisa formati",
     tana: "<p>UG65 ichidagi tarmoq serveri dekodlangan xabarni MQTT(s) yoki HTTP(s) bilan uzatadi. Bulut kerak emas: shlyuz to'g'ridan-to'g'ri MKB brokeriga ulanadi. Taklif qilinayotgan mavzu tuzilmasi:</p>" +
-      "<pre><code>mkb/v1/{obyekt}/{device_id}/hodisa\nmkb/v1/{obyekt}/{device_id}/holat\nmkb/v1/shlyuz/{gw_id}/lwt</code></pre>" +
+      "<pre><code>mkb/v1/{obyekt}/{device_id}/hodisa\nmkb/v1/{obyekt}/{device_id}/holat\nmkb/v1/{obyekt}/{device_id}/aloqa</code></pre>" +
       "<pre><code>{\"obyekt\":\"AK-2025/0934\",\"device_id\":\"DAT-0012\",\n \"tur\":\"eshik\",\"qiymat\":\"ochiq\",\"batareya\":87,\n \"rssi\":-108,\"snr\":4.5,\"fcnt\":1532,\n \"vaqt\":\"2026-01-14T02:13:05+05:00\"}</code></pre>" +
       "<h4>Qoidalar</h4><ul><li>QoS 1, sessiya saqlanadi: aloqa uzilsa broker xabarni yo'qotmaydi.</li><li>TLS 1.2 va undan yuqori, har shlyuzga alohida mijoz sertifikati. Broker ACL shlyuzga faqat o'z obyektlariga yozishga ruxsat beradi.</li><li>LWT: shlyuz tushib qolsa, broker <code>lwt</code> mavzusiga «offline» yozadi va platforma bitta ogohlantirish chiqaradi, har datchik uchun emas.</li><li>Iste'molchi idempotent: <code>DevEUI + fcnt</code> bo'yicha takror yozilmaydi.</li></ul>" +
       "<p>HTTP varianti ham shu JSON'ni yuboradi, faqat HMAC imzo sarlavhasi bilan. Qaysi biri tanlansa ham, platformadagi hodisa modeli bitta.</p><h4>Yuklama</h4><p>Obyektda 5 datchik, har biri 10 daqiqada holat yuboradi: bu kuniga 720 ta xabar. 188 bino uchun sutkasiga taxminan 140 ming kichik xabar chiqadi, buni bitta broker bemalol ko'taradi.</p>",
@@ -3343,7 +3343,7 @@ Object.assign(window.MKB_BATAFSIL, {
       yorliq: "Для тимлида",
       sarlavha: "Топики MQTT и формат события",
       tana: "<p>Встроенный сетевой сервер UG65 передаёт декодированное сообщение по MQTT(s) или HTTP(s). Облако не нужно: шлюз подключается напрямую к брокеру MKB. Предлагаемая структура топиков:</p>" +
-        "<pre><code>mkb/v1/{obyekt}/{device_id}/hodisa\nmkb/v1/{obyekt}/{device_id}/holat\nmkb/v1/shlyuz/{gw_id}/lwt</code></pre>" +
+        "<pre><code>mkb/v1/{obyekt}/{device_id}/hodisa\nmkb/v1/{obyekt}/{device_id}/holat\nmkb/v1/{obyekt}/{device_id}/aloqa</code></pre>" +
         "<pre><code>{\"obyekt\":\"AK-2025/0934\",\"device_id\":\"DAT-0012\",\n \"tur\":\"eshik\",\"qiymat\":\"ochiq\",\"batareya\":87,\n \"rssi\":-108,\"snr\":4.5,\"fcnt\":1532,\n \"vaqt\":\"2026-01-14T02:13:05+05:00\"}</code></pre>" +
         "<h4>Правила</h4><ul><li>QoS 1 с сохранением сессии: при обрыве связи брокер не теряет сообщение.</li><li>TLS 1.2 и выше, отдельный клиентский сертификат на каждый шлюз. ACL брокера разрешает шлюзу писать только в топики своих объектов.</li><li>LWT: если шлюз пропал, брокер пишет «offline» в топик <code>lwt</code>, и платформа выдаёт одно предупреждение, а не по каждому датчику.</li><li>Потребитель идемпотентен: повтор по <code>DevEUI + fcnt</code> не записывается.</li></ul>" +
         "<p>Вариант HTTP отправляет тот же JSON, только с заголовком подписи HMAC. Что бы ни выбрали, модель события на платформе одна.</p><h4>Нагрузка</h4><p>На объекте 5 датчиков, каждый шлёт состояние раз в 10 минут: 720 сообщений в сутки. На 188 зданий это около 140 тысяч мелких сообщений в сутки, с ними спокойно справляется один брокер.</p>"
@@ -4127,7 +4127,7 @@ Object.assign(window.MKB_BATAFSIL, {
     tana: "<p>Ochiq maydon bir gektardan katta, devor yoki darvoza yo'q, yoki obyektda o'g'irlik urinishi bo'lgan. Minora bir kunda qo'yiladi va obyekt sotilgach keyingisiga ketadi.</p>" +
       "<h4>Narx nimaga bog'liq</h4><ul><li>Mahalliy yig'ilgan machta — 40 mln atrofida, import tirkama — 120 mln gacha.</li><li>Panel va akkumulyator dekabrga hisoblanganmi.</li><li>PTZ va kameralar soni, sirena, 5G.</li></ul>" +
       "<h4>Balansdan qaysi obyekt</h4><p>Ishlab chiqarish sexlari (24) va chorvachilik fermalari (32) hududlari, maxsus texnika to'plangan maydon.</p>" +
-      "<h4>Qaror</h4><p>Obyekt bir yilda sotilishi kerak (MB 2696-son nizomi, 20-band). Shuning uchun minora obyektga emas, bankning 2–4 minoralik puliga yoki ijaraga olinadi. Ijara foydali bo'ladigan chegara: oylik ijara × oylar &lt; xarid − qoldiq qiymati.</p><h4>Tijorat taklifida so'raladi</h4><ul><li>Oylik ijara va minimal muddat.</li><li>Ko'chirish xizmati narxi.</li><li>Dekabr energiya hisobi.</li></ul><p>Minoraning o'zi ham sug'urtalanadi va GPS bilan kuzatiladi.</p>",
+      "<h4>Qaror</h4><p>Obyekt bir yilda sotilishi kerak (MB 2696-son nizomi, 20-band). Shuning uchun minora bankning 2–4 minoralik puliga yoki ijaraga olinadi. Ijara foydali bo'ladigan chegara: oylik ijara × oylar &lt; xarid − qoldiq qiymati.</p><h4>Tijorat taklifida so'raladi</h4><ul><li>Oylik ijara va minimal muddat.</li><li>Ko'chirish xizmati narxi.</li><li>Dekabr energiya hisobi.</li></ul><p>Minoraning o'zi ham sug'urtalanadi va GPS bilan kuzatiladi.</p>",
     manba: [],
     ru: {
       yorliq: "Для руководства",
@@ -4139,3 +4139,1068 @@ Object.assign(window.MKB_BATAFSIL, {
     }
   }
 });
+
+/* ---- tuzatish1: fotodagi qurilma yorliqlari va arxitektura qatorlari ---- */
+/* Fotodagi har bir chaqiruv yorlig'i endi bosiladi. Yozuvlar qurilma darajasida:
+   nima qiladi, qancha oladi, nima buziladi. Bir xil qurilma bir necha yorliqda
+   uchraganda bitta yozuv qayta ishlatiladi - javob ikki xil bo'lmasin. */
+(function () {
+  var B = window.MKB_BATAFSIL;
+  var M = {
+    reo3: ["Reolink: batareyali kamera va uchinchi tomon dasturi", "https://support.reolink.com/articles/360004441753-Can-Reolink-Battery-Powered-Cameras-Work-with-3rd-Party-Software/"],
+    reoHub: ["Reolink Home Hub", "https://reolink.com/product/reolink-home-hub/"],
+    reoArgus: ["Reolink Argus 4 Pro", "https://reolink.com/product/argus-4-pro/"],
+    hik41: ["Hikvision DS-2XS2T41G1-ID/4G datasheet", "https://assets.hikvision.com/prd/normal/all/doc/m000060523/DS-2XS2T41G1-ID_4G_Datasheet_20250804.pdf"],
+    hik80: ["Hikvision DS-2XS6A46G1/P-IZS/C36S80 datasheet", "https://assets.hikvision.com/prd/public/all/doc/m000069241/DS-2XS6A46G1_P-IZS_C36S80_Datasheet_20240402.pdf"],
+    dhKit: ["Dahua KIT/DH-PFM378-B125-CB datasheet", "https://material.dahuasecurity.com/uploads/cpq/prm-os-srv-res/smart/datasheetzipfiles/KITKIT_DH-PFM378-B125-CB_DH-SD49425DB-HNY-GQ-LA_datasheet_20240125.pdf"],
+    dhBat: ["Dahua PFM372-L45-4S14P datasheet", "https://www.dahuasecurity.com/asset/upload/uploads/soft/20200925/PFM372-L45-4S14P_datasheet_20200811.pdf"],
+    ajHub: ["Ajax Hub 2 (4G): spetsifikatsiya", "https://ajax.systems/products/specs/hub-2/"],
+    ajCam: ["Ajax MotionCam: spetsifikatsiya", "https://ajax.systems/products/specs/motioncam/"],
+    ajBat: ["Ajax: batareya muddati", "https://ajax.systems/support/posts/how-long-operate-from-batteries/"],
+    vmq: ["VMQ 649-son, Yong'in xavfsizligi qoidalari", "https://lex.uz/docs/-5056473"]
+  };
+  var Y = {};
+
+  Y.batkam = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Batareyali kamera: qachon uyg'onadi va qancha chidaydi",
+    tana: "<p>Kamera sutkaning deyarli butun davomida uxlaydi. Uni PIR datchik uyg'otadi: issiq jism 8–10 m ichida qimirlasa, kamera 0,6–1,2 soniyada uyg'onadi va yozishni boshlaydi. Shu kechikish tufayli birinchi kadrda odam ko'pincha ramka chekkasida qoladi, shuning uchun kamera yo'lakka ko'ndalang qaratiladi, yuzma-yuz emas.</p>" +
+      "<table><tr><th>Ko'rsatkich</th><th>Qiymat</th></tr>" +
+      "<tr><td>Ichki akkumulyator</td><td class='n'>5000 mA·soat, almashtirilmaydi</td></tr>" +
+      "<tr><td>Kunlik hodisa</td><td class='n'>30–40 uyg'onish × 15–20 soniya</td></tr>" +
+      "<tr><td>Zaryadsiz</td><td class='n'>45–70 kun</td></tr>" +
+      "<tr><td>6 Vt panel bilan</td><td class='n'>dekabrda ham tugamaydi</td></tr>" +
+      "<tr><td>Ishchi harorat</td><td class='n'>−10…+55 °C</td></tr></table>" +
+      "<h4>Uchta tipik nosozlik</h4><ul>" +
+      "<li><b>Shamoldagi shox.</b> Har 40 soniyada uyg'otadi va akkumulyatorni bir haftada tugatadi. Davo: hodisa zonasini maskalash va sezgirlikni pasaytirish, kamerani ko'chirish emas.</li>" +
+      "<li><b>Iliq tun.</b> PIR issiqlik farqiga ishlaydi: −5 °C da odam va fon farqi katta, +35 °C tunda kichik. Yozda sezgirlik oshiriladi.</li>" +
+      "<li><b>Qishki zaryad.</b> 0 °C dan past haroratda ichki akkumulyator zaryadni qabul qilmaydi: panel quyoshda tursa ham foiz o'smaydi. Kamera janubga qaragan devorga, shamoldan panada o'rnatiladi.</li></ul>" +
+      "<p class='ogoh'>Uyqudagi kameradan doimiy RTSP olib bo'lmaydi. Jonli oqim faqat hub orqali va faqat kamera uyg'oq turgan 40 soniyada ochiladi.</p>",
+    manba: [M.reoArgus, M.reo3],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Батарейная камера: когда просыпается и сколько держит",
+      tana: "<p>Камера спит почти всё время. Её будит PIR-датчик: если тёплый объект движется в пределах 8–10 м, камера просыпается за 0,6–1,2 секунды и начинает запись. Из-за этой задержки на первом кадре человек часто оказывается у края рамки, поэтому камеру ставят поперёк прохода, а не в лоб.</p>" +
+        "<table><tr><th>Параметр</th><th>Значение</th></tr>" +
+        "<tr><td>Встроенный аккумулятор</td><td class='n'>5000 мА·ч, несменный</td></tr>" +
+        "<tr><td>Событий в сутки</td><td class='n'>30–40 пробуждений × 15–20 с</td></tr>" +
+        "<tr><td>Без подзарядки</td><td class='n'>45–70 дней</td></tr>" +
+        "<tr><td>С панелью 6 Вт</td><td class='n'>не садится и в декабре</td></tr>" +
+        "<tr><td>Рабочая температура</td><td class='n'>−10…+55 °C</td></tr></table>" +
+        "<h4>Три типовых отказа</h4><ul>" +
+        "<li><b>Ветка на ветру.</b> Будит камеру каждые 40 секунд и сажает аккумулятор за неделю. Лечится маскированием зоны и снижением чувствительности, а не переносом камеры.</li>" +
+        "<li><b>Тёплая ночь.</b> PIR работает на разнице температур: при −5 °C контраст человека и фона большой, при +35 °C маленький. Летом чувствительность поднимают.</li>" +
+        "<li><b>Зарядка на морозе.</b> Ниже 0 °C встроенный аккумулятор не принимает заряд: панель на солнце, а процент не растёт. Камеру вешают на южную стену, в затишье.</li></ul>" +
+        "<p class='ogoh'>Со спящей камеры нельзя снимать постоянный RTSP. Живой поток открывается только через хаб и только в те 40 секунд, пока камера не уснула.</p>"
+    }
+  };
+
+  Y.domofon = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Video domofon: doimiy tok kerak, qulf esa impulsda ochiladi",
+    tana: "<p>Domofon obyektdagi yagona qurilma bo'lib, u chindan ham sutka bo'yi yoqiq turishi kerak: qo'ng'iroqni kutish rejimida 2–3 Vt, qo'ng'iroq paytida 6–8 Vt oladi. Qulf esa doimiy tok olmaydi — elektromexanik qulf faqat ochish paytida 0,6–1,2 soniya davomida tortiladi, sutkasiga o'nta ochish 0,4 Vt·soatdan kam.</p>" +
+      "<h4>Ulanish</h4><ul>" +
+      "<li>Domofon 12 V bloki bilan LiFePO4 shinasiga ulanadi, qulf esa alohida rele orqali: qulf tokining sakrashi domofonni qayta yuklamasin.</li>" +
+      "<li>Qulf chizig'iga teskari diod qo'yiladi. Diodsiz sxemada g'altak o'chganda hosil bo'ladigan impuls rele kontaktini olti oyda kuydiradi.</li>" +
+      "<li>Qo'ng'iroq mobil ilovaga hodisa sifatida keladi; eshikni ochish buyrug'i esa <code>POST /buyruq</code> orqali, <code>Idempotency-Key</code> bilan — takror bosish eshikni ikki marta ochmaydi.</li></ul>" +
+      "<p class='ogoh'>Sovuqda odam qo'lqopda tugmani sekin bosadi. Domofonning javob vaqti 2 soniyadan oshsa, u tugmani yana bosadi va navbatga ikkita qo'ng'iroq tushadi. Shuning uchun qabul tomonida takror qo'ng'iroq 10 soniyalik oyna bo'yicha birlashtiriladi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Видеодомофон: питание постоянное, замок импульсом",
+      tana: "<p>Домофон — единственное устройство на объекте, которое действительно должно быть включено круглосуточно: в ожидании вызова он берёт 2–3 Вт, во время вызова 6–8 Вт. Замок постоянного тока не потребляет: электромеханический замок притягивается только на 0,6–1,2 секунды, и десять открытий в сутки — это меньше 0,4 Вт·ч.</p>" +
+        "<h4>Подключение</h4><ul>" +
+        "<li>Домофон питается от шины LiFePO4 через блок 12 В, замок — через отдельное реле: бросок тока замка не должен перезагружать домофон.</li>" +
+        "<li>В цепь замка ставится обратный диод. Без него выброс при обесточивании катушки выжигает контакт реле за полгода.</li>" +
+        "<li>Вызов приходит в мобильное приложение как событие, открытие двери идёт командой <code>POST /buyruq</code> с <code>Idempotency-Key</code> — повторное нажатие не откроет замок дважды.</li></ul>" +
+        "<p class='ogoh'>На морозе человек в перчатке жмёт кнопку медленно. Если домофон отвечает дольше 2 секунд, он жмёт ещё раз — и в очередь падают два вызова. Поэтому на приёме повторный вызов склеивается по окну в 10 секунд.</p>"
+    }
+  };
+
+  Y.hub = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Home Hub: obyektdagi asosiy iste'molchi va yagona RTSP manbai",
+    tana: "<p>Kameralar batareyada, hub esa emas. U sutka bo'yi yoqiq: Wi-Fi nuqtasini ushlab turadi, kameralardan kelgan klipni ichki xotiraga yozadi va markazga faqat shu hub chiqadi. Obyektdagi kunlik energiyaning uchdan ikkisi shu qutiga ketadi.</p>" +
+      "<table><tr><th>Ko'rsatkich</th><th>Qiymat</th></tr>" +
+      "<tr><td>Kirish</td><td class='n'>12 V / 1 A</td></tr>" +
+      "<tr><td>Doimiy iste'mol</td><td class='n'>3–5 Vt, kuniga 72–120 Vt·soat</td></tr>" +
+      "<tr><td>Wi-Fi radiusi</td><td class='n'>ochiq joyda 25–35 m, g'ishtli devor orqali 8–12 m</td></tr>" +
+      "<tr><td>Ishchi harorat</td><td class='n'>−10…+45 °C</td></tr></table>" +
+      "<h4>Nega u kerak</h4>" +
+      "<p>Batareyali kamera uchinchi tomon dasturiga to'g'ridan-to'g'ri oqim bermaydi. Hub uni bitta manzilda ochadi: <code>rtsp://hub:554/h264Preview_01_main</code>. Hub bo'lmasa, kameraga faqat ishlab chiqaruvchining ilovasi orqali kirish qoladi va MKB platformasi uni umuman ko'rmaydi.</p>" +
+      "<p class='ogoh'>Hub isitilmaydigan ombor devoriga osilsa, yanvarda ichki harorat −15 °C ga tushadi va u qayta yuklanish halqasiga kiradi. Hub va akkumulyator doim bino ichiga, tashqi devordan uzoqroqqa qo'yiladi.</p>",
+    manba: [M.reoHub, M.reo3],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Home Hub: главный потребитель объекта и единственный источник RTSP",
+      tana: "<p>Камеры на батарее, хаб — нет. Он работает круглосуточно: держит точку Wi-Fi, пишет пришедшие клипы во внутреннюю память, и наружу выходит только он. Две трети суточной энергии объекта уходит в эту коробку.</p>" +
+        "<table><tr><th>Параметр</th><th>Значение</th></tr>" +
+        "<tr><td>Вход</td><td class='n'>12 В / 1 А</td></tr>" +
+        "<tr><td>Постоянное потребление</td><td class='n'>3–5 Вт, 72–120 Вт·ч в сутки</td></tr>" +
+        "<tr><td>Радиус Wi-Fi</td><td class='n'>на открытом месте 25–35 м, через кирпичную стену 8–12 м</td></tr>" +
+        "<tr><td>Рабочая температура</td><td class='n'>−10…+45 °C</td></tr></table>" +
+        "<h4>Зачем он нужен</h4>" +
+        "<p>Батарейная камера не отдаёт поток стороннему софту напрямую. Хаб открывает его по одному адресу: <code>rtsp://hub:554/h264Preview_01_main</code>. Без хаба к камере можно попасть только из приложения производителя, и платформа МКБ её не видит.</p>" +
+        "<p class='ogoh'>Если хаб повесить на стену неотапливаемого склада, в январе внутри будет −15 °C и он уйдёт в цикл перезагрузок. Хаб и аккумулятор всегда ставят внутри помещения, подальше от наружной стены.</p>"
+    }
+  };
+
+  Y.router = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "4G router: signal, ikki SIM va tunnel",
+    tana: "<p>Router obyektning yagona chiqish nuqtasi. U 12 V da 2–4 Vt oladi va hech qachon o'chirilmaydi: uzilgan tunnelni tiklash 40–90 soniya oladi, hodisa esa bu vaqtni kutmaydi.</p>" +
+      "<h4>Signal</h4>" +
+      "<p>Ko'rik paytida RSRP o'lchanadi. −105 dBm dan yuqori bo'lsa ichki antenna yetadi; −105…−115 dBm oralig'ida tashqi yo'naltirilgan antenna qo'yiladi; −115 dBm dan past bo'lsa 4G hisobga olinmaydi va obyekt LoRaWAN yoki klaster sxemasiga o'tadi. Antennani mahkamlashdan oldin ustunda 30 sm qadam bilan uch nuqta o'lchanadi: yarim metr siljish 6–8 dB beradi.</p>" +
+      "<h4>Ikki SIM</h4>" +
+      "<p>Ikkala SIM ham yopiq APN'da va har xil operatorda. Asosiy SIM'da ketma-ket uchta ping yo'qolsa router zaxiraga o'tadi, 15 daqiqadan keyin asosiyni qayta sinaydi. Almashish platformaga <code>aloqa</code> hodisasi bo'lib yoziladi — trafik hisobida qaysi SIM qancha ishlagani ko'rinib tursin.</p>" +
+      "<p class='ogoh'>Operator tarmog'i bo'sh ulanishni bir necha daqiqada uzadi. Shuning uchun MQTT keepalive 60 soniyaga qo'yiladi: aks holda router onlayn ko'rinadi, lekin buyruq unga yetmaydi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "4G-роутер: сигнал, две SIM и туннель",
+      tana: "<p>Роутер — единственная точка выхода объекта. Он берёт 2–4 Вт от 12 В и никогда не выключается: восстановление разорванного туннеля занимает 40–90 секунд, а событие столько не ждёт.</p>" +
+        "<h4>Сигнал</h4>" +
+        "<p>На обследовании замеряют RSRP. Выше −105 дБм хватает внутренней антенны; в диапазоне −105…−115 дБм ставят внешнюю направленную; ниже −115 дБм 4G не рассматривают, и объект уходит в схему LoRaWAN или в кластер. До закрепления антенны меряют три точки на мачте с шагом 30 см: полметра сдвига дают 6–8 дБ.</p>" +
+        "<h4>Две SIM</h4>" +
+        "<p>Обе SIM в закрытом APN и у разных операторов. При потере трёх пингов подряд роутер уходит на резервную и через 15 минут пробует основную снова. Переключение уходит на платформу событием <code>aloqa</code> — чтобы в отчёте по трафику было видно, сколько отработала каждая SIM.</p>" +
+        "<p class='ogoh'>Сеть оператора закрывает простаивающее соединение за несколько минут. Поэтому keepalive MQTT ставят в 60 секунд: иначе роутер числится онлайн, а команда до него не доходит.</p>"
+    }
+  };
+
+  Y.ups = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "LiFePO4 va DC UPS: nega qo'rg'oshin emas",
+    tana: "<p>Blok obyektni tunda va bulutli kunlarda ushlab turadi. Hisob oddiy: kunlik yuk Vt·soatda quyoshsiz kunlar soniga ko'paytiriladi, 0,8 razryad chuqurligiga va 12,8 V ga bo'linadi. 5 Vt doimiy yuk va 5 kunlik zaxira uchun bu 12 V 60 A·soat degani.</p>" +
+      "<table><tr><th></th><th>LiFePO4</th><th>AGM, qo'rg'oshin</th></tr>" +
+      "<tr><td>Foydali sig'im</td><td class='n'>80–90%</td><td class='n'>50%</td></tr>" +
+      "<tr><td>Sikl</td><td class='n'>3000 dan ortiq</td><td class='n'>400–600</td></tr>" +
+      "<tr><td>Og'irlik, 100 A·soat</td><td class='n'>12–14 kg</td><td class='n'>30–32 kg</td></tr>" +
+      "<tr><td>Boshlang'ich narx</td><td class='n'>2–2,5 barobar qimmat</td><td class='n'>arzon</td></tr></table>" +
+      "<p>Uch yillik hisobda LiFePO4 arzonga tushadi: qo'rg'oshin blok obyektda ikki qish chidaydi, keyin sig'imi yarmiga tushadi va uni ikkinchi marta olib borish kerak bo'ladi.</p>" +
+      "<p class='ogoh'>LiFePO4 0 °C dan past haroratda zaryadlanmaydi — bu kimyoning cheklovi, sozlama emas. Past harorat himoyasi bo'lgan BMS yoki isitgichli blok shartnomaga alohida band bilan yoziladi; aks holda yanvarda quyosh chiqadi, kontroller zaryad beradi, blok esa uni qabul qilmaydi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "LiFePO4 и DC UPS: почему не свинец",
+      tana: "<p>Блок держит объект ночью и в пасмурные дни. Счёт простой: суточная нагрузка в Вт·ч умножается на число дней без солнца, делится на глубину разряда 0,8 и на 12,8 В. Для постоянных 5 Вт и запаса в 5 дней это 12 В 60 А·ч.</p>" +
+        "<table><tr><th></th><th>LiFePO4</th><th>AGM, свинец</th></tr>" +
+        "<tr><td>Полезная ёмкость</td><td class='n'>80–90%</td><td class='n'>50%</td></tr>" +
+        "<tr><td>Циклов</td><td class='n'>более 3000</td><td class='n'>400–600</td></tr>" +
+        "<tr><td>Вес, 100 А·ч</td><td class='n'>12–14 кг</td><td class='n'>30–32 кг</td></tr>" +
+        "<tr><td>Цена на входе</td><td class='n'>дороже в 2–2,5 раза</td><td class='n'>дешевле</td></tr></table>" +
+        "<p>На горизонте трёх лет LiFePO4 выходит дешевле: свинцовый блок переживает на объекте две зимы, теряет половину ёмкости, и за ним нужно ехать второй раз.</p>" +
+        "<p class='ogoh'>LiFePO4 не заряжается ниже 0 °C — это ограничение химии, а не настройка. BMS с низкотемпературной защитой или блок с подогревом прописывают в договоре отдельным пунктом; иначе в январе выходит солнце, контроллер даёт заряд, а блок его не принимает.</p>"
+    }
+  };
+
+  B["s-y01.rb1"] = Y.batkam;
+  B["s-y01.rb2"] = Y.batkam;
+  B["s-y01.rb3"] = Y.batkam;
+  B["s-y01.rb4"] = Y.domofon;
+  B["s-y01.rb5"] = Y.hub;
+  B["s-y01.rb6"] = Y.router;
+  B["s-y01.rb7"] = Y.ups;
+  B["s-y07.rb1"] = Y.router;
+  B["s-y07.rb2"] = Y.domofon;
+  B["s-y04.rb3"] = Y.ups;
+  window.MKB_QURILMA = Y;
+})();
+
+/* ---- tuzatish1b: quyosh, shkaf va PTZ qurilmalari ---- */
+(function () {
+  var B = window.MKB_BATAFSIL;
+  var M = {
+    hik41: ["Hikvision DS-2XS2T41G1-ID/4G datasheet", "https://assets.hikvision.com/prd/normal/all/doc/m000060523/DS-2XS2T41G1-ID_4G_Datasheet_20250804.pdf"],
+    dhKit: ["Dahua KIT/DH-PFM378-B125-CB datasheet", "https://material.dahuasecurity.com/uploads/cpq/prm-os-srv-res/smart/datasheetzipfiles/KITKIT_DH-PFM378-B125-CB_DH-SD49425DB-HNY-GQ-LA_datasheet_20240125.pdf"],
+    dhBat: ["Dahua PFM372-L45-4S14P datasheet", "https://www.dahuasecurity.com/asset/upload/uploads/soft/20200925/PFM372-L45-4S14P_datasheet_20200811.pdf"]
+  };
+  var Y = {};
+
+  Y.panel = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Quyosh paneli: dekabrga o'lchanadi, iyunga emas",
+    tana: "<p>Panel ikki vazifani bajaradi: kunlik yukni qoplaydi va tunda bo'shagan akkumulyatorni qaytadan to'ldiradi. Faqat birinchisiga o'lchangan panel birinchi uzoq bulutli haftadan keyin obyektni tiklay olmaydi — shuning uchun hisobda tiklash muddati ham bor.</p>" +
+      "<p>Toshkent atrofida dekabrdagi samarali quyosh soati 1,62 ga teng, yozda esa deyarli besh barobar ko'p. Kontroller, kabel va issiqlik yo'qotishlari 0,7 koeffitsiyenti bilan olinadi.</p>" +
+      "<h4>Joylashtirish</h4><ul>" +
+      "<li><b>Burchak.</b> Qishda past quyosh uchun 45–55° tikroq qo'yiladi. Yozga sozlangan 30° dekabrda unumni beshdan bir qismga kamaytiradi.</li>" +
+      "<li><b>Soya.</b> Panelning bittagina hujayrasiga tushgan soya butun qatorning tokini cheklaydi. Ustunni tanlashda soat 9 va 15 dagi soya tekshiriladi.</li>" +
+      "<li><b>Chang.</b> Yo'l yoqasida changli qatlam unumni oyiga 8–15% ga tushiradi. Panel yerdan 2,5 m balandda va yuvish uchun qo'l yetadigan holatda o'rnatiladi.</li>" +
+      "<li><b>Qor.</b> Tikroq burchak qorni o'zi tushiradi; 30° da qor uch kun turadi va shu uch kun butun byudjetni yeydi.</li></ul>" +
+      "<p class='ogoh'>Panelni kesib o'g'irlash — chekka obyektdagi eng ko'p uchraydigan yo'qotish. Kronshteyn uzilmaydigan bolt bilan, kabel esa metall gofra ichida ustun tanasidan o'tkaziladi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Солнечная панель: считается на декабрь, а не на июнь",
+      tana: "<p>Панель делает две работы: покрывает суточную нагрузку и заново наполняет аккумулятор, севший за ночь. Панель, посчитанная только под первую задачу, не поднимет объект после первой же долгой пасмурной недели — поэтому в расчёте есть и срок восстановления.</p>" +
+        "<p>В районе Ташкента эффективных солнечных часов в декабре 1,62, летом почти в пять раз больше. Потери в контроллере, кабеле и от нагрева учитываются коэффициентом 0,7.</p>" +
+        "<h4>Размещение</h4><ul>" +
+        "<li><b>Угол.</b> Под низкое зимнее солнце панель ставят круче, 45–55°. Летние 30° срезают декабрьскую выработку примерно на пятую часть.</li>" +
+        "<li><b>Тень.</b> Тень даже на одной ячейке ограничивает ток всей цепочки. При выборе опоры смотрят тень не в полдень, а в 9 и в 15 часов.</li>" +
+        "<li><b>Пыль.</b> У дороги слой пыли снижает выработку на 8–15% в месяц. Панель вешают на 2,5 м и так, чтобы до неё доставала рука с щёткой.</li>" +
+        "<li><b>Снег.</b> Крутой угол сбрасывает снег сам; при 30° снег лежит три дня, и эти три дня съедают весь бюджет.</li></ul>" +
+        "<p class='ogoh'>Срезанная панель — самая частая потеря на удалённом объекте. Кронштейн ставят на срывной болт, кабель ведут в металлорукаве внутри тела опоры.</p>"
+    }
+  };
+
+  Y.akbQuti = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Akkumulyator qutisi va 4G moduli: kamera ichidagi butun tizim",
+    tana: "<p>Quyosh-4G kamerada ustunda alohida shkaf yo'q: akkumulyator, zaryad kontrolleri va 4G moduli kameraning o'z korpusida turadi. Shuning uchun obyektda ulanadigan yagona narsa — panel kabeli, IP67 razyom bilan.</p>" +
+      "<table><tr><th>Ko'rsatkich</th><th>Qiymat</th></tr>" +
+      "<tr><td>Ichki akkumulyator</td><td class='n'>odatda 30–50 A·soat, 12 V</td></tr>" +
+      "<tr><td>Kutish iste'moli</td><td class='n'>0,3–0,6 Vt</td></tr>" +
+      "<tr><td>Hodisa yozuvi</td><td class='n'>2,5–4 Vt, 20–40 soniya</td></tr>" +
+      "<tr><td>Jonli oqim</td><td class='n'>4–7 Vt</td></tr>" +
+      "<tr><td>Ishchi harorat</td><td class='n'>−30…+60 °C</td></tr></table>" +
+      "<h4>Nima tekshiriladi</h4>" +
+      "<p>Batareya foizi va zaryad toki telemetriya sifatida <code>GET /qurilma/{id}/holat</code> orqali ko'rinadi. Panelning kabeli uzilsa yoki razyom oksidlansa, foiz sekin tushadi: platforma uch kunlik tushish tendensiyasini ko'rib, quvvat tugashidan oldin servis topshirig'ini ochadi.</p>" +
+      "<p class='ogoh'>Korpus ichida zaryad kontrolleri bo'lgani uchun akkumulyatorni maydonda almashtirib bo'lmaydi — kamera butunlay yechib olinadi. Shu sababli bu sinf omborda zaxira komplekt saqlashni talab qiladi.</p>",
+    manba: [M.hik41],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Отсек аккумулятора и 4G-модуль: вся система внутри камеры",
+      tana: "<p>У солнечно-4G камеры нет отдельного шкафа на опоре: аккумулятор, контроллер заряда и 4G-модуль стоят в её собственном корпусе. Поэтому на объекте подключается ровно одно — кабель панели, разъёмом IP67.</p>" +
+        "<table><tr><th>Параметр</th><th>Значение</th></tr>" +
+        "<tr><td>Встроенный аккумулятор</td><td class='n'>обычно 30–50 А·ч, 12 В</td></tr>" +
+        "<tr><td>Потребление в ожидании</td><td class='n'>0,3–0,6 Вт</td></tr>" +
+        "<tr><td>Запись события</td><td class='n'>2,5–4 Вт, 20–40 с</td></tr>" +
+        "<tr><td>Живой поток</td><td class='n'>4–7 Вт</td></tr>" +
+        "<tr><td>Рабочая температура</td><td class='n'>−30…+60 °C</td></tr></table>" +
+        "<h4>Что контролируется</h4>" +
+        "<p>Процент заряда и ток заряда видны как телеметрия через <code>GET /qurilma/{id}/holat</code>. Если оборвался кабель панели или окислился разъём, процент падает медленно: платформа ловит трёхдневный тренд и открывает сервисное задание раньше, чем объект обесточится.</p>" +
+        "<p class='ogoh'>Контроллер заряда внутри корпуса, поэтому аккумулятор нельзя заменить в поле — камеру снимают целиком. Этот класс требует не второй камеры на объекте, а подменного комплекта на складе.</p>"
+    }
+  };
+
+  Y.domofonSip = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "SIP va ONVIF: domofon platformaga qanday ulanadi",
+    tana: "<p>Domofon ikkita mustaqil interfeys beradi va ular boshqa-boshqa ishlaydi. ONVIF video oqim va hodisa uchun: platforma kameradek ko'radi, kadr oladi, arxivga yozadi. SIP esa ovozli chaqiruv uchun: tashrifchi tugmani bosganda domofon SIP registratsiyasi bo'yicha qo'ng'iroq yuboradi.</p>" +
+      "<table><tr><th>Interfeys</th><th>Nima beradi</th><th>Kim ishlatadi</th></tr>" +
+      "<tr><td>ONVIF Profile S</td><td>RTSP oqim, kadr</td><td>Media shlyuz</td></tr>" +
+      "<tr><td>ONVIF Profile T yoki push</td><td>Harakat va tugma hodisasi</td><td>Hodisa shinasi</td></tr>" +
+      "<tr><td>SIP</td><td>Ovozli chaqiruv</td><td>Operator ilovasi</td></tr>" +
+      "<tr><td>Quruq kontakt yoki rele</td><td>Qulfni ochish</td><td>Buyruq xizmati</td></tr></table>" +
+      "<p>Adapter shu to'rttasini bitta qurilma sifatida birlashtiradi: reyestrda bitta <code>qurilma_id</code>, unga bog'langan to'rtta kanal. Operator uchun bu bitta kartochka.</p>" +
+      "<p class='ogoh'>SIP registratsiyasi NAT ortida har 30–60 soniyada yangilanishi kerak, aks holda chaqiruv operatorga yetmaydi. Uxlab qoladigan kanalda domofonning SIP qismi ishlamaydi — domofon doim yoqiq qurilmalar sinfida qoladi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "SIP и ONVIF: как домофон подключается к платформе",
+      tana: "<p>Домофон отдаёт два независимых интерфейса, и работают они по-разному. ONVIF — для видео и событий: платформа видит его как камеру, берёт кадр, пишет в архив. SIP — для голосового вызова: при нажатии кнопки домофон звонит по своей SIP-регистрации.</p>" +
+        "<table><tr><th>Интерфейс</th><th>Что даёт</th><th>Кто использует</th></tr>" +
+        "<tr><td>ONVIF Profile S</td><td>RTSP-поток, кадр</td><td>Медиашлюз</td></tr>" +
+        "<tr><td>ONVIF Profile T или push</td><td>События движения и кнопки</td><td>Шина событий</td></tr>" +
+        "<tr><td>SIP</td><td>Голосовой вызов</td><td>Приложение оператора</td></tr>" +
+        "<tr><td>Сухой контакт или реле</td><td>Открытие замка</td><td>Сервис команд</td></tr></table>" +
+        "<p>Адаптер сводит эти четыре канала в одно устройство: в реестре один <code>qurilma_id</code> и привязанные к нему каналы. Для оператора это одна карточка.</p>" +
+        "<p class='ogoh'>SIP-регистрацию за NAT нужно обновлять каждые 30–60 секунд, иначе вызов до оператора не дойдёт. На засыпающем канале SIP-часть домофона не работает — домофон остаётся в классе постоянно включённых устройств.</p>"
+    }
+  };
+
+  Y.ptz = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "PTZ kamera: aylanish energiyaga qimmatga tushadi",
+    tana: "<p>Aylanuvchi kamera katta maydonni bitta nuqtadan yopadi, lekin uning motori qisqa vaqtga bo'lsa ham eng katta tokni oladi. Tinch turgan PTZ 4–6 Vt, aylanish paytida 12–18 Vt, IQ yoritgich yoqilganda yana 6–9 Vt qo'shiladi. Quvvat byudjeti aynan shu uch rejimning sutkalik ulushiga qarab tuziladi.</p>" +
+      "<h4>Qanday ishlatiladi</h4><ul>" +
+      "<li><b>Presetlar.</b> 4–6 ta nuqta belgilanadi: darvoza, perimetr burchaklari, texnika maydoni. Hodisa kelganda kamera kerakli presetga 2–3 soniyada boradi.</li>" +
+      "<li><b>Patrul o'chiriladi.</b> Uzluksiz avtomatik aylanish motorni ham, akkumulyatorni ham yeydi va nazoratga hech narsa qo'shmaydi: harakat baribir datchik yoki analitika orqali topiladi.</li>" +
+      "<li><b>Buyruq.</b> Operator burilishi <code>POST /buyruq</code> orqali ketadi va jurnalga kim, qachon, qaysi presetga burgani yoziladi.</li></ul>" +
+      "<p class='ogoh'>Motorli mexanizm chang va sovuqda eskiradigan yagona qism: −20 °C da moy quyuqlashadi va burilish sekinlashadi. Shartnomada aylanish resursi (sikl soni) va kafolat muddati alohida ko'rsatiladi.</p>",
+    manba: [M.dhKit],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "PTZ-камера: поворот дорого обходится по питанию",
+      tana: "<p>Поворотная камера закрывает большую площадь с одной точки, но её мотор берёт самый большой ток, пусть и на короткое время. В покое PTZ потребляет 4–6 Вт, при повороте 12–18 Вт, при включённой ИК-подсветке добавляются ещё 6–9 Вт. Энергобюджет строят именно по суточным долям этих трёх режимов.</p>" +
+        "<h4>Как её используют</h4><ul>" +
+        "<li><b>Пресеты.</b> Задают 4–6 точек: ворота, углы периметра, площадка с техникой. По событию камера приходит в нужный пресет за 2–3 секунды.</li>" +
+        "<li><b>Патрулирование выключают.</b> Непрерывный обход изнашивает мотор и сажает аккумулятор, ничего не добавляя к контролю: движение всё равно ловится датчиком или аналитикой.</li>" +
+        "<li><b>Команда.</b> Поворот оператора идёт через <code>POST /buyruq</code>, и в журнал пишется кто, когда и в какой пресет повернул.</li></ul>" +
+        "<p class='ogoh'>Моторный узел — единственная часть, которая изнашивается от пыли и мороза: при −20 °C смазка густеет и поворот замедляется. Ресурс поворотов и срок гарантии выносят в договор отдельной строкой.</p>"
+    }
+  };
+
+  Y.boshQuti = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Boshqaruv qutisi: akkumulyator, MPPT va 4G bitta korpusda",
+    tana: "<p>Ustundagi quti obyektning butun elektr qismini o'zida saqlaydi: LiFePO4 blok, MPPT zaryad kontrolleri, 4G modem va saqlagichlar. Quti yerdan 2,5–3 m balandda, panel ostida va kameradan pastda turadi — shunda kabel qisqa va yomg'ir suvining yo'li quti ustidan o'tmaydi.</p>" +
+      "<h4>Ichidagi tartib</h4><ul>" +
+      "<li><b>MPPT, PWM emas.</b> Qishki past yoritishda MPPT kontroller o'sha paneldan 15–25% ko'proq oladi. Farq dekabrda hal qiluvchi bo'ladi.</li>" +
+      "<li><b>Har iste'molchiga alohida saqlagich.</b> Kamera, modem va isitgich alohida chiziqda: bittasining qisqa tutashuvi butun obyektni o'chirmasin.</li>" +
+      "<li><b>Zichlik.</b> IP66 dan past korpus bir yilda ichiga kondensat yig'adi. Kabel kirish joyi pastdan va germetik salnik bilan.</li></ul>" +
+      "<p class='ogoh'>Quti ochilishi hodisa bo'lib qayd etiladi: eshigiga tamper kontakti qo'yiladi va u <code>buzish</code> turidagi hodisa yuboradi. Servis borganda topshiriq oldindan ochiladi, shunda tamper hodisasi signal sifatida qabul qilinmaydi.</p>",
+    manba: [M.dhBat],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Блок управления: аккумулятор, MPPT и 4G в одном корпусе",
+      tana: "<p>Коробка на опоре держит всю электрическую часть объекта: блок LiFePO4, MPPT-контроллер заряда, 4G-модем и предохранители. Её ставят на 2,5–3 м, под панелью и ниже камеры — так кабель короче, а вода не идёт поверх корпуса.</p>" +
+        "<h4>Что внутри</h4><ul>" +
+        "<li><b>MPPT, а не PWM.</b> При слабом зимнем свете MPPT снимает с той же панели на 15–25% больше. В декабре эта разница решает.</li>" +
+        "<li><b>Свой предохранитель на каждого потребителя.</b> Камера, модем и подогрев на отдельных линиях: короткое замыкание одного не должно гасить весь объект.</li>" +
+        "<li><b>Герметичность.</b> Корпус ниже IP66 за год набирает конденсат. Ввод кабеля — снизу и через герметичный сальник.</li></ul>" +
+        "<p class='ogoh'>Вскрытие коробки фиксируется как событие: на дверцу ставят тампер, он отправляет событие типа <code>buzish</code>. Перед выездом сервиса задание открывают заранее, чтобы тампер не приняли за тревогу.</p>"
+    }
+  };
+
+  Y.tarmoq = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Router va kommutator: obyektning tarmoq qismi",
+    tana: "<p>Shkafdagi tarmoq bloki uchta ishni bajaradi: obyektni tashqariga chiqaradi, ichkarida PoE bilan kameralarni quvvatlaydi va tunnel holatini o'zi kuzatadi. Doimiy iste'moli 6–12 Vt, PoE yuki qo'shilganda kamera soniga qarab o'sadi.</p>" +
+      "<table><tr><th>Qism</th><th>Vazifa</th></tr>" +
+      "<tr><td>LTE router</td><td>Yopiq APN, IPsec tunnel, ikki SIM</td></tr>" +
+      "<tr><td>PoE kommutator</td><td>Kameraga quvvat va ma'lumot bitta kabelda</td></tr>" +
+      "<tr><td>SNMP agenti</td><td>Port holati, harorat, uzilish soni</td></tr></table>" +
+      "<p>SNMP telemetriyasi platformaga qurilma holati bo'lib tushadi: qaysi port o'chgani, necha marta qayta ulangani ko'rinadi. Bitta portning takroriy uzilishi ko'pincha kabel razyomining oksidlanishini bildiradi va uni kamera o'chib qolishidan oldin topish mumkin.</p>" +
+      "<p class='ogoh'>PoE kommutator shkafdagi eng issiq qurilma. Yozda shkaf ichi +55 °C dan oshsa, u portlarni o'zi o'chira boshlaydi — shuning uchun kommutator shkafning pastki qismiga, ventilyatsiya oqimiga qo'yiladi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Роутер и коммутатор: сетевая часть объекта",
+      tana: "<p>Сетевой блок в шкафу делает три работы: выводит объект наружу, внутри питает камеры по PoE и сам следит за состоянием туннеля. Постоянное потребление 6–12 Вт, плюс нагрузка PoE по числу камер.</p>" +
+        "<table><tr><th>Узел</th><th>Задача</th></tr>" +
+        "<tr><td>LTE-роутер</td><td>Закрытый APN, туннель IPsec, две SIM</td></tr>" +
+        "<tr><td>PoE-коммутатор</td><td>Питание и данные камеры по одному кабелю</td></tr>" +
+        "<tr><td>Агент SNMP</td><td>Состояние портов, температура, число обрывов</td></tr></table>" +
+        "<p>Телеметрия SNMP приходит на платформу как состояние устройства: видно, какой порт погас и сколько раз переподключался. Повторяющиеся обрывы одного порта обычно означают окисление разъёма, и это ловится до того, как камера отключится совсем.</p>" +
+        "<p class='ogoh'>PoE-коммутатор — самое горячее устройство в шкафу. Летом при +55 °C внутри он начинает сам гасить порты, поэтому его ставят в нижнюю часть шкафа, в поток вентиляции.</p>"
+    }
+  };
+
+  Y.ventil = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Shkaf harorati: yozda +70 °C, qishda muzlagan akkumulyator",
+    tana: "<p>Metall shkaf quyoshda ichki haroratni tashqi haroratdan 15–25 °C ga oshiradi. Iyulda +45 °C soyada bo'lsa, shkaf ichi +70 °C ga chiqadi: bu haroratda LiFePO4 sig'imini yo'qotadi, kommutator esa portlarni o'chira boshlaydi.</p>" +
+      "<h4>Yechim uch qatlamli</h4><ul>" +
+      "<li><b>Soya qalqoni.</b> Shkafdan 3–5 sm uzoqda turgan ikkinchi list quyosh nurini oladi va ichki haroratni 8–12 °C ga tushiradi. Eng arzon va eng ta'sirli qadam.</li>" +
+      "<li><b>Termostatli ventilyator.</b> +40 °C da yoqiladi, +32 °C da o'chadi. O'zi 2–3 Vt oladi, shuning uchun u faqat kerak paytda ishlaydi.</li>" +
+      "<li><b>Kirish-chiqish panjaralari.</b> Havo pastdan kiradi, yuqoridan chiqadi. Chang filtri bo'lmasa, ventilyator changni shkaf ichiga haydaydi.</li></ul>" +
+      "<p>Shkaf harorati telemetriya sifatida yuboriladi. Ikki hafta ichida maksimum harorat o'sib borsa, bu odatda filtr tiqilganini bildiradi — servis topshirig'i jihoz ishdan chiqishidan oldin ochiladi.</p>" +
+      "<p class='ogoh'>Qishda muammo teskari: isitgichsiz shkafda LiFePO4 0 °C dan pastda zaryadni qabul qilmaydi. Isitgich panel to'g'ridan-to'g'ri berayotgan quvvatdan ishlashi kerak.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Температура в шкафу: летом +70 °C, зимой замёрзший аккумулятор",
+      tana: "<p>Металлический шкаф на солнце поднимает внутреннюю температуру на 15–25 °C выше наружной. При +45 °C в тени в июле внутри будет +70 °C: при такой температуре LiFePO4 теряет ёмкость, а коммутатор начинает гасить порты.</p>" +
+        "<h4>Решение из трёх слоёв</h4><ul>" +
+        "<li><b>Теневой экран.</b> Второй лист в 3–5 см от шкафа принимает солнце на себя и снижает температуру внутри на 8–12 °C. Самый дешёвый и самый действенный шаг.</li>" +
+        "<li><b>Вентилятор с термостатом.</b> Включается при +40 °C, выключается при +32 °C. Сам берёт 2–3 Вт, поэтому работает не постоянно, а по необходимости.</li>" +
+        "<li><b>Решётки входа и выхода.</b> Воздух заходит снизу, выходит сверху. Без пылевого фильтра вентилятор загоняет пыль внутрь шкафа.</li></ul>" +
+        "<p>Температура шкафа уходит в телеметрию. Если за две недели максимум ползёт вверх, обычно это забитый фильтр — сервисное задание открывается до отказа оборудования.</p>" +
+        "<p class='ogoh'>Зимой задача обратная: без подогрева LiFePO4 не принимает заряд ниже 0 °C. Подогрев должен питаться не от самого аккумулятора, а напрямую от того, что в этот момент даёт панель.</p>"
+    }
+  };
+
+  B["s-y02.rb1"] = Y.panel;
+  B["s-y02.rb2"] = Y.akbQuti;
+  B["s-y02.rb3"] = Y.domofonSip;
+  B["s-y03.rb1"] = Y.panel;
+  B["s-y03.rb2"] = Y.ptz;
+  B["s-y03.rb3"] = Y.boshQuti;
+  B["s-y04.rb1"] = Y.tarmoq;
+  B["s-y04.rb2"] = Y.ventil;
+  B["s-y08.rb3"] = Y.tarmoq;
+  B["s-y09.rb1"] = Y.ptz;
+  B["s-y09.rb3"] = Y.panel;
+})();
+
+/* ---- tuzatish1c: datchiklar (Ajax va LoRaWAN) ---- */
+(function () {
+  var B = window.MKB_BATAFSIL;
+  var M = {
+    ajHub: ["Ajax Hub 2 (4G): spetsifikatsiya", "https://ajax.systems/products/specs/hub-2/"],
+    ajCam: ["Ajax MotionCam: spetsifikatsiya", "https://ajax.systems/products/specs/motioncam/"],
+    ajBat: ["Ajax: batareya muddati", "https://ajax.systems/support/posts/how-long-operate-from-batteries/"],
+    vmq: ["VMQ 649-son, Yong'in xavfsizligi qoidalari", "https://lex.uz/docs/-5056473"]
+  };
+  var Y = {};
+
+  Y.yongin = {
+    yorliq: "Moliya va huquq",
+    sarlavha: "Yong'in datchigi: tutun, harorat va is gazi bir korpusda",
+    tana: "<p>Bo'sh turgan obyektda eng katta moliyaviy xatar o'g'irlik emas, yong'in: aktiv butunlay yo'qoladi va sug'urta tergovi oylarga cho'ziladi. Datchik uch parametrni birga o'lchaydi — optik tutun kamerasi, harorat sensori va is gazi (CO) hujayrasi — va faqat kamida ikkitasi mos kelganda signal beradi. Shu qoida chang va bug'dan keladigan yolg'on signallarni kesadi.</p>" +
+      "<table><tr><th>Ko'rsatkich</th><th>Qiymat</th></tr>" +
+      "<tr><td>Quvvat</td><td class='n'>ichki batareya, 3–4 yil</td></tr>" +
+      "<tr><td>Signal</td><td class='n'>korpusdagi sirena, 85 dB</td></tr>" +
+      "<tr><td>Markazga xabar</td><td class='n'>hub orqali, 10–20 soniyada</td></tr>" +
+      "<tr><td>Bir datchik maydoni</td><td class='n'>25–40 m², shiftga</td></tr></table>" +
+      "<p>Bank balansidagi bino uchun bu jihoz shunchaki qulaylik emas: yong'in xavfsizligi qoidalari bo'yicha obyektda avtomatik aniqlash bo'lishi talab qilinadi, va sug'urta shartnomasida uning bor-yo'qligi tarifga ta'sir qiladi.</p>" +
+      "<p class='ogoh'>Datchik shiftning o'rtasiga, havo oqimidan uzoqroqqa qo'yiladi. Deraza yoki ventilyatsiya tirqishi yonida tutun uning yoniga yetib bormaydi va signal 3–5 daqiqaga kechikadi — aynan hal qiluvchi daqiqalarga.</p>",
+    manba: [M.vmq],
+    ru: {
+      yorliq: "Финансы и право",
+      sarlavha: "Пожарный извещатель: дым, температура и CO в одном корпусе",
+      tana: "<p>На пустующем объекте главный финансовый риск — не кража, а пожар: актив пропадает целиком, а разбирательство со страховщиком растягивается на месяцы. Извещатель меряет три параметра сразу — оптическую камеру дыма, температуру и ячейку угарного газа — и срабатывает, только когда совпали минимум два. Это правило отсекает ложные тревоги от пыли и пара.</p>" +
+        "<table><tr><th>Параметр</th><th>Значение</th></tr>" +
+        "<tr><td>Питание</td><td class='n'>встроенная батарея, 3–4 года</td></tr>" +
+        "<tr><td>Сигнал</td><td class='n'>сирена в корпусе, 85 дБ</td></tr>" +
+        "<tr><td>Передача в центр</td><td class='n'>через хаб, за 10–20 секунд</td></tr>" +
+        "<tr><td>Площадь на извещатель</td><td class='n'>25–40 м², на потолок</td></tr></table>" +
+        "<p>Для здания на балансе банка это не удобство: правила пожарной безопасности требуют автоматического обнаружения, а наличие системы влияет на тариф в договоре страхования.</p>" +
+        "<p class='ogoh'>Извещатель ставят в середину потолка, подальше от воздушного потока. Рядом с окном или вентиляционной щелью дым до него не доходит, и сигнал опаздывает на 3–5 минут — ровно на те минуты, которые решают.</p>"
+    }
+  };
+
+  Y.ipkam = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Datchikli sxemadagi IP kamera: nazorat emas, tasdiq",
+    tana: "<p>Bu sxemada kamera guvoh vazifasini bajaradi. U doimiy yozmaydi va uni operator ham doim ochib turmaydi: datchik ishlaganda hub kameradan bir necha kadr yoki 10–15 soniyalik klip so'raydi va shuni hodisaga biriktiradi. Operator ekranida signal bilan birga rasm keladi — ketish kerakmi yoki yo'qmi, shu rasmga qarab hal qilinadi.</p>" +
+      "<h4>Nega shunday</h4><ul>" +
+      "<li><b>Trafik.</b> Faqat hodisali kadr oyiga bir kamera uchun 0,8 GB atrofida qoladi; doimiy yozuv 166 GB bo'lardi.</li>" +
+      "<li><b>Quvvat.</b> Kamera kun bo'yi kutish rejimida 80 mVt oladi, ya'ni datchiklar bilan bir xil quvvat byudjetiga sig'adi.</li>" +
+      "<li><b>Dalil.</b> Klip markazga kelganda uning SHA-256 xeshi yoziladi. Fayl keyin o'zgartirilsa, tekshiruvdan o'tmaydi.</li></ul>" +
+      "<p class='ogoh'>Yolg'on signalni kamera kesadi, lekin faqat u yaxshi ko'rsa. Kamera datchik qamrab olgan zonaning o'ziga, kirish yo'lini ko'radigan qilib qaratiladi — aks holda rasm keladi, ammo unda hech narsa ko'rinmaydi va operator baribir odam jo'natadi.</p>",
+    manba: [M.ajCam],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "IP-камера в датчиковой схеме: не наблюдение, а подтверждение",
+      tana: "<p>Здесь камера — не наблюдатель, а свидетель. Она не пишет постоянно, и оператор её не держит открытой: при срабатывании датчика хаб запрашивает несколько кадров или клип на 10–15 секунд и прикладывает их к событию. На экране оператора тревога приходит сразу с картинкой — по ней и решают, ехать или нет.</p>" +
+        "<h4>Почему так</h4><ul>" +
+        "<li><b>Трафик.</b> Только событийные кадры — около 0,8 ГБ в месяц на камеру; постоянная запись дала бы 166 ГБ.</li>" +
+        "<li><b>Питание.</b> В ожидании камера берёт 80 мВт, то есть укладывается в тот же энергобюджет, что и датчики.</li>" +
+        "<li><b>Доказательство.</b> При приёме клипа считается его хеш SHA-256. Если файл потом изменить, проверку он не пройдёт.</li></ul>" +
+        "<p class='ogoh'>Ложную тревогу отсекает камера, но только если ей есть что показать. Её направляют на ту же зону, что и датчик, и так, чтобы был виден путь входа — иначе картинка придёт, но на ней ничего не будет, и оператор всё равно отправит человека.</p>"
+    }
+  };
+
+  Y.harakat = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Harakat datchigi: qayerga qo'yiladi va nimadan yanglishadi",
+    tana: "<p>PIR datchik harorat farqini ko'radi, harakatni emas. Shuning uchun u ko'ndalang yurgan odamni ishonchli, o'ziga to'g'ri kelayotgan odamni esa yomonroq sezadi. Datchik 2,3–2,7 m balandlikda, kirish yo'liga ko'ndalang qaratib o'rnatiladi.</p>" +
+      "<table><tr><th>Ko'rsatkich</th><th>Qiymat</th></tr>" +
+      "<tr><td>Ko'rish masofasi</td><td class='n'>12 m gacha, 88°</td></tr>" +
+      "<tr><td>Batareya</td><td class='n'>5–7 yil, oddiy rejimda</td></tr>" +
+      "<tr><td>Hub bilan aloqa</td><td class='n'>radio, binoda 50–80 m</td></tr>" +
+      "<tr><td>Javob vaqti</td><td class='n'>1 soniyadan kam</td></tr></table>" +
+      "<h4>Yolg'on signal manbalari</h4><ul>" +
+      "<li>Datchikka qaragan isitgich yoki konditsioner oqimi.</li>" +
+      "<li>Quyosh nuri tushib turgan deraza: bulut o'tganda issiqlik manzarasi tez o'zgaradi.</li>" +
+      "<li>Obyektga kirib qolgan mushuk yoki qush. Hayvonga chidamli linza tanlanadi va datchik yerdan balandroqqa ko'chiriladi.</li></ul>" +
+      "<p class='ogoh'>Kamera bilan juftlangan datchik yolg'on signalni o'zi kesadi: hub ikkalasini bir hodisaga qo'shadi va operator rasmga qarab qaror qiladi. Kamerasiz datchik esa har yolg'on signalda odam jo'natishga majbur qiladi — chekka obyektda bu yiliga million so'mlar.</p>",
+    manba: [M.ajCam, M.ajBat],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Датчик движения: куда вешать и от чего он врёт",
+      tana: "<p>PIR видит разницу температур, а не движение. Поэтому человека, идущего поперёк, он ловит уверенно, а идущего прямо на него — хуже. Датчик ставят на высоте 2,3–2,7 м, поперёк пути входа.</p>" +
+        "<table><tr><th>Параметр</th><th>Значение</th></tr>" +
+        "<tr><td>Дальность</td><td class='n'>до 12 м, 88°</td></tr>" +
+        "<tr><td>Батарея</td><td class='n'>5–7 лет в обычном режиме</td></tr>" +
+        "<tr><td>Связь с хабом</td><td class='n'>радио, 50–80 м в здании</td></tr>" +
+        "<tr><td>Время отклика</td><td class='n'>меньше секунды</td></tr></table>" +
+        "<h4>Источники ложных срабатываний</h4><ul>" +
+        "<li>Обогреватель или поток кондиционера, направленный на датчик.</li>" +
+        "<li>Окно под прямым солнцем: при проходе облака тепловая картина меняется рывком.</li>" +
+        "<li>Забравшаяся на объект кошка или птица. Берут линзу с защитой от животных и поднимают датчик выше.</li></ul>" +
+        "<p class='ogoh'>Датчик в паре с камерой отсекает ложные тревоги сам: хаб сводит их в одно событие, и оператор решает по картинке. Датчик без камеры заставляет высылать человека на каждую ложную тревогу — на удалённом объекте это миллионы сумов в год.</p>"
+    }
+  };
+
+  Y.eshikAjax = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Eshik datchigi: eng arzon va eng ishonchli signal",
+    tana: "<p>Magnit kontakt eshik yoki deraza ochilishini ikkilanmasdan beradi: yolg'on signal deyarli yo'q, quvvat esa ahamiyatsiz — batareya 5–7 yil. Bo'sh obyekt uchun bu birinchi qo'yiladigan datchik.</p>" +
+      "<h4>O'rnatish qoidalari</h4><ul>" +
+      "<li>Korpus qo'zg'almas ramkaga, magnit esa harakatlanuvchi tavaga. Orasidagi tirqish yopiq holatda 15 mm dan oshmasin.</li>" +
+      "<li>Metall eshikda magnit maydoni tarqaladi: bunda datchik plastik yoki yog'och prokladka ustiga qo'yiladi.</li>" +
+      "<li>Qo'shimcha quruq kontakt kirishi bor modelda bitta datchik ikki nuqtani — masalan eshik va shundoq yonidagi lyukni — bitta batareyada olib boradi.</li></ul>" +
+      "<p>Tamper kontakti korpusni ochishga urinishni alohida hodisa qilib yuboradi. Inventarizatsiya paytida bu foydali: datchikni kim va qachon olib qo'yganini jurnal ko'rsatadi.</p>" +
+      "<p class='ogoh'>Eshik hodisasining o'zi tashrif emas. Rejalashtirilgan ko'rik oldidan tizimda topshiriq ochiladi, shunda ochilish signali o'sha topshiriqqa bog'lanadi va operator bekorga chiqmaydi.</p>",
+    manba: [M.ajBat],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Датчик открытия: самый дешёвый и самый надёжный сигнал",
+      tana: "<p>Магнитный контакт даёт факт открытия двери или окна без двусмысленности: ложных срабатываний практически нет, а питания он почти не ест — батареи хватает на 5–7 лет. Для пустующего объекта это датчик номер один.</p>" +
+        "<h4>Правила установки</h4><ul>" +
+        "<li>Корпус — на неподвижную раму, магнит — на подвижную створку. Зазор в закрытом положении не больше 15 мм.</li>" +
+        "<li>На металлической двери магнитное поле растекается: тогда датчик ставят на пластиковую или деревянную подкладку.</li>" +
+        "<li>Модель с дополнительным входом сухого контакта ведёт две точки — например дверь и люк рядом — на одной батарее.</li></ul>" +
+        "<p>Тампер отправляет попытку вскрыть корпус отдельным событием. При инвентаризации это полезно: журнал показывает, кто и когда снял датчик.</p>" +
+        "<p class='ogoh'>Само событие открытия — ещё не визит. Перед плановым осмотром в системе открывают задание, и тогда сигнал привязывается к нему, а не к очереди безопасности, и оператор не выезжает зря.</p>"
+    }
+  };
+
+  Y.ajaxHub = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Hub: datchiklar markazi va platformaga yagona chiqish",
+    tana: "<p>Datchiklar markazga to'g'ridan-to'g'ri chiqmaydi: ular hub bilan o'z radio protokolida gaplashadi, hub esa 4G yoki LAN orqali tashqariga chiqadi. Obyektda doimiy quvvat kerak bo'lgan yagona qurilma shu: 6 yoki 12–24 V DC, kutish rejimida 2–4 Vt.</p>" +
+      "<table><tr><th>Ko'rsatkich</th><th>Qiymat</th></tr>" +
+      "<tr><td>Qurilma sig'imi</td><td class='n'>100 tagacha datchik</td></tr>" +
+      "<tr><td>Radio masofa</td><td class='n'>binoda 50–80 m, ochiq joyda ko'proq</td></tr>" +
+      "<tr><td>Ichki zaxira</td><td class='n'>quvvatsiz 10–16 soat</td></tr>" +
+      "<tr><td>Kanal</td><td class='n'>4G va LAN, avtomatik almashish</td></tr></table>" +
+      "<h4>Platformaga ulanish</h4>" +
+      "<p>Hub xavfsizlik pultlariga SIA DC-09 protokoli bilan ulanadi — MKB adapteri aynan shu kanalni tinglaydi va hodisani yagona sxemaga o'tkazadi. Brendning bulutiga bog'lanmaslik muhim: hodisa bank tarmog'iga keladi, uchinchi tomon serveriga emas.</p>" +
+      "<p class='ogoh'>Hub aloqani yo'qotsa, datchiklar ishlashda davom etadi va hodisalar ichki xotirada turadi, lekin markaz ularni ko'rmaydi. Shuning uchun hubning o'zi har 3 daqiqada hayot belgisi yuboradi: ikkita o'tkazib yuborilgan signal <code>aloqa_yoq</code> hodisasini ochadi.</p>",
+    manba: [M.ajHub],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Хаб: центр датчиков и единственный выход на платформу",
+      tana: "<p>Датчики не выходят наружу сами: они говорят с хабом по своему радиопротоколу, а хаб выходит через 4G или LAN. Это единственное устройство на объекте, которому нужно постоянное питание: 6 или 12–24 В DC, 2–4 Вт в ожидании.</p>" +
+        "<table><tr><th>Параметр</th><th>Значение</th></tr>" +
+        "<tr><td>Ёмкость</td><td class='n'>до 100 датчиков</td></tr>" +
+        "<tr><td>Радиус радио</td><td class='n'>50–80 м в здании, больше на открытом</td></tr>" +
+        "<tr><td>Внутренний резерв</td><td class='n'>10–16 часов без питания</td></tr>" +
+        "<tr><td>Канал</td><td class='n'>4G и LAN с автопереключением</td></tr></table>" +
+        "<h4>Подключение к платформе</h4>" +
+        "<p>Хаб подключается к пультам охраны по протоколу SIA DC-09 — адаптер МКБ слушает именно этот канал и приводит событие к единой схеме. Важно не завязываться на облако бренда: событие приходит в сеть банка, а не на сторонний сервер.</p>" +
+        "<p class='ogoh'>Если хаб потерял связь, датчики продолжают работать и события копятся во внутренней памяти, но центр их не видит. Поэтому хаб сам шлёт признак жизни каждые 3 минуты: два пропуска подряд открывают событие <code>aloqa_yoq</code>.</p>"
+    }
+  };
+
+  Y.tasdiqKam = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Tasdiqlovchi kamera: yiliga bir necha marta uyg'onadi",
+    tana: "<p>LoRaWAN tarmog'i video uzatmaydi — uning kanali soniyasiga o'nlab bayt. Shuning uchun bu sxemada kamera alohida turadi va odatda o'chiq: uni faqat datchik ishlaganda LoRaWAN buyrug'i uyg'otadi, kamera 4G modulini yoqib bir necha kadr yuboradi va yana o'chadi.</p>" +
+      "<h4>Ketma-ketlik</h4><ol>" +
+      "<li>Datchik hodisani LoRaWAN orqali shlyuzga beradi — bu 3–5 soniya.</li>" +
+      "<li>Shlyuz kameraga uyg'onish buyrug'ini yuboradi.</li>" +
+      "<li>Kamera 4G ga registratsiya qiladi va kadrni yuboradi — 20–40 soniya.</li>" +
+      "<li>Kadr hodisaga biriktiriladi, kamera uxlaydi.</li></ol>" +
+      "<p>Ya'ni rasm signaldan 30–50 soniya keyin keladi. Bu qo'riqlash pultining me'yori emas, lekin bo'sh obyektni tekshirish uchun yetarli: operator odam jo'natishdan oldin nima bo'lganini ko'radi.</p>" +
+      "<p class='ogoh'>Kamera yilda 20–40 marta uyg'onishga hisoblangan. Agar u kuniga o'n marta uyg'ona boshlasa, demak datchik yolg'on ishlayapti — kameraning batareyasi bir oyda tugaydi va muammoning sababi datchikda izlanadi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Подтверждающая камера: просыпается несколько раз в год",
+      tana: "<p>Сеть LoRaWAN видео не носит — её канал это десятки байт в секунду. Поэтому камера здесь стоит отдельно и обычно выключена: её будит команда по LoRaWAN при срабатывании датчика, камера поднимает 4G-модуль, отдаёт несколько кадров и снова гаснет.</p>" +
+        "<h4>Последовательность</h4><ol>" +
+        "<li>Датчик отдаёт событие на шлюз по LoRaWAN — 3–5 секунд.</li>" +
+        "<li>Шлюз шлёт камере команду пробуждения.</li>" +
+        "<li>Камера регистрируется в 4G и отправляет кадр — 20–40 секунд.</li>" +
+        "<li>Кадр прикладывается к событию, камера засыпает.</li></ol>" +
+        "<p>То есть картинка приходит через 30–50 секунд после тревоги. Это не норматив пультовой охраны, но для проверки пустующего объекта достаточно: оператор видит, что произошло, до того как выслать человека.</p>" +
+        "<p class='ogoh'>Камера рассчитана на 20–40 пробуждений в год. Если она начала просыпаться по десять раз в день, значит врёт датчик — батарея камеры сядет за месяц, и причину ищут в датчике, а не в камере.</p>"
+    }
+  };
+
+  Y.harorat = {
+    yorliq: "Moliya va huquq",
+    sarlavha: "Harorat datchigi: quvur yorilishi mingdan bir narxga tushadi",
+    tana: "<p>Isitilmaydigan binoda quvur yorilishi — bo'sh obyektdagi eng qimmat va eng sekin yetib keladigan zarar: suv haftalar davomida oqadi, gips, pol va devor yo'qoladi, ta'mir summasi datchik narxidan minglab marta katta bo'ladi.</p>" +
+      "<table><tr><th>Chegara</th><th>Nima bo'ladi</th></tr>" +
+      "<tr><td class='n'>+5 °C</td><td>Ogohlantirish: bino sovub bormoqda</td></tr>" +
+      "<tr><td class='n'>+2 °C</td><td>Signal: quvurni bo'shatish yoki isitish kerak</td></tr>" +
+      "<tr><td class='n'>+45 °C</td><td>Yuqori chegara: yong'in yoki nosoz isitgich</td></tr></table>" +
+      "<p>Datchik har 15–60 daqiqada bitta qiymat yuboradi — LoRaWAN kanaliga bu hech narsa, batareyasi 5 yil chidaydi. Platforma qiymatni chegara bilan solishtiradi va tendensiyani ham ko'radi: harorat olti soatda 8 °C ga tushsa, deraza siniqmi yoki eshik ochiqmi degan savol o'z-o'zidan paydo bo'ladi.</p>" +
+      "<p class='ogoh'>Datchik quvur yoniga, tashqi devor bo'ylab qo'yiladi — xonaning o'rtasi emas. Muzlash devor yonidan boshlanadi va xona o'rtasidagi termometr hali +9 °C ko'rsatib turgan paytda quvur allaqachon muzlagan bo'lishi mumkin.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Финансы и право",
+      sarlavha: "Датчик температуры: разрыв трубы обходится в тысячи его цен",
+      tana: "<p>В неотапливаемом здании разрыв трубы — самый дорогой и самый медленно доходящий ущерб на пустующем объекте: вода течёт неделями, гибнут штукатурка, пол и стены, а смета ремонта в тысячи раз больше цены датчика.</p>" +
+        "<table><tr><th>Порог</th><th>Что происходит</th></tr>" +
+        "<tr><td class='n'>+5 °C</td><td>Предупреждение: здание остывает</td></tr>" +
+        "<tr><td class='n'>+2 °C</td><td>Тревога: трубу нужно спустить или обогреть</td></tr>" +
+        "<tr><td class='n'>+45 °C</td><td>Верхний порог: пожар или неисправный обогреватель</td></tr></table>" +
+        "<p>Датчик отдаёт одно значение раз в 15–60 минут — для канала LoRaWAN это ничто, батареи хватает на 5 лет. Платформа сравнивает значение с порогом и видит тренд: если температура упала на 8 °C за шесть часов, вопрос про разбитое окно или открытую дверь возникает сам.</p>" +
+        "<p class='ogoh'>Датчик ставят у трубы, вдоль наружной стены, а не в середине комнаты. Промерзание идёт от стены, и труба может уже замёрзнуть, когда термометр в центре помещения показывает ещё +9 °C.</p>"
+    }
+  };
+
+  Y.namlik = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Namlik datchigi: mollar emas, bino buziladi",
+    tana: "<p>Namlik bo'sh obyektni sekin yeydi: 70% dan yuqori doimiy namlikda mog'or paydo bo'ladi, gips ko'chadi, metall qismlar zanglaydi. Bu zarar bir mavsumda ko'rinadi — va aynan shuning uchun uni faqat o'lchov topadi, ko'rik emas.</p>" +
+      "<h4>Nima o'lchanadi</h4><ul>" +
+      "<li><b>Nisbiy namlik.</b> Soatiga bir qiymat. 70% dan uzoq oshib turishi ogohlantirish beradi.</li>" +
+      "<li><b>Shudring nuqtasi.</b> Harorat va namlik birga olinadi: shudring nuqtasi devor haroratiga yaqinlashsa, kondensat boshlanadi.</li>" +
+      "<li><b>Sakrash.</b> Namlikning bir necha soatda 20% ga ko'tarilishi quvur yorilgani yoki tom oqayotganini bildiradi.</li></ul>" +
+      "<p>Datchik podvalga, shift ostiga va quvur o'tgan xonaga qo'yiladi. Uch nuqta ko'p obyekt uchun yetarli va butun komplekt bitta LoRaWAN shlyuziga o'tiradi.</p>" +
+      "<p class='ogoh'>Sensorning o'zi kondensatda ishdan chiqadi. Suv to'g'ridan-to'g'ri tegishi mumkin bo'lgan joyga alohida suv oqishi datchigi — pol darajasidagi kontaktli sensor qo'yiladi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Датчик влажности: страдает не имущество, а само здание",
+      tana: "<p>Влажность съедает пустующий объект медленно: при постоянных 70% и выше появляется плесень, отходит штукатурка, ржавеют металлические узлы. Ущерб виден не за день, а за сезон — и потому его находит только измерение, а не осмотр.</p>" +
+        "<h4>Что измеряется</h4><ul>" +
+        "<li><b>Относительная влажность.</b> Одно значение в час. Долгое превышение 70% даёт предупреждение.</li>" +
+        "<li><b>Точка росы.</b> Температура и влажность берутся вместе: когда точка росы подходит к температуре стены, начинается конденсат.</li>" +
+        "<li><b>Скачок.</b> Рост влажности на 20% за несколько часов означает разрыв трубы или протечку кровли.</li></ul>" +
+        "<p>Датчики ставят в подвал, под потолок и в помещение с трубами. Трёх точек хватает большинству объектов, и весь комплект садится на один шлюз LoRaWAN.</p>" +
+        "<p class='ogoh'>Сам сенсор выходит из строя в конденсате. Туда, где вода может попасть напрямую, ставят не обычный датчик влажности, а отдельный датчик протечки — контактный, на уровне пола.</p>"
+    }
+  };
+
+  Y.eshikLora = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Eshik holati datchigi LoRaWAN'da: 5 yil, simsiz, hubsiz",
+    tana: "<p>Bu datchik to'g'ridan-to'g'ri LoRaWAN shlyuzi bilan gaplashadi — shuning uchun obyektda quvvat talab qiladigan hech narsa qolmaydi. Bitta shlyuz ochiq joyda bir necha kilometrgacha, katta ombor ichida yuzlab metrgacha datchikni eshitadi.</p>" +
+      "<table><tr><th>Ko'rsatkich</th><th>Qiymat</th></tr>" +
+      "<tr><td>Batareya</td><td class='n'>5 yilgacha, almashtiriladi</td></tr>" +
+      "<tr><td>Xabar</td><td class='n'>ochilish, yopilish va soatlik hayot belgisi</td></tr>" +
+      "<tr><td>Kechikish</td><td class='n'>3–5 soniya</td></tr>" +
+      "<tr><td>Bitta shlyuzga</td><td class='n'>o'nlab datchik</td></tr></table>" +
+      "<p>Hayot belgisi shu sxemada eng muhim xabar: LoRaWAN'da javob so'ralmaydi, shuning uchun jim turgan datchikni faqat kutilgan soatlik xabar kelmaganidan bilish mumkin. Ikkita o'tkazib yuborilgan xabar platformada <code>aloqa_yoq</code> hodisasini ochadi.</p>" +
+      "<p class='ogoh'>LoRaWAN kanali tor: unga video ham, tez-tez yuboriladigan telemetriya ham sig'maydi. Datchikni har daqiqada xabar yuboradigan qilib sozlash butun tarmoqni to'ldiradi va batareyani besh yildan yarim yilga tushiradi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Датчик открытия на LoRaWAN: 5 лет, без проводов и без хаба",
+      tana: "<p>Этот датчик говорит не с хабом, а прямо со шлюзом LoRaWAN — поэтому на объекте не остаётся ничего, что требует питания. Один шлюз слышит датчики на несколько километров на открытом месте и на сотни метров внутри большого склада.</p>" +
+        "<table><tr><th>Параметр</th><th>Значение</th></tr>" +
+        "<tr><td>Батарея</td><td class='n'>до 5 лет, сменная</td></tr>" +
+        "<tr><td>Сообщения</td><td class='n'>открытие, закрытие и признак жизни раз в час</td></tr>" +
+        "<tr><td>Задержка</td><td class='n'>3–5 секунд</td></tr>" +
+        "<tr><td>На один шлюз</td><td class='n'>десятки датчиков</td></tr></table>" +
+        "<p>Признак жизни здесь — самое важное сообщение: в LoRaWAN подтверждения не запрашиваются, и молчащий датчик виден только по неприходу ожидаемого часового пакета. Два пропуска открывают на платформе событие <code>aloqa_yoq</code>.</p>" +
+        "<p class='ogoh'>Канал LoRaWAN узкий: в него не влезет ни видео, ни частая телеметрия. Датчик, настроенный слать сообщение раз в минуту, забивает всю сеть и превращает пять лет батареи в полгода.</p>"
+    }
+  };
+
+  Y.tutunLora = {
+    yorliq: "Moliya va huquq",
+    sarlavha: "LoRaWAN tutun datchigi: katta ombor uchun yagona amaliy variant",
+    tana: "<p>Katta ombor yoki texnik xonada radio hub bilan ishlaydigan datchik yetib bormaydi: masofa va metall konstruksiyalar signalni yeydi. LoRaWAN esa aynan shu sharoit uchun qilingan — uzoq masofa, kam ma'lumot, uzoq batareya.</p>" +
+      "<h4>Sxemadagi o'rni</h4><ul>" +
+      "<li>Datchik korpusidagi sirena mahalliy signal beradi; markazga xabar shlyuz orqali 3–5 soniyada yetadi.</li>" +
+      "<li>Batareya 5 yilga hisoblangan, lekin har oy holat xabari keladi: datchik tirikmi va zaryad qanchaligi ko'rinadi.</li>" +
+      "<li>Hodisa turi <code>tutun</code> — platformada bu eng yuqori navbatga tushadi va operatorga darhol qo'ng'iroq qilinadi.</li></ul>" +
+      "<p>Yong'in xavfsizligi qoidalari bo'yicha obyektda avtomatik aniqlash bo'lishi talab qilinadi. Datchikning o'zi bu talabni yopadi, lekin o'chirish tizimi o'rnini bosmaydi — loyihada bu ikkisi alohida turadi.</p>" +
+      "<p class='ogoh'>Balandligi 6 m dan oshadigan omborda shift ostidagi issiq havo qatlami tutunni pastda ushlab qoladi. Bunday binoda datchik 4–5 m balandlikda, ustunlarga bosqichma-bosqich joylashtiriladi.</p>",
+    manba: [M.vmq],
+    ru: {
+      yorliq: "Финансы и право",
+      sarlavha: "Дымовой извещатель на LoRaWAN: для большого склада это единственный рабочий вариант",
+      tana: "<p>В большом складе или техническом помещении датчик на радиохабе не добивает: расстояние и металлоконструкции съедают сигнал. LoRaWAN сделан ровно под эти условия — большая дальность, мало данных, долгая батарея.</p>" +
+        "<h4>Место в схеме</h4><ul>" +
+        "<li>Сирена в корпусе даёт локальный сигнал; в центр сообщение уходит через шлюз за 3–5 секунд.</li>" +
+        "<li>Батарея рассчитана на 5 лет, но раз в месяц приходит статус: жив ли датчик и какой у него заряд.</li>" +
+        "<li>Тип события — <code>tutun</code>, на платформе он идёт в высшую очередь, оператору звонят немедленно.</li></ul>" +
+        "<p>Правила пожарной безопасности требуют автоматического обнаружения. Сам извещатель это требование закрывает, но систему тушения не заменяет — в проекте это две разные позиции.</p>" +
+        "<p class='ogoh'>На складе выше 6 м слой горячего воздуха под потолком удерживает дым внизу. В таком здании извещатели ставят не на потолок, а ярусами на колоннах, на высоте 4–5 м.</p>"
+    }
+  };
+
+  B["s-y05.rb1"] = Y.yongin;
+  B["s-y05.rb2"] = Y.ipkam;
+  B["s-y05.rb3"] = Y.harakat;
+  B["s-y05.rb4"] = Y.eshikAjax;
+  B["s-y05.rb5"] = Y.ajaxHub;
+  B["s-y06.rb1"] = Y.tasdiqKam;
+  B["s-y06.rb2"] = Y.harorat;
+  B["s-y06.rb3"] = Y.namlik;
+  B["s-y06.rb4"] = Y.eshikLora;
+  B["s-y06.rb5"] = Y.tutunLora;
+})();
+
+/* ---- tuzatish1d: quvvat manbalari, klaster va arxitektura qatorlari ---- */
+(function () {
+  var B = window.MKB_BATAFSIL;
+  var Y = {};
+
+  Y.stansiya = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Ko'chma stansiya: obyekt bilan emas, jadval bilan ishlaydi",
+    tana: "<p>1–4 kVt·soatlik ko'chma blok o'rnatilmaydi — u olib kelinadi, ulanadi va zaryad tugaganda almashtiriladi. Shuning uchun uning asosiy ko'rsatkichi — bir tashrifga to'g'ri keladigan kun soni.</p>" +
+      "<table><tr><th>Sig'im</th><th>5 Vt yukda</th><th>15 Vt yukda</th></tr>" +
+      "<tr><td class='n'>1 kVt·soat</td><td class='n'>7 kun</td><td class='n'>2,5 kun</td></tr>" +
+      "<tr><td class='n'>2 kVt·soat</td><td class='n'>14 kun</td><td class='n'>5 kun</td></tr>" +
+      "<tr><td class='n'>4 kVt·soat</td><td class='n'>28 kun</td><td class='n'>10 kun</td></tr></table>" +
+      "<p>Hisobda 0,85 foydali sig'im olingan: inverter va o'z-o'zidan bo'shash hisobga olinadi. 12 V chiqishi bo'lgan modelda inverter umuman ishlatilmaydi va yo'qotish yana 10–15% ga kamayadi — kamera va router baribir 12 V da ishlaydi.</p>" +
+      "<h4>Qachon mos keladi</h4>" +
+      "<p>Uch oydan kam turadigan obyekt, ta'mirdagi bino, savdoga tayyorlanayotgan maydon. Bunda quyosh paneli va ustun uchun sarflangan pul obyekt bilan birga ketadi, ko'chma stansiya esa keyingi obyektga o'tadi.</p>" +
+      "<p class='ogoh'>Blok obyektda qolganda o'g'irlanadi — u yengil va ko'chma. Shkafga qulflanadi, shkafga tamper qo'yiladi va blok almashtirilgan har safar inventar raqami dalolatnomaga yoziladi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Переносная станция: работает не с объектом, а с графиком",
+      tana: "<p>Блок на 1–4 кВт·ч не монтируют — его привозят, подключают и меняют, когда заряд кончился. Поэтому главный его показатель не ёмкость, а число дней на один выезд.</p>" +
+        "<table><tr><th>Ёмкость</th><th>При 5 Вт</th><th>При 15 Вт</th></tr>" +
+        "<tr><td class='n'>1 кВт·ч</td><td class='n'>7 дней</td><td class='n'>2,5 дня</td></tr>" +
+        "<tr><td class='n'>2 кВт·ч</td><td class='n'>14 дней</td><td class='n'>5 дней</td></tr>" +
+        "<tr><td class='n'>4 кВт·ч</td><td class='n'>28 дней</td><td class='n'>10 дней</td></tr></table>" +
+        "<p>В расчёте взята полезная ёмкость 0,85: учтены инвертор и саморазряд. У модели с выходом 12 В инвертор не нужен вовсе, и потери падают ещё на 10–15% — камера и роутер всё равно питаются от 12 В.</p>" +
+        "<h4>Когда подходит</h4>" +
+        "<p>Объект на срок меньше трёх месяцев, здание в ремонте, площадка под предпродажную подготовку. Деньги за панель и опору уходят вместе с объектом, а переносная станция переезжает на следующий.</p>" +
+        "<p class='ogoh'>Оставленный на объекте блок воруют — он лёгкий и переносной. Его запирают в шкаф, на шкаф ставят тампер, а инвентарный номер при каждой замене вписывают в акт.</p>"
+    }
+  };
+
+  Y.efoy = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Metanol yoqilg'i elementi: quyosh yetmaydigan joyda",
+    tana: "<p>Yoqilg'i elementi generator emas — u shovqin qilmaydi, harakatlanuvchi qismi yo'q va tutun chiqarmaydi. U metanolni to'g'ridan-to'g'ri elektrga aylantiradi va faqat akkumulyator zaryadi pasayganda o'zi yoqiladi, sutkasiga bir necha soat.</p>" +
+      "<h4>Qanday ishlaydi</h4><ol>" +
+      "<li>Yuk akkumulyatordan olinadi; yoqilg'i elementi kuzatib turadi.</li>" +
+      "<li>Zaryad belgilangan chegaraga tushganda element yonadi va akkumulyatorni to'ldiradi.</li>" +
+      "<li>To'lgach o'chadi. Sutkalik ish vaqti odatda 2–6 soat.</li></ol>" +
+      "<p>Shuning uchun sarf sutkalik Vt·soat bilan hisoblanadi. 30 Vt doimiy yukda bitta M28 kartriji taxminan 43 kun, quyosh paneli bilan gibrid sxemada 66 kun ishlaydi.</p>" +
+      "<p class='ogoh'>Metanol ADR bo'yicha xavfli yuk: uni oddiy pochta bilan yuborib bo'lmaydi va import muddati uch haftagacha cho'ziladi. Shu sababli har obyektda doim bitta to'la zaxira kartrij ulangan holda turadi — buyurtma muddati nazoratni to'xtatmasin.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Метанольный топливный элемент: там, где солнца не хватает",
+      tana: "<p>Топливный элемент — не генератор: он не шумит, у него нет движущихся частей и выхлопа. Он превращает метанол в электричество напрямую и включается сам, только когда заряд аккумулятора просел, на несколько часов в сутки.</p>" +
+        "<h4>Как это работает</h4><ol>" +
+        "<li>Нагрузка идёт от аккумулятора; топливный элемент следит за зарядом.</li>" +
+        "<li>При падении до заданного порога элемент запускается и дозаряжает батарею.</li>" +
+        "<li>После заполнения гаснет. Обычная наработка — 2–6 часов в сутки.</li></ol>" +
+        "<p>Поэтому расход считают не по объёму картриджа, а по суточным Вт·ч. При постоянных 30 Вт одного картриджа M28 хватает примерно на 43 дня, а в гибридной схеме с солнечной панелью — на 66 дней.</p>" +
+        "<p class='ogoh'>Метанол по ADR — опасный груз: обычной почтой его не отправить, а срок поставки с импортом растягивается до трёх недель. Поэтому на каждом объекте постоянно стоит подключённый полный запасной картридж — чтобы срок заказа не останавливал контроль.</p>"
+    }
+  };
+
+  Y.efoyAkb = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Bufer akkumulyator: yoqilg'i elementi unga ishlaydi, yukka emas",
+    tana: "<p>Yoqilg'i elementi tez o'zgaruvchi yukni yomon ko'radi: PTZ burilishi yoki 4G modulining uyg'onishi tokni bir zumda uch barobar oshiradi. Shuning uchun sxemada ular orasida LiFePO4 bufer turadi — yuk doim akkumulyatordan olinadi, element esa faqat akkumulyatorni to'ldiradi.</p>" +
+      "<h4>Bufer nima beradi</h4><ul>" +
+      "<li><b>Barqaror kuchlanish.</b> Kamera va router uchun kuchlanish sakrashi yo'q.</li>" +
+      "<li><b>Kam yoqish.</b> Element sutkasiga bir-ikki marta yoqiladi — bu resursni uzaytiradi va yoqilg'i sarfini kamaytiradi.</li>" +
+      "<li><b>Zaxira.</b> Kartrij tugab, yangisi hali yetib kelmagan bo'lsa, obyekt yana bir necha kun buferda yashaydi.</li></ul>" +
+      "<p>Bufer sig'imi kunlik yukdan kamida ikki barobar katta olinadi. 30 Vt doimiy yuk sutkasiga 720 Vt·soat degani, ya'ni bufer 1,5 kVt·soatdan kichik bo'lmaydi.</p>" +
+      "<p class='ogoh'>Yoqilg'i elementining zaryad profili LiFePO4 uchun alohida sozlanadi. Qo'rg'oshin akkumulyatorga mo'ljallangan zavod sozlamasi LiFePO4 ni to'liq to'ldirmaydi va blok yiliga bir necha marta bo'sh qolganday ko'rinadi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Буферный аккумулятор: топливный элемент работает на него, а не на нагрузку",
+      tana: "<p>Топливный элемент плохо переносит рывки нагрузки: поворот PTZ или пробуждение 4G-модуля мгновенно утраивают ток. Поэтому между ними в схеме стоит буфер LiFePO4 — нагрузка всегда идёт от аккумулятора, а элемент только дозаряжает аккумулятор.</p>" +
+        "<h4>Что даёт буфер</h4><ul>" +
+        "<li><b>Стабильное напряжение.</b> Камера и роутер не видят просадок.</li>" +
+        "<li><b>Редкие запуски.</b> Элемент включается раз-два в сутки, а не десятки раз — это продлевает ресурс и снижает расход топлива.</li>" +
+        "<li><b>Запас.</b> Если картридж кончился, а новый ещё в пути, объект живёт на буфере ещё несколько дней.</li></ul>" +
+        "<p>Ёмкость буфера берут минимум вдвое больше суточной нагрузки. Постоянные 30 Вт — это 720 Вт·ч в сутки, значит буфер не меньше 1,5 кВт·ч.</p>" +
+        "<p class='ogoh'>Профиль заряда топливного элемента настраивают под LiFePO4 отдельно. Заводская настройка под свинец не добирает LiFePO4 до полного, и блок несколько раз в год выглядит опустевшим без причины.</p>"
+    }
+  };
+
+  Y.karnay = {
+    yorliq: "Montajchi uchun",
+    sarlavha: "Karnay va sirena: birinchi javob odam borgunicha",
+    tana: "<p>Chekka maydonda ekipajning yetib borishi 20–40 daqiqa. Shu vaqt ichida yagona ta'sir vositasi — obyektning o'zi: 110 dB sirena va operator gapiradigan karnay. Amaliyotda tasodifiy kirgan odamning ketishiga ko'pincha shu yetadi.</p>" +
+      "<h4>Ketma-ketlik</h4><ol>" +
+      "<li>Datchik yoki analitika hodisani beradi, operator kadrni ko'radi.</li>" +
+      "<li>Operator karnay orqali gapiradi: obyekt bank nazoratida va yozuv olib borilmoqda.</li>" +
+      "<li>Javob bo'lmasa, sirena 30 soniyaga yoqiladi.</li>" +
+      "<li>Har ikkala amal ham <code>POST /buyruq</code> orqali ketadi va kim qilgani jurnalga yoziladi.</li></ol>" +
+      "<p>Energiya bo'yicha bu qimmat emas: sirena kuniga bir necha marta 30 soniya ishlasa, sutkalik byudjetdan 2–3 Vt·soat oladi. Karnay usilitelining kutish rejimi esa 0,5 Vt dan oshmasligi kerak — aks holda u sutka bo'yi eng katta iste'molchiga aylanadi.</p>" +
+      "<p class='ogoh'>Sirena aholi yashaydigan joyga yaqin obyektda tungi shikoyatga sabab bo'ladi. Shuning uchun tunda avval ovozli ogohlantirish, sirena esa faqat operator qaroriga ko'ra yoqiladi — avtomatik emas.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для монтажника",
+      sarlavha: "Громкоговоритель и сирена: первая реакция, пока едет человек",
+      tana: "<p>На удалённой площадке экипаж едет 20–40 минут. Всё это время единственное средство воздействия — сам объект: сирена на 110 дБ и громкоговоритель, через который говорит оператор. На практике случайно зашедшего человека этого чаще всего хватает, чтобы он ушёл.</p>" +
+        "<h4>Порядок</h4><ol>" +
+        "<li>Датчик или аналитика дают событие, оператор смотрит кадр.</li>" +
+        "<li>Оператор говорит в громкоговоритель: объект под контролем банка, идёт запись.</li>" +
+        "<li>Если реакции нет, на 30 секунд включается сирена.</li>" +
+        "<li>Обе команды идут через <code>POST /buyruq</code>, и в журнал пишется, кто их дал.</li></ol>" +
+        "<p>По энергии это недорого: сирена на 30 секунд несколько раз в сутки берёт 2–3 Вт·ч. А вот дежурный режим усилителя не должен превышать 0,5 Вт — иначе он круглосуточно станет главным потребителем.</p>" +
+        "<p class='ogoh'>Рядом с жильём сирена ночью превращается в жалобу. Поэтому ночью сначала идёт голосовое предупреждение, а сирена включается только по решению оператора, не автоматически.</p>"
+    }
+  };
+
+  Y.klaster = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Klaster shkafi: uchtadan o'ntagacha obyektga bitta chiqish",
+    tana: "<p>Qo'shni obyektlar bir hovlida yoki bir necha yuz metr masofada turganda har biriga alohida router, SIM va tunnel qo'yish — pulni uch marta to'lash demak. Klaster sxemasida markazda bitta shkaf turadi: NVR, kommutator va LTE-router, qolgan obyektlar unga simsiz ko'prik yoki optika bilan ulanadi.</p>" +
+      "<table><tr><th>Nima tejaladi</th><th>Qanday</th></tr>" +
+      "<tr><td>SIM va trafik</td><td>10 ta o'rniga 1 ta abonent</td></tr>" +
+      "<tr><td>Tunnel va sertifikat</td><td>1 ta shlyuz, 1 ta mTLS juftligi</td></tr>" +
+      "<tr><td>Servis tashrifi</td><td>1 nuqta, 10 ta emas</td></tr>" +
+      "<tr><td>Video arxiv</td><td>bitta NVR, umumiy disk</td></tr></table>" +
+      "<h4>Chegarasi</h4>" +
+      "<p>Simsiz ko'prik to'g'ridan-to'g'ri ko'rinish talab qiladi; oradagi bino yoki daraxt bor bo'lsa, kanal ishlamaydi. Ko'rik paytida har bir nuqtaga ko'rinish borligi tekshiriladi, keyin klaster rejalashtiriladi.</p>" +
+      "<p class='ogoh'>Markaziy shkaf — yagona uzilish nuqtasi: u o'chsa, o'nta obyekt birdan ko'rinmay qoladi. Shuning uchun uning quvvat zaxirasi va SIM'i ikkitadan bo'ladi, holati esa alohida, yuqori ustuvorlikdagi nazoratda turadi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Кластерный шкаф: один выход на три–десять объектов",
+      tana: "<p>Когда соседние объекты стоят в одном дворе или в паре сотен метров, отдельный роутер, SIM и туннель на каждый — это троекратная оплата одного и того же. В кластерной схеме в центре стоит один шкаф: NVR, коммутатор и LTE-роутер, остальные объекты подключаются к нему беспроводным мостом или оптикой.</p>" +
+        "<table><tr><th>Что экономится</th><th>Как</th></tr>" +
+        "<tr><td>SIM и трафик</td><td>1 абонент вместо 10</td></tr>" +
+        "<tr><td>Туннель и сертификаты</td><td>1 шлюз, 1 пара mTLS</td></tr>" +
+        "<tr><td>Сервисный выезд</td><td>1 точка вместо 10</td></tr>" +
+        "<tr><td>Видеоархив</td><td>один NVR, общий диск</td></tr></table>" +
+        "<h4>Ограничение</h4>" +
+        "<p>Беспроводному мосту нужна прямая видимость; здание или дерево между точками — и канала нет. На обследовании проверяют видимость до каждой точки, и только потом планируют кластер.</p>" +
+        "<p class='ogoh'>Центральный шкаф — единственная точка отказа: погаснет он, и сразу пропадут десять объектов. Поэтому у него двойной резерв по питанию и две SIM, а его состояние стоит на отдельном, повышенном контроле.</p>"
+    }
+  };
+
+  /* ---------- 19-slayd: ustunlar ichidagi qatorlar ---------- */
+
+  B["s-arx.kanal1"] = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "VPN: obyekt bank tarmog'iga qanday kiradi",
+    tana: "<p>Obyektdagi router ochiq internetda hech qanday port ochmaydi. U o'zi bank chekkasidagi konsentratorga tunnel quradi va butun trafik shu tunnel ichida yuradi. Kirish faqat ichkaridan tashqariga: tashqaridan kameraga kirish yo'li umuman mavjud emas.</p>" +
+      "<table><tr><th>Parametr</th><th>Qiymat</th></tr>" +
+      "<tr><td>Protokol</td><td>IPsec IKEv2 yoki OpenVPN/WireGuard sinfidagi SSL tunnel</td></tr>" +
+      "<tr><td>Autentifikatsiya</td><td>har shlyuzga alohida sertifikat, umumiy parol emas</td></tr>" +
+      "<tr><td>Tiklanish</td><td>uzilgandan keyin 40–90 soniya</td></tr>" +
+      "<tr><td>Yo'nalish</td><td>faqat obyektdan markazga</td></tr></table>" +
+      "<p>Tunnel ichida obyektga o'z quyi tarmog'i beriladi, masalan <code>10.60.<i>obyekt</i>.0/24</code>. Shunda ikkita obyektning kamerasi bir xil ichki manzilda tursa ham to'qnashmaydi.</p>" +
+      "<p class='ogoh'>Sertifikat muddati tugashi — bu sxemadagi eng ko'p uchraydigan nosozlik. Muddat platformada kuzatiladi va tugashiga 30 kun qolganda servis topshirig'i o'zi ochiladi; aks holda obyekt bir kechada jim bo'lib qoladi va sababi darrov topilmaydi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "VPN: как объект попадает в сеть банка",
+      tana: "<p>Роутер на объекте не открывает наружу ни одного порта. Он сам строит туннель до концентратора на границе банка, и весь трафик идёт внутри этого туннеля. Соединение только изнутри наружу: пути снаружи к камере не существует.</p>" +
+        "<table><tr><th>Параметр</th><th>Значение</th></tr>" +
+        "<tr><td>Протокол</td><td>IPsec IKEv2 либо SSL-туннель класса OpenVPN/WireGuard</td></tr>" +
+        "<tr><td>Аутентификация</td><td>отдельный сертификат на каждый шлюз, не общий пароль</td></tr>" +
+        "<tr><td>Восстановление</td><td>40–90 секунд после обрыва</td></tr>" +
+        "<tr><td>Направление</td><td>только от объекта к центру</td></tr></table>" +
+        "<p>Внутри туннеля объект получает свою подсеть, например <code>10.60.<i>объект</i>.0/24</code>. Тогда камеры двух объектов не конфликтуют, даже если у них одинаковые внутренние адреса.</p>" +
+        "<p class='ogoh'>Истёкший сертификат — самый частый отказ в этой схеме. Срок отслеживается на платформе, и за 30 дней до конца сервисное задание открывается само; иначе объект замолкает за ночь, и причину находят не сразу.</p>"
+    }
+  };
+
+  B["s-arx.kanal2"] = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Yopiq APN: SIM'ning internetga chiqishi umuman yo'q",
+    tana: "<p>Yopiq APN — operator tarmog'i ichidagi alohida nuqta. Shu APN'ga ulangan SIM ommaviy internetga umuman chiqmaydi: uning yagona yo'li — operatordan bankka o'tkazilgan kanal. Ya'ni himoya VPN'dan oldin, operator darajasida boshlanadi.</p>" +
+      "<h4>Nima beradi</h4><ul>" +
+      "<li><b>Skanerlash yo'q.</b> Qurilmaning ommaviy IP manzili bo'lmagani uchun uni internetdan topib bo'lmaydi.</li>" +
+      "<li><b>SIM o'g'irlanishi foydasiz.</b> SIM chiqarib olinib boshqa qurilmaga qo'yilsa ham, u faqat bank kanaliga chiqadi.</li>" +
+      "<li><b>Statik manzil.</b> Har obyektga doimiy ichki manzil beriladi, ya'ni reyestrdagi yozuv bilan qurilma bir xilda bog'lanadi.</li>" +
+      "<li><b>Trafik hisobi.</b> Operator har SIM bo'yicha hisobot beradi, bu chegaradan oshgan obyektni darhol ko'rsatadi.</li></ul>" +
+      "<p>Xizmat operator bilan alohida shartnomada rasmiylashtiriladi. Muhim shartlar: APN nomi, tarmoq oralig'i, kanal kafolatlangan tezligi va SIM'ni bloklash muddati.</p>" +
+      "<p class='ogoh'>Yopiq APN obyektdagi qurilmani yangilashni qiyinlashtiradi: proshivka internetdan yuklanmaydi. Yangilanish fayllari bank ichidagi omborda turadi va qurilma faqat shu manzilga murojaat qiladi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Закрытый APN: у SIM вообще нет выхода в интернет",
+      tana: "<p>Закрытый APN — это отдельная точка внутри сети оператора. SIM, подключённая к такому APN, в публичный интернет не выходит вовсе: её единственный путь — канал от оператора в банк. То есть защита начинается раньше VPN, на уровне оператора.</p>" +
+        "<h4>Что это даёт</h4><ul>" +
+        "<li><b>Нет сканирования.</b> У устройства нет публичного адреса, найти его из интернета нельзя.</li>" +
+        "<li><b>Кража SIM бесполезна.</b> Даже переставленная в другое устройство, она выходит только в канал банка.</li>" +
+        "<li><b>Статический адрес.</b> Каждому объекту выдаётся постоянный внутренний адрес, и запись в реестре однозначно связана с устройством.</li>" +
+        "<li><b>Учёт трафика.</b> Оператор отчитывается по каждой SIM, и объект, вышедший за лимит, виден сразу.</li></ul>" +
+        "<p>Услуга оформляется отдельным договором с оператором. Существенные условия: имя APN, диапазон сети, гарантированная скорость канала и срок блокировки SIM по заявке.</p>" +
+        "<p class='ogoh'>Закрытый APN усложняет обновление оборудования: прошивку из интернета не скачать. Файлы обновлений держат в хранилище внутри банка, и устройство обращается только по этому адресу.</p>"
+    }
+  };
+
+  B["s-arx.kanal3"] = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "TLS: tunnel ichida ham shifrlash saqlanadi",
+    tana: "<p>VPN kanalni yopadi, TLS esa ulanishning o'zini yopadi. Ikkalasi birga ishlaydi: tunnel uzilib, trafik boshqa yo'ldan ketsa ham, ma'lumot ochiq holda ko'rinmaydi. Bu ortiqcha emas — bank tarmog'i ichida ham ma'lumot ochiq yurmasligi kerak.</p>" +
+      "<table><tr><th>Qayerda</th><th>Nima ishlatiladi</th></tr>" +
+      "<tr><td>Shlyuz → API</td><td>TLS 1.2 va undan yuqori, mijoz sertifikati bilan (mTLS)</td></tr>" +
+      "<tr><td>Shlyuz → broker</td><td>MQTT over TLS, port 8883</td></tr>" +
+      "<tr><td>Brauzer → panel</td><td>TLS, HSTS yoqilgan</td></tr>" +
+      "<tr><td>Video</td><td>WebRTC uchun DTLS-SRTP</td></tr></table>" +
+      "<p>Eski kameralarning bir qismi faqat TLS 1.0 ni biladi. Bunday qurilma to'g'ridan-to'g'ri platformaga qo'yilmaydi: u obyektdagi shlyuz ortida qoladi va tashqariga faqat shlyuz chiqadi.</p>" +
+      "<p class='ogoh'>Sertifikatni tekshirishni o'chirib qo'yish — sinov paytida qilinadigan va keyin unutiladigan eng xavfli qadam. Adapterlar sinovida sertifikat tekshiruvi yoqilganligi alohida test bilan tasdiqlanadi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "TLS: шифрование остаётся и внутри туннеля",
+      tana: "<p>VPN закрывает канал, TLS закрывает само соединение. Работают они вместе: даже если туннель оборвётся и трафик уйдёт другим путём, данные не окажутся открытыми. Это не избыточность — внутри сети банка данные тоже не должны ходить в открытом виде.</p>" +
+        "<table><tr><th>Где</th><th>Что используется</th></tr>" +
+        "<tr><td>Шлюз → API</td><td>TLS 1.2 и выше, с клиентским сертификатом (mTLS)</td></tr>" +
+        "<tr><td>Шлюз → брокер</td><td>MQTT over TLS, порт 8883</td></tr>" +
+        "<tr><td>Браузер → панель</td><td>TLS с включённым HSTS</td></tr>" +
+        "<tr><td>Видео</td><td>DTLS-SRTP для WebRTC</td></tr></table>" +
+        "<p>Часть старых камер знает только TLS 1.0. Такое устройство не подключают к платформе напрямую: оно остаётся за шлюзом на объекте, наружу выходит только шлюз.</p>" +
+        "<p class='ogoh'>Отключить проверку сертификата — самый опасный шаг, который делают на отладке и забывают вернуть. В тестах адаптеров включённая проверка подтверждается отдельным кейсом.</p>"
+    }
+  };
+
+  B["s-arx.kanal4"] = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Holat nazorati: jim qurilma ham hodisa",
+    tana: "<p>Nazoratning eng katta xatosi — jim turgan qurilmani soz deb hisoblash. Aslida jimlik ikki narsani bildirishi mumkin: hech narsa bo'lmadi yoki qurilma o'lgan. Ularni ajratish uchun har qurilma muntazam hayot belgisi yuboradi.</p>" +
+      "<table><tr><th>Ko'rsatkich</th><th>Qanday keladi</th><th>Chegara</th></tr>" +
+      "<tr><td><code>last_seen</code></td><td>har xabar bilan yangilanadi</td><td class='n'>3 davr o'tsa — signal</td></tr>" +
+      "<tr><td>Batareya, %</td><td>telemetriya</td><td class='n'>20% — ogohlantirish</td></tr>" +
+      "<tr><td>Signal, dBm</td><td>telemetriya</td><td class='n'>−110 dan past — ogohlantirish</td></tr>" +
+      "<tr><td>Xotira, %</td><td>telemetriya</td><td class='n'>90% — ogohlantirish</td></tr></table>" +
+      "<p>Davr qurilma sinfiga qarab har xil: doim yoqiq shlyuz uchun 3 daqiqa, LoRaWAN datchigi uchun 1 soat, batareyali kamera uchun 6 soat. Chegara reyestrda qurilma turiga bog'lab saqlanadi, kodda emas.</p>" +
+      "<p class='ogoh'>Batareya foizi chiziqli tushmaydi: LiFePO4 uzoq vaqt 100% ko'rsatib turadi, keyin tez tushadi. Shuning uchun signal uch kunlik tushish tezligiga ham qo'yiladi — shunda servis obyekt o'chishidan oldin chiqadi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Контроль состояния: молчащее устройство — тоже событие",
+      tana: "<p>Главная ошибка мониторинга — считать молчащее устройство исправным. На деле молчание значит либо что ничего не произошло, либо что устройство умерло. Чтобы их различать, каждое устройство регулярно шлёт признак жизни.</p>" +
+        "<table><tr><th>Показатель</th><th>Как приходит</th><th>Порог</th></tr>" +
+        "<tr><td><code>last_seen</code></td><td>обновляется каждым сообщением</td><td class='n'>3 периода — тревога</td></tr>" +
+        "<tr><td>Заряд, %</td><td>телеметрия</td><td class='n'>20% — предупреждение</td></tr>" +
+        "<tr><td>Сигнал, дБм</td><td>телеметрия</td><td class='n'>ниже −110 — предупреждение</td></tr>" +
+        "<tr><td>Память, %</td><td>телеметрия</td><td class='n'>90% — предупреждение</td></tr></table>" +
+        "<p>Период зависит от класса устройства: 3 минуты для постоянно включённого шлюза, час для датчика LoRaWAN, 6 часов для батарейной камеры. Пороги хранятся в реестре рядом с типом устройства, а не в коде.</p>" +
+        "<p class='ogoh'>Заряд падает нелинейно: LiFePO4 долго держит 100%, а потом уходит вниз рывком. Поэтому тревога ставится не только на процент, но и на скорость падения за три дня — тогда сервис выезжает до того, как объект погаснет.</p>"
+    }
+  };
+
+  B["s-arx.yadro1"] = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Qurilmalar reyestri: qaysi qurilma qaysi obyektda turibdi",
+    tana: "<p>Reyestr butun tizimning yagona haqiqat manbai. Hodisada faqat <code>qurilma_id</code> keladi — obyekt, filial va mas'ul shaxs aynan shu jadvaldan olinadi. Adapter obyekt kodini hech qachon qurilmaning o'zidan olmaydi: qurilma sozlamasi maydonda o'zgartirilishi mumkin, reyestr esa o'zgartirilmaydi.</p>" +
+      "<h4>Har qurilmada nima saqlanadi</h4><ul>" +
+      "<li>Inventar raqami, seriya raqami va MAC — buxgalteriya bilan bog'lanish uchun.</li>" +
+      "<li>Obyekt, o'rnatilgan sana, o'rnatgan pudratchi, kafolat muddati.</li>" +
+      "<li>Sinfi: doim yoqiq yoki uxlaydigan; hayot belgisi davri shundan kelib chiqadi.</li>" +
+      "<li>Sertifikat barmoq izi va uning tugash sanasi.</li>" +
+      "<li>Holati: ishda, servisda, omborda, hisobdan chiqarilgan.</li></ul>" +
+      "<p>Obyekt sotilganda jihoz u bilan ketmaydi: reyestrda qurilma omborga o'tkaziladi, keyin keyingi obyektga biriktiriladi. Bitta komplekt besh yilda uch-to'rt obyektga xizmat qiladi, va bu iqtisodiy hisobning asosi.</p>" +
+      "<p class='ogoh'>Reyestrda bo'lmagan qurilmadan kelgan hodisa qabul qilinmaydi va alohida jurnalga tushadi. Bu qattiq qoida: aks holda sinov qurilmasi yoki noto'g'ri sozlangan adapter hisobotga soxta obyekt qo'shib qo'yadi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Реестр устройств: какое устройство на каком объекте",
+      tana: "<p>Реестр — единственный источник истины во всей системе. В событии приходит только <code>qurilma_id</code>, а объект, филиал и ответственного берут именно из этой таблицы. Адаптер никогда не берёт код объекта с самого устройства: настройку устройства в поле можно поменять, реестр — нет.</p>" +
+        "<h4>Что хранится по каждому устройству</h4><ul>" +
+        "<li>Инвентарный и серийный номер, MAC — для связи с бухгалтерией.</li>" +
+        "<li>Объект, дата установки, подрядчик, срок гарантии.</li>" +
+        "<li>Класс: постоянно включённое или засыпающее; от него зависит период признака жизни.</li>" +
+        "<li>Отпечаток сертификата и дата его окончания.</li>" +
+        "<li>Состояние: в работе, в сервисе, на складе, списано.</li></ul>" +
+        "<p>При продаже объекта оборудование не уходит вместе с ним: в реестре устройство переводится на склад и затем привязывается к следующему объекту. Один комплект за пять лет обслуживает три-четыре объекта — на этом стоит весь экономический расчёт.</p>" +
+        "<p class='ogoh'>Событие от устройства, которого нет в реестре, не принимается и уходит в отдельный журнал. Это жёсткое правило: иначе тестовое устройство или неверно настроенный адаптер добавят в отчётность несуществующий объект.</p>"
+    }
+  };
+
+  B["s-arx.yadro2"] = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Adapter: brendning tilidan yagona sxemaga",
+    tana: "<p>Adapter — bitta brendning protokolini biladigan kichik xizmat. U uchta ishni bajaradi: brend tilidagi xabarni oladi, uni yagona hodisa sxemasiga o'tkazadi va <code>POST /hodisa</code> bilan shinaga qo'yadi. Platformaning qolgan qismi brend haqida hech narsa bilmaydi.</p>" +
+      "<h4>Har adapterda majburiy qism</h4><ul>" +
+      "<li><b>Xom yozuv.</b> Kelgan xabar o'zgartirilmasdan 30 kun saqlanadi — nosozlikni tekshirish uchun.</li>" +
+      "<li><b>Sxemaga qarshi test.</b> Har chiqish JSON Schema fayliga tekshiriladi; o'tmagan xabar shinaga chiqmaydi.</li>" +
+      "<li><b>Takrorni tashlash.</b> Bir xil <code>hodisa_id</code> ikkinchi marta kelsa, yangi voqea yaratilmaydi.</li>" +
+      "<li><b>Chegaralash.</b> Bitta obyektdan daqiqasiga 60 dan ortiq hodisa kelsa, ortiqchasi yig'iladi va bitta xabarga birlashtiriladi.</li></ul>" +
+      "<p>Yangi brend qo'shish — yangi adapter yozish, platformani o'zgartirish emas. Ish hajmi odatda ikki-uch hafta, chunki protokol hujjati va sinov stendi allaqachon tayyor.</p>" +
+      "<p class='ogoh'>Yopiq protokolli brend olinmaydi. Agar ishlab chiqaruvchi faqat o'z bulutiga chiqishni taklif qilsa, hodisa bank tarmog'idan tashqarida bo'ladi — bu xarid shartlarida rad etish asosi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Адаптер: с языка бренда на единую схему",
+      tana: "<p>Адаптер — небольшой сервис, знающий протокол одного бренда. Он делает три вещи: принимает сообщение на языке бренда, приводит его к единой схеме события и кладёт в шину через <code>POST /hodisa</code>. Остальная платформа о бренде не знает ничего.</p>" +
+        "<h4>Обязательные части каждого адаптера</h4><ul>" +
+        "<li><b>Сырая запись.</b> Пришедшее сообщение хранится без изменений 30 дней — для разбора сбоев.</li>" +
+        "<li><b>Тест против схемы.</b> Каждый выход проверяется по файлу JSON Schema; не прошедшее сообщение в шину не попадает.</li>" +
+        "<li><b>Отсечение дублей.</b> Повторный <code>hodisa_id</code> не создаёт нового происшествия.</li>" +
+        "<li><b>Ограничение потока.</b> Если с объекта идёт больше 60 событий в минуту, лишнее собирается и склеивается в одно сообщение.</li></ul>" +
+        "<p>Добавить бренд — значит написать адаптер, а не менять платформу. Обычно это две-три недели, потому что документация протокола и тестовый стенд уже готовы.</p>" +
+        "<p class='ogoh'>Бренд с закрытым протоколом не берут. Если производитель предлагает выход только в своё облако, событие оказывается вне сети банка — в условиях закупки это основание для отказа.</p>"
+    }
+  };
+
+  B["s-arx.yadro3"] = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Media shlyuz: RTSP'ni brauzerga olib chiqadi va faqat so'ralganda yoqadi",
+    tana: "<p>Brauzer RTSP oqimini o'zi ochmaydi. Media shlyuz shu bo'shliqni yopadi: kameradan RTSP oladi va brauzerga WebRTC bilan beradi, arxivni esa HLS bilan. Qayta kodlash yo'q — H.264 paketi qanday bo'lsa, shunday o'tkaziladi, shuning uchun bitta server yuzlab sessiyani ko'taradi.</p>" +
+      "<table><tr><th>Rejim</th><th>Protokol</th><th>Kechikish</th></tr>" +
+      "<tr><td>Jonli</td><td>WebRTC</td><td class='n'>1 soniyadan kam</td></tr>" +
+      "<tr><td>Arxiv</td><td>HLS</td><td class='n'>6–10 soniya</td></tr>" +
+      "<tr><td>Kadr</td><td>JPEG</td><td class='n'>bir marta</td></tr></table>" +
+      "<h4>Eng muhim xossa</h4>" +
+      "<p>Shlyuz kameraga faqat so'rov kelganda ulanadi. Operator oynani yopsa, ulanish ham uziladi. Batareyali va quyoshli obyektda bu shart: doimiy ulanish kamerani bir kunda bo'shatadi.</p>" +
+      "<p class='ogoh'>Sessiya tokeni 60 soniya yashaydi va bir marta ishlatiladi. Aks holda bir marta olingan havola obyekt kamerasiga doimiy kirish yo'liga aylanadi — bu audit uchun ham, xavfsizlik uchun ham qabul qilib bo'lmaydigan holat.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Медиашлюз: выводит RTSP в браузер и включается только по запросу",
+      tana: "<p>Браузер сам поток RTSP не откроет. Медиашлюз закрывает этот разрыв: берёт RTSP с камеры и отдаёт браузеру по WebRTC, а архив по HLS. Без перекодирования — пакет H.264 проходит как есть, поэтому один сервер держит сотни сессий.</p>" +
+        "<table><tr><th>Режим</th><th>Протокол</th><th>Задержка</th></tr>" +
+        "<tr><td>Живой</td><td>WebRTC</td><td class='n'>меньше секунды</td></tr>" +
+        "<tr><td>Архив</td><td>HLS</td><td class='n'>6–10 секунд</td></tr>" +
+        "<tr><td>Кадр</td><td>JPEG</td><td class='n'>разово</td></tr></table>" +
+        "<h4>Главное свойство</h4>" +
+        "<p>Шлюз подключается к камере только по запросу. Закрыл оператор окно — соединение разорвано. Для батарейного и солнечного объекта это обязательное условие: постоянное соединение сажает камеру за сутки.</p>" +
+        "<p class='ogoh'>Токен сессии живёт 60 секунд и используется один раз. Иначе однажды полученная ссылка превращается в постоянный доступ к камере объекта — недопустимо и для аудита, и для безопасности.</p>"
+    }
+  };
+
+  B["s-arx.yadro4"] = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Hodisa shinasi: qabul, filtr va yo'naltirish",
+    tana: "<p>Shina hodisani qabul qiladi va darhol <b>202</b> qaytaradi: yozuv navbatga tushdi, qayta ishlash keyin. Shu tufayli adapter platformaning sekinlashuvini kutib qolmaydi va hodisani yo'qotmaydi.</p>" +
+      "<h4>Hodisa qanday yo'l bosadi</h4><ol>" +
+      "<li><b>Tekshiruv.</b> Sxema, sertifikat va reyestrdagi qurilma bor-yo'qligi.</li>" +
+      "<li><b>Takrorni tashlash.</b> <code>hodisa_id</code> bo'yicha; ayni shu id ikkinchi marta kelsa, javob 202 va <code>takror: true</code>.</li>" +
+      "<li><b>Boyitish.</b> Obyekt, filial, mas'ul va ustuvorlik reyestrdan qo'shiladi.</li>" +
+      "<li><b>Filtr.</b> Ochiq servis topshirig'i bor obyektning hodisasi o'sha topshiriqqa boriladi.</li>" +
+      "<li><b>Yo'naltirish.</b> Operator navbati, mobil xabarnoma, webhook obunachilari.</li></ol>" +
+      "<p>Navbat hodisani 7 kun saqlaydi. Qabul qiluvchi tomon ishlamayotgan bo'lsa, urinishlar oshib boruvchi oraliqda takrorlanadi va jami taxminan 42 soatga cho'ziladi.</p>" +
+      "<p class='ogoh'>Aloqa tiklanganda obyektdan bir vaqtda o'nlab saqlangan hodisa keladi. Ular qurilma vaqti bo'yicha tartiblanadi va har biri o'z <code>hodisa_id</code>si bilan ajratiladi — vaqt oynasi bo'yicha birlashtirish bu yerda ishlamaydi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Шина событий: приём, фильтр и маршрутизация",
+      tana: "<p>Шина принимает событие и сразу отвечает <b>202</b>: запись поставлена в очередь, обработка позже. Благодаря этому адаптер не ждёт замедлившуюся платформу и не теряет событие.</p>" +
+        "<h4>Путь события</h4><ol>" +
+        "<li><b>Проверка.</b> Схема, сертификат, наличие устройства в реестре.</li>" +
+        "<li><b>Отсечение дублей.</b> По <code>hodisa_id</code>; на повтор возвращается 202 и <code>takror: true</code>.</li>" +
+        "<li><b>Обогащение.</b> Из реестра добавляются объект, филиал, ответственный и приоритет.</li>" +
+        "<li><b>Фильтр.</b> Событие объекта с открытым сервисным заданием идёт не в очередь безопасности, а к этому заданию.</li>" +
+        "<li><b>Маршрутизация.</b> Очередь оператора, пуш в мобильное приложение, подписчики webhook.</li></ol>" +
+        "<p>Очередь хранит событие 7 дней. Если приёмник не отвечает, попытки повторяются с растущим интервалом, в сумме около 42 часов.</p>" +
+        "<p class='ogoh'>При восстановлении связи с объекта одновременно приходят десятки накопленных событий. Их сортируют по времени устройства и разделяют по <code>hodisa_id</code> — склейка по временному окну здесь не работает.</p>"
+    }
+  };
+
+  B["s-arx.yadro5"] = {
+    yorliq: "Jamoa rahbarlari uchun",
+    sarlavha: "Buyruq xizmati: eshik, PTZ va sirena — bitta yo'l bilan",
+    tana: "<p>Hodisa qurilmadan markazga boradi, buyruq esa teskari yo'nalishda. Shuning uchun u alohida xizmatda: har buyruq avtorlashtiriladi, jurnalga yoziladi va natijasi kutiladi. Interfeys kameraga yoki qulfga to'g'ridan-to'g'ri murojaat qilmaydi.</p>" +
+      "<table><tr><th>Buyruq</th><th>Kimga ruxsat</th><th>Javob</th></tr>" +
+      "<tr><td>Eshikni ochish</td><td>Operator, obyekt menejeri</td><td class='n'>2–5 soniya</td></tr>" +
+      "<tr><td>PTZ presetga burish</td><td>Operator</td><td class='n'>2–3 soniya</td></tr>" +
+      "<tr><td>Sirena</td><td>Operator</td><td class='n'>1–2 soniya</td></tr>" +
+      "<tr><td>Qurilmani qayta yuklash</td><td>Administrator</td><td class='n'>40–90 soniya</td></tr></table>" +
+      "<p><code>Idempotency-Key</code> majburiy: takror bosish yoki tarmoq uzilishidan keyingi qayta yuborish eshikni ikki marta ochmaydi. Uxlaydigan qurilmaga buyruq navbatda turadi va qurilma uyg'onganda yetkaziladi; navbat muddati 15 daqiqa, undan keyin buyruq bekor qilinadi va operatorga sabab ko'rsatiladi.</p>" +
+      "<p class='ogoh'>Eshikni ochish — huquqiy oqibati bor amal. Jurnalda kim, qaysi obyektga, qaysi asosda ochgani va o'sha paytdagi video sessiyasi bir yozuvda bog'lanadi; jurnal o'chirilmaydi va audit uchun eksport qilinadi.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для тимлида",
+      sarlavha: "Сервис команд: дверь, PTZ и сирена — одним путём",
+      tana: "<p>Событие идёт от устройства в центр, команда — в обратную сторону. Поэтому она вынесена в отдельный сервис: каждая команда авторизуется, пишется в журнал и ждёт результата. Интерфейс не обращается к камере или замку напрямую.</p>" +
+        "<table><tr><th>Команда</th><th>Кому разрешена</th><th>Ответ</th></tr>" +
+        "<tr><td>Открыть дверь</td><td>Оператор, менеджер объекта</td><td class='n'>2–5 с</td></tr>" +
+        "<tr><td>Повернуть PTZ в пресет</td><td>Оператор</td><td class='n'>2–3 с</td></tr>" +
+        "<tr><td>Сирена</td><td>Оператор</td><td class='n'>1–2 с</td></tr>" +
+        "<tr><td>Перезагрузить устройство</td><td>Администратор</td><td class='n'>40–90 с</td></tr></table>" +
+        "<p><code>Idempotency-Key</code> обязателен: повторное нажатие или пересылка после обрыва сети не откроют дверь дважды. Команда засыпающему устройству ждёт в очереди и доставляется при пробуждении; срок ожидания 15 минут, после чего команда отменяется, а оператору показывают причину.</p>" +
+        "<p class='ogoh'>Открытие двери — действие с правовыми последствиями. В журнале одной записью связываются кто, на какой объект, на каком основании открыл и какая в этот момент шла видеосессия; журнал не удаляется и выгружается для аудита.</p>"
+    }
+  };
+
+  /* ---------- 07-slayd: yechim qanday tanlanadi ---------- */
+  B["s-matritsa.tanlov"] = {
+    yorliq: "Rahbariyat uchun",
+    sarlavha: "O'nta yechimdan qaysi biri: ikki savol va bitta jadval",
+    tana: "<p>Tanlovni obyektning qiymati emas, uning sharoiti hal qiladi. Ikki savolga javob berilsa, o'nta variantdan ikki-uchtasi qoladi, qolgani esa ko'rikdagi o'lchovlar bilan yopiladi.</p>" +
+      "<h4>Birinchi savol: quvvat</h4>" +
+      "<p>Obyektda ishlaydigan hisoblagich bormi? Bo'lsa — masala yo'q, oddiy IP kamera va NVR qo'yiladi va bu taqdimotning mavzusi emas. Yo'q bo'lsa, quvvat manbai tanlanadi: kunlik yuk 10 Vt gacha bo'lsa quyosh, 10–50 Vt bo'lsa quyosh va katta akkumulyator shkafi, 50 Vt dan yuqorida quyosh ishlamaydi — elektrga qayta ulanish arzonroq.</p>" +
+      "<h4>Ikkinchi savol: aloqa</h4>" +
+      "<p>RSRP −105 dBm dan yuqori bo'lsa 4G yetadi. −105…−115 dBm oralig'ida tashqi antenna kerak. Qamrov umuman bo'lmasa, video imkoni yo'q: obyekt LoRaWAN datchiklariga yoki qo'shni obyekt orqali klaster sxemasiga o'tadi.</p>" +
+      "<table><tr><th>Sharoit</th><th>Mos yechim</th></tr>" +
+      "<tr><td>Bino ichi, tok bor, kabel yo'q</td><td>1-yechim: batareyali kamera va hub</td></tr>" +
+      "<tr><td>Ochiq hudud, tok yo'q, 4G bor</td><td>2- va 3-yechim: quyosh-4G kamera</td></tr>" +
+      "<tr><td>Bir necha kamera, uzoq avtonomiya</td><td>4-yechim: LiFePO4 shkafi</td></tr>" +
+      "<tr><td>Video shart emas, faqat fakt kerak</td><td>5- va 6-yechim: datchiklar</td></tr>" +
+      "<tr><td>Obyekt 3 oydan kam turadi</td><td>7-yechim: ko'chma stansiya</td></tr>" +
+      "<tr><td>Chekka, yiliga 3–4 marta boriladi</td><td>8-yechim: yoqilg'i elementi</td></tr>" +
+      "<tr><td>Katta maydon, ustun yo'q</td><td>9-yechim: mobil minora</td></tr>" +
+      "<tr><td>Qo'shni obyektlar guruhi</td><td>10-yechim: klaster shkafi</td></tr></table>" +
+      "<p class='ogoh'>Jadval yakuniy qaror emas. Har obyektda ko'rik o'tkaziladi: RSRP o'lchanadi, quyoshga soya tekshiriladi va kunlik yuk ampermetr bilan hisoblanadi. Ko'riksiz tanlangan komplekt ikkinchi tashrifda o'zgartiriladi — bu esa ikki marta to'lash demakdir.</p>",
+    manba: [],
+    ru: {
+      yorliq: "Для руководства",
+      sarlavha: "Какое из десяти решений: два вопроса и одна таблица",
+      tana: "<p>Выбор определяет не стоимость объекта, а его условия. Ответ на два вопроса оставляет из десяти вариантов два-три, остальное закрывают замеры на обследовании.</p>" +
+        "<h4>Первый вопрос: питание</h4>" +
+        "<p>Есть ли на объекте работающий счётчик? Если есть — вопроса нет, ставят обычную IP-камеру и NVR, и это не тема презентации. Если нет, выбирают источник: при суточной нагрузке до 10 Вт — солнце, при 10–50 Вт — солнце и большой аккумуляторный шкаф, свыше 50 Вт солнце не работает — дешевле восстановить подключение к сети.</p>" +
+        "<h4>Второй вопрос: связь</h4>" +
+        "<p>При RSRP выше −105 дБм хватает 4G. В диапазоне −105…−115 дБм нужна внешняя антенна. Если покрытия нет вовсе, видео невозможно: объект уходит на датчики LoRaWAN или в кластерную схему через соседний объект.</p>" +
+        "<table><tr><th>Условие</th><th>Подходящее решение</th></tr>" +
+        "<tr><td>Внутри здания, ток есть, кабеля нет</td><td>Решение 1: батарейные камеры и хаб</td></tr>" +
+        "<tr><td>Открытая территория, тока нет, 4G есть</td><td>Решения 2 и 3: солнечно-4G камера</td></tr>" +
+        "<tr><td>Несколько камер, длинная автономия</td><td>Решение 4: шкаф LiFePO4</td></tr>" +
+        "<tr><td>Видео не нужно, нужен факт</td><td>Решения 5 и 6: датчики</td></tr>" +
+        "<tr><td>Объект стоит меньше 3 месяцев</td><td>Решение 7: переносная станция</td></tr>" +
+        "<tr><td>Удалённый, выезд 3–4 раза в год</td><td>Решение 8: топливный элемент</td></tr>" +
+        "<tr><td>Большая площадь, опоры нет</td><td>Решение 9: мобильная вышка</td></tr>" +
+        "<tr><td>Группа соседних объектов</td><td>Решение 10: кластерный шкаф</td></tr></table>" +
+        "<p class='ogoh'>Таблица — не окончательное решение. По каждому объекту проводят обследование: меряют RSRP, проверяют тень на солнце и считают суточную нагрузку амперметром. Комплект, выбранный без обследования, меняют на втором выезде — то есть платят дважды.</p>"
+    }
+  };
+
+  B["s-y07.rb3"] = Y.stansiya;
+  B["s-y08.rb1"] = Y.efoy;
+  B["s-y08.rb2"] = Y.efoyAkb;
+  B["s-y09.rb2"] = Y.karnay;
+  B["s-y10.rb1"] = Y.klaster;
+})();

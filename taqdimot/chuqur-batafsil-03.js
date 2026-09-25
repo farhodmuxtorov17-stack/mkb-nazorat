@@ -129,7 +129,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<tr><td>Yanvar</td><td class='n'>≈2,9</td></tr>" +
     "<tr><td>Mart</td><td class='n'>≈5,5</td></tr></table>" +
     "<p>Ya'ni dekabr va yanvarda komplekt ishlab chiqaruvchi belgilagan shartdan tashqarida ishlaydi.</p>" +
-    "<p class='ogoh'>Buni yashirish emas, ochiq yozish kerak. Yechim ikki chora bilan ishlaydi: qishki tungi rejim va ikkinchi akkumulyator. Ikkalasi ham loyihaga kiritiladi va pilot natijasi bo'yicha tasdiqlanadi. Shu ikkisisiz komplekt yanvarda to'xtaydi va bu sotuvchining aybi bo'lmaydi.</p>",
+    "<p class='ogoh'>Buni hujjatda ochiq yozish kerak. Yechim ikki chora bilan ishlaydi: qishki tungi rejim va ikkinchi akkumulyator. Ikkalasi ham loyihaga kiritiladi va pilot natijasi bo'yicha tasdiqlanadi. Shu ikkisisiz komplekt yanvarda to'xtaydi va bu sotuvchining aybi bo'lmaydi.</p>",
   ru: { yorliq: "Для правления", sarlavha: "Ограничение паспорта: 3,5 солнечных часа",
     tana: "<p>Производитель определяет комплект для мест, где солнце светит больше 3,5 часа в сутки. Если условие не выполняется, гарантия не действует.</p>" +
       "<table><tr><th>Месяц</th><th>Солнечных часов в Ташкенте</th></tr>" +
@@ -226,7 +226,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<tr><td>Bitta shox soyasi</td><td class='n'>−30…60%</td></tr>" +
     "<tr><td>Panel 20° burilgan</td><td class='n'>−6…10%</td></tr></table>" +
     "<p>Soya eng shafqatsiz omil: hujayralar ketma-ket ulangani uchun kichik soya butun panel quvvatini tushiradi.</p>" +
-    "<p class='ogoh'>Unum grafigidagi to'satdan pasayish deyarli har doim ikki sababdan biri bilan izohlanadi: panel burilgan yoki uni biror narsa to'sgan. Platforma bu pasayishni avtomatik aniqlaydi va ko'rik vazifasini ochadi — obyektga taxmin bilan emas, aniq sabab bilan boriladi.</p>",
+    "<p class='ogoh'>Unum grafigidagi to'satdan pasayish deyarli har doim ikki sababdan biri bilan izohlanadi: panel burilgan yoki uni biror narsa to'sgan. Platforma bu pasayishni avtomatik aniqlaydi va ko'rik vazifasini ochadi — obyektga aniq sabab bilan boriladi.</p>",
   ru: { yorliq: "Для монтажника", sarlavha: "Панель 125 Вт: выработка и её враги",
     tana: "<p>Площадь панели 0,6 м², и её выработка зависит от трёх вещей: угла, чистоты и тени.</p>" +
       "<table><tr><th>Фактор</th><th>Влияние на выработку</th></tr>" +
@@ -411,7 +411,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<li><b>Adapter presetni chaqiradi.</b> Hodisa turiga mos preset raqami jadvaldan olinadi.</li>" +
     "<li><b>Kamera buriladi va yozadi.</b> Buyruq bajarilgani javobdan tasdiqlanadi.</li>" +
     "<li><b>Klip hodisa kartasiga bog'lanadi.</b> Kamera asosiy presetga qaytadi.</li></ol>" +
-    "<h4>Nima xato ketishi mumkin</h4><p>Burilish 3–8 soniya davom etadi. Agar odam tez harakatlansa, kamera yetib kelganda u allaqachon o'tib ketgan bo'ladi. Shuning uchun perimetr datchigi kirish nuqtasidan emas, undan uzoqroqdan qo'yiladi: kameraga burilish uchun vaqt kerak.</p>" +
+    "<h4>Nima xato ketishi mumkin</h4><p>Burilish 3–8 soniya davom etadi. Agar odam tez harakatlansa, kamera yetib kelganda u allaqachon o'tib ketgan bo'ladi. Shuning uchun perimetr datchigi kirish nuqtasidan uzoqroqqa qo'yiladi: kameraga burilish uchun vaqt kerak.</p>" +
     "<p class='ogoh'>Tasdiq kelmasa hodisa kartasiga «kamera burilmadi» belgisi qo'yiladi. Bu belgi takrorlansa, motor yoki pozitsiya datchigi ishdan chiqqan degani va ko'rik vazifasi ochiladi.</p>",
   ru: { yorliq: "Для тимлида", sarlavha: "Событие → пресет → клип: три шага",
     tana: "<p>Цепочка работает автоматически, и каждый её шаг проверяется отдельно.</p>" +
@@ -593,7 +593,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<tr><td>Yozuv resursi</td><td>past</td><td>bir necha barobar yuqori</td></tr>" +
     "<tr><td>Uzluksiz yozuvda muddat</td><td>6–12 oy</td><td>3–5 yil</td></tr></table>" +
     "<h4>Nosozlik qanday ko'rinadi</h4><p>Avval alohida kliplar ochilmaydi, keyin kamera «SD xatosi» hodisasini beradi va oxirida karta umuman yozilmay qoladi. Eng yomoni, bu hodisa aynan aloqa uzilgan paytda ma'lum bo'ladi — ya'ni yozuv eng kerak bo'lganda.</p>" +
-    "<p class='ogoh'>Kartaning TBW ko'rsatkichi xarid shartiga yoziladi. Adapter «SD xatosi» hodisasini alohida turga ajratadi va platformada u oddiy nosozlik emas, dalil yo'qolishi xatari sifatida ko'rsatiladi.</p>",
+    "<p class='ogoh'>Kartaning TBW ko'rsatkichi xarid shartiga yoziladi. Adapter «SD xatosi» hodisasini alohida turga ajratadi va platformada u dalil yo'qolishi xatari sifatida ko'rsatiladi.</p>",
   ru: { yorliq: "Для монтажника", sarlavha: "microSD: почему нужен индустриальный класс",
     tana: "<p>При обрыве связи вся запись идёт на microSD. Непрерывная запись быстро изнашивает карту: каждая ячейка выдерживает ограниченное число перезаписей.</p>" +
       "<table><tr><th></th><th>Розничная карта</th><th>Индустриальная</th></tr>" +

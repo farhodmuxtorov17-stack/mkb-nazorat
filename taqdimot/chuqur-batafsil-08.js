@@ -3,23 +3,23 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 
 "y08.element": {
   yorliq: "Jamoa rahbarlari uchun", sarlavha: "Yoqilg'i elementi zaryadlagich, generator emas",
-  tana: "<p>To'g'ridan-to'g'ri metanolli yoqilg'i elementi membranada metanol va suvni reaksiyaga kiritadi; natijada elektr, suv bug'i, CO₂ va issiqlik hosil bo'ladi. Uning quvvati doimiy va uni oshirib bo'lmaydi: bu generator emas, akkumulyator zaryadlagichi.</p>" +
+  tana: "<p>To'g'ridan-to'g'ri metanolli yoqilg'i elementi membranada metanol va suvni reaksiyaga kiritadi; natijada elektr, suv bug'i, CO₂ va issiqlik hosil bo'ladi. Uning quvvati doimiy va uni oshirib bo'lmaydi: element akkumulyatorni sutka bo'yi sekin to'ldiruvchi zaryadlagich sifatida ishlaydi.</p>" +
     "<table><tr><th>Model</th><th>Nominal quvvat</th><th>Sutkasiga</th></tr>" +
     "<tr><td class='b'>EFOY Pro 900</td><td class='n'>42 Vt</td><td class='n'>1,0 kVt·soat</td></tr>" +
     "<tr><td class='b'>EFOY Pro 1800</td><td class='n'>82 Vt</td><td class='n'>2,0 kVt·soat</td></tr>" +
     "<tr><td class='b'>EFOY Pro 2800</td><td class='n'>125 Vt</td><td class='n'>3,0 kVt·soat</td></tr></table>" +
     "<h4>Model qanday tanlanadi</h4>" +
-    "<p>Nominal quvvat sutkalik o'rtacha yukdan kamida 1,5 barobar katta olinadi. 30 vattlik yukka Pro 900 chegarada ishlaydi, Pro 1800 esa zaxira bilan. Cho'qqi quvvatga qarab tanlanmaydi: PTZ aylanishidagi 25 vattni element emas, akkumulyator ko'taradi.</p>" +
+    "<p>Nominal quvvat sutkalik o'rtacha yukdan kamida 1,5 barobar katta olinadi. 30 vattlik yukka Pro 900 chegarada ishlaydi, Pro 1800 esa zaxira bilan. Cho'qqi quvvatga qarab tanlanmaydi: PTZ aylanishidagi 25 vattni akkumulyator ko'taradi.</p>" +
     "<p class='ogoh'>Element sutkasiga bir necha marta yonadi va o'chadi — bu normal ish tartibi. Uni doim yoqib qo'yish mumkin emas va shart ham emas: har ishga tushish sikli issiqlik va yoqilg'i talab qiladi, shuning uchun juda tez-tez yonib-o'chish akkumulyator kichikligini bildiradi.</p>",
   manba: [["EFOY Pro modellari", "https://www.efoy-pro.com/en/efoy/efoy-efoypro/"]],
-  ru: {yorliq: "Для тимлида", sarlavha: "Топливный элемент — зарядное устройство, а не генератор",
+  ru: {yorliq: "Для тимлида", sarlavha: "Топливный элемент работает зарядным устройством",
     tana: "<p>Прямой метанольный топливный элемент проводит на мембране реакцию метанола и воды; на выходе — электричество, водяной пар, CO₂ и тепло. Его мощность постоянна и увеличить её нельзя: это не генератор, а зарядное устройство для аккумулятора.</p>" +
       "<table><tr><th>Модель</th><th>Номинальная мощность</th><th>В сутки</th></tr>" +
       "<tr><td class='b'>EFOY Pro 900</td><td class='n'>42 Вт</td><td class='n'>1,0 кВт·ч</td></tr>" +
       "<tr><td class='b'>EFOY Pro 1800</td><td class='n'>82 Вт</td><td class='n'>2,0 кВт·ч</td></tr>" +
       "<tr><td class='b'>EFOY Pro 2800</td><td class='n'>125 Вт</td><td class='n'>3,0 кВт·ч</td></tr></table>" +
       "<h4>Как выбирается модель</h4>" +
-      "<p>Номинальная мощность берётся минимум в 1,5 раза больше среднесуточной нагрузки. Для нагрузки 30 Вт Pro 900 работает на пределе, Pro 1800 — с запасом. По пиковой мощности выбор не делается: 25 Вт при повороте PTZ берёт на себя аккумулятор, а не элемент.</p>" +
+      "<p>Номинальная мощность берётся минимум в 1,5 раза больше среднесуточной нагрузки. Для нагрузки 30 Вт Pro 900 работает на пределе, Pro 1800 — с запасом. По пиковой мощности выбор не делается: 25 Вт при повороте PTZ берёт на себя аккумулятор.</p>" +
       "<p class='ogoh'>Элемент включается и выключается несколько раз в сутки — это штатный режим. Держать его включённым постоянно нельзя, да и незачем: каждый пуск требует тепла и топлива, поэтому слишком частые циклы означают, что аккумулятор мал.</p>"}
 },
 
@@ -32,7 +32,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>30 Vt</td><td class='n'>0,72 kVt·soat</td><td class='n'>43 kun</td></tr></table>" +
     "<h4>Fuel Manager</h4>" +
     "<p>Fuel Manager moduli 8 tagacha kartrijni ketma-ket ulaydi: biri tugaganda element o'zi keyingisiga o'tadi. To'rtta M28 bilan 30 vattlik yuk qariyb 170 kun ishlaydi, ya'ni obyektga yiliga ikki marta borilsa yetadi. Chekkadagi obyektda bu asosiy tejash: qatnov yoqilg'idan qimmatga tushishi mumkin.</p>" +
-    "<p class='ogoh'>Kartrij element yonida emas, qulflangan alohida bo'limda turadi. Bo'lim ochilishiga datchik qo'yiladi va u platformaga hodisa bo'lib tushadi.</p>",
+    "<p class='ogoh'>Bo'lim datchigi ochilishni qayd etadi, lekin kartrij sathini ko'rsatmaydi: qolgan metanol faqat Modbus orqali element o'zidan o'qiladi. Shuning uchun almashtirish tashrifi telemetriyaga qarab rejalashtiriladi.</p>",
   manba: [["EFOY kartrijlari", "https://www.efoy-pro.com/en/efoy/fuel-cartridges/"]],
   ru: {yorliq: "Для монтажника", sarlavha: "Картридж M28 и расчёт топлива",
     tana: "<p>M28 — картридж на 28 литров: масса 23,4 кг, энергия 31,1 кВт·ч. Номинальный расход — 0,9 литра метанола на каждый кВт·ч.</p>" +
@@ -42,14 +42,14 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td>30 Вт</td><td class='n'>0,72 кВт·ч</td><td class='n'>43 суток</td></tr></table>" +
       "<h4>Fuel Manager</h4>" +
       "<p>Модуль Fuel Manager подключает последовательно до восьми картриджей: при опустошении одного элемент сам переходит на следующий. С четырьмя M28 нагрузка в 30 Вт обеспечивается почти 170 суток, то есть на объект достаточно выезжать дважды в год. Для удалённого объекта это и есть основная экономия: выезд может стоить дороже топлива.</p>" +
-      "<p class='ogoh'>Картридж хранится не рядом с элементом, а в отдельном запираемом отсеке. На отсек ставится датчик вскрытия, его срабатывание уходит событием на платформу.</p>"}
+      "<p class='ogoh'>Датчик отсека фиксирует вскрытие, но не показывает уровень в картридже: остаток метанола читается только по Modbus из самого элемента. Поэтому выезд на замену планируется по телеметрии.</p>"}
 },
 
 "y08.akb": {
   yorliq: "Montajchi uchun", sarlavha: "Akkumulyator nega kerak va u qanday tanlanadi",
   tana: "<p>Element doimiy quvvat beradi, yuk esa tebranib turadi. Bu farqni akkumulyator yopadi va u ikkita vazifani bajaradi.</p>" +
     "<ul><li><b>Cho'qqilarni ko'tarish.</b> PTZ aylanishi, IR yoritgichning yonishi va NVR yozuvi qisqa vaqtga 25–40 vattlik cho'qqi beradi. Element buni ta'qib qilmaydi.</li>" +
-    "<li><b>Sikl sonini kamaytirish.</b> Sig'im katta bo'lsa, element kuniga to'rt marta emas, ikki marta yonadi. Har ishga tushish yoqilg'i va resurs sarflaydi.</li></ul>" +
+    "<li><b>Sikl sonini kamaytirish.</b> Sig'im katta bo'lsa, element sutkasiga to'rt marta o'rniga ikki marta yonadi. Har ishga tushish yoqilg'i va resurs sarflaydi.</li></ul>" +
     "<h4>Sovuq masalasi</h4>" +
     "<p>LiFePO4 0 °C dan past zaryadlanmaydi. Isitilmaydigan shkafda bu qishda zaryadni butunlay to'xtatadi va element bekorga ishlaydi. Ikki yo'l bor: past harorat himoyali va isitgichli akkumulyator olish yoki shkafni izolyatsiyalab, element issiqligini ichkarida ushlab qolish. Amalda ikkalasi ham qilinadi.</p>" +
     "<p class='ogoh'>Isitgich akkumulyatorning o'zidan oziqlanmaydi: bu aylanma sarf hosil qiladi. U elementning issiqligidan yoki quyosh panelidan oziqlanadi.</p>",
@@ -75,9 +75,9 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr class='jami'><td>Jami</td><td class='n'>38–55</td></tr></table>" +
     "<h4>Uchta qaror</h4>" +
     "<ul><li>PTZ kechasi bitta nuqtada turadi; aylanish faqat hodisada. Bu 10 vattgacha tejaydi.</li>" +
-    "<li>NVR qattiq disk emas, SSD bilan yig'iladi: kam quvvat va sovuqqa chidamli.</li>" +
+    "<li>NVR sanoat SSD'si bilan yig'iladi: kam quvvat, sovuqqa chidamli.</li>" +
     "<li>IR yoritgich faqat hovli chirog'i yetmaydigan kamerada yoqiladi, qolganlari yorug' tomonga qaraydi.</li></ul>" +
-    "<p class='ogoh'>Maqsad — o'rtacha 30 vatt. Shunda M28 kartrij 24 kun emas, 43 kun yetadi va yillik yoqilg'i qariyb ikki barobar kamayadi. Montajdan keyingi birinchi haftada haqiqiy iste'mol Modbus orqali o'lchanadi va jadval shunga qarab tuzatiladi.</p>",
+    "<p class='ogoh'>Maqsad — o'rtacha 30 vatt. Shunda M28 kartrij 24 kun o'rniga 43 kun yetadi va yillik yoqilg'i qariyb ikki barobar kamayadi. Montajdan keyingi birinchi haftada haqiqiy iste'mol Modbus orqali o'lchanadi va jadval shunga qarab tuzatiladi.</p>",
   manba: [],
   ru: {yorliq: "Для монтажника", sarlavha: "Снижение нагрузки с 55 до 30 ватт",
     tana: "<p>Метанол — это деньги за каждый ватт, поэтому до выбора комплекта нагрузка считается, а затем целенаправленно снижается.</p>" +
@@ -90,7 +90,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr class='jami'><td>Итого</td><td class='n'>38–55</td></tr></table>" +
       "<h4>Три решения</h4>" +
       "<ul><li>Ночью PTZ стоит в одной точке; поворот — только по событию. Это экономит до 10 Вт.</li>" +
-      "<li>NVR собирается с SSD, а не с жёстким диском: меньше потребление и лучше стойкость к холоду.</li>" +
+      "<li>NVR собирается на промышленном SSD: меньше потребление, лучше стойкость к холоду.</li>" +
       "<li>ИК-прожектор включается только на камере, которой не хватает дворового освещения; остальные смотрят в освещённую сторону.</li></ul>" +
       "<p class='ogoh'>Цель — в среднем 30 Вт. Тогда картриджа M28 хватает не на 24, а на 43 суток, и годовой расход топлива падает почти вдвое. В первую неделю после монтажа фактическое потребление замеряется по Modbus, и график корректируется по нему.</p>"}
 },
@@ -103,7 +103,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td class='b'>Quyosh bilan gibrid</td><td class='n'>11–14 mln so'm</td><td class='n'>≈55 mln so'm</td></tr></table>" +
     "<p>Faqat element bilan ishlaganda yillik yoqilg'i 42 ta M28 ga, ya'ni 1 314 kVt·soatga teng bo'ladi. Gibrid sxemada element asosan noyabr–fevralda ishlaydi va kartrijlar soni 14 taga tushadi.</p>" +
     "<h4>Qaror uchun raqam</h4>" +
-    "<p>Besh yillik yoqilg'i xarajati jihoz narxiga teng yoki undan ko'p bo'lishi mumkin. Shuning uchun taqqoslash xarid narxi bo'yicha emas, besh yillik to'liq egalik qiymati bo'yicha qilinadi. Shu hisobda quyosh paneli 3–5 mln so'mga birinchi yildayoq o'zini qoplaydi.</p>" +
+    "<p>Besh yillik yoqilg'i xarajati jihoz narxiga teng yoki undan ko'p bo'lishi mumkin. Shuning uchun taqqoslash besh yillik to'liq egalik qiymati bo'yicha qilinadi. Shu hisobda quyosh paneli 3–5 mln so'mga birinchi yildayoq o'zini qoplaydi.</p>" +
     "<p class='ogoh'>Muzlashdan himoya rejimining sarfi jadvalga kirmagan. Qish oylarida u yillik hisobga yana 5–10 foiz qo'shadi va bu raqam yetkazuvchidan hujjat bilan so'raladi.</p>",
   manba: [["EFOY kartrijlari", "https://www.efoy-pro.com/en/efoy/fuel-cartridges/"]],
   ru: {yorliq: "Финансы и право", sarlavha: "Один картридж, год, пять лет",
@@ -144,7 +144,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   tana: "<p>Element ichida suv aylanadi, shuning uchun u muzlashdan himoyalanadi. Harorat chegaradan pastga tushganda qurilma o'zini isitish uchun yoqilg'i sarflay boshlaydi — bu akkumulyatorni zaryadlamaydi va foydali ish bermaydi, faqat qurilmani saqlaydi.</p>" +
     "<h4>Nima qilinadi</h4>" +
     "<ul><li>Shkaf izolyatsiyalanadi. Elementning o'z issiqligi izolyatsiyali shkafda ichki haroratni tashqaridan 10–15 daraja yuqori ushlab turadi va himoya rejimi deyarli yoqilmaydi.</li>" +
-    "<li>Shkaf imkon qadar bino ichiga qo'yiladi; tashqarida bo'lsa, shimol tomonga emas, shamoldan yopiq joyga.</li>" +
+    "<li>Shkaf imkon qadar bino ichiga qo'yiladi; tashqarida bo'lsa, shamoldan yopiq joyga.</li>" +
     "<li>Egzoz quvuri pastga qiyalik bilan chiqariladi: kondensat muzlab, chiqishni yopib qo'yishi mumkin.</li></ul>" +
     "<h4>Hisobga olish</h4>" +
     "<p>Muzlashdan himoya sarfi katalogdagi asosiy jadvalda ko'rsatilmaydi. Qish oylarida u yillik yoqilg'iga 5–10 foiz qo'shadi. Yetkazuvchidan bu raqam alohida so'raladi va smetaga kiritiladi.</p>" +
@@ -172,20 +172,20 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<h4>Havo kirishi</h4>" +
     "<p>Element toza havo oladi. Kirish filtr bilan qilinadi, aks holda chang ichkariga kiradi. O'zbekiston sharoitida filtr yiliga bir-ikki marta, changli hududda ko'proq almashtiriladi: to'lgan filtr elementni quvvatdan tushiradi va xato kodi beradi.</p>" +
     "<h4>Ichki tartib</h4>" +
-    "<p>Kartrij element yonida emas, qulflangan alohida bo'limda. Bo'limda ochilish datchigi. Akkumulyator pastda, kabel kiritishlar salnik bilan, hamma liniyada saqlagich.</p>" +
+    "<p>Bo'lim ventilyatsiyasi yiliga bir marta tozalanadi: metanol bug'i havodan og'ir, u pastda yig'iladi va tiqilib qolgan shamollatish teshigi kontsentratsiyani chegaradan chiqaradi. Akkumulyator pastda, kabel kiritishlar salnik bilan, hamma liniyada saqlagich.</p>" +
     "<p class='ogoh'>Shkaf yonida yonuvchi material saqlanmaydi. Ogohlantirish belgisi va xavfsizlik ma'lumotlari varaqasi shkaf eshigining ichki tomonida turadi.</p>",
   manba: [],
   ru: {yorliq: "Для монтажника", sarlavha: "Шкаф, выхлоп и приток воздуха",
     tana: "<p>При работе элемент выделяет водяной пар и углекислый газ, поэтому шкаф не делается герметичным: нужны приток и выход.</p>" +
       "<h4>Выхлопная труба</h4>" +
       "<ul><li>Выводится наружу с уклоном вниз. В горизонтальной трубе скапливается конденсат, который зимой замерзает.</li>" +
-      "<li>Срез делается косым и направляется вбок, а не навстречу ветру.</li>" +
+      "<li>Срез делается косым и направляется вбок от преобладающего ветра.</li>" +
       "<li>Не выводится туда, где скапливается снег, и не в нижнюю часть кровли.</li>" +
       "<li>Выходное отверстие располагается на высоте, где не ходят люди.</li></ul>" +
       "<h4>Приток воздуха</h4>" +
       "<p>Элементу нужен чистый воздух. Приток делается через фильтр, иначе внутрь попадает пыль. В условиях Узбекистана фильтр меняется раз-два в год, в запылённых районах чаще: забитый фильтр снижает мощность элемента и вызывает код ошибки.</p>" +
       "<h4>Внутренний порядок</h4>" +
-      "<p>Картридж — не рядом с элементом, а в отдельном запираемом отсеке. В отсеке датчик вскрытия. Аккумулятор внизу, вводы кабеля через сальники, на каждой линии предохранитель.</p>" +
+      "<p>Вентиляция отсека прочищается раз в год: пары метанола тяжелее воздуха, скапливаются внизу, и забитое вентиляционное отверстие выводит концентрацию за предел. Аккумулятор внизу, вводы кабеля через сальники, на каждой линии предохранитель.</p>" +
       "<p class='ogoh'>Рядом со шкафом не хранятся горючие материалы. Предупреждающий знак и паспорт безопасности размещаются с внутренней стороны дверцы шкафа.</p>"}
 },
 
@@ -197,7 +197,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<li>Adapter har 60 soniyada o'qiydi: akkumulyator kuchlanishi, ish holati, kartrijdagi yoqilg'i, xato kodi va ishlagan soatlar.</li>" +
     "<li>Natija MKB formatida yoziladi: <code>mkb/v1/{obyekt}/{device_id}/quvvat</code>.</li></ol>" +
     "<h4>Qoidalar</h4>" +
-    "<ul><li>Yoqilg'i 30 foizdan kam — kartrij buyurtmasi. Chegara 20 emas, 30 foiz: import va ADR tashuvi uch haftagacha cho'ziladi.</li>" +
+    "<ul><li>Kartrijda 31 kunlik sarfdan kam qoldi — kartrij buyurtmasi. Chegara qolgan kunlarda o'lchanadi: 21 kunlik yetkazish va 10 kunlik zaxira. 43 kunlik rejimda bu 72 foiz, gibridda 47 foiz.</li>" +
     "<li>Xato kodi — servis vazifasi va distribyutorga xabar.</li>" +
     "<li>Akkumulyator kuchlanishi pasaymoqda, element esa yonmayapti — shoshilinch.</li>" +
     "<li>Ishlagan soatlar servis muddatiga yaqinlashdi — rejali servis vazifasi.</li></ul>" +
@@ -210,7 +210,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<li>Адаптер опрашивает каждые 60 секунд: напряжение аккумулятора, состояние работы, остаток топлива в картридже, код ошибки и моточасы.</li>" +
       "<li>Результат публикуется в формате МКБ: <code>mkb/v1/{obyekt}/{device_id}/quvvat</code>.</li></ol>" +
       "<h4>Правила</h4>" +
-      "<ul><li>Топливо ниже 30% — заказ картриджа. Порог именно 30, а не 20 процентов: импорт и перевозка по ADR занимают до трёх недель.</li>" +
+      "<ul><li>В картридже осталось меньше чем на 31 день — заказ картриджа. Порог меряется не в процентах, а в оставших днях: 21 день поставки плюс 10 дней запаса. В режиме на 43 дня это 72 процента, в гибриде — 47.</li>" +
       "<li>Код ошибки — сервисная задача и уведомление дистрибьютору.</li>" +
       "<li>Напряжение аккумулятора падает, а элемент не запускается — срочно.</li>" +
       "<li>Моточасы подошли к сервисному интервалу — плановая сервисная задача.</li></ul>" +
@@ -224,7 +224,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<li><b>ONVIF PTZ</b> — burish va presetlar. Operator 4–6 ta preset bilan ishlaydi, har biri muhim nuqtaga qaratilgan.</li>" +
     "<li><b>NVR SSD bilan</b> — aloqa uzilsa ham yozuv joyida qoladi va tiklangach platforma uni oladi.</li></ul>" +
     "<h4>Analitika kamerada hisoblanadi</h4>" +
-    "<p>Chiziq kesish va hudud hodisalari serverda emas, kameraning o'zida aniqlanadi. Bu ikki sababdan muhim: trafik tejaladi va aloqa uzilganda ham hodisa yozib qo'yiladi. Serverda faqat natija qabul qilinadi va yagona hodisa sxemasiga keltiriladi.</p>" +
+    "<p>Chiziq kesish va hudud hodisalari kameraning o'zida aniqlanadi. Bu ikki sababdan muhim: trafik tejaladi va aloqa uzilganda ham hodisa yozib qo'yiladi. Serverda faqat natija qabul qilinadi va yagona hodisa sxemasiga keltiriladi.</p>" +
     "<h4>Trafik</h4>" +
     "<p>Doimiy oqim bu yerda ham yoqilmaydi. Asos — hodisa, kadr va talab bo'yicha klip. Jonli oqim operator ochganda ishlaydi va u qo'shimcha oqimdan olinadi: 1–2 Mbit/s.</p>",
   manba: [],
@@ -263,25 +263,25 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   yorliq: "Jamoa rahbarlari uchun", sarlavha: "Adapter qoidalari va ularning muddatlari",
   tana: "<p>Telemetriya o'z-o'zidan foyda bermaydi: uni harakatga aylantiradigan qoidalar kerak. Bu yechimda ular yetkazish muddatiga moslab yoziladi.</p>" +
     "<table><tr><th>Shart</th><th>Nima bo'ladi</th><th>Muddat</th></tr>" +
-    "<tr><td>Yoqilg'i &lt; 30%</td><td>Kartrij buyurtmasi</td><td class='n'>3 ish kuni</td></tr>" +
+    "<tr><td>Yoqilg'i &lt; 31 kunlik sarf</td><td>Kartrij buyurtmasi</td><td class='n'>3 ish kuni</td></tr>" +
     "<tr><td>Yoqilg'i &lt; 10%</td><td>Shoshilinch, bo'lim boshlig'iga</td><td class='n'>24 soat</td></tr>" +
     "<tr><td>Xato kodi</td><td>Servis vazifasi, distribyutorga</td><td class='n'>48 soat</td></tr>" +
     "<tr><td>Kuchlanish tushmoqda, element yonmayapti</td><td>Shoshilinch chiqish</td><td class='n'>24 soat</td></tr>" +
     "<tr><td>Ishlagan soat servis chegarasida</td><td>Rejali servis</td><td class='n'>30 kun</td></tr></table>" +
-    "<h4>Nega chegara 30 foiz</h4>" +
-    "<p>Kartrij import qilinadi va ADR tashuvchisi bilan keltiriladi. Buyurtmadan obyektga yetgunicha uch haftagacha vaqt ketadi. 30 foiz 30 vattlik yukda taxminan 13 kunga teng — bu yetkazish muddatini qoplaydi va zaxira qoldiradi. 20 foizda buyurtma berilsa, obyekt yetkazishni kutib jim qolishi mumkin.</p>" +
+    "<h4>Chegara qanday hisoblanadi</h4>" +
+    "<p>Kartrij import qilinadi va ADR tashuvchisi bilan keltiriladi. Buyurtmadan obyektga yetgunicha uch haftagacha vaqt ketadi, shuning uchun chegara yetkazish muddatidan orqaga hisoblanadi: 21 kun yetkazish va 10 kun zaxira — ya'ni kartrijda 31 kunlik sarf qolganda. 30 vattlik yukda bu 43 kunlik kartrijning 72 foizi, gibrid sxemadagi 66 kunlikning 47 foizi. Foiz bo'yicha 30 da buyurtma berilsa, qo'lda atigi 13 kun qoladi va obyekt yetkazishni kutib jim qoladi.</p>" +
     "<p class='ogoh'>Har qoidaning muddati shartnomadagi yetkazish muddati bilan solishtiriladi. Yetkazuvchi almashsa, qoidalar ham qayta hisoblanadi.</p>",
   manba: [],
   ru: {yorliq: "Для тимлида", sarlavha: "Правила адаптера и их сроки",
     tana: "<p>Телеметрия сама по себе пользы не приносит: нужны правила, превращающие её в действие. В этом решении они пишутся под срок поставки.</p>" +
       "<table><tr><th>Условие</th><th>Что происходит</th><th>Срок</th></tr>" +
-      "<tr><td>Топливо &lt; 30%</td><td>Заказ картриджа</td><td class='n'>3 рабочих дня</td></tr>" +
+      "<tr><td>Топлива &lt; чем на 31 день</td><td>Заказ картриджа</td><td class='n'>3 рабочих дня</td></tr>" +
       "<tr><td>Топливо &lt; 10%</td><td>Срочно, руководителю отдела</td><td class='n'>24 часа</td></tr>" +
       "<tr><td>Код ошибки</td><td>Сервисная задача, дистрибьютору</td><td class='n'>48 часов</td></tr>" +
       "<tr><td>Напряжение падает, элемент не запускается</td><td>Срочный выезд</td><td class='n'>24 часа</td></tr>" +
       "<tr><td>Моточасы у сервисного порога</td><td>Плановый сервис</td><td class='n'>30 суток</td></tr></table>" +
-      "<h4>Почему порог 30 процентов</h4>" +
-      "<p>Картридж ввозится и доставляется перевозчиком с допуском ADR. От заказа до объекта проходит до трёх недель. 30% при нагрузке 30 Вт — это примерно 13 суток, чего хватает на срок поставки и остаётся запас. Если заказывать на 20%, объект может замолчать в ожидании доставки.</p>" +
+      "<h4>Как считается порог</h4>" +
+      "<p>Картридж ввозится и доставляется перевозчиком с допуском ADR. От заказа до объекта проходит до трёх недель, поэтому порог считается не от процента, а назад от срока поставки: 21 день доставки плюс 10 дней запаса, то есть когда топлива осталось на 31 день. При нагрузке 30 Вт это 72% картриджа на 43 дня и 47% в гибридной схеме на 66 дней. Если заказывать по проценту на 30, в запасе останется всего 13 дней и объект замолчит в ожидании доставки.</p>" +
       "<p class='ogoh'>Срок каждого правила сверяется со сроком поставки по договору. При смене поставщика правила пересчитываются.</p>"}
 },
 
@@ -301,7 +301,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   ru: {yorliq: "Для правления", sarlavha: "Колонка топлива в карточке объекта",
     tana: "<p>В этом решении у оператора один основной вопрос: на сколько суток хватит картриджа и сделан ли заказ. Всё остальное — обычное видеонаблюдение.</p>" +
       "<h4>Что в карточке</h4>" +
-      "<ul><li>Топливо в картридже в процентах и в оставшихся сутках. Число суток считается по фактическому расходу за последние семь дней, а не по каталожной цифре.</li>" +
+      "<ul><li>Топливо в картридже в процентах и в оставшихся сутках. Число суток считается по фактическому расходу за последние семь дней: каталожная цифра на морозе завышена.</li>" +
       "<li>Состояние элемента: работает, ожидает, ошибка. При ошибке — с её кодом.</li>" +
       "<li>Моточасы и остаток до следующего сервиса.</li>" +
       "<li>Напряжение и заряд аккумулятора.</li>" +
@@ -352,7 +352,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<ul><li>Bank omborida zaxira saqlanmaydi yoki alohida shamollatiladigan joyda, cheklangan miqdorda saqlanadi.</li>" +
     "<li>Yong'in xavfsizligi talablari VMQ-649 qoidalari bo'yicha aniqlanadi.</li>" +
     "<li>Kartrij bo'limi qulflanadi, ogohlantirish belgisi qo'yiladi, ochilish datchigi platformaga ulanadi.</li></ul>" +
-    "<p class='ogoh'>Metanol ichilsa o'limga olib keladi. Bank yuristi va yong'in xavfsizligi mas'uli shartnomani imzolashdan oldin ko'rib chiqadi — bu texnik emas, javobgarlik masalasi.</p>",
+    "<p class='ogoh'>Metanol ichilsa o'limga olib keladi. Bank yuristi va yong'in xavfsizligi mas'uli shartnomani imzolashdan oldin ko'rib chiqadi: javobgarlik shu yerda taqsimlanadi.</p>",
   manba: [["EFOY kartrijlari", "https://www.efoy-pro.com/en/efoy/fuel-cartridges/"]],
   ru: {yorliq: "Финансы и право", sarlavha: "Метанол: пункты, вносимые в договор",
     tana: "<p>Метанол — опасный груз UN 1230: легковоспламеняющаяся жидкость класса 3 с дополнительной опасностью «токсично». Картриджи EFOY имеют допуск к перевозке морским, автомобильным и воздушным транспортом, но это не освобождает банк от правил хранения.</p>" +
@@ -405,7 +405,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<li><b>Partiya hajmi.</b> Bir dona xarid bilan yuzta xarid orasidagi farq 40 foizgacha yetadi.</li>" +
     "<li><b>Kartrijlar soni.</b> To'rtta M28 va Fuel Manager qatnovlarni ikki barobar kamaytiradi, lekin boshlang'ich smetaga 16 mln so'm qo'shadi.</li>" +
     "<li><b>Yoqilg'i.</b> Jadvalga kirmaydi va bu eng katta yillik xarajat.</li></ul>" +
-    "<p class='ogoh'>Taqqoslash xarid narxi bo'yicha emas, besh yillik to'liq egalik qiymati bo'yicha qilinadi. Faqat element bilan ishlaganda yoqilg'i besh yilda jihoz narxidan oshib ketadi.</p>",
+    "<p class='ogoh'>Taqqoslash besh yillik to'liq egalik qiymati bo'yicha qilinadi. Faqat element bilan ishlaganda yoqilg'i besh yilda jihoz narxidan oshib ketadi.</p>",
   manba: [["Seashop: EFOY Pro 2800", "https://www.seashop.com/en/efoy-pro-2800-fuel-cell"],
           ["SFC Energy: 180 dona buyurtma", "https://www.sfc.com/news/sfc-energy-receives-another-order-from-linc-polska-of-180-efoy-pro-2800-fuel-cells-worth-more-than-eur-1-million/"]],
   ru: {yorliq: "Финансы и право", sarlavha: "Как складывается стоимость",
@@ -459,7 +459,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<p>Element chiqargan suv bug'i quvurda kondensatga aylanadi. Quvur gorizontal yotqizilgan yoki uchi yuqoriga qaragan bo'lsa, kondensat pastda yig'iladi va sovuqda muzlaydi. Chiqish yopilganda element o'zini himoya qilib o'chadi.</p>" +
     "<h4>Oldini olish</h4>" +
     "<ul><li>Quvur butun uzunligi bo'yicha tashqariga pastga qiyalik bilan yotqiziladi. Gorizontal uchastka qoldirilmaydi.</li>" +
-    "<li>Uchi qiya kesiladi va yon tomonga, shamolga qarshi emas, qaratiladi.</li>" +
+    "<li>Quvur uchiga to'r yoki qalpoqcha qo'yilmaydi: ular birinchi bo'lib qirovlanadi va chiqishni butunlay yopadi.</li>" +
     "<li>Chiqish qor to'planadigan joyga, tomning quyi qismiga chiqarilmaydi.</li>" +
     "<li>Har servisda quvur ichi ko'zdan kechiriladi va tozalanadi.</li></ul>" +
     "<p class='ogoh'>Bu nosozlik faqat qishda va faqat noto'g'ri montajda yuz beradi. Uni montaj kunida bir marta to'g'ri qilib butunlay yopib qo'yish mumkin — lekin keyin tuzatish uchun yana bir marta chekkadagi obyektga borish kerak bo'ladi.</p>",
@@ -470,7 +470,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<p>Водяной пар, выделяемый элементом, превращается в трубе в конденсат. Если труба уложена горизонтально или её срез направлен вверх, конденсат скапливается внизу и на морозе замерзает. При перекрытии выхода элемент выключается, защищая себя.</p>" +
       "<h4>Профилактика</h4>" +
       "<ul><li>Труба укладывается наружу с уклоном вниз по всей длине. Горизонтальных участков не оставляют.</li>" +
-      "<li>Срез делается косым и направляется вбок, а не навстречу ветру.</li>" +
+      "<li>На конец трубы не ставят сетку или колпак: они обмерзают первыми и наглухо перекрывают выход.</li>" +
       "<li>Выход не выводится туда, где скапливается снег, и не в нижнюю часть кровли.</li>" +
       "<li>На каждом сервисе труба осматривается изнутри и прочищается.</li></ul>" +
       "<p class='ogoh'>Этот отказ случается только зимой и только при неправильном монтаже. Его можно закрыть навсегда, один раз сделав правильно в день монтажа, — иначе для исправления придётся ещё раз ехать на удалённый объект.</p>"}
@@ -480,9 +480,9 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   yorliq: "Nosozlik", sarlavha: "Kartrij vaqtida yetib kelmadi",
   tana: "<p>Belgisi: yoqilg'i tugadi, element to'xtadi, akkumulyator ikki kunda bo'shadi va obyekt nazoratdan chiqdi. Texnik nosozlik yo'q.</p>" +
     "<h4>Sababi</h4>" +
-    "<p>Kartrij import qilinadi va ADR ruxsati bor tashuvchi bilan keltiriladi. Buyurtmadan obyektga yetgunicha uch haftagacha vaqt ketadi. Agar buyurtma 20 foizda berilgan bo'lsa, 30 vattlik yukda bu atigi to'qqiz kun — yetkazish muddatidan kam.</p>" +
+    "<p>Kartrij import qilinadi va ADR ruxsati bor tashuvchi bilan keltiriladi. Buyurtmadan obyektga yetgunicha uch haftagacha vaqt ketadi. Foizga qarab buyurtma berish shu yerda ishlamaydi: 30 vattlik yukda 30 foiz atigi 13 kun, 20 foiz esa to'qqiz kun beradi — ikkalasi ham yetkazish muddatidan kam.</p>" +
     "<h4>Oldini olish</h4>" +
-    "<ul><li>Buyurtma vazifasi 30 foizda ochiladi. Bu 30 vattlik yukda taxminan 13 kun va u yetkazishni qoplaydi.</li>" +
+    "<ul><li>Buyurtma vazifasi kartrijda 31 kunlik sarf qolganda ochiladi: 21 kun yetkazish va 10 kun zaxira. 43 kunlik rejimda bu 72 foiz, gibridda 47 foiz.</li>" +
     "<li>Shartnomaga yetkazish muddati va uning buzilishi uchun javobgarlik raqam bilan yoziladi.</li>" +
     "<li>Fuel Manager bilan to'rtta kartrij ulanadi: zaxira obyektning o'zida turadi va buyurtma kechikishi xatarli bo'lmaydi.</li>" +
     "<li>Yetkazuvchi almashsa, qoidalar muddati qayta hisoblanadi.</li></ul>" +
@@ -506,10 +506,9 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<h4>Nega bu alohida xatar</h4>" +
     "<p>Metanol suyuq yoqilg'i sifatida qiziqish uyg'otadi. U rangsiz va spirtga o'xshaydi, lekin ichilsa o'limga olib keladi. Bo'sh obyektda qulflanmagan kartrij bank uchun jihoz yo'qotishdan ham og'irroq masala — bu insoniy va huquqiy javobgarlik.</p>" +
     "<h4>Oldini olish</h4>" +
-    "<ul><li>Kartrij element yonida emas, qulflangan alohida bo'limda turadi.</li>" +
+    "<ul><li>Zaxira kartrij obyektda saqlanmaydi: u yetkazuvchining ADR talablariga javob beradigan omborida turadi va buyurtma bo'yicha keltiriladi.</li>" +
     "<li>Bo'limda ochilish datchigi, unga kameralardan biri qaratilgan. Hodisa darhol operatorga chiqadi.</li>" +
     "<li>Bo'lim eshigida ogohlantirish belgisi va xavfsizlik ma'lumotlari varaqasi.</li>" +
-    "<li>Zaxira kartrij obyektda emas, yetkazuvchida saqlanadi.</li>" +
     "<li>Obyekt hududiga ruxsatsiz kirish holatlari alohida hisobga olinadi va takrorlansa, obyekt uchun boshqa yechim ko'rib chiqiladi.</li></ul>" +
     "<p class='ogoh'>Agar obyektga muntazam begona odam kiradigan bo'lsa, bu yechim umuman tanlanmaydi. Metanol nazoratsiz joyda turmaydi.</p>",
   manba: [],
@@ -518,10 +517,9 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<h4>Почему это отдельный риск</h4>" +
       "<p>Метанол вызывает интерес как жидкое топливо. Он бесцветен и похож на спирт, но приём внутрь смертелен. Незапертый картридж на пустом объекте — вопрос более тяжёлый, чем утрата оборудования: это человеческая и правовая ответственность.</p>" +
       "<h4>Профилактика</h4>" +
-      "<ul><li>Картридж хранится не рядом с элементом, а в отдельном запираемом отсеке.</li>" +
+      "<ul><li>Запасной картридж не хранится на объекте: он стоит на складе поставщика, отвечающем требованиям ADR, и привозится по заявке.</li>" +
       "<li>В отсеке датчик вскрытия, на него направлена одна из камер. Событие немедленно выходит оператору.</li>" +
       "<li>На дверце отсека — предупреждающий знак и паспорт безопасности.</li>" +
-      "<li>Запасной картридж хранится не на объекте, а у поставщика.</li>" +
       "<li>Случаи несанкционированного доступа на территорию учитываются отдельно, и при повторении для объекта рассматривается другое решение.</li></ul>" +
       "<p class='ogoh'>Если на объект регулярно заходят посторонние, это решение не выбирается вовсе. Метанол не остаётся в бесконтрольном месте.</p>"}
 }
@@ -576,8 +574,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
  "Это последний вариант в перечне. До него закрываются два вопроса: можно ли вернуть объекту электроснабжение (технические условия — 39 600 сумов и три рабочих дня) и найдётся ли место под солнечную панель.",
 
 "Qishki sutka: chekkadagi sex, −15 °C": "Зимние сутки: удалённый цех, −15 °C",
-"Element sutkada bir necha marta yonadi va o'chadi. Uning ishlash mantig'i quyosh panelidan butunlay boshqacha: bu yerda energiya jadval bo'yicha emas, akkumulyator kuchlanishi bo'yicha ishlab chiqariladi.":
- "За сутки элемент включается и выключается несколько раз. Логика его работы совершенно иная, чем у солнечной панели: энергия вырабатывается не по расписанию, а по напряжению аккумулятора.",
+"Element sutkada bir necha marta yonadi va o'chadi. Uning ishlash mantig'i quyosh panelidan butunlay boshqacha: yoqilishni akkumulyator kuchlanishi buyuradi, shuning uchun bulutli kun ham, tun ham hisobga ta'sir qilmaydi.": "Элемент за сутки включается и выключается несколько раз. Логика работы у него совсем не такая, как у солнечной панели: команду на запуск даёт напряжение аккумулятора, поэтому ни пасмурный день, ни ночь на расчёт не влияют.",
 "tun": "ночь", "sovuq": "холод", "hodisa": "событие", "telemetriya": "телеметрия", "kunduz": "день", "yakun": "итог",
 "Element o'zi yonadi": "Элемент запускается сам",
 "Akkumulyator kuchlanishi belgilangan quyi chegaraga tushadi va element ishga tushadi. Sovuqda ishga tushish bir necha daqiqa oladi: avval ichki kontur isiydi. Shundan keyin u nominal quvvatda ishlay boshlaydi va akkumulyatorni to'ldiradi.":
@@ -591,8 +588,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
  "Аналитика камеры фиксирует пересечение линии, PTZ разворачивается на пресет, и возникает пик в 25 Вт. Номинальной мощности элемента на это не хватает, да и не должно хватать: пик принимает аккумулятор. А элемент восполнит его позже, в своём порядке.",
 "Cho'qqi 25 Vt · davomiyligi 40 soniya": "Пик 25 Вт · длительность 40 секунд",
 "Adapter kartrijdagi yoqilg'ini o'qiydi": "Адаптер считывает остаток топлива в картридже",
-"Har 60 soniyada RS-232 porti orqali Modbus so'rovi ketadi: akkumulyator kuchlanishi, ish holati, kartrijdagi yoqilg'i, xato kodi va ishlagan soatlar. Yoqilg'i 30 foizga tushganda buyurtma vazifasi ochiladi — 20 emas, 30 foizda: yetkazish muddati import va ADR tashuvi bilan uch haftagacha cho'ziladi.":
- "Каждые 60 секунд через порт RS-232 уходит запрос Modbus: напряжение аккумулятора, состояние работы, остаток топлива, код ошибки и моточасы. При падении топлива до 30% открывается задача на заказ — именно до 30, а не до 20 процентов: срок поставки с учётом импорта и перевозки по ADR доходит до трёх недель.",
+"Har 60 soniyada RS-232 porti orqali Modbus so'rovi ketadi: akkumulyator kuchlanishi, ish holati, kartrijdagi yoqilg'i, xato kodi va ishlagan soatlar. Buyurtma chegarasi yetkazish muddatidan orqaga hisoblanadi: 21 kunlik yetkazish va 10 kunlik zaxira, ya'ni kartrijda 31 kunlik sarf qolganda. 43 kunlik rejimda bu 72 foiz, gibrid sxemada (66 kun) 47 foiz. Foizga qarab 30 da buyurtma berilsa, 43 kunlik kartrijda atigi 13 kun qoladi va obyekt yangi partiya kelgunicha quvvatsiz turadi.": "Каждые 60 секунд через порт RS-232 уходит запрос Modbus: напряжение аккумулятора, режим работы, остаток топлива в картридже, код ошибки и наработка. Порог заказа отсчитывается назад от срока поставки: 21 день доставки плюс 10 дней запаса, то есть когда в картридже остаётся 31 день расхода. В режиме на 43 дня это 72 процента, в гибридной схеме (66 дней) — 47. Если заказывать по проценту, на 30 в картридже на 43 дня остаётся всего 13 дней, и объект стоит без питания до новой партии.",
 "Quyosh paneli elementni to'xtatadi": "Солнечная панель останавливает элемент",
 "Gibrid sxemada panel akkumulyatorni zaryadlaydi va kuchlanish yuqori chegaraga chiqadi. Element o'chadi va yoqilg'i sarflamaydi. Dekabrda panel kunlik ehtiyojning uchdan bir qismini beradi — shu bilan yillik yoqilg'i uch barobarga kamayadi.":
  "В гибридной схеме панель заряжает аккумулятор, и напряжение доходит до верхнего порога. Элемент выключается и топливо не расходует. В декабре панель покрывает треть суточной потребности — за счёт этого годовой расход топлива падает втрое.",
@@ -614,8 +610,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "Nominal sarf: 1 kVt·soatga 0,9 litr metanol. Muzlashdan himoya rejimining sarfi bu jadvalga kirmaydi va qish oylarida u yana 5–10 foiz qo'shadi.":
  "Номинальный расход: 0,9 литра метанола на 1 кВт·ч. Расход в режиме защиты от замерзания в эту таблицу не входит и в зимние месяцы добавляет ещё 5–10%.",
 "Yukni kamaytirish": "Снижение нагрузки",
-"PTZ kechasi bitta nuqtada turadi va faqat hodisada aylanadi. NVR disk emas, SSD bilan yig'iladi. IR yoritgich faqat hovli chirog'i yetmaydigan kamerada yoqiladi. Shu uchta qaror 55 vattni 30 vattga tushiradi va yillik yoqilg'ini qariyb ikki barobar kamaytiradi.":
- "Ночью PTZ стоит в одной точке и разворачивается только по событию. NVR собирается с SSD, а не с жёстким диском. ИК-прожектор включается лишь на той камере, которой не хватает дворового света. Эти три решения снижают 55 Вт до 30 Вт и почти вдвое сокращают годовой расход топлива.",
+"PTZ kechasi bitta nuqtada turadi va faqat hodisada aylanadi. NVR SSD bilan yig'iladi: aylanadigan disk doimiy 4–7 vatt oladi. IR yoritgich faqat hovli chirog'i yetmaydigan kamerada yoqiladi. Shu uchta qaror 55 vattni 30 vattga tushiradi va yillik yoqilg'ini qariyb ikki barobar kamaytiradi.": "Ночью PTZ стоит на одной точке и поворачивается только по событию. NVR собирается на SSD: вращающийся диск постоянно берёт 4–7 Вт. ИК-подсветка включается только там, где не хватает дворового освещения. Эти три решения снижают 55 Вт до 30 и почти вдвое сокращают годовой расход топлива.",
 "Gibrid sxema": "Гибридная схема",
 "Panel yozda elementni deyarli butunlay to'xtatadi, dekabrda esa kunlik ehtiyojning uchdan bir qismini beradi. Element asosan noyabr–fevralda ishlaydi. Panelning o'zi 3–5 mln so'm turadi va birinchi yildayoq o'zini qoplaydi.":
  "Летом панель практически полностью останавливает элемент, а в декабре покрывает треть суточной потребности. Элемент работает в основном с ноября по февраль. Сама панель стоит 3–5 млн сумов и окупается уже в первый год.",
@@ -639,8 +634,8 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
  "Порт Modbus не выходит в интернет и открывается только внутри туннеля",
 "Ikki SIM, tashqi antenna": "Две SIM, внешняя антенна",
 "Adapter va qoidalar": "Адаптер и правила",
-"Yoqilg'i 30 foizda buyurtma, xato kodida servis, kuchlanish tushsa shoshilinch":
- "На 30% топлива — заказ, при коде ошибки — сервис, при падении напряжения — срочно",
+"Kartrijda 31 kunlik sarf qolganda buyurtma, xato kodida servis, kuchlanish tushsa shoshilinch":
+ "Осталось топлива на 31 день — заказ, при коде ошибки — сервис, при падении напряжения — срочно",
 "Bank serverida": "На сервере банка",
 "Yadro va ekranlar": "Ядро и экраны",
 "Kartrij qoldig'i kunlarda ko'rsatiladi, buyurtma muddati yetkazish vaqtidan hisoblanadi":
@@ -685,12 +680,10 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "3–4 soat": "3–4 ч", "2 soat": "2 ч",
 "Telemetriya va adapter sinovi": "Проверка телеметрии и адаптера",
 "Jamoa rahbari masofadan": "Тимлид удалённо",
-"Egzoz quvuri tashqariga pastga qiyalik bilan chiqariladi va uchi shamolga qarshi emas, yon tomonga qaratiladi. Quvurda suv bug'i kondensatga aylanadi va qiyalik bo'lmasa u ichkariga qaytadi.":
- "Выхлопная труба выводится наружу с уклоном вниз, а её срез направляется вбок, а не навстречу ветру. В трубе водяной пар превращается в конденсат, и без уклона он стекает обратно внутрь.",
+"Egzoz quvuri tashqariga pastga qiyalik bilan chiqariladi, uchi esa hukmron shamol yo'nalishiga ko'ndalang qaratiladi. Quvurda suv bug'i kondensatga aylanadi va qiyalik bo'lmasa u ichkariga qaytadi.": "Выхлопная труба выводится наружу с уклоном вниз, а срез разворачивается поперёк господствующего ветра. В трубе водяной пар превращается в конденсат, и без уклона он стекает обратно внутрь.",
 "Havo kirishi filtr bilan qilinadi. Chang ko'p hududda filtr servis jadvaliga kiritiladi: to'lgan filtr elementni quvvatdan tushiradi.":
  "Приток воздуха делается через фильтр. В запылённой местности фильтр вносится в график обслуживания: забитый фильтр снижает мощность элемента.",
-"Kartrij element yonida emas, alohida bo'limda, qulf ostida turadi. Bo'lim ochilishiga datchik qo'yiladi va u platformaga hodisa bo'lib tushadi.":
- "Картридж стоит не рядом с элементом, а в отдельном отсеке под замком. На вскрытие отсека ставится датчик, и его срабатывание уходит событием на платформу.",
+"Kartrij alohida bo'limda, qulf ostida va tashqariga ventilyatsiya bilan turadi. Bo'lim ochilishiga datchik qo'yiladi va u platformaga hodisa bo'lib tushadi.": "Картридж стоит в отдельном отсеке под замком, с вентиляцией наружу. На вскрытие отсека ставится датчик, и оно приходит в платформу отдельным событием.",
 "Akkumulyator past harorat himoyali BMS bilan olinadi. Isitgich elementning o'z issiqligidan yoki paneldan oziqlanadi, akkumulyatordan emas.":
  "Аккумулятор берётся с BMS низкотемпературной защиты. Подогрев питается от собственного тепла элемента или от панели, а не от аккумулятора.",
 "Ishga tushirish dalolatnomasiga ishlagan soatlar hisoblagichining boshlang'ich qiymati va registrlar xaritasining versiyasi yoziladi. Ikkalasi ham keyingi servis uchun kerak bo'ladi.":
@@ -753,6 +746,9 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "Element servisi": "Сервис элемента",
 "Ishlagan soat bo'yicha, distribyutor tomonidan": "По моточасам, силами дистрибьютора",
 "Shartnomada": "По договору",
+"Zaxira kartrij obyektda": "Запасной картридж на объекте",
+"Doim ulangan turadi, yetkazish muddatini yopadi": "Стоит постоянно подключённым и закрывает срок поставки",
+"≈4 mln so'm": "≈4 млн сумов",
 "Havo filtri": "Воздушный фильтр",
 "Yiliga 1–2 marta, changli hududda ko'proq": "1–2 раза в год, в запылённой местности чаще",
 "0,5–1,0 mln so'm": "0,5–1,0 млн сумов",
@@ -771,8 +767,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "Kartrij vaqtida yetib kelmadi": "Картридж не пришёл вовремя",
 "Yoqilg'i tugadi, element to'xtadi, akkumulyator ikki kunda bo'shadi va obyekt nazoratdan chiqdi. Sababi texnik emas: buyurtma kech berilgan yoki ADR tashuvi kechikkan.":
  "Топливо закончилось, элемент остановился, аккумулятор разрядился за двое суток, объект вышел из-под контроля. Причина не техническая: заказ сделан поздно или задержалась перевозка по ADR.",
-"Buyurtma vazifasi 20 emas, 30 foizda ochiladi — bu uch haftalik yetkazishni qoplaydi. Shartnomaga yetkazish muddati va uning buzilishi uchun javobgarlik yoziladi. Har obyektga bitta zaxira kartrij rejalashtiriladi.":
- "Задача на заказ открывается на 30, а не на 20 процентах — этого хватает на трёхнедельную доставку. В договор вносятся срок поставки и ответственность за его нарушение. На каждый объект планируется один запасной картридж.",
+"Chegara qolgan kunda o'lchanadi: kartrijda 31 kunlik sarf qolganda buyurtma ochiladi — 21 kunlik yetkazish va 10 kunlik zaxira. 43 kunlik rejimda bu 72 foiz, gibrid sxemada 47 foiz. 30 foiz atigi 13 kun beradi va uch haftalik yetkazishni qoplamaydi. Har obyektda bitta to'la zaxira kartrij Fuel Manager'ga ulangan turadi, shartnomaga esa yetkazish muddati va uning buzilishi uchun javobgarlik yoziladi.": "Порог измеряется в оставшихся сутках: заказ открывается, когда в картридже остаётся 31 день расхода — 21 день доставки и 10 дней запаса. В режиме на 43 дня это 72 процента, в гибридной схеме — 47. Тридцать процентов дают всего 13 дней и трёхнедельную доставку не перекрывают. На каждом объекте стоит один полный резервный картридж, подключённый к Fuel Manager, а в договоре прописываются срок поставки и ответственность за его нарушение.",
 "Kartrij o'g'irlandi yoki bo'lim ochildi": "Картридж украден или отсек вскрыт",
 "Metanol suyuq yoqilg'i sifatida qiziqish uyg'otadi va uni ichgan odam o'ladi. Bo'sh obyektdagi qulflanmagan kartrij bank uchun huquqiy va insoniy javobgarlik masalasi.":
  "Метанол вызывает интерес как жидкое топливо, а выпивший его человек погибает. Незапертый картридж на пустом объекте — вопрос правовой и человеческой ответственности банка.",
@@ -865,7 +860,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "Mos keladi": "Подходит",
 "Mos emas": "Не подходит",
 "Yetkazib beruvchidan so'raladigan savollar": "Вопросы, которые задают поставщику",
-"Tijorat taklifi olinishidan oldin yoziladi. Javoblar shartnomaga ilova qilinadi.": "Задаются до получения коммерческого предложения. Ответы прикладываются к договору.",
+"Elementning o'ziga savol kam: ro'yxatning yarmi yoqilg'i logistikasi va hujjatlar haqida. Kartrij yo'lda ikki hafta qolib ketsa, obyekt aynan shu sababdan to'xtaydi.": "К самому элементу вопросов мало: половина списка — про логистику топлива и документы. Если картридж застрянет в пути на две недели, объект встанет именно из-за этого.",
 "O'nta yechim orasida": "Среди десяти решений",
 "Uy va kichik ofis": "Дом и малый офис",
 "Tashqi perimetr": "Наружный периметр",

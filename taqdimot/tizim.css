@@ -5,15 +5,15 @@
    ========================================================================== */
 
 /* ---------- Hodisaning yo'li: vaqt ustuni va qadamlar ---------- */
-.t-yol{position:relative;display:flex;flex-direction:column;gap:2px;padding-left:132px}
-.t-yol::before{content:"";position:absolute;left:104px;top:22px;bottom:22px;width:2px;
+.t-yol{position:relative;display:flex;flex-direction:column;gap:2px;padding-left:146px}
+.t-yol::before{content:"";position:absolute;left:116px;top:22px;bottom:22px;width:2px;
   background:linear-gradient(180deg,var(--yashil),rgba(10,74,156,.3) 60%,var(--chiziq))}
 .t-yol > li{position:relative;list-style:none;padding:18px 22px;border-radius:14px;background:var(--oq);
   box-shadow:inset 0 0 0 1px var(--chiziq)}
 .t-yol > li.bor-batafsil{padding-right:54px}
 .t-yol > li::after{content:"";position:absolute;left:-35px;top:26px;width:12px;height:12px;border-radius:50%;
   background:var(--oq);box-shadow:0 0 0 3px var(--yashil),0 0 0 6px var(--fon)}
-.t-vaqt{position:absolute;left:-132px;top:18px;width:96px;text-align:right}
+.t-vaqt{position:absolute;left:-146px;top:18px;width:96px;text-align:right}
 .t-vaqt b{display:block;font-size:17px;font-weight:800;color:var(--siyoh);font-variant-numeric:tabular-nums;
   letter-spacing:-.02em;line-height:1.2}
 .t-vaqt span{display:block;margin-top:3px;font-size:12.5px;font-weight:700;color:var(--yashil-toq);
@@ -34,10 +34,10 @@
   .t-vaqt em{margin-top:0}
 }
 @media print{
-  .t-yol{padding-left:110px}
-  .t-yol::before{left:88px}
+  .t-yol{padding-left:132px}
+  .t-yol::before{left:102px}
   .t-yol > li{break-inside:avoid}
-  .t-vaqt{left:-110px;width:84px}
+  .t-vaqt{left:-132px;width:84px}
 }
 
 /* ---------- Ikki ustunli setka (ekranlar, kartalar) ---------- */
@@ -47,3 +47,110 @@
 /* ---------- Sxemadagi bosiladigan ustun ---------- */
 .c-sxema .nuqta:hover .sx-fon,.c-sxema .nuqta:focus-visible .sx-fon{fill:var(--yashil-och);stroke:var(--yashil)}
 .c-sxema .nuqta.tanlangan .sx-fon{fill:var(--yashil-och);stroke:var(--yashil);stroke-width:2}
+
+/* ==========================================================================
+   XARITA — tizim sahifalaridagi inline SVG sxemalarning uslub lug'ati.
+
+   Matn va shakl xususiyatlari SVG atributlarida emas, shu yerda turadi:
+   shunda shrift, rang va qalinlik butun sahifa bo'ylab bir xil bo'ladi va
+   ruscha matnga o'tganda ham buzilmaydi. Har bir tugun .nuqta sinfida —
+   uni bosish batafsil panelini ochadi, belgini dvigatel chizadi.
+   ========================================================================== */
+.c-sxema.x-keng{padding:22px 18px}
+.x-harita{font-family:var(--sh);overflow:visible}
+.x-harita text{paint-order:stroke;dominant-baseline:auto}
+
+/* --- kontur: obyekt / operator / bank chegarasi --- */
+.x-kontur{fill:none;stroke-width:1.6;stroke-dasharray:7 6;rx:20}
+.x-kontur.obyekt{stroke:#13A33A}
+.x-kontur.operator{stroke:#C77A00}
+.x-kontur.bank{stroke:#0A4A9C}
+.x-kontur-fon{stroke:none}
+.x-kontur-fon.obyekt{fill:rgba(19,163,58,.045)}
+.x-kontur-fon.operator{fill:rgba(199,122,0,.05)}
+.x-kontur-fon.bank{fill:rgba(10,74,156,.045)}
+.x-yorliq-fon{fill:var(--oq);stroke-width:1.6;stroke-dasharray:none}
+.x-yorliq-fon.obyekt{stroke:#13A33A}
+.x-yorliq-fon.operator{stroke:#C77A00}
+.x-yorliq-fon.bank{stroke:#0A4A9C}
+.x-t-kontur{font-size:13px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.x-t-kontur.obyekt{fill:#0B7D2B}
+.x-t-kontur.operator{fill:#9A5E00}
+.x-t-kontur.bank{fill:#0A4A9C}
+.x-t-kontur-izoh{font-size:13px;font-weight:700;fill:var(--matn-3)}
+
+/* --- band: bitta qatlam --- */
+.x-band{fill:var(--oq);stroke:rgba(10,27,69,.16);stroke-width:1.5}
+.x-band.toq{fill:#0A1B45;stroke:#0A1B45}
+.x-doira{fill:var(--yashil-och);stroke:var(--yashil);stroke-width:1.6}
+.x-doira.toq{fill:rgba(255,255,255,.12);stroke:#7FE09A}
+.x-t-raqam{font-size:19px;font-weight:800;fill:var(--yashil-toq);text-anchor:middle}
+.x-t-raqam.toq{fill:#7FE09A}
+.x-t-nom{font-size:21px;font-weight:800;fill:var(--siyoh);letter-spacing:-.02em}
+.x-t-nom.toq{fill:#fff}
+.x-t-tag{font-size:13.5px;font-weight:600;fill:var(--matn-3)}
+.x-t-tag.toq{fill:#98A9CC}
+.x-ajratgich{stroke:rgba(10,27,69,.12);stroke-width:1}
+.x-ajratgich.toq{stroke:rgba(255,255,255,.18)}
+
+/* --- pill: qatlam ichidagi haqiqiy qism --- */
+.x-pill{fill:var(--fon);stroke:rgba(10,27,69,.09);stroke-width:1;rx:9}
+.x-pill.toq{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.14)}
+.x-t-pill{font-size:12.5px;font-weight:700;fill:var(--matn-2)}
+.x-t-pill.toq{fill:#C5D2EA}
+.x-t-ega-yorliq{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  fill:var(--matn-4);text-anchor:end}
+.x-t-ega{font-size:14px;font-weight:800;fill:var(--kok);text-anchor:end}
+.x-t-ega.toq{fill:#7FE09A}
+
+/* --- rels: oqim chiziqlari va ularning metkalari --- */
+.x-rels{fill:none;stroke-width:2.4}
+.x-rels.yuqori{stroke:#13A33A}
+.x-rels.past{stroke:#0A4A9C;stroke-dasharray:8 6}
+.x-rels.video{stroke:#98A1B5;stroke-dasharray:2 5;stroke-linecap:round}
+.x-rels-nuqta{stroke:var(--oq);stroke-width:2}
+.x-rels-nuqta.yuqori{fill:#13A33A}
+.x-rels-nuqta.past{fill:#0A4A9C}
+.x-rels-nuqta.video{fill:#98A1B5}
+.x-t-rels{font-size:12px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+.x-t-rels.yuqori{fill:#0B7D2B}
+.x-t-rels.past{fill:#0A4A9C}
+.x-t-rels.video{fill:#6E7891}
+
+/* --- metka: chiziq ustidagi protokol yorlig'i --- */
+.x-metka-fon{fill:var(--oq);stroke:rgba(10,27,69,.14);stroke-width:1;rx:7}
+.x-t-metka{font-size:12px;font-weight:800;fill:var(--siyoh);text-anchor:middle;
+  font-family:"Cascadia Mono","Consolas",ui-monospace,monospace;letter-spacing:-.01em}
+.x-t-mono{font-size:12.5px;font-weight:700;fill:var(--siyoh);text-anchor:start;
+  font-family:"Cascadia Mono","Consolas",ui-monospace,monospace;letter-spacing:-.01em}
+.x-t-mono.ikkilamchi{fill:var(--matn-3)}
+.x-t-metka-izoh{font-size:11.5px;font-weight:700;fill:var(--matn-3);text-anchor:middle}
+.x-strelka{fill:none;stroke:#98A1B5;stroke-width:2}
+
+/* --- oqadigan matn: SVG ichida HTML bloki (ikki tilda ham o'ziga qarab o'raladi) --- */
+.x-harita foreignObject{overflow:visible}
+.x-fo{margin:0;font-family:var(--sh);font-size:12px;line-height:1.36;font-weight:600;color:var(--matn-3)}
+.x-fo.kuchli{font-size:14.5px;line-height:1.24;font-weight:800;color:var(--siyoh)}
+.x-fo.matn{font-size:12.5px;color:var(--matn-2)}
+.x-fo.toq{color:#98A9CC}
+
+/* --- izoh: xarita ostidagi shartli belgilar --- */
+.x-izoh-fon{fill:var(--fon);rx:12}
+.x-t-izoh-sar{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;fill:var(--matn-4)}
+.x-t-izoh{font-size:13px;font-weight:700;fill:var(--matn-2)}
+
+/* --- bosiladigan tugun: kursor, ta'kid, tanlangan holat --- */
+.c-sxema .nuqta .x-band,.c-sxema .nuqta .x-kontur,.c-sxema .nuqta .x-rels{transition:stroke var(--tez),fill var(--tez)}
+.c-sxema .nuqta:hover .x-band,.c-sxema .nuqta:focus-visible .x-band{stroke:var(--yashil);stroke-width:2.4}
+.c-sxema .nuqta.tanlangan .x-band{stroke:var(--kok);stroke-width:2.4}
+.c-sxema .nuqta:hover .x-kontur,.c-sxema .nuqta:focus-visible .x-kontur,
+.c-sxema .nuqta.tanlangan .x-kontur{stroke-width:3;stroke-dasharray:none}
+.c-sxema .nuqta:hover .x-rels,.c-sxema .nuqta:focus-visible .x-rels,
+.c-sxema .nuqta.tanlangan .x-rels{stroke-width:4}
+.c-sxema .nuqta:hover .x-yorliq-fon,.c-sxema .nuqta:focus-visible .x-yorliq-fon{stroke-width:2.4}
+.c-sxema .nuqta .x-sezgir{fill:transparent;stroke:none}
+
+@media print{
+  .x-kontur-fon{fill:none}
+  .c-sxema.x-keng{padding:12px 6px}
+}

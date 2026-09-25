@@ -601,7 +601,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>Himoya ulushi</td><td class='n'>0,36</td><td class='n'>0,50</td></tr>" +
     "<tr><td>Ball</td><td class='n'>5,4</td><td class='n'>7,5</td></tr></table>" +
     "<p>Ikki ball ko'p emas. Lekin 267 obyektga ko'paytirilsa, bu portfel bo'yicha sezilarli farq &mdash; va eng muhimi, aloqasiz qurilma ortida ko'rinmaydigan obyekt turadi.</p>" +
-    "<p class='ogoh'>Servis marshruti indeksga qarab emas, xavfga qarab tuziladi: qiymati yuqori va chekka obyektlar birinchi navbatda.</p>",
+    "<p class='ogoh'>Servis marshruti xavfga qarab tuziladi: qiymati yuqori va chekka obyektlar birinchi navbatda.</p>",
   ru: {
     yorliq: "Для сервиса",
     sarlavha: "Сколько баллов стоит один выезд сервиса",
@@ -740,7 +740,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "tb.m-hodisa": {
   yorliq: "Xavfsizlik uchun",
   sarlavha: "Javob muddati: besh daqiqa qanday sanaladi",
-  tana: "<p>Sanoq voqea yaratilgan soniyadan boshlanadi va operator voqeani ochgan paytda to'xtaydi. Xabarnoma yuborilgan vaqt emas, aynan ochilgan vaqt hisoblanadi.</p>" +
+  tana: "<p>Sanoq voqea yaratilgan soniyadan boshlanadi va operator voqeani ochgan paytda to'xtaydi. Hisobga aynan ochilgan vaqt olinadi, xabarnoma yuborilgani sanalmaydi.</p>" +
     "<h4>Muddat o'tib ketsa</h4>" +
     "<ul><li>Voqea smena boshlig'iga dublyaj qilinadi.</li>" +
     "<li>Yozuv oylik SLA hisobotiga tushadi.</li>" +
@@ -750,7 +750,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   ru: {
     yorliq: "Для безопасности",
     sarlavha: "Срок ответа: как считаются пять минут",
-    tana: "<p>Отсчёт начинается в секунду создания инцидента и останавливается, когда оператор его открыл. Считается именно момент открытия, а не отправки уведомления.</p>" +
+    tana: "<p>Отсчёт начинается в секунду создания инцидента и останавливается, когда оператор его открыл. Считается именно момент открытия инцидента.</p>" +
       "<h4>Если срок пропущен</h4>" +
       "<ul><li>Инцидент дублируется начальнику смены.</li>" +
       "<li>Запись попадает в месячный отчёт по SLA.</li>" +
@@ -822,7 +822,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>Qoidalardan o'tib voqea bo'lgan</td><td class='n'>~300</td></tr>" +
     "<tr><td>Chora talab qilgan</td><td class='n'>5&ndash;15</td></tr></table>" +
     "<p>Har bosqichda oqim taxminan o'n barobar qisqaradi. Aynan shu filtrlash zanjiri navbatchining ishini bajarilishi mumkin holatga keltiradi.</p>" +
-    "<p class='ogoh'>Cho'qqi oqim tekis emas: tong va shom, shamolli kunlar va bayram kechalari yuk bir necha barobar oshadi. Server o'rtacha emas, cho'qqi bo'yicha o'lchanadi.</p>",
+    "<p class='ogoh'>Cho'qqi oqim tekis emas: tong va shom, shamolli kunlar va bayram kechalari yuk bir necha barobar oshadi. Server cho'qqi yuklama bo'yicha o'lchanadi.</p>",
   ru: {
     yorliq: "Для тимлида",
     sarlavha: "36 000 событий в сутки, в очередь попадает 300",
@@ -833,21 +833,21 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td>Прошло правила и стало инцидентом</td><td class='n'>~300</td></tr>" +
       "<tr><td>Потребовало действий</td><td class='n'>5&ndash;15</td></tr></table>" +
       "<p>На каждом этапе поток сокращается примерно в десять раз. Именно эта цепочка фильтров делает работу дежурного выполнимой.</p>" +
-      "<p class='ogoh'>Пик неравномерен: на рассвете и в сумерках, в ветреные дни и праздничные ночи нагрузка вырастает в несколько раз. Сервер считается по пику, а не по среднему.</p>"
+      "<p class='ogoh'>Пик неравномерен: на рассвете и в сумерках, в ветреные дни и праздничные ночи нагрузка вырастает в несколько раз. Сервер считается по пиковой нагрузке.</p>"
   },
   manba: []
 },
 
 "tb.s-video": {
   yorliq: "Jamoa rahbarlari uchun",
-  sarlavha: "Jonli video: obyekt soni emas, ochilgan oqim soni muhim",
+  sarlavha: "Jonli video: hisob ochilgan oqim soniga qurilgan",
   tana: "<p>Media shlyuzning yuki bir vaqtda ochilgan oqimlarga bog'liq. Ming obyekt bo'lsa ham, agar bir paytda uchta oqim ochilgan bo'lsa, yuk uchta oqimga teng.</p>" +
     "<table><tr><th>Holat</th><th>Oqim</th><th>Kanal</th></tr>" +
     "<tr><td>Tunda, tinch</td><td class='n'>1&ndash;2</td><td class='n'>1 Mbit/s</td></tr>" +
     "<tr><td>Kunduzi, odatiy</td><td class='n'>4&ndash;8</td><td class='n'>4 Mbit/s</td></tr>" +
     "<tr><td>Cho'qqi, 10 operator</td><td class='n'>40</td><td class='n'>20,5 Mbit/s</td></tr></table>" +
     "<h4>Chegara qayerda</h4>" +
-    "<p>Bitta media shlyuz nusxasi o'nlab bir vaqtdagi oqimni bemalol uzatadi. Undan yuqorisi uchun ikkinchi nusxa qo'shiladi &mdash; bu kod o'zgarishi emas, konfiguratsiya.</p>" +
+    "<p>Bitta media shlyuz nusxasi o'nlab bir vaqtdagi oqimni bemalol uzatadi. Undan yuqorisi uchun ikkinchi nusxa qo'shiladi &mdash; bu konfiguratsiya darajasidagi ish.</p>" +
     "<p class='ogoh'>Arxivni ko'rish jonli oqimdan farq qiladi: u obyekt omboridan HLS bilan beriladi va kameraga umuman tegmaydi.</p>",
   ru: {
     yorliq: "Для тимлида",
@@ -858,7 +858,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td>День, обычная работа</td><td class='n'>4&ndash;8</td><td class='n'>4 Мбит/с</td></tr>" +
       "<tr><td>Пик, 10 операторов</td><td class='n'>40</td><td class='n'>20,5 Мбит/с</td></tr></table>" +
       "<h4>Где предел</h4>" +
-      "<p>Один экземпляр медиашлюза спокойно отдаёт десятки одновременных потоков. Выше — добавляется второй экземпляр: это конфигурация, а не изменение кода.</p>" +
+      "<p>Один экземпляр медиашлюза спокойно отдаёт десятки одновременных потоков. Выше — добавляется второй экземпляр: это работа на уровне конфигурации.</p>" +
       "<p class='ogoh'>Просмотр архива отличается от живого потока: он отдаётся из объектного хранилища по HLS и камеру не трогает вовсе.</p>"
   },
   manba: []
@@ -867,7 +867,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "tb.s-dalil": {
   yorliq: "Jamoa rahbarlari uchun",
   sarlavha: "Dalil arxivi: eng tez o'sadigan hajm",
-  tana: "<p>Kadr va klip bazada emas, obyekt omborida yotadi. 90 kunlik saqlash muddatida hajm quyidagicha bo'ladi.</p>" +
+  tana: "<p>Kadr va klip obyekt omborida yotadi. 90 kunlik saqlash muddatida hajm quyidagicha bo'ladi.</p>" +
     "<table><tr><th>Obyekt</th><th>Kuniga</th><th>90 kun</th><th>Yiliga</th></tr>" +
     "<tr><td>10</td><td class='n'>0,4 GB</td><td class='n'>0,03 TB</td><td class='n'>0,13 TB</td></tr>" +
     "<tr><td>300</td><td class='n'>11 GB</td><td class='n'>0,97 TB</td><td class='n'>3,9 TB</td></tr>" +
@@ -904,7 +904,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>Zaxira nusxa va xizmat trafigi</td><td class='n'>3 Mbit/s</td></tr>" +
     "<tr><td>Ikki barobar zaxira bilan</td><td class='n'>36 Mbit/s</td></tr></table>" +
     "<p>Bu bank ma'lumotlar markazi uchun kichik raqam. Diqqat qilinadigan joy boshqa: kanal simmetrik bo'lishi kerak, chunki asosiy oqim ichkariga kiradi.</p>" +
-    "<p class='ogoh'>Kanal kengligi bitta obyektning ulanishini yaxshilamaydi. Zaif signalli obyektda muammo markazda emas, uchidagi radioda.</p>",
+    "<p class='ogoh'>Kanal kengligi bitta obyektning ulanishini yaxshilamaydi. Zaif signalli obyektda muammo uchidagi radioda bo'ladi.</p>",
   ru: {
     yorliq: "Для тимлида",
     sarlavha: "Канал центра: из чего складывается",
@@ -947,7 +947,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "tb.s-jamoa": {
   yorliq: "Xavfsizlik uchun",
   sarlavha: "Navbatchi smenasi: nechta odam kerak",
-  tana: "<p>Hisob voqealar soniga emas, sutkalik qoplashga bog'liq. Kun-tun navbatchilik uchun bitta o'rinni yopish 4&ndash;5 shtat birligini talab qiladi: smenalar, dam olish va ta'til.</p>" +
+  tana: "<p>Hisob sutkalik qoplashga bog'liq. Kun-tun navbatchilik uchun bitta o'rinni yopish 4&ndash;5 shtat birligini talab qiladi: smenalar, dam olish va ta'til.</p>" +
     "<table><tr><th>Obyekt</th><th>Bir smenada</th><th>Kuniga voqea</th></tr>" +
     "<tr><td>10</td><td class='n'>1</td><td class='n'>~10</td></tr>" +
     "<tr><td>300</td><td class='n'>2</td><td class='n'>~300</td></tr>" +
@@ -1019,7 +1019,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "tb.o-odam": {
   yorliq: "Xavfsizlik uchun",
   sarlavha: "Navbatchining e'tibori: haqiqiy chegara",
-  tana: "<p>Server yukini pul bilan hal qilish mumkin, odamning e'tiborini emas. Shuning uchun filtrlash zanjiri texnik emas, tashkiliy talab.</p>" +
+  tana: "<p>Server yukini pul bilan hal qilish mumkin, odamning e'tiborini emas. Shuning uchun filtrlash zanjiri tashkiliy talab bo'lib qoladi.</p>" +
     "<table><tr><th>Bosqich</th><th>Kuniga</th><th>Kim ko'radi</th></tr>" +
     "<tr><td>Yuborilgan hodisa</td><td class='n'>36 000</td><td>Hech kim, bazada qoladi</td></tr>" +
     "<tr><td>Voqea</td><td class='n'>~300</td><td>Navbatchi ro'yxatda</td></tr>" +
@@ -1335,7 +1335,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>Servis chiqishlari va muddatlari</td><td>Servis arizalari</td></tr>" +
     "<tr><td>Obyekt bo'yicha xarajat</td><td>Xarajatlar moduli</td></tr></table>" +
     "<h4>Nima uchun kerak</h4>" +
-    "<p>Pudratchi muddatni buzganini yoki jihoz tez-tez ishdan chiqayotganini og'zaki bahsda emas, raqam bilan ko'rsatish kerak. Shartnomadagi jarima bandi ana shu hisobotga tayanadi.</p>",
+    "<p>Pudratchi muddatni buzganini yoki jihoz tez-tez ishdan chiqayotganini raqam bilan ko'rsatish kerak. Shartnomadagi jarima bandi ana shu hisobotga tayanadi.</p>",
   ru: {
     yorliq: "Для правления",
     sarlavha: "Месячный отчёт: аргумент в споре с подрядчиком",
@@ -1347,7 +1347,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td>Выезды сервиса и сроки</td><td>Сервисные заявки</td></tr>" +
       "<tr><td>Расходы по объекту</td><td>Модуль расходов</td></tr></table>" +
       "<h4>Зачем это нужно</h4>" +
-      "<p>Нарушение сроков подрядчиком или частые отказы оборудования показывают цифрой, а не в устном споре. Пункт договора о неустойке опирается именно на этот отчёт.</p>"
+      "<p>Нарушение сроков подрядчиком или частые отказы оборудования показывают цифрой. Пункт договора о неустойке опирается именно на этот отчёт.</p>"
   },
   manba: []
 },
@@ -1400,6 +1400,173 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<li>Вывод: «система не заработала» — хотя не заработало другое.</li></ul>" +
       "<h4>Что делается</h4>" +
       "<p>В решение по пилоту вносятся три пункта: ответственное подразделение, график смен и кто рассматривает месячный отчёт. Без этих пунктов утверждение бюджета на оборудование увеличивает риск.</p>"
+  },
+  manba: []
+},
+
+/* ---------- Yo'naltirish xaritasi ---------- */
+
+"tb.y-hodisa": {
+  yorliq: "Kirish",
+  sarlavha: "Bitta hodisa: ekranga tushguncha nima ma'lum",
+  tana: "<p>Navbatchi ekranida hodisa uchta raqam bilan paydo bo'ladi: turi, sinfi va ishonch darajasi. Uchalasi ham kameraning o'zidan keladi &mdash; markaz hech narsani qayta tanimaydi.</p>" +
+    "<table><tr><th>Maydon</th><th>Qiymat</th><th>Nimaga ta'sir qiladi</th></tr>" +
+    "<tr><td><code>tur</code></td><td>harakat</td><td>Qaysi qoida ishga tushishini belgilaydi</td></tr>" +
+    "<tr><td><code>sinf</code></td><td>odam</td><td>Hayvon va mashina tunda navbatchini uyg'otmaydi</td></tr>" +
+    "<tr><td><code>ishonch</code></td><td>0,87</td><td>0,70 dan past bo'lsa voqea ochilmaydi, yozuv qoladi</td></tr></table>" +
+    "<p><b>Nima qo'shiladi.</b> Reyestrdan obyektning toifasi, qo'riqlanadimi yoki yo'qligi va oxirgi ko'rik sanasi olinadi. Shuning uchun bir xil signal qo'riqlanadigan filial binosida va bo'sh omborda boshqacha yo'l tutadi.</p>" +
+    "<p class='ogoh'>Ishonch darajasi past hodisa ham yo'qolmaydi. U obyekt kartochkasida qoladi va haftalik tahlilda ko'riladi: agar bitta kamerada past ishonchli signal ko'payib ketsa, demak linza changlagan yoki burchak noto'g'ri.</p>",
+  ru: {
+    yorliq: "Вход",
+    sarlavha: "Одно событие: что известно к моменту появления на экране",
+    tana: "<p>На экране дежурного событие появляется с тремя значениями: тип, класс и уверенность. Все три приходят от самой камеры &mdash; центр ничего не распознаёт заново.</p>" +
+      "<table><tr><th>Поле</th><th>Значение</th><th>На что влияет</th></tr>" +
+      "<tr><td><code>tur</code></td><td>движение</td><td>Определяет, какое правило сработает</td></tr>" +
+      "<tr><td><code>sinf</code></td><td>человек</td><td>Животное и машина ночью дежурного не будят</td></tr>" +
+      "<tr><td><code>ishonch</code></td><td>0,87</td><td>Ниже 0,70 инцидент не открывается, запись остаётся</td></tr></table>" +
+      "<p><b>Что добавляется.</b> Из реестра подтягиваются категория объекта, наличие охраны и дата последнего осмотра. Поэтому один и тот же сигнал в охраняемом здании филиала и на пустом складе идёт разными путями.</p>" +
+      "<p class='ogoh'>Событие с низкой уверенностью тоже не пропадает. Оно остаётся в карточке объекта и разбирается на недельном обзоре: если по одной камере таких сигналов стало много, значит, запылилась линза или выбран неверный угол.</p>"
+  },
+  manba: []
+},
+
+"tb.y-qoida": {
+  yorliq: "Yo'naltirish",
+  sarlavha: "Qoidalar mexanizmi: kimni uyg'otish va kimni uyg'otmaslik",
+  tana: "<p>Qoida to'rtta shartni birga ko'radi: vaqt, sinf, obyektning holati va hodisa turi. Shartlar mos kelsa voqea ochiladi, mas'ul belgilanadi va muddat qo'yiladi. Mos kelmasa hodisa faqat yozuv bo'lib qoladi.</p>" +
+    "<h4>Amaldagi qoidalar</h4>" +
+    "<table><tr><th>Shart</th><th>Natija</th></tr>" +
+    "<tr><td>Tun (20:00&ndash;08:00) + sinf odam + qo'riqlanmaydigan obyekt</td><td>Navbatchiga darhol, muddat 5 daqiqa</td></tr>" +
+    "<tr><td>Kunduz + sinf odam + bo'sh obyekt</td><td>Kunlik ro'yxatga, muddat 4 soat</td></tr>" +
+    "<tr><td>Sinf mashina yoki hayvon</td><td>Faqat yozuv, xabar yuborilmaydi</td></tr>" +
+    "<tr><td>Eshik ochilishi + ish vaqti emas</td><td>Navbatchiga darhol, muddat 5 daqiqa</td></tr>" +
+    "<tr><td>Uch puls kelmadi</td><td>Servisga ariza, muddat 72 soat</td></tr></table>" +
+    "<p><b>Nega qoidani soddaligicha saqlash kerak.</b> Qoida qancha murakkab bo'lsa, tunda nima uchun xabar kelgani yoki kelmaganini tushuntirish shuncha qiyin bo'ladi. Beshta qoida barcha 267 obyektga yetadi; obyektga xos istisno reyestrdagi belgi bilan beriladi, kodda emas.</p>" +
+    "<p class='ogoh'>Qoidani o'zgartirish administratorning bir o'zida emas: o'zgarish jurnalga tushadi, yigirmadan ortiq obyektga tegsa, ikkinchi imzo talab qilinadi. Tungi xabarnomani jimgina o'chirib qo'yish mumkin bo'lmasligi kerak.</p>",
+  ru: {
+    yorliq: "Маршрутизация",
+    sarlavha: "Механизм правил: кого будить, а кого нет",
+    tana: "<p>Правило смотрит на четыре условия сразу: время, класс, состояние объекта и тип события. Совпало &mdash; открывается инцидент, назначается ответственный, ставится срок. Не совпало &mdash; событие остаётся просто записью.</p>" +
+      "<h4>Действующие правила</h4>" +
+      "<table><tr><th>Условие</th><th>Результат</th></tr>" +
+      "<tr><td>Ночь (20:00&ndash;08:00) + класс человек + объект без охраны</td><td>Дежурному сразу, срок 5 минут</td></tr>" +
+      "<tr><td>День + класс человек + пустой объект</td><td>В суточный список, срок 4 часа</td></tr>" +
+      "<tr><td>Класс машина или животное</td><td>Только запись, уведомление не уходит</td></tr>" +
+      "<tr><td>Открытие двери вне рабочего времени</td><td>Дежурному сразу, срок 5 минут</td></tr>" +
+      "<tr><td>Три пропущенных пульса</td><td>Заявка в сервис, срок 72 часа</td></tr></table>" +
+      "<p><b>Почему правила надо держать простыми.</b> Чем сложнее правило, тем труднее объяснить, почему ночью уведомление пришло или не пришло. Пяти правил хватает на все 267 объектов; исключение для конкретного объекта задаётся меткой в реестре.</p>" +
+      "<p class='ogoh'>Менять правило администратор в одиночку не может: изменение пишется в журнал, а если оно задевает больше двадцати объектов, требуется вторая подпись. Возможности тихо отключить ночное уведомление быть не должно.</p>"
+  },
+  manba: []
+},
+
+"tb.y-ertalab": {
+  yorliq: "Pog'ona 2",
+  sarlavha: "Ertalabki ro'yxat: tunda bo'lgan hamma narsa bitta ekranda",
+  tana: "<p>Soat 08:00 da obyekt menejeri va ko'rik inspektori bitta ro'yxatni ochadi: kecha kechqurundan beri bo'lgan barcha voqealar, har biri holati va mas'uli bilan. Bu ro'yxat pochta orqali kelmaydi va uni qidirib topish kerak emas &mdash; panelning birinchi ekranida turadi.</p>" +
+    "<h4>Ro'yxatdan nima chiqadi</h4>" +
+    "<table><tr><th>Holat</th><th>Keyingi qadam</th><th>Muddat</th></tr>" +
+    "<tr><td>Yopilgan, yolg'on signal</td><td>Sabab belgilangan, kamera sozlash ro'yxatiga tushadi</td><td class='n'>&mdash;</td></tr>" +
+    "<tr><td>Yopilmagan, kirish tasdiqlangan</td><td>Ko'rik topshirig'i, obyektga chiqish</td><td class='n'>48 soat</td></tr>" +
+    "<tr><td>Qurilma javob bermayapti</td><td>Servis arizasi, zaxira komplekt</td><td class='n'>72 soat</td></tr>" +
+    "<tr><td>Zarar aniqlangan</td><td>Dalolatnoma, xarajat yozuvi, sug'urta xabari</td><td class='n'>5 kun</td></tr></table>" +
+    "<p>Inspektor uchun bu ro'yxatning asosiy natijasi &mdash; ko'rik rejasining qayta tartiblanishi. Tunda signal bergan obyekt rejaning boshiga chiqadi, hodisasiz obyekt esa keyingi oyga suriladi. Reja shu tartibda tuziladi.</p>" +
+    "<p class='ogoh'>Ertalabki ro'yxat tungi voqeani takrorlamaydi: agar navbatchi uni tunda yopgan bo'lsa, ro'yxatda faqat qisqa satr qoladi. Ikki marta ko'rib chiqish ishga ham, ishonchga ham zarar.</p>",
+  ru: {
+    yorliq: "Ступень 2",
+    sarlavha: "Утренний список: всё, что было ночью, на одном экране",
+    tana: "<p>В 08:00 менеджер объекта и инспектор осмотра открывают один список: все инциденты со вчерашнего вечера, каждый со статусом и ответственным. Список не приходит почтой и его не нужно искать &mdash; он на первом экране панели.</p>" +
+      "<h4>Что выходит из списка</h4>" +
+      "<table><tr><th>Статус</th><th>Следующий шаг</th><th>Срок</th></tr>" +
+      "<tr><td>Закрыт, ложное срабатывание</td><td>Причина отмечена, камера попадает в список настройки</td><td class='n'>&mdash;</td></tr>" +
+      "<tr><td>Не закрыт, проникновение подтверждено</td><td>Задание на осмотр, выезд на объект</td><td class='n'>48 часов</td></tr>" +
+      "<tr><td>Устройство не отвечает</td><td>Заявка в сервис, запасной комплект</td><td class='n'>72 часа</td></tr>" +
+      "<tr><td>Выявлен ущерб</td><td>Акт, запись расхода, уведомление страховщику</td><td class='n'>5 дней</td></tr></table>" +
+      "<p>Для инспектора главный результат этого списка &mdash; пересборка плана осмотров. Объект, подавший сигнал ночью, поднимается в начало плана, а объект без событий сдвигается на следующий месяц. План составляется этим порядком.</p>" +
+      "<p class='ogoh'>Утренний список не повторяет ночной инцидент: если дежурный закрыл его ночью, в списке остаётся только короткая строка. Разбирать одно и то же дважды вредно и для работы, и для доверия.</p>"
+  },
+  manba: []
+},
+
+"tb.y-oy": {
+  yorliq: "Pog'ona 3",
+  sarlavha: "Oylik jamlama: rahbariyat tendensiyani ko'radi",
+  tana: "<p>Kengashga ayrim signal chiqmaydi. Oylik hisobotda to'rtta raqam turadi va ularning har biri qaror uchun kerak.</p>" +
+    "<table><tr><th>Ko'rsatkich</th><th>Nimani hal qiladi</th></tr>" +
+    "<tr><td>Kirish tasdiqlangan voqealar soni, hududlar bo'yicha</td><td>Qaysi viloyatda qo'shimcha qurilma yoki jismoniy qo'riqlash kerak</td></tr>" +
+    "<tr><td>Yolg'on signal ulushi</td><td>Sozlash ishining sifati; 15 foizdan oshsa, pudratchi bilan suhbat</td></tr>" +
+    "<tr><td>Nazorat indeksi past obyektlar soni</td><td>Zaxira toifasini qayta ko'rish va auditor savoliga javob</td></tr>" +
+    "<tr><td>Qurilma ishdan chiqishi va tiklash vaqti</td><td>Servis shartnomasini uzaytirish yoki almashtirish</td></tr></table>" +
+    "<p>Buxgalteriya va risk bo'limi uchun bir xil ma'lumotning boshqa kesimi chiqadi: obyektning holati zaxira toifasini asoslaydi, qurilma xarajati esa saqlash xarajatlari tarkibiga kiradi. Ikkalasi ham bitta manbadan olinadi, shuning uchun hisobotlar bir-biriga zid bo'lmaydi.</p>" +
+    "<p class='ogoh'>Oylik raqam bitta obyektning nomini ochmaydi. Rahbariyat kesimni ko'radi; aniq obyektga kirish huquqi obyekt menejerida va inspektorda qoladi. Bu cheklov ataylab qo'yilgan: hisobot boshqaruv quroli, kuzatuv quroli emas.</p>",
+  ru: {
+    yorliq: "Ступень 3",
+    sarlavha: "Месячная сводка: правление видит не событие, а тенденцию",
+    tana: "<p>На правление отдельные сигналы не выходят. В месячном отчёте стоят четыре показателя, и каждый нужен для решения.</p>" +
+      "<table><tr><th>Показатель</th><th>Что решает</th></tr>" +
+      "<tr><td>Число подтверждённых проникновений по регионам</td><td>Где нужны дополнительные устройства или физическая охрана</td></tr>" +
+      "<tr><td>Доля ложных срабатываний</td><td>Качество настройки; выше 15 процентов &mdash; разговор с подрядчиком</td></tr>" +
+      "<tr><td>Число объектов с низким индексом контроля</td><td>Пересмотр категории резерва и ответ на вопрос аудитора</td></tr>" +
+      "<tr><td>Отказы устройств и время восстановления</td><td>Продлевать сервисный договор или менять исполнителя</td></tr></table>" +
+      "<p>Для бухгалтерии и риска из тех же данных выходит другой срез: состояние объекта обосновывает категорию резерва, а расходы на устройства входят в затраты на содержание. Оба берутся из одного источника, поэтому отчёты не противоречат друг другу.</p>" +
+      "<p class='ogoh'>Месячная цифра не раскрывает имя конкретного объекта. Правление видит срез; доступ к конкретному объекту остаётся у менеджера и инспектора. Ограничение поставлено сознательно: отчёт &mdash; инструмент управления, а не наблюдения за людьми.</p>"
+  },
+  manba: []
+},
+
+"tb.y-kormaydi": {
+  yorliq: "Chegara",
+  sarlavha: "Kim ko'rmaydi va nega bu muhim",
+  tana: "<p>Realizatsiya mutaxassisiga e'lon uchun faqat odam tushmagan kadr chiqadi: ochiq savdo e'lonida begona shaxs tasviri chop etilsa, bank shaxsiy ma'lumotlar rejimini buzadi. Quyidagi beshta cheklovning har biri xuddi shunday aniq huquqiy yoki tashkiliy sababdan kelib chiqqan.</p>" +
+    "<table><tr><th>Kim</th><th>Nimani ko'rmaydi</th><th>Sabab</th></tr>" +
+    "<tr><td>Realizatsiya mutaxassisi</td><td>Hodisa navbati va jonli video</td><td>Unga faqat e'longa yaroqli, odam tushmagan kadr kerak</td></tr>" +
+    "<tr><td>Xavfsizlik xizmati</td><td>Obyektning baholangan qiymati va zaxira toifasi</td><td>Baholangan qiymat &mdash; savdo bo'yicha qaror, xavfsizlik xizmatining ishi emas</td></tr>" +
+    "<tr><td>Buxgalteriya</td><td>Qurilmaga buyruq berish</td><td>Moliyaviy rol texnik boshqaruvga tegmaydi</td></tr>" +
+    "<tr><td>Administrator</td><td>Audit jurnalini tahrirlash</td><td>O'z izini o'chira oladigan rol bo'lmasligi kerak</td></tr>" +
+    "<tr><td>Yetkazuvchi va pudratchi</td><td>Reyestr, qiymat, hujjatlar</td><td>Ularga faqat o'z qurilmasining telemetriyasi ochiladi</td></tr></table>" +
+    "<p><b>Qanday ta'minlanadi.</b> Cheklov API darajasida ishlaydi: rolga kirmaydigan ma'lumot so'ralganda server <code>403</code> qaytaradi va urinish jurnalga yoziladi. Shuning uchun havolani qo'lda yozib kirib bo'lmaydi.</p>" +
+    "<p class='ogoh'>Eng ko'p uchraydigan xato &mdash; sinov davrida hammaga to'liq huquq berib, keyin uni qaytarib olishni unutish. Shuning uchun pilot bosqichida ham rollar haqiqiy holicha qo'yiladi, keyin emas.</p>",
+  ru: {
+    yorliq: "Граница",
+    sarlavha: "Кто не видит и почему это важно",
+    tana: "<p>Специалисту по реализации в объявление уходит только кадр без людей: снимок с посторонним лицом в публичном объявлении о торгах &mdash; нарушение режима персональных данных. Каждое из пяти ограничений ниже имеет такую же конкретную правовую или организационную причину.</p>" +
+      "<table><tr><th>Кто</th><th>Чего не видит</th><th>Причина</th></tr>" +
+      "<tr><td>Специалист по реализации</td><td>Очередь событий и живое видео</td><td>Ему нужен только кадр без людей, пригодный для объявления</td></tr>" +
+      "<tr><td>Служба безопасности</td><td>Оценочную стоимость объекта и категорию резерва</td><td>Стоимость &mdash; решение по продаже, а не работа охраны</td></tr>" +
+      "<tr><td>Бухгалтерия</td><td>Отправку команд на устройство</td><td>Финансовая роль не касается технического управления</td></tr>" +
+      "<tr><td>Администратор</td><td>Редактирование журнала аудита</td><td>Роли, способной стереть свой след, быть не должно</td></tr>" +
+      "<tr><td>Поставщик и подрядчик</td><td>Реестр, стоимость, документы</td><td>Им открыта только телеметрия собственного оборудования</td></tr></table>" +
+      "<p><b>Как это обеспечено.</b> Ограничение работает не скрытием экрана, а на уровне API: при запросе данных вне роли сервер возвращает <code>403</code>, а попытка пишется в журнал. Поэтому зайти, набрав ссылку руками, не получится.</p>" +
+      "<p class='ogoh'>Самая частая ошибка &mdash; выдать всем полные права на время испытаний и забыть их снять. Поэтому роли ставятся в боевом виде уже на пилоте.</p>"
+  },
+  manba: []
+},
+"tb.y-ozgarmas": {
+  yorliq: "Barqaror qism",
+  sarlavha: "O'n barobar o'sganda nima o'zgarmaydi va nega bu muhim",
+  tana: "<p>Masshtab haqidagi savolning javobi odatda &laquo;server qo'shamiz&raquo; bo'ladi. Aslida muhimi boshqasi: o'sishda nimani qayta yozish kerak emasligi. Quyidagilar o'n obyektda ham, ming obyektda ham o'zgarmaydi.</p>" +
+    "<table><tr><th>Qism</th><th>Nega o'zgarmaydi</th></tr>" +
+    "<tr><td>Arxitektura</td><td>Qatlamlar soni obyektlar soniga bog'liq emas. Ko'payadigan narsa &mdash; har qatlamning nusxasi</td></tr>" +
+    "<tr><td>Hodisa sxemasi</td><td>Yozuv brendga ham, obyektlar soniga ham bog'lanmagan; faqat maydon qo'shiladi</td></tr>" +
+    "<tr><td>Adapter kodi</td><td>Bitta brend uchun bir marta yoziladi; obyekt qo'shilsa faqat sozlama qo'shiladi</td></tr>" +
+    "<tr><td>Rollar va ekranlar</td><td>Etti rol o'n obyektga ham, minggasiga ham yetadi; kesim o'zgaradi, ekran emas</td></tr>" +
+    "<tr><td>Montaj tartibi</td><td>Bitta obyektning montaj varag'i universal: o'lchov, surat, akt</td></tr>" +
+    "<tr><td>Shartnoma shakli</td><td>Yetkazuvchi, integrator va aloqa operatori bilan shartnoma bandlari takrorlanadi</td></tr></table>" +
+    "<p><b>Nima o'zgaradi.</b> Virtual mashina soni, disk hajmi, media shlyuz nusxasi va navbatchilar soni. Hammasi &mdash; raqam, kod emas. Shuning uchun o'sish rejasini moliyaviy tilda tuzish mumkin: har yuz obyektga qancha disk, qancha kanal va qancha odam.</p>" +
+    "<p class='ogoh'>Pilot ikki narsani beradi: SLA ga qo'yiladigan o'lchangan vaqtlar va shu olti bandning o'zgarmasligini tasdiqlash. Ikkinchisi muhimroq &mdash; o'sishda ulardan birortasini qayta yozish kerak bo'lsa, demak pilotda xato qilingan.</p>",
+  ru: {
+    yorliq: "Устойчивая часть",
+    sarlavha: "Что не меняется при росте в десять раз и почему это важно",
+    tana: "<p>На вопрос о масштабе обычно отвечают &laquo;добавим серверов&raquo;. На деле важнее другое: что при росте не придётся переписывать. Перечисленное ниже одинаково и для десяти объектов, и для тысячи.</p>" +
+      "<table><tr><th>Часть</th><th>Почему не меняется</th></tr>" +
+      "<tr><td>Архитектура</td><td>Число слоёв не зависит от числа объектов. Растёт лишь количество экземпляров каждого слоя</td></tr>" +
+      "<tr><td>Схема события</td><td>Запись не привязана ни к бренду, ни к числу объектов; поля только добавляются</td></tr>" +
+      "<tr><td>Код адаптера</td><td>Пишется один раз на бренд; при добавлении объекта добавляется только настройка</td></tr>" +
+      "<tr><td>Роли и экраны</td><td>Семи ролей хватает и на десять объектов, и на тысячу; меняется срез, экран остаётся тем же</td></tr>" +
+      "<tr><td>Порядок монтажа</td><td>Лист монтажа одного объекта универсален: замер, фотографии, акт</td></tr>" +
+      "<tr><td>Форма договора</td><td>Пункты договоров с поставщиком, интегратором и оператором связи повторяются</td></tr></table>" +
+      "<p><b>Что меняется.</b> Число виртуальных машин, объём диска, экземпляры медиашлюза и количество дежурных. Всё это цифры в смете. Поэтому план роста можно составить на финансовом языке: сколько диска, канала и людей на каждую сотню объектов.</p>" +
+      "<p class='ogoh'>Пилот даёт две вещи: измеренные времена, которые ставятся в SLA, и подтверждение того, что эти шесть пунктов не меняются. Второе важнее &mdash; если при росте приходится переписывать любой из них, значит, на пилоте была допущена ошибка.</p>"
   },
   manba: []
 }

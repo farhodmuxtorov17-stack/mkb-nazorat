@@ -28,7 +28,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   ru: {
     yorliq: "Для тимлида",
     sarlavha: "41 секунда: откуда взята каждая часть",
-    tana: "<p>Это расчёт по частям, а не одно измерение. Каждая часть взята из своего источника и будет перемерена на пилоте.</p>" +
+    tana: "<p>Это расчёт по частям. Каждая часть взята из своего источника и будет перемерена на пилоте.</p>" +
       "<table><tr><th>Часть</th><th>Источник</th><th>Секунд</th></tr>" +
       "<tr><td>Пробуждение камеры</td><td>Даташит батарейной камеры</td><td class='n'>1,4</td></tr>" +
       "<tr><td>Классификация в камере</td><td>Аналитика на устройстве</td><td class='n'>0,9</td></tr>" +
@@ -106,7 +106,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<ul><li>Qurilma va mahalliy tugun &mdash; yetkazuvchi kafolati va integrator servisi.</li>" +
     "<li>Kanal &mdash; aloqa operatori bilan SIM shartnomasi va yopiq APN.</li>" +
     "<li>Adapter, yadro va ish joyi &mdash; bankning o'z jamoasi.</li></ul>" +
-    "<p>Bitta bosh integrator modelida birinchi ikki qatlam bitta shartnomaga yig'iladi: nosozlikda bank kim aybdorligini emas, qachon tuzatilishini so'raydi.</p>" +
+    "<p>Bitta bosh integrator modelida birinchi ikki qatlam bitta shartnomaga yig'iladi: nosozlikda bank bitta savol beradi: qachon tuzatiladi.</p>" +
     "<p>Muhim chegara: yadro bankda qoladi. Aks holda yetkazuvchi almashtirilganda butun nazorat tizimi qaytadan quriladi.</p>",
   ru: {
     yorliq: "Для правления",
@@ -126,7 +126,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "ti.q01": {
   yorliq: "Montajchilar uchun",
   sarlavha: "PIR datchik: nimani ko'radi va nimani ko'rmaydi",
-  tana: "<p>Piroelektrik sensor haroratni emas, infraqizil nurlanishning siljishini sezadi. Shuning uchun u qimirlamay turgan odamni bir necha soniyadan keyin yo'qotadi, lekin uyqu rejimida deyarli energiya yemaydi.</p>" +
+  tana: "<p>Piroelektrik sensor infraqizil nurlanishning siljishini sezadi. Shuning uchun u qimirlamay turgan odamni bir necha soniyadan keyin yo'qotadi, lekin uyqu rejimida deyarli energiya yemaydi.</p>" +
     "<h4>Montajda hal qilinadigan uchta narsa</h4>" +
     "<ul><li><b>Balandlik 2,5&ndash;3 m.</b> Pastroqda it va qo'y ham signal beradi, balandroqda odam sezish zonasidan chiqib ketadi.</li>" +
     "<li><b>Burchak.</b> Sensor o'ziga tik kelayotgan odamni yomon, ko'ndalang o'tayotganini yaxshi sezadi. Kameraning o'qi yo'lakka burchak ostida qaratiladi.</li>" +
@@ -159,9 +159,9 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   ru: {
     yorliq: "Для тимлида",
     sarlavha: "Почему запись начинается на объекте",
-    tana: "<p>Проснувшись, камера первым делом пишет на SD-карту, а не подключается к центру. Причина простая: подключение может не состояться, а доказательство нужно в любом случае.</p>" +
+    tana: "<p>Проснувшись, камера первым делом пишет на SD-карту. Причина простая: подключение может не состояться, а доказательство нужно в любом случае.</p>" +
       "<h4>Кадры до срабатывания</h4>" +
-      "<p>Хорошие камеры сохраняют 2&ndash;5 секунд до сигнала: в памяти держится кольцевой буфер. Благодаря этому в записи остаётся момент входа человека в кадр, а не только его уход. Этот пункт входит в список вопросов поставщику.</p>" +
+      "<p>Хорошие камеры сохраняют 2&ndash;5 секунд до сигнала: в памяти держится кольцевой буфер. Благодаря этому в записи остаётся сам момент входа человека в кадр. Этот пункт входит в список вопросов поставщику.</p>" +
       "<h4>Объём карты</h4>" +
       "<table><tr><th>Карта</th><th>H.265, 2 Мбит/с</th><th>Архив событий</th></tr>" +
       "<tr><td>64 ГБ</td><td class='n'>71 час</td><td class='n'>~2 месяца</td></tr>" +
@@ -184,7 +184,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<p class='ogoh'>Videoni markazda tahlil qilish varianti ham bor, lekin u doimiy oqimni talab qiladi. Batareyali obyektda bu mumkin emas &mdash; shuning uchun tahlilning qurilmada bo'lishi yechim tanlash mezoniga kiritilgan.</p>",
   ru: {
     yorliq: "Для тимлида",
-    sarlavha: "Классификация выполняется в камере, а не в центре",
+    sarlavha: "Классификация выполняется на борту камеры",
     tana: "<p>Аналитика на борту отделяет человека от транспорта и животного. Это примерно в восемь раз сокращает число отправляемых событий и бережёт батарею: каждый неотправленный кадр — сэкономленная энергия.</p>" +
       "<h4>Как выбирается порог уверенности</h4>" +
       "<table><tr><th>Порог</th><th>Результат</th></tr>" +
@@ -252,7 +252,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "ti.q06": {
   yorliq: "Aloqa uchun",
   sarlavha: "Kadr o'lchami va zaif signal",
-  tana: "<p>148 KB &mdash; 1280&times;720 o'lchamdagi JPEG, sifat koeffitsiyenti 75. Bu operator yuzni emas, vaziyatni ko'rishi uchun yetarli: nechta odam, qayerda turibdi, texnika bormi.</p>" +
+  tana: "<p>148 KB &mdash; 1280&times;720 o'lchamdagi JPEG, sifat koeffitsiyenti 75. Bu operator vaziyatni ko'rishi uchun yetarli: nechta odam, qayerda turibdi, texnika bormi.</p>" +
     "<table><tr><th>Signal</th><th>Amaldagi uplink</th><th>148 KB yuklash</th></tr>" +
     "<tr><td>&minus;75 dBm</td><td class='n'>4 Mbit/s</td><td class='n'>0,3 s</td></tr>" +
     "<tr><td>&minus;89 dBm</td><td class='n'>1,1 Mbit/s</td><td class='n'>1,1 s</td></tr>" +
@@ -263,7 +263,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   ru: {
     yorliq: "Для связи",
     sarlavha: "Размер кадра и слабый сигнал",
-    tana: "<p>148 КБ — это JPEG 1280&times;720 с качеством 75. Оператору этого достаточно, чтобы увидеть обстановку, а не лицо: сколько людей, где стоят, есть ли техника.</p>" +
+    tana: "<p>148 КБ — это JPEG 1280&times;720 с качеством 75. Оператору этого достаточно, чтобы увидеть обстановку: сколько людей, где стоят, есть ли техника.</p>" +
       "<table><tr><th>Сигнал</th><th>Реальный аплинк</th><th>Загрузка 148 КБ</th></tr>" +
       "<tr><td>&minus;75 дБм</td><td class='n'>4 Мбит/с</td><td class='n'>0,3 с</td></tr>" +
       "<tr><td>&minus;89 дБм</td><td class='n'>1,1 Мбит/с</td><td class='n'>1,1 с</td></tr>" +
@@ -385,6 +385,8 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<ul><li>Batareyali kamera doimiy oqimda bir-ikki kunda o'chadi.</li>" +
     "<li>Yuzta kameraning doimiy oqimi markaz kanalida 50 Mbit/s ni egallaydi va uni hech kim ko'rmaydi.</li>" +
     "<li>Kameraga ulanish har safar sessiya tokeni bilan ochiladi: kim, qachon va qancha ko'rgani jurnalda qoladi.</li></ul>" +
+    "<h4>Uyg'oqlik oynasi</h4>" +
+    "<p>Kamera hodisadan keyin 90 soniya uyg'oq turadi &mdash; bu shlyuzga qoldirilgan zaxira. Oyna 30 hodisali sutkada sarfga taxminan 0,4 Vt&middot;soat qo'shadi va 06-bo'limdagi 4,2 Vt&middot;soatlik kunlik balansga sig'adi. Uni 40 soniyaga qisqartirish kuniga 0,2 Vt&middot;soat tejaydi, lekin navbatchi kechikkan har uchinchi hodisada birinchi kadr qayta uyg'onishni 1,4 soniya kutadi.</p>" +
     "<h4>Texnik chegara</h4>" +
     "<p>Uy shlyuzlari orqali ishlaydigan kameralarda RTSP sessiyasi 3&ndash;5 daqiqada uziladi. Bu kamchilik emas, ishlab chiqaruvchining quvvatni tejash qarori. Operator kerak bo'lsa sessiyani qayta ochadi; uzoq kuzatuv talab qilinadigan obyektga boshqa yechim tanlanadi.</p>",
   ru: {
@@ -395,6 +397,8 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<ul><li>Батарейная камера на постоянном потоке садится за сутки-двое.</li>" +
       "<li>Постоянный поток со ста камер занимает 50 Мбит/с канала центра, и его никто не смотрит.</li>" +
       "<li>Подключение открывается по сессионному токену: кто, когда и сколько смотрел — остаётся в журнале.</li></ul>" +
+      "<h4>Окно бодрствования</h4>" +
+      "<p>После события камера остаётся активной 90 секунд &mdash; это запас, оставленный шлюзу. Окно добавляет к расходу около 0,4 Вт&middot;ч в сутки с тридцатью событиями и укладывается в дневной баланс 4,2 Вт&middot;ч из раздела 06. Сокращение до 40 секунд экономит 0,2 Вт&middot;ч в сутки, но на каждом третьем событии, где дежурный задержался, первый кадр ждёт повторного пробуждения 1,4 секунды.</p>" +
       "<h4>Техническое ограничение</h4>" +
       "<p>У камер, работающих через домашние хабы, RTSP-сессия обрывается через 3&ndash;5 минут. Это не дефект, а решение производителя ради экономии энергии. Оператор при необходимости открывает сессию заново; для объектов с длительным наблюдением выбирается другое решение.</p>"
   },
@@ -404,7 +408,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "ti.q12": {
   yorliq: "Xavfsizlik uchun",
   sarlavha: "Buyruq: ikki marta bosilsa ham bir marta bajariladi",
-  tana: "<p>Har buyruqqa mijoz tomonidan <code>Idempotency-Key</code> beriladi. Server shu kalit bo'yicha javobni 24 soat eslab qoladi: takroriy so'rov yangi amal emas, eski javobni qaytaradi.</p>" +
+  tana: "<p>Har buyruqqa mijoz tomonidan <code>Idempotency-Key</code> beriladi. Server shu kalit bo'yicha javobni 24 soat eslab qoladi: takroriy so'rov eski javobni qaytaradi.</p>" +
     "<h4>Nega bu kerak</h4>" +
     "<p>Zaif aloqada operator tugma ishlamadi deb o'ylab ikki-uch marta bosadi. Idempotentliksiz sirena uch marta yoqiladi yoki eshik yopilgach qayta ochiladi.</p>" +
     "<h4>Buyruq bajarilganini nima tasdiqlaydi</h4>" +
@@ -437,8 +441,8 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<li>Ko'rik dalolatnomasi imzolanadi, suratlar biriktiriladi.</li>" +
     "<li>Zarar aniqlansa, obyekt kartochkasida xarajat yoki sug'urta ishi ochiladi.</li></ol>" +
     "<h4>Nima uchun bu muhim</h4>" +
-    "<p>Sug'urta kompaniyasi ham, sud ham video emas, rasmiylashtirilgan hujjatni so'raydi. Video shu hujjatning ilovasi bo'ladi: vaqt tamg'asi, uzluksiz yozuv va o'zgartirilmaganligini tasdiqlovchi xesh bilan.</p>" +
-    "<p class='ogoh'>Yozuv qonun buzilmasdan olingan bo'lishi kerak: obyekt kirishida videokuzatuv haqida ogohlantirish lavhasi turishi, kamera qo'shnining hovlisiga emas, o'z hududiga qaratilgan bo'lishi shart.</p>",
+    "<p>Sug'urta kompaniyasi ham, sud ham rasmiylashtirilgan hujjatni so'raydi. Video shu hujjatning ilovasi bo'ladi: vaqt tamg'asi, uzluksiz yozuv va o'zgartirilmaganligini tasdiqlovchi xesh bilan.</p>" +
+    "<p class='ogoh'>Yozuv qonun buzilmasdan olingan bo'lishi kerak: obyekt kirishida videokuzatuv haqida ogohlantirish lavhasi turishi, kamera faqat o'z hududiga qaratilgan bo'lishi shart.</p>",
   ru: {
     yorliq: "Для менеджера объекта",
     sarlavha: "Какой документ остаётся после ночного события",
@@ -450,7 +454,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<li>При обнаружении ущерба в карточке объекта открывается расход или страховое дело.</li></ol>" +
       "<h4>Почему это важно</h4>" +
       "<p>И страховая компания, и суд спрашивают не видео, а оформленный документ. Видео становится приложением к нему: с отметкой времени, непрерывной записью и хешем, подтверждающим неизменность.</p>" +
-      "<p class='ogoh'>Запись должна быть получена без нарушения закона: на входе — предупреждающая табличка о видеонаблюдении, камера направлена на свою территорию, а не во двор соседа.</p>"
+      "<p class='ogoh'>Запись должна быть получена без нарушения закона: на входе — предупреждающая табличка о видеонаблюдении, камера направлена только на свою территорию.</p>"
   },
   manba: []
 },
@@ -579,12 +583,13 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "ti.qat3": {
   yorliq: "Qatlam 3",
   sarlavha: "Kanal: yopiq APN va ikki SIM",
-  tana: "<p>SIM kartalar oddiy internetga emas, operatorning yopiq APN ga ulanadi: qurilma faqat bank manzillari bilan gaplashadi va tashqi tarmoqdan ko'rinmaydi.</p>" +
+  tana: "<p>SIM kartalar operatorning yopiq APN iga ulanadi: qurilma faqat bank manzillari bilan gaplashadi va tashqi tarmoqdan ko'rinmaydi.</p>" +
     "<table><tr><th>Sozlama</th><th>Qiymat</th></tr>" +
     "<tr><td>APN</td><td>Yopiq, korporativ shartnomada</td></tr>" +
     "<tr><td>Ikkinchi SIM</td><td>Boshqa operator, avtomatik o'tish</td></tr>" +
     "<tr><td>O'tish vaqti</td><td>30&ndash;90 soniya</td></tr>" +
-    "<tr><td>Oylik trafik, bitta obyekt</td><td>0,3&ndash;1,5 GB</td></tr></table>" +
+    "<tr><td>Oylik trafik, kamerali tugun</td><td>4,3 GB: hodisa 0,8 va jonli video 3,5</td></tr>" +
+    "<tr><td>Oylik trafik, datchikli tugun</td><td>30 MB dan kam &mdash; video yo'q</td></tr></table>" +
     "<h4>Nima buziladi</h4>" +
     "<ul><li>Bitta operatorning bazaviy stansiyasi ta'mirga to'xtaydi &mdash; ikkinchi SIM shuning uchun kerak.</li>" +
     "<li>SIM balansi tugaydi: reyestrda har SIM ning tarifi va to'lov sanasi turadi.</li>" +
@@ -598,11 +603,12 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td>APN</td><td>Закрытый, по корпоративному договору</td></tr>" +
       "<tr><td>Вторая SIM</td><td>Другой оператор, автопереключение</td></tr>" +
       "<tr><td>Время переключения</td><td>30&ndash;90 секунд</td></tr>" +
-      "<tr><td>Трафик в месяц на объект</td><td>0,3&ndash;1,5 ГБ</td></tr></table>" +
+      "<tr><td>Трафик в месяц, узел с камерой</td><td>4,3 ГБ: события 0,8 и живое видео 3,5</td></tr>" +
+      "<tr><td>Трафик в месяц, узел с датчиками</td><td>меньше 30 МБ &mdash; видео нет</td></tr></table>" +
       "<h4>Что ломается</h4>" +
       "<ul><li>Базовая станция одного оператора уходит в ремонт — для этого и нужна вторая SIM.</li>" +
       "<li>Заканчивается баланс SIM: в реестре хранятся тариф и дата платежа по каждой карте.</li>" +
-      "<li>Оператор меняет IP-адрес — поэтому устройство подключается к центру, а не наоборот.</li></ul>" +
+      "<li>Оператор меняет IP-адрес — поэтому соединение всегда начинает устройство.</li></ul>" +
       "<p class='ogoh'>Настройка закрытого APN занимает несколько недель и закладывается в тендерные документы заранее. Временное решение через открытый интернет не применяется даже на пилоте.</p>"
   },
   manba: []
@@ -887,7 +893,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<h4>Почему не случайный UUID</h4>" +
       "<p>Со случайными идентификаторами индекс фрагментируется и запись замедляется. Возрастающий по времени идентификатор кладёт новые записи в конец индекса.</p>" +
       "<h4>Правило отсечения повторов</h4>" +
-      "<ul><li>Если тот же <code>hodisa_id</code> приходит повторно, запись принимается и отбрасывается; ответ 200, а не ошибка.</li>" +
+      "<ul><li>Если тот же <code>hodisa_id</code> приходит повторно, запись принимается и отбрасывается, ответ всё равно 200.</li>" +
       "<li>Число повторов считается по устройству: его рост указывает на проблему канала.</li>" +
       "<li>Если идентификатора нет, адаптер собирает его из <code>qurilma_id + vaqt + tur</code>.</li></ul>"
   },
@@ -955,7 +961,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<p class='ogoh'>Turli brendlarning koeffitsiyentlari bir xil shkalada emas. Shuning uchun chegara har brend uchun alohida sozlanadi va bu adapter hujjatida yoziladi.</p>",
   ru: {
     yorliq: "Для безопасности",
-    sarlavha: "ishonch: фильтр по числу, а не по ощущению",
+    sarlavha: "ishonch: фильтр по числу",
     tana: "<p>Коэффициент от 0 до 1 выдаёт собственная аналитика устройства. Платформа его не меняет, только сравнивает с порогом.</p>" +
       "<h4>Практические правила</h4>" +
       "<ul><li>Порог задаётся по типу объекта: в городском офисе выше, на отдалённом складе ниже.</li>" +
@@ -969,7 +975,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "ti.m-kadr": {
   yorliq: "Xavfsizlik uchun",
   sarlavha: "kadr_url: rasm qayerda saqlanadi",
-  tana: "<p>Maydon faylning o'zini emas, dalil omboridagi manzilini saqlaydi. Fayl bank ichidagi obyekt omborida (MinIO yoki shunga o'xshash S3 mos ombor) yotadi.</p>" +
+  tana: "<p>Maydon dalil omboridagi manzilni saqlaydi. Fayl bank ichidagi obyekt omborida (MinIO yoki shunga o'xshash S3 mos ombor) yotadi.</p>" +
     "<h4>Kirish qoidalari</h4>" +
     "<ul><li>Havola vaqtinchalik: token 15 daqiqada tugaydi, shuning uchun nusxalangan manzil keyin ochilmaydi.</li>" +
     "<li>Har ochish jurnalga yoziladi: kim, qachon, qaysi obyekt.</li>" +
@@ -1054,14 +1060,14 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   ru: {
     yorliq: "Для тимлида",
     sarlavha: "Порядок изменения схемы",
-    tana: "<p>Добавление поля не является ломающим изменением: старые адаптеры продолжают работать, а не знающие о поле просто его игнорируют.</p>" +
+    tana: "<p>Добавление поля не является ломающим изменением: старые адаптеры продолжают работать и просто игнорируют незнакомое поле.</p>" +
       "<h4>Список ломающих изменений</h4>" +
       "<ul><li>Удаление поля или переименование.</li>" +
       "<li>Смена типа: вместо числа строка.</li>" +
       "<li>Удаление значения из списка допустимых.</li>" +
       "<li>Превращение необязательного поля в обязательное.</li></ul>" +
       "<h4>Порядок</h4>" +
-      "<p>Под ломающее изменение выпускается v2. Обе версии принимаются минимум шесть месяцев, затем старая отключается. Адаптеры переводятся по одному, а не все разом.</p>"
+      "<p>Под ломающее изменение выпускается v2. Обе версии принимаются минимум шесть месяцев, затем старая отключается. Адаптеры переводятся по одному.</p>"
   },
   manba: []
 },
@@ -1159,7 +1165,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     sarlavha: "Dahua: поток подписки и разница в названиях",
     tana: "<p>В HTTP API подписка открывается через <code>eventManager</code>, события приходят в этом же соединении. Логика близка к Hikvision, названия другие.</p>" +
       "<h4>На что обращать внимание</h4>" +
-      "<ul><li>Имена событий отличаются от модели к модели: <code>CrossRegionDetection</code>, <code>CrossLineDetection</code>, <code>VideoMotion</code>. Таблица соответствия лежит в настройках адаптера, а не в коде.</li>" +
+      "<ul><li>Имена событий отличаются от модели к модели: <code>CrossRegionDetection</code>, <code>CrossLineDetection</code>, <code>VideoMotion</code>. Таблица соответствия лежит в настройках адаптера.</li>" +
       "<li>Начало и конец события приходят раздельно: адаптер считает событием только начало.</li>" +
       "<li>Кадр берётся запросом <code>snapshot</code>.</li></ul>" +
       "<p class='ogoh'>С новой моделью таблицу названий придётся дополнить. Поэтому в приёмочных испытаниях используется именно та модель, которая пойдёт на объекты.</p>"
@@ -1196,7 +1202,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 "ti.a-ajax": {
   yorliq: "Jamoa rahbarlari uchun",
   sarlavha: "Ajax: signalizatsiya tili, video emas",
-  tana: "<p>Ajax &mdash; signalizatsiya tizimi: datchiklar, klaviatura, sirena. Kamera uning tarkibida emas, alohida qo'yiladi.</p>" +
+  tana: "<p>Ajax &mdash; signalizatsiya tizimi: datchiklar, klaviatura, sirena. Kamera alohida qo'yiladi.</p>" +
     "<h4>Hodisa qanday olinadi</h4>" +
     "<ul><li><code>SIA DC-09</code> &mdash; qo'riqlash sanoatining standart protokoli. Hodisa qisqa kod bilan keladi: <code>BA</code> &mdash; bosqin signali, <code>BR</code> &mdash; tiklanish, <code>OP</code>/<code>CL</code> &mdash; qo'riqdan olish va qo'yish.</li>" +
     "<li>Bu kanal markaziy kuzatuv stansiyalari uchun mo'ljallangan, shuning uchun ishonchli va sodda.</li>" +
@@ -1226,7 +1232,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>Harorat va namlik</td><td>chegaradan chiqish</td></tr>" +
     "<tr><td>Suv bosishi</td><td>suv aniqlandi</td></tr></table>" +
     "<p>LoRaWAN datchigining batareyasi 3&ndash;5 yil ishlaydi va signal binoning ichkarisidan ham o'tadi. Lekin u rasm bermaydi: nima bo'lganini ko'rish uchun baribir kamera kerak.</p>" +
-    "<p class='ogoh'>Shu sababli LoRaWAN datchiklari kameraning o'rniga emas, qo'shimchasiga qo'yiladi: ular arzon va ko'p nuqtani qamrab oladi.</p>",
+    "<p class='ogoh'>Shu sababli LoRaWAN datchiklari kameraga qo'shimcha sifatida qo'yiladi: ular arzon va ko'p nuqtani qamrab oladi.</p>",
   ru: {
     yorliq: "Для тимлида",
     sarlavha: "Milesight: самый дешёвый адаптер и меньше всего данных",
@@ -1289,7 +1295,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 
 "ti.ad2": {
   yorliq: "Jamoa rahbarlari uchun",
-  sarlavha: "Normallashtirish: nomlar jadvali kodda emas, sozlamada",
+  sarlavha: "Normallashtirish: nomlar jadvali sozlama faylida",
   tana: "<p>Brend hodisasini yagona turga o'girish jadvali sozlama faylida saqlanadi. Yangi model chiqqanda kodni o'zgartirmasdan, jadvalga qator qo'shiladi.</p>" +
     "<table><tr><th>Brend hodisasi</th><th>Yagona tur</th><th>Sinf</th></tr>" +
     "<tr><td>fielddetection</td><td>harakat</td><td>odam</td></tr>" +
@@ -1299,7 +1305,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<p>Jadvalda yo'q hodisa <code>tur: boshqa</code> bilan saqlanadi va navbatga chiqmaydi. Haftalik tahlilda shunday yozuvlar ko'riladi: ular orasida kerakli hodisa bo'lsa, jadvalga qo'shiladi.</p>",
   ru: {
     yorliq: "Для тимлида",
-    sarlavha: "Нормализация: таблица имён в настройках, а не в коде",
+    sarlavha: "Нормализация: таблица имён в файле настроек",
     tana: "<p>Таблица перевода событий бренда в единый тип лежит в файле настроек. При выходе новой модели строка добавляется в таблицу, код не меняется.</p>" +
       "<table><tr><th>Событие бренда</th><th>Единый тип</th><th>Класс</th></tr>" +
       "<tr><td>fielddetection</td><td>движение</td><td>человек</td></tr>" +
@@ -1421,7 +1427,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>Antenna yoki kabel</td><td>Signal asta-sekin pasaygan</td><td>Servis chiqishi</td></tr>" +
     "<tr><td>Quvvat tugadi</td><td>Batareya oldindan pasayib borgan</td><td>Panel va akkumulyatorni tekshirish</td></tr></table>" +
     "<h4>Uzilish paytida nima ishlaydi</h4>" +
-    "<p>Kamera yozishni davom ettiradi, shlyuz hodisalarni navbatga yozadi. Aloqa tiklangach, navbat tartib bilan bo'shatiladi va 5 daqiqadan eski hodisalar kechikkan belgisi bilan alohida ro'yxatga tushadi &mdash; ular jonli signal emas.</p>" +
+    "<p>Kamera yozishni davom ettiradi, shlyuz hodisalarni navbatga yozadi. Aloqa tiklangach, navbat darhol bo'shamaydi: shlyuz 0 dan 120 soniyagacha tasodifiy kutadi va soniyasiga beshta hodisa yuboradi, aks holda butun hudud bir vaqtda ulanib markazni bosib qoladi. 5 daqiqadan eski hodisalar kechikkan belgisi bilan alohida ro'yxatga tushadi &mdash; ular jonli signal emas.</p>" +
     "<p class='ogoh'>Puls davri qurilma turiga qarab boshqacha: elektr bilan ta'minlangan tugun 60 soniyada, batareyali kamera 15 daqiqada xabar beradi. Shuning uchun aloqasizlikni e'lon qilish muddati ham har xil: 15 va 45 daqiqa.</p>",
   ru: {
     yorliq: "Для сервиса",
@@ -1433,7 +1439,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td>Антенна или кабель</td><td>Сигнал падал постепенно</td><td>Выезд сервиса</td></tr>" +
       "<tr><td>Кончилось питание</td><td>Батарея снижалась заранее</td><td>Проверка панели и аккумулятора</td></tr></table>" +
       "<h4>Что работает во время обрыва</h4>" +
-      "<p>Камера продолжает писать, шлюз складывает события в очередь. После восстановления очередь выгружается по порядку, а события старше пяти минут попадают в отдельный список с пометкой «запоздало» — это не живая тревога.</p>" +
+      "<p>Камера продолжает писать, шлюз складывает события в очередь. После восстановления очередь выгружается не залпом: шлюз ждёт случайные 0–120 секунд и отдаёт по пять событий в секунду, иначе целый регион подключится одновременно и накроет центр. События старше пяти минут попадают в отдельный список с пометкой «запоздало» — это не живая тревога.</p>" +
       "<p class='ogoh'>Период импульса зависит от типа устройства: узел с электропитанием отчитывается раз в 60 секунд, батарейная камера — раз в 15 минут. Поэтому и срок объявления потери связи разный: 15 и 45 минут.</p>"
   },
   manba: []
@@ -1534,7 +1540,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>Talab bo'yicha klip</td><td>haftada bitta, 3,1 MB</td><td class='n'>0,4 MB</td></tr>" +
     "<tr><td>Puls va telemetriya</td><td>96 &times; 200 B</td><td class='n'>0,02 MB</td></tr>" +
     "<tr><td><b>Jami</b></td><td></td><td class='n'><b>6,8 MB</b></td></tr></table>" +
-    "<p>Oyiga taxminan 0,2 GB. Eng arzon M2M tarifi ham buni qoplaydi, shuning uchun aloqa xarajati SIM abonent to'lovi bilan cheklanadi.</p>" +
+    "<p>Oyiga taxminan 0,2 GB &mdash; lekin bu hisob kuniga atigi 30 soniyalik jonli videoga qurilgan. Operator obyektni kuniga 30 daqiqa ochsa (tavsiya etilgan rejim), jonli video oyiga 3,5 GB qo'shadi va jami 4,3 GB chiqadi. SIM tarifi kattaroq raqamga olinadi: sarflanmagan trafik arzon, yetmagan trafik esa uzilish.</p>" +
     "<h4>Qachon bu raqam oshadi</h4>" +
     "<ul><li>Operator obyektni tez-tez ochsa: har daqiqa jonli video 3,8 MB qo'shadi.</li>" +
     "<li>Yolg'on signal ko'p bo'lsa: har ortiqcha hodisa 148 KB.</li>" +
@@ -1548,7 +1554,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td>Клип по запросу</td><td>один в неделю, 3,1 МБ</td><td class='n'>0,4 МБ</td></tr>" +
       "<tr><td>Импульсы и телеметрия</td><td>96 &times; 200 Б</td><td class='n'>0,02 МБ</td></tr>" +
       "<tr><td><b>Итого</b></td><td></td><td class='n'><b>6,8 МБ</b></td></tr></table>" +
-      "<p>Около 0,2 ГБ в месяц. Это покрывает даже самый дешёвый M2M-тариф, поэтому расходы на связь ограничены абонентской платой за SIM.</p>" +
+      "<p>Около 0,2 ГБ в месяц &mdash; но этот расчёт построен всего на 30 секундах живого видео в сутки. Если оператор держит объект открытым 30 минут в сутки (рекомендуемый режим), живое видео добавляет 3,5 ГБ в месяц и в итоге выходит 4,3 ГБ. Тариф SIM берётся по большему числу: неизрасходованный трафик — не деньги, а нехватка трафика — это обрыв.</p>" +
       "<h4>Когда цифра вырастет</h4>" +
       "<ul><li>Оператор часто открывает объект: каждая минута живого видео добавляет 3,8 МБ.</li>" +
       "<li>Много ложных тревог: каждое лишнее событие — 148 КБ.</li>" +
@@ -1569,8 +1575,8 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<h4>Nima balansni buzadi</h4>" +
     "<ul><li>Puls davrini 60 soniyaga tushirish: sarf ikki barobardan ko'proq oshadi. Shuning uchun batareyali qurilmada davr 15 daqiqa.</li>" +
     "<li>Kuniga 30 daqiqalik jonli video: qo'shimcha 2,8 Vt&middot;soat.</li>" +
-    "<li>Sovuqda akkumulyator sig'imi 20&ndash;30% kamayadi &mdash; bu sarf emas, zaxiraning qisqarishi.</li></ul>" +
-    "<p class='ogoh'>Panel va akkumulyator o'lchami shu kunlik raqamdan emas, dekabrdagi quyoshsiz kunlar ketma-ketligidan hisoblanadi. Hisob taqdimotning quvvat slaydida turadi.</p>",
+    "<li>Sovuqda akkumulyator sig'imi 20&ndash;30% kamayadi &mdash; bu zaxiraning qisqarishi.</li></ul>" +
+    "<p class='ogoh'>Panel va akkumulyator o'lchami dekabrdagi quyoshsiz kunlar ketma-ketligidan hisoblanadi. Hisob taqdimotning quvvat slaydida turadi.</p>",
   ru: {
     yorliq: "Для монтажников",
     sarlavha: "Энергобаланс декабрьских суток",
@@ -1599,7 +1605,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>Operator amali</td><td class='n'>1&ndash;3</td><td>Jurnal, 5 yil</td></tr></table>" +
     "<h4>Nega puls yozilmaydi</h4>" +
     "<p>1 200 qurilmadan har daqiqada kelgan puls kuniga 1,7 million qator beradi va bazani hech qanday foydasiz o'stiradi. Uning yagona vazifasi &mdash; qurilmaning <code>last_seen</code> maydonini yangilash. Tarix uchun 15 daqiqalik telemetriya yetadi.</p>" +
-    "<p>Dalil fayllari bazada emas, obyekt omborida yotadi: bazada faqat manzil va xesh saqlanadi. Bu bazani kichik va tez tutadi.</p>",
+    "<p>Dalil fayllari obyekt omborida yotadi: bazada faqat manzil va xesh saqlanadi. Bu bazani kichik va tez tutadi.</p>",
   ru: {
     yorliq: "Для тимлида",
     sarlavha: "Что пишется в базу, а что нет",
@@ -1635,6 +1641,324 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td>Питание</td><td>Постоянные 220 В</td><td>Солнце и аккумулятор</td></tr>" +
       "<tr><td>Диск в центре, 90 дней</td><td class='n'>десятки ТБ</td><td class='n'>0,97 ТБ</td></tr></table>" +
       "<p>На большинстве объектов банковского баланса нет ни электричества, ни интернета. Поэтому выбор здесь — не вопрос технического вкуса: схема с постоянным потоком на этих объектах просто не работает.</p>"
+  },
+  manba: []
+},
+
+/* ---------- Tizim xaritasi: konturlar va oqimlar ---------- */
+
+"ti.x-kontur-obyekt": {
+  yorliq: "Kontur 1",
+  sarlavha: "Obyekt konturi: elektr ham, internet ham, odam ham yo'q joyda nima ishlaydi",
+  tana: "<p>Balansdagi 267 obyektning ko'pchiligi &mdash; tuman markazidan uzoqdagi ombor, tegirmon, sex va yer uchastkasi. Ular kredit bo'yicha o'tgan kunda elektr allaqachon uzilgan, shartnomasi bekor qilingan, qorovul ishdan bo'shagan. Shu sababli bu konturdagi hamma narsa uchta shartga bo'ysunadi: o'zining quvvati bilan ishlaydi, aloqasiz ham ishlaydi, kimdir borib tugmasini bosishini kutmaydi.</p>" +
+    "<h4>Konturdan nima chiqadi va nima chiqmaydi</h4>" +
+    "<table><tr><th>Chiqadi</th><th>Chiqmaydi</th></tr>" +
+    "<tr><td>Hodisa yozuvi, 412 bayt JSON</td><td>Uzluksiz video oqimi</td></tr>" +
+    "<tr><td>Bitta kadr, 148 KB</td><td>Kunlik to'liq arxiv</td></tr>" +
+    "<tr><td>Puls va telemetriya: zaryad, RSRP, SD holati</td><td>Shaxsiy ma'lumot va yuz tasviri</td></tr>" +
+    "<tr><td>Operator so'raganda &mdash; jonli sessiya</td><td>Xodim ismi, telefon raqami</td></tr></table>" +
+    "<p>Arxiv obyektda qoladi. Buni tejamkorlik deb o'qish xato: aloqa uzilgan paytda ham dalil yo'qolmasligi kerak. NVR yoki SD karta joyida yozadi, markazga faqat ustidagi qatlam &mdash; nima bo'lgani haqidagi yozuv &mdash; ko'chadi.</p>" +
+    "<h4>Bu konturda bank nimani boshqara olmaydi</h4>" +
+    "<ul><li><b>Havo.</b> Dekabrda quyoshdan kuniga atigi 1,62 kVt&middot;soat/m&sup2; tushadi, qor panelni yopadi. Quvvat hisobi shu eng yomon oyga quriladi va zaxira 5 sutkaga olinadi.</li>" +
+    "<li><b>Odam.</b> Qo'shni obyektdan kabel tortish, panelni burish, kamerani o'girish &mdash; hammasi uchraydi. Montaj varag'ida antivandal qutisi, tortish momenti va surat bilan qabul majburiy.</li>" +
+    "<li><b>Masofa.</b> Chekka tumandagi obyektga brigada 5 ish kunigacha yetib boradi. Shuning uchun zaxira komplekt viloyat markazida saqlanadi, obyektda emas.</li></ul>" +
+    "<p class='ogoh'>Konturning chegarasi shartnomada ham chizilgan: bu yerdagi jihoz yetkazuvchi kafolatida, montaj integrator zimmasida, elektr va aloqa esa bankning o'z hisobidan. Chegara aniq bo'lmasa, birinchi nosozlikdayoq uchala tomon bir-biriga ko'rsatadi.</p>",
+  ru: {
+    yorliq: "Контур 1",
+    sarlavha: "Контур объекта: что работает там, где нет ни электричества, ни интернета, ни человека",
+    tana: "<p>Большая часть из 267 объектов на балансе &mdash; склад, мельница, цех или участок далеко от райцентра. К моменту перехода по кредиту свет там уже отключён, договор расторгнут, сторож уволен. Поэтому всё в этом контуре подчинено трём условиям: работает на своей энергии, работает без связи, не ждёт, пока кто-то приедет и нажмёт кнопку.</p>" +
+      "<h4>Что выходит из контура, а что нет</h4>" +
+      "<table><tr><th>Выходит</th><th>Не выходит</th></tr>" +
+      "<tr><td>Запись события, 412 байт JSON</td><td>Непрерывный видеопоток</td></tr>" +
+      "<tr><td>Один кадр, 148 КБ</td><td>Полный суточный архив</td></tr>" +
+      "<tr><td>Пульс и телеметрия: заряд, RSRP, состояние SD</td><td>Персональные данные и изображения лиц</td></tr>" +
+      "<tr><td>Живая сессия &mdash; по запросу оператора</td><td>Имя сотрудника, номер телефона</td></tr></table>" +
+      "<p>Архив остаётся на объекте. Это не экономия, а правило: доказательство не должно пропасть в момент обрыва связи. NVR или SD-карта пишут на месте, в центр уходит только верхний слой &mdash; запись о том, что произошло.</p>" +
+      "<h4>Чем в этом контуре банк управлять не может</h4>" +
+      "<ul><li><b>Погода.</b> В декабре приход солнца — всего 1,62 кВт&middot;ч/м&sup2; в сутки, снег закрывает панель. Энергорасчёт строится по этому худшему месяцу, запас берётся на 5 суток.</li>" +
+      "<li><b>Человек.</b> Кабель к соседнему объекту, развёрнутая панель, повёрнутая камера &mdash; всё это встречается. В листе монтажа обязательны антивандальный бокс, момент затяжки и приёмка по фотографиям.</li>" +
+      "<li><b>Расстояние.</b> До объекта в отдалённом районе бригада едет до 5 рабочих дней. Поэтому запасной комплект хранится в областном центре.</li></ul>" +
+      "<p class='ogoh'>Граница контура прочерчена и в договоре: оборудование здесь на гарантии поставщика, монтаж &mdash; на интеграторе, электричество и связь &mdash; за счёт банка. Если граница размыта, при первой же неисправности все трое показывают друг на друга.</p>"
+  },
+  manba: []
+},
+
+"ti.x-kontur-operator": {
+  yorliq: "Kontur 2",
+  sarlavha: "Aloqa operatori tarmog'i: bankka tegishli emas, lekin javobgarligi shartnomada",
+  tana: "<p>Qurilma bilan markaz o'rtasidagi yagona bo'g'in &mdash; uyali tarmoq. Uni bank sozlamaydi va ta'mirlamaydi, shuning uchun bu yerda shartnoma qarori ishlaydi.</p>" +
+    "<h4>Shartnomaga aynan nima yoziladi</h4>" +
+    "<table><tr><th>Band</th><th>Talab</th></tr>" +
+    "<tr><td>APN</td><td>Yopiq, internetga chiqmaydigan. SIM o'g'irlansa ham boshqa hech qayerga ulanmaydi</td></tr>" +
+    "<tr><td>Manzil</td><td>Doimiy ichki IP yoki tunnel, NAT ortidan kirish talab qilinmaydi</td></tr>" +
+    "<tr><td>Tiklash muddati</td><td>24 soat, yakka obyekt uchun; 4 soat, bitta bazaviy stansiyada 10 dan ortiq obyekt uzilsa</td></tr>" +
+    "<tr><td>Hisobot</td><td>Oylik uzilishlar jurnali, obyekt bo'yicha, bank tomonida tekshiriladi</td></tr>" +
+    "<tr><td>Trafik</td><td>Kamerali obyektga oyiga 5 GB paket: 0,8 GB hodisa, 3,5 GB jonli video va zaxira. Ortiqchasi tarif ichida, jarimasiz</td></tr></table>" +
+    "<h4>Nega ikkita operator</h4>" +
+    "<p>Bitta operatorning viloyatdagi uzilishi o'nlab obyektni bir vaqtda ko'r qiladi. Modemda ikkita SIM turadi: asosiysi 3 marta ketma-ket ulanolmasa, ikkinchisiga o'tadi va 6 soatdan keyin asosiysini qayta sinaydi. Ikkinchi SIM oyiga taxminan 12 ming so'm turadi &mdash; bitta obyektga chiqishning narxidan yuz barobar arzon.</p>" +
+    "<p><b>Imzolashdan oldin o'lchanadi.</b> Har bir obyektda montajdan oldin RSRP, SINR va uzluksiz 15 daqiqalik yuklash sinovi bajariladi, natija montaj varag'iga yoziladi. &minus;110 dBm dan past joyda tashqi antenna yoki mast kerak bo'ladi va bu smetaga oldindan kiritiladi &mdash; keyin emas.</p>" +
+    "<p class='ogoh'>Operatorning &laquo;qamrov xaritasi&raquo; dalil emas. Xaritada yashil bo'lgan joyda ombor devori ichida signal umuman bo'lmasligi mumkin; o'lchov faqat qurilma turadigan nuqtada, o'sha balandlikda qilinadi.</p>",
+  ru: {
+    yorliq: "Контур 2",
+    sarlavha: "Сеть оператора связи: банку не принадлежит, но ответственность прописана в договоре",
+    tana: "<p>Единственное звено между устройством и центром &mdash; сотовая сеть. Банк её не настраивает и не чинит, поэтому здесь работает не техническое решение, а договорное.</p>" +
+      "<h4>Что именно пишется в договор</h4>" +
+      "<table><tr><th>Пункт</th><th>Требование</th></tr>" +
+      "<tr><td>APN</td><td>Закрытый, без выхода в интернет. Даже украденная SIM никуда больше не подключится</td></tr>" +
+      "<tr><td>Адресация</td><td>Постоянный внутренний IP или туннель, вход из-за NAT не требуется</td></tr>" +
+      "<tr><td>Срок восстановления</td><td>24 часа для одиночного объекта; 4 часа, если на одной базовой станции отвалилось больше 10</td></tr>" +
+      "<tr><td>Отчётность</td><td>Ежемесячный журнал обрывов по объектам, сверяется на стороне банка</td></tr>" +
+      "<tr><td>Трафик</td><td>Пакет 5 ГБ в месяц на объект с камерой: 0,8 ГБ событий, 3,5 ГБ живого видео и запас. Превышение внутри тарифа, без штрафа</td></tr></table>" +
+      "<h4>Зачем два оператора</h4>" +
+      "<p>Один сбой оператора в области ослепляет десятки объектов одновременно. В модеме стоят две SIM: если основная три раза подряд не подключилась, модем уходит на вторую и через 6 часов пробует основную снова. Вторая SIM стоит около 12 тысяч сумов в месяц &mdash; в сто раз дешевле одного выезда на объект.</p>" +
+      "<p><b>Измеряется до подписания.</b> На каждом объекте перед монтажом снимаются RSRP, SINR и 15-минутный тест непрерывной отдачи, результат заносится в лист монтажа. Ниже &minus;110 дБм нужна внешняя антенна или мачта &mdash; и это закладывается в смету заранее.</p>" +
+      "<p class='ogoh'>&laquo;Карта покрытия&raquo; оператора доказательством не является. Там, где на карте зелено, внутри стен склада сигнала может не быть вовсе; замер делается только в той точке и на той высоте, где встанет устройство.</p>"
+  },
+  manba: []
+},
+
+"ti.x-kontur-bank": {
+  yorliq: "Kontur 3",
+  sarlavha: "Bank konturi: ma'lumot qayerda yotadi va unga kim tegadi",
+  tana: "<p>Adapterdan boshlab hamma narsa bankning o'z perimetrida ishlaydi: virtual mashinalar bankning ma'lumot markazida, baza bankning disklarida, zaxira nusxa bankning arxivida. Bulutli xizmat ham, yetkazuvchining serveri ham bu yerda ishtirok etmaydi.</p>" +
+    "<h4>Segmentlar va ular orasidagi qoida</h4>" +
+    "<table><tr><th>Segment</th><th>Nima turadi</th><th>Kim kiradi</th></tr>" +
+    "<tr><td>DMZ</td><td>Shlyuz, qurilmalarning mTLS ulanishi</td><td>Hech kim; faqat qurilma sertifikati</td></tr>" +
+    "<tr><td>Ilova</td><td>Adapter, shina, qoidalar, API</td><td>Ma'muriy tarmoqdan, ikkinchi omil bilan</td></tr>" +
+    "<tr><td>Ma'lumot</td><td>Reyestr bazasi, jurnal, media</td><td>Faqat ilova segmentidan</td></tr>" +
+    "<tr><td>Ish joyi</td><td>Panel va mobil ilova</td><td>AD hisobi, rol bo'yicha</td></tr></table>" +
+    "<p>Segmentlar orasida faqat ro'yxatga olingan port va yo'nalish ochiladi. Qurilma hech qachon baza bilan bevosita gaplashmaydi: u shlyuzga keladi, undan narisiga faqat tekshirilgan yozuv o'tadi.</p>" +
+    "<h4>Bank o'zi yuritadigan uchta ish</h4>" +
+    "<ul><li><b>Sertifikat.</b> Har bir qurilmaning o'z mijoz sertifikati bor, amal muddati 2 yil. Almashtirish bosqichma-bosqich, haftasiga 40 obyektdan, aks holda bir kunda yuzta obyekt uzilib qoladi.</li>" +
+    "<li><b>Zaxira.</b> Baza har kuni, media haftasiga. Sinalmagan zaxira mavjud emas: chorakda bir marta boshqa serverga tiklab ko'riladi va natija akt bilan qayd etiladi.</li>" +
+    "<li><b>Jurnal.</b> Kim qaysi obyektni ko'rgani, qaysi videoni so'ragani, qaysi buyruqni yuborgani o'zgartirib bo'lmaydigan jurnalga yoziladi va 5 yil saqlanadi.</li></ul>" +
+    "<p class='ogoh'>Ma'lumot mamlakat ichida saqlanishi qonun talabi. Shuning uchun xaritada bu kontur alohida chizilgan: undan tashqariga faqat bankning o'zi ruxsat bergan eksport chiqadi.</p>",
+  ru: {
+    yorliq: "Контур 3",
+    sarlavha: "Контур банка: где лежат данные и кто к ним прикасается",
+    tana: "<p>Начиная с адаптера всё работает внутри собственного периметра банка: виртуальные машины в ЦОД банка, база на дисках банка, резервные копии в архиве банка. Ни облачный сервис, ни сервер поставщика здесь не участвуют.</p>" +
+      "<h4>Сегменты и правило между ними</h4>" +
+      "<table><tr><th>Сегмент</th><th>Что стоит</th><th>Кто входит</th></tr>" +
+      "<tr><td>DMZ</td><td>Шлюз, mTLS-подключения устройств</td><td>Никто; только сертификат устройства</td></tr>" +
+      "<tr><td>Приложение</td><td>Адаптер, шина, правила, API</td><td>Из административной сети, со вторым фактором</td></tr>" +
+      "<tr><td>Данные</td><td>База реестра, журнал, медиа</td><td>Только из сегмента приложения</td></tr>" +
+      "<tr><td>Рабочее место</td><td>Панель и мобильное приложение</td><td>Учётная запись AD, по роли</td></tr></table>" +
+      "<p>Между сегментами открыты только перечисленные порты и направления. Устройство никогда не разговаривает с базой напрямую: оно приходит на шлюз, дальше проходит только проверенная запись.</p>" +
+      "<h4>Три работы, которые банк ведёт сам</h4>" +
+      "<ul><li><b>Сертификаты.</b> У каждого устройства свой клиентский сертификат сроком на 2 года. Замена идёт волнами, по 40 объектов в неделю, иначе за один день отвалится сотня.</li>" +
+      "<li><b>Резервные копии.</b> База ежедневно, медиа еженедельно. Непроверенной копии не существует: раз в квартал восстановление на другой сервер с оформлением акта.</li>" +
+      "<li><b>Журнал.</b> Кто какой объект смотрел, какое видео запрашивал, какую команду отправил &mdash; пишется в неизменяемый журнал и хранится 5 лет.</li></ul>" +
+      "<p class='ogoh'>Хранение данных внутри страны &mdash; не выбор, а требование. Поэтому на карте этот контур выделен отдельно: наружу уходит только тот экспорт, который банк разрешил сам.</p>"
+  },
+  manba: []
+},
+
+"ti.x-oqim-yuqori": {
+  yorliq: "Oqim 1",
+  sarlavha: "Hodisa va telemetriya: pastdan yuqoriga, yo'qolishsiz",
+  tana: "<p>Bu oqim doim bitta yo'nalishda yuradi &mdash; qurilmadan markazga. Uning ikkita turi bor va ularni aralashtirmaslik kerak: hodisa (nimadir sodir bo'ldi) va telemetriya (qurilma o'zi haqida xabar beradi).</p>" +
+    "<h4>Nima va qancha</h4>" +
+    "<table><tr><th>Yozuv</th><th>Hajmi</th><th>Qanchada bir</th></tr>" +
+    "<tr><td>Hodisa, JSON</td><td>412 bayt</td><td>Sodir bo'lganda</td></tr>" +
+    "<tr><td>Hodisa kadri, JPEG</td><td>148 KB</td><td>Hodisa bilan birga</td></tr>" +
+    "<tr><td>Puls, elektrli tugun</td><td>96 bayt</td><td>60 soniyada</td></tr>" +
+    "<tr><td>Puls, batareyali qurilma</td><td>96 bayt</td><td>15 daqiqada</td></tr>" +
+    "<tr><td>Telemetriya: zaryad, RSRP, harorat, SD holati</td><td>210 bayt</td><td>Soatiga</td></tr></table>" +
+    "<p>Shu oqimning &mdash; hodisa va telemetriyaning &mdash; bir obyektdagi dekabr trafigi 240&ndash;300 MB. Uning 90 foizdan ko'pi hodisa kadrlariga ketadi, qolgani puls va telemetriya. Jonli video bu oqimga kirmaydi: u alohida kanal va operator obyektni kuniga 30 daqiqa ochsa, oyiga yana 3,5 GB qo'shadi.</p>" +
+    "<h4>Yo'qolmasligi qanday ta'minlanadi</h4>" +
+    "<ul><li><b>Navbat pastda.</b> Aloqa uzilsa, shlyuz hodisalarni o'z xotirasida 72 soat saqlaydi va tiklanganda tartib bilan yuboradi.</li>" +
+    "<li><b>Kamida bir marta.</b> Qurilma javob olmaguncha qayta yuboradi, shuning uchun takror kelishi mumkin. Har yozuvda qurilma bergan <code>hodisa_id</code> turadi; adapter shu kalit bo'yicha takrorni tashlaydi.</li>" +
+    "<li><b>Tartib buzilishi.</b> Uzilgan obyektdan hodisalar kechikib keladi va boshqalaridan keyin tushadi. Shuning uchun saralash qurilma soati bo'yicha bajariladi, soat farqi esa alohida maydonda saqlanadi.</li>" +
+    "<li><b>Bosim.</b> Bitta obyekt soatiga 200 dan ortiq hodisa yubora boshlasa, u &laquo;sozlash kerak&raquo; ro'yxatiga tushadi va oqimi cheklanadi &mdash; aks holda bitta nosoz kamera butun navbatni to'sib qo'yadi.</li></ul>" +
+    "<p class='ogoh'>Signal kelmasligi ham hodisa. Uch marta puls kelmasa, tizim &laquo;aloqada emas&raquo; voqeasini ochadi. Shuning uchun bu oqimning qiymati uzluksizligida.</p>",
+  ru: {
+    yorliq: "Поток 1",
+    sarlavha: "События и телеметрия: снизу вверх, без потерь",
+    tana: "<p>Этот поток всегда идёт в одну сторону &mdash; от устройства в центр. В нём два типа записей, и смешивать их нельзя: событие (что-то произошло) и телеметрия (устройство отчитывается о себе).</p>" +
+      "<h4>Что и сколько</h4>" +
+      "<table><tr><th>Запись</th><th>Размер</th><th>Как часто</th></tr>" +
+      "<tr><td>Событие, JSON</td><td>412 байт</td><td>По факту</td></tr>" +
+      "<tr><td>Кадр события, JPEG</td><td>148 КБ</td><td>Вместе с событием</td></tr>" +
+      "<tr><td>Пульс, узел с питанием</td><td>96 байт</td><td>Раз в 60 секунд</td></tr>" +
+      "<tr><td>Пульс, батарейное устройство</td><td>96 байт</td><td>Раз в 15 минут</td></tr>" +
+      "<tr><td>Телеметрия: заряд, RSRP, температура, состояние SD</td><td>210 байт</td><td>Раз в час</td></tr></table>" +
+      "<p>Декабрьский трафик именно этого потока &mdash; событий и телеметрии &mdash; составляет 240&ndash;300 МБ на объект. Больше 90 процентов приходится на кадры событий, остальное &mdash; пульс и телеметрия. Живое видео в этот поток не входит: это отдельный канал, и при 30 минутах просмотра в сутки он добавляет ещё 3,5 ГБ в месяц.</p>" +
+      "<h4>Как обеспечивается сохранность</h4>" +
+      "<ul><li><b>Очередь внизу.</b> При обрыве шлюз держит события в своей памяти 72 часа и после восстановления отдаёт их по порядку.</li>" +
+      "<li><b>Не менее одного раза.</b> Устройство повторяет отправку, пока не получит ответ, поэтому дубли возможны. В каждой записи есть <code>hodisa_id</code>, присвоенный устройством; по этому ключу адаптер гасит повтор.</li>" +
+      "<li><b>Нарушение порядка.</b> С отключённого объекта события приходят с опозданием, позже остальных. Поэтому сортировка идёт не по времени приёма, а по часам устройства, а расхождение часов хранится отдельным полем.</li>" +
+      "<li><b>Давление.</b> Если объект начинает слать больше 200 событий в час, он попадает в список &laquo;требует настройки&raquo;, а его поток ограничивается &mdash; иначе одна неисправная камера забьёт всю очередь.</li></ul>" +
+      "<p class='ogoh'>Отсутствие сигнала &mdash; тоже событие. После трёх пропущенных пульсов система открывает инцидент &laquo;нет связи&raquo;. Ценность этого потока не в событиях, а в его непрерывности.</p>"
+  },
+  manba: []
+},
+
+"ti.x-oqim-past": {
+  yorliq: "Oqim 2",
+  sarlavha: "Buyruq va sozlama: yuqoridan pastga, har biri jurnalda",
+  tana: "<p>Pastga tushadigan har bir narsa obyektdagi jihozning xulqini o'zgartiradi, shuning uchun bu oqimning qoidasi qattiqroq: imzolangan, jurnalga yozilgan va qaytarib olinadigan bo'lishi shart.</p>" +
+    "<h4>Qanday buyruqlar bor</h4>" +
+    "<table><tr><th>Buyruq</th><th>Kim beradi</th><th>Qanday bajariladi</th></tr>" +
+    "<tr><td>Jonli sessiyani ochish</td><td>Navbatchi operator</td><td>Darhol, token 10 daqiqa amal qiladi</td></tr>" +
+    "<tr><td>Sezish zonasi va chegarani o'zgartirish</td><td>Servis muhandisi</td><td>Navbatda, qurilma uyg'onganda</td></tr>" +
+    "<tr><td>Soatni to'g'rilash</td><td>Tizim, avtomatik</td><td>Har ulanishda, farq 2 daqiqadan oshsa</td></tr>" +
+    "<tr><td>Proshivkani yangilash</td><td>Bank jamoasi</td><td>Ish kunida, bosqichma-bosqich, orqaga qaytarish bilan</td></tr>" +
+    "<tr><td>Sertifikatni almashtirish</td><td>Bank jamoasi</td><td>Haftasiga 40 obyekt, eskisi 14 kun ishlaydi</td></tr></table>" +
+    "<h4>Uchta qoida</h4>" +
+    "<ul><li><b>Sukut bilan bajarilmaydi.</b> Har bir buyruq kim, qachon va nima uchun berganini yozib qoldiradi. Videoni ochish ham buyruq: kim ko'rgani jurnalda qoladi.</li>" +
+    "<li><b>Ommaviy buyruq ikki imzo bilan.</b> 20 dan ortiq obyektga tegadigan har qanday o'zgarish ikkinchi xodim tasdig'isiz ketmaydi. Bitta noto'g'ri sozlama yuzlab obyektni bir vaqtda ko'r qilishi mumkin.</li>" +
+    "<li><b>Bosqichma-bosqich.</b> Proshivka avval 5 obyektda, keyin 40 da, keyin qolganida. Har bosqichdan keyin 48 soat kuzatiladi: puls chastotasi, batareya sarfi va yolg'on signal soni solishtiriladi.</li></ul>" +
+    "<p>Batareyali qurilma doim uxlab yotgani uchun buyruq darhol yetmaydi: u navbatda turadi va qurilma keyingi ulanishida oladi. Operator ekranda &laquo;navbatda&raquo; holatini ko'radi va buyruq yo'qolgan deb o'ylamaydi.</p>" +
+    "<p class='ogoh'>Bu oqimni yetkazuvchiga ochib bo'lmaydi. Masofadan sozlash huquqi faqat bank jamoasida qoladi; yetkazuvchi kerak bo'lsa, unga vaqtincha va jurnalga yoziladigan kirish beriladi.</p>",
+  ru: {
+    yorliq: "Поток 2",
+    sarlavha: "Команды и настройки: сверху вниз, каждая в журнале",
+    tana: "<p>Всё, что идёт вниз, меняет поведение оборудования на объекте, поэтому правило здесь жёстче: команда должна быть подписана, записана в журнал и обратима.</p>" +
+      "<h4>Какие бывают команды</h4>" +
+      "<table><tr><th>Команда</th><th>Кто отдаёт</th><th>Как исполняется</th></tr>" +
+      "<tr><td>Открыть живую сессию</td><td>Дежурный оператор</td><td>Сразу, токен действует 10 минут</td></tr>" +
+      "<tr><td>Изменить зону детекции и порог</td><td>Сервисный инженер</td><td>Из очереди, при пробуждении устройства</td></tr>" +
+      "<tr><td>Выровнять часы</td><td>Система, автоматически</td><td>При каждом подключении, если расхождение больше 2 минут</td></tr>" +
+      "<tr><td>Обновить прошивку</td><td>Команда банка</td><td>В рабочий день, волнами, с откатом</td></tr>" +
+      "<tr><td>Заменить сертификат</td><td>Команда банка</td><td>По 40 объектов в неделю, старый живёт 14 дней</td></tr></table>" +
+      "<h4>Три правила</h4>" +
+      "<ul><li><b>Молча не исполняется.</b> Каждая команда оставляет след: кто, когда и зачем. Открытие видео &mdash; тоже команда: кто смотрел, остаётся в журнале.</li>" +
+      "<li><b>Массовая команда &mdash; в две подписи.</b> Любое изменение, затрагивающее больше 20 объектов, не уходит без подтверждения второго сотрудника. Одна неверная настройка способна ослепить сотни объектов разом.</li>" +
+      "<li><b>Волнами.</b> Прошивка сначала на 5 объектах, затем на 40, затем на остальных. После каждой волны 48 часов наблюдения: частота пульса, расход батареи и число ложных срабатываний сравниваются с прежними.</li></ul>" +
+      "<p>Батарейное устройство спит, поэтому команда доходит не мгновенно: она ждёт в очереди и забирается при следующем подключении. Оператор видит на экране статус &laquo;в очереди&raquo; и не считает команду потерянной.</p>" +
+      "<p class='ogoh'>Этот поток нельзя открывать поставщику. Право удалённой настройки остаётся у команды банка; поставщику при необходимости выдаётся временный доступ, который пишется в журнал.</p>"
+  },
+  manba: []
+},
+
+"ti.x-oqim-video": {
+  yorliq: "Oqim 3",
+  sarlavha: "Video: so'rov bo'yicha ochiladigan sessiya",
+  tana: "<p>267 obyektdan uzluksiz video olish na kanal, na quvvat, na disk bo'yicha ko'tarilmaydi. Shu sababli video alohida oqim sifatida ishlaydi va faqat operator so'raganda ochiladi.</p>" +
+    "<h4>Sessiya qanday ochiladi</h4>" +
+    "<table><tr><th>Qadam</th><th>Nima bo'ladi</th><th>Vaqt</th></tr>" +
+    "<tr><td>1</td><td>Operator hodisa kartochkasida &laquo;Jonli ko'rish&raquo; ni bosadi</td><td>&mdash;</td></tr>" +
+    "<tr><td>2</td><td>Yadro qurilmaga uyg'onish buyrug'ini yuboradi va vaqtinchalik token beradi</td><td>0,4 s</td></tr>" +
+    "<tr><td>3</td><td>Media shlyuz qurilma oqimini qabul qiladi va brauzerga WebRTC bilan uzatadi</td><td>3,6 s</td></tr>" +
+    "<tr><td>4</td><td>Token 10 daqiqada kuchini yo'qotadi, sessiya avtomatik yopiladi</td><td>10 daq</td></tr></table>" +
+    "<p>Brauzer kameraga bevosita ulanmaydi: oradagi media shlyuz qurilmaning manzilini yashiradi va oqimga foydalanuvchi nomi bilan vaqt belgisini bosadi. Ekrandan olingan surat ham shu belgi bilan chiqadi.</p>" +
+    "<h4>Narxi va cheklovlari</h4>" +
+    "<ul><li>Bitta 5 daqiqalik sessiya 2 Mbit/s oqimda 75 MB trafik oladi &mdash; obyektning oylik limitining chorak qismi. Shuning uchun sessiya faqat hodisaga bog'liq holda ochiladi.</li>" +
+    "<li>Batareyali kamerada jonli oqim quvvatni 12 barobar ko'p yeydi: 10 daqiqalik ko'rish dekabr zaxirasidan taxminan yarim soatlik ishni oladi.</li>" +
+    "<li>Zaryad 20 foizdan tushganda jonli ko'rish o'chadi va tugma ekranda faolsiz bo'lib qoladi. Bu himoya ishlagani: yozuv davom etadi.</li></ul>" +
+    "<p><b>Arxiv ko'chmaydi.</b> Sud yoki tekshiruv uchun kerak bo'lsa, operator aniq oraliqni belgilab klip so'raydi; qurilma faqat shu bo'lakni yuklaydi. 3 MB lik klip bir daqiqada keladi, butun kunlik arxiv esa hech qachon markazga ko'chirilmaydi.</p>",
+  ru: {
+    yorliq: "Поток 3",
+    sarlavha: "Видео: не постоянный поток, а сессия по запросу",
+    tana: "<p>Непрерывное видео с 267 объектов не вытягивают ни канал, ни энергия, ни диски. Поэтому видео работает отдельным потоком и открывается только по запросу оператора.</p>" +
+      "<h4>Как открывается сессия</h4>" +
+      "<table><tr><th>Шаг</th><th>Что происходит</th><th>Время</th></tr>" +
+      "<tr><td>1</td><td>Оператор нажимает &laquo;Живой просмотр&raquo; в карточке события</td><td>&mdash;</td></tr>" +
+      "<tr><td>2</td><td>Ядро посылает устройству команду пробуждения и выдаёт временный токен</td><td>0,4 с</td></tr>" +
+      "<tr><td>3</td><td>Медиашлюз принимает поток устройства и отдаёт в браузер по WebRTC</td><td>3,6 с</td></tr>" +
+      "<tr><td>4</td><td>Через 10 минут токен теряет силу, сессия закрывается сама</td><td>10 мин</td></tr></table>" +
+      "<p>Браузер не подключается к камере напрямую: медиашлюз между ними скрывает адрес устройства и накладывает на поток имя пользователя и метку времени. Снимок с экрана выходит с той же меткой.</p>" +
+      "<h4>Цена и ограничения</h4>" +
+      "<ul><li>Одна пятиминутная сессия при потоке 2 Мбит/с берёт 75 МБ &mdash; четверть месячного лимита объекта. Поэтому сессия открывается только в привязке к событию.</li>" +
+      "<li>На батарейной камере живой поток тратит энергию в 12 раз быстрее: 10 минут просмотра забирают из декабрьского запаса около получаса работы.</li>" +
+      "<li>Ниже 20 процентов заряда живой просмотр отключается, кнопка на экране становится неактивной. Это не сбой, а защита: запись при этом продолжается.</li></ul>" +
+      "<p><b>Архив не переезжает.</b> Если запись нужна для суда или проверки, оператор указывает точный интервал и запрашивает клип; устройство отдаёт только этот фрагмент. Клип на 3 МБ приходит за минуту, а суточный архив в центр не копируется никогда.</p>"
+  },
+  manba: []
+},
+
+/* ---------- Adapter xaritasi: modul, chiqish, iste'molchilar ---------- */
+
+"ti.x-adapter": {
+  yorliq: "Adapter",
+  sarlavha: "Adapter nima va u qayerda ishlaydi",
+  tana: "<p>Adapter brendga bittadan kichik moduldan iborat. Har biri o'z jarayonida ishlaydi va faqat o'z brendini biladi. Hikvision moduli ishdan chiqsa, Ajax va Milesight oqimi buzilmaydi &mdash; bu shunday bo'lingan yagona sabab.</p>" +
+    "<h4>Qayerda turadi</h4>" +
+    "<table><tr><th>Savol</th><th>Javob</th></tr>" +
+    "<tr><td>Joyi</td><td>Bank ma'lumot markazi, ilova segmenti</td></tr>" +
+    "<tr><td>Nusxa soni</td><td>Har brendga 2 ta, bir-birini ko'tarib turadi</td></tr>" +
+    "<tr><td>Bitta nusxa ko'taradi</td><td>200 obyekt yoki sekundiga 50 hodisa</td></tr>" +
+    "<tr><td>Yangilash</td><td>Boshqasini to'xtatmasdan, birma-bir</td></tr>" +
+    "<tr><td>Kuzatuv</td><td>Navbat uzunligi, rad etilgan yozuv, o'rtacha kechikish</td></tr></table>" +
+    "<h4>Yangi brend qo'shilganda nima o'zgaradi</h4>" +
+    "<p>Faqat yangi modul yoziladi. Yadro, baza, ekranlar va hisobotlar tegilmaydi &mdash; ular brend haqida umuman bilmaydi. Shu sababli beshinchi brendni ulash birinchisidan qiyin emas: ish hajmi hujjatning sifatiga bog'liq.</p>" +
+    "<p class='ogoh'>Adapterning eng xavfli xatosi &mdash; sekin ishlash emas, jimgina yutib yuborish. Shuning uchun sxemadan o'tmagan yozuv tashlab yuborilmaydi: u karantin jadvaliga tushadi, ustida ogohlantirish yonadi va muhandis uni qo'lda ko'radi.</p>",
+  ru: {
+    yorliq: "Адаптер",
+    sarlavha: "Что такое адаптер и где он работает",
+    tana: "<p>Адаптер &mdash; не одна большая программа, а по маленькому модулю на бренд. Каждый работает в своём процессе и знает только свой бренд. Если модуль Hikvision упал, потоки Ajax и Milesight не страдают &mdash; ради этого разделение и сделано.</p>" +
+      "<h4>Где стоит</h4>" +
+      "<table><tr><th>Вопрос</th><th>Ответ</th></tr>" +
+      "<tr><td>Место</td><td>ЦОД банка, сегмент приложений</td></tr>" +
+      "<tr><td>Число экземпляров</td><td>По 2 на бренд, страхуют друг друга</td></tr>" +
+      "<tr><td>Один экземпляр держит</td><td>200 объектов или 50 событий в секунду</td></tr>" +
+      "<tr><td>Обновление</td><td>По одному, без остановки остальных</td></tr>" +
+      "<tr><td>Наблюдение</td><td>Длина очереди, отклонённые записи, средняя задержка</td></tr></table>" +
+      "<h4>Что меняется при добавлении бренда</h4>" +
+      "<p>Пишется только новый модуль. Ядро, база, экраны и отчёты не трогаются &mdash; они о брендах вообще не знают. Поэтому пятый бренд подключается не тяжелее первого: объём работы зависит не от протокола, а от качества документации.</p>" +
+      "<p class='ogoh'>Самая опасная ошибка адаптера &mdash; не медленная работа, а тихое проглатывание. Поэтому запись, не прошедшая схему, не выбрасывается: она попадает в карантинную таблицу, по ней загорается предупреждение, и инженер разбирает её руками.</p>"
+  },
+  manba: []
+},
+
+"ti.x-chiqish": {
+  yorliq: "Chiqish",
+  sarlavha: "Chiqishdagi yozuv: nima brendga bog'liq emas",
+  tana: "<p>Adapterdan chiqadigan yozuv hech qaysi brendning atamasini saqlamaydi. U 412 bayt atrofida bo'ladi va o'n yildan keyin ham ochilib o'qiladigan qilib tuzilgan: maydonlar o'chirilmaydi, faqat qo'shiladi.</p>" +
+    "<table><tr><th>Maydon</th><th>Nima uchun kerak</th></tr>" +
+    "<tr><td><code>sxema</code></td><td>Versiya. Eski yozuvlar yangi kod bilan ham o'qiladi</td></tr>" +
+    "<tr><td><code>hodisa_id</code></td><td>Qurilma bergan kalit. Takrorni aynan shu ushlaydi</td></tr>" +
+    "<tr><td><code>obyekt_id</code></td><td>Reyestrdagi obyekt. Shina navbati shu kalit bo'yicha bo'linadi</td></tr>" +
+    "<tr><td><code>vaqt</code></td><td>Qurilma soati bo'yicha, UTC da. Saralash shu bo'yicha</td></tr>" +
+    "<tr><td><code>tur</code>, <code>sinf</code></td><td>Harakat, eshik, signal; odam, mashina, hayvon</td></tr>" +
+    "<tr><td><code>ishonch</code></td><td>Qurilma bergan baho. Chegara 0,70; pastdagisi voqea ochmaydi</td></tr>" +
+    "<tr><td><code>sha256</code></td><td>Rasm o'zgarmaganining dalili. Sudda shu tekshiriladi</td></tr>" +
+    "<tr><td><code>manba_brend</code></td><td>Kelib chiqishi. Yetkazuvchi bilan bahsda kerak bo'ladi</td></tr></table>" +
+    "<p><b>Nima yo'q.</b> Yozuvda shaxs nomi, telefon raqami va yuz tasviri bo'lmaydi. Kadr saqlanadi, lekin unga tanib olish tahlili qo'llanilmaydi &mdash; bu ataylab qo'yilgan chegara.</p>" +
+    "<p class='ogoh'>Sxema o'zgarganda eski maydon olib tashlanmaydi. Yangi maydon qo'shiladi, eskisi esa to'ldirilishda davom etadi va faqat hamma iste'molchi ko'chgandan keyin so'nadi. Aks holda o'tgan yilgi hisobot bugungi kod bilan ochilmay qoladi.</p>",
+  ru: {
+    yorliq: "Выход",
+    sarlavha: "Запись на выходе: что в ней не зависит от бренда",
+    tana: "<p>Запись, выходящая из адаптера, не содержит терминов ни одного бренда. Она занимает около 412 байт и построена так, чтобы её открыли и прочитали через десять лет: поля не удаляются, только добавляются.</p>" +
+      "<table><tr><th>Поле</th><th>Зачем нужно</th></tr>" +
+      "<tr><td><code>sxema</code></td><td>Версия. Старые записи читаются и новым кодом</td></tr>" +
+      "<tr><td><code>hodisa_id</code></td><td>Ключ, присвоенный устройством. Именно он ловит повтор</td></tr>" +
+      "<tr><td><code>obyekt_id</code></td><td>Объект в реестре. По этому ключу делится очередь шины</td></tr>" +
+      "<tr><td><code>vaqt</code></td><td>По часам устройства, в UTC. Сортировка идёт по нему</td></tr>" +
+      "<tr><td><code>tur</code>, <code>sinf</code></td><td>Движение, дверь, тревога; человек, машина, животное</td></tr>" +
+      "<tr><td><code>ishonch</code></td><td>Оценка устройства. Порог 0,70; ниже инцидент не открывается</td></tr>" +
+      "<tr><td><code>sha256</code></td><td>Доказательство неизменности кадра. В суде проверяют его</td></tr>" +
+      "<tr><td><code>manba_brend</code></td><td>Происхождение. Пригодится в споре с поставщиком</td></tr></table>" +
+      "<p><b>Чего в ней нет.</b> В записи нет имени человека, номера телефона и изображения лица. Кадр хранится, но распознавание к нему не применяется &mdash; это не вопрос технической возможности, а сознательно поставленная граница.</p>" +
+      "<p class='ogoh'>При изменении схемы старое поле не убирают. Добавляется новое, старое продолжает заполняться и гаснет только после перехода всех потребителей. Иначе прошлогодний отчёт перестанет открываться сегодняшним кодом.</p>"
+  },
+  manba: []
+},
+
+"ti.x-isteomol": {
+  yorliq: "Iste'molchilar",
+  sarlavha: "Yozuvni kim oladi va nima uchun to'rttasi alohida",
+  tana: "<p>Adapter yozuvni to'g'ridan-to'g'ri bazaga yozmaydi. U shinaga qo'yadi, shinadan esa to'rtta mustaqil iste'molchi o'qiydi. Biri sekinlashsa yoki to'xtasa, qolganlari ishlashda davom etadi.</p>" +
+    "<table><tr><th>Iste'molchi</th><th>Nima qiladi</th><th>To'xtasa nima bo'ladi</th></tr>" +
+    "<tr><td>Qoidalar mexanizmi</td><td>Voqea ochadi, muddat qo'yadi, mas'ulni belgilaydi</td><td>Hodisa yozilaveradi, lekin navbatchi xabar olmaydi</td></tr>" +
+    "<tr><td>Obyekt reyestri</td><td>Obyekt kartochkasidagi holat va nazorat indeksini yangilaydi</td><td>Kartochka eskiradi, hodisalar yo'qolmaydi</td></tr>" +
+    "<tr><td>Bildirishnoma xizmati</td><td>Push va SMS yuboradi, yetganini qayd etadi</td><td>Ekranda ko'rinadi, telefonga bormaydi</td></tr>" +
+    "<tr><td>O'zgarmas jurnal</td><td>Yozuvni tegib bo'lmaydigan holda saqlaydi</td><td>Ogohlantirish beriladi va qabul to'xtatiladi</td></tr></table>" +
+    "<p><b>Kamida bir marta.</b> Shina yetkazishni kafolatlaydi, lekin bir martalikni emas: iste'molchi to'xtab qolib qayta ishga tushsa, ba'zi yozuvlarni ikkinchi marta oladi. Shuning uchun har bir iste'molchi <code>hodisa_id</code> ni tekshiradi va ikkinchi marta hech narsa qilmaydi.</p>" +
+    "<p><b>Tartib.</b> Navbat <code>obyekt_id</code> bo'yicha bo'linadi. Bitta obyektning hodisalari doim tartib bilan keladi; turli obyektlarniki aralashishi mumkin va bu hech narsani buzmaydi.</p>" +
+    "<p class='ogoh'>Navbat uzunligi asosiy ogohlantirish ko'rsatkichi. U 10 000 dan oshsa, demak iste'molchilardan biri yiqilgan yoki bitta obyekt oqimni bosib ketgan. Ikkalasi ham darhol ko'rinadi, chunki navbat obyekt kesimida o'lchanadi.</p>",
+  ru: {
+    yorliq: "Потребители",
+    sarlavha: "Кто забирает запись и зачем их четверо",
+    tana: "<p>Адаптер не пишет запись прямо в базу. Он кладёт её в шину, а из шины читают четыре независимых потребителя. Если один замедлился или встал, остальные продолжают работать.</p>" +
+      "<table><tr><th>Потребитель</th><th>Что делает</th><th>Что будет, если встанет</th></tr>" +
+      "<tr><td>Механизм правил</td><td>Открывает инцидент, ставит срок, назначает ответственного</td><td>События пишутся, но дежурный не получает сигнала</td></tr>" +
+      "<tr><td>Реестр объектов</td><td>Обновляет состояние и индекс контроля в карточке</td><td>Карточка устаревает, события не теряются</td></tr>" +
+      "<tr><td>Служба уведомлений</td><td>Шлёт push и SMS, отмечает доставку</td><td>На экране видно, на телефон не уходит</td></tr>" +
+      "<tr><td>Неизменяемый журнал</td><td>Хранит запись в неприкасаемом виде</td><td>Поднимается тревога, приём останавливается</td></tr></table>" +
+      "<p><b>Не менее одного раза.</b> Шина гарантирует доставку, но не однократность: если потребитель упал и поднялся, часть записей он получит повторно. Поэтому каждый потребитель сверяет <code>hodisa_id</code> и на втором разе ничего не делает.</p>" +
+      "<p><b>Порядок.</b> Очередь делится по <code>obyekt_id</code>. События одного объекта всегда приходят по порядку; события разных объектов могут перемешиваться, и это ничего не ломает.</p>" +
+      "<p class='ogoh'>Длина очереди &mdash; главный сигнальный показатель. Перевалила за 10 000 &mdash; значит, упал один из потребителей или один объект залил поток. И то и другое видно сразу, потому что очередь меряется в разрезе объектов.</p>"
   },
   manba: []
 }

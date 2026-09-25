@@ -87,7 +87,11 @@
   function joriyTil() { return oqi("mkb-til") === "ru" ? "ru" : "uz"; }
   function xabar(nom, d) { document.dispatchEvent(new CustomEvent(nom, { detail: d || {} })); }
 
-  /* Yuklanish ko'rsatkichi: sahifa sekin ochilsa (rasmlar), bir lahza brend ekrani turadi */
+  /* Yuklanish ko'rsatkichi: brend ekrani birinchi slayd chizilgunicha turadi.
+     Parda window.load ni kutmaydi — 40 slaydning fotolari keyin kelaveradi, bosish
+     esa shu daqiqadan ishlaydi. CSS'da pointer-events:none, ya'ni shaffof holatda
+     ham hech qachon bosishni yutmaydi. */
+  var pardaniYop = function () {};
   (function () {
     if (KADR || MARUZA || !document.body) return;
     var y = document.createElement("div");
@@ -95,9 +99,15 @@
     y.setAttribute("aria-hidden", "true");
     y.innerHTML = '<div class="yk-ichi">' + BELGI_OQ + '<span class="yk-chiziq"><i></i></span></div>';
     document.body.appendChild(y);
-    function yop() { y.classList.add("ketdi"); setTimeout(function () { if (y.parentNode) y.parentNode.removeChild(y); }, 600); }
-    if (document.readyState === "complete") yop();
-    else { window.addEventListener("load", yop); setTimeout(yop, 6000); }
+    var ketdi = false;
+    pardaniYop = function () {
+      if (ketdi) return;
+      ketdi = true;
+      y.classList.add("ketdi");
+      setTimeout(function () { if (y.parentNode) y.parentNode.removeChild(y); }, 600);
+    };
+    if (document.readyState === "complete") pardaniYop();
+    else { window.addEventListener("load", pardaniYop); setTimeout(pardaniYop, 1200); }
   })();
   function tarjima(el) { if (window.tarjimaQil) window.tarjimaQil(el || document.body); }
 
@@ -218,6 +228,8 @@
       }
     }
     bor(n > 0 ? n - 1 : 0, true, true);
+    /* slayd chizildi va bosish ishlaydi — parda shu yerda ketadi */
+    pardaniYop();
   }
 
   function tabTanla(t, n) {
@@ -246,7 +258,10 @@
     [".ikki-izoh > div", "izoh"], [".tamoyil > div", "tamoyil"], [".xatarlar > div", "karta"],
     [".diapazon .q", "diapazon"], [".bom tbody tr", "bom"], [".chiplar", "chiplar"],
     [".hamkor > div", "hamkor"], [".jarayon", "jarayon"], [".ekranlar figure", "ekran"],
-    [".pilot-qadam > div", "pilot"], [".qaror", "qaror"], [".nuqta", "nuqta"]
+    [".pilot-qadam > div", "pilot"], [".qaror", "qaror"], [".nuqta", "nuqta"],
+    /* fotodagi chaqiruv yorliqlari va arxitektura ustunlari ichidagi qatorlar:
+       auditoriya aynan shu nomlarni so'raydi, shuning uchun ular ham nuqta */
+    [".yechim-s .rq-i > .rb", "rb"], [".arx .u li.b", "kanal"], [".arx .u.yadro li", "yadro"]
   ];
   function nuqtaKalitlari() {
     var natija = [];
@@ -309,10 +324,14 @@
   function hisobBelgila() {
     slaydlar.forEach(function (s) {
       var n = $$(".bor-batafsil", s).length;
-      var joy = $(".s-bosh .qism", s);
-      /* ba'zi slaydlarda sarlavha qatori yashirilgan (muqova, pilot) — hisob pastki qatorga tushadi */
-      var oyoqda = joy && getComputedStyle(joy).display === "none";
-      if (oyoqda) joy = $(".s-oyoq", s);
+      /* slayd o'zi joy ko'rsatsa (data-hisob-joy), yorliq o'sha yerga tushadi;
+         aks holda sarlavha qatoriga, u yashirilgan bo'lsa pastki qatorga */
+      var joy = $("[data-hisob-joy]", s), oyoqda = false;
+      if (!joy) {
+        joy = $(".s-bosh .qism", s);
+        oyoqda = joy && getComputedStyle(joy).display === "none";
+        if (oyoqda) joy = $(".s-oyoq", s);
+      }
       if (!n || !joy || $(".bf-son", s)) return;
       var t = document.createElement("button");
       t.type = "button";
@@ -484,7 +503,18 @@
     panelManba = $(".bf-manba", panel);
     panelHisob = $(".bf-hisob", panel);
     panelIlova = $(".bf-chuqur", panel);
-    $(".bf-parda", panel).addEventListener("click", panelYop);
+    /* Parda slayd ustida turadi. Ostida yana bir batafsil blok bo'lsa, bosish
+       panelni yopmasdan o'sha blokka o'tadi: bloklar orasida yurish uchun ikki
+       marta bosish kerak emas. */
+    $(".bf-parda", panel).addEventListener("click", function (e) {
+      var ost = null;
+      panel.style.pointerEvents = "none";
+      try { ost = document.elementFromPoint(e.clientX, e.clientY); } catch (_) {}
+      panel.style.pointerEvents = "";
+      var blok = ost && ost.closest ? ost.closest(".bor-batafsil") : null;
+      if (blok && !blok.classList.contains("tanlangan")) panelOch(blok);
+      else panelYop();
+    });
     panel.addEventListener("click", function (e) {
       var t = e.target.closest("[data-bf]");
       if (!t) return;
@@ -594,7 +624,7 @@
     ishoraEl.className = "tq-ishora";
     ishoraEl.setAttribute("role", "status");
     ishoraEl.innerHTML = '<i aria-hidden="true">+</i>' +
-      "<p>Har qanday blokni bosing — batafsil ochiladi</p>" +
+      "<p>Yashil belgili har bir blok bosiladi</p>" +
       '<button type="button" aria-label="Yopish">' + IK.yop + "</button>";
     ishoraEl.querySelector("button").addEventListener("click", function (e) { e.stopPropagation(); ishoraTugadi(); });
     document.body.appendChild(ishoraEl);
@@ -602,8 +632,10 @@
   }
   function ishoraKorsat() {
     if (!ishoraEl) return;
+    /* slaydda o'z ichki ishorasi bo'lsa (muqovadagi yashil qator), suzuvchi yorliq takrorlanmaydi */
     var kerak = oqi(ISHORA) !== "1" && joriy < 3 && slaydlar[joriy] &&
-      $$(".bor-batafsil", slaydlar[joriy]).length > 0;
+      $$(".bor-batafsil", slaydlar[joriy]).length > 0 &&
+      !$(".muq-ishora, .ishora-inline", slaydlar[joriy]);
     ishoraEl.classList.toggle("ochiq", !!kerak);
   }
   function ishoraTugadi() {
@@ -675,9 +707,25 @@
   }
 
   /* ---------- O'tish ---------- */
+  /* Slayd rasmlari loading="lazy" bilan yuklanadi. Ma'ruzachi oldinga o'tganda
+     rasm endi so'raladi: proyektorda foto paneli bir necha soniya bo'sh turadi
+     va chaqiruv yorliqlari kulrang fonda osilib qoladi. Shuning uchun joriy
+     slayddan oldingi va keyingi ikkitasining rasmlaridan "lazy" olib tashlanadi —
+     brauzer ularni darhol so'raydi, uzoqdagi slaydlar esa lazy bo'lib qolaveradi. */
+  function rasmTayyorla(i) {
+    for (var j = i - 1; j <= i + 2; j++) {
+      if (j < 0 || j >= jami || !slaydlar[j]) continue;
+      $$("img[loading='lazy']", slaydlar[j]).forEach(function (im) {
+        im.removeAttribute("loading");
+        if (im.decode) try { im.decode().catch(function () {}); } catch (_) {}
+      });
+    }
+  }
+
   function bor(i, birinchi, siljit) {
     if (i < 0 || i >= jami) return;
     panelYop();
+    rasmTayyorla(i);
     if (rejim === "oqish") {
       belgilaJoriy(i);
       if (siljit) qutilar[i].scrollIntoView({ block: "start", behavior: birinchi ? "auto" : "smooth" });

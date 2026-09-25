@@ -60,7 +60,7 @@ Object.assign(window.MKB_BATAFSIL, {
       "<tr><td>Лестница, второй этаж</td><td>Двое, тяжело</td></tr>" +
       "<tr><td>Узкий коридор, подвал</td><td>Практически невыполнимо</td></tr></table>" +
       "<p>В сложных местах блок делят на два модуля по 24 В: каждый 22–24 кг, и их переносят поочерёдно вдвоём или по одному.</p>" +
-      "<p class='ogoh'>Это решение принимают на осмотре, а не после монтажа. Путь замеряют и вносят в акт: ширина двери, есть ли лестница, пройдёт ли тележка. Иначе проблема выяснится в день первой замены — когда объект уже оснащён.</p>" }
+      "<p class='ogoh'>Это решение принимают на осмотре, до заказа оборудования. Путь замеряют и вносят в акт: ширина двери, есть ли лестница, пройдёт ли тележка. Иначе проблема выяснится в день первой замены — когда объект уже оснащён.</p>" }
 },
 
 "y04.r-narx": {
@@ -242,7 +242,7 @@ Object.assign(window.MKB_BATAFSIL, {
 
 "y04.b-ogirlik": {
   yorliq: "Montajchi uchun", sarlavha: "Yo'lni o'lchash: ko'rik bosqichidagi ish",
-  tana: "<p>Ko'rikda shkafgacha bo'lgan yo'l o'lchanadi va dalolatnomaga yoziladi. Bu ish montajchining emas, obyekt menejerining vazifasi va u jihoz buyurtma qilinishidan oldin bajariladi.</p>" +
+  tana: "<p>Ko'rikda shkafgacha bo'lgan yo'l o'lchanadi va dalolatnomaga yoziladi. Bu ish obyekt menejerining vazifasi va u jihoz buyurtma qilinishidan oldin bajariladi.</p>" +
     "<h4>Nima yoziladi</h4><ul><li>eshiklar eni va balandligi;</li><li>zinapoya bor-yo'qligi, pog'onalar soni;</li><li>burilishlar radiusi — 45 kg yukni tor burchakda burib bo'lmaydi;</li><li>mashina qayergacha kela oladi;</li><li>aravacha o'tadimi.</li></ul>" +
     "<p>Bu ma'lumot bo'yicha blok konfiguratsiyasi tanlanadi: bitta 48 V blok yoki ikkita 24 V modul.</p>" +
     "<p class='ogoh'>O'lchov qilinmagan obyektda birinchi almashtirish kuni brigada blokni ko'tara olmasligi ma'lum bo'ladi. Shu paytda shkaf allaqachon o'rnatilgan, kabel yotqizilgan va obyekt platformada ro'yxatga olingan bo'ladi — ya'ni tuzatish butun montajni qayta qilish degani.</p>",
@@ -260,7 +260,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<tr><td>Vintli klemma</td><td class='n'>15–20 daqiqa</td><td>Mumkin</td></tr>" +
     "<tr><td>Tez uziladigan ulagich</td><td class='n'>2–3 daqiqa</td><td>Konstruksiya bilan istisno</td></tr></table>" +
     "<p>Bir obyektda o'n daqiqalik farq besh yilda 260 tashrifda 43 soatga aylanadi — bu ikki ish haftasidan ko'p, faqat vint burash uchun.</p>" +
-    "<p class='ogoh'>Ulagich toki yuklamaga emas, eng yuqori qisqa muddatli tokka hisoblanadi. Ulanish paytidagi uchqun kontaktni asta-sekin kuydiradi, shuning uchun ulagich zaxira bilan tanlanadi va uning kontaktlari yiliga bir marta ko'zdan kechiriladi.</p>",
+    "<p class='ogoh'>Ulagich toki eng yuqori qisqa muddatli tokka hisoblanadi. Ulanish paytidagi uchqun kontaktni asta-sekin kuydiradi, shuning uchun ulagich zaxira bilan tanlanadi va uning kontaktlari yiliga bir marta ko'zdan kechiriladi.</p>",
   ru: { yorliq: "Для монтажника", sarlavha: "Разъём: разница между десятью и двадцатью минутами",
     tana: "<p>Скорость замены определяет тип разъёма. С винтовой клеммой каждая замена растягивается до двадцати минут, и качество контакта с каждым разом падает.</p>" +
       "<table><tr><th>Разъём</th><th>Замена</th><th>Переполюсовка</th></tr>" +
@@ -299,7 +299,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<p>Har almashtirish platformada qayd etiladi: qaysi blok olib ketildi, qaysi blok qo'yildi, qaysi vaqtda. Shunday qilib har blokning joyi va tsikl soni ma'lum bo'ladi.</p>" +
     "<p class='ogoh'>Taqvim bo'yicha rotatsiya ikki tomondan zarar keltiradi: bir obyektga erta boriladi va blok yarim zaryad bilan almashtiriladi, boshqasiga esa kech qolinadi. Ma'lumotga asoslangan marshrut tashrif sonini taxminan uchdan bir qismga kamaytiradi.</p>",
   ru: { yorliq: "Для тимлида", sarlavha: "Маршрут строит платформа",
-    tana: "<p>Адаптер знает заряд и остаток дней по каждому объекту. Маршрут строится по этим данным, а не по календарю.</p>" +
+    tana: "<p>Адаптер знает заряд и остаток дней по каждому объекту. Маршрут строится по этим данным.</p>" +
       "<h4>Как это работает</h4><ol><li>Адаптер считает по каждому объекту <code>qolgan_kun</code>: остаток энергии делится на средний расход за последние 24 часа.</li>" +
       "<li>Если остаётся меньше трёх дней, сервисная задача открывается автоматически.</li>" +
       "<li>Открытые задачи группируются по территориальной близости.</li>" +
@@ -343,7 +343,7 @@ Object.assign(window.MKB_BATAFSIL, {
       "<li>повреждённый блок везут отдельно, в огнестойкой таре;</li>" +
       "<li>в машине есть порошковый огнетушитель;</li>" +
       "<li>водитель и монтажник проходят короткий инструктаж.</li></ul>" +
-      "<p class='ogoh'>Повреждённый или вздувшийся блок ни при каких условиях не везут обычным порядком и не заряжают. Его оставляют на объекте в огнестойком месте и применяют отдельный порядок утилизации. Этот порядок прописывают в сервисном договоре заранее, а не в момент происшествия.</p>" }
+      "<p class='ogoh'>Повреждённый или вздувшийся блок ни при каких условиях не везут обычным порядком и не заряжают. Его оставляют на объекте в огнестойком месте и применяют отдельный порядок утилизации. Этот порядок прописывают в сервисном договоре заранее.</p>" }
 },
 
 "y04.y-bms": {
@@ -485,7 +485,7 @@ Object.assign(window.MKB_BATAFSIL, {
 
 "y04.v-tashrif": {
   yorliq: "Moliya va huquq", sarlavha: "Tashrif narxi: nimadan iborat va qanday o'lchanadi",
-  tana: "<p>Bu yechimning besh yillik xarajatidagi asosiy o'zgaruvchi. Uni taxmin qilish emas, o'lchash kerak.</p>" +
+  tana: "<p>Bu yechimning besh yillik xarajatidagi asosiy o'zgaruvchi. Uni birinchi kvartalda o'lchab chiqish kerak.</p>" +
     "<table><tr><th>Modda</th><th>Izoh</th></tr>" +
     "<tr><td>Yo'l</td><td>Yoqilg'i va vaqt, marshrut uzunligiga qarab</td></tr>" +
     "<tr><td>Ikki kishining ish vaqti</td><td>Obyektda 20–30 daqiqa, yo'lda ko'proq</td></tr>" +
@@ -513,10 +513,10 @@ Object.assign(window.MKB_BATAFSIL, {
     "<p class='ogoh'>Eng ko'p uchraydigan amaliy sabab — zaxira blokning zaryadlanmagani. Bazada blok qaytgan zahoti zaryadga qo'yiladi, «keyinroq» qoldirilmaydi. Bazadagi tartib obyektdagi tartibdan kam ahamiyatli emas va u ham servis shartnomasida yoziladi.</p>",
   ru: { yorliq: "Для тимлида", sarlavha: "Маршрут сорвался: что происходит",
     tana: "<p>Причина может быть любой: перекрыта дорога, бригада занята, резервный блок не заряжен. Результат один — аккумулятор садится, и объект несколько дней без контроля.</p>" +
-      "<h4>Трёхступенчатая защита</h4><ol><li><b>Трёхдневный запас.</b> Задача открывается при остатке меньше трёх дней, а не на нуле.</li>" +
+      "<h4>Трёхступенчатая защита</h4><ol><li><b>Трёхдневный запас.</b> Задача открывается при остатке меньше трёх дней.</li>" +
       "<li><b>Недельное планирование.</b> Маршрут собирают в понедельник и не переносят на выходные.</li>" +
       "<li><b>Приоритетный порог.</b> При заряде ниже 15% объект выводят из маршрута и назначают отдельный выезд.</li></ol>" +
-      "<p class='ogoh'>Самая частая практическая причина — незаряженный резервный блок. На базе блок ставят на заряд сразу по возвращении, а не «потом». Порядок на базе важен не меньше, чем порядок на объекте, и его тоже прописывают в сервисном договоре.</p>" }
+      "<p class='ogoh'>Самая частая практическая причина — незаряженный резервный блок. На базе блок ставят на заряд сразу по возвращении. Порядок на базе важен не меньше, чем порядок на объекте, и его тоже прописывают в сервисном договоре.</p>" }
 },
 
 "y04.x-bms": {

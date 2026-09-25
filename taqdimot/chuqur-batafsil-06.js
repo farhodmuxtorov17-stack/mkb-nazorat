@@ -44,7 +44,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     sarlavha: "Как ставить датчик открытия на металлические ворота",
     tana: "<p>WS301 состоит из двух частей: корпуса и магнита. Корпус крепится на неподвижную раму, магнит — на открывающуюся створку. На складских воротах возникают две проблемы.</p>" +
       "<h4>Первая — металл глушит антенну</h4>" +
-      "<p>Если антенна 868 МГц прилегает к металлической поверхности, резонанс смещается и большая часть излучаемой мощности теряется. Практический результат: в одной и той же точке вместо −95 dBm прибор показывает −118 dBm. Решение — пластиковая или деревянная подложка, отодвигающая корпус от металла на 20–30 мм. Подложка закладывается в монтажный комплект заранее, а не ищется на месте.</p>" +
+      "<p>Если антенна 868 МГц прилегает к металлической поверхности, резонанс смещается и большая часть излучаемой мощности теряется. Практический результат: в одной и той же точке вместо −95 dBm прибор показывает −118 dBm. Решение — пластиковая или деревянная подложка, отодвигающая корпус от металла на 20–30 мм. Подложка закладывается в монтажный комплект заранее.</p>" +
       "<h4>Вторая — клейкая лента не держит на морозе</h4>" +
       "<p>Акриловая лента не схватывается на поверхности холоднее +10 °C и в январе отваливается вместе со створкой. На неотапливаемом объекте датчик крепится только винтами. При зимнем монтаже лента не применяется вовсе.</p>" +
       "<h4>Зазор</h4>" +
@@ -60,9 +60,9 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<h4>Passivatsiya</h4>" +
     "<p>Batareya uzoq turganda anod sirtida litiy xlorid qatlami hosil bo'ladi. U batareyani saqlaydi, lekin birinchi katta tok talab qilinganda kuchlanish cho'kadi. Amalda bu shunday ko'rinadi: yangi datchik yoqiladi, indikator yonadi, ammo OTAA join oxirigacha bormaydi va qurilma qayta-qayta uriniб turadi. Yechim — montajdan oldin har datchikni 10–15 daqiqa yoqib qo'yish: bir necha uzatish qatlamni yemiradi va kuchlanish tiklanadi. Omborda olti oydan ortiq turgan partiya montaj kunidan bir kun oldin shu tartibda «uyg'otiladi».</p>" +
     "<h4>Sovuq</h4>" +
-    "<p>−20 °C da batareyaning sig'imi emas, impuls berish qobiliyati pasayadi. Uzatish paytidagi qisqa tok kuchlanishni pasaytiradi va datchik qayta yuklanishi mumkin. Shuning uchun qishda uzatish intervalini qisqartirish eng yomon qaror: har bir qo'shimcha uzatish xatarni oshiradi. Aksincha, yanvarda interval 10 daqiqadan 20 daqiqaga uzaytiriladi, bahorda qaytariladi.</p>" +
+    "<p>−20 °C da batareyaning impuls berish qobiliyati pasayadi. Uzatish paytidagi qisqa tok kuchlanishni pasaytiradi va datchik qayta yuklanishi mumkin. Shuning uchun qishda uzatish intervalini qisqartirish eng yomon qaror: har bir qo'shimcha uzatish xatarni oshiradi. Aksincha, yanvarda interval 10 daqiqadan 20 daqiqaga uzaytiriladi, bahorda qaytariladi.</p>" +
     "<h4>Almashtirish</h4>" +
-    "<p>Batareya «past» signalini kutib emas, kalendar bo'yicha almashtiriladi: beshinchi yilning bahorida hamma datchik bir yo'la yangilanadi. Sabab sodda — past batareya signali sovuqda kech keladi, ko'pincha qurilma butunlay jim bo'lgandan keyin. Zaxira batareya omborda +25 °C dan issiq bo'lmagan joyda saqlanadi.</p>" +
+    "<p>Batareya kalendar bo'yicha almashtiriladi: beshinchi yilning bahorida hamma datchik bir yo'la yangilanadi. Sabab sodda — past batareya signali sovuqda kech keladi, ko'pincha qurilma butunlay jim bo'lgandan keyin. Zaxira batareya omborda +25 °C dan issiq bo'lmagan joyda saqlanadi.</p>" +
     "<p class='ogoh'>Boshqa kimyodagi batareya qo'yilmaydi. Bir xil o'lchamdagi ishqoriy yoki litiy-ion element kuchlanishi boshqa: qurilma yo ishlamaydi, yo bir necha haftada o'chadi.</p>",
   manba: [["Milesight WS301", "https://www.milesight.com/iot/product/lorawan-sensor/ws301"],
           ["Milesight EM300-TH", "https://www.milesight.com/iot/product/lorawan-sensor/em300-th"]],
@@ -120,7 +120,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<p>Toshkentda dekabr insolyatsiyasi 1,62 kVt·soat/m². 200 Vt panel yo'qotishlar bilan (kontroller, harorat, chang, qishki burchak xatosi — jami 30%) sutkasiga taxminan 227 Vt·soat beradi. Zaxira 1,6 barobar. 150 Vt panelda zaxira 1,2 barobar qoladi va uch kunlik bulut byudjetni yeydi.</p>" +
     "<h4>Akkumulyator</h4>" +
     "<p>12 V 100 A·soatlik LiFePO4 — 1 280 Vt·soat, foydali 80% bilan 1 024 Vt·soat. Bu 142 Vt·soatga bo'linganda quyoshsiz 7,2 kun chiqadi.</p>" +
-    "<p class='ogoh'>Akkumulyator tashqi shkafda tursa, yanvar ertalabida BMS zaryadni bermaydi: LiFePO4 0 °C dan past zaryadlanmaydi. Quyoshli kunning birinchi ikki soati shu bilan yo'qoladi. Shuning uchun akkumulyator shlyuz bilan bitta izolyatsiyali shkafda, past harorat himoyasi va isitgich bilan turadi, isitgich esa akkumulyatordan emas, to'g'ridan-to'g'ri paneldan oziqlanadi.</p>",
+    "<p class='ogoh'>Akkumulyator tashqi shkafda tursa, yanvar ertalabida BMS zaryadni bermaydi: LiFePO4 0 °C dan past zaryadlanmaydi. Quyoshli kunning birinchi ikki soati shu bilan yo'qoladi. Shuning uchun akkumulyator shlyuz bilan bitta izolyatsiyali shkafda, past harorat himoyasi va isitgich bilan turadi, isitgich esa to'g'ridan-to'g'ri paneldan oziqlanadi.</p>",
   manba: [],
   ru: {
     yorliq: "Для монтажника",
@@ -134,7 +134,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<p>Декабрьская инсоляция в Ташкенте — 1,62 кВт·ч/м². Панель 200 Вт с учётом потерь (контроллер, нагрев, запылённость, ошибка зимнего угла — в сумме 30%) даёт около 227 Вт·ч в сутки. Запас — 1,6 раза. У панели 150 Вт запас остаётся 1,2 раза, и три пасмурных дня съедают бюджет.</p>" +
       "<h4>Аккумулятор</h4>" +
       "<p>LiFePO4 12 В 100 А·ч — это 1 280 Вт·ч, при полезной глубине 80% — 1 024 Вт·ч. Делением на 142 Вт·ч получаем 7,2 суток без солнца.</p>" +
-      "<p class='ogoh'>Если аккумулятор стоит в наружном шкафу, январским утром BMS не примет заряд: LiFePO4 не заряжается при температуре ниже 0 °C. Первые два часа солнечного дня теряются. Поэтому аккумулятор размещают со шлюзом в одном утеплённом шкафу, с низкотемпературной защитой и подогревом, причём подогрев питается напрямую от панели, а не от аккумулятора.</p>"
+      "<p class='ogoh'>Если аккумулятор стоит в наружном шкафу, январским утром BMS не примет заряд: LiFePO4 не заряжается при температуре ниже 0 °C. Первые два часа солнечного дня теряются. Поэтому аккумулятор размещают со шлюзом в одном утеплённом шкафу, с низкотемпературной защитой и подогревом, причём подогрев питается напрямую от панели.</p>"
   }
 },
 
@@ -148,7 +148,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td class='b'>SF12</td><td class='n'>≈1,3 s</td><td>Chegara, ombor ichidan</td></tr></table>" +
     "<h4>Nega bu narxga ta'sir qiladi</h4>" +
     "<p>Efir vaqti uzaygan sari batareya tezroq tugaydi va kanal bandroq bo'ladi. Bir foizli efir chegarasida SF12 ga tushgan datchik uzatgandan keyin taxminan ikki daqiqa efirga chiqa olmaydi. Chegaradagi o'nta datchik bir vaqtda uyg'onsa, ularning bir qismi navbatda qoladi.</p>" +
-    "<p>Shuning uchun montajda SF12 qabul qilinmaydi. RSSI −115 dBm dan yaxshi va SNR noldan yuqori bo'lgandagina nuqta yopiladi. Bu shart bajarilmasa, datchik ko'chiriladi yoki shlyuz antennasi ko'tariladi — sozlama bilan tuzatib bo'lmaydi.</p>" +
+    "<p>Shuning uchun montajda nuqta SF10 dan yuqoriga chiqmasligi shart. Mezon SF ga bog'langan: SNR o'sha SF ning demodulyator chegarasidan kamida 5 dB, RSSI esa sezgirligidan kamida 10 dB yuqori bo'lsin — SF9 uchun bu −7,5 dB va −119 dBm. Bu shart bajarilmasa, datchik ko'chiriladi yoki shlyuz antennasi ko'tariladi; sozlama bilan tuzatib bo'lmaydi, chunki ADR SF ni faqat pastga tushira olmaydi.</p>" +
     "<h4>Interval</h4>" +
     "<p>10 daqiqalik holat xabari — ikki talab orasidagi muvozanat: batareya besh yil chidaydi va aloqasiz qolgan datchik yarim soat ichida aniqlanadi. Ketma-ket uchta xabar kelmasa, platforma «aloqa yo'q» hodisasini ochadi. Eshik ochilishi esa intervalga bog'liq emas: u hodisa sifatida darhol yuboriladi.</p>",
   manba: [["LoRa Alliance RP002-1.0.2", "https://lora-alliance.org/wp-content/uploads/2020/11/RP_2-1.0.2.pdf"]],
@@ -162,7 +162,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td class='b'>SF12</td><td class='n'>≈1,3 с</td><td>Предел, изнутри склада</td></tr></table>" +
       "<h4>Почему это влияет на стоимость</h4>" +
       "<p>Чем дольше передача в эфире, тем быстрее садится батарея и тем плотнее занят канал. При ограничении в один процент эфирного времени датчик, ушедший на SF12, после передачи не может выйти в эфир около двух минут. Если десять таких датчиков просыпаются одновременно, часть из них встаёт в очередь.</p>" +
-      "<p>Поэтому SF12 при монтаже не принимается. Точка закрывается только при RSSI лучше −115 dBm и SNR выше нуля. Если условие не выполнено, датчик переносят или поднимают антенну шлюза — настройками это не лечится.</p>" +
+      "<p>Поэтому при монтаже точка не должна уходить выше SF10. Критерий привязан к SF: SNR не менее чем на 5 дБ выше порога демодулятора этого SF, RSSI — не менее чем на 10 дБ выше его чувствительности; для SF9 это −7,5 дБ и −119 дБм. Если условие не выполнено, датчик переносят или поднимают антенну шлюза; настройками это не лечится — ADR умеет только опускать SF.</p>" +
       "<h4>Интервал</h4>" +
       "<p>Статусное сообщение раз в 10 минут — баланс двух требований: батареи хватает на пять лет, а пропавший датчик обнаруживается в пределах получаса. Если подряд не приходят три сообщения, платформа открывает событие «нет связи». Открытие двери от интервала не зависит: оно уходит событием немедленно.</p>"
   }
@@ -172,7 +172,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   yorliq: "Jamoa rahbarlari uchun",
   sarlavha: "Shlyuzdan brokergacha: mavzular, TLS va LWT",
   tana: "<p>Shlyuz dekodlangan xabarni MQTT(s) orqali bank brokeriga yozadi. Mavzu tuzilmasi obyekt va qurilma bo'yicha bo'linadi, shuning uchun huquqni mavzu darajasida cheklash mumkin.</p>" +
-    "<pre><code>mkb/v1/{obyekt}/{device_id}/hodisa\nmkb/v1/{obyekt}/{device_id}/holat\nmkb/v1/shlyuz/{gw_id}/lwt</code></pre>" +
+    "<pre><code>mkb/v1/{obyekt}/{device_id}/hodisa\nmkb/v1/{obyekt}/{device_id}/holat\nmkb/v1/{obyekt}/{device_id}/aloqa</code></pre>" +
     "<pre><code>{\"obyekt\":\"AK-2025/0934\",\"device_id\":\"DAT-0012\",\n \"tur\":\"eshik\",\"qiymat\":\"ochiq\",\"batareya\":87,\n \"rssi\":-108,\"snr\":4.5,\"fcnt\":1532,\n \"vaqt\":\"2026-01-14T02:13:05Z\"}</code></pre>" +
     "<h4>Qat'iy qoidalar</h4>" +
     "<ul><li>QoS 1 va doimiy sessiya: aloqa uzilsa broker xabarni saqlaydi, shlyuz tiklanganda navbatni bo'shatadi.</li>" +
@@ -186,7 +186,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     yorliq: "Для тимлида",
     sarlavha: "От шлюза до брокера: топики, TLS и LWT",
     tana: "<p>Шлюз публикует декодированное сообщение по MQTT(s) в брокер банка. Структура топиков разделена по объекту и устройству, поэтому права ограничиваются на уровне топика.</p>" +
-      "<pre><code>mkb/v1/{obyekt}/{device_id}/hodisa\nmkb/v1/{obyekt}/{device_id}/holat\nmkb/v1/shlyuz/{gw_id}/lwt</code></pre>" +
+      "<pre><code>mkb/v1/{obyekt}/{device_id}/hodisa\nmkb/v1/{obyekt}/{device_id}/holat\nmkb/v1/{obyekt}/{device_id}/aloqa</code></pre>" +
       "<pre><code>{\"obyekt\":\"AK-2025/0934\",\"device_id\":\"DAT-0012\",\n \"tur\":\"eshik\",\"qiymat\":\"ochiq\",\"batareya\":87,\n \"rssi\":-108,\"snr\":4.5,\"fcnt\":1532,\n \"vaqt\":\"2026-01-14T02:13:05Z\"}</code></pre>" +
       "<h4>Жёсткие правила</h4>" +
       "<ul><li>QoS 1 и постоянная сессия: при обрыве связи брокер сохраняет сообщения, после восстановления шлюз разбирает очередь.</li>" +
@@ -253,10 +253,10 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<h4>Obyektda tartib</h4>" +
     "<ol><li>Har datchikning DevEUI yorlig'i skanerlanadi va reyestrga yoziladi: <code>DAT-0012 → AK-2025/0934</code>.</li>" +
     "<li>Datchik OTAA bilan ro'yxatdan o'tadi va bir marta ishga tushiriladi.</li>" +
-    "<li>Shlyuz panelida RSSI va SNR yozib olinadi. Chegara: −115 dBm va SNR &gt; 0.</li>" +
+    "<li>Shlyuz panelida RSSI va SNR yozib olinadi. Chegara SF ga bog'langan: SF9 da RSSI ≥ −119 dBm va SNR ≥ −7,5 dB.</li>" +
     "<li>Eshik yopilib ochiladi, platformada ikkala holat ham ko'rinadi.</li>" +
     "<li>Sinov hodisasi operator ekraniga chiqqanidan keyingina dalolatnoma imzolanadi.</li></ol>" +
-    "<p class='ogoh'>Ombor ichida javon ko'chirilsa yoki tovar to'ldirilsa signal 10–15 dB pasayishi mumkin. Shuning uchun o'lchov bo'sh omborda emas, ish holatidagi omborda qilinadi.</p>",
+    "<p class='ogoh'>Ombor ichida javon ko'chirilsa yoki tovar to'ldirilsa signal 10–15 dB pasayishi mumkin. Shuning uchun o'lchov tovar bilan to'la, ish holatidagi omborda qilinadi.</p>",
   manba: [],
   ru: {
     yorliq: "Для монтажника",
@@ -275,7 +275,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<h4>Порядок на объекте</h4>" +
       "<ol><li>Этикетка DevEUI каждого датчика сканируется и вносится в реестр: <code>DAT-0012 → AK-2025/0934</code>.</li>" +
       "<li>Датчик регистрируется по OTAA и однократно запускается.</li>" +
-      "<li>В панели шлюза фиксируются RSSI и SNR. Порог: −115 dBm и SNR &gt; 0.</li>" +
+      "<li>В панели шлюза фиксируются RSSI и SNR. Порог привязан к SF: на SF9 это RSSI ≥ −119 дБм и SNR ≥ −7,5 дБ.</li>" +
       "<li>Дверь закрывается и открывается, на платформе видны оба состояния.</li>" +
       "<li>Акт подписывается только после того, как тестовое событие дошло до экрана оператора.</li></ol>" +
       "<p class='ogoh'>Если внутри склада переставят стеллаж или заполнят его товаром, сигнал может упасть на 10–15 дБ. Поэтому замеры делаются не на пустом складе, а на складе в рабочем состоянии.</p>"
@@ -290,7 +290,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td class='b'>Datchiklar soni</td><td>Har qo'shimcha nuqta 400–800 ming so'm. Uchta eshikli ombor to'rtta eshiklisidan arzon</td></tr>" +
     "<tr><td class='b'>Klaster kattaligi</td><td>Shlyuz 6–9 mln. Uch obyektga bo'linsa 2–3 mln, o'n obyektga bo'linsa 0,6–0,9 mln</td></tr>" +
     "<tr><td class='b'>Kamera bormi</td><td>Obyektda kamera bo'lsa, qator nolga tushadi. Yo'q bo'lsa 1,5–2,5 mln qo'shiladi</td></tr>" +
-    "<tr><td class='b'>Partiya hajmi</td><td>20 donalik buyurtma birlik narxida 200 donalikdan taxminan 15% qimmat: logistika va bojxona rasmiylashtiruvi partiyaga emas, jo'natmaga to'g'ri keladi</td></tr></table>" +
+    "<tr><td class='b'>Partiya hajmi</td><td>20 donalik buyurtma birlik narxida 200 donalikdan taxminan 15% qimmat: logistika va bojxona rasmiylashtiruvi har jo'natmaga alohida to'g'ri keladi</td></tr></table>" +
     "<h4>Amaliy xulosa</h4>" +
     "<p>Bu yechimning iqtisodi klasterga asoslangan. Bitta uzoq obyektga shlyuz qo'yish — eng qimmat variant: obyektga 9–15 mln tushadi va bu LiFePO4 shkafidan ham qimmat. Shuning uchun ko'rikda avval xaritaga qaraladi: 2 km radiusda kamida uchta obyekt bormi. Bo'lmasa, 02 yoki 04-yechim tanlanadi.</p>" +
     "<p class='ogoh'>Tenderga chiqishdan oldin datchik va shlyuz bitta chastota variantida ekani tekshiriladi. Turli variantdagi qurilma bir-birini umuman ko'rmaydi va bu faqat montaj kunida ma'lum bo'ladi.</p>",
@@ -303,7 +303,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td class='b'>Количество датчиков</td><td>Каждая дополнительная точка — 400–800 тыс. сумов. Склад с тремя воротами дешевле склада с четырьмя</td></tr>" +
       "<tr><td class='b'>Размер кластера</td><td>Шлюз стоит 6–9 млн. На три объекта это 2–3 млн, на десять — 0,6–0,9 млн</td></tr>" +
       "<tr><td class='b'>Есть ли камера</td><td>Если камера на объекте уже стоит, статья обнуляется. Если нет — добавляется 1,5–2,5 млн</td></tr>" +
-      "<tr><td class='b'>Объём партии</td><td>Заказ на 20 штук в пересчёте на единицу дороже заказа на 200 примерно на 15%: логистика и таможенное оформление приходятся на отправку, а не на партию</td></tr></table>" +
+      "<tr><td class='b'>Объём партии</td><td>Заказ на 20 штук в пересчёте на единицу дороже заказа на 200 примерно на 15%: логистика и таможенное оформление ложатся на каждую отправку отдельно</td></tr></table>" +
       "<h4>Практический вывод</h4>" +
       "<p>Экономика этого решения держится на кластере. Ставить шлюз ради одного удалённого объекта — самый дорогой вариант: на объект ложится 9–15 млн, дороже, чем шкаф LiFePO4. Поэтому на осмотре сначала смотрят на карту: есть ли в радиусе 2 км хотя бы три объекта. Если нет — выбирается решение 02 или 04.</p>" +
       "<p class='ogoh'>До выхода на тендер проверяется, что датчики и шлюз заказаны в одном частотном исполнении. Устройства разных исполнений не видят друг друга вовсе, и выясняется это только в день монтажа.</p>"
@@ -337,7 +337,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td class='b'>SIM камеры 4G</td><td>Если есть камера — самая крупная статья</td><td class='n'>3–6</td></tr>" +
       "<tr><td class='b'>Осмотр шлюза</td><td>Раз в год</td><td class='n'>0,3–0,6</td></tr></table>" +
       "<h4>Почему трафик дешёвый</h4>" +
-      "<p>Кластер из тридцати объектов отправляет около 21 600 коротких сообщений в сутки. С накладными расходами TLS это 5–6 МБ в сутки и менее 200 МБ в месяц. Достаточно самого дешёвого M2M-тарифа. Трафик наращивает камера, а не датчики.</p>" +
+      "<p>Кластер из тридцати объектов отправляет около 21 600 коротких сообщений в сутки. С накладными расходами TLS это 5–6 МБ в сутки и менее 200 МБ в месяц. Достаточно самого дешёвого M2M-тарифа. Трафик наращивает камера; датчики в нём почти не видны.</p>" +
       "<h4>Что держится на складе</h4>" +
       "<ul><li>На каждые 20 датчиков — 2–3 запасные батареи обоих типов.</li>" +
       "<li>Пластиковые подложки и винты: для установки на металлические двери.</li>" +
@@ -395,7 +395,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<p>Практически всегда батарея. На морозе элемент Li-SOCl₂ хуже отдаёт импульс; если он не вышел из пассивации полностью, в момент передачи напряжение падает ниже критического порога и устройство перезагружается. Вторая вероятная причина — после замены батареи счётчик кадров сбросился в ноль, и защита от повтора отбрасывает сообщения.</p>" +
       "<h4>Профилактика</h4>" +
       "<ul><li>Снятие пассивации до монтажа: каждый датчик держат включённым 10–15 минут.</li>" +
-      "<li>Батареи меняются по календарю, весной пятого года, а не по сигналу «низкий заряд».</li>" +
+      "<li>Батареи меняются по календарю, весной пятого года.</li>" +
       "<li>Зимой интервал увеличивают, а не сокращают.</li>" +
       "<li>Каждое устройство с заменённой батареей проходит повторную регистрацию.</li></ul>" +
       "<p class='ogoh'>Если несколько датчиков замолчали в один день, первое, что проверяют, — из одной ли они партии и не ставились ли в один день. Если да, причина в батарее, а не в объекте.</p>"
@@ -425,8 +425,8 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<h4>Профилактика</h4>" +
       "<ul><li>Две SIM разных операторов и watchdog: при пропадании связи на 10 минут модем перезагружается.</li>" +
       "<li>DC UPS закрывает отключение сети на 4–8 часов.</li>" +
-      "<li>LWT и независимый heartbeat: платформа сама сообщает о падении шлюза, а не догадывается по молчанию датчиков.</li>" +
-      "<li>На складе лежит полный запасной шлюз и сохранённый файл конфигурации — замена занимает 40 минут, а не повторную настройку.</li>" +
+      "<li>LWT и независимый heartbeat: платформа сама сообщает о падении шлюза в течение минуты.</li>" +
+      "<li>На складе лежит полный запасной шлюз и сохранённый файл конфигурации — замена вместе с восстановлением конфигурации занимает 40 минут.</li>" +
       "<li>На кластер больше десяти объектов ставится второй шлюз: зоны покрытия перекрываются, и при падении одного слышит второй.</li></ul>" +
       "<p class='ogoh'>В договоре для шлюза прописывается отдельный срок реакции — 24 часа. Для одного датчика этот срок может составлять 5 рабочих дней, для шлюза — нет.</p>"
   }
@@ -441,7 +441,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<h4>Oldini olish</h4>" +
     "<ul><li>Magnit tabaqaning ichki chetiga suriladi, tirqish eng kichik holatga keltiriladi.</li>" +
     "<li>Darvoza qimirlaydigan joyda hodisa platformada 60 soniyalik filtr bilan birlashtiriladi: bir daqiqa ichidagi ochilish-yopilish bitta yozuv bo'ladi.</li>" +
-    "<li>Suv zondi poldan 3–5 mm ko'tariladi va quvur ostiga emas, suv yig'iladigan eng past nuqtaga qo'yiladi.</li>" +
+    "<li>Suv zondi poldan 3–5 mm ko'tariladi va suv yig'iladigan eng past nuqtaga qo'yiladi.</li>" +
     "<li>Platformada har datchik uchun haftalik hodisa soni kuzatiladi. Chegaradan oshgani servis vazifasini o'zi ochadi.</li></ul>" +
     "<p class='ogoh'>Soxta hodisani sozlama bilan «o'chirib qo'yish» taqiqlanadi. Datchik jim qilingani reyestrda ko'rinmasa, obyekt nazoratda deb hisoblanadi, aslida esa emas.</p>",
   manba: [],
@@ -483,7 +483,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "Har bir blok bosiladi: hisob, protokol va montaj tartibi shu yerda ochiladi.":
   "Любой блок открывается: расчёт, протокол и порядок монтажа — внутри.",
 
-"obyektda quvvat sarfi": "потребление энергии на объекте",
+"faqat datchikli variantda": "только в варианте с одними датчиками",
 "yil batareya": "года работы батареи",
 "obyekt bir shlyuzda": "объектов на один шлюз",
 "mln so'm obyektga": "млн сумов на объект",
@@ -584,7 +584,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "Montaj: kim, qancha vaqtda, nimani tekshiradi":
   "Монтаж: кто, за какое время и что проверяет",
 "Ish klaster bo'yicha rejalashtiriladi, obyekt bo'yicha emas. Shlyuz nuqtasi birinchi kuni yopiladi, obyektlar keyin ketma-ket ulanadi.":
-  "Работа планируется по кластеру, а не по объекту. Точка шлюза закрывается в первый день, объекты подключаются затем один за другим.",
+  "Работа планируется по кластеру целиком. Точка шлюза закрывается в первый день, объекты подключаются затем один за другим.",
 
 "Narx: 3–8 mln so'm bir obyektga": "Стоимость: 3–8 млн сумов на объект",
 "Datchiklar, 4–6 dona": "Датчики, 4–6 шт.",
@@ -632,16 +632,14 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
   "Объект в радиусе 2 км от филиала: шлюз ставится на кровле филиала, и вопрос питания снимается полностью.",
 "Yolg'iz turgan uzoq obyekt: shlyuz narxi bitta obyektga tushadi va yechim 04-variantdan qimmatlashadi.":
   "Одиночный удалённый объект: стоимость шлюза ложится на один объект, и решение становится дороже варианта 04.",
-"Katta ochiq maydon: datchik hududni emas, faqat eshik va xonani ko'radi. Bunga 09-minora kerak.":
-  "Большая открытая территория: датчик видит не периметр, а только дверь и помещение. Для этого нужна вышка из решения 09.",
+"Katta ochiq maydon: datchik faqat eshik va xonaning ichini ko'radi, hudud bo'ylab harakat esa qayd etilmaydi. Bunga 09-minora kerak.": "Большая открытая площадка: датчик видит только дверь и помещение, движение по территории не фиксируется. Здесь нужна вышка из Решения 09.",
 "Doimiy video talab qilinadigan qimmat obyekt: LoRaWAN kanali video ko'tarmaydi.":
   "Дорогой объект, где требуется постоянное видео: канал LoRaWAN видео не несёт.",
 "Davlat qo'riqlash pultiga ulanishi shart bo'lgan obyekt: pult SIA DC-09 kutadi, buni 05-yechim beradi.":
   "Объект, который обязан быть подключён к пульту государственной охраны: пульт ожидает SIA DC-09, это даёт решение 05.",
 
 "Yetkazib beruvchidan so'raladigan savollar": "Вопросы, которые задают поставщику",
-"Tijorat taklifi olinishidan oldin yoziladi. Javoblar shartnomaga ilova qilinadi.":
-  "Задаются до получения коммерческого предложения. Ответы прикладываются к договору.",
+"Ro'yxatning birinchi ikki savoli hal qiluvchi: chastota ruxsati va shlyuzning bulutsiz ishlashi. Ularga hujjat bilan javob bermagan yetkazuvchi bilan tender bosqichida ajrashiladi.": "Первые два вопроса списка решающие: разрешение на частоту и работа шлюза без облака. С поставщиком, который не отвечает на них документом, расстаются ещё на тендере.",
 "Qurilmalar qaysi chastota variantida yetkaziladi va bu variant O'zbekistonda ruxsat etilganini nima tasdiqlaydi?":
   "В каком частотном исполнении поставляется оборудование и чем подтверждается, что это исполнение разрешено в Узбекистане?",
 "Shlyuzning ichki tarmoq serveri bulutsiz ishlaydimi va MQTT mijoz sertifikatini qo'llab-quvvatlaydimi?":
@@ -727,7 +725,7 @@ Object.assign(window.MKB_LUGAT, {
 "Kamera uyg'onadi": "Камера просыпается",
 "Platforma reyestrdan shu datchikka bog'langan kamerani topadi va klip so'raydi. Kamera uyquda edi: uyg'onish va birinchi kadr to'qqiz soniya oladi. Operator ekranida hodisa allaqachon turibdi, kadr o'rnida yuklanish belgisi aylanadi.":
  "Платформа находит в реестре камеру, привязанную к этому датчику, и запрашивает клип. Камера была в спящем режиме: пробуждение и первый кадр занимают девять секунд. На экране оператора событие уже стоит, на месте кадра крутится индикатор загрузки.",
-"Kameraning 20 soniyalik uyg'oqligi: 0,04 Vt·soat": "20 секунд бодрствования камеры — 0,04 Вт·ч",
+"Tasdiqlovchi kameraning 20 soniyalik uyg'oqligi: 0,04 Vt·soat": "20 секунд бодрствования камеры подтверждения — 0,04 Вт·ч",
 "Harorat chegaradan o'tadi": "Температура пересекает порог",
 "EM300-TH ombor ichida +1,2 °C ni ko'rsatadi. Platformadagi chegara +5 °C: vazifa avtomatik ochiladi va obyekt menejeriga suv tizimini bo'shatish topshirig'i tushadi. Bu kamera ko'rmaydigan zarar — quvur yorilsa, ta'mir jihoz narxidan qimmatga tushadi.":
  "EM300-TH показывает внутри склада +1,2 °C. Порог на платформе — +5 °C: задача открывается автоматически, и менеджеру объекта поступает поручение слить воду из системы. Этот ущерб камера не увидит — при разрыве трубы ремонт обойдётся дороже самого оборудования.",
@@ -737,14 +735,14 @@ Object.assign(window.MKB_LUGAT, {
 "Kunlik holat to'plami": "Суточный набор статусов",
 "Besh datchikning batareya foizi, RSSI va SNR qiymatlari platformaga tushadi. Bittasining signali bir hafta ichida 7 dB pasaygan: omborga tovar to'ldirilgan yoki javon ko'chirilgan. Servis vazifasi o'zi ochiladi.":
  "Проценты заряда пяти датчиков, значения RSSI и SNR уходят на платформу. У одного сигнал за неделю упал на 7 дБ: склад заполнили товаром или переставили стеллаж. Сервисная задача открывается сама.",
-"Sutka yakuni: obyektda 0,24 Vt·soat": "Итог суток: 0,24 Вт·ч на объекте",
+"Sutka yakuni: datchiklar 0,2 va tasdiqlovchi kamera 0,04 Vt·soat": "Итог суток: 0,2 Вт·ч датчики и 0,04 Вт·ч камера подтверждения",
 
 "Besh datchik shuncha sarflaydi va bu energiya ularning o'z batareyasidan olinadi. Besh yil davomida obyektga bironta simni tortish kerak emas.":
  "Столько расходуют пять датчиков, и эта энергия берётся из их собственных батарей. За пять лет на объект не нужно протягивать ни одного провода.",
 "Shlyuz va 4G router birgalikda shuncha oladi. Rozetka bo'lsa, hisob shu yerda yopiladi. Bo'lmasa — 200 Vt panel va 12 V 100 A·soatlik LiFePO4, quyoshsiz yetti kunga yetadi.":
  "Столько потребляют шлюз и 4G-маршрутизатор вместе. При наличии розетки расчёт на этом закрывается. При её отсутствии — панель 200 Вт и LiFePO4 12 В 100 А·ч, хватает на семь суток без солнца.",
-"Tasdiqlovchi kamera quyosh-4G bo'lsa, uning byudjeti alohida hisoblanadi: oyiga 30 hodisada shuncha trafik chiqadi. Doimiy oqim bu yechimda yoqilmaydi.":
- "Если подтверждающая камера солнечно-4G, её бюджет считается отдельно: при 30 событиях в месяц выходит такой трафик. Постоянный поток в этом решении не включается.",
+"Oyiga 30 hodisada shuncha trafik chiqadi; doimiy oqim bu yechimda yoqilmaydi. Lekin kamera qo'shilishi bilan obyektda yana 6,5 Vt panel va 51 Vt·soatlik akkumulyator paydo bo'ladi: sarf sutkasiga 7,4 Vt·soatga chiqadi, smeta 3–8 mln dan 6–12 mln so'mga ko'tariladi va dekabr cheklovi 02-yechimdagi bilan bir xil bo'ladi.":
+ "При тридцати событиях в месяц выходит именно такой трафик; постоянный поток в этом решении не включается. Но вместе с камерой на объекте снова появляются панель 6,5 Вт и аккумулятор на 51 Вт·ч: расход доходит до 7,4 Вт·ч в сутки, смета растёт с 3–8 до 6–12 млн сумов, а декабрьское ограничение становится таким же, как в Решении 02.",
 "Ko'rikda birinchi tekshiriladigan narsa — 2 km radiusda elektr bor nuqta bormi. Bo'lsa, quvvat bo'limi butunlay yopiladi va smeta 3 mln so'mga tushadi.":
  "Первое, что проверяется на осмотре, — есть ли в радиусе 2 км точка с электроснабжением. Если есть, раздел энергоснабжения закрывается полностью, а смета опускается до 3 млн сумов.",
 
@@ -821,20 +819,18 @@ Object.assign(window.MKB_LUGAT, {
  "Разъём направляется вниз и закрывается самослипающейся лентой. Разъём с попавшей водой за один сезон вдвое сокращает дальность связи.",
 "Har datchikning DevEUI yorlig'i korpusni yopishdan oldin skanerlanadi va reyestrga yoziladi.":
  "Этикетка DevEUI каждого датчика сканируется до закрытия корпуса и вносится в реестр.",
-"Shlyuz panelida RSSI va SNR yozib olinadi. Chegara: −115 dBm dan yaxshi va SNR noldan yuqori. Chegaradan o'tmagan nuqta ko'chiriladi, sozlama bilan tuzatilmaydi.":
- "В панели шлюза фиксируются RSSI и SNR. Порог: лучше −115 dBm и SNR выше нуля. Точка, не прошедшая порог, переносится, а не правится настройками.",
+"Shlyuz panelida RSSI va SNR yozib olinadi. Mezon o'sha nuqtada ADR tanlagan SF ga nisbatan qo'yiladi: SNR demodulyator chegarasidan kamida 5 dB yuqori, RSSI esa sezgirlikdan kamida 10 dB yuqori bo'lsin. SF9 uchun bu SNR ≥ −7,5 dB va RSSI ≥ −119 dBm. SF12 ga tushib qolgan nuqta ham ishlaydi, lekin efir vaqti 1,3 soniyaga chiqadi va 1 foizlik efir cheklovi datchikni har uzatishdan keyin 130 soniya jim turishga majbur qiladi — shuning uchun SF10 dan yuqoriga chiqqan datchik ko'chiriladi.":
+ "В панели шлюза фиксируются RSSI и SNR. Критерий ставится относительно того SF, который ADR выбрал в этой точке: SNR не менее чем на 5 дБ выше порога демодулятора, RSSI — не менее чем на 10 дБ выше чувствительности. Для SF9 это SNR ≥ −7,5 дБ и RSSI ≥ −119 дБм. Точка, скатившаяся до SF12, тоже работает, но время в эфире вырастает до 1,3 секунды, а однопроцентное ограничение эфира заставляет датчик молчать 130 секунд после каждой передачи — поэтому датчик, ушедший выше SF10, переносят.",
 "Eshik yopilib ochiladi, platformada ikkala holat ham ko'rinadi. Sinov hodisasi operator ekraniga chiqqanidan keyingina dalolatnoma imzolanadi.":
  "Дверь закрывается и открывается, на платформе видны оба состояния. Акт подписывается только после того, как тестовое событие вышло на экран оператора.",
-"Signal o'lchovi bo'sh omborda emas, ish holatidagi omborda qilinadi. Javon ko'chirilsa yoki tovar to'ldirilsa, signal 10–15 dB pasayishi mumkin.":
- "Замер сигнала делается не на пустом складе, а на складе в рабочем состоянии. При перестановке стеллажа или заполнении товаром сигнал может упасть на 10–15 дБ.",
+"Signal tovar bilan to'lgan, ish holatidagi omborda o'lchanadi: javon ko'chirilsa yoki javonlar to'ldirilsa, daraja 10–15 dB pasayadi va bo'sh omborda olingan o'lchov yaroqsiz bo'lib qoladi.": "Сигнал замеряют на складе в рабочем состоянии, с товаром: при перестановке или заполнении стеллажей уровень падает на 10–15 дБ, и замер, сделанный в пустом складе, становится негодным.",
 
 "Tasdiqlovchi kamera, obyektda bo'lsa nol": "Подтверждающая камера, при наличии — ноль",
 "Rasmiy distribyutor orqali import. Yetkazish muddati odatda 4–8 hafta; kichik partiya aviajo'natma bilan ikki haftada keladi, lekin birlik narxi qimmatroq tushadi. Datchik, shlyuz va zaxira batareya bitta partiyada buyuriladi.":
  "Импорт через официального дистрибьютора. Срок поставки обычно 4–8 недель; небольшая партия авиаотправкой приходит за две недели, но единица обходится дороже. Датчики, шлюз и запасные батареи заказываются одной партией.",
 "Shartnomada shlyuz va datchik uchun alohida reaksiya muddati yoziladi: shlyuz 24 soat, datchik 5 ish kuni. Bitta umumiy muddat yozilsa, klaster butun hafta jim turishi mumkin.":
  "В договоре прописываются отдельные сроки реакции на шлюз и на датчик: шлюз — 24 часа, датчик — 5 рабочих дней. При одном общем сроке кластер может простоять в молчании всю неделю.",
-"Chastota ruxsati bu yechimning yagona to'suvchi sharti. U texnik emas, huquqiy savol va xariddan oldin yopiladi.":
- "Разрешение на частоту — единственное блокирующее условие этого решения. Вопрос не технический, а правовой, и закрывается он до закупки.",
+"Chastota ruxsati bu yechimning yagona to'suvchi sharti: 868 MHz diapazoni bo'yicha javob xarid e'lon qilinishidan oldin yuridik xizmatdan yozma olinadi.": "Разрешение на частоту — единственное блокирующее условие этого решения: ответ по диапазону 868 МГц берётся у юридической службы письменно, до объявления закупки.",
 
 "Bu yechimning afzalligi uzoq muddatda ko'rinadi: harakatlanadigan qismi yo'q, yoqilg'i yo'q, almashtiriladigan akkumulyator yo'q. Besh yilda bitta jiddiy ish bor — batareya almashtirish.":
  "Преимущество этого решения проявляется на длинной дистанции: нет движущихся частей, нет топлива, нет заменяемых аккумуляторов. За пять лет предстоит одна серьёзная работа — замена батарей.",
@@ -889,8 +885,7 @@ Object.assign(window.MKB_LUGAT, {
  "Ответственный за пожарную безопасность опирается именно на этот документ.",
 "Bir shlyuzga necha qurilma 10 daqiqalik intervalda sinovdan o'tgan?":
  "Сколько устройств на один шлюз проверено испытанием при интервале 10 минут?",
-"Katalogdagi maksimal son emas, sinov natijasi so'raladi.":
- "Запрашивается не максимум из каталога, а результат испытания.",
+"Katalogdagi maksimal son o'rniga sinov protokoli so'raladi.": "Вместо максимума из каталога запрашивается протокол испытаний.",
 "Issiq omborda saqlangan batareya resursining bir qismini yo'qotadi.":
  "Батарея, хранившаяся на тёплом складе, теряет часть ресурса."
 });

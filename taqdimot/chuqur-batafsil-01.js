@@ -47,7 +47,7 @@ Object.assign(window.MKB_BATAFSIL, {
 
 "y01.r-harorat": {
   yorliq: "Rahbariyat uchun", sarlavha: "Harorat chegarasi yechimning chegarasi",
-  tana: "<p>Bu komplektdagi eng past chegara −10 °C. U marketing raqami emas, kamera va hub datasheet'idagi qiymat.</p>" +
+  tana: "<p>Bu komplektdagi eng past chegara −10 °C. U kamera va hub datasheet'idan olingan qiymat.</p>" +
     "<table><tr><th>Qism</th><th>Ishlash</th><th>Zaryad</th></tr>" +
     "<tr><td>Batareyali kamera</td><td>−10…+55 °C</td><td>0…+45 °C</td></tr>" +
     "<tr><td>Home Hub</td><td>−10…+45 °C</td><td>—</td></tr>" +
@@ -65,12 +65,12 @@ Object.assign(window.MKB_BATAFSIL, {
 },
 
 "y01.r-narx": {
-  yorliq: "Moliya va huquq", sarlavha: "8–12 mln so'mga nima kiradi va nima kirmaydi",
+  yorliq: "Moliya va huquq", sarlavha: "8,0–11,5 mln so'mga nima kiradi va nima kirmaydi",
   tana: "<p>Raqam uch kamerali obyektning kalit topshirish narxi: jihoz, montaj, sozlash va platformada ro'yxatga olish.</p>" +
     "<h4>Kiradi</h4><ul><li>Home Hub, uchta batareyali kamera, 4G router;</li><li>LiFePO4 blok, MPPT kontroller va quyosh paneli;</li><li>kronshteyn, kabel, shkaf va montaj ishi;</li><li>sinov hodisasi va topshirish dalolatnomasi.</li></ul>" +
     "<h4>Kirmaydi</h4><ul><li>kirish kontrolleri va zamok — 2–4 mln so'm qo'shiladi;</li><li>video domofon — model bo'yicha alohida;</li><li>SIM va trafik — oyiga 50–100 ming so'm;</li><li>servis tashriflari — besh yillik xarajatning asosiy qismi.</li></ul>" +
-    "<p class='ogoh'>Smetani kamera soniga emas, zaryadsiz kun soniga bog'lab tuzing. To'rtinchi kamera narxni 1,5–2 mln so'mga oshiradi, avtonomiyani bir haftadan bir oyga cho'zish esa undan qimmat va aynan shu qator servis xarajatini belgilaydi.</p>",
-  ru: { yorliq: "Финансы и право", sarlavha: "Что входит в 8–12 млн сум, а что нет",
+    "<p class='ogoh'>Smetani zaryadsiz kun soniga bog'lab tuzing. To'rtinchi kamera narxni 1,5–2 mln so'mga oshiradi, avtonomiyani bir haftadan bir oyga cho'zish esa undan qimmat va aynan shu qator servis xarajatini belgilaydi.</p>",
+  ru: { yorliq: "Финансы и право", sarlavha: "Что входит в 8,0–11,5 млн сум, а что нет",
     tana: "<p>Цифра — стоимость объекта с тремя камерами под ключ: оборудование, монтаж, настройка и регистрация в платформе.</p>" +
       "<h4>Входит</h4><ul><li>Home Hub, три аккумуляторные камеры, 4G-роутер;</li><li>блок LiFePO4, MPPT-контроллер и солнечная панель;</li><li>кронштейны, кабель, шкаф и монтажные работы;</li><li>тестовое событие и акт сдачи.</li></ul>" +
       "<h4>Не входит</h4><ul><li>контроллер доступа и замок — плюс 2–4 млн сум;</li><li>видеодомофон — отдельно, по модели;</li><li>SIM и трафик — 50–100 тыс. сум в месяц;</li><li>сервисные выезды — основная часть пятилетних затрат.</li></ul>" +
@@ -158,8 +158,8 @@ Object.assign(window.MKB_BATAFSIL, {
     "<h4>Arxitektura uchun oqibati</h4><ul><li>Adapter obyektdagi bitta manzil bilan ishlaydi, o'nta emas.</li><li>Kamera qo'shilsa yoki almashtirilsa, bank tarmog'i tomonida hech nima o'zgarmaydi.</li><li>Hub yagona nosozlik nuqtasiga aylanadi va uni alohida nazorat qilish kerak bo'ladi.</li></ul>" +
     "<p>Shu sababli tender shartida «RTSP va ONVIF ochiq bo'lsin» degan jumla yetarli emas. Aniq yoziladi: qaysi qurilmada, qaysi port va qaysi mikrodastur versiyasida. Sinov stendida ko'rsatilsin.</p>",
   ru: { yorliq: "Для тимлида", sarlavha: "Почему нельзя подключиться к камере напрямую",
-    tana: "<p>Аккумуляторная камера общается с хабом по собственному протоколу производителя. RTSP и ONVIF открываются на уровне хаба — это конструктивная особенность, а не настройка.</p>" +
-      "<h4>Что это значит для архитектуры</h4><ul><li>Адаптер работает с одним адресом на объекте, а не с десятью.</li><li>Добавление или замена камеры ничего не меняет в сети банка.</li><li>Хаб становится единственной точкой отказа, и следить за ним нужно отдельно.</li></ul>" +
+    tana: "<p>Аккумуляторная камера общается с хабом по собственному протоколу производителя. RTSP и ONVIF открываются на уровне хаба — это конструктивная особенность хаба.</p>" +
+      "<h4>Что это значит для архитектуры</h4><ul><li>Адаптер работает с одним адресом на объекте.</li><li>Добавление или замена камеры ничего не меняет в сети банка.</li><li>Хаб становится единственной точкой отказа, и следить за ним нужно отдельно.</li></ul>" +
       "<p>Поэтому фразы «RTSP и ONVIF должны быть открыты» в тендере недостаточно. Пишут точно: на каком устройстве, через какой порт и на какой версии прошивки. И требуют показать на стенде.</p>" }
 },
 
@@ -205,13 +205,13 @@ Object.assign(window.MKB_BATAFSIL, {
     "<tr><td>55–60° (qishki optimal)</td><td>+20…25%</td></tr></table>" +
     "<p>Tik qo'yilgan panelda qor o'zi sirg'alib tushadi va chang yomg'ir bilan yuviladi. Yo'nalish — janubga, og'ish ±15° gacha sezilarli zarar bermaydi.</p>" +
     "<p class='ogoh'>Soya alohida masala. Panel ichidagi hujayralar ketma-ket ulangan, shuning uchun bitta shox tushirgan soya butun panel quvvatini uchdan biriga tushiradi. O'rnatish joyi qish quyoshining past yo'li bo'yicha tanlanadi, yoz soyasi bo'yicha emas.</p>",
-  ru: { yorliq: "Для монтажника", sarlavha: "Угол панели: зимой 55°, а не как летом",
+  ru: { yorliq: "Для монтажника", sarlavha: "Угол панели: 55° под зимнее солнце",
     tana: "<p>21 декабря в Ташкенте солнце в полдень поднимается на 25,3° над горизонтом. Панель, поставленная под годовой оптимум 30–35°, принимает декабрьский свет под очень скользящим углом.</p>" +
       "<table><tr><th>Наклон</th><th>Выработка в декабре</th></tr>" +
       "<tr><td>30° (годовой оптимум)</td><td>база</td></tr>" +
       "<tr><td>55–60° (зимний оптимум)</td><td>+20…25%</td></tr></table>" +
       "<p>С крутой панели снег сходит сам, а пыль смывает дождём. Ориентация — на юг, отклонение до ±15° заметного ущерба не даёт.</p>" +
-      "<p class='ogoh'>Тень — отдельная тема. Ячейки внутри панели соединены последовательно, поэтому тень от одной ветки роняет мощность всей панели до трети. Место выбирают по низкой зимней траектории солнца, а не по летней тени.</p>" }
+      "<p class='ogoh'>Тень — отдельная тема. Ячейки внутри панели соединены последовательно, поэтому тень от одной ветки роняет мощность всей панели до трети. Место выбирают по низкой зимней траектории солнца.</p>" }
 },
 
 "y01.s-kamera": {
@@ -364,26 +364,26 @@ Object.assign(window.MKB_BATAFSIL, {
     "<li><b>Dalilni biriktirish.</b> Klip omborga yoziladi, sha256 xeshi hisoblanadi va hodisa kartasiga bog'lanadi.</li>" +
     "<li><b>Obyekt indeksini qayta hisoblash.</b> Hodisa turi va javob vaqti nazorat indeksiga kiradi.</li>" +
     "<li><b>Vazifa ochish.</b> Buzish, tutun yoki uzoq aloqasizlik bo'yicha mas'ul xodimga vazifa yaratiladi va muddat qo'yiladi.</li></ol>" +
-    "<p class='ogoh'>Platformaga kamera modeli emas, hodisa turi keladi. Shuning uchun keyingi tenderda brend almashsa, hisobotlar, indekslar va muddatlar o'zgarmaydi.</p>",
+    "<p class='ogoh'>Platformaga hodisa turi keladi, kamera modeli reyestrda qoladi. Shuning uchun keyingi tenderda brend almashsa, hisobotlar, indekslar va muddatlar o'zgarmaydi.</p>",
   ru: { yorliq: "Для тимлида", sarlavha: "Что происходит на стороне платформы",
     tana: "<p>За адаптером бренд заканчивается. Платформа всегда получает одну и ту же запись из десяти полей и делает с ней четыре вещи.</p>" +
       "<ol><li><b>Снимает дубли.</b> Одно событие может прийти дважды — через push и через опрос: записи склеиваются по устройству, типу и времени в окне 10 секунд.</li>" +
       "<li><b>Прикрепляет доказательство.</b> Клип уходит в хранилище, считается хеш sha256 и привязывается к карточке события.</li>" +
       "<li><b>Пересчитывает индекс объекта.</b> Тип события и время реакции входят в контрольный индекс.</li>" +
       "<li><b>Создаёт задачу.</b> По вскрытию, дыму и долгому отсутствию связи ответственному ставится задача со сроком.</li></ol>" +
-      "<p class='ogoh'>В платформу приходит тип события, а не модель камеры. Поэтому смена бренда на следующем тендере не меняет ни отчёты, ни индексы, ни сроки.</p>" }
+      "<p class='ogoh'>В платформу приходит тип события; модель камеры остаётся в реестре. Поэтому смена бренда на следующем тендере не меняет ни отчёты, ни индексы, ни сроки.</p>" }
 },
 
 "y01.p-rtsp": {
   yorliq: "Jamoa rahbarlari uchun", sarlavha: "RTSP: kanal raqami va transport",
   tana: "<p>Ikkita nozik joy bor va ikkalasi ham birinchi integratsiyada vaqt yeydi.</p>" +
-    "<h4>Kanal raqami</h4><p>URL'da kanal birdan boshlanadi (<code>Preview_01_main</code>), API javobida esa noldan (<code>channel=0</code>). Adapter URL tuzayotganda birni qo'shadi. Buni unutish — eng ko'p uchraydigan xato.</p>" +
+    "<h4>Kanal raqami</h4><p>URL'da kanal birdan boshlanadi (<code>h264Preview_01_main</code>), API javobida esa noldan (<code>channel=0</code>). Adapter URL tuzayotganda birni qo'shadi. Buni unutish — eng ko'p uchraydigan xato.</p>" +
     "<h4>Transport</h4><p>4G kanalida RTSP faqat TCP orqali so'raladi. UDP paketlari yo'qolganda tasvir buziladi va operator buni «kamera ishlamayapti» deb tushunadi.</p>" +
     "<h4>Qaysi oqim</h4><p>Panelda qo'shimcha oqim ochiladi, asosiysi faqat operator kattalashtirganda. Bu 4G trafigini bir necha barobar tejaydi.</p>" +
     "<p class='ogoh'>Sessiya taxminan besh daqiqadan keyin uziladi, chunki kamera uyquga qaytadi. Adapter buni xato deb belgilamaydi; operator yana so'rasa, oqim qaytadan ochiladi.</p>",
   ru: { yorliq: "Для тимлида", sarlavha: "RTSP: нумерация каналов и транспорт",
     tana: "<p>Здесь два тонких места, и оба съедают время на первой интеграции.</p>" +
-      "<h4>Номер канала</h4><p>В URL канал считается с единицы (<code>Preview_01_main</code>), а в ответе API — с нуля (<code>channel=0</code>). Адаптер прибавляет единицу при сборке URL. Забыть об этом — самая частая ошибка.</p>" +
+      "<h4>Номер канала</h4><p>В URL канал считается с единицы (<code>h264Preview_01_main</code>), а в ответе API — с нуля (<code>channel=0</code>). Адаптер прибавляет единицу при сборке URL. Забыть об этом — самая частая ошибка.</p>" +
       "<h4>Транспорт</h4><p>В канале 4G поток запрашивают только по TCP. При потере UDP-пакетов картинка рассыпается, и оператор читает это как «камера не работает».</p>" +
       "<h4>Какой поток</h4><p>На панели открывают дополнительный поток, основной — только при увеличении. Это экономит трафик 4G в несколько раз.</p>" +
       "<p class='ogoh'>Сессия обрывается примерно через пять минут, потому что камера уходит в сон. Адаптер не считает это ошибкой; по новому запросу оператора поток открывается заново.</p>" }
@@ -418,7 +418,7 @@ Object.assign(window.MKB_BATAFSIL, {
   yorliq: "Jamoa rahbarlari uchun", sarlavha: "Yagona sxema: nima yuboriladi, nima yo'q",
   tana: "<p>Sxema brenddan mustaqil va yopiq. Yangi maydon faqat qo'shiladi; borini o'chirish yoki ma'nosini o'zgartirish <code>/api/v2</code> degani.</p>" +
     "<table><tr><th>Maydon</th><th>Qoida</th></tr>" +
-    "<tr><td><code>obyekt_id</code></td><td>Reyestrdagi kalit, qurilmadan emas, reyestrdan olinadi</td></tr>" +
+    "<tr><td><code>obyekt_id</code></td><td>Reyestrdagi kalit; qiymat reyestrdan olinadi, qurilma yuborgani e'tiborga olinmaydi</td></tr>" +
     "<tr><td><code>tur</code></td><td>Yopiq ro'yxat: harakat, eshik, tutun, buzish, batareya_past, aloqa_yoq</td></tr>" +
     "<tr><td><code>vaqt</code></td><td>ISO-8601, faqat UTC va «Z»</td></tr>" +
     "<tr><td><code>ishonch</code></td><td>0–1; brend bermasa <code>null</code>, taxmin qo'yilmaydi</td></tr>" +
@@ -427,7 +427,7 @@ Object.assign(window.MKB_BATAFSIL, {
   ru: { yorliq: "Для тимлида", sarlavha: "Единая схема: что уходит, а что нет",
     tana: "<p>Схема не зависит от бренда и закрыта. Новое поле можно только добавить; удалить существующее или изменить его смысл — это уже <code>/api/v2</code>.</p>" +
       "<table><tr><th>Поле</th><th>Правило</th></tr>" +
-      "<tr><td><code>obyekt_id</code></td><td>Ключ из реестра; берётся из реестра, а не с устройства</td></tr>" +
+      "<tr><td><code>obyekt_id</code></td><td>Ключ из реестра; то, что прислало устройство, игнорируется</td></tr>" +
       "<tr><td><code>tur</code></td><td>Закрытый перечень: движение, дверь, дым, вскрытие, низкий заряд, нет связи</td></tr>" +
       "<tr><td><code>vaqt</code></td><td>ISO-8601, только UTC с «Z»</td></tr>" +
       "<tr><td><code>ishonch</code></td><td>0–1; если бренд не даёт — <code>null</code>, догадки не подставляются</td></tr>" +
@@ -443,7 +443,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<tr><td>Qo'shimcha oqim tezligi</td><td>1,5–3 Mbit/s</td></tr>" +
     "<tr><td>Asosiy oqim tezligi</td><td>6–12 Mbit/s</td></tr>" +
     "<tr><td>Bir seansdagi trafik</td><td>60–130 MB</td></tr></table>" +
-    "<p>Shuning uchun oylik trafikning asosiy hajmini hodisalar emas, operatorlarning jonli ko'rishlari beradi. Tarif pilotdagi haqiqiy sarf bo'yicha tanlanadi.</p>" +
+    "<p>Shuning uchun oylik trafikning asosiy hajmini operatorlarning jonli ko'rishlari beradi. Tarif pilotdagi haqiqiy sarf bo'yicha tanlanadi.</p>" +
     "<p class='ogoh'>Uzoq gaplashish va sirena kamera akkumulyatorini tez bo'shatadi. Ikki tomonlama ovoz — qisqa ogohlantirish uchun vosita, suhbat uchun emas.</p>",
   ru: { yorliq: "Техническая справка", sarlavha: "Живое видео: сессия на пять минут",
     tana: "<p>Когда оператор жмёт «живое видео», хаб будит камеру. Картинка приходит за 3–6 секунд, сессия длится около пяти минут, затем камера снова засыпает.</p>" +
@@ -497,14 +497,14 @@ Object.assign(window.MKB_BATAFSIL, {
   yorliq: "Montajchi uchun", sarlavha: "Kronshteyn birinchi bo'lib ishdan chiqadi",
   tana: "<p>Kamera yengil, lekin kronshteyn shamol, qor va haroratning kunlik o'zgarishi ostida ishlaydi. Amalda eng ko'p uchraydigan nosozlik — kadrning siljishi.</p>" +
     "<ul><li>Uchta 6×40 dyubel, beton yoki g'ishtga. Pardoz qatlami va gips-karton hisobga olinmaydi.</li>" +
-    "<li>Kabel kiritish tepadan emas, pastdan: suv kronshteyn bo'ylab oqib, ulanishga tushmasin. Kabelda tomchi halqasi qoldiriladi.</li>" +
+    "<li>Kabel pastdan kiritiladi: suv kronshteyn bo'ylab oqib, ulanishga tushmasin. Kabelda tomchi halqasi qoldiriladi.</li>" +
     "<li>Teshik atrofi neytral germetik bilan yopiladi. Sirka asosidagi germetik metall qismni yeydi.</li>" +
     "<li>Mahkamlash momenti ortiqcha bo'lmasin: plastik kronshteyn qattiq tortilganda sovuqda yorilib ketadi.</li></ul>" +
     "<p class='ogoh'>O'rnatilgandan keyin kadr ekrandan tasdiqlanadi va shu holat surati dalolatnomaga biriktiriladi. Keyingi ko'rikda kadr shu surat bilan solishtiriladi: siljish shu tarzda birinchi kunidayoq ko'rinadi.</p>",
   ru: { yorliq: "Для монтажника", sarlavha: "Первым выходит из строя кронштейн",
     tana: "<p>Камера лёгкая, но кронштейн живёт под ветром, снегом и суточными перепадами температуры. На практике самая частая неисправность — сползший кадр.</p>" +
       "<ul><li>Три дюбеля 6×40, в бетон или кирпич. Отделочный слой и гипсокартон в расчёт не идут.</li>" +
-      "<li>Ввод кабеля снизу, а не сверху: вода не должна стекать по кронштейну в разъём. На кабеле оставляют каплесборную петлю.</li>" +
+      "<li>Ввод кабеля снизу: вода не должна стекать по кронштейну в разъём. На кабеле оставляют каплесборную петлю.</li>" +
       "<li>Отверстие закрывают нейтральным герметиком. Уксусный разъедает металл.</li>" +
       "<li>Момент затяжки не завышают: перетянутый пластиковый кронштейн трескается на морозе.</li></ul>" +
       "<p class='ogoh'>После установки кадр подтверждают с экрана, и его снимок прикладывают к акту. На следующем осмотре кадр сверяют с этим снимком — так сползание замечают в первый же день.</p>" }
@@ -521,7 +521,7 @@ Object.assign(window.MKB_BATAFSIL, {
   ru: { yorliq: "Для монтажника", sarlavha: "Геометрия PIR: куда направляют камеру",
     tana: "<p>PIR ловит пересечение своих зон объектом с иной температурой. Поэтому человека, идущего поперёк, он видит уверенно, а идущего прямо на камеру — с большим опозданием.</p>" +
       "<ul><li>Высота 2,6–3,2 м: ниже камера в пределах досягаемости руки, выше зона PIR уходит от земли.</li>" +
-      "<li>Направляют под углом 30–45° к проходу, а не строго навстречу.</li>" +
+      "<li>Направляют под углом 30–45° к проходу.</li>" +
       "<li>В кадр не должны попадать ветка, флаг и всё, что качается в свете фонаря: каждый такой объект даёт за ночь десятки ложных событий.</li>" +
       "<li>Обогреватель, дымоход и нагретая солнцем металлическая поверхность для PIR — источники тепла.</li></ul>" +
       "<p class='ogoh'>Ложные события съедают заряд и приучают оператора не реагировать — в том числе на настоящий сигнал. Прежде чем снижать чувствительность, всегда сначала поправьте границы кадра.</p>" }
@@ -591,7 +591,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<tr><td>Panelsiz, haftada bir</td><td>≈260</td></tr>" +
     "<tr><td>100 Vt panel bilan, oyda bir</td><td>≈60</td></tr>" +
     "<tr><td>Faqat rejali ko'rik, yilda ikki</td><td>10</td></tr></table>" +
-    "<h4>Tashrif nimadan iborat</h4><p>Yo'l, ikki kishining ish vaqti, akkumulyatorni almashtirish yoki zaryadlagichni ulash, panelni tozalash va kadrni tekshirish. Bir marshrutga besh-sakkiz obyekt yig'ilsa, xarajat shu obyektlarga bo'linadi.</p>" +
+    "<h4>Tashrif nimadan iborat</h4><p>Yo'l, ikki kishining ish vaqti, akkumulyatorni almashtirish yoki zaryadlagichni ulash, panelni tozalash va kadrni tekshirish. Bir marshrutga besh-sakkiz obyekt yig'ilsa, xarajat shu obyektlarga bo'linadi. Bir tashrif shahar ichida 95 ming so'mdan, viloyat tumanida 160 ming so'mgacha turadi: oltmish tashrif besh yilda 5,7&ndash;9,7 mln so'm beradi.</p>" +
     "<p class='ogoh'>Pilotda tashrif narxi taxmin qilinmaydi, o'lchanadi: har chiqish uchun vaqt, masofa va bajarilgan ish yoziladi. Shu ma'lumotsiz 267 obyektning servis byudjetini tuzib bo'lmaydi.</p>",
   ru: { yorliq: "Финансы и право", sarlavha: "Стоимость выезда — ядро пятилетних затрат",
     tana: "<p>Оборудование покупают один раз, а выезд повторяется каждую неделю или каждый месяц. Поэтому итог за пять лет выходит в два-три раза больше стартовой сметы.</p>" +
@@ -599,7 +599,7 @@ Object.assign(window.MKB_BATAFSIL, {
       "<tr><td>Без панели, раз в неделю</td><td>≈260</td></tr>" +
       "<tr><td>С панелью 100 Вт, раз в месяц</td><td>≈60</td></tr>" +
       "<tr><td>Только плановый осмотр, два раза в год</td><td>10</td></tr></table>" +
-      "<h4>Из чего состоит выезд</h4><p>Дорога, рабочее время двух человек, замена аккумулятора или подключение зарядного, чистка панели и проверка кадра. Если в маршрут собрать пять-восемь объектов, затраты делятся между ними.</p>" +
+      "<h4>Из чего состоит выезд</h4><p>Дорога, рабочее время двух человек, замена аккумулятора или подключение зарядного, чистка панели и проверка кадра. Если в маршрут собрать пять-восемь объектов, затраты делятся между ними. Один выезд стоит от 95 тыс. сум в городе до 160 тыс. сум в районе области: шестьдесят выездов за пять лет дают 5,7&ndash;9,7 млн сум.</p>" +
       "<p class='ogoh'>В пилоте стоимость выезда не оценивают, а измеряют: по каждому выходу фиксируют время, расстояние и выполненную работу. Без этих данных сервисный бюджет на 267 объектов не построить.</p>" }
 },
 
@@ -609,7 +609,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<h4>Nima qilinadi</h4><ul><li>Kamera ayvon tagiga, shamol va yog'indan berkitilgan joyga ko'chiriladi.</li>" +
     "<li>Hub va akkumulyator isitiladigan ichki xonaga, tashqi devordan uzoqroqqa qo'yiladi.</li>" +
     "<li>Platforma har kunning eng past harorati va oflayn oraliqlarini jurnalga yozadi; ketma-ket uch kecha takrorlansa obyekt boshqa yechimga o'tkaziladi.</li></ul>" +
-    "<p class='ogoh'>Oynaning orqasiga qo'yish yechim emas: IR yoritgich oynadan qaytadi va tunda kadr butunlay oqarib ketadi. Kamera oyna oldiga emas, ochiq tirqishga yoki eshik tepasiga qo'yiladi.</p>",
+    "<p class='ogoh'>Oynaning orqasiga qo'yish yechim emas: IR yoritgich oynadan qaytadi va tunda kadr butunlay oqarib ketadi. Kamera ochiq tirqishga yoki eshik tepasiga qo'yiladi.</p>",
   ru: { yorliq: "Для монтажника", sarlavha: "Мороз: признаки и меры",
     tana: "<h4>Как это выглядит</h4><p>Сначала в кадре растёт шум и увеличивается задержка, потом камера уходит в «офлайн» в списке хаба. Днём, когда теплеет, она возвращается сама — это самый надёжный признак того, что дело именно в холоде.</p>" +
       "<h4>Что делают</h4><ul><li>Камеру переносят под навес, в место, закрытое от ветра и осадков.</li>" +
@@ -667,7 +667,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<li><b>Nazorat hodisaga asoslanishi kifoya qiladimi?</b> Ya'ni «kimdir kirdimi» savoliga javob yetarlimi. Kifoya qilsa — mos.</li>" +
     "<li><b>4G qamrovi obyekt ichida ishonchlimi?</b> RSRP −100 dBm dan yuqori bo'lsa — mos.</li></ol>" +
     "<p>Bunday obyektlar bank balansida ko'p: shahar ichidagi kvartira va hovli-joy, savdo do'koni, ofis bloki, idora binosi. Ularda komplekt bir kunda o'rnatiladi va xaridor kelganda video domofon bilan ikki tomonlama muloqot ham ishlaydi.</p>" +
-    "<p class='ogoh'>Obyekt sotilgach komplekt keyingisiga ko'chiriladi. Bitta komplekt besh yilda uch-to'rt obyektga xizmat qiladi — shuning uchun jihoz obyektga emas, portfelga sotib olinadi.</p>",
+    "<p class='ogoh'>Obyekt sotilgach komplekt keyingisiga ko'chiriladi. Bitta komplekt besh yilda uch-to'rt obyektga xizmat qiladi — shuning uchun jihoz portfelga sotib olinadi.</p>",
   ru: { yorliq: "Для правления", sarlavha: "Как распознать подходящий объект",
     tana: "<p>Если на три вопроса ответ «да», решение подходит.</p>" +
       "<ol><li><b>Промерзает ли объект зимой?</b> Если нет — подходит. Офис с сохранённым отоплением, магазин, квартира, домовладение.</li>" +
@@ -686,7 +686,7 @@ Object.assign(window.MKB_BATAFSIL, {
     "<tr><td>Uzluksiz yozuv kerak</td><td>Batareyali kamera 24 soat yozmaydi</td><td>Yechim 04</td></tr>" +
     "<tr><td>Yong'in talabi bor bino</td><td>Kamera yong'inni aniqlamaydi</td><td>Yechim 05</td></tr>" +
     "<tr><td>Yuz tanish kerak</td><td>Biometrika mahalliy serverda saqlanishi shart</td><td>Alohida loyiha</td></tr></table>" +
-    "<p class='ogoh'>Obyektni tanlashda birinchi savol narx emas, harorat bo'lishi kerak. Narx bo'yicha tanlangan komplekt dekabrda ishlamay qolsa, uning arzonligi ahamiyatsiz bo'lib qoladi.</p>",
+    "<p class='ogoh'>Obyektni tanlashda birinchi savol harorat bo'lishi kerak. Narx bo'yicha tanlangan komplekt dekabrda ishlamay qolsa, uning arzonligi ahamiyatsiz bo'lib qoladi.</p>",
   ru: { yorliq: "Для правления", sarlavha: "Что берут там, где это решение не годится",
     tana: "<p>Отказ — тоже решение: комплект, поставленный не на тот объект, откажет в первую же зиму и подорвёт доверие ко всему проекту.</p>" +
       "<table><tr><th>Объект</th><th>Почему не годится</th><th>Что берут</th></tr>" +

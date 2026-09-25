@@ -3,7 +3,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 
 "y07.yuk": {
   yorliq: "Montajchi uchun", sarlavha: "Yigirma vatt qayerdan yig'iladi",
-  tana: "<p>Avtonomiya hisobining birinchi raqami — yuk. U jihoz pasportidan emas, o'lchovdan olinadi: bazadagi sutkalik sinovda stansiyaning o'z displeyi haqiqiy chiqish quvvatini ko'rsatadi.</p>" +
+  tana: "<p>Avtonomiya hisobining birinchi raqami — yuk. U o'lchovdan olinadi: bazadagi sutkalik sinovda stansiyaning o'z displeyi haqiqiy chiqish quvvatini ko'rsatadi.</p>" +
     "<table><tr><th>Iste'molchi</th><th>Vt</th></tr>" +
     "<tr><td>IP kamera, 2 dona, tunda IR bilan</td><td class='n'>10</td></tr>" +
     "<tr><td>4G router</td><td class='n'>5</td></tr>" +
@@ -42,7 +42,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td>1 kVt·soat</td><td class='n'>1,6 kun</td><td class='n'>1,1 kun</td></tr>" +
     "<tr><td>2 kVt·soat</td><td class='n'>3,1 kun</td><td class='n'>2,1 kun</td></tr>" +
     "<tr><td>4 kVt·soat</td><td class='n'>6,2 kun</td><td class='n'>4,2 kun</td></tr></table>" +
-    "<p class='ogoh'>Stansiya isitilmaydigan xonada tursa, qishki tuzatish 10 emas, 15–20 foizgacha chiqadi. Shuning uchun u imkon qadar bino ichiga, tashqi devordan uzoqroqqa qo'yiladi.</p>",
+    "<p class='ogoh'>Stansiya isitilmaydigan xonada tursa, qishki tuzatish 15–20 foizgacha chiqadi. Shuning uchun u imkon qadar bino ichiga, tashqi devordan uzoqroqqa qo'yiladi.</p>",
   manba: [["EcoFlow DELTA 2 Max", "https://us.ecoflow.com/products/delta-2-max-portable-power-station"]],
   ru: {yorliq: "Для монтажника", sarlavha: "Как считается зимняя автономия",
     tana: "<p>Расчёт состоит из трёх шагов, и на каждом теряется часть ёмкости. Подставить в график летнюю цифру из каталога — самый простой способ оставить объект без контроля в январе.</p>" +
@@ -59,7 +59,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 
 "y07.almash": {
   yorliq: "Montajchi uchun", sarlavha: "Almashtirish tartibi: qirq daqiqa",
-  tana: "<p>Almashtirish tashqi shartnoma bo'yicha emas, bank xodimi tomonidan bajariladi. Tartib yozma va o'zgarmas.</p>" +
+  tana: "<p>Almashtirishni bank xodimining o'zi bajaradi, pudratchi jalb qilinmaydi. Tartib yozma va o'zgarmas.</p>" +
     "<ol><li>Chiqishdan oldin platformada komplekt raqami, obyekt manzili va kalit kimdaligi tekshiriladi.</li>" +
     "<li>Quti ochiladi — bu ochilish datchigi orqali hodisa bo'lib tushadi va vazifaga bog'lanadi, shuning uchun soxta signal chiqmaydi.</li>" +
     "<li>To'la stansiya yoniga qo'yiladi va 12 V chiqish ulanadi, keyingina bo'shagani uziladi. Shunda kameralar umuman o'chmaydi.</li>" +
@@ -69,7 +69,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<p class='ogoh'>Vazifa «bajarildi» deb faqat platformadagi zaryad foizi yangilangandan keyin yopiladi. Og'zaki hisobot qabul qilinmaydi: aynan shu yerda ikki kunlik uzilishlar paydo bo'ladi.</p>",
   manba: [],
   ru: {yorliq: "Для монтажника", sarlavha: "Порядок замены: сорок минут",
-    tana: "<p>Замену выполняет сотрудник банка, а не подрядчик. Порядок письменный и неизменный.</p>" +
+    tana: "<p>Замену выполняет сотрудник банка, подрядчик к этому не привлекается. Порядок письменный и неизменный.</p>" +
       "<ol><li>Перед выездом на платформе проверяются номер комплекта, адрес объекта и то, у кого ключ.</li>" +
       "<li>Открывается ящик — это проходит событием с датчика вскрытия и привязывается к задаче, поэтому ложного сигнала не возникает.</li>" +
       "<li>Полная станция ставится рядом и подключается к линии 12 В, и только затем отключается разряженная. При таком порядке камеры не гаснут вовсе.</li>" +
@@ -89,7 +89,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td class='b'>Komplektlar soni</td><td>Viloyatga 5–10 komplekt olinsa, sozlash va o'qitish bir marta qilinadi</td></tr></table>" +
     "<h4>Nima hisobga kirmaydi</h4>" +
     "<p>Smetada ko'rinmaydigan, lekin eng katta doimiy xarajat — qatnov. Uch kunlik jadvalda oyiga o'nta qatnov chiqadi va bu 1,5–3 mln so'm. Yechimni taqqoslashda u albatta qo'shiladi, aks holda ko'chma stansiya qog'ozda LiFePO4 shkafidan arzon ko'rinadi.</p>" +
-    "<p class='ogoh'>Uch oydan ortiq muddatga bu yechim tanlanmaydi. Chegara narxda emas, logistikada: to'rtinchi oyda qatnovlar 04-yechimning butun smetasini yeb qo'yadi.</p>",
+    "<p class='ogoh'>Uch oydan ortiq muddatga bu yechim tanlanmaydi. Chegarani logistika qo'yadi: to'rtinchi oyda qatnovlar 04-yechimning butun smetasini yeb qo'yadi.</p>",
   manba: [["EcoFlow DELTA 2 Max", "https://us.ecoflow.com/products/delta-2-max-portable-power-station"]],
   ru: {yorliq: "Финансы и право", sarlavha: "Что определяет стоимость",
     tana: "<p>Больше половины сметы приходится на две станции. Остальные статьи те же, что и в других решениях.</p>" +
@@ -108,7 +108,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
   tana: "<p>Bozorda o'nlab model bor va ularning ko'pchiligi bu ish uchun yaramaydi. Tanlov beshta shart bo'yicha qilinadi.</p>" +
     "<ul><li><b>Kimyo — LiFePO4.</b> NMC elementli stansiya arzonroq, lekin 800–1 000 sikldan keyin sig'imini yo'qotadi va sovuqqa yomonroq chidaydi.</li>" +
     "<li><b>Sikl resursi kamida 3 000</b>, 80 foiz razryadda o'lchangan holda.</li>" +
-    "<li><b>12 V DC chiqish kamida 10 A uzluksiz.</b> Cho'qqi qiymat emas, uzluksiz qiymat.</li>" +
+    "<li><b>12 V DC chiqish kamida 10 A uzluksiz.</b> Katalogdagi cho'qqi qiymat bu yerda hisobga olinmaydi.</li>" +
     "<li><b>Chiqishning avtomatik o'chirish taymerini butunlay o'chirish imkoni.</b> Bu shartsiz talab.</li>" +
     "<li><b>Hujjatlashtirilgan API.</b> Bo'lmasa, zaryad platformada ko'rinmaydi.</li></ul>" +
     "<h4>Namuna</h4>" +
@@ -245,7 +245,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 
 "y07.jadval": {
   yorliq: "Rahbariyat uchun", sarlavha: "Qatnov jadvali va uning narxi",
-  tana: "<p>Bu yechimda asosiy xarajat jihozda emas, qatnovda. Uni oldindan hisoblab qo'ymaslik — eng ko'p uchraydigan xato.</p>" +
+  tana: "<p>Bu yechimda asosiy xarajat qatnovda yig'iladi. Uni oldindan hisoblab qo'ymaslik — eng ko'p uchraydigan xato.</p>" +
     "<table><tr><th>Jadval</th><th>Oyiga qatnov</th><th>Oyiga so'm</th></tr>" +
     "<tr><td>Uch kunlik</td><td class='n'>10</td><td class='n'>1,5–3,0 mln</td></tr>" +
     "<tr><td>Besh kunlik, yuk 20 Vt</td><td class='n'>6</td><td class='n'>0,9–1,8 mln</td></tr>" +
@@ -306,7 +306,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<tr><td class='b'>Stansiya</td><td>Seriya raqami</td><td>Komplekt kartochkasi</td></tr></table>" +
     "<p>Komplekt kartochkasi — bu yechimning o'ziga xos jadvali. Unda komplekt raqami, ikkita stansiya seriyasi va joriy obyekt kodi turadi. Almashtirishda faqat shu kartochkadagi bitta qator o'zgaradi, qurilmalar reyestri tegilmaydi.</p>" +
     "<h4>Nega shunday</h4>" +
-    "<p>Stansiya obyektga emas, komplektga tegishli. Agar u to'g'ridan-to'g'ri obyektga bog'lansa, har almashtirishda ikkita yozuv o'zgaradi va tarix chalkashadi: qaysi stansiya qaysi obyektda necha kun turgani ko'rinmay qoladi. Servis va kafolat masalasi aynan shu tarixga tayanadi.</p>" +
+    "<p>Stansiya komplektga tegishli. Agar u to'g'ridan-to'g'ri obyektga bog'lansa, har almashtirishda ikkita yozuv o'zgaradi va tarix chalkashadi: qaysi stansiya qaysi obyektda necha kun turgani ko'rinmay qoladi. Servis va kafolat masalasi aynan shu tarixga tayanadi.</p>" +
     "<p class='ogoh'>Obyekt sotilganda komplekt kartochkasi «bazada» holatiga o'tadi, arxivga emas. Qurilmalar reyestridan esa obyekt bog'lanishi uziladi.</p>",
   manba: [],
   ru: {yorliq: "Для тимлида", sarlavha: "Привязка двух каналов к одному объекту",
@@ -317,8 +317,8 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<tr><td class='b'>Станция</td><td>Серийный номер</td><td>Карточка комплекта</td></tr></table>" +
       "<p>Карточка комплекта — отдельная таблица этого решения. В ней номер комплекта, серийные номера двух станций и код текущего объекта. При замене меняется одна строка в этой карточке, реестр устройств не трогается.</p>" +
       "<h4>Почему именно так</h4>" +
-      "<p>Станция принадлежит комплекту, а не объекту. При прямой привязке к объекту каждая замена меняла бы две записи, и история путалась бы: становится не видно, какая станция сколько дней простояла на каком объекте. Вопросы обслуживания и гарантии опираются именно на эту историю.</p>" +
-      "<p class='ogoh'>При продаже объекта карточка комплекта переходит в состояние «на базе», а не в архив. В реестре устройств привязка к объекту при этом снимается.</p>"}
+      "<p>Станция принадлежит комплекту. При прямой привязке к объекту каждая замена меняла бы две записи, и история путалась бы: становится не видно, какая станция сколько дней простояла на каком объекте. Вопросы обслуживания и гарантии опираются именно на эту историю.</p>" +
+      "<p class='ogoh'>При продаже объекта карточка комплекта переходит в состояние «на базе» и остаётся в работе. В реестре устройств привязка к объекту при этом снимается.</p>"}
 },
 
 "y07.operator": {
@@ -330,7 +330,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<li>Kechikkan almashtirish vazifalari alohida ro'yxatda turadi va oylik hisobotga chiqadi.</li></ul>" +
     "<h4>Nima qilib bo'lmaydi</h4>" +
     "<p>Stansiyani masofadan zaryadlash, uni o'chirib-yoqish yoki jadvalni o'zgartirmasdan avtonomiyani uzaytirish. Zaryad tugasa obyekt nazoratdan chiqadi va buni faqat odam tiklaydi.</p>" +
-    "<p class='ogoh'>Shuning uchun almashtirish vazifasining muddati boshqa vazifalar bilan bir qatorda emas, alohida nazoratda turadi. Bu yechimning yagona haqiqiy xatari — kechikish.</p>",
+    "<p class='ogoh'>Shuning uchun almashtirish vazifasining muddati alohida nazoratda turadi. Bu yechimning yagona haqiqiy xatari — kechikish.</p>",
   manba: [],
   ru: {yorliq: "Для правления", sarlavha: "Дополнительная колонка на экране оператора",
     tana: "<p>При работе с мобильным комплектом на экране оператора помимо обычного видеонаблюдения есть ещё одна величина: заряд комплекта и срок следующей замены.</p>" +
@@ -340,7 +340,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<li>Просроченные задачи на замену стоят отдельным списком и выходят в месячный отчёт.</li></ul>" +
       "<h4>Чего сделать нельзя</h4>" +
       "<p>Зарядить станцию удалённо, включить или выключить её, продлить автономию без изменения графика. Когда заряд кончается, объект выходит из-под контроля, и восстановить это может только человек.</p>" +
-      "<p class='ogoh'>Поэтому срок задачи на замену держится на отдельном контроле, а не в общем списке. Единственный настоящий риск этого решения — опоздание.</p>"}
+      "<p class='ogoh'>Поэтому срок задачи на замену держится на отдельном контроле. Единственный настоящий риск этого решения — опоздание.</p>"}
 },
 
 "y07.montaj": {
@@ -479,7 +479,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
 
 "y07.qayta": {
   yorliq: "Rahbariyat uchun", sarlavha: "Qayta ishlatish hisobi",
-  tana: "<p>Bu yechimning iqtisodi bitta obyektga emas, komplektning yillik bandligiga tayanadi.</p>" +
+  tana: "<p>Bu yechimning iqtisodi komplektning yillik bandligiga tayanadi.</p>" +
     "<table><tr><th>Yilda nechta obyekt</th><th>Bir obyektga jihoz qiymati</th></tr>" +
     "<tr><td>2 obyekt</td><td class='n'>3,5–8,0 mln</td></tr>" +
     "<tr><td>4 obyekt</td><td class='n'>1,8–4,0 mln</td></tr>" +
@@ -487,7 +487,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
     "<p>Komplekt yiliga ikkitagina obyektga xizmat qilsa, u statsionar yechimdan arzon emas. Foyda faqat bandlik yuqori bo'lganda paydo bo'ladi.</p>" +
     "<h4>Bank hal qiladigan savol</h4>" +
     "<p>Har viloyatga 5–10 komplektlik pul ajratiladi. Komplektlar obyektdan obyektga o'tadi va yil davomida o'nlab obyektni qamraydi. Buyruq bilan uchta narsa belgilanadi: pul kimga biriktiriladi, almashtirishni kim qiladi va komplekt bo'sh turganda u qayerda saqlanadi.</p>" +
-    "<p class='ogoh'>Komplektlar bo'lim balansida yuritiladi va inventarizatsiyada boshqa asosiy vositalar bilan bir qatorda sanaladi. Ular ko'chib yurgani uchun inventarizatsiya joyi emas, komplekt raqami bo'yicha qilinadi.</p>",
+    "<p class='ogoh'>Komplektlar bo'lim balansida yuritiladi va inventarizatsiyada boshqa asosiy vositalar bilan bir qatorda sanaladi. Ular ko'chib yurgani uchun inventarizatsiya komplekt raqami bo'yicha qilinadi.</p>",
   manba: [],
   ru: {yorliq: "Для правления", sarlavha: "Расчёт повторного использования",
     tana: "<p>Экономика этого решения опирается не на один объект, а на годовую загрузку комплекта.</p>" +
@@ -498,7 +498,7 @@ window.MKB_BATAFSIL = Object.assign(window.MKB_BATAFSIL || {}, {
       "<p>Если комплект обслуживает за год всего два объекта, он не дешевле стационарного решения. Выигрыш появляется только при высокой загрузке.</p>" +
       "<h4>Вопрос, который решает банк</h4>" +
       "<p>На каждую область выделяются средства на 5–10 комплектов. Комплекты переходят с объекта на объект и за год охватывают десятки объектов. Приказом определяются три вещи: за кем закреплены средства, кто выполняет замену и где хранится комплект в период простоя.</p>" +
-      "<p class='ogoh'>Комплекты учитываются на балансе подразделения и при инвентаризации пересчитываются наравне с прочими основными средствами. Поскольку они перемещаются, инвентаризация ведётся по номеру комплекта, а не по месту нахождения.</p>"}
+      "<p class='ogoh'>Комплекты учитываются на балансе подразделения и при инвентаризации пересчитываются наравне с прочими основными средствами. Поскольку они перемещаются, инвентаризация ведётся по номеру комплекта.</p>"}
 }
 });
 
@@ -581,8 +581,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
  "На улице −9 °C, в запертом помещении +2 °C. Нагрузка постоянна: две камеры с ИК — 10 Вт, маршрутизатор — 5 Вт, домофон в режиме ожидания — 3 Вт, хаб датчиков — 2 Вт. На выходе станции 20 Вт, за сутки 0,48 кВт·ч.",
 "Qolgan zaxira: taxminan 19 soat": "Остаток запаса: около 19 часов",
 "Sig'im sovuqda qisqaradi": "На холоде ёмкость сокращается",
-"Xonada harorat +1 °C ga tushadi. LiFePO4 bu haroratda razryad bera oladi, lekin foydali sig'im nominaldan 8–10 foiz kam chiqadi. Shuning uchun jadval 3,5 kunga emas, 3 kunga tuziladi: yozgi hisob bilan chiqarilgan jadval yanvarda obyektni bir kecha nazoratsiz qoldiradi.":
- "Температура в помещении опускается до +1 °C. LiFePO4 при такой температуре разряжается, но полезная ёмкость оказывается на 8–10% ниже номинала. Поэтому график строится не на 3,5, а на 3 суток: график, выведенный из летнего расчёта, в январе оставляет объект без контроля на целую ночь.",
+"Xonada harorat +1 °C ga tushadi. LiFePO4 bu haroratda razryad bera oladi, lekin foydali sig'im nominaldan 8–10 foiz kam chiqadi. Shuning uchun almashtirish jadvali 3 kunga tuziladi: yozgi hisobdagi 3,5 kun yanvarda obyektni bir kecha nazoratsiz qoldiradi.": "В помещении температура падает до +1 °C. LiFePO4 при ней разряд отдаёт, но полезная ёмкость выходит на 8–10 процентов ниже номинала. Поэтому график замены строится на 3 суток: летние 3,5 суток в январе оставляют объект на ночь без контроля.",
 "Zaryad 30 foizdan pastga tushadi": "Заряд опускается ниже 30 процентов",
 "Adapter stansiya telemetriyasini har daqiqada o'qiydi. 30 foiz chegarasida platforma «komplektni almashtirish» vazifasini ochadi, muddatni 12 soat qilib qo'yadi va viloyat xo'jalik bo'limiga biriktiradi. 15 foizda vazifa shoshilinchga o'tadi va bo'lim boshlig'iga ham ketadi.":
  "Адаптер читает телеметрию станции каждую минуту. На отметке 30% платформа открывает задачу «заменить комплект», ставит срок 12 часов и закрепляет её за хозяйственным отделом области. На 15% задача переходит в срочные и дублируется руководителю отдела.",
@@ -652,8 +651,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
  "Состояние станции идёт через облако, но это не биометрические данные, и требование локализации по ЗРУ-1125 этого канала не касается. Видео в облако не выходит вовсе.",
 
 "Operator nima ko'radi va nima qila oladi": "Что видит оператор и что он может сделать",
-"Bu yechimda operator ekranida odatiy video nazoratdan tashqari yana bitta ustun bor: komplektning zaryadi va keyingi almashtirish muddati. U obyekt kartochkasida emas, komplekt kartochkasida turadi.":
- "В этом решении на экране оператора помимо обычного видеонаблюдения есть ещё одна колонка: заряд комплекта и срок следующей замены. Она находится не в карточке объекта, а в карточке комплекта.",
+"Bu yechimda operator ekranida odatiy video nazoratdan tashqari yana bitta ustun bor: komplektning zaryadi va keyingi almashtirish muddati. Ustun komplekt kartochkasiga bog'lanadi, chunki komplekt obyektdan obyektga ko'chib yuradi.": "Здесь на экране оператора кроме обычного видеонаблюдения есть ещё один столбец: заряд комплекта и срок следующей замены. Столбец привязан к карточке комплекта, потому что сам комплект переезжает с объекта на объект.",
 "Ko'rsatkich": "Показатель", "Manbasi": "Источник", "Yangilanishi": "Обновление",
 "Jonli video va arxiv": "Живое видео и архив",
 "Kamera RTSP orqali, arxiv SD kartada": "Камера по RTSP, архив на SD-карте",
@@ -695,7 +693,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "Kabel faqat bino ichida yotadi. Tashqariga chiqadigan kabel o'g'irlanadi yoki kesiladi va uni qayta tortish har safar yangi ish degani.":
  "Кабель прокладывается только внутри здания. Выведенный наружу кабель срезают или крадут, а его повторная прокладка — это каждый раз новая работа.",
 "Stansiya qulflangan xonada, ankerlangan po'lat qutida, beton poldan yog'och taglikda turadi. Qutiga ochilish datchigi qo'yiladi.":
- "Станция стоит в запертом помещении, в анкерном стальном ящике, на деревянной подложке, а не на бетонном полу. На ящик ставится датчик вскрытия.",
+ "Станция стоит в запертом помещении, в анкерном стальном ящике, на деревянной подложке, приподнятой над бетонным полом. На ящик ставится датчик вскрытия.",
 "Chiqishning «kutishda o'chirish» taymeri o'chiriladi va bu bazadagi sutkalik sinovda tekshiriladi. Tekshirilmagan taymer birinchi tunda kameralarni o'chiradi.":
  "Таймер «выключение в режиме ожидания» отключается, и это проверяется на суточном испытании на базе. Непроверенный таймер гасит камеры уже в первую ночь.",
 "Ketishdan oldin tekshiriladi: kameralar ko'rinishi, SD kartaga yozuv, platformada «onlayn» holati va stansiya foizi. Beshtasi ham bo'lmasa, dalolatnoma imzolanmaydi.":
@@ -704,8 +702,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
  "При демонтаже запись с SD-карты переносится в архив, а карта форматируется. Кадры предыдущего объекта не должны оставаться на следующем.",
 
 "Narx: 7–16 mln so'm komplektga": "Стоимость: 7–16 млн сумов за комплект",
-"Bu narx obyektga emas, komplektga tegishli. Komplekt obyektdan obyektga ko'chadi, shuning uchun bir obyektga tushadigan qiymat undan bir necha barobar kichik.":
- "Это стоимость комплекта, а не объекта. Комплект переходит с объекта на объект, поэтому величина, приходящаяся на один объект, в несколько раз меньше.",
+"Bu narx bitta komplektning narxi. Komplekt obyektdan obyektga ko'chadi va yilda olti obyektga xizmat qilsa, bir obyektga tushadigan qiymat olti barobar kichik bo'ladi.": "Это цена одного комплекта. Комплект переезжает с объекта на объект, и если за год он обслуживает шесть объектов, доля на один объект выходит вшестеро меньше.",
 "Qator": "Статья", "mln so'm": "млн сумов", "Jami": "Итого",
 "LiFePO4 stansiya, 1–2 kVt·soat": "Станция LiFePO4, 1–2 кВт·ч",
 "Ikkita stansiya: biri ishda, biri zaryadda": "Две станции: одна в работе, вторая на зарядке",
@@ -716,11 +713,9 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "2026-yil sentabr holatiga bozor bahosi. Mo'ljal uchun: EcoFlow DELTA 2 Max (2 kVt·soat, 3000 sikl) AQSh do'konida 1 029 dollar.":
  "Рыночные цены по состоянию на сентябрь 2026 года. Для ориентира: EcoFlow DELTA 2 Max (2 кВт·ч, 3000 циклов) в магазине США стоит 1 029 долларов.",
 "Obyektga tushadigan qiymat": "Стоимость в расчёте на объект",
-"Komplekt yilda olti obyektga xizmat qilsa, jihoz qiymati shu darajaga bo'linadi. Asosiy doimiy xarajat esa jihoz emas, almashtirish qatnovlari.":
- "Если комплект за год обслуживает шесть объектов, стоимость оборудования делится до этого уровня. Основной же постоянный расход — не оборудование, а выезды на замену.",
+"Komplekt yilda olti obyektga xizmat qilsa, jihoz qiymati shu darajaga bo'linadi. Doimiy xarajatning og'irligi almashtirish qatnovlariga tushadi: uch kunda bir tashrif yiliga 120 qatnov degani.": "Если комплект за год обслуживает шесть объектов, стоимость оборудования делится на это число. Основной вес постоянных затрат приходится на выезды по замене: визит раз в трое суток — это 120 выездов в год.",
 "Narxni nima ko'taradi": "Что повышает стоимость",
-"Eng katta qator — stansiya sig'imi. 2 kVt·soatdan 4 kVt·soatga o'tish narxni ikki barobarga yaqin oshiradi va jadvalni atigi uch kunga uzaytiradi. Ko'pincha arzonroq yo'l: sig'imni emas, yukni kamaytirish.":
- "Самая крупная статья — ёмкость станции. Переход с 2 на 4 кВт·ч почти удваивает цену и растягивает график всего на трое суток. Чаще дешевле другой путь: сокращать не ёмкость, а нагрузку.",
+"Eng katta qator — stansiya sig'imi. 2 kVt·soatdan 4 kVt·soatga o'tish narxni ikki barobarga yaqin oshiradi va jadvalni atigi uch kunga uzaytiradi. Yukni 55 vattdan 30 vattga tushirish esa o'sha uch kunni tekinga beradi.": "Самая крупная строка — ёмкость станции. Переход с 2 кВт·ч на 4 кВт·ч почти удваивает цену и растягивает график всего на трое суток. А снижение нагрузки с 55 до 30 Вт даёт те же трое суток бесплатно.",
 "Nimani kamaytirish mumkin": "Что можно сократить",
 "IR yoritgichni faqat kerakli kamerada yoqish, domofonni chaqiruv bo'lgandagina uyg'otish va to'rtinchi kameradan voz kechish yukni 30 Vt dan 20 Vt ga tushiradi. Bu jadvalni uch kundan besh kunga uzaytiradi va oyiga to'rtta qatnovni tejaydi.":
  "Включение ИК-прожектора только на нужной камере, пробуждение домофона лишь при вызове и отказ от четвёртой камеры снижают нагрузку с 30 до 20 Вт. Это растягивает график с трёх суток до пяти и экономит четыре выезда в месяц.",
@@ -733,8 +728,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "Birinchi komplektni CCTV integratori yig'adi: DC liniyasi, saqlagichlar, VPN va API ulanishi shu yerda bir marta to'g'rilanadi. Keyingi komplektlar shu yig'ilgan namuna bo'yicha takrorlanadi.":
  "Первый комплект собирает CCTV-интегратор: линия DC, предохранители, VPN и подключение API отлаживаются здесь один раз. Последующие комплекты повторяются по этому собранному образцу.",
 "Almashtirish": "Замена",
-"Almashtirishni bank xodimi qiladi — bu integrator ishi emas, chunki har safar tashqi shartnoma bo'yicha chaqirish narxni ikki barobar oshiradi. Xodim yarim kunlik o'qish va yozma tartibdan o'tadi.":
- "Замену выполняет сотрудник банка — это не работа интегратора, поскольку вызов подрядчика по договору каждый раз удваивает стоимость. Сотрудник проходит полудневное обучение и письменный регламент.",
+"Almashtirishni bank xodimi qiladi: har safar integratorni tashqi shartnoma bo'yicha chaqirish tashrif narxini ikki barobar oshiradi. Xodim yarim kunlik o'qish va yozma tartibdan o'tadi.": "Замену выполняет сотрудник банка: вызывать интегратора по внешнему договору на каждую замену вдвое повышает стоимость выезда. Сотрудник проходит полудневное обучение и письменный регламент.",
 "Ijara": "Аренда",
 "O'zbekistonda ko'chma stansiya ijarasi bozori kichik va u asosan tadbir xizmatlariga qaratilgan. Uzoq muddatli ijara taklifi integratordan alohida so'raladi; odatda sotib olish arzonroq chiqadi.":
  "Рынок аренды мобильных станций в Узбекистане невелик и ориентирован в основном на обслуживание мероприятий. Предложение по долгосрочной аренде запрашивается у интегратора отдельно; обычно покупка обходится дешевле.",
@@ -773,8 +767,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
 "Taymer ishlab chiqaruvchi ilovasida o'chiriladi va bazada bir sutkalik sinovdan o'tkaziladi. Sinovsiz komplekt obyektga chiqarilmaydi.":
  "Таймер отключается в приложении производителя и проверяется суточным испытанием на базе. Комплект без испытания на объект не выдаётся.",
 "Almashtirish kechikdi va obyekt ikki kun nazoratsiz qoldi": "Замена просрочена, и объект двое суток был без контроля",
-"Bu yechimning asosiy xatari texnik emas, tashkiliy. Zaryad tugagach obyekt oddiygina ko'rinmay qoladi va buni hech bir avtomatika tuzatmaydi.":
- "Основной риск этого решения не технический, а организационный. Когда заряд заканчивается, объект просто пропадает из виду, и никакая автоматика этого не исправит.",
+"Bu yechimning asosiy xatari jadvalning buzilishi. Zaryad tugagach obyekt oddiygina ko'rinmay qoladi va buni hech bir avtomatika tuzatmaydi: stansiyani faqat odam almashtiradi.": "Главный риск этого решения — сорванный график. Когда заряд кончается, объект просто перестаёт быть виден, и никакая автоматика это не исправит: станцию меняет только человек.",
 "30 foizda vazifa 12 soatlik muddat bilan ochiladi, 15 foizda shoshilinchga o'tadi va bo'lim boshlig'iga ketadi. Har komplekt ikkita stansiya bilan ishlaydi. Kechikkan vazifa oylik hisobotga chiqadi.":
  "На 30% задача открывается со сроком 12 часов, на 15% переходит в срочные и дублируется руководителю отдела. Каждый комплект работает с двумя станциями. Просроченная задача выходит в месячный отчёт.",
 "Stansiyaning o'zi o'g'irlandi": "Украли саму станцию",
@@ -803,8 +796,7 @@ window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
  "Большая открытая территория с постоянной работой PTZ: нагрузка превышает 60 Вт, и график падает до суток.",
 
 "Yetkazib beruvchidan so'raladigan savollar": "Вопросы, которые задают поставщику",
-"Tijorat taklifi olinishidan oldin yoziladi. Javoblar shartnomaga ilova qilinadi.":
- "Задаются до получения коммерческого предложения. Ответы прикладываются к договору.",
+"Katalogda stansiya kVt·soat bilan sotiladi, bizga esa 12 V chiqishning uzluksiz toki va avtomatik o'chirish taymerini bekor qilish imkoni kerak. Shu ikkisiga yozma javob olinadi.": "В каталоге станцию продают по кВт·ч, а нам нужны длительный ток выхода 12 В и возможность отключить таймер автоотключения. По этим двум пунктам ответ берут письменно.",
 "12 V DC chiqish uzluksiz necha amper beradi va u qancha vaqt davomida shu tokda ishlay oladi?":
  "Сколько ампер длительно отдаёт выход 12 В DC и как долго он способен работать при этом токе?",
 "Katalogdagi cho'qqi qiymat emas, uzluksiz qiymat so'raladi.": "Запрашивается длительное значение, а не пиковое из каталога.",

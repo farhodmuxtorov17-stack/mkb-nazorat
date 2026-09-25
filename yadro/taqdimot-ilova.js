@@ -55,8 +55,12 @@
     function hisobla() {
       var vt = +w.value, kun = +k.value;
       var kunlik = vt * 24;
-      var panel = Math.ceil(kunlik / (1.62 * 0.7));
       var wh = kunlik * kun / 0.8;
+      /* Panel ikki vazifani bajaradi: kunlik yukni beradi va bo'shagan blokni
+         tiklaydi. TIKLASH = akkumulyatorni to'ldirishga beriladigan kun soni;
+         usiz panel birinchi uzoq bulutli davrdan keyin blokni ko'tarolmaydi. */
+      var TIKLASH = 10;
+      var panel = Math.ceil((kunlik + wh / TIKLASH) / (1.62 * 0.7));
       var ah = Math.ceil(wh / 12.8);
       yoz("w", son(vt, vt % 1 ? 1 : 0));
       yoz("kun", son(kun));
@@ -133,6 +137,12 @@
       yoz("tejash", tejash > 0 ? bosh(Math.round(tejash / 10) * 10) : "0");
       yoz("nazorat", bosh(Math.round(nazoratYil)));
       yoz("qoplash", oylikFoyda > 0 ? bosh((N * K / oylikFoyda).toFixed(1)) : "—");
+      /* grafikdagi «Masofaviy nazorat» ustuni ayni shu hisobdan chiqadi */
+      var birObyekt = nazoratYil / N;
+      yoz("bir", bosh(birObyekt.toFixed(1)));
+      var t = s.querySelector('[data-iq-t="bir"]');
+      if (t) t.style.width = Math.min(100, birObyekt / 145 * 100).toFixed(1) + "%";
+      yoz("karra", bosh((55 / birObyekt).toFixed(1)));
     }
 
     ["obyekt", "qoriq", "komplekt"].forEach(function (n) {

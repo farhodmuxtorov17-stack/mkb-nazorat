@@ -97,7 +97,7 @@ Object.assign(window.MKB_BATAFSIL, {
       "<tr><td>Декабрь, ясно</td><td class='n'>7,4 Вт·ч</td></tr>" +
       "<tr><td>Декабрь, плотная облачность</td><td class='n'>1,9 Вт·ч</td></tr>" +
       "<tr><td>Запылённая панель</td><td class='n'>−10…25%</td></tr></table>" +
-      "<p class='ogoh'>Заменить панель на более мощную обычно нельзя: контроллер и корпус рассчитаны на заводскую мощность. Если нужно больше энергии, берут комплект другого класса, а не меняют панель.</p>" }
+      "<p class='ogoh'>Заменить панель на более мощную обычно нельзя: контроллер и корпус рассчитаны на заводскую мощность. Если нужно больше энергии, берут комплект другого класса.</p>" }
 },
 
 "y02.k-akb": {
@@ -160,7 +160,7 @@ Object.assign(window.MKB_BATAFSIL, {
   tana: "<p>Texnik shartga quyidagi jumla kiritiladi: <b>ishlash harorati −20 °C dan past bo'lmasin, zaryad harorati datasheet'da alohida ko'rsatilsin, dekabr sharoitida quyoshsiz avtonomiya kamida besh kun bo'lsin.</b></p>" +
     "<h4>Nega aynan shunday</h4><ul><li>«sovuqqa chidamli» degan ta'rif o'lchanmaydi va tenderda himoya qilinmaydi;</li>" +
     "<li>ishlash harorati yozilgan, lekin zaryad harorati yozilmagan komplekt qishda zaryadlanmay qoladi;</li>" +
-    "<li>avtonomiya kutish rejimi uchun emas, faol rejim uchun o'lchanadi — ikkalasi o'rtasida yetti barobar farq bor.</li></ul>" +
+    "<li>avtonomiya faol rejim uchun o'lchanadi — ikkalasi o'rtasida yetti barobar farq bor.</li></ul>" +
     "<p class='ogoh'>Uchala talabning ham tekshirish usuli yoziladi: rasmiy datasheet, ishlab chiqaruvchi hujjati va pilotdagi birinchi qish jurnali. Tekshirib bo'lmaydigan talab tenderda hech qanday kuchga ega emas.</p>",
   ru: { yorliq: "Для правления", sarlavha: "Одна фраза, которая закрывает годовой риск",
     tana: "<p>В техническое задание вносят формулировку: <b>температура работы не выше −20 °C, температура заряда указана в паспорте отдельной строкой, автономия без солнца в декабрьских условиях — не менее пяти суток.</b></p>" +
@@ -355,7 +355,7 @@ Object.assign(window.MKB_BATAFSIL, {
       "<li><code>dateTime</code> — время камеры с местной зоной;</li>" +
       "<li><code>channelID</code> — номер канала;</li>" +
       "<li><code>activePostCount</code> — счётчик повторов события.</li></ul>" +
-      "<h4>Поля, которые добавляет адаптер</h4><p>Идентификатор объекта берётся из реестра, а не с устройства. Ссылка на клип пишется как ключ в хранилище, хеш sha256 считается при приёме.</p>" +
+      "<h4>Поля, которые добавляет адаптер</h4><p>Идентификатор объекта берётся из реестра. Ссылка на клип пишется как ключ в хранилище, хеш sha256 считается при приёме.</p>" +
       "<p class='ogoh'>Обратите внимание на <code>activePostCount</code>: камера может повторить одно длящееся движение десятками сообщений. Адаптер склеивает их в одно событие в окне 10 секунд — иначе экран оператора заполнят сотни записей об одном и том же.</p>" }
 },
 
@@ -363,7 +363,7 @@ Object.assign(window.MKB_BATAFSIL, {
   yorliq: "Texnik izoh", sarlavha: "Birinchi soniyalar: kechikishni qanday qisqartirish",
   tana: "<p>Uyqu rejimida yozuv kamera uyg'ongandan keyin boshlanadi. Demak hodisaning birinchi bir-ikki soniyasi klipga tushmaydi va ba'zan aynan shu soniyalarda odamning yuzi ko'rinadi.</p>" +
     "<h4>Nima yordam beradi</h4><ul><li><b>Radar datchigi.</b> PIR dan oldinroq ishlaydi va uyg'onishni bir necha yuz millisekundga tezlashtiradi.</li>" +
-    "<li><b>Kadr geometriyasi.</b> Kamera kirish nuqtasining o'ziga emas, unga olib boradigan yo'lakning boshiga qaratiladi: odam kadrga kirganda kamera allaqachon yozayotgan bo'ladi.</li>" +
+    "<li><b>Kadr geometriyasi.</b> Kamera kirish nuqtasiga olib boradigan yo'lakning boshiga qaratiladi: odam kadrga kirganda kamera allaqachon yozayotgan bo'ladi.</li>" +
     "<li><b>Ikkinchi kamera.</b> Qimmat obyektda ikkinchi kamera birinchisining ko'r vaqtini yopadi.</li></ul>" +
     "<p class='ogoh'>Kechikishni nolga tushirib bo'lmaydi va buni loyiha hujjatida ochiq yozish kerak. Aks holda birinchi jiddiy hodisadan keyin «kamera ishlamadi» degan xulosa chiqariladi, holbuki kamera aynan mo'ljallanganidek ishlagan.</p>",
   ru: { yorliq: "Техническая справка", sarlavha: "Первые секунды: как сократить задержку",
@@ -426,7 +426,7 @@ Object.assign(window.MKB_BATAFSIL, {
       "<tr><td>30° (годовой оптимум)</td><td>база</td></tr>" +
       "<tr><td>55–60° (зимний оптимум)</td><td>+20…25%</td></tr></table>" +
       "<h4>Тень</h4><p>Ячейки внутри панели соединены последовательно. Поэтому тень от одного провода или ветки способна уронить мощность всей панели до трети — независимо от того, насколько мала затенённая площадь.</p>" +
-      "<p class='ogoh'>Место выбирают по низкой зимней траектории солнца, а не по летней тени. Стена или дерево, которые летом не мешают, в декабре дают тень весь день: солнце идёт низко, и тени длинные.</p>" }
+      "<p class='ogoh'>Место выбирают по низкой зимней траектории солнца. Стена или дерево, которые летом не мешают, в декабре дают тень весь день: солнце идёт низко, и тени длинные.</p>" }
 },
 
 "y02.m-signal": {
@@ -470,7 +470,7 @@ Object.assign(window.MKB_BATAFSIL, {
 "y02.b-distr": {
   yorliq: "Moliya va huquq", sarlavha: "Rasmiy kanal: nima so'raladi",
   tana: "<p>Hikvision'ning O'zbekistonda rasmiy distribyutori bor va bu Yechim 01 ga nisbatan katta afzallik: kafolat, hujjat va xizmat markazi rasmiy kanalda ishlaydi.</p>" +
-    "<p>Ammo distribyutor katalogida quyosh va 4G liniyasi ko'rsatilmagan. Shuning uchun birinchi savol texnik emas, tijoriy bo'ladi.</p>" +
+    "<p>Ammo distribyutor katalogida quyosh va 4G liniyasi ko'rsatilmagan. Shuning uchun birinchi savol tijoriy bo'ladi.</p>" +
     "<h4>Yozma so'raladi</h4><ul><li>bu liniyani rasmiy olib kela olasizmi va qancha muddatda;</li>" +
     "<li>kafolat muddati va nosoz jihozni almashtirish tartibi;</li>" +
     "<li>zaxira qismlar: akkumulyator, panel, kronshteyn alohida sotiladimi;</li>" +
