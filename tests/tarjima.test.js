@@ -150,6 +150,41 @@ sinov("konkatenatsiyada ishlatiladigan ikki nuqtali kalitga qoida bor", () => {
   tekshir(xato.length === 0, "{} qoidasi yo'q kalit (" + xato.length + "):\n  " + xato.join("\n  "));
 });
 
+/* ---------- 3. Obyekt ro'yxati: "nom · kod · holat" ---------- */
+/* Ijara, lot va taklif oynalaridagi obyekt ro'yxati shu ko'rinishda quriladi.
+   Qoida faqat holatni o'girsa, ruscha ro'yxatda nom o'zbekcha qolib ketadi. */
+sinov("obyekt ro'yxatida nom ham, holat ham ruschaga o'giriladi", () => {
+  const xato = [];
+  [
+    ["Biznes markaz binosi · AK-2026/4552 · Balansda", "Biznes markaz binosi"],
+    ["Boshqaruv binosi · AK-2026/3923 · Balansda", "Boshqaruv binosi"],
+    ["Choyxona va do'kon binosi · AK-2026/1111 · Balansda", "Choyxona va do'kon binosi"],
+    ["Bir qavatli turar joy · AK-2025/1407 · Sud qarori", "Bir qavatli turar joy"],
+  ].forEach(([uz, nom]) => {
+    const ru = tarjima(uz);
+    if (ru.indexOf(nom) >= 0) xato.push("nom o'zbekcha: " + uz + "  =>  " + ru);
+    if (/Balansda|Sud qarori/.test(ru)) xato.push("holat o'zbekcha: " + uz + "  =>  " + ru);
+    if (ru.indexOf(uz.split(" · ")[1]) < 0) xato.push("kod yo'qoldi: " + uz + "  =>  " + ru);
+  });
+  tekshir(xato.length === 0, "obyekt ro'yxati (" + xato.length + "):\n  " + xato.join("\n  "));
+});
+
+/* ---------- 4. Maydon birligi ---------- */
+/* Maydon ming ajratgichi bilan yoziladi ("20 774 m²") va ko'pincha [data-tarjimasiz]
+   ichida turadi, ya'ni faqat mkbBirlikTarjima orqali o'tadi. */
+sinov("maydon birligi m² ruschada м² bo'ladi", () => {
+  const xato = [], aj = String.fromCharCode(160);
+  ["78 m²", "20 774 m²", "20" + aj + "774 m²", "2 791 m²", "1 850,5 m²"].forEach(uz => {
+    const ru = tarjima(uz);
+    if (/m²/.test(ru)) xato.push("qoida: " + uz + "  =>  " + ru);
+    const b = oyna.mkbBirlikTarjima(uz);
+    if (/m²/.test(b)) xato.push("birlik: " + uz + "  =>  " + b);
+  });
+  /* raqamdan keyin turmagan m² (o'lchov nomi ichida) o'zgarmaydi */
+  if (oyna.mkbBirlikTarjima("mln so'm/m²").indexOf("m²") < 0) xato.push("mln so'm/m² qoidaga tushib ketdi");
+  tekshir(xato.length === 0, "maydon birligi (" + xato.length + "):\n  " + xato.join("\n  "));
+});
+
 /* ---------- Ishga tushirish ---------- */
 let otdi = 0, yiqildi = 0;
 console.log("Lug'at va tarjima qoidalari tekshiruvi\n");

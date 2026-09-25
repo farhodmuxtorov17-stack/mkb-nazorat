@@ -17,6 +17,7 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 const crypto = require("crypto");
+const zlib = require("zlib");
 
 const ILDIZ = path.join(__dirname, "..");
 const OMBOR = path.join(__dirname, "malumotlar");
@@ -506,6 +507,7 @@ const MIME = {".html": "text/html; charset=utf-8", ".css": "text/css; charset=ut
   ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".woff2": "font/woff2", ".ico": "image/x-icon",
   ".pdf": "application/pdf", ".txt": "text/plain; charset=utf-8", ".csv": "text/csv; charset=utf-8",
   ".md": "text/markdown; charset=utf-8",
+  ".geojson": "application/geo+json",
   ".doc": "application/msword", ".xls": "application/vnd.ms-excel",
   ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
@@ -534,12 +536,28 @@ function statika(req, res){
   if (kichik.startsWith("/server/") || /\/\./.test(kichik)) return topilmadi(res);
   /* v8/ — ilovaning eski nusxasi (repoda kuzatilmaydi): server uni bermaydi */
   if (kichik.startsWith("/v8/") || kichik === "/v8") return topilmadi(res);
+  /* Ishlab chiqish qoldiqlari: _ bilan boshlanadigan tekshiruv sahifalari va skript fayllari.
+     Ular mahsulot konturiga kirmaydi, shuning uchun tashqi manzildan ochilmaydi. */
+  if (/\/_[^/]*\.html$/.test(kichik) || /\.(py|pyc)$/.test(kichik)) return topilmadi(res);
   /* Haqiqiy reyestr va suratlar faqat shu kompyuterdan */
   if (kichik.startsWith("/mahalliy/") && !mahalliyManzilmi(req)) return topilmadi(res);
   fs.stat(f, (xato, st) => {
     if (xato || !st.isFile()) return topilmadi(res);
-    res.writeHead(200, {"Content-Type": MIME[path.extname(f).toLowerCase()] || "application/octet-stream",
-      "Cache-Control": yol.startsWith("/assets/") ? "max-age=86400" : "no-cache"});
+    const tur = MIME[path.extname(f).toLowerCase()] || "application/octet-stream";
+    const bosh = {"Content-Type": tur,
+      "Cache-Control": yol.startsWith("/assets/") ? "max-age=86400" : "no-cache"};
+    /* Matn fayllari siqib beriladi: chegara fayllari 476 KB dan 132 KB ga tushadi,
+       filialning tor kanalida bu sezilarli. Rasm va shrift allaqachon siqilgan — ularga tegilmaydi. */
+    const siqsa = /^(text\/|application\/(json|geo\+json|javascript))/.test(tur) &&
+      /(^|[\s,])gzip($|[\s,;])/.test(String(req.headers["accept-encoding"] || ""));
+    if (siqsa){
+      bosh["Content-Encoding"] = "gzip";
+      bosh["Vary"] = "Accept-Encoding";
+      res.writeHead(200, bosh);
+      fs.createReadStream(f).pipe(zlib.createGzip()).pipe(res);
+      return;
+    }
+    res.writeHead(200, bosh);
     fs.createReadStream(f).pipe(res);
   });
 }

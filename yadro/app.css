@@ -244,7 +244,9 @@ p,li,dd{text-wrap:pretty}
 .natija-band > .ic{width:18px;height:18px;color:var(--matn-3);flex:none}
 .natija-band .matn{min-width:0;flex:1;display:flex;flex-direction:column}
 .natija-band .matn b{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.natija-band .matn span{font-size:12.5px;color:var(--matn-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.natija-band .matn > span{font-size:12.5px;color:var(--matn-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Izoh bo'laklari (kod · hudud · holat) lug'at uchun alohida tugunlarda turadi: ular bitta qatorda qoladi */
+.natija-band .matn > span span,.natija-band .matn b span{font:inherit;color:inherit;white-space:inherit}
 .natija-band .ic.mitti{width:14px;height:14px;opacity:0}
 .natija-band:hover,.natija-band.faol{background:var(--band)}
 .natija-band.faol .ic.mitti{opacity:1}
@@ -1429,6 +1431,224 @@ main[data-chop="albom"]{page:albom}
   /* Tor ekranda tugmalar ustma-ust: asosiy amal tepada, matn qisqartirilmaydi */
   .modal-oyoq{flex-direction:column-reverse;align-items:stretch}
   .modal-oyoq .tugma,.tasdiqla .modal-oyoq .tugma{flex:none;width:100%;min-width:0}
+}
+/* ---------- Xarita metkalari va konturlari (yadro/xarita.js: xarita.html, panel.html) ---------- */
+.mkb-metka{background:none;border:0;transition:opacity var(--tez)}
+.mkb-metka .mkb-pin{display:block;width:28px;height:38px;margin:2px 6px 4px;filter:drop-shadow(0 2px 4px rgba(11,11,10,.3));transition:transform var(--tez);transform-origin:50% 100%}
+.mkb-metka:hover .mkb-pin,.mkb-metka.yoritilgan .mkb-pin{transform:translateY(-3px) scale(1.12)}
+.mkb-metka:focus-visible{outline:none}
+.mkb-metka:focus-visible .mkb-pin{outline:2px solid var(--siyoh);outline-offset:2px;border-radius:14px}
+.mkb-metka.sonik,.mkb-klaster.sonik{opacity:.25}
+/* Hudud metkasi: uzuq chiziqli kontur joy taxminiy ekanini bildiradi, nom xaritada yozilib turadi */
+.mkb-hudud{display:grid;place-items:center;border-radius:999px;background:rgba(255,255,255,.9);
+  border:2px dashed var(--hudud-rang,var(--matn-3));box-shadow:0 2px 8px rgba(11,11,10,.18);
+  font:600 14px var(--shrift);color:var(--siyoh);transition:transform var(--tez),background var(--tez),border-color var(--tez)}
+.mkb-hudud b{font-weight:600;font-variant-numeric:tabular-nums}
+.mkb-hudud-nom{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:4px;white-space:nowrap;pointer-events:none;
+  font:500 11.5px var(--shrift);color:var(--siyoh);background:rgba(255,255,255,.86);border-radius:8px;padding:1px 7px;box-shadow:0 1px 3px rgba(11,11,10,.12)}
+.mkb-hudud-nom.yashirin{display:none}
+.mkb-hudud-metka:hover .mkb-hudud-nom.yashirin{display:block}
+.mkb-hudud-metka:hover .mkb-hudud,.mkb-hudud-metka.yoritilgan .mkb-hudud{transform:scale(1.08);background:#fff}
+.mkb-hudud-metka.tanlangan .mkb-hudud{border-style:solid;background:var(--hudud-rang,var(--siyoh));color:#fff}
+.mkb-hudud-metka:focus-visible{outline:none}
+.mkb-hudud-metka:focus-visible .mkb-hudud{outline:2px solid var(--siyoh);outline-offset:3px}
+/* Hudud konturi: geometriya ma'lumot faylida bo'lsa chiziladi */
+.mkb-kontur{cursor:pointer;transition:fill-opacity var(--tez)}
+.mkb-kontur:hover,.mkb-kontur.tanlangan{fill-opacity:.55}
+.leaflet-tooltip.mkb-yorliq{background:var(--siyoh);color:#fff;border:0;border-radius:10px;padding:6px 10px;
+  font:400 12.5px var(--shrift);box-shadow:var(--soya-suzuvchi);white-space:nowrap}
+.leaflet-tooltip.mkb-yorliq b{display:block;font-weight:500;font-size:13px;color:#fff}
+.leaflet-tooltip.mkb-yorliq span{display:block;color:rgba(255,255,255,.72);font-size:11.5px}
+/* Ichma-ich yozuv bir qatorda qoladi: "Aktivlar soni — 28 ta" uch qatorga bo'linmasin */
+.leaflet-tooltip.mkb-yorliq span :is(span,b){display:inline;font-size:inherit}
+.leaflet-tooltip.mkb-yorliq span b{font-weight:600;color:#fff;font-variant-numeric:tabular-nums}
+.leaflet-tooltip.mkb-yorliq.leaflet-tooltip-top::before{border-top-color:var(--siyoh)}
+.leaflet-tooltip.mkb-yorliq.leaflet-tooltip-bottom::before{border-bottom-color:var(--siyoh)}
+/* ---------- Vektor asos: hudud va tuman konturlari, yer nomlari ----------
+   Geometriya repodagi assets/geo dan keladi, tashqi tayl serveri talab qilinmaydi. */
+.leaflet-container.mkb-vektor{background:var(--band)}
+.mkb-hudud-shakl{transition:fill var(--tez),stroke-width var(--tez);cursor:pointer}
+.mkb-hudud-shakl.yoritilgan{stroke:var(--siyoh);stroke-width:1.8;stroke-opacity:1}
+.mkb-hudud-shakl.tanlangan{stroke:var(--siyoh);stroke-width:2.4;stroke-opacity:1}
+/* Tuman konturi standartda bosishni ushlamaydi; sahifa unga nom yoki amal bersa bosiladigan bo'ladi */
+.mkb-tuman-shakl{pointer-events:none}
+.leaflet-interactive.mkb-tuman-shakl{pointer-events:auto;cursor:pointer}
+.mkb-nom{position:relative;background:none;border:0}
+.mkb-nom > span{position:absolute;left:0;top:0;transform:translate(-50%,-50%);white-space:nowrap;
+  background:rgba(255,255,255,.84);border-radius:7px;padding:1px 6px}
+/* Hudud yozuvidagi son — xaritadagi yagona raqam: bo'yoq qaysi o'lchovni ko'rsatsa, son ham o'sha */
+.mkb-nom-hudud > span b{margin-left:6px;font-weight:500;color:var(--matn-2);font-variant-numeric:tabular-nums}
+.mkb-nom-hudud > span{font:600 12.5px var(--shrift-displey);letter-spacing:.01em;color:var(--siyoh);
+  transform:translate(-50%,-50%) translate(var(--nom-x,0),var(--nom-y,-44px));box-shadow:0 1px 3px rgba(11,11,10,.14)}
+.mkb-nom-tuman > span{font:500 11px var(--shrift);color:var(--matn-2);background:rgba(255,255,255,.7)}
+.mkb-nom > span.yashirin{display:none}
+/* Raster plitka yoqilganda: so'ndirilgan fon olinadi, konturlar surat ustida ingichka qoladi */
+.mkb-raster .leaflet-pane.mkb-fon{display:none}
+.mkb-raster .mkb-hudud-shakl{fill-opacity:.06;stroke:#fff;stroke-width:1.4;stroke-opacity:.85}
+.mkb-raster .mkb-tuman-shakl{fill-opacity:0;stroke:#fff;stroke-opacity:.5}
+.mkb-raster .mkb-nom > span{background:rgba(255,255,255,.9)}
+/* ---------- Jamlangan metkalar ----------
+   Halqa segmentlari guruh ichidagi toifalar ulushini ko'rsatadi, o'rtasida soni. */
+.mkb-klaster{background:none;border:0;cursor:pointer}
+.mkb-klaster .mkb-klaster-halqa{position:absolute;inset:0;border-radius:999px;
+  -webkit-mask:radial-gradient(circle at 50% 50%,transparent 58%,#000 59%);
+  mask:radial-gradient(circle at 50% 50%,transparent 58%,#000 59%);
+  filter:drop-shadow(0 2px 6px rgba(11,11,10,.28));transition:transform var(--tez)}
+.mkb-klaster b{position:absolute;inset:15%;border-radius:999px;background:var(--oq);display:grid;place-items:center;
+  font:600 13px var(--shrift);font-variant-numeric:tabular-nums;color:var(--siyoh);
+  box-shadow:0 1px 4px rgba(11,11,10,.16);transition:transform var(--tez)}
+.mkb-klaster:hover .mkb-klaster-halqa{transform:scale(1.08)}
+.mkb-klaster.bir-joyda b::after{content:"";position:absolute;right:-1px;bottom:-1px;width:9px;height:9px;border-radius:999px;
+  background:var(--siyoh);border:2px solid var(--oq)}
+.mkb-klaster:focus-visible{outline:none}
+.mkb-klaster:focus-visible b{outline:2px solid var(--siyoh);outline-offset:3px}
+.mkb-metka.tanlangan .mkb-pin{transform:translateY(-4px) scale(1.24);filter:drop-shadow(0 4px 10px rgba(11,11,10,.42))}
+.mkb-metka.taxminiy .mkb-pin{opacity:.92}
+.mkb-oyoq{pointer-events:none}
+/* ---------- Masofa o'lchash ---------- */
+.leaflet-container.mkb-olchayapti{cursor:crosshair}
+.leaflet-container.mkb-olchayapti .mkb-metka,.leaflet-container.mkb-olchayapti .mkb-klaster,
+.leaflet-container.mkb-olchayapti .mkb-hudud-shakl{pointer-events:none}
+.mkb-olchov-yorliq{position:relative}
+.mkb-olchov-yorliq span{position:absolute;left:10px;top:-12px;white-space:nowrap;background:var(--siyoh);color:#fff;
+  font:500 12px var(--shrift);font-variant-numeric:tabular-nums;padding:4px 9px;border-radius:9px;box-shadow:var(--soya-past)}
+
+/* ============================================================
+   Obyektlar xaritasi sahifasi (.xarita)
+   ============================================================ */
+.xarita .x-asbob{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.xarita .x-asbob .izlash{max-width:320px;min-width:180px;height:44px}
+.xarita .x-asbob .x-ong{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.xarita .x-yon #x-olchov-tanlov,.xarita .x-yon #x-belgi-tanlov{margin-top:8px;box-shadow:none;background:var(--plitka);width:100%}
+.xarita .x-yon .almashtirgich button{height:34px;padding:0 12px;font-size:12.5px}
+.xarita .x-filtrlar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.xarita .x-yon .maydon{gap:5px;min-width:0}
+.xarita .x-yon .maydon-yorliq{font-size:12px;color:var(--matn-3)}
+.xarita .x-yon .tanlov{height:42px;min-width:0}
+.xarita .x-yon .tanlov select{min-width:0}
+.xarita .x-tozala{margin-top:10px;width:100%;justify-content:center}
+.xarita .x-qobiq{display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:20px;align-items:start}
+/* Yon ustun xaritadan baland: xarita yopishib qoladi, aks holda ro'yxat aylantirilganda
+   chap tomonda bo'sh ustun qolib, metka bilan ro'yxat qatori bir vaqtda ko'rinmaydi.
+   Balandlik mamlakat konturining nisbatiga qarab tanlangan: O'zbekiston enidan ikki barobar
+   past, shuning uchun juda baland kartada kontur o'rtada kichrayib qoladi. */
+/* Chap ustun yopishib turadi: ro'yxat aylantirilganda xarita ko'zdan ketmaydi */
+.xarita .x-chap{position:sticky;top:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+/* Xarita oyna bilan birga o'sadi: butun sahifasi xaritaga bag'ishlangan ekranda u eng katta obyekt */
+.xarita .x-karta{position:relative;background:var(--oq);border-radius:var(--r-karta);overflow:hidden;box-shadow:var(--soya);
+  height:clamp(480px,calc(100vh - 208px),820px)}
+.xarita .x-karta:fullscreen{position:relative;top:0;height:100vh;border-radius:0}
+.xarita .x-joy{position:absolute;inset:0;z-index:1}
+.xarita .x-ustki{position:absolute;left:14px;top:14px;z-index:500;display:flex;flex-direction:column;gap:8px;align-items:flex-start;
+  max-width:calc(100% - 100px);pointer-events:none}
+.xarita .x-ustki > *{pointer-events:auto}
+.xarita .x-asos-tanlov{display:inline-flex;gap:3px;padding:3px;background:rgba(255,255,255,.94);border-radius:var(--r-pilyula);
+  box-shadow:var(--soya-past);backdrop-filter:blur(6px)}
+.xarita .x-asos-tanlov button{height:34px;padding:0 13px;border-radius:var(--r-pilyula);font-size:12.5px;color:var(--matn-2);
+  display:inline-flex;align-items:center;gap:6px}
+.xarita .x-asos-tanlov button:hover{background:var(--plitka);color:var(--siyoh)}
+.xarita .x-asos-tanlov button[aria-pressed="true"]{background:var(--siyoh);color:var(--oq)}
+.xarita .x-asos-tanlov .ic{width:15px;height:15px}
+/* Izoh satri xarita ustida emas, ostida turadi: ilgari u xaritaning eng qiziq burchagini yopib,
+   telefonda esa maydonning uchdan birini egallab qolardi */
+.xarita .x-holat{font-size:12.5px;line-height:1.5;color:var(--matn-3);padding:0 4px;min-height:19px}
+.xarita .x-holat b{font-weight:500;color:var(--siyoh)}
+.xarita .x-asboblar{position:absolute;right:14px;bottom:22px;z-index:500;display:flex;flex-direction:column;gap:6px}
+.xarita .x-asboblar button{width:44px;height:44px;border-radius:14px;background:var(--oq);box-shadow:var(--soya-past);
+  display:grid;place-items:center;color:var(--matn-2)}
+.xarita .x-asboblar button:hover{color:var(--siyoh);box-shadow:var(--soya)}
+.xarita .x-asboblar button[aria-pressed="true"]{background:var(--siyoh);color:var(--oq)}
+.xarita .x-asboblar .ic{width:19px;height:19px}
+/* Yon ustun: legenda va ro'yxat */
+.xarita .x-yon{display:flex;flex-direction:column;gap:16px;min-width:0}
+.xarita .x-yon .karta{padding:18px 18px 16px}
+.xarita .x-yon h3{font:500 15px var(--shrift-displey);letter-spacing:-.01em;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.xarita .x-yon h3 .son{margin-left:auto;font:500 13px var(--shrift);color:var(--matn-3);font-variant-numeric:tabular-nums}
+.xarita .x-izoh{font-size:12.5px;color:var(--matn-3);line-height:1.45}
+.xarita .x-legenda{list-style:none;display:flex;flex-direction:column;gap:1px;margin-top:10px}
+.xarita .x-legenda button{display:flex;align-items:center;gap:10px;width:100%;min-height:36px;padding:5px 9px;border-radius:11px;
+  font-size:13px;text-align:left;transition:background var(--tez)}
+.xarita .x-legenda button:hover{background:var(--plitka)}
+/* O'chirilgan toifa va tanlanmagan oraliq so'niq turadi — panel.html dagi legenda bilan bir xil */
+.xarita .x-legenda button[aria-pressed="false"]{opacity:.42}
+.xarita .x-legenda > li.matn{display:flex;align-items:center;gap:10px;min-height:36px;padding:5px 9px;
+  font-size:13px;color:var(--matn-3)}
+.xarita .x-legenda > li.matn b{margin-left:auto;font-weight:500;font-variant-numeric:tabular-nums}
+.xarita .x-legenda i{width:16px;height:16px;border-radius:5px;flex:none;box-shadow:inset 0 0 0 1px rgba(11,11,10,.12)}
+.xarita .x-legenda i.yoq{background:repeating-linear-gradient(45deg,var(--band) 0 3px,var(--oq) 3px 6px)}
+.xarita .x-legenda b{margin-left:auto;font-weight:500;color:var(--matn-3);font-variant-numeric:tabular-nums}
+.xarita .x-royxat{list-style:none;display:flex;flex-direction:column;margin:0 -8px}
+.xarita .x-qator{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;
+  padding:9px 8px;border-radius:13px;text-align:left;min-height:56px;transition:background var(--tez)}
+.xarita .x-qator:hover,.xarita .x-qator.yoritilgan{background:var(--plitka)}
+.xarita .x-qator.tanlangan{background:var(--siyoh);color:var(--oq)}
+.xarita .x-qator .nuqta{width:10px;height:10px;border-radius:999px;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
+.xarita .x-qator .matn{min-width:0}
+.xarita .x-qator .nom{display:block;font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xarita .x-qator .tag{display:block;font-size:11.5px;color:var(--matn-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xarita .x-qator.tanlangan .tag{color:rgba(255,255,255,.7)}
+.xarita .x-qator .son{font:500 12.5px var(--shrift);font-variant-numeric:tabular-nums;color:var(--matn-2);text-align:right;white-space:nowrap}
+.xarita .x-qator.tanlangan .son{color:rgba(255,255,255,.88)}
+.xarita .x-royxat-oyoq{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--chiziq-2)}
+.xarita .x-royxat-joy{max-height:min(46vh,430px);overflow-y:auto;margin:6px -8px -4px;padding:0 8px}
+/* Xarita popup: obyekt kartochkasining qisqa ko'rinishi */
+.xarita .leaflet-popup-content-wrapper{border-radius:20px;box-shadow:var(--soya-suzuvchi)}
+.xarita .leaflet-popup-content{margin:14px 16px;min-width:246px}
+.xarita .leaflet-container{font-family:var(--shrift)}
+/* Manba qatori litsenziya talabi: to'liq o'qilishi kerak, kartaning yumaloq chetiga tegib turmaydi.
+   Asboblar ustuni o'ng tomonda 44px joy egallaydi, shuning uchun qator undan oldin tugaydi. */
+.xarita .leaflet-control-attribution{max-width:calc(100% - 76px);padding:3px 10px;border-radius:9px 0 0 0;
+  font-size:10.5px;line-height:1.45;color:var(--matn-3);background:rgba(255,255,255,.9)}
+.xarita .leaflet-control-attribution a{color:var(--matn-2)}
+.xarita .leaflet-control-zoom a{width:40px!important;height:40px!important;line-height:40px!important;font-size:20px!important}
+.xp{display:flex;flex-direction:column;gap:7px;font-size:13px}
+.xp .xp-surat{width:100%;height:104px;border-radius:13px;overflow:hidden;background:var(--plitka)}
+.xp .xp-surat img,.xp .xp-surat .surat-yoq{width:100%;height:100%;object-fit:cover}
+.xp .xp-bosh{display:flex;align-items:baseline;gap:8px}
+.xp .xp-bosh b{font-size:14.5px;font-weight:500;line-height:1.3}
+.xp .kod-mono{font-size:11.5px;color:var(--matn-3)}
+.xp .xp-qator{display:flex;justify-content:space-between;gap:12px;color:var(--matn-2)}
+.xp .xp-qator > span:last-child{font-weight:500;color:var(--siyoh);text-align:right}
+.xp .xp-qator .kech{color:var(--xavf-matn-yorqin)}
+.xp .xp-amal{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.xp .xp-amal .tugma{flex:1 1 auto;justify-content:center}
+.xp .xp-amal .tugma-asosiy{color:#fff}
+/* Telefon: filtr va ro'yxat pastki varaqda */
+.xarita .x-varaq-tugma{display:none}
+.xarita .x-parda{position:fixed;inset:0;background:var(--parda-yengil);z-index:899;display:none}
+.xarita .x-parda.ochiq{display:block}
+@media (max-width:1180px){
+  .xarita .x-qobiq{grid-template-columns:minmax(0,1fr)}
+  /* Bir ustunda xarita va ro'yxat ketma-ket turadi: yopishtirish kerak emas */
+  .xarita .x-chap{position:relative;top:0}
+  .xarita .x-karta{height:clamp(520px,66vh,780px)}
+}
+@media (max-width:760px){
+  .xarita .x-asos-tanlov button > span{position:absolute;left:-9999px}
+  .xarita .x-asos-tanlov button{padding:0 11px}
+  .xarita .x-holat{font-size:12px;padding:0 2px}
+  /* Pastda manba qatori turadi: tugmalar uning ustiga chiqmasin */
+  .xarita .x-asboblar{bottom:46px}
+  .xarita .leaflet-control-attribution{font-size:9.5px;line-height:1.35}
+  .xarita .x-asbob .x-ong{margin-left:0;width:100%}
+  .xarita .x-asbob .izlash{max-width:none;flex:1 1 100%}
+  .xarita .x-karta{height:clamp(420px,62vh,640px)}
+  /* Manba qatori telefonda ikki qatorga bo'linadi: tugma uning tepasida turadi */
+  .xarita .x-varaq-tugma{display:inline-flex;position:absolute;left:50%;bottom:48px;transform:translateX(-50%);z-index:500}
+  .xarita .x-yon{position:fixed;left:0;right:0;bottom:0;z-index:900;max-height:78vh;overflow-y:auto;gap:12px;
+    background:var(--oq);border-radius:24px 24px 0 0;padding:12px 16px 26px;
+    transform:translateY(105%);transition:transform var(--sekin);box-shadow:var(--soya-suzuvchi)}
+  .xarita .x-yon.ochiq{transform:none}
+  .xarita .x-yon::before{content:"";display:block;width:44px;height:5px;border-radius:99px;background:var(--chiziq-3);margin:0 auto 4px;flex:none}
+  .xarita .x-yon .karta{box-shadow:none;padding:6px 0;border-radius:0}
+  .xarita .x-yon .karta + .karta{border-top:1px solid var(--chiziq-2)}
+  .xarita .x-qator{min-height:60px}
+  .xarita .x-asboblar button{width:46px;height:46px}
+  /* Barmoq uchun: varaqdagi almashtirgich va legenda qatorlari stol ustidagidan baland */
+  .xarita .x-yon .almashtirgich button{height:44px;padding:0 14px;font-size:13px}
+  .xarita .x-legenda button{min-height:44px;padding:7px 9px}
+  .xarita .x-yon .tanlov{height:46px}
+  .xarita .x-tozala{min-height:44px}
 }
 @media (prefers-reduced-motion:reduce){
   .aylana{animation:aylana-puls 1.2s ease-in-out infinite!important;animation-duration:1.2s!important;border-right-color:currentColor;transform:scale(.6)}

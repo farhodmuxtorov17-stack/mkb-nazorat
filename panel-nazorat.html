@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Ko'rik va xavfsizlik paneli</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
+<link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css?v=26092200">
 <style>
 /* Panel tasmasi: keng ekranda yon menyu aynan shu uchta havolani ko'rsatib turadi,
    shuning uchun tasma faqat yon menyu yopiq bo'lgan ekranlarda ko'rinadi */
@@ -34,6 +35,32 @@
 .guruh-sarlavha{font-size:12px;letter-spacing:.02em;color:var(--matn-3);margin:14px 0 2px}
 .guruh-sarlavha:first-child{margin-top:0}
 #hs-sana{margin-right:8px}
+/* Xavf xaritasi: xarita chapda, o'lchov tanlovi va izoh o'ngda */
+.xx-tor{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,258px);gap:20px;align-items:start}
+.xx-xarita{position:relative;height:420px;border-radius:var(--r-plitka);overflow:hidden;background:var(--plitka)}
+#xx-leaflet{position:absolute;inset:0;z-index:1}
+.xx-xarita .leaflet-container{font-family:var(--shrift);background:var(--plitka)}
+.xx-xarita .leaflet-control-zoom a{width:40px;height:40px;line-height:40px;font-size:20px}
+/* Belgidagi son — hududdagi yozuvlar soni, taxminiy joy emas: uzuq kontur o'rniga to'liq chiziq */
+.xx-xarita .mkb-hudud{font-size:12px;border-style:solid}
+.xx-xarita .leaflet-control-attribution{padding:2px 8px;border-radius:9px 0 0 0;font-size:9.5px;line-height:1.35;
+  color:var(--matn-3);background:rgba(255,255,255,.9)}
+.xx-xarita .leaflet-control-attribution a{color:var(--matn-2)}
+.xx-yon{display:flex;flex-direction:column;gap:10px}
+.xx-olchov{display:flex;flex-direction:column;gap:6px}
+.xx-olchov button{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 14px;border-radius:999px;background:var(--plitka);font-size:13px;text-align:left;transition:background var(--tez),color var(--tez)}
+.xx-olchov button:hover{background:var(--band-hover)}
+.xx-olchov button[aria-pressed="true"]{background:var(--siyoh);color:#fff}
+.xx-olchov span{flex:1;min-width:0}
+.xx-olchov b{font-weight:500;font-variant-numeric:tabular-nums}
+.xx-izoh{margin:0;font-size:12.5px;color:var(--matn-3)}
+@media (max-width:1040px){
+  .xx-tor{grid-template-columns:minmax(0,1fr)}
+  .xx-olchov{flex-direction:row;flex-wrap:wrap}
+  .xx-olchov button{flex:none}
+  .xx-olchov span{flex:none}
+}
+@media (max-width:480px){.xx-xarita{height:340px}}
 </style>
 </head>
 <body data-sahifa="panel">
@@ -109,6 +136,12 @@
     </div>
   </div>
 
+  <section class="karta" aria-labelledby="v-xavf" data-sayohat="xavf-xarita">
+    <div class="karta-bosh"><h2 id="v-xavf">Xavf xaritasi</h2><span class="soni" id="xavf-soni"></span>
+      <a class="karta-havola" href="xarita.html" id="xavf-havola">Xaritada<svg class="ic"><use href="#ik-ong"/></svg></a></div>
+    <div id="xavf-xarita"></div>
+  </section>
+
   <section class="karta" aria-labelledby="v-sugurta" data-sayohat="sugurtasiz">
     <div class="karta-bosh"><h2 id="v-sugurta">Sug'urtasiz aktivlar</h2><span class="soni" id="sugurta-soni"></span>
       <a class="karta-havola" href="sugurta.html#sg-sugurtasiz">Sug'urta<svg class="ic"><use href="#ik-ong"/></svg></a></div>
@@ -123,6 +156,23 @@
 <script src="malumot-kirish.js?v=26092200"></script>
 <script src="malumot-indeks.js?v=26092200"></script>
 <script src="tarjima.js?v=26092200"></script>
+<script>
+/* Xavf xaritasining matnlari. Lug'atda bo'lmagan kalitgina qo'shiladi:
+   tarjima.js dagi yozuv ustun turadi (yadro/app.js bilan bir xil qoida). */
+(function(){
+  const L = window.MKB_LUGAT;
+  if (!L || typeof L !== "object") return;
+  const Y = {
+    "Xavf xaritasi": "Карта рисков",
+    "Xavf o'lchovi": "Показатель риска",
+    "Hudud rangi qanchalik to'q bo'lsa, o'lchov shuncha yuqori. Hududni bosganda o'sha hududning to'liq xaritasi ochiladi.":
+      "Чем темнее регион, тем выше показатель. Нажатие на регион открывает полную карту этого региона.",
+    "Tanlangan o'lchov bo'yicha hech bir hududda yozuv yo'q": "По выбранному показателю нет записей ни в одном регионе",
+    "Xarita chegaralarini yuklab bo'lmadi": "Не удалось загрузить границы карты"
+  };
+  Object.keys(Y).forEach(k => { if (L[k] == null) L[k] = Y[k]; });
+})();
+</script>
 <script src="yadro/ikonlar.js?v=26092200"></script>
 <script src="yadro/daraxt.js?v=26092200"></script>
 <script src="yadro/chizma.js?v=26092200"></script>
@@ -130,9 +180,13 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/geo.js?v=26092200"></script>
+<script src="assets/vendor/leaflet/leaflet.js?v=26092200"></script>
+<script src="yadro/xarita.js?v=26092200"></script>
 <script>
 (async () => {
-  const JOYLAR = {koriklar: ["qator", 4], hodisalar: ["qator", 3], qurilmalar: ["qator", 3], sugurta: ["qator", 3]};
+  const JOYLAR = {koriklar: ["qator", 4], hodisalar: ["qator", 3], qurilmalar: ["qator", 3],
+    "xavf-xarita": ["qator", 3], sugurta: ["qator", 3]};
   Object.keys(JOYLAR).forEach(id => { document.getElementById(id).innerHTML = MKB.skelet(JOYLAR[id][1]); });
   await MKBapi.tayyor;
   const D = MKB_DATA;
@@ -280,7 +334,172 @@
       (yoqlar.length > 8 ? '<p class="karta-izoh"><span>Yana</span> <b data-tarjimasiz>' + (yoqlar.length - 8) + "</b> <span>ta aktiv</span></p>" : "")
       : MKB.boshHolat("sugurta", "Barcha faol aktivlar sug'urtalangan", D.MANBA === "mahalliy" && !hammaPolis.length ? "Mahalliy reyestrda polislar hali kiritilmagan" : "");
 
+    /* ---------- Xavf xaritasi: yuqoridagi ro'yxatlar hudud kesimiga yig'iladi ----------
+       Yozuv obyekt orqali hududga bog'lanadi; balansdan chiqarilgan obyekt ham topiladi,
+       shuning uchun hodisa sanog'i ko'rsatkich kartasidagi son bilan bir xil bo'ladi. */
+    {
+      const ob = new Map(faol.map(x => [x.id, x]));
+      const obyekt = id => ob.get(id) || D.topish(id);
+      const sanoq = {korik: {}, hodisa: {}, sugurta: {}, qurilma: {}};
+      const qosh = (kalit, obyektId) => {
+        const k = hududKodi(obyekt(obyektId));
+        if (k) sanoq[kalit][k] = (sanoq[kalit][k] || 0) + 1;
+      };
+      kech.forEach(x => qosh("korik", x.k.obyektId));
+      hodisalar.forEach(h => qosh("hodisa", h.obyektId));
+      yoqlar.forEach(x => qosh("sugurta", x.y.id));
+      oflayn.forEach(x => qosh("qurilma", x.q.obyektId));
+      xavfChiz(sanoq);
+    }
+
     tarjimaQil(document.querySelector("main"));
+  }
+
+  /* ---------- Xavf xaritasi ----------
+     Hudud rangi — tanlangan o'lchov bo'yicha yozuvlar soni: kechikkan ko'rik, ochiq hodisa,
+     sug'urtasiz aktiv yoki aloqasiz qurilma. Chegaralar repodagi assets/geo dan chiziladi,
+     shuning uchun blok bank tarmog'ida internetsiz ham to'liq ishlaydi.
+     Hudud bosilganda o'sha hududning to'liq xaritasi ochiladi. */
+  const XAVF = [
+    {kalit: "korik", nom: "Kechikkan ko'riklar", param: "&olchov=korik"},
+    {kalit: "hodisa", nom: "Ochiq hodisalar", param: ""},
+    {kalit: "sugurta", nom: "Sug'urtasiz aktivlar", param: ""},
+    {kalit: "qurilma", nom: "Aloqasiz qurilmalar", param: ""}
+  ];
+  const X_RANG = [1, 2, 3, 4, 5].map(i => "var(--voronka-" + i + ")");
+  let xOlchov = "korik", xSanoq = {}, xShkala = null;   /* bo'yoq bosqichlari, MKBxarita.shkala */
+  let xKarta = null, xAsos = null, xNuqta = null, xJoylandi = false, xOxirgi = null, xGeoKutildi = false;
+  const hududKodi = ob => ob ? (ob.hududKod || (D.hududKodi && D.hududKodi(ob.hudud)) || null) : null;
+  const xJoriy = () => XAVF.find(x => x.kalit === xOlchov) || XAVF[0];
+  const xQiymat = kod => (xSanoq[xOlchov] || {})[kod] || 0;
+  /* Hudud nomi chegara faylidan olinadi: unda ruscha to'liq nom ham bor ("Сурхандарьинская область") */
+  const xNomi = kod => {
+    const p = kod && MKB.geo && MKB.geo.obyekt(kod) ? MKB.geo.obyekt(kod).properties : null;
+    const ru = document.documentElement.lang === "ru";
+    return (p && (ru ? p.toliq_ru || p.nom_ru : p.toliq_uz || p.nom_uz)) || ((D.HUDUD_KODLAR || {})[kod] || {}).toliq || kod;
+  };
+  const xBosqich = v => (xShkala ? xShkala.bosqich(v) : 0);
+  function xUslub(kod){
+    const v = xQiymat(kod);
+    if (!v) return {rang: "var(--band)", shaffof: 1};
+    /* Bitta hududda qiymat qolganda bo'yoq bosqichi hech narsani ajratmaydi: uni eng to'q
+       rangga bo'yash "hamma joyda eng yuqori daraja" degan yolg'on manzara beradi */
+    if (xShkala && xShkala.yagona) return {rang: "var(--band)", shaffof: .5, chiziq: "var(--siyoh)", qalinlik: 2.2};
+    return {rang: X_RANG[xBosqich(v)], shaffof: .92};
+  }
+  function xYorliq(kod){
+    const v = xQiymat(kod);
+    return "<b data-tarjimasiz>" + e(xNomi(kod)) + "</b><span>" + (v
+      ? "<b data-tarjimasiz>" + v + "</b> · <span>" + e(xJoriy().nom) + "</span>"
+      : "<span>Tanlangan o'lchov bo'yicha hech bir hududda yozuv yo'q</span>") + "</span>";
+  }
+  const xHavola = kod => "xarita.html?hudud=" + encodeURIComponent(kod) + xJoriy().param;
+  /* Hudud belgisi: yadrodagi hududMetka "taxminiy joy" deb o'qiydi — bu yerda esa son hududdagi
+     yozuvlar soni, joy taxmini emas. Shuning uchun belgi shu yerda yig'iladi: ko'rinishi bir xil
+     (.mkb-hudud yorliqlarni chetlab o'tish hisobida ham shu sinf bo'yicha ishlaydi), matni boshqa. */
+  function xavfMetka(markaz, kod, son){
+    const d = Math.round(Math.min(72, 38 + Math.sqrt(son) * 4.6) * .62);
+    return MKBxarita.tugmaQil(L.marker(markaz, {
+      icon: L.divIcon({className: "mkb-metka mkb-hudud-metka",
+        iconSize: [d, d], iconAnchor: [d / 2, d / 2], popupAnchor: [0, -d / 2], tooltipAnchor: [0, -d / 2],
+        html: '<span class="sr-only"><span>' + e(xNomi(kod)) + '</span>: <span data-tarjimasiz>' + son +
+          "</span> <span>" + e(xJoriy().nom) + "</span></span>" +
+          '<div class="mkb-hudud" aria-hidden="true" style="width:' + d + "px;height:" + d +
+          "px;--hudud-rang:" + MKB.rangQiymat("var(--pushti-matn)") + '"><b data-tarjimasiz>' + son + "</b></div>"}),
+      keyboard: true, riseOnHover: true
+    }));
+  }
+
+  function xavfChiz(sanoq){
+    if (sanoq) xSanoq = sanoq;
+    xOxirgi = xSanoq;
+    const joy = $("xavf-xarita");
+    /* Qayta urinishda blok skelet bilan almashtirilgan bo'lsa, xarita yangidan quriladi */
+    if (xKarta && !document.getElementById("xx-leaflet")){ xKarta.remove(); xKarta = null; xJoylandi = false; }
+    const qiymatlar = Object.keys(xSanoq[xOlchov] || {}).map(k => xSanoq[xOlchov][k]).filter(v => v > 0).sort((a, b) => a - b);
+    const jami = qiymatlar.reduce((a, v) => a + v, 0);
+    /* Bosqichlar kvantil bo'yicha: bitta hududdagi kattalik qolgan hammasini bir rangga bosib qo'ymaydi.
+       Hisob yadroda (MKBxarita.shkala): qiymat besh tadan kam bo'lsa shkala eng ochidan boshlanadi. */
+    xShkala = window.MKBxarita && MKBxarita.shkala ? MKBxarita.shkala(qiymatlar, X_RANG.length) : null;
+
+    $("xavf-soni").innerHTML = '<b data-tarjimasiz>' + MKB.fmt(jami) + "</b> <span>" + e(xJoriy().nom) + "</span>";
+    $("xavf-havola").href = "xarita.html" + (xJoriy().param ? "?" + xJoriy().param.slice(1) : "");
+
+    if (!window.L || !window.MKBxarita){
+      joy.innerHTML = MKB.boshHolat("xarita", "Xarita chegaralarini yuklab bo'lmadi");
+      tarjimaQil(joy);
+      return;
+    }
+    if (!xKarta){
+      joy.innerHTML = '<div class="xx-tor">' +
+        '<div class="xx-xarita"><div id="xx-leaflet" role="region" aria-label="Xavf xaritasi"></div></div>' +
+        '<div class="xx-yon"><div class="xx-olchov" id="xx-olchov" role="group" aria-label="Xavf o\'lchovi"></div>' +
+        '<p class="xx-izoh" id="xx-izoh"></p></div></div>';
+      /* zoomSnap: .25 — mamlakat konturi blokka to'liq sig'adi, butun qadamda bir pog'ona ortiqcha uzoqlashardi */
+      xKarta = L.map("xx-leaflet", {zoomControl: false, attributionControl: true, scrollWheelZoom: false,
+        minZoom: 4, zoomSnap: .25, zoomDelta: 1}).setView([41.3, 64.6], 5);
+      MKBxarita.zoomTugmalari(xKarta);
+      xAsos = MKBxarita.asos(xKarta, {
+        uslub: xUslub, nom: xYorliq,
+        bosildi: kod => { location.href = xHavola(kod); },
+        /* Blok mamlakat ko'rinishida qotib turadi: 370 KB lik tuman geometriyasi kerak emas */
+        tumanlar: false
+      });
+      xNuqta = L.layerGroup().addTo(xKarta);
+      MKBxarita.yorliqlarniKuzat(xKarta);
+      /* Chegara fayli keyinroq keladi: u kelgach belgilar poligon markazlariga va nomlar
+         faylning o'z yozuvlariga qayta chiziladi (shu paytgacha ma'lumot bazasidagi markaz ishlaydi) */
+      if (xAsos && xAsos.tayyor && !xGeoKutildi){
+        xGeoKutildi = true;
+        xAsos.tayyor.then(() => xavfChiz(xOxirgi)).catch(() => {});
+      }
+      $("xx-olchov").addEventListener("click", ev => {
+        const b = ev.target.closest("[data-olchov]");
+        if (!b || b.dataset.olchov === xOlchov) return;
+        xOlchov = b.dataset.olchov;
+        xavfChiz(xOxirgi);
+      });
+    }
+
+    /* Hudud belgisi: sondan tashqari bosiladigan nishon ham beradi — konturni bosish barmoqqa noqulay */
+    xNuqta.clearLayers();
+    Object.keys(xSanoq[xOlchov] || {}).forEach(kod => {
+      const son = xQiymat(kod);
+      const markaz = MKB.geo.markaz(kod);
+      if (!son || !markaz) return;
+      xavfMetka(markaz, kod, son)
+        .bindTooltip('<b data-tarjimasiz>' + e(xNomi(kod)) + "</b><span><b data-tarjimasiz>" + son + "</b> · <span>" +
+          e(xJoriy().nom) + "</span></span>", {direction: "top", className: "mkb-yorliq", offset: [0, -4]})
+        .on("click", () => { location.href = xHavola(kod); })
+        .addTo(xNuqta);
+    });
+    if (xAsos && xAsos.uslubla) xAsos.uslubla();
+
+    $("xx-olchov").innerHTML = XAVF.map(x => '<button type="button" data-olchov="' + x.kalit + '" aria-pressed="' + (x.kalit === xOlchov) + '">' +
+      "<span>" + x.nom + '</span><b data-tarjimasiz>' + MKB.fmt(Object.keys(xSanoq[x.kalit] || {}).reduce((a, k) => a + xSanoq[x.kalit][k], 0)) + "</b></button>").join("");
+    $("xx-izoh").innerHTML = jami
+      ? "<span>Hudud rangi qanchalik to'q bo'lsa, o'lchov shuncha yuqori. Hududni bosganda o'sha hududning to'liq xaritasi ochiladi.</span>"
+      : "<span>Tanlangan o'lchov bo'yicha hech bir hududda yozuv yo'q</span>";
+
+    if (!xJoylandi){
+      xJoylandi = true;
+      /* Ko'rinish chegarasi hudud geometriyasidan olinadi va konteyner yakuniy o'lchamini olgach moslanadi:
+         shunda mamlakat blokka to'liq sig'adi. animate: false — ketma-ket ikki moslashda
+         birinchisining animatsiyasi ikkinchisini yutib yuborar edi. */
+      const mosla = () => {
+        if (!xKarta) return;
+        xKarta.invalidateSize({animate: false});
+        const ch = xAsos && xAsos.hududQatlam && xAsos.hududQatlam.getBounds();
+        /* Pastda manba qatori turadi: janubiy viloyat nomi uning ostiga tushmasin */
+        if (ch && ch.isValid()) xKarta.fitBounds(ch, {paddingTopLeft: [24, 10], paddingBottomRight: [24, 42], animate: false});
+      };
+      mosla();
+      if (xAsos && xAsos.tayyor) xAsos.tayyor.then(mosla).catch(() => {});
+      setTimeout(mosla, 220);
+    }
+    tarjimaQil(joy);
+    requestAnimationFrame(() => MKBxarita.yorliqlarniTekisla(xKarta));
+    setTimeout(() => xKarta && xKarta.invalidateSize(), 150);
   }
 
   /* ---------- Yuklash: skelet, xato va qayta urinish; yangilanish vaqti ---------- */

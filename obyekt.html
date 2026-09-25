@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyekt kartochkasi</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
+<!-- Plitka so'rovi bilan bankning ichki manzili uchinchi tomonga yetib bormasin -->
+<meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css?v=26092200">
 <style>
 .holat-qator .belgi .ic{width:18px;height:18px}
 .indeks-band{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:12px 0;border-bottom:1px solid var(--chiziq-2)}
@@ -33,6 +36,37 @@ a.metrika:hover{transform:translateY(-2px)}
 .keyingi-amal .ka-boshqa > summary::-webkit-details-marker{display:none}
 .keyingi-amal .ka-boshqa > summary::after{content:"";width:8px;height:8px;margin-left:auto;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform var(--tez)}
 .keyingi-amal .ka-boshqa[open] > summary::after{transform:rotate(-135deg)}
+/* Joylashuv kartasi: xarita chapda, manzil va koordinata o'ngda */
+.oj-tor{display:grid;grid-template-columns:minmax(0,1fr) minmax(184px,216px);gap:18px;align-items:start}
+.oj-xarita{position:relative;height:292px;border-radius:var(--r-plitka);overflow:hidden;background:var(--plitka)}
+#oj-leaflet{position:absolute;inset:0;z-index:1}
+.oj-xarita .leaflet-container{font-family:var(--shrift);background:var(--plitka)}
+.oj-xarita .leaflet-control-zoom a{width:40px;height:40px;line-height:40px;font-size:20px}
+.oj-xarita .mkb-nom-tuman > span{font-size:10.5px}
+/* Manba qatori litsenziya talabi: kichik kartada ham to'liq o'qiladi */
+.oj-xarita .leaflet-control-attribution{padding:2px 8px;border-radius:9px 0 0 0;font-size:9.5px;line-height:1.35;
+  color:var(--matn-3);background:rgba(255,255,255,.9)}
+.oj-xarita .leaflet-control-attribution a{color:var(--matn-2)}
+/* Kattalashtirish tugmalari chap yuqorida turadi, shuning uchun asos tanlovi o'ng tomonda */
+.oj-asos{position:absolute;right:10px;top:10px;z-index:2;display:flex;gap:4px;padding:4px;border-radius:var(--r-pilyula);background:rgba(255,255,255,.94);box-shadow:var(--soya-past)}
+.oj-asos button{border:0;background:transparent;font:inherit;font-size:12.5px;color:var(--matn-2);min-height:36px;padding:0 12px;border-radius:var(--r-pilyula);cursor:pointer;white-space:nowrap;transition:background var(--tez),color var(--tez)}
+.oj-asos button:hover{background:var(--plitka)}
+.oj-asos button[aria-pressed="true"]{background:var(--siyoh);color:#fff}
+.oj-asos button:focus-visible{outline:2px solid var(--siyoh);outline-offset:2px}
+.oj-yon{display:flex;flex-direction:column;gap:14px;min-width:0}
+.oj-yon dl{margin:0;display:grid;gap:10px}
+.oj-yon dt{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--matn-3);font-weight:600}
+.oj-yon dd{margin:2px 0 0;font-size:13.5px;overflow-wrap:anywhere}
+.oj-yon .oj-kod{font-variant-numeric:tabular-nums}
+.oj-izoh{font-size:12.5px;color:var(--matn-3);margin:0}
+@media (max-width:1040px){
+  .oj-tor{grid-template-columns:minmax(0,1fr)}
+  .oj-yon dl{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+}
+@media (max-width:480px){
+  .oj-xarita{height:236px}
+  .oj-asos button{min-height:44px}
+}
 </style>
 </head>
 <body data-sahifa="aktivlar">
@@ -71,6 +105,10 @@ a.metrika:hover{transform:translateY(-2px)}
         <div class="karta-bosh"><h2>Asosiy ma'lumotlar</h2></div>
         <dl class="malumot-royxat" id="asosiy"></dl>
       </section>
+      <section class="karta" id="joy-karta" data-sayohat="joylashuv">
+        <div class="karta-bosh"><h2>Joylashuv</h2><a class="karta-havola" id="joy-havola" href="xarita.html" hidden><span>Xaritada ko'rish</span><svg class="ic"><use href="#ik-ong"/></svg></a></div>
+        <div id="joy"></div>
+      </section>
     </div>
     <div class="ustun">
       <section class="karta" data-sayohat="holat">
@@ -92,6 +130,21 @@ a.metrika:hover{transform:translateY(-2px)}
 <script src="malumot-kirish.js?v=26092200"></script>
 <script src="malumot-indeks.js?v=26092200"></script>
 <script src="tarjima.js?v=26092200"></script>
+<script>
+/* Joylashuv kartochkasining matnlari. Lug'atda bo'lmagan kalitgina qo'shiladi:
+   tarjima.js dagi yozuv ustun turadi (yadro/app.js bilan bir xil qoida). */
+(function(){
+  const L = window.MKB_LUGAT;
+  if (!L || typeof L !== "object") return;
+  const Y = {
+    "Metkani xaritadan ko'chirish uchun obyekt tahririni oching": "Чтобы перенести метку, откройте редактирование объекта",
+    "Obyekt xaritada": "Объект на карте",
+    "Tuman markazi": "Центр района",
+    "Xarita chegaralarini yuklab bo'lmadi": "Не удалось загрузить границы карты"
+  };
+  Object.keys(Y).forEach(k => { if (L[k] == null) L[k] = Y[k]; });
+})();
+</script>
 <script src="yadro/ikonlar.js?v=26092200"></script>
 <script src="yadro/daraxt.js?v=26092200"></script>
 <script src="yadro/chizma.js?v=26092200"></script>
@@ -99,8 +152,11 @@ a.metrika:hover{transform:translateY(-2px)}
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/geo.js?v=26092200"></script>
+<script src="assets/vendor/leaflet/leaflet.js?v=26092200"></script>
+<script src="yadro/xarita.js?v=26092200"></script>
 <script>
-MKB.sahifaYukla({joylar: {keyingi: ["qator", 1], kpi: ["karta", 3], yol: ["qator", 1], lenta: ["qator", 2], asosiy: ["qator", 5], holat: ["qator", 4], indeks: ["qator", 4]},
+MKB.sahifaYukla({joylar: {keyingi: ["qator", 1], kpi: ["karta", 3], yol: ["qator", 1], lenta: ["qator", 2], asosiy: ["qator", 5], joy: ["qator", 3], holat: ["qator", 4], indeks: ["qator", 4]},
   xato: "Obyekt kartochkasini yuklab bo'lmadi", ish: async () => {
   if (document.readyState === "loading") await new Promise(r => document.addEventListener("DOMContentLoaded", r));
   const D = MKB_DATA, esc = MKB.esc, ik = MKB.ik;
@@ -118,6 +174,7 @@ MKB.sahifaYukla({joylar: {keyingi: ["qator", 1], kpi: ["karta", 3], yol: ["qator
   MKB.obyektTablar(y.id, "obyekt.html");
   { const t = document.querySelector(".obyekt-tablar"); if (t) t.setAttribute("data-sayohat", "tablar"); }
   MKB.fotoShapka(y, ".foto-shapka");
+
 
   /* ---------- Ko'rsatkichlar ---------- */
   const m = D.muddatHisobi(y);
@@ -181,6 +238,168 @@ MKB.sahifaYukla({joylar: {keyingi: ["qator", 1], kpi: ["karta", 3], yol: ["qator
     (binoli
       ? qator("xarita", "Kadastr raqami", h.kadastrRaqami ? '<span class="kod-mono" data-tarjimasiz>' + esc(h.kadastrRaqami) + "</span>" : yoq)
       : qator("avto", "Davlat raqami", h.davlatRaqami ? '<span class="kod-mono" data-tarjimasiz>' + esc(h.davlatRaqami) + "</span>" : yoq));
+
+  /* ---------- Joylashuv: xarita, manzil, tuman ----------
+     Metka nuqtasi uch manbadan olinadi: aktivning o'z koordinatasi, tuman markazi yoki viloyat markazi.
+     Koordinata to'qib chiqarilmaydi — taxminiy nuqta uzuq konturli metka bilan chiziladi va
+     kartochkada shundayligi yozib qo'yiladi, aks holda xodim noto'g'ri uyni qidirib yuradi.
+     Chegaralar repodagi assets/geo dan o'qiladi: bank tarmog'ida internetsiz ham ishlaydi. */
+  const HK = D.HUDUD_KODLAR || {};
+  const hudKod = y.hududKod || D.hududKodi(y.hudud) || null;
+  const nomKalit = s => String(s == null ? "" : s).trim().toLowerCase()
+    .replace(/[‘’ʻʼ`´]/g, "'").replace(/\s+/g, " ")
+    .replace(/\s+(tumani|tuman|shahri|shahar|sh\.)$/, "");
+  /* Tuman nomi o'z viloyati ichida qidiriladi: bir xil nomli tumanlar (Do'stlik, Oltinsoy) chalkashmaydi */
+  function tumanKodi(){
+    if (!hudKod || !y.tuman) return null;
+    const k = nomKalit(y.tuman);
+    const f = (MKB.geo.hududTumanlari(hudKod) || []).find(g => {
+      const p = g.properties || {};
+      return nomKalit(p.nom_uz) === k || nomKalit(p.nom_ru) === k;
+    });
+    return f ? f.properties.kod : null;
+  }
+  function joyniTop(){
+    const tk = tumanKodi();
+    if (y.joy && y.joy.aniq && isFinite(y.joy.lat) && isFinite(y.joy.lng))
+      return {lat: y.joy.lat, lng: y.joy.lng, daraja: "aniq", kod: tk || hudKod};
+    const tm = tk && MKB.geo.markaz(tk);
+    if (tm) return {lat: tm[0], lng: tm[1], daraja: "tuman", kod: tk};
+    const hm = hudKod && MKB.geo.markaz(hudKod);
+    if (hm) return {lat: hm[0], lng: hm[1], daraja: "hudud", kod: hudKod};
+    return null;
+  }
+
+  /* Hudud nomi chegara faylidan olinadi: unda ruscha to'liq nom ham bor ("Сурхандарьинская область") */
+  const toliqNomi = kod => {
+    const p = kod && MKB.geo.obyekt(kod) ? MKB.geo.obyekt(kod).properties : null;
+    const ru = document.documentElement.lang === "ru";
+    return (p && (ru ? p.toliq_ru || p.nom_ru : p.toliq_uz || p.nom_uz)) || (HK[kod] || {}).toliq || kod || "";
+  };
+  let jKarta = null, jAsos = null, jRaster = null, jMosla = null;
+  const jTahrir = MKB.huquq("aktivlar", "yoz") && MKB.ruxsat("obyekt-tahrir.html");
+  async function joyChiz(){
+    const el = document.getElementById("joy");
+    const havola = document.getElementById("joy-havola");
+    if (havola && MKB.ruxsat("xarita.html") && y.holat !== "Chiqarildi"){
+      havola.href = "xarita.html?id=" + q;
+      havola.hidden = false;
+    }
+    try { await MKB.geo.yukla(); }
+    catch (_) { MKB.xatoHolat(el, "Xarita chegaralarini yuklab bo'lmadi", joyChiz); return; }
+
+    const joy = joyniTop();
+    const tk = tumanKodi();
+    const hududNomi = toliqNomi(hudKod) || y.hudud || "";
+    const tumanNomi = (tk && MKB.geo.nomi(tk, document.documentElement.lang)) || y.tuman || "";
+    const koord = joy && joy.daraja === "aniq"
+      ? MKB.fmt(D.yaxlit(joy.lat, 4)) + ", " + MKB.fmt(D.yaxlit(joy.lng, 4)) : "";
+    const tahrirTugma = jTahrir
+      ? '<a class="tugma tugma-oq tugma-kichik" href="obyekt-tahrir.html?id=' + q + '#joy">' + ik("tahrir") + "<span>Tahrirlash</span></a>" : "";
+
+    const malumot = "<dl>" +
+      "<div><dt>Manzil</dt><dd" + (y.manzil ? " data-tarjimasiz" : "") + ">" +
+        (y.manzil ? esc(y.manzil) : "<span>Manzil kiritilmagan</span>") + "</dd></div>" +
+      (tumanNomi ? "<div><dt>Tuman</dt><dd data-tarjimasiz>" + esc(tumanNomi) + "</dd></div>" : "") +
+      "<div><dt>Hudud</dt><dd" + (hududNomi ? " data-tarjimasiz" : "") + ">" +
+        (hududNomi ? esc(hududNomi) : "<span>Hudud ko'rsatilmagan</span>") + "</dd></div>" +
+      (koord
+        ? '<div><dt>Aniq koordinata</dt><dd class="oj-kod" data-tarjimasiz>' + esc(koord) + "</dd></div>"
+        : '<div><dt>Taxminiy joy</dt><dd><span>' +
+          (joy && joy.daraja === "tuman" ? "Tuman markazi" : "Viloyat markazi") + "</span></dd></div>") +
+      "</dl>";
+    const izoh = '<p class="oj-izoh"><span>' +
+      (koord ? "Metkani xaritadan ko'chirish uchun obyekt tahririni oching" : "Taxminiy joy: aniq koordinata kiritilmagan") +
+      "</span></p>";
+
+    if (!joy || !window.L){
+      el.innerHTML = joy
+        ? '<div class="oj-tor"><div class="oj-yon">' + malumot + izoh + tahrirTugma + "</div></div>"
+        : MKB.boshHolat("xarita", "Hudud ko'rsatilmagan", "Koordinata obyekt tahririda kiritiladi",
+            tahrirTugma ? '<div class="bosh-amal">' + tahrirTugma + "</div>" : "");
+      tarjimaQil(el);
+      return;
+    }
+
+    el.innerHTML = '<div class="oj-tor"><div class="oj-xarita">' +
+      '<div id="oj-leaflet" role="region" aria-label="Obyekt xaritada"></div>' +
+      /* Ko'cha qatlami tugmasi faqat ichki plitka serveri sozlangan bo'lsa qo'shiladi:
+         shartnomasiz tashqi servis (Esri, OpenStreetMap) bank mahsulotidan olib tashlandi */
+      '<div class="oj-asos" id="oj-asos" role="group" aria-label="Asos qatlami"' +
+      (MKBxarita.ichkiPlitka() ? "" : " hidden") + ">" +
+      '<button type="button" data-asos="" aria-pressed="true">Chegara xaritasi</button>' +
+      (MKBxarita.ichkiPlitka() ? '<button type="button" data-asos="kocha" aria-pressed="false">' + "Ko'cha xaritasi" + "</button>" : "") +
+      "</div></div>" +
+      '<div class="oj-yon">' + malumot + izoh + tahrirTugma + "</div></div>";
+
+    /* Ko'rinish: plitka yoqilgan va koordinata aniq bo'lsa binoning o'zi ko'rinadigan masshtab,
+       aks holda tuman konturi — vektor asosda bundan yaqinroqda ko'radigan narsa qolmaydi. */
+    jMosla = function(){
+      if (!jKarta) return;
+      jKarta.invalidateSize({animate: false});
+      if (jRaster && jRaster.nomi() && joy.daraja === "aniq"){
+        jKarta.setView([joy.lat, joy.lng], 17, {animate: false});
+        return;
+      }
+      const chek = (joy.kod && MKB.geo.chegara(joy.kod)) || (hudKod && MKB.geo.chegara(hudKod));
+      /* Chegaraga metka ham qo'shiladi: aniq koordinata tuman chetidan tashqarida bo'lsa ham ko'rinadi.
+         Tepada asos tanlovi va kattalashtirish tugmalari turadi, pastda manba qatori — ular hisobga olinadi. */
+      if (chek) jKarta.fitBounds(L.latLngBounds(chek).extend([joy.lat, joy.lng]),
+        {paddingTopLeft: [14, 62], paddingBottomRight: [14, 34], maxZoom: 12, animate: false});
+      else jKarta.setView([joy.lat, joy.lng], 9, {animate: false});
+    };
+
+    /* zoomSnap: .25 — tuman konturi kichik kartaga to'liq sig'adi, butun qadamda bir pog'ona ortiqcha uzoqlashardi */
+    jKarta = L.map("oj-leaflet", {zoomControl: false, attributionControl: true, scrollWheelZoom: false,
+      minZoom: 4, zoomSnap: .25, zoomDelta: 1}).setView([joy.lat, joy.lng], 9);
+    MKBxarita.zoomTugmalari(jKarta);
+    jAsos = MKBxarita.asos(jKarta, {
+      uslub: kod => kod === hudKod ? {rang: "var(--lavanda)", shaffof: .5} : {rang: "var(--oq)"},
+      nom: kod => '<b data-tarjimasiz>' + esc(toliqNomi(kod)) + "</b>",
+      bosildi: kod => { if (MKB.ruxsat("xarita.html")) location.href = "xarita.html?hudud=" + encodeURIComponent(kod); }
+    });
+    /* Tuman konturi alohida bo'yaladi: aktiv qaysi tuman ichida turgani metkasiz ham ko'rinadi */
+    const tumanShakl = tk && MKB.geo.tuman(tk);
+    if (tumanShakl) L.geoJSON(tumanShakl, {
+      pane: "mkb-tuman", interactive: false,
+      style: {color: MKB.rangQiymat("var(--siyoh)"), weight: 2, opacity: .9,
+        fillColor: MKB.rangQiymat("var(--lavanda)"), fillOpacity: .95}
+    }).addTo(jKarta);
+    /* Plitka ixtiyoriy: server ochilmasa qatlam o'chadi va vektor chegara joyida qoladi */
+    const asosBelgila = nomi => document.querySelectorAll("#oj-asos [data-asos]")
+      .forEach(b => b.setAttribute("aria-pressed", String((b.dataset.asos || "") === nomi)));
+    function plitkaUzildi(){
+      jRaster.ochir();
+      asosBelgila("");
+      jMosla();
+      MKB.toast("Plitka serveri ochilmadi. Chegara xaritasi qoldi", "xavf");
+    }
+    jRaster = MKBxarita.rasterlar(jKarta, {uzildi: plitkaUzildi});
+    MKBxarita.metka([joy.lat, joy.lng], {
+      nom: y.qisqa || y.nom, izoh: y.manzil, tur: y.turKalit, taxminiy: joy.daraja !== "aniq",
+      rang: (D.MUDDAT_HOLATLARI[m.holat] || {}).rang || "var(--matn-4)"
+    }).on("click", () => { if (MKB.ruxsat("xarita.html")) location.href = "xarita.html?id=" + q; }).addTo(jKarta);
+    MKBxarita.yorliqlarniKuzat(jKarta);
+
+    document.getElementById("oj-asos").addEventListener("click", ev => {
+      const b = ev.target.closest("[data-asos]");
+      if (!b) return;
+      const nomi = b.dataset.asos || "";
+      asosBelgila(nomi);
+      if (!nomi){ jRaster.ochir(); jMosla(); return; }
+      /* Birinchi plitkani kutish endi yadroda: bank tarmog'ida so'rov xato qaytarmay
+         osilib qolsa, qatlam to'rt soniyadan keyin o'zi olib tashlanadi va uzildi chaqiriladi */
+      jRaster.qoy(nomi);
+      jMosla();
+    });
+
+    jMosla();
+    if (jAsos && jAsos.tayyor) jAsos.tayyor.then(jMosla).catch(() => {});
+    setTimeout(jMosla, 200);
+    tarjimaQil(el);
+    requestAnimationFrame(() => MKBxarita.yorliqlarniTekisla(jKarta));
+  }
+  joyChiz();
 
   /* ---------- Joriy holat ---------- */
   const rang = {ulangan: ["chip-yashil", "mint"], uzilgan: ["chip-xavf", "pushti"], "vaqtincha to'xtatilgan": ["chip-sariq", "lavanda"], "mavjud emas": ["chip-kul", "siyoh"]};

@@ -6,11 +6,54 @@
 <title>MKB — Hududlar kesimi</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
-.hh-almash{display:inline-flex;gap:4px;padding:4px;border-radius:var(--r-pilyula);background:var(--band)}
-.hh-almash button{height:36px;padding:0 14px;border-radius:var(--r-pilyula);font-size:13.5px;color:var(--matn-2)}
+.hh-almash{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;border-radius:var(--r-pilyula);background:var(--band)}
+.hh-almash button{height:36px;padding:0 14px;border-radius:var(--r-pilyula);font-size:13.5px;color:var(--matn-2);white-space:nowrap}
 .hh-almash button[aria-pressed="true"]{background:var(--oq);color:var(--siyoh);box-shadow:var(--soya-past)}
-#hh-bar .bar-qator{grid-template-columns:minmax(110px,190px) minmax(0,1fr) auto}
+#hh-bar.bar-royxat{gap:5px}
+#hh-bar .bar-qator{grid-template-columns:minmax(96px,150px) minmax(0,1fr) auto;width:100%;text-align:left;padding:4px 10px;gap:12px}
+#hh-bar .bar-son em{display:inline;margin-left:7px;font-size:11.5px}
+#hh-bar .bar-qator .bar-nom{grid-column:auto;white-space:nowrap;overflow:hidden;line-height:1.2}
+#hh-bar .bar-qator.yoritilgan{background:var(--plitka)}
+#hh-bar .bar-qator.tanlangan{background:var(--plitka);box-shadow:inset 0 0 0 1px var(--chiziq-3)}
+
+/* Xarita va reyting yonma-yon: chap ustunda chegara chizmasi, o'ngda saralangan qatorlar */
+.hh-panel{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:1080px){.hh-panel{grid-template-columns:minmax(0,1fr);gap:20px}}
+.hx{display:block;width:100%;height:auto;overflow:visible}
+.hx path.hx-hudud{stroke-linejoin:round;cursor:pointer}
+.hx path.hx-hudud.sonik{opacity:.22}
+.hx path.hx-hudud:focus{outline:none;stroke:var(--siyoh);stroke-width:2.6;stroke-opacity:1}
+.hx .hx-ip{fill:none;stroke:var(--matn-3);stroke-width:1}
+.hx .hx-nom{pointer-events:none}
+/* Yozuv har qanday bo'yoq ustida o'qilsin: harf konturi fon rangida chiziladi */
+.hx .hx-nom text{font:500 11px var(--shrift);paint-order:stroke;stroke-width:3px;stroke-linejoin:round}
+.hx .hx-nom text.toq{fill:var(--oq);stroke:rgba(11,11,10,.55)}
+.hx .hx-nom text.och{fill:var(--siyoh);stroke:var(--oq)}
+.hx .hx-nom tspan.son{font-weight:600;font-size:11.5px}
+.hx .hx-nom tspan.birlik{font-weight:400;font-size:9.5px}
+.hh-legenda{list-style:none;display:flex;flex-wrap:wrap;gap:4px;margin:14px 0 0;padding:0}
+.hh-legenda button{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 11px;border-radius:var(--r-pilyula);
+  background:var(--plitka);font-size:12.5px;color:var(--matn-2);font-variant-numeric:tabular-nums}
+.hh-legenda button:hover{background:var(--band)}
+.hh-legenda button[aria-pressed="false"]{opacity:.38}
+.hh-legenda i{width:14px;height:14px;border-radius:4px;flex:none;box-shadow:inset 0 0 0 1px rgba(11,11,10,.12)}
+.hh-legenda i.yoq{background:repeating-linear-gradient(45deg,var(--band) 0 3px,var(--oq) 3px 6px)}
+.hh-legenda b{font-weight:500;color:var(--matn-3)}
+.hh-oquv{min-height:22px;margin:12px 0 0;font-size:13px;color:var(--matn-2)}
+.hh-oquv b{font-weight:600;color:var(--siyoh)}
+.hh-manba{margin:8px 0 0;font-size:11.5px;color:var(--matn-4)}
+.hh-tanlov{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-left:auto;font-size:13px;color:var(--matn-2)}
+.hh-tanlov .chip{font-weight:500}
+a.hh-nom.tanlangan{font-weight:600}
+a.hh-nom.tanlangan::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--siyoh);margin-right:7px;vertical-align:1px}
+
 .chop-varaq table{font-size:10px}
+.chop-varaq .cv-xarita{margin:4px 0 10px;width:84%}
+.chop-varaq .cv-xarita svg{width:100%;height:auto}
+.chop-varaq .cv-legenda{list-style:none;display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;padding:0;font-size:10px;color:#333}
+.chop-varaq .cv-legenda li{display:flex;align-items:center;gap:5px}
+.chop-varaq .cv-legenda i{width:10px;height:10px;border-radius:2px;display:inline-block;border:1px solid #bbb}
+@media print{.chop-varaq{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 @page{size:A4;margin:12mm}
 </style>
 </head>
@@ -25,17 +68,31 @@
     <div class="hs-qator"><h1>Hududlar kesimi</h1><span class="hs-meta" id="hs-meta">—</span>
       <div class="hs-amallar">
         <button type="button" class="tugma tugma-oq" id="hh-chop" data-sayohat="chop"><svg class="ic"><use href="#ik-chop"/></svg>Chop etish</button>
-        <a class="tugma tugma-oq" href="xarita.html"><svg class="ic"><use href="#ik-xarita"/></svg>Xaritada ko'rish</a>
+        <a class="tugma tugma-oq" id="hh-xarita-havola" href="xarita.html"><svg class="ic"><use href="#ik-xarita"/></svg>Xaritada ko'rish</a>
       </div></div>
   </div>
   <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">KPI</a><a href="hisobot-hudud.html" class="faol">Hududlar</a><a href="hisobot-undiruv.html">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-eksport.html">Eksport</a></nav>
 
   <section class="metrika-qator tort" id="hh-kpi" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi"></section>
   <section class="karta"><div class="karta-bosh"><h2>Hududlar reytingi</h2>
-    <div class="hh-almash" role="group" aria-label="Ko'rsatkich" data-sayohat="filtr"><button type="button" data-kor="son" aria-pressed="true">Soni</button><button type="button" data-kor="qiymat" aria-pressed="false">Balans qiymati</button><button type="button" data-kor="umidsiz" aria-pressed="false">Umidsiz ulushi</button></div></div>
-    <div id="hh-bar"></div></section>
+    <div class="hh-almash" role="group" aria-label="Ko'rsatkich" data-sayohat="filtr">
+      <button type="button" data-kor="soni" aria-pressed="true">Aktivlar soni</button>
+      <button type="button" data-kor="qiymat" aria-pressed="false">Balans qiymati</button>
+      <button type="button" data-kor="korik" aria-pressed="false">Kechikkan ko'rik</button>
+      <button type="button" data-kor="himoyasiz" aria-pressed="false">Qo'riqlanmaydi</button>
+      <button type="button" data-kor="zaxira" aria-pressed="false">Zaxira yuki</button>
+    </div></div>
+    <div class="hh-panel">
+      <div>
+        <div id="hh-xarita" data-sayohat="xarita"></div>
+        <p class="hh-oquv" id="hh-oquv" aria-live="polite"></p>
+        <ul class="hh-legenda" id="hh-legenda"></ul>
+        <p class="hh-manba" id="hh-manba"></p>
+      </div>
+      <div id="hh-bar"></div>
+    </div></section>
   <section aria-label="Hududlar jadvali" data-sayohat="jadval"><div class="seksiya-bosh" style="margin-bottom:14px"><h2>Hududlar</h2></div><div id="hh-jadval"></div></section>
-  <section aria-label="Filiallar jadvali"><div class="seksiya-bosh" style="margin-bottom:14px"><h2>Filiallar</h2></div><div id="hh-filial"></div></section>
+  <section aria-label="Filiallar jadvali"><div class="seksiya-bosh" style="margin-bottom:14px"><h2>Filiallar</h2><div class="hh-tanlov" id="hh-tanlov"></div></div><div id="hh-filial"></div></section>
   <section class="chop-varaq" id="chop" aria-hidden="true"></section>
 </main>
 </div>
@@ -52,12 +109,15 @@
 <script src="yadro/qollanma.js?v=26092200"></script>
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
+<script src="yadro/geo.js?v=26092200"></script>
+<!-- Leafletsiz yuklanadi: faqat MKBxarita.shkala kerak (bo'yoq bosqichlari) -->
+<script src="yadro/xarita.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
   MKB.sahifaYukla({
-    joylar: {"hh-kpi": ["karta", 4], "hh-bar": ["qator", 6], "hh-jadval": ["jadval", 8], "hh-filial": ["jadval", 8]},
+    joylar: {"hh-kpi": ["karta", 4], "hh-xarita": ["karta", 1], "hh-bar": ["qator", 6], "hh-jadval": ["jadval", 8], "hh-filial": ["jadval", 8]},
     xato: "Hududlar hisobotini yuklab bo'lmadi",
     ish: boshla,
   });
@@ -99,34 +159,316 @@ async function boshla(){
     });
   }
   const son = n => n == null || n === "" ? "" : String(D.yaxlit(Number(n), 2)).replace(".", ",");
-  const pulHTML = mln => { const m = /^(.*?)\s*(mlrd so'm|mln so'm)$/.exec(MKB.pul(mln)); return m ? '<span data-tarjimasiz>' + esc(m[1]) + "</span><small>" + m[2] + "</small>" : esc(MKB.pul(mln)); };
   const fMatn = f => f == null ? "—" : String(f).replace(".", ",") + "%";
-  let kor = "son", hj = null, fj = null, hududlar = [], filiallar = [], hcfgJoriy = null;
 
+  /* ============================================================
+     1. O'lchovlar — xarita sahifasidagi tanlovning aynan o'zi.
+     Kalitlar bir xil bo'lgani uchun ?olchov= havolasi ikki sahifa
+     orasida ishlaydi: xaritadan kelgan kesim hisobotda ochiladi.
+     ============================================================ */
+  const OLCHOVLAR = {
+    soni:      {nom: "Aktivlar soni",    qiymat: h => h.son,       matn: v => MKB.fmt(v), birlik: "ta"},
+    qiymat:    {nom: "Balans qiymati",   qiymat: h => h.qiymat,    matn: v => MKB.pul(v), birlik: ""},
+    korik:     {nom: "Kechikkan ko'rik", qiymat: h => h.korik,     matn: v => MKB.fmt(v), birlik: "ta"},
+    himoyasiz: {nom: "Qo'riqlanmaydi",   qiymat: h => h.himoyasiz, matn: v => MKB.fmt(v), birlik: "ta"},
+    zaxira:    {nom: "Zaxira yuki",      qiymat: h => h.zaxira,    matn: v => MKB.pul(v), birlik: ""},
+  };
+  const SHKALA = () => [1, 2, 3, 4, 5].map(i => MKB.rangQiymat("var(--voronka-" + i + ")"));
+  const BOSH_RANG = () => MKB.rangQiymat("var(--band)");
+
+  const url = new URLSearchParams(location.search);
+  let kor = OLCHOVLAR[url.get("olchov")] ? url.get("olchov") : "soni";
+  let tanlangan = url.get("hudud") || null;      /* hudud kodi: TS, FA, ... */
+  let band = /^[0-4]$/.test(url.get("bosqich") || "") ? +url.get("bosqich") : null;
+  let hj = null, fj = null, hududlar = [], filiallar = [], hcfgJoriy = null, hKod = {};
+  let shkala = null, shakllar = [], geoXato = false;   /* shkala — MKBxarita.shkala natijasi */
+
+  function havolaYangila(){
+    const p = new URLSearchParams();
+    if (kor !== "soni") p.set("olchov", kor);
+    if (tanlangan) p.set("hudud", tanlangan);
+    if (band != null) p.set("bosqich", band);
+    const s = p.toString();
+    history.replaceState(null, "", location.pathname + (s ? "?" + s : ""));
+    const x = new URLSearchParams();
+    if (kor !== "soni") x.set("olchov", kor);
+    if (tanlangan) x.set("hudud", tanlangan);
+    const xs = x.toString();
+    $("hh-xarita-havola").href = "xarita.html" + (xs ? "?" + xs : "");
+  }
+
+  /* ============================================================
+     2. Hisob-kitob
+     ============================================================ */
   function hisobla(){
     const aktivlar = MKB.doira((D.YOZUVLAR || []).filter(y => y.holat !== "Chiqarildi"));
+    /* Kechikkan ko'rik va amaldagi qo'riqlash bir marta yig'iladi: har yozuv uchun qayta qidirilmaydi */
+    const kechikkan = new Set((D.KORIKLAR || []).filter(k => k.holat === "kechikkan").map(k => k.obyektId));
+    const qoriqlanadi = new Set((D.QORIQLASH || []).filter(x => x.holat === "amalda" && x.qoriqlashTuri).map(x => x.obyektId));
+    const himoyasizmi = y => !((y.himoya && y.himoya.qoriqlashTuri) || qoriqlanadi.has(y.id));
     const guruh = (kalit, qosh) => {
       const g = {};
       aktivlar.forEach(y => {
         const k = kalit(y) || "Kiritilmagan";
-        const h = g[k] || (g[k] = Object.assign({id: k, nom: k, son: 0, qiymat: 0, umidsiz: 0, xavf90: 0, ball: 0, ballSoni: 0, filiallar: new Set()}, qosh ? qosh(y) : {}));
+        const h = g[k] || (g[k] = Object.assign({id: k, nom: k, son: 0, qiymat: 0, umidsiz: 0, xavf90: 0, korik: 0, himoyasiz: 0,
+          zaxira: 0, ball: 0, ballSoni: 0, filiallar: new Set()}, qosh ? qosh(y) : {}));
         h.son++; h.qiymat += (y.balans || {}).qiymat || 0; h.filiallar.add(y.filial);
         const m = D.muddatHisobi(y).holat;
         if (m === "umidsiz" || m === "3-yildan-oshgan") h.umidsiz++;
         if (m === "xavf-90") h.xavf90++;
+        if (kechikkan.has(y.id)) h.korik++;
+        if (himoyasizmi(y)) h.himoyasiz++;
+        h.zaxira += (D.zaxiraHisobi(y) || {}).summa || 0;
         const n = D.nazoratIndeksi(y);
         if (n && n.daraja !== "malumotsiz"){ h.ball += n.ball; h.ballSoni++; }
       });
       const jamiQ = aktivlar.reduce((a, y) => a + ((y.balans || {}).qiymat || 0), 0);
-      return Object.values(g).map(h => Object.assign(h, {qiymat: D.yaxlit(h.qiymat, 1), filialSoni: h.filiallar.size,
+      return Object.values(g).map(h => Object.assign(h, {qiymat: D.yaxlit(h.qiymat, 1), zaxira: D.yaxlit(h.zaxira, 1), filialSoni: h.filiallar.size,
         ulush: jamiQ ? D.yaxlit(h.qiymat / jamiQ * 100, 1) : 0, umidsizUlush: D.yaxlit(h.umidsiz / h.son * 100, 1),
         indeks: h.ballSoni ? Math.round(h.ball / h.ballSoni) : null}));
     };
-    hududlar = guruh(y => y.hudud);
-    filiallar = guruh(y => y.filial, y => ({hudud: y.hudud}));
+    hududlar = guruh(y => y.hudud, y => ({kod: y.hududKod || D.hududKodi(y.hudud) || null}));
+    filiallar = guruh(y => y.filial, y => ({hudud: y.hudud, kod: y.hududKod || D.hududKodi(y.hudud) || null}));
+    hKod = {};
+    hududlar.forEach(h => { if (h.kod) hKod[h.kod] = h; });
     return aktivlar;
   }
 
+  /* Kvantil bo'yicha besh bosqich: bir nechta hudud ajralib turganda ham
+     qolganlari bitta rangga yopishib qolmaydi (xarita sahifasidagi shkala bilan bir xil). */
+  function shkalaQur(){
+    const O = OLCHOVLAR[kor];
+    shkala = window.MKBxarita && MKBxarita.shkala
+      ? MKBxarita.shkala(hududlar.map(h => O.qiymat(h)), 5) : null;
+  }
+  const bosqich = v => (shkala ? shkala.bosqich(v) : 0);
+  const qiymatKod = k => { const h = hKod[k]; return h ? OLCHOVLAR[kor].qiymat(h) : null; };
+  const bandMos = k => { if (band == null) return true; const v = qiymatKod(k); return v > 0 && bosqich(v) === band; };
+
+  /* ============================================================
+     3. Chegara chizmasi (assets/geo/hududlar.geojson)
+     Tashqi tayl serveri yo'q: shakl SVG bo'lib sahifada chiziladi,
+     shuning uchun chop etishga ham, bank tarmog'iga ham to'g'ri keladi.
+     ============================================================ */
+  const XW = 620;
+  let XH = 400;
+  /* Yozuv siljishi 760 px kenglikdagi chizmaga o'lchangan va XW ga nisbatan qayta hisoblanadi.
+     Toshkent shahri butun chizmada 11 px keladi: yozuvi chetga chiqarilib, ingichka chiziq bilan bog'lanadi. */
+  const NOM_SURISH = {TS: [-34, -74], TV: [-8, 15], SI: [12, 22], JI: [-25, -22], NA: [8, -16], FA: [-13, 51], AN: [-4, -2]};
+
+  function loyihala(fc){
+    const halqalar = f => {
+      const g = f.geometry;
+      return g.type === "Polygon" ? g.coordinates : [].concat.apply([], g.coordinates);
+    };
+    let x1 = 1e9, y1 = 1e9, x2 = -1e9, y2 = -1e9;
+    fc.features.forEach(f => halqalar(f).forEach(r => r.forEach(p => {
+      if (p[0] < x1) x1 = p[0];
+      if (p[0] > x2) x2 = p[0];
+      if (p[1] < y1) y1 = p[1];
+      if (p[1] > y2) y2 = p[1];
+    })));
+    /* Teng masshtabli silindrik loyiha: O'zbekiston kengligida (41°) shakl buzilmaydi */
+    const k = Math.cos((y1 + y2) / 2 * Math.PI / 180);
+    const s = XW / ((x2 - x1) * k);
+    XH = Math.round((y2 - y1) * s);
+    const X = lng => (lng - x1) * k * s, Y = lat => (y2 - lat) * s;
+    return fc.features.map(f => {
+      const p = f.properties || {};
+      const d = [];
+      halqalar(f).forEach(r => {
+        let t = "", ax = null, ay = null;
+        r.forEach(c => {
+          const a = Math.round(X(c[0]) * 10) / 10, b = Math.round(Y(c[1]) * 10) / 10;
+          /* Ekrandagi bir nuqtaga tushadigan koordinatalar tashlanadi: fayl yengillashadi, shakl o'zgarmaydi */
+          if (ax !== null && Math.abs(a - ax) < 0.2 && Math.abs(b - ay) < 0.2) return;
+          t += (t ? "L" : "M") + a + " " + b;
+          ax = a; ay = b;
+        });
+        if (t) d.push(t + "Z");
+      });
+      const m = p.markaz || [];
+      const sur = NOM_SURISH[p.kod] || [0, 0], o = XW / 760;
+      return {kod: p.kod, nom: p.nom_uz || p.kod, d: d.join(""),
+        halqalar: halqalar(f).map(r => r.map(c => [X(c[0]), Y(c[1])])),
+        mx: m.length ? X(m[1]) : 0, my: m.length ? Y(m[0]) : 0,
+        nx: m.length ? X(m[1]) + sur[0] * o : 0, ny: m.length ? Y(m[0]) + sur[1] * o : 0};
+    });
+  }
+
+  /* Yozuv qaysi hudud ustiga tushdi: nur usuli (teshiklar XOR bilan o'zi hisobga olinadi).
+     Yozuv rangi shu bo'yoqdan olinadi, shuning uchun chetga chiqarilgan yozuv ham o'qiladi. */
+  function ichida(f, x, y){
+    let ich = false;
+    f.halqalar.forEach(r => {
+      for (let i = 0, j = r.length - 1; i < r.length; j = i++){
+        const xi = r[i][0], yi = r[i][1], xj = r[j][0], yj = r[j][1];
+        if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) ich = !ich;
+      }
+    });
+    return ich;
+  }
+
+  /* Bo'yoqning ravshanligi: to'q bo'yoqda oq yozuv, och bo'yoqda siyoh yozuv o'qiladi */
+  function ravshanlik(v){
+    const h = String(v || "").trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (!h) return 1;
+    const x = h[1].length === 3 ? h[1].split("").map(c => c + c).join("") : h[1];
+    const r = parseInt(x.slice(0, 2), 16), g = parseInt(x.slice(2, 4), 16), b = parseInt(x.slice(4, 6), 16);
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  }
+
+  function xaritaSVG(chop){
+    const O = OLCHOVLAR[kor], S = SHKALA(), bosh = BOSH_RANG();
+    const oq = MKB.rangQiymat("var(--oq)"), siyoh = MKB.rangQiymat("var(--siyoh)");
+    const shakl = shakllar.map(f => {
+      const v = qiymatKod(f.kod);
+      const boyoq = v > 0 ? S[bosqich(v)] : bosh;
+      const toq = ravshanlik(boyoq) < 0.55;
+      const sonik = !chop && (band != null && !bandMos(f.kod));
+      const tanlovda = f.kod === tanlangan;
+      const chiziq = tanlovda ? siyoh : (toq ? oq : siyoh);
+      return '<path class="hx-hudud' + (sonik ? " sonik" : "") + '" d="' + f.d + '" data-kod="' + esc(f.kod) + '"' +
+        ' fill="' + boyoq + '" stroke="' + chiziq + '" stroke-width="' + (tanlovda ? 2.6 : 1) + '"' +
+        ' stroke-opacity="' + (tanlovda ? 1 : (toq ? .8 : .38)) + '"' +
+        (chop ? "" : ' tabindex="0" role="button" aria-pressed="' + (tanlovda ? "true" : "false") + '"') +
+        "><title>" + esc(f.nom) + "</title></path>";
+    }).join("");
+    const boyoqKod = k => { const v = qiymatKod(k); return v > 0 ? S[bosqich(v)] : bosh; };
+    /* Nuqta to'q bo'yoq ustidami: so'nik hudud oq yozuvni ko'tarmaydi, shuning uchun u ham och deb qaraladi */
+    const toqMi = (x, y) => {
+      const g = shakllar.find(q => ichida(q, x, y));
+      return !!g && ravshanlik(boyoqKod(g.kod)) < 0.55 && !(!chop && band != null && !bandMos(g.kod));
+    };
+    const nom = shakllar.map(f => {
+      /* Yozuv rangi u turgan joydagi bo'yoqdan olinadi: chetga chiqarilgan yozuv oq fonda siyoh bo'lib qoladi */
+      const yozuvToq = toqMi(f.nx, f.ny + 4);
+      const sur = f.nx !== f.mx || f.ny !== f.my;
+      const v = qiymatKod(f.kod);
+      /* Pul qiymati uzun: son va birlik ikki qatorga bo'linadi, aks holda yozuv qo'shni hududga chiqib ketadi */
+      const xom = v > 0 ? O.matn(v) : "—";
+      const pul = v > 0 && !O.birlik ? /^(.*?)\s*((?:mlrd |mln |ming )?so'm)$/.exec(xom) : null;
+      const sonMatn = pul ? pul[1] : xom + (v > 0 && O.birlik ? " " + O.birlik : "");
+      return (sur ? '<path class="hx-ip" d="M' + f.nx + " " + (f.ny + (pul ? 29 : 18)) + "L" + f.mx + " " + f.my + '"/>' : "") +
+        '<text class="' + (yozuvToq ? "toq" : "och") + '" x="' + f.nx + '" y="' + f.ny + '" text-anchor="middle">' + esc(f.nom) +
+        '<tspan class="son" x="' + f.nx + '" dy="13" data-tarjimasiz>' + esc(sonMatn) + "</tspan>" +
+        (pul ? '<tspan class="birlik" x="' + f.nx + '" dy="11" data-tarjimasiz>' + esc(pul[2]) + "</tspan>" : "") + "</text>";
+    }).join("");
+    return '<svg class="hx" viewBox="-4 -4 ' + (XW + 8) + " " + (XH + 20) + '" role="group" aria-label="Chegara xaritasi">' +
+      '<g class="hx-shakl">' + shakl + '</g><g class="hx-nom">' + nom + "</g></svg>";
+  }
+
+  function xaritaChiz(){
+    const el = $("hh-xarita");
+    if (geoXato){
+      el.innerHTML = MKB.boshHolat("xarita", "Chegara xaritasi", "Ma'lumot yo'q",
+        '<button type="button" class="tugma tugma-oq tugma-kichik" id="hh-geo-qayta">Qayta urinish</button>');
+      tarjimaQil(el);
+      const q = $("hh-geo-qayta");
+      if (q) q.onclick = e => MKB.band(e.currentTarget, async () => { geoXato = false; await geoYukla(); chiz(); });
+      return;
+    }
+    if (!shakllar.length){ el.innerHTML = ""; return; }
+    el.innerHTML = xaritaSVG(false);
+    tarjimaQil(el);
+    el.querySelectorAll("path.hx-hudud").forEach(p => {
+      const kod = p.dataset.kod;
+      p.addEventListener("click", () => tanla(kod, true));
+      p.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " "){ e.preventDefault(); tanla(kod, true); }
+      });
+      p.addEventListener("mouseenter", () => yorit(kod, true));
+      p.addEventListener("mouseleave", () => yorit(kod, false));
+      p.addEventListener("focus", () => yorit(kod, true));
+      p.addEventListener("blur", () => yorit(kod, false));
+    });
+  }
+
+  /* Xarita va reyting bir-birini yoritadi: sichqoncha qayerda bo'lsa, ikkala tomonda ham o'sha hudud ajraladi */
+  function yorit(kod, holat){
+    const p = $("hh-xarita").querySelector('path[data-kod="' + kod + '"]');
+    if (p) p.setAttribute("stroke-width", holat && kod !== tanlangan ? "2.2" : (kod === tanlangan ? "2.6" : "1"));
+    const q = $("hh-bar").querySelector('[data-kod="' + kod + '"]');
+    if (q) q.classList.toggle("yoritilgan", !!holat);
+    oquvChiz(holat ? kod : null);
+  }
+
+  function oquvChiz(kod){
+    const k = kod || tanlangan;
+    const el = $("hh-oquv");
+    if (!k || !hKod[k]){ el.innerHTML = ""; return; }
+    const O = OLCHOVLAR[kor], h = hKod[k], v = O.qiymat(h);
+    el.innerHTML = "<b>" + esc(h.nom) + "</b> · <span>" + esc(O.nom) + "</span> <b data-tarjimasiz>" +
+      esc(O.matn(v) + (O.birlik ? " " + O.birlik : "")) + "</b>" +
+      ' · <span data-tarjimasiz>' + h.filialSoni + "</span> <span>ta filial</span>";
+    tarjimaQil(el);
+  }
+
+  function legendaChiz(){
+    const O = OLCHOVLAR[kor], S = SHKALA();
+    const el = $("hh-legenda");
+    const bor = shakllar.map(f => f.kod).filter(k => qiymatKod(k) > 0);
+    if (!bor.length){ el.innerHTML = ""; return; }
+    /* Yorliq kuzatilgan qiymatlardan emas, bosqich chegaralaridan yoziladi: shunda
+       shkalada ko'rinmas bo'shliq qolmaydi (xarita sahifasidagi legenda bilan bir xil) */
+    const oraliqlar = [];
+    for (let i = 0; i < (shkala ? shkala.pogona : 1); i++) {
+      const ch = shkala.oraliq(i);
+      oraliqlar.push({i: i, rang: S[i], son: bor.filter(k => bosqich(qiymatKod(k)) === i).length,
+        past: ch.past, yuqori: ch.yuqori});
+    }
+    const bosh = shakllar.length - bor.length;
+    const birlikli = v => esc(O.matn(v) + (O.birlik ? " " + O.birlik : ""));
+    el.innerHTML = oraliqlar.map(x =>
+      '<li><button type="button" data-bosqich="' + x.i + '" aria-pressed="' + (band == null || band === x.i) + '">' +
+      '<i style="background:' + x.rang + '"></i>' +
+      (x.past == null
+        ? '<span data-tarjimasiz>' + birlikli(x.yuqori) + "</span> <span>va undan kam</span>"
+        : x.yuqori == null
+          ? '<span data-tarjimasiz>' + birlikli(x.past) + "</span> <span>va undan ko'p</span>"
+          : '<span data-tarjimasiz>' + esc(O.matn(x.past) + " – " + O.matn(x.yuqori) + (O.birlik ? " " + O.birlik : "")) + "</span>") +
+      '<b data-tarjimasiz>' + x.son + "</b></button></li>").join("") +
+      (bosh ? '<li><button type="button" data-bosqich="yoq" aria-pressed="true" disabled><i class="yoq"></i><span>Balansda aktiv yo\'q</span><b data-tarjimasiz>' + bosh + "</b></button></li>" : "");
+    el.querySelectorAll("[data-bosqich]").forEach(b => {
+      if (b.disabled) return;
+      const i = +b.dataset.bosqich;
+      b.addEventListener("click", () => { band = band === i ? null : i; tanlangan = null; chiz(); });
+    });
+    tarjimaQil(el);
+    const m = String((MKB.geo && MKB.geo.ATRIBUT) || "");
+    const j = m.indexOf(": ");
+    $("hh-manba").innerHTML = j > 0 ? "<span>" + esc(m.slice(0, j)) + '</span><span data-tarjimasiz>' + esc(m.slice(j)) + "</span>"
+      : '<span data-tarjimasiz>' + esc(m) + "</span>";
+    tarjimaQil($("hh-manba"));
+  }
+
+  /* ============================================================
+     4. Hududni tanlash — filiallar jadvali shu hududga tushadi
+     ============================================================ */
+  function tanla(kod, bosildi){
+    tanlangan = tanlangan === kod ? null : kod;
+    if (tanlangan) band = null;
+    chiz();
+    if (bosildi && tanlangan){
+      const j = $("hh-filial");
+      if (j) j.scrollIntoView({behavior: "smooth", block: "center"});
+    }
+  }
+
+  function tanlovChiz(){
+    const el = $("hh-tanlov"), h = tanlangan && hKod[tanlangan];
+    if (!h){ el.innerHTML = ""; return; }
+    el.innerHTML = '<span class="chip">' + esc(h.nom) + "</span>" +
+      '<span><b data-tarjimasiz>' + h.filialSoni + "</b> <span>ta filial</span></span>" +
+      '<a class="tugma tugma-oq tugma-kichik" href="obyektlar.html?hudud=' + encodeURIComponent(h.nom) + '">Aktivlar reyestri</a>' +
+      '<button type="button" class="tugma tugma-oq tugma-kichik" id="hh-tanlov-yop">Tanlovni bekor qilish</button>';
+    tarjimaQil(el);
+    $("hh-tanlov-yop").onclick = () => { tanlangan = null; chiz(); };
+  }
+
+  /* ============================================================
+     5. Sahifani chizish
+     ============================================================ */
   function chiz(){
     const aktivlar = hisobla();
     const jamiQ = aktivlar.reduce((a, y) => a + ((y.balans || {}).qiymat || 0), 0);
@@ -134,6 +476,8 @@ async function boshla(){
     const umidsiz = hududlar.reduce((a, h) => a + h.umidsiz, 0);
     const uchYil = aktivlar.filter(y => D.muddatHisobi(y).holat === "3-yildan-oshgan").length;
     const eng = hududlar.slice().sort((a, b) => b.umidsizUlush - a.umidsizUlush)[0];
+    if (tanlangan && !hKod[tanlangan]) tanlangan = null;
+    shkalaQur();
     $("hs-meta").textContent = hududlar.length + " ta hudud · " + filiallar.length + " ta filial · " + D.sanaYoz(D.bugun()) + " holatiga";
     $("hh-kpi").innerHTML =
       '<div class="metrika"><span class="m-yorliq">Hududlar</span><span class="m-qiymat"><span data-tarjimasiz>' + hududlar.length + "</span></span>" +
@@ -146,11 +490,18 @@ async function boshla(){
       '<div class="metrika"><span class="m-yorliq">Umidsiz ulushi eng yuqori</span><span class="m-qiymat" style="font-size:26px"><span data-tarjimasiz>' + (eng ? esc(eng.nom) : "—") + "</span></span>" +
         '<span class="m-izoh">' + (eng ? "<b data-tarjimasiz>" + fMatn(eng.umidsizUlush) + "</b>, <b data-tarjimasiz>" + eng.umidsiz + " / " + eng.son + "</b>" : "") + "</span></div>";
     tarjimaQil($("hh-kpi"));
+    xaritaChiz();
+    legendaChiz();
+    oquvChiz(null);
     barChiz();
+    tanlovChiz();
+    havolaYangila();
 
-    const hcfg = hcfgJoriy = {id: "hisobot-hududlar", qatorlar: hududlar, csvNomi: "hududlar-kesimi", saralash: "son", yonalish: -1, sahifaHajmi: 15,
+    const hcfg = hcfgJoriy = {id: "hisobot-hududlar", qatorlar: hududlar.filter(h => bandMos(h.kod)), csvNomi: "hududlar-kesimi",
+      saralash: "son", yonalish: -1, sahifaHajmi: 15,
       ustunlar: [
-        {kalit: "nom", nom: "Hudud", chiz: h => '<a href="obyektlar.html?hudud=' + encodeURIComponent(h.nom) + '">' + esc(h.nom) + "</a>", csv: h => h.nom},
+        {kalit: "nom", nom: "Hudud", majburiy: true, chiz: h => '<a class="hh-nom' + (h.kod && h.kod === tanlangan ? " tanlangan" : "") +
+          '" href="obyektlar.html?hudud=' + encodeURIComponent(h.nom) + '">' + esc(h.nom) + "</a>", csv: h => h.nom},
         {kalit: "filialSoni", nom: "Filiallar", son: true},
         {kalit: "son", nom: "Aktivlar", son: true},
         {kalit: "qiymat", nom: "Balans qiymati", son: true, chiz: h => '<span class="pul">' + esc(MKB.pul(h.qiymat)) + "</span>", csv: h => son(h.qiymat)},
@@ -158,52 +509,118 @@ async function boshla(){
         {kalit: "xavf90", nom: "90 kunda umidsiz", son: true},
         {kalit: "umidsiz", nom: "Umidsiz", son: true},
         {kalit: "umidsizUlush", nom: "Umidsiz ulushi", son: true, chiz: h => '<span class="chip chip-kichik ' + (h.umidsizUlush >= 50 ? "chip-xavf" : h.umidsizUlush >= 25 ? "chip-sariq" : "chip-yashil") + '">' + fMatn(h.umidsizUlush) + "</span>", csv: h => son(h.umidsizUlush)},
+        /* Xaritadagi uch o'lchov jadvalda ham ustun bo'lib turadi: CSV va chop etish xarita bilan bir xil sonni beradi */
+        {kalit: "korik", nom: "Kechikkan ko'rik", son: true},
+        {kalit: "himoyasiz", nom: "Qo'riqlanmaydi", son: true},
+        {kalit: "zaxira", nom: "Zaxira yuki", son: true, chiz: h => '<span class="pul">' + esc(MKB.pul(h.zaxira)) + "</span>", csv: h => son(h.zaxira)},
         {kalit: "indeks", nom: "Nazorat indeksi", chiz: h => MKB.shtrix(h.indeks), csv: h => h.indeks ?? ""},
       ],
       bosilganda(h){ location.href = "obyektlar.html?hudud=" + encodeURIComponent(h.nom); },
       bosh: {sarlavha: "Balansda aktiv yo'q", izoh: D.MANBA === "mahalliy" ? "Mahalliy reyestrda aktiv hali kiritilmagan" : ""}};
-    if (hj) hj.yangila(hududlar); else hj = MKB.jadval("hh-jadval", hcfg);
-    const fcfg = {id: "hisobot-filiallar", qatorlar: filiallar, csvNomi: "filiallar-kesimi", saralash: "son", yonalish: -1, qidiruv: ["nom", "hudud"], qidiruvYozuvi: "Filial yoki hudud",
+    if (hj) hj.yangila(hcfg.qatorlar); else hj = MKB.jadval("hh-jadval", hcfg);
+
+    const fQatorlar = filiallar.filter(f => (!tanlangan || f.kod === tanlangan) && (tanlangan || bandMos(f.kod)));
+    const fcfg = {id: "hisobot-filiallar", qatorlar: fQatorlar, csvNomi: "filiallar-kesimi", saralash: "son", yonalish: -1,
+      qidiruv: ["nom", "hudud"], qidiruvYozuvi: "Filial yoki hudud",
       ustunlar: [
-        {kalit: "nom", nom: "Filial"}, {kalit: "hudud", nom: "Hudud"}, {kalit: "son", nom: "Aktivlar", son: true},
+        {kalit: "nom", nom: "Filial", majburiy: true}, {kalit: "hudud", nom: "Hudud"}, {kalit: "son", nom: "Aktivlar", son: true},
         {kalit: "qiymat", nom: "Balans qiymati", son: true, chiz: h => '<span class="pul">' + esc(MKB.pul(h.qiymat)) + "</span>", csv: h => son(h.qiymat)},
         {kalit: "umidsiz", nom: "Umidsiz", son: true},
         {kalit: "umidsizUlush", nom: "Umidsiz ulushi", son: true, chiz: h => fMatn(h.umidsizUlush), csv: h => son(h.umidsizUlush)},
+        {kalit: "korik", nom: "Kechikkan ko'rik", son: true},
+        {kalit: "himoyasiz", nom: "Qo'riqlanmaydi", son: true},
+        {kalit: "zaxira", nom: "Zaxira yuki", son: true, chiz: h => '<span class="pul">' + esc(MKB.pul(h.zaxira)) + "</span>", csv: h => son(h.zaxira)},
         {kalit: "indeks", nom: "Nazorat indeksi", chiz: h => MKB.shtrix(h.indeks), csv: h => h.indeks ?? ""},
       ],
       bosh: {sarlavha: "Balansda aktiv yo'q"}};
-    if (fj) fj.yangila(filiallar); else fj = MKB.jadval("hh-filial", fcfg);
+    if (fj) fj.yangila(fQatorlar); else fj = MKB.jadval("hh-filial", fcfg);
   }
 
   function barChiz(){
-    const r = hududlar.slice().sort((a, b) => kor === "son" ? b.son - a.son : kor === "qiymat" ? b.qiymat - a.qiymat : b.umidsizUlush - a.umidsizUlush);
+    const O = OLCHOVLAR[kor];
+    const r = hududlar.filter(h => bandMos(h.kod)).slice().sort((a, b) => O.qiymat(b) - O.qiymat(a));
     const el = $("hh-bar");
-    if (!r.length){ el.innerHTML = MKB.boshHolat("xarita", "Balansda aktiv yo'q"); tarjimaQil(el); return; }
-    const maks = Math.max(1, ...r.map(h => kor === "son" ? h.son : kor === "qiymat" ? h.qiymat : h.umidsizUlush));
+    if (!r.length){ el.className = ""; el.innerHTML = MKB.boshHolat("xarita", "Balansda aktiv yo'q"); tarjimaQil(el); return; }
+    const S = SHKALA();
+    const maks = Math.max(1, ...r.map(h => O.qiymat(h)));
+    const jami = r.reduce((a, h) => a + O.qiymat(h), 0);
     el.className = "bar-royxat";
     el.innerHTML = r.map(h => {
-      const v = kor === "son" ? h.son : kor === "qiymat" ? h.qiymat : h.umidsizUlush;
-      const rang = kor === "umidsiz" ? (h.umidsizUlush >= 50 ? "var(--xavf)" : h.umidsizUlush >= 25 ? "var(--sariq-matn)" : "var(--mint-matn)") : "var(--siyoh)";
-      const matn = kor === "son" ? h.son + "<em>" + fMatn(D.yaxlit(h.son / hududlar.reduce((a, x) => a + x.son, 0) * 100, 1)) + "</em>"
-        : kor === "qiymat" ? esc(MKB.pul(h.qiymat)) + "<em>" + fMatn(h.ulush) + "</em>" : fMatn(h.umidsizUlush) + "<em>" + h.umidsiz + " / " + h.son + "</em>";
-      return '<a class="bar-qator" href="obyektlar.html?hudud=' + encodeURIComponent(h.nom) + '"><span class="bar-nom"><i style="background:' + rang + '"></i><span class="bar-nom-matn">' + esc(h.nom) + "</span></span>" +
-        '<span class="bar-iz">' + (v > 0 ? '<span style="width:' + Math.max(3, v / maks * 100) + "%;background:" + rang + '"></span>' : "") + '</span><span class="bar-son" data-tarjimasiz>' + matn + "</span></a>";
+      const v = O.qiymat(h);
+      const rang = v > 0 ? S[bosqich(v)] : BOSH_RANG();
+      const ulush = jami ? D.yaxlit(v / jami * 100, 1) : 0;
+      return '<button type="button" class="bar-qator' + (h.kod && h.kod === tanlangan ? " tanlangan" : "") + '" data-kod="' + esc(h.kod || "") +
+        '" aria-pressed="' + (h.kod && h.kod === tanlangan) + '"><span class="bar-nom"><i style="background:' + rang + '"></i>' +
+        '<span class="bar-nom-matn">' + esc(h.nom) + "</span></span>" +
+        '<span class="bar-iz">' + (v > 0 ? '<span style="width:' + Math.max(3, v / maks * 100) + "%;background:" + rang + '"></span>' : "") + "</span>" +
+        '<span class="bar-son"><span data-tarjimasiz>' + esc(O.matn(v)) + "</span><em data-tarjimasiz>" + fMatn(ulush) + "</em></span></button>";
     }).join("");
+    tarjimaQil(el);
+    el.querySelectorAll(".bar-qator").forEach(b => {
+      const kod = b.dataset.kod;
+      if (!kod) return;
+      b.addEventListener("click", () => tanla(kod, true));
+      b.addEventListener("mouseenter", () => yorit(kod, true));
+      b.addEventListener("mouseleave", () => yorit(kod, false));
+      b.addEventListener("focus", () => yorit(kod, true));
+      b.addEventListener("blur", () => yorit(kod, false));
+    });
   }
 
+  /* ============================================================
+     6. Chegara faylini yuklash
+     ============================================================ */
+  async function geoYukla(){
+    try {
+      const fc = await MKB.geo.hududlar();
+      shakllar = loyihala(fc);
+      geoXato = false;
+    } catch (e) {
+      shakllar = [];
+      geoXato = true;
+    }
+  }
+
+  /* ============================================================
+     7. Boshqaruv
+     ============================================================ */
   document.querySelectorAll("[data-kor]").forEach(b => b.addEventListener("click", () => {
     kor = b.dataset.kor;
+    band = null;
     document.querySelectorAll("[data-kor]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-    barChiz();
+    chiz();
   }));
+  document.querySelectorAll("[data-kor]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.kor === kor)));
+
   $("hh-chop").onclick = e => chopQil(e.currentTarget, () => {
     if (!hududlar.length){ MKB.toast("Chop etish uchun ma'lumot yo'q", "xavf"); return false; }
+    const O = OLCHOVLAR[kor], S = SHKALA();
     const r = hj ? hj.moslar() : hududlar;
+    const bor = shakllar.map(f => f.kod).filter(k => qiymatKod(k) > 0);
+    /* Chop varag'idagi legenda ham bosqich chegaralaridan yoziladi: qog'ozdagi shkala
+       ekrandagisi bilan bir xil o'qilishi kerak */
+    const legenda = S.slice(0, shkala ? shkala.pogona : 0).map((rang, i) => {
+      if (!bor.some(k => bosqich(qiymatKod(k)) === i)) return "";
+      const ch = shkala.oraliq(i);
+      const b = v => esc(O.matn(v) + (O.birlik ? " " + O.birlik : ""));
+      const matn = ch.past == null ? b(ch.yuqori) + " va undan kam"
+        : ch.yuqori == null ? b(ch.past) + " va undan ko'p"
+        : esc(O.matn(ch.past) + " – " + O.matn(ch.yuqori) + (O.birlik ? " " + O.birlik : ""));
+      return '<li><i style="background:' + rang + '"></i><span data-tarjimasiz>' + matn + "</span></li>";
+    }).join("");
+    const h = tanlangan && hKod[tanlangan];
     $("chop").innerHTML = '<div class="cv-meta"><span>Mikrokreditbank</span> · <span>Balansdagi aktivlar</span></div><h1>Hududlar kesimi</h1>' +
       '<div class="cv-meta"><span data-tarjimasiz>' + D.sanaYoz(D.bugun()) + "</span> <span>holatiga</span> · " + tamgaHTML() + "</div>" +
-      chopJadval("hh-jadval", hcfgJoriy ? hcfgJoriy.ustunlar : [], r);
+      '<div class="cv-meta"><span>Ko\'rsatkich</span>: <span>' + esc(O.nom) + "</span>" +
+        (h ? ' · <span>Hudud</span>: <span data-tarjimasiz>' + esc(h.nom) + "</span>" : "") + "</div>" +
+      (shakllar.length ? '<div class="cv-xarita">' + xaritaSVG(true) + '</div><ul class="cv-legenda">' + legenda + "</ul>" : "") +
+      chopJadval("hh-jadval", hcfgJoriy ? hcfgJoriy.ustunlar : [], r) +
+      '<div class="cv-meta" style="margin-top:8px"><span data-tarjimasiz>' + esc(String((MKB.geo && MKB.geo.ATRIBUT) || "")) + "</span></div>";
   });
+
   document.addEventListener("mkb:malumot", chiz);
+  document.addEventListener("mkb:til", () => chiz());
+  await geoYukla();
   chiz();
 }
 })();

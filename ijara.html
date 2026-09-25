@@ -83,7 +83,22 @@
   const chip = (k, kichik) => '<span class="chip ' + (CHIP[k] || "") + (kichik ? " chip-kichik" : "") + '">' + esc(NOM[k] || MKB.holatNomi(k)) + "</span>";
   const obNomi = ij => { const o = D.obyekt(ij.obyektId) || {}; return o.qisqa || o.nom || ij.obyektId; };
   const q = new URLSearchParams(location.search);
-  let jadval = null;
+  let jadval = null, joriy = [];
+  /* Filtr variantlari chizilgan qatorlardan yig'iladi: mos qatori yo'q variant ro'yxatga tushmaydi */
+  const variantlar = (maydon, tartib) => {
+    const v = [...new Set(joriy.map(x => x[maydon]).filter(Boolean))];
+    const tanlangan = jadval && jadval.holat.filtrlar[maydon];
+    if (tanlangan && v.indexOf(tanlangan) < 0) v.push(tanlangan);
+    return tartib ? v.sort((a, b) => (tartib.indexOf(a) + 1 || 99) - (tartib.indexOf(b) + 1 || 99))
+      : v.sort((a, b) => String(a).localeCompare(String(b), "uz"));
+  };
+  const filtrlar = () => [
+    {kalit: "amalNom", nom: "Shartnoma", variantlar: variantlar("amalNom", ["Amaldagi", "Tugagan"])},
+    {kalit: "holatNom", nom: "Holat", variantlar: variantlar("holatNom", ["amalda", "kechikkan", "muddati tugagan", "tugagan qarzli", "yakunlangan"].map(k => NOM[k]))},
+    {kalit: "qarzNom", nom: "Qarz", variantlar: variantlar("qarzNom", ["Qarzi bor", "Qarzi yo'q"])},
+  ].filter(f => f.variantlar.length > 1 || (jadval && jadval.holat.filtrlar[f.kalit]));
+  /* Bironta qatorga mos kelmaydigan tayyor ko'rinish ro'yxatda ko'rsatilmaydi */
+  const mosKorinishlar = a => a.filter(v => joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
 
   /* "10.2025" davri uchun to'lov sanasi: ijara boshlangan kun shu oyda */
   function tolovSanasi(ij, davr){
@@ -125,14 +140,19 @@
     const xJami = xarajatli.reduce((a, x) => a + x.h.xarajat, 0), iJami = xarajatli.reduce((a, x) => a + x.oylikN, 0);
     const qoplash = xJami > 0 ? Math.round(iJami / xJami * 100) : null;
     const AMAL = {amalNom: "Amaldagi"};
-    const m = (f, yorliq, qiymat, izoh) => '<a class="metrika" href="ijara.html" data-f="' + esc(JSON.stringify(f)) + '"><span class="m-yorliq">' + yorliq + '</span><span class="m-qiymat">' + qiymat +
-      '</span><span class="m-izoh">' + izoh + "</span></a>";
+    /* Soni nol bo'lgan plitka bosilmaydi: bosilsa doim bo'sh ro'yxat chiqar edi */
+    const m = (f, yorliq, qiymat, izoh, bor) => {
+      const t = bor === false ? "div" : "a";
+      return "<" + t + ' class="metrika"' + (t === "a" ? ' href="ijara.html" data-f="' + esc(JSON.stringify(f)) + '"' : "") +
+        '><span class="m-yorliq">' + yorliq + '</span><span class="m-qiymat">' + qiymat + '</span><span class="m-izoh">' + izoh + "</span></" + t + ">";
+    };
+    const faolBor = faol.length > 0;
     document.getElementById("kpi").innerHTML =
-      m(AMAL, "Amaldagi ijaralar", '<span data-tarjimasiz>' + faol.length + "</span>", "<span>" + MKB.fmt(Math.round(faol.reduce((a, x) => a + x.maydonN, 0))) + " m²</span>") +
-      m(AMAL, "Oylik ijara tushumi", pulK(oylik), "<span>Yillik</span> <span>" + pul(yaxlit(oylik * 12)) + "</span>") +
-      m({qarzNom: "Qarzi bor"}, "Kechikkan to'lovlar", otgan ? pulK(otgan) : '<span data-tarjimasiz>0</span>', kech.length ? "<span>" + kech.length + " ta shartnoma</span>" : "<span>Kechikish yo'q</span>") +
+      m(AMAL, "Amaldagi ijaralar", '<span data-tarjimasiz>' + faol.length + "</span>", "<span>" + MKB.fmt(Math.round(faol.reduce((a, x) => a + x.maydonN, 0))) + " m²</span>", faolBor) +
+      m(AMAL, "Oylik ijara tushumi", pulK(oylik), "<span>Yillik</span> <span>" + pul(yaxlit(oylik * 12)) + "</span>", faolBor) +
+      m({qarzNom: "Qarzi bor"}, "Kechikkan to'lovlar", otgan ? pulK(otgan) : '<span data-tarjimasiz>0</span>', kech.length ? "<span>" + kech.length + " ta shartnoma</span>" : "<span>Kechikish yo'q</span>", kech.length > 0) +
       m(AMAL, "Saqlash xarajatini qoplash", qoplash == null ? "<span>—</span>" : '<span data-tarjimasiz>' + qoplash + "%</span>",
-        xJami > 0 ? "<span>Oylik xarajat</span> <span>" + pul(yaxlit(xJami, 2)) + "</span>" : "<span>Xarajat ma'lumoti yo'q</span>");
+        xJami > 0 ? "<span>Oylik xarajat</span> <span>" + pul(yaxlit(xJami, 2)) + "</span>" : "<span>Xarajat ma'lumoti yo'q</span>", faolBor);
     document.getElementById("kpi").querySelectorAll("[data-f]").forEach(a => a.addEventListener("click", e => {
       e.preventDefault();
       /* Karta o'z hisobidagi qatorlarni ko'rsatadi: filtr karta hisoblagan to'plam bilan bir xil */
@@ -144,22 +164,18 @@
 
   function chiz(){
     const r = qatorlar();
+    joriy = r;
     const meta = document.getElementById("hs-meta");
     meta.textContent = r.length + " ta shartnoma";
     tarjimaQil(meta);
     kpi(r);
     if (jadval){ jadval.yangila(r); return; }
-    jadval = MKB.jadval("jadval-joy", {
+    const cfg = {
       id: "ijara",
       qatorlar: r,
       qidiruv: ["id", "ijarachi", "obNom", "obyektId"],
       qidiruvYozuvi: "Ijarachi yoki obyekt",
-      filtrlar: [
-        {kalit: "amalNom", nom: "Shartnoma", variantlar: ["Amaldagi", "Tugagan"]},
-        {kalit: "holatNom", nom: "Holat", variantlar: ["amalda", "kechikkan", "muddati tugagan", "tugagan qarzli", "yakunlangan"].map(k => NOM[k])},
-        {kalit: "qarzNom", nom: "Qarz", variantlar: ["Qarzi bor", "Qarzi yo'q"]},
-      ],
-      korinishlar: {tayyor: [{nom: "Qarzi bor", filtrlar: {qarzNom: "Qarzi bor"}, saralash: "otganN", yonalish: -1}]},
+      korinishlar: {tayyor: mosKorinishlar([{nom: "Qarzi bor", filtrlar: {qarzNom: "Qarzi bor"}, saralash: "otganN", yonalish: -1}])},
       saralash: "otganN", yonalish: -1, csvNomi: "ijara",
       bosh: {sarlavha: "Ijara shartnomasi yo'q", izoh: yoza() ? "Sotuvni kutayotgan obyektni «Ijaraga berish» tugmasi orqali ijaraga bering" : "Ijara shartnomalari realizatsiya bo'limi tomonidan kiritiladi"},
       ustunlar: [
@@ -173,8 +189,12 @@
         {kalit: "holatNom", nom: "Holat", chiz: x => chip(x.h.holat, true) + (x.sotuvdaBekorQilishSharti ? "" : ' <span class="chip chip-kichik chip-xavf">Sotuv sharti yo\'q</span>'), csv: x => x.holatNom},
       ],
       bosilganda: x => panel(x.id),
-    });
-    if (q.get("holat") && NOM[q.get("holat")]){ jadval.holat.filtrlar.holatNom = NOM[q.get("holat")]; jadval.yangila(); }
+    };
+    Object.defineProperty(cfg, "filtrlar", {get: filtrlar, enumerable: true});
+    jadval = MKB.jadval("jadval-joy", cfg);
+    /* Havoladagi holat faqat mos qator bo'lsa qo'llanadi: aks holda ro'yxat sababsiz bo'sh ko'rinardi */
+    const hn = NOM[q.get("holat")];
+    if (hn && r.some(x => x.holatNom === hn)){ jadval.holat.filtrlar.holatNom = hn; jadval.yangila(); }
   }
 
   /* ---------- Tafsilot ---------- */

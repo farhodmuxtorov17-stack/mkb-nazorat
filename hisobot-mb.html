@@ -307,7 +307,7 @@ async function boshla(){
     const kech = D.sanaOqi(x.muddat) && d > D.sanaOqi(x.muddat);
     const res = await MKB.tasdiqla({
       sarlavha: "MB hisobotini topshirilgan deb belgilash",
-      matn: oyNomi(x.davr) + " hisoboti Markaziy bankka topshirilgan deb qayd etiladi. Raqamlar shu holatda qotadi va keyin qayta hisoblanmaydi.",
+      matn: "Hisobot Markaziy bankka topshirilgan deb qayd etiladi. Raqamlar shu holatda qotadi va keyin qayta hisoblanmaydi.",
       tafsilot: [["Davr", oyNomi(x.davr)], ["Topshirilgan sana", {matn: sana, tarjimasiz: true}], ["Topshirish muddati", {matn: x.muddat || "—", tarjimasiz: true}],
         ["Obyektlar soni", {matn: MKB.fmt(x.obyektlarSoni), tarjimasiz: true}], ["Jami balans qiymati", {matn: MKB.pul(x.jamiBalansQiymat), tarjimasiz: true}],
         ["Kapitalga nisbati", {matn: foizMatn(x.kapitalgaNisbat), tarjimasiz: true}], ["Umidsiz toifada", {matn: MKB.fmt(x.umidsizSoni), tarjimasiz: true}]],
@@ -317,7 +317,7 @@ async function boshla(){
       bajar: ({sabab}) => MKBapi.yangilash("MB_HISOBOTLAR", x.id, Object.assign({holat: "topshirilgan", topshirilganSana: sana}, sabab ? {izoh: sabab} : {})),
     });
     if (!res) return;
-    MKB.toast("MB hisoboti " + oyNomi(x.davr) + " topshirilgan deb belgilandi", "tasdiq");
+    MKB.toast("MB hisoboti topshirilgan deb belgilandi: " + oyNomi(x.davr), "tasdiq");
     chizish();
   }
   /* Raqamlarni yangilash: saqlangan raqamlar reyestr bo'yicha qayta hisoblanadi, eski va yangi qiymat ko'rsatiladi */
@@ -332,20 +332,20 @@ async function boshla(){
     if (!qatorlar.length){ MKB.toast("Raqamlar reyestr bilan mos, o'zgarish yo'q", "info"); return; }
     const res = await MKB.tasdiqla({
       sarlavha: "Hisobot raqamlarini yangilash",
-      matn: oyNomi(x.davr) + " hisobotidagi raqamlar bugungi reyestr bo'yicha qayta hisoblanadi.",
-      tafsilot: qatorlar.map(q => [q[0], {matn: q[1] + " → " + q[2], tarjimasiz: true}]),
+      matn: "Hisobotdagi raqamlar bugungi reyestr bo'yicha qayta hisoblanadi.",
+      tafsilot: [["Davr", oyNomi(x.davr)]].concat(qatorlar.map(q => [q[0], {matn: q[1] + " → " + q[2], tarjimasiz: true}])),
       okMatn: "Raqamlarni yangilash",
       bajar: () => MKBapi.yangilash("MB_HISOBOTLAR", x.id, patch),
     });
     if (!res) return;
-    MKB.toast("MB hisoboti " + oyNomi(x.davr) + " raqamlari yangilandi", "tasdiq");
+    MKB.toast("MB hisoboti raqamlari yangilandi: " + oyNomi(x.davr), "tasdiq");
     chizish();
   }
   /* Belgini bekor qilish: faqat administrator, sabab majburiy (izohga yoziladi) */
   async function bekorQil(x){
     const res = await MKB.tasdiqla({
       sarlavha: "Topshirish belgisini bekor qilish",
-      matn: oyNomi(x.davr) + " hisoboti yana topshirilmagan holatga qaytadi va muddat nazoratiga tushadi.",
+      matn: "Hisobot yana topshirilmagan holatga qaytadi va muddat nazoratiga tushadi.",
       tafsilot: [["Davr", oyNomi(x.davr)], ["Topshirilgan sana", {matn: x.topshirilganSana || "—", tarjimasiz: true}]],
       ton: "xavfli",
       sabab: {majburiy: true, min: 5, maks: 300, yorliq: "Bekor qilish sababi", izoh: "Sabab hisobot izohiga yoziladi", namuna: "Masalan, sana xato kiritilgan"},
@@ -353,7 +353,7 @@ async function boshla(){
       bajar: ({sabab}) => MKBapi.yangilash("MB_HISOBOTLAR", x.id, {holat: "tayyorlanmoqda", topshirilganSana: null, izoh: "Topshirish belgisi bekor qilindi: " + sabab}),
     });
     if (!res) return;
-    MKB.toast("MB hisoboti " + oyNomi(x.davr) + " belgisi bekor qilindi", "info");
+    MKB.toast("MB hisoboti topshirish belgisi bekor qilindi: " + oyNomi(x.davr), "info");
     chizish();
   }
   /* 1-darajali kapital: forma o'zi tasdiqlash, eski va yangi qiymat hamda qayta hisoblanadigan hisobotlar ko'rsatiladi */

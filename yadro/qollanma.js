@@ -711,6 +711,10 @@ window.MKB_YORDAM = {
     nimaUchun: X("Inspektorning ish kuni shu yerdan boshlanadi: bugungi va kechikkan ko'riklar, ochiq hodisalar, nosoz qurilmalar va sug'urtasiz aktivlar.",
                  "Рабочий день инспектора начинается здесь: сегодняшние и просроченные осмотры, открытые инциденты, неисправные устройства и активы без страховки."),
     bloklar: [
+      B("Ko'riklar doirasi", "Охват осмотров", "Sizga tayinlangan ko'rik bo'lsa, tepada tanlov chiqadi: «Mening ko'riklarim» — sizga tayinlanganlari, «Barcha ko'riklar» — filialdagi hammasi. Tanlov raqamlarga ham ta'sir qiladi va eslab qolinadi.",
+        "Если у вас есть назначенные осмотры, вверху появляется переключатель: «Mening ko'riklarim» — назначенные вам, «Barcha ko'riklar» — все по филиалу. Выбор влияет и на цифры, и запоминается."),
+      B("Ko'rsatkichlar qatori", "Строка показателей", "Besh raqam: 7 kundagi rejadagi ko'riklar, kechikkanlar, ochiq hodisalar, sug'urtasiz aktivlar va 24 soatdan ortiq aloqasiz qurilmalar. Har biri o'z ro'yxatini ochadi.",
+        "Пять цифр: плановые осмотры на 7 дней, просроченные, открытые инциденты, активы без страховки и устройства без связи более 24 часов. Каждая открывает свой список."),
       B("Ko'rik navbati", "Очередь осмотров", "Uch guruh: Kechikkan, Bugun, Rejada. Har qatorda inspektor va qancha kun o'tgani yoki qolgani yozilgan.", "Три группы: Просроченные, Сегодня, По плану. В каждой строке — инспектор и сколько дней прошло или осталось."),
       B("Ochiq hodisalar", "Открытые инциденты", "Jiddiylik bo'yicha tartiblangan. Hodisani bossangiz, uning sahifasi ochiladi.", "Отсортированы по важности. Нажмите на инцидент, чтобы открыть его страницу."),
       B("Qurilma nosozliklari", "Неисправности устройств", "Uzoq aloqasiz va batareyasi past qurilmalar.", "Устройства, долго находящиеся без связи, и устройства с низким зарядом."),

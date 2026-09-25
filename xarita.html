@@ -5,103 +5,105 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Xaritada</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
+<!-- Plitka so'rovi bilan bankning ichki manzili uchinchi tomonga yetib bormasin -->
+<meta name="referrer" content="no-referrer">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css?v=26092200">
-<style>
-.xarita-asbob{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.xarita-asbob .izoh{font-size:13px;color:var(--matn-3);margin-left:auto}
-.xarita-qobiq{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:stretch}
-.xarita-karta{position:relative;background:var(--oq);border-radius:var(--r-karta);overflow:hidden;box-shadow:var(--soya);min-height:max(60vh,560px)}
-#leaflet-joy{position:absolute;inset:0;z-index:1}
-.xarita-yon{display:flex;flex-direction:column;gap:16px;min-width:0;max-height:max(60vh,560px);overflow-y:auto;padding:22px}
-.xarita-yon h3{font:500 15px var(--shrift-displey);letter-spacing:-.01em;margin-bottom:8px}
-.legenda{list-style:none;display:flex;flex-direction:column;gap:2px}
-.legenda button{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:6px 10px;border-radius:12px;font-size:13.5px;text-align:left;transition:background var(--tez),opacity var(--tez)}
-.legenda button:hover{background:var(--plitka)}
-.legenda button[aria-pressed="false"]{opacity:.4}
-.legenda i{width:12px;height:12px;border-radius:99px;flex:none;border:2px solid #fff;box-shadow:0 0 0 1px rgba(11,11,10,.25)}
-.legenda b{margin-left:auto;font-weight:500;font-variant-numeric:tabular-nums}
-.taxminiy-royxat{list-style:none;display:flex;flex-direction:column;font-size:13px}
-.taxminiy-royxat li{display:flex;align-items:center;gap:8px;min-height:40px;border-bottom:1px solid var(--chiziq-2)}
-.taxminiy-royxat li:last-child{border-bottom:0}
-.taxminiy-royxat a{min-width:0;flex:1;align-self:stretch;line-height:40px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.taxminiy-royxat a:hover{text-decoration:underline}
-.taxminiy-royxat .tahrir{flex:none;color:var(--matn-3);display:inline-flex;align-items:center;min-height:40px;line-height:1.3;gap:4px;font-size:12.5px}
-.yon-izoh{font-size:12.5px;color:var(--matn-3);line-height:1.45}
-.hudud-royxat{display:flex;flex-direction:column}
-.hudud-band{display:flex;align-items:center;gap:9px;width:100%;min-height:40px;padding:6px 10px;border-radius:12px;font-size:13.5px;text-align:left}
-.hudud-band:hover{background:var(--plitka)}
-.hudud-band.faol{background:var(--siyoh);color:#fff}
-.hudud-band b{margin-left:auto;font-weight:500;font-variant-numeric:tabular-nums}
-.leaflet-container{font-family:var(--shrift);background:var(--plitka)}
-.leaflet-control-zoom a{width:40px!important;height:40px!important;line-height:40px!important;font-size:20px!important}
-.leaflet-popup-content-wrapper{border-radius:18px}
-.leaflet-popup-content{margin:12px 14px;min-width:220px}
-.xp{display:flex;flex-direction:column;gap:6px;font-size:13px}
-.xp .xp-surat{width:100%;height:110px;border-radius:12px;overflow:hidden;background:var(--plitka)}
-.xp .xp-surat img,.xp .xp-surat .surat-yoq{width:100%;height:100%;object-fit:cover}
-.xp b{font-size:14px;font-weight:500}
-.xp .xp-qator{display:flex;justify-content:space-between;gap:10px;color:var(--matn-2)}
-.xp .xp-qator span:last-child{font-weight:500;color:var(--siyoh);text-align:right}
-.xp a.tugma{margin-top:4px;color:#fff}
-.klaster-belgi{display:grid;place-items:center;border-radius:999px;background:rgba(255,255,255,.85);border:2px dashed var(--matn-2);
-  font:600 13px var(--shrift);color:var(--siyoh)}
-/* Aniq joydagi obyekt: klaviatura bilan tanlanadigan belgi (Leaflet marker, Enter popupni ochadi) */
-/* Ko'rinishi 16px, teginish maydoni 40px: divIcon 40x40, belgi markazda (margin) */
-.nuqta-belgi{width:16px;height:16px;margin:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(11,11,10,.35);opacity:.95}
-.leaflet-marker-icon:focus-visible{outline:2px solid var(--siyoh);outline-offset:3px;border-radius:999px}
-.leaflet-marker-icon:focus-visible:has(.nuqta-belgi){outline:none}
-.leaflet-marker-icon:focus-visible .nuqta-belgi{outline:2px solid var(--siyoh);outline-offset:3px}
-.varaq-tugma{display:none}
-@media (max-width:1100px){
-  .xarita-qobiq{grid-template-columns:minmax(0,1fr)}
-  .xarita-yon{max-height:none}
-}
-@media (max-width:720px){
-  .xarita-asbob .izoh{margin-left:0;flex:1 1 100%}
-  .xarita-karta{min-height:62vh}
-  .varaq-tugma{display:inline-flex;position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:500}
-  .xarita-yon{position:fixed;left:0;right:0;bottom:0;z-index:900;max-height:72vh;border-radius:24px 24px 0 0;
-    transform:translateY(105%);transition:transform var(--sekin);box-shadow:var(--soya-suzuvchi);padding:14px 18px 24px}
-  .xarita-yon.ochiq{transform:none}
-  .xarita-yon::before{content:"";display:block;width:44px;height:5px;border-radius:99px;background:var(--chiziq-3);margin:0 auto 6px;flex:none}
-  .varaq-parda{position:fixed;inset:0;background:rgba(20,16,14,.3);z-index:899;display:none}
-  .varaq-parda.ochiq{display:block}
-}
-</style>
 </head>
 <body data-sahifa="aktivlar">
 <div class="qobiq">
 <nav class="yon" id="yon" aria-label="Asosiy bo'limlar"></nav>
 <div class="sahna">
 <header class="shapka" id="shapka"></header>
-<main class="kontent">
+<main class="kontent xarita">
   <div class="hujjat-shapka">
     <div class="hs-yorliq"><a href="obyektlar.html">Balans aktivlari</a><span class="ajratgich">/</span><span>Xaritada</span></div>
     <div class="hs-qator"><h1>Obyektlar xaritasi</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
   <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="obyektlar.html">Reyestr</a><a href="muddatlar.html">Muddatlar</a><a href="xarita.html" class="faol" aria-current="page">Xaritada</a><a href="qabul-boshlash.html">Balansga qabul</a><a href="rasmiylashtirish.html">Huquqni rasmiylashtirish</a><a href="arxiv.html">Arxiv va chiqim</a></nav>
 
-  <div class="xarita-asbob">
-    <div class="almashtirgich" role="group" aria-label="Rang qatlami" data-sayohat="qatlam">
-      <button type="button" data-qatlam="muddat">Muddat holati</button>
-      <button type="button" data-qatlam="qoriqlash">Qo'riqlash</button>
-      <button type="button" data-qatlam="kommunal">Kommunal</button>
+  <div class="x-asbob">
+    <div class="x-ong">
+      <label class="izlash">
+        <svg class="ic" aria-hidden="true"><use href="#ik-izlash"/></svg>
+        <input type="search" id="x-qidiruv" placeholder="Reyestr raqami, nomi yoki manzili" aria-label="Xaritadan qidirish">
+      </label>
+      <button type="button" class="tugma tugma-oq tugma-kichik" id="x-ulash"><svg class="ic"><use href="#ik-ulashish"/></svg>Havolani nusxalash</button>
+      <button type="button" class="tugma tugma-oq tugma-kichik" id="x-csv"><svg class="ic"><use href="#ik-csv"/></svg>CSV</button>
     </div>
-    <span class="izoh" id="xarita-izoh"></span>
   </div>
 
-  <div class="xarita-qobiq">
-    <div class="xarita-karta" data-sayohat="xarita">
-      <div id="leaflet-joy" role="region" aria-label="Xarita"></div>
-      <button type="button" class="tugma tugma-asosiy tugma-kichik varaq-tugma" id="varaq-tugma" aria-controls="xarita-yon" aria-expanded="false"><svg class="ic"><use href="#ik-filtr"/></svg>Legenda va ro'yxat</button>
+  <div class="x-qobiq">
+    <div class="x-chap">
+    <div class="x-karta" id="x-karta" data-sayohat="xarita">
+      <!-- Xarita maydonida hudud shakllari va har bir metka fokus oladi: yaqinlashganda
+           yigirmadan ortiq element Tab tartibida turadi. Shu havola ularni o'tkazib yuboradi. -->
+      <a class="otish" href="#x-royxat" id="x-otish">Ro'yxatga o'tish</a>
+      <div id="x-joy" class="x-joy" role="region" aria-label="Xarita"></div>
+      <div class="x-ustki" data-xarita-tosiq>
+        <!-- Ko'cha qatlami tugmasi faqat ichki plitka serveri sozlangan bo'lsa qo'shiladi
+             (asosTugmalari): sozlanmagan tarmoqda bosiladigan, lekin ishlamaydigan tugma qolmaydi -->
+        <div class="x-asos-tanlov" id="x-asos" role="group" aria-label="Asos qatlami">
+          <button type="button" data-asos="" aria-pressed="true" title="Chegara xaritasi"><svg class="ic"><use href="#ik-xarita"/></svg><span>Chegara xaritasi</span></button>
+        </div>
+      </div>
+      <div class="x-asboblar" data-xarita-tosiq>
+        <!-- Kattalashtirish-kichraytirish sahifaning o'z asboblar ustunida turadi: Leaflet tugmalari
+             chap yuqorida asos qatlami panelining ostiga tushib, bosilmay qolar edi -->
+        <button type="button" id="x-kattalash" title="Kattalashtirish" aria-label="Kattalashtirish"><svg class="ic"><use href="#ik-qoshish"/></svg></button>
+        <button type="button" id="x-kichraytir" title="Kichraytirish" aria-label="Kichraytirish"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M15 12L9 12"/></svg></button>
+        <button type="button" id="x-qayta" title="Ko'rinishni tiklash" aria-label="Ko'rinishni tiklash"><svg class="ic"><use href="#ik-yangilash"/></svg></button>
+        <!-- Chizg'ich belgisi ikonkalar to'plamida yo'q: shu yerda bir xil chiziq qalinligida chizilgan -->
+        <button type="button" id="x-olchagich" aria-pressed="false" title="Masofa o'lchash" aria-label="Masofa o'lchash"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 16.5 16.5 3 21 7.5 7.5 21z" stroke-linejoin="round"/><path d="m7 12.5 2 2m1-5 2 2m1-5 2 2" stroke-linecap="round"/></svg></button>
+        <button type="button" id="x-toliq" aria-pressed="false" title="To'liq ekran" aria-label="To'liq ekran"><svg class="ic"><use href="#ik-skaner"/></svg></button>
+      </div>
+      <button type="button" class="tugma tugma-asosiy tugma-kichik x-varaq-tugma" id="x-varaq-tugma" aria-controls="x-yon" aria-expanded="false"><svg class="ic"><use href="#ik-filtr"/></svg>Filtr va ro'yxat</button>
     </div>
-    <aside class="karta xarita-yon" id="xarita-yon" aria-label="Legenda">
-      <section data-sayohat="legenda"><h3 id="legenda-sar">Legenda</h3><ul class="legenda" id="legenda"></ul></section>
-      <section data-sayohat="hududlar"><h3>Hududlar</h3><div class="hudud-royxat" id="hudud-royxat"></div></section>
-      <section id="taxminiy-blok" data-sayohat="taxminiy"></section>
+    <p class="x-holat" id="x-holat" role="status" aria-live="polite"></p>
+    </div>
+
+    <aside class="x-yon" id="x-yon" aria-label="Filtr, legenda va ro'yxat">
+      <section class="karta" data-sayohat="filtr">
+        <h3><svg class="ic"><use href="#ik-filtr"/></svg>Filtr<span class="son" id="x-filtr-son"></span></h3>
+        <div class="x-filtrlar" id="x-filtrlar"></div>
+        <button type="button" class="tugma tugma-oq tugma-kichik x-tozala" id="x-tozala" hidden><svg class="ic"><use href="#ik-rad"/></svg>Filtrni tozalash</button>
+      </section>
+      <section class="karta" data-sayohat="legenda">
+        <h3>Hududlar bo'yalishi<span class="son" id="x-olchov-nom"></span></h3>
+        <div class="almashtirgich" id="x-olchov-tanlov" role="group" aria-label="Hududlar bo'yalishi" data-sayohat="qatlam"></div>
+        <p class="x-izoh" id="x-legenda-izoh"></p>
+        <ul class="x-legenda" id="x-legenda"></ul>
+      </section>
+      <section class="karta" data-sayohat="metka">
+        <h3>Metka rangi</h3>
+        <div class="almashtirgich" id="x-belgi-tanlov" role="group" aria-label="Metka rangi"></div>
+        <ul class="x-legenda" id="x-belgi-legenda"></ul>
+      </section>
+      <section class="karta" data-sayohat="royxat">
+        <h3>Ro'yxat<span class="son" id="x-royxat-son"></span></h3>
+        <div class="maydon">
+          <label class="maydon-yorliq" for="x-tartib">Tartib</label>
+          <span class="tanlov"><select id="x-tartib">
+            <option value="nom">Nomi bo'yicha</option>
+            <option value="qiymat">Balans qiymati kamayishi bo'yicha</option>
+            <option value="nazorat">Nazorat indeksi o'sishi bo'yicha</option>
+            <option value="muddat">Umidsizgacha qolgan kun bo'yicha</option>
+          </select><svg class="ic strelka"><use href="#ik-past"/></svg></span>
+        </div>
+        <div class="x-royxat-joy"><ul class="x-royxat" id="x-royxat" tabindex="-1"></ul></div>
+        <div class="x-royxat-oyoq">
+          <button type="button" class="tugma tugma-oq tugma-kichik" id="x-csv2"><svg class="ic"><use href="#ik-csv"/></svg>CSV</button>
+          <span class="x-izoh" id="x-royxat-izoh"></span>
+        </div>
+      </section>
+      <!-- Chegara ma'lumotining manbasi va sanasi: kengashda savol tug'ilganda javob ekranda tursin -->
+      <section class="karta">
+        <h3>Chegaralar haqida</h3>
+        <p class="x-izoh" id="x-chegara-izoh"></p>
+      </section>
     </aside>
   </div>
-  <div class="varaq-parda" id="varaq-parda"></div>
+  <div class="x-parda" id="x-parda"></div>
+  <p class="sr-only" role="status" aria-live="polite" id="x-eshittir"></p>
 </main>
 </div>
 </div>
@@ -118,223 +120,1044 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/geo.js?v=26092200"></script>
 <script src="assets/vendor/leaflet/leaflet.js?v=26092200"></script>
+<script src="yadro/xarita.js?v=26092200"></script>
 <script>
 MKB.sahifaYukla({
-  joylar: {"legenda": ["qator", 4], "hudud-royxat": ["qator", 5]},
-  xato: "Xarita ma'lumotini yuklab bo'lmadi",
+  /* Xarita maydoni ham ro'yxatga kiradi: yuklanmay qolsa o'sha yerda sabab va
+     "Qayta urinish" tugmasi chiqadi, bo'm-bo'sh oq quti qolmaydi */
+  joylar: {"x-joy": ["karta", 1], "x-legenda": ["qator", 5], "x-royxat": ["qator", 6]},
   ish: async () => {
+  try {
   if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
-  if (!window.L) throw new Error("Xarita kutubxonasi yuklanmadi. Sahifani yangilang");
+  if (!window.L || !window.MKBxarita) throw new Error("Xarita kutubxonasi yuklanmadi. Sahifani yangilang");
   if (window.MKB_XARITA) return;
   const D = MKB_DATA;
   const esc = MKB.esc;
   const HK = D.HUDUD_KODLAR || {};
-  const yozaOladi = MKB.huquq("yoz") && MKB.ruxsat("obyekt-tahrir.html");
-
+  const $ = id => document.getElementById(id);
   const uslub = getComputedStyle(document.documentElement);
-  const tokenRang = nom => uslub.getPropertyValue(nom).trim() || "#B6B2AC";   /* zaxira: --matn-4 ning qiymati */
+  const token = nom => uslub.getPropertyValue(nom).trim() || "#B6B2AC";
 
-  /* ---------- Qatlamlar: rang va toifa ---------- */
-  const QATLAMLAR = {
-    /* Umidsiz toifa 3 yildan oshganlarni ham o'z ichiga oladi (zaxira hisobidagi kabi). Ular legenda ostida alohida sanaladi. */
-    muddat: {nom: "Muddat holati", toifalar: ["imtiyozda", "normal", "xavf-90", "umidsiz", "kiritilmagan"]
-      .map(k => ({kalit: k, nom: D.MUDDAT_HOLATLARI[k].nom, rang: D.MUDDAT_HOLATLARI[k].rang})),
-      toifa: y => { const h = D.muddatHisobi(y).holat; return h === "3-yildan-oshgan" ? "umidsiz" : h; }},
-    /* Ranglar app.css dagi --qoriq-* tokenlaridan (qoriqlash.html grafigi ham shularni o'qiydi).
-       Leaflet fillColor ni SVG atributiga yozadi, u yerda var() yechilmaydi, shuning uchun xom qiymat olinadi */
-    qoriqlash: {nom: "Qo'riqlash", toifalar: (D.QORIQLASH_TURLARI || []).map(t => ({kalit: t.kalit, nom: t.nom, rang: tokenRang("--qoriq-" + t.kalit)}))
-      .concat([{kalit: "yoq", nom: "Qo'riqlanmaydi", rang: tokenRang("--qoriq-yoq")}]),
-      toifa: y => {
-        const t = y.himoya && y.himoya.qoriqlashTuri;
-        if (t) return t;
-        const q = (D.QORIQLASH || []).find(q => q.obyektId === y.id && q.holat === "amalda");
-        return q && q.qoriqlashTuri ? q.qoriqlashTuri : "yoq";
-      }},
-    kommunal: {nom: "Kommunal", toifalar: [
-      {kalit: "ulangan", nom: "Hammasi ulangan", rang: "var(--yashil)"}, {kalit: "uzilgan", nom: "Uzilgan xizmat bor", rang: "var(--xavf-matn-yorqin)"},
-      {kalit: "noaniq", nom: "Holati kiritilmagan", rang: "var(--matn-3)"}, {kalit: "binosiz", nom: "Bino emas", rang: "var(--matn-4)"}],
-      toifa: y => {
-        if (!D.binolimi(y)) return "binosiz";
-        const k = (y.kommunal || []).filter(x => x && x.holat && x.holat !== "mavjud emas");
-        if (k.some(x => x.holat === "uzilgan" || x.holat === "vaqtincha to'xtatilgan")) return "uzilgan";
-        return k.length && k.every(x => x.holat === "ulangan") ? "ulangan" : "noaniq";
-      }},
-  };
-  const url = new URLSearchParams(location.search);
-  /* Qatlam, yashirilgan toifalar va hudud xodim bo'yicha eslab qolinadi; havoladagi ?qatlam= ustun turadi */
-  const SOZ = MKBapi.kalit("mkb4-xarita:" + ((MKBapi.sessiya() || {}).login || "-"));
-  let soz = {};
-  try{ soz = JSON.parse(localStorage.getItem(SOZ) || "{}") || {}; }catch(_){ soz = {}; }
-  const qatlam0 = QATLAMLAR[url.get("qatlam")] ? url.get("qatlam") : QATLAMLAR[soz.qatlam] ? soz.qatlam : "muddat";
-  const holat = {qatlam: qatlam0, yashirin: new Set(qatlam0 === soz.qatlam && Array.isArray(soz.yashirin) ? soz.yashirin : []), hudud: soz.hudud || null};
-  const eslab = () => { try{ localStorage.setItem(SOZ, JSON.stringify({qatlam: holat.qatlam, yashirin: [...holat.yashirin], hudud: holat.hudud})); }catch(_){ } };
+  /* Chegara fayllari — repodan. Ochilmasa xarita metkalar bilan ishlayveradi,
+     hudud markazi ma'lumotnomadagi koordinatadan olinadi. */
+  let chegaraXato = null;
+  try { await MKB.geo.yukla(); } catch (e) { chegaraXato = e; }
 
+  /* ============================================================
+     1. Ma'lumot: obyektlar, joylashuv, kesimlar
+     ============================================================ */
   const obyektlar = MKB.doira((D.YOZUVLAR || []).filter(y => y.holat !== "Chiqarildi"));
-  const aniq = obyektlar.filter(y => y.joy && y.joy.aniq && isFinite(y.joy.lat) && isFinite(y.joy.lng));
-  const taxminiy = obyektlar.filter(y => !aniq.includes(y));
   const hududKod = y => y.hududKod || D.hududKodi(y.hudud) || null;
 
-  /* ---------- Xarita ---------- */
-  const xarita = L.map("leaflet-joy", {zoomControl: false, attributionControl: true, scrollWheelZoom: true}).setView([41.3, 64.6], 6);
-  window.MKB_XARITA = xarita;
-  L.control.zoom({zoomInTitle: "Kattalashtirish", zoomOutTitle: "Kichraytirish"}).addTo(xarita);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(xarita);
-  const nuqtaQatlam = L.layerGroup().addTo(xarita);
-  const klasterQatlam = L.layerGroup().addTo(xarita);
-
-  function popupHTML(y){
-    const m = D.muddatHisobi(y);
-    const muddat = m.kiritilmagan ? "Balans sanasi kiritilmagan" : m.qolganKun > 0 ? m.qolganKun + " kun" : (D.MUDDAT_HOLATLARI[m.holat] || {}).nom;
-    return '<div class="xp"><div class="xp-surat">' + MKB.obyektSurati(y, {kichik: true}) + "</div>" +
-      "<b>" + esc(y.qisqa || y.nom) + '</b><span class="kod-mono" data-tarjimasiz>' + esc(y.id) + "</span>" +
-      '<div class="xp-qator"><span>Balans qiymati</span><span data-tarjimasiz>' + esc(MKB.pul(y.balans && y.balans.qiymat)) + "</span></div>" +
-      '<div class="xp-qator"><span>Umidsizgacha</span><span>' + esc(muddat) + "</span></div>" +
-      '<div class="xp-qator"><span>Holat</span><span>' + esc(y.holat || "") + "</span></div>" +
-      '<a class="tugma tugma-asosiy tugma-kichik" href="obyekt.html?id=' + encodeURIComponent(y.id) + '">Kartani ochish</a></div>';
-  }
-
-  function toifaRang(q, k){ const t = QATLAMLAR[q].toifalar.find(t => t.kalit === k); return MKB.rangQiymat(t ? t.rang : "var(--matn-4)"); }
-
-  function chiz(){
-    const Q = QATLAMLAR[holat.qatlam];
-    nuqtaQatlam.clearLayers();
-    klasterQatlam.clearLayers();
-    const koringan = y => !holat.yashirin.has(Q.toifa(y)) && (!holat.hudud || hududKod(y) === holat.hudud);
-    let soni = 0;
-    aniq.filter(koringan).forEach(y => {
-      soni++;
-      /* divIcon marker: Leaflet unga tabindex va role="button" beradi; nomi ekran o'quvchi uchun belgi ichida */
-      L.marker([y.joy.lat, y.joy.lng], {icon: L.divIcon({className: "", iconSize: [40, 40],
-          html: '<span class="sr-only" data-tarjimasiz>' + esc(y.qisqa || y.nom) + '</span><div class="nuqta-belgi" aria-hidden="true" style="background:' + toifaRang(holat.qatlam, Q.toifa(y)) + '"></div>'}), zIndexOffset: 1000})
-        .bindPopup(() => { const d = document.createElement("div"); d.innerHTML = popupHTML(y); tarjimaQil(d); return d; }, {maxWidth: 280})
-        .addTo(nuqtaQatlam);
+  /* Tuman nomini chegara faylidagi tumanga bog'lash: qidiruv o'z viloyati ichida,
+     shuning uchun bir xil nomli tumanlar (Do'stlik, Oltinsoy) chalkashmaydi. */
+  const nomKalit = s => String(s == null ? "" : s).trim().toLowerCase()
+    .replace(/[‘’ʻʼ`´]/g, "'").replace(/\s+/g, " ")
+    .replace(/\s+(tumani|tuman|shahri|shahar|sh\.)$/, "");
+  const tumanIndeks = {};
+  Object.keys(HK).forEach(h => {
+    const m = {};
+    (MKB.geo.hududTumanlari(h) || []).forEach(f => {
+      const p = f.properties || {};
+      [p.nom_uz, p.nom_ru].forEach(n => { const k = nomKalit(n); if (k && !m[k]) m[k] = p.kod; });
     });
-    /* koordinatasiz obyektlar: hudud markazida bitta "taxminiy joy" belgisi */
-    const guruh = {};
-    taxminiy.filter(koringan).forEach(y => { const k = hududKod(y) || "?"; (guruh[k] = guruh[k] || []).push(y); });
-    Object.keys(guruh).forEach(k => {
-      const h = HK[k];
-      if (!h) return;
-      const r = guruh[k];
-      const o = Math.min(64, 34 + r.length * 2);
-      /* Tugma nomi faqat son bo'lmasin: hudud, obyektlar soni va joy taxminiy ekani o'qiladi */
-      L.marker([h.lat, h.lng], {icon: L.divIcon({className: "", iconSize: [o, o],
-          html: '<span class="sr-only"><span>' + esc(h.toliq) + '</span>: <span data-tarjimasiz>' + r.length + '</span> <span>ta obyekt, taxminiy joy</span></span>' +
-            '<div class="klaster-belgi" aria-hidden="true" style="width:' + o + "px;height:" + o + 'px" data-tarjimasiz>' + r.length + "</div>"}),
-        title: "Taxminiy joy"})
-        .bindPopup('<div class="xp"><b>' + esc(h.toliq) + "</b><span>Taxminiy joy: aniq koordinata kiritilmagan</span>" +
-          '<div class="xp-qator"><span>Obyektlar</span><span data-tarjimasiz>' + r.length + "</span></div>" +
-          '<div class="xp-qator"><span>Balans qiymati</span><span data-tarjimasiz>' + esc(MKB.pul(r.reduce((s, y) => s + ((y.balans && y.balans.qiymat) || 0), 0))) + "</span></div></div>")
-        .addTo(klasterQatlam);
-    });
-    const tx = Object.values(guruh).reduce((s, r) => s + r.length, 0);
-    document.getElementById("hs-meta").innerHTML = '<span>Aniq joyda</span> <b data-tarjimasiz>' + soni + "</b>" +
-      (tx ? ' · <span>taxminiy joyda</span> <b data-tarjimasiz>' + tx + "</b>" : "");
-    document.getElementById("xarita-izoh").textContent = taxminiy.length
-      ? "Uzuq chiziqli doira: koordinatasi kiritilmagan obyektlar, hudud markazida jamlangan."
-      : "Barcha obyektlar aniq koordinata bilan chizilgan.";
-    legendaChiz();
-    tarjimaQil(document.querySelector(".kontent"));
-  }
+    tumanIndeks[h] = m;
+  });
+  const tumanKodi = y => (tumanIndeks[hududKod(y)] || {})[nomKalit(y.tuman)] || null;
 
-  function legendaChiz(){
-    const Q = QATLAMLAR[holat.qatlam];
-    const hisob = {};
-    obyektlar.filter(y => !holat.hudud || hududKod(y) === holat.hudud).forEach(y => { const k = Q.toifa(y); hisob[k] = (hisob[k] || 0) + 1; });
-    document.getElementById("legenda-sar").textContent = Q.nom;
-    const el = document.getElementById("legenda");
-    el.innerHTML = Q.toifalar.filter(t => hisob[t.kalit]).map(t =>
-      '<li><button type="button" data-toifa="' + t.kalit + '" aria-pressed="' + !holat.yashirin.has(t.kalit) + '">' +
-      '<i style="background:' + t.rang + '"></i><span>' + esc(t.nom) + '</span><b data-tarjimasiz>' + hisob[t.kalit] + "</b></button></li>").join("") ||
-      "<li>" + MKB.boshHolat("xarita", "Obyekt yo'q") + "</li>";
-    if (holat.qatlam === "muddat") {
-      const uchYil = obyektlar.filter(y => (!holat.hudud || hududKod(y) === holat.hudud) && D.muddatHisobi(y).holat === "3-yildan-oshgan").length;
-      if (uchYil) el.insertAdjacentHTML("beforeend", '<li class="maydon-izoh" style="padding:6px 10px"><span>Umidsiz toifa ichida 3 yildan oshgan aktivlar:</span> <b data-tarjimasiz>' + uchYil + " ta</b></li>");
+  /* Joy: aniq koordinata -> tuman markazi -> viloyat markazi. Koordinata to'qib chiqarilmaydi,
+     taxminiy joy metkada uzuq kontur bilan, popupda esa yozib ko'rsatiladi. */
+  const JOY = new Map();
+  obyektlar.forEach(y => {
+    if (y.joy && y.joy.aniq && isFinite(y.joy.lat) && isFinite(y.joy.lng)) {
+      JOY.set(y.id, {lat: y.joy.lat, lng: y.joy.lng, daraja: "aniq"});
+      return;
     }
-    el.querySelectorAll("[data-toifa]").forEach(b => b.addEventListener("click", () => {
-      const k = b.dataset.toifa;
-      if (holat.yashirin.has(k)) holat.yashirin.delete(k); else holat.yashirin.add(k);
-      eslab();
-      chiz();
-      const y = document.querySelector('#legenda [data-toifa="' + k + '"]'); if (y) y.focus();
-    }));
+    const tk = tumanKodi(y);
+    const tm = tk && MKB.geo.markaz(tk);
+    if (tm) { JOY.set(y.id, {lat: tm[0], lng: tm[1], daraja: "tuman", kod: tk}); return; }
+    const hk = hududKod(y);
+    const hm = hk && MKB.geo.markaz(hk);
+    if (hm) JOY.set(y.id, {lat: hm[0], lng: hm[1], daraja: "hudud", kod: hk});
+  });
+  const JOY_SANOQ = {aniq: 0, tuman: 0, hudud: 0, yoq: 0};
+  obyektlar.forEach(y => { const j = JOY.get(y.id); JOY_SANOQ[j ? j.daraja : "yoq"]++; });
+
+  /* Ko'rik holati va qo'riqlash — xaritada filtr va rang uchun oldindan yig'iladi */
+  const KECHIKKAN = new Set((D.KORIKLAR || []).filter(k => k.holat === "kechikkan").map(k => k.obyektId));
+  const OXIRGI_KORIK = new Map();
+  (D.KORIKLAR || []).filter(k => k.holat === "otkazildi").forEach(k => {
+    const d = D.sanaOqi(k.sana);
+    const b = OXIRGI_KORIK.get(k.obyektId);
+    if (d && (!b || d > b.sana)) OXIRGI_KORIK.set(k.obyektId, {sana: d, yozuv: k});
+  });
+  const qoriqlashTuri = y => {
+    const t = y.himoya && y.himoya.qoriqlashTuri;
+    if (t) return t;
+    const q = (D.QORIQLASH || []).find(x => x.obyektId === y.id && x.holat === "amalda");
+    return q && q.qoriqlashTuri ? q.qoriqlashTuri : "yoq";
+  };
+  const kommunalHolati = y => {
+    if (!D.binolimi(y)) return "binosiz";
+    const k = (y.kommunal || []).filter(x => x && x.holat && x.holat !== "mavjud emas");
+    if (k.some(x => x.holat === "uzilgan" || x.holat === "vaqtincha to'xtatilgan")) return "uzilgan";
+    return k.length && k.every(x => x.holat === "ulangan") ? "ulangan" : "noaniq";
+  };
+  const nazoratDarajasi = y => { const n = D.nazoratIndeksi(y); return n ? n.daraja : "malumotsiz"; };
+
+  /* ============================================================
+     2. Metka rangi (legenda bilan) va hudud bo'yalishi (o'lchov)
+     ============================================================ */
+  const NAZORAT_TOIFA = [
+    {kalit: "yuqori", nom: "Yuqori nazorat", rang: "var(--yashil)"},
+    {kalit: "barqaror", nom: "Barqaror", rang: "var(--moviy)"},
+    {kalit: "past", nom: "Diqqat talab", rang: "var(--apelsin)"},
+    {kalit: "kritik", nom: "Xavfli", rang: "var(--xavf)"},
+    {kalit: "malumotsiz", nom: "Ma'lumot kiritilmagan", rang: "var(--matn-4)"}
+  ];
+  const BELGILAR = {
+    muddat: {nom: "Muddat holati",
+      toifalar: ["imtiyozda", "normal", "xavf-90", "umidsiz", "3-yildan-oshgan", "kiritilmagan"]
+        .map(k => ({kalit: k, nom: D.MUDDAT_HOLATLARI[k].nom, rang: D.MUDDAT_HOLATLARI[k].rang})),
+      toifa: y => D.muddatHisobi(y).holat},
+    nazorat: {nom: "Nazorat indeksi", toifalar: NAZORAT_TOIFA, toifa: nazoratDarajasi},
+    holat: {nom: "Aktiv holati",
+      toifalar: (D.HOLATLAR || []).filter(h => h.kalit !== "chiqarildi").map(h => ({kalit: h.kalit, nom: h.nom, rang: h.rang})),
+      toifa: y => { const h = (D.HOLATLAR || []).find(x => x.nom === y.holat); return h ? h.kalit : "balansda"; }},
+    qoriqlash: {nom: "Qo'riqlash",
+      toifalar: (D.QORIQLASH_TURLARI || []).map(t => ({kalit: t.kalit, nom: t.nom, rang: token("--qoriq-" + t.kalit)}))
+        .concat([{kalit: "yoq", nom: "Qo'riqlanmaydi", rang: token("--qoriq-yoq")}]),
+      toifa: qoriqlashTuri},
+    kommunal: {nom: "Kommunal", toifalar: [
+      {kalit: "ulangan", nom: "Hammasi ulangan", rang: "var(--yashil)"},
+      {kalit: "uzilgan", nom: "Uzilgan xizmat bor", rang: "var(--xavf-matn-yorqin)"},
+      {kalit: "noaniq", nom: "Holati kiritilmagan", rang: "var(--matn-3)"},
+      {kalit: "binosiz", nom: "Bino emas", rang: "var(--matn-4)"}],
+      toifa: kommunalHolati}
+  };
+  const OLCHOVLAR = {
+    soni: {nom: "Aktivlar soni", izoh: "Hudud rangi — filtrdan o'tgan aktivlar soni.",
+      hisob: r => r.length, matn: v => MKB.fmt(v), birlik: "ta"},
+    qiymat: {nom: "Balans qiymati", izoh: "Hudud rangi — balans qiymatlari yig'indisi.",
+      hisob: r => D.yaxlit(r.reduce((a, y) => a + ((y.balans && y.balans.qiymat) || 0), 0)), matn: v => MKB.pul(v), birlik: ""},
+    korik: {nom: "Kechikkan ko'rik", izoh: "Hudud rangi — ko'rik muddati o'tgan aktivlar soni.",
+      hisob: r => r.filter(y => KECHIKKAN.has(y.id)).length, matn: v => MKB.fmt(v), birlik: "ta"},
+    himoyasiz: {nom: "Qo'riqlanmaydi", izoh: "Hudud rangi — qo'riqlash shartnomasi ham, qurilmasi ham yo'q aktivlar soni.",
+      hisob: r => r.filter(y => qoriqlashTuri(y) === "yoq").length, matn: v => MKB.fmt(v), birlik: "ta"},
+    zaxira: {nom: "Zaxira yuki", izoh: "Hudud rangi — hisoblangan zaxira summasi.",
+      hisob: r => D.yaxlit(r.reduce((a, y) => a + (D.zaxiraHisobi(y).summa || 0), 0)), matn: v => MKB.pul(v), birlik: ""}
+  };
+  /* Bo'yoq shkalasi: bitta tonning to'qlashuvi (--voronka-1..5). Rang ko'rmaydigan ko'z uchun ham
+     bosqichlar to'qlik bilan farqlanadi, legenda oralig'i raqam bilan yozilgan. */
+  const SHKALA = [1, 2, 3, 4, 5].map(i => token("--voronka-" + i));
+  const BOSH_RANG = token("--band");
+
+  /* ============================================================
+     3. Holat: filtr, ko'rinish, eslab qolish
+     ============================================================ */
+  const url = new URLSearchParams(location.search);
+  const SOZ_KALIT = MKBapi.kalit("mkb4-xarita:" + ((MKBapi.sessiya() || {}).login || "-"));
+  let soz = {};
+  try { soz = JSON.parse(localStorage.getItem(SOZ_KALIT) || "{}") || {}; } catch (_) { soz = {}; }
+  const urlBor = ["id", "hudud", "tur", "holat", "himoya", "muddat", "filial", "q", "olchov", "belgi", "asos", "qatlam",
+    "bosqich", "yashir"].some(k => url.has(k));
+  /* Eski havola: ?qatlam=muddat|qoriqlash|kommunal metka rangini belgilardi */
+  const belgi0 = BELGILAR[url.get("belgi")] ? url.get("belgi") : BELGILAR[url.get("qatlam")] ? url.get("qatlam")
+    : BELGILAR[soz.belgi] ? soz.belgi : "muddat";
+  const holat = {
+    olchov: OLCHOVLAR[url.get("olchov")] ? url.get("olchov") : OLCHOVLAR[soz.olchov] ? soz.olchov : "soni",
+    belgi: belgi0,
+    asos: url.has("asos") ? url.get("asos") : (soz.asos || ""),
+    hudud: HK[url.get("hudud")] ? url.get("hudud") : (urlBor ? null : soz.hudud) || null,
+    tur: url.get("tur") || (urlBor ? null : soz.tur) || null,
+    holat: url.get("holat") || (urlBor ? null : soz.holatNomi) || null,
+    himoya: url.get("himoya") || (urlBor ? null : soz.himoya) || null,
+    muddat: url.get("muddat") || (urlBor ? null : soz.muddat) || null,
+    filial: url.get("filial") || (urlBor ? null : soz.filial) || null,
+    q: url.get("q") || "",
+    tartib: soz.tartib || "nom",
+    tanlangan: null,
+    /* Legendadan qo'yiladigan ikki tez filtr: bo'yoq bosqichi va o'chirilgan metka toifalari */
+    bosqich: /^[0-4]$/.test(url.get("bosqich") || "") ? +url.get("bosqich") : null,
+    yashirin: new Set((url.get("yashir") || "").split(",").filter(Boolean))
+  };
+  /* ?id=<reyestr raqami> — aktiv kartochkasidagi "Xaritada ko'rish" havolasi. "id" urlBor ro'yxatida
+     turadi, shuning uchun eslab qolingan filtr qo'llanmaydi va aktiv albatta ko'rinadi. */
+  let boshId = url.get("id") || null;
+  /* Karta yopiq bo'lsa (masalan, sahifa ko'rinmas holatda ochilsa) markaz NaN bo'lishi mumkin:
+     bunday qiymat saqlanmaydi, aks holda keyingi kirishda xarita ochilmay qoladi. */
+  /* Faqat xodim o'zi qo'ygan ko'rinish eslab qolinadi. Tizim hisoblagan boshlang'ich ko'rinish
+     saqlanmaydi: aks holda sahifa fonda ochilib xarita noto'g'ri joyda qotib qolsa, o'sha noto'g'ri
+     ko'rinish yozilib qoladi va keyingi kirishlarda ham o'shanday ochilaveradi. */
+  let xodimKorinishi = false;
+  const korinish = () => {
+    if (!xarita || !xodimKorinishi) return {};
+    const c = xarita.getCenter(), z = xarita.getZoom();
+    if (!c || !isFinite(c.lat) || !isFinite(c.lng) || !isFinite(z)) return {};
+    return {markaz: [D.yaxlit(c.lat, 4), D.yaxlit(c.lng, 4)], zoom: z};
+  };
+  const eslab = () => {
+    try {
+      localStorage.setItem(SOZ_KALIT, JSON.stringify(Object.assign({
+        olchov: holat.olchov, belgi: holat.belgi, asos: holat.asos, hudud: holat.hudud, tur: holat.tur,
+        holatNomi: holat.holat, himoya: holat.himoya, muddat: holat.muddat, filial: holat.filial,
+        tartib: holat.tartib
+      }, korinish())));
+    } catch (_) { /* xotira yopiq bo'lsa sahifa ishlayveradi */ }
+  };
+  function havolaYangila() {
+    const p = new URLSearchParams();
+    ["hudud", "tur", "holat", "himoya", "muddat", "filial"].forEach(k => { if (holat[k]) p.set(k, holat[k]); });
+    if (holat.q) p.set("q", holat.q);
+    if (holat.olchov !== "soni") p.set("olchov", holat.olchov);
+    if (holat.belgi !== "muddat") p.set("belgi", holat.belgi);
+    if (holat.asos) p.set("asos", holat.asos);
+    if (holat.bosqich != null) p.set("bosqich", holat.bosqich);
+    if (holat.yashirin.size) p.set("yashir", Array.from(holat.yashirin).join(","));
+    const s = p.toString();
+    history.replaceState(null, "", location.pathname + (s ? "?" + s : ""));
   }
 
-  /* Ko'rinish oynasi: aniq nuqtalar va koordinatasiz obyektlar jamlangan hudud markazlari birga (hudud tanlansa, faqat shu hudud) */
-  function korinishNuqtalari(hudud){
-    const bu = aniq.filter(y => !hudud || hududKod(y) === hudud).map(y => [y.joy.lat, y.joy.lng]);
-    new Set(taxminiy.map(hududKod)).forEach(k => { if (HK[k] && (!hudud || k === hudud)) bu.push([HK[k].lat, HK[k].lng]); });
-    if (hudud && HK[hudud] && !bu.length) bu.push([HK[hudud].lat, HK[hudud].lng]);
-    return bu;
+  /* ============================================================
+     4. Filtr
+     ============================================================ */
+  const qidiruvMatni = y => [y.id, y.nom, y.qisqa, y.manzil, y.tuman, y.hudud, y.filial].filter(Boolean).join(" ").toLowerCase();
+  function mos(y) {
+    if (holat.hudud && hududKod(y) !== holat.hudud) return false;
+    if (holat.tur && y.turKalit !== holat.tur) return false;
+    if (holat.holat && y.holat !== holat.holat) return false;
+    if (holat.himoya && (holat.himoya === "bor" ? qoriqlashTuri(y) === "yoq" : qoriqlashTuri(y) !== holat.himoya)) return false;
+    if (holat.muddat && D.muddatHisobi(y).holat !== holat.muddat) return false;
+    if (holat.filial && y.filialKod !== holat.filial) return false;
+    if (holat.q && qidiruvMatni(y).indexOf(holat.q.toLowerCase()) < 0) return false;
+    return true;
+  }
+  let korinadigan = [];
+
+  const FILTRLAR = [
+    {kalit: "hudud", nom: "Hudud", bosh: "Barcha hududlar",
+      variant: () => Object.keys(HK).filter(k => obyektlar.some(y => hududKod(y) === k)).map(k => [k, HK[k].toliq])},
+    {kalit: "tur", nom: "Aktiv turi", bosh: "Barcha turlar",
+      variant: () => (D.ASOSIY_TURLAR || []).filter(t => obyektlar.some(y => y.turKalit === t.kalit)).map(t => [t.kalit, t.nom])},
+    {kalit: "holat", nom: "Holati", bosh: "Barcha holatlar",
+      variant: () => (D.HOLATLAR || []).filter(h => obyektlar.some(y => y.holat === h.nom)).map(h => [h.nom, h.nom])},
+    {kalit: "himoya", nom: "Qo'riqlash", bosh: "Farqi yo'q",
+      variant: () => [["bor", "Qo'riqlanadi"]].concat((D.QORIQLASH_TURLARI || []).map(t => [t.kalit, t.nom])).concat([["yoq", "Qo'riqlanmaydi"]])},
+    {kalit: "muddat", nom: "Muddat holati", bosh: "Barcha muddatlar",
+      variant: () => Object.keys(D.MUDDAT_HOLATLARI).filter(k => k !== "chiqarilgan" && obyektlar.some(y => D.muddatHisobi(y).holat === k))
+        .map(k => [k, D.MUDDAT_HOLATLARI[k].nom])},
+    {kalit: "filial", nom: "Filial", bosh: "Barcha filiallar",
+      variant: () => (D.FILIALLAR || []).filter(f => obyektlar.some(y => y.filialKod === (f.id || f.kod))).map(f => [f.id || f.kod, f.nom])}
+  ];
+  function filtrChiz() {
+    /* Havoladagi qiymat ro'yxatda bo'lmasa (eski havola, xato yozilgan qiymat yoki bu rolga
+       ko'rinmaydigan toifa) u tashlab yuboriladi. Aks holda tanlov "Barchasi" bo'lib turadi,
+       lekin xarita bo'sh qoladi va buning sababi hech qayerda ko'rinmaydi. */
+    const variantlar = {};
+    FILTRLAR.forEach(f => {
+      variantlar[f.kalit] = f.variant();
+      if (holat[f.kalit] && !variantlar[f.kalit].some(([v]) => v === holat[f.kalit])) holat[f.kalit] = null;
+    });
+    $("x-filtrlar").innerHTML = FILTRLAR.map(f =>
+      '<div class="maydon"><label class="maydon-yorliq" for="x-f-' + f.kalit + '">' + esc(f.nom) + "</label>" +
+      '<span class="tanlov"><select id="x-f-' + f.kalit + '" data-filtr="' + f.kalit + '">' +
+      '<option value="">' + esc(f.bosh) + "</option>" +
+      variantlar[f.kalit].map(([v, n]) => '<option value="' + esc(v) + '"' + (holat[f.kalit] === v ? " selected" : "") + ">" + esc(n) + "</option>").join("") +
+      '</select><svg class="ic strelka"><use href="#ik-past"/></svg></span></div>').join("");
+    tarjimaQil($("x-filtrlar"));
+  }
+  /* Tinglovchi bir marta bog'lanadi. Idish (#x-filtrlar) o'zgarmaydi, faqat ichi qayta chiziladi:
+     bog'lashni filtrChiz() ichida qoldirganda "Filtrni tozalash" har bosilganda yana bitta nusxa
+     qo'shilib, keyingi har bir o'zgarishda yangila() bir necha marta ishlar edi. */
+  $("x-filtrlar").addEventListener("change", e => {
+    const t = e.target.closest("[data-filtr]");
+    if (!t) return;
+    holat[t.dataset.filtr] = t.value || null;
+    holat.tanlangan = null;
+    if (t.dataset.filtr === "hudud") hududgaUch(holat.hudud);
+    yangila();
+  });
+
+  /* ============================================================
+     5. Xarita
+     ============================================================ */
+  /* zoomSnap: .25 — mamlakat konturi kartaga to'liq sig'adi, butun qadam bo'lganda bir pog'ona ortiqcha uzoqlashardi */
+  const eskiKorinish = !urlBor && Array.isArray(soz.markaz) && soz.markaz.every(isFinite) && isFinite(soz.zoom) ? soz : null;
+  $("x-joy").innerHTML = "";   /* yuklanish skeleti olib tashlanadi, xarita shu quti ichida ochiladi */
+  const xarita = L.map("x-joy", {zoomControl: false, attributionControl: true, scrollWheelZoom: true,
+    minZoom: 4, zoomSnap: .25, zoomDelta: 1})
+    .setView(eskiKorinish ? eskiKorinish.markaz : [41.4, 63.9], eskiKorinish ? eskiKorinish.zoom : 6);
+  window.MKB_XARITA = xarita;
+  /* zoomTugmalari quti yopish tugmasiga o'zbekcha nom beradi; Leaflet ning o'z zoom qutisi esa
+     chap yuqorida asos qatlami panelining ostida qolar edi, shuning uchun u olib tashlanadi —
+     kattalashtirish va kichraytirish sahifaning asboblar ustunida turadi */
+  const leafletZoom = MKBxarita.zoomTugmalari(xarita);
+  if (leafletZoom && leafletZoom.remove) leafletZoom.remove();
+  function zoomHolati() {
+    const z = xarita.getZoom();
+    $("x-kattalash").disabled = z >= xarita.getMaxZoom();
+    $("x-kichraytir").disabled = z <= xarita.getMinZoom();
+  }
+  $("x-kattalash").addEventListener("click", () => { xarita.zoomIn(); });
+  $("x-kichraytir").addEventListener("click", () => { xarita.zoomOut(); });
+  xarita.on("zoomend", zoomHolati);
+
+  const asos = MKBxarita.asos(xarita, {
+    nom: kod => hududYorligi(kod),
+    bosildi: kod => hududTanla(holat.hudud === kod ? null : kod),
+    uslub: kod => hududUslubi(kod),
+    tumanUslub: kod => tumanUslubi(kod)
+  });
+  const raster = MKBxarita.rasterlar(xarita, {
+    /* Plitka serveri ochilmaganda tugma bosilgandagi tartibning aynan o'zi bajariladi:
+       bo'yoq raster rejimidagi shaffoflikda qolib ketmasin (xarita oqarib turardi) va
+       nosoz qatlam eslab qolinmasin (har safar sahifa ochilganda qaytadan yoqilardi). */
+    uzildi: () => {
+      holat.asos = "";
+      asos.uslubla();
+      asosTugmalari();
+      eslab();
+      havolaYangila();
+      MKB.toast("Plitka serveri ochilmadi. Chegara xaritasi qoldi", "xavf");
+    }
+  });
+  /* Eslab qolingan yoki havoladagi qatlam endi mavjud bo'lmasligi mumkin (ichki plitka
+     serveri sozlamadan olib tashlangan): bunday qiymat darhol tozalanadi, aks holda
+     xarita bo'yog'i raster rejimidagi shaffoflikda qolib ketardi. */
+  if (holat.asos && !(raster.royxat || []).some(x => x.kalit === holat.asos)) holat.asos = "";
+
+  const olchagich = MKBxarita.olchagich(xarita, {
+    ozgardi: (n, matn) => {
+      if (!olchagich.holati()) return;
+      $("x-holat").innerHTML = n < 2
+        ? "<span>Masofa o'lchash: xaritada ikkita yoki undan ko'p nuqta belgilang.</span>"
+        : "<span>O'lchangan masofa:</span> <b data-tarjimasiz>" + esc(matn) + "</b>";
+      tarjimaQil($("x-holat"));
+    }
+  });
+
+  /* Mamlakat ko'rinishida jamlagich soni hudud yozuvidagi son bilan bir xil raqamni ikkinchi
+     marta yozar edi, shuning uchun u masshtab JAM_ZOOM dan past bo'lganda kichik nuqtaga
+     aylanadi: son yozuvda qoladi, nuqta esa aktivlar qayerda to'planganini ko'rsatadi.
+     Ilgari bu holatda doiralar butunlay yashirilar va xaritada birorta metka qolmasdi. */
+  const JAM_ZOOM = 7;
+  const tor = () => window.matchMedia("(max-width:760px)").matches;
+  const klaster = MKBxarita.klaster(xarita, {
+    /* Telefon ekranida hujra kichikroq: aks holda butun mamlakat uch-to'rt pufakchaga yig'ilib qoladi */
+    hujra: tor() ? 44 : 64,
+    mayda: z => z < JAM_ZOOM,
+    metka: n => {
+      const y = n.yozuv;
+      const m = MKBxarita.metka([n.lat, n.lng], {
+        nom: y.qisqa || y.nom, izoh: MKB.pul(y.balans && y.balans.qiymat),
+        rang: n.rang, tur: y.turKalit, taxminiy: n.daraja !== "aniq"
+      });
+      /* Quti xarita ustidagi boshqaruvlar ostiga tushmasin: yuqori chapda asos qatlami tanlovi,
+         o'ngda asboblar ustuni turadi. Leaflet quti shu chegaralarga sig'masa xaritani suradi,
+         shuning uchun quti har doim bo'sh joyda ochiladi. */
+      m.bindPopup(() => qutiHTML(y, n), {maxWidth: 300, minWidth: 250,
+        autoPanPaddingTopLeft: [30, 74], autoPanPaddingBottomRight: [76, 46]});
+      m.on("click", () => { holat.tanlangan = y.id; klaster.belgila(y.id); royxatBelgila(); });
+      m.on("mouseover", () => qatorYorit(y.id, true));
+      m.on("mouseout", () => qatorYorit(y.id, false));
+      return m;
+    }
+  });
+  MKBxarita.yorliqlarniKuzat(xarita);
+
+  /* Chegara qatlamining manbasi, litsenziyasi va sanasi. Matn geo.js da bir joyda saqlanadi. */
+  (function chegaraIzohi() {
+    const el = $("x-chegara-izoh");
+    if (!el || !MKB.geo) return;
+    const g = MKB.geo;
+    /* Manba nomi va litsenziya belgisi o'zgarmaydi — ular huquqiy matn; oldidagi izoh
+       so'zi esa interfeys tiliga o'giriladi, shuning uchun alohida tugunda turadi
+       (xarita ustidagi atribut qatori ham xuddi shunday bo'linadi). */
+    const atr = String(g.ATRIBUT || "");
+    const bolim = atr.indexOf(": ");
+    const yorliq = bolim > 0 ? atr.slice(0, bolim) : "";
+    const manba = bolim > 0 ? atr.slice(bolim + 2) : atr;
+    el.innerHTML = "<span>Ma'muriy chegaralar tizim ichida saqlanadi: xarita ishlashi uchun tashqi serverga chiqish shart emas.</span> " +
+      "<span>Chegaralar</span> <b data-tarjimasiz>" + esc(g.SANA || "") + "</b> <span>yil holatiga.</span> " +
+      (yorliq ? "<span>" + esc(yorliq) + "</span>: " : "") + '<span data-tarjimasiz>' + esc(manba) + "</span>" +
+      (g.MANBA_HAVOLA ? ' <a href="' + esc(g.MANBA_HAVOLA) + '" target="_blank" rel="noopener" data-tarjimasiz>geoboundaries.org</a>' : "");
+    tarjimaQil(el);
+  })();
+  xarita.on("moveend zoomend", eslab);
+
+  /* ---------- Hudud bo'yalishi ---------- */
+  let shkala = MKBxarita.shkala([]);   /* bo'yoq bosqichlari */
+  let hududQiymat = {};    /* kod -> o'lchov qiymati */
+  function hududUslubi(kod) {
+    const v = hududQiymat[kod];
+    if (v == null) return {rang: "var(--band)", shaffof: holat.asos ? .06 : 1};
+    /* Bitta hududda ma'lumot qolganda bo'yoq hech narsani ajratmaydi: uni to'q rangga
+       bo'yash "eng yuqori daraja" degan yolg'on manzara beradi. Shunday holatda hudud
+       bo'yalmaydi, faqat qalin kontur bilan belgilanadi. */
+    if (shkala.yagona) return {rang: "var(--band)", shaffof: holat.asos ? .1 : .5,
+      chiziq: "var(--siyoh)", qalinlik: 2.4};
+    const i = bosqich(v);
+    /* Legendadan bosqich tanlansa qolgan hududlar so'nadi: tanlov xaritada ko'rinib turadi */
+    const faol = holat.bosqich == null || holat.bosqich === i;
+    return {rang: SHKALA[i], shaffof: holat.asos ? (faol ? .5 : .12) : (faol ? .92 : .22),
+      chiziq: holat.hudud === kod ? "var(--siyoh)" : "var(--chiziq-3)", qalinlik: holat.hudud === kod ? 2.4 : 1};
+  }
+  /* Tuman chizig'i bo'yoq ustida yotadi: to'q bosqichda oq, och bosqichda qora chiziq o'qiladi */
+  function tumanUslubi(kod) {
+    const v = hududQiymat[kod];
+    const i = v == null ? -1 : bosqich(v);
+    return i >= 2 ? {chiziq: "var(--oq)", shaffof: .5} : {chiziq: "var(--siyoh)", shaffof: .2};
+  }
+  const bosqich = v => shkala.bosqich(v);
+  function shkalaQur() {
+    const O = OLCHOVLAR[holat.olchov];
+    hududQiymat = {};
+    const guruh = {};
+    korinadigan.forEach(y => { const k = hududKod(y) || "?"; (guruh[k] = guruh[k] || []).push(y); });
+    Object.keys(HK).forEach(k => { if (guruh[k]) hududQiymat[k] = O.hisob(guruh[k]); });
+    /* Kvantil bo'yicha besh bosqich: bir nechta hudud ajralib turganda ham qolganlari
+       bir rangga yopishib qolmaydi. Hisob yadroda — to'rt sahifa shu bitta funksiyani chaqiradi. */
+    shkala = MKBxarita.shkala(Object.keys(hududQiymat).map(k => hududQiymat[k]), SHKALA.length);
+  }
+  /* Hudud yozuvidagi son: xaritadagi yagona raqam shu bo'lib qoladi. Ilgari o'sha sonni
+     viloyat markazidagi katta doira ham yozar, doira esa bo'yoq bilan nomni yopib turardi. */
+  function hududYozuvlari() {
+    const O = OLCHOVLAR[holat.olchov];
+    document.querySelectorAll("#x-joy .mkb-nom-hudud > span[data-kod]").forEach(s => {
+      const v = hududQiymat[s.dataset.kod];
+      let b = s.querySelector("b");
+      if (v == null) { if (b) b.remove(); return; }
+      if (!b) { b = document.createElement("b"); s.appendChild(b); }
+      b.textContent = " " + O.matn(v) + (O.birlik ? " " + O.birlik : "");
+    });
+  }
+  function hududYorligi(kod) {
+    const O = OLCHOVLAR[holat.olchov];
+    const v = hududQiymat[kod];
+    const nomi = (HK[kod] || {}).toliq || MKB.geo.nomi(kod) || kod;
+    const d = document.createElement("div");
+    d.innerHTML = "<b data-tarjimasiz>" + esc(nomi) + "</b>" +
+      (v == null ? "<span>Filtrga mos aktiv yo'q</span>"
+        : "<span><span>" + esc(O.nom) + "</span> — <b data-tarjimasiz>" + esc(O.matn(v)) + "</b>" +
+          (O.birlik ? " <span>" + O.birlik + "</span>" : "") + "</span>") +
+      "<span>" + (holat.hudud === kod ? "Tanlovni bekor qilish uchun bosing" : "Faqat shu hududni ko'rish uchun bosing") + "</span>";
+    tarjimaQil(d);
+    return d;
   }
 
-  function hududChiz(){
-    const s = {};
-    obyektlar.forEach(y => { const k = hududKod(y) || "?"; s[k] = (s[k] || 0) + 1; });
-    const el = document.getElementById("hudud-royxat");
-    if (holat.hudud && !s[holat.hudud]) holat.hudud = null;
-    el.innerHTML = '<button type="button" class="hudud-band' + (!holat.hudud ? " faol" : "") + '" data-hudud="" aria-pressed="' + !holat.hudud + '">Barcha hududlar<b data-tarjimasiz>' + obyektlar.length + "</b></button>" +
-      Object.keys(s).filter(k => HK[k]).sort((a, b) => s[b] - s[a]).map(k =>
-        '<button type="button" class="hudud-band' + (holat.hudud === k ? " faol" : "") + '" data-hudud="' + k + '" aria-pressed="' + (holat.hudud === k) + '">' + esc(HK[k].toliq) + '<b data-tarjimasiz>' + s[k] + "</b></button>").join("");
-    el.addEventListener("click", e => {
-      const b = e.target.closest("[data-hudud]");
-      if (!b) return;
-      holat.hudud = b.dataset.hudud || null;
-      eslab();
-      el.querySelectorAll(".hudud-band").forEach(x => { x.classList.toggle("faol", x === b); x.setAttribute("aria-pressed", String(x === b)); });
-      xarita.closePopup();
-      const bu = korinishNuqtalari(holat.hudud);
-      if (bu.length > 1) xarita.flyToBounds(bu, {padding: [40, 40], maxZoom: 12, duration: .6});
-      else if (bu.length) xarita.flyTo(bu[0], 10, {duration: .6});
-      chiz();
-      varaqYop();
+  /* ---------- Popup ---------- */
+  const yozaOladi = MKB.huquq("yoz") && MKB.ruxsat("obyekt-tahrir.html");
+  const JOY_NOMI = {aniq: "Aniq koordinata", tuman: "Taxminiy: tuman markazi", hudud: "Taxminiy: viloyat markazi"};
+  function qutiHTML(y, n) {
+    const m = D.muddatHisobi(y);
+    const nz = D.nazoratIndeksi(y) || {};
+    const q = qoriqlashTuri(y);
+    const qNom = q === "yoq" ? "Qo'riqlanmaydi" : ((D.QORIQLASH_TURLARI || []).find(t => t.kalit === q) || {}).nom || q;
+    const kk = OXIRGI_KORIK.get(y.id);
+    const kechikkan = KECHIKKAN.has(y.id);
+    const muddat = m.kiritilmagan ? "Balans sanasi kiritilmagan"
+      : m.qolganKun > 0 ? m.qolganKun + " kun qoldi" : (D.MUDDAT_HOLATLARI[m.holat] || {}).nom;
+    const joyIzoh = "<span>" + esc(JOY_NOMI[n.daraja]) + "</span>" +
+      (n.daraja === "tuman" && MKB.geo.nomi(n.kod) ? ' — <span data-tarjimasiz>' + esc(MKB.geo.nomi(n.kod)) + "</span>" : "");
+    const amal = [];
+    amal.push('<a class="tugma tugma-asosiy tugma-kichik" href="obyekt.html?id=' + encodeURIComponent(y.id) + '">Kartani ochish</a>');
+    if (MKB.ruxsat("obyekt-himoya.html"))
+      amal.push('<a class="tugma tugma-oq tugma-kichik" href="obyekt-himoya.html?id=' + encodeURIComponent(y.id) + '">Himoya</a>');
+    if (MKB.ruxsat("korik-tayinlash.html") && MKB.huquq("korik", "yoz"))
+      amal.push('<a class="tugma tugma-oq tugma-kichik" href="korik-tayinlash.html?id=' + encodeURIComponent(y.id) + '">' + "Ko'rik tayinlash" + '</a>');
+    const d = document.createElement("div");
+    d.innerHTML = '<div class="xp"><div class="xp-surat">' + MKB.obyektSurati(y, {kichik: true}) + "</div>" +
+      '<div class="xp-bosh"><b data-tarjimasiz>' + esc(y.qisqa || y.nom) + '</b></div>' +
+      '<span class="kod-mono"><span data-tarjimasiz>' + esc(y.id) + "</span> · <span>" + esc(y.tur) + "</span></span>" +
+      '<div class="xp-qator"><span>Balans qiymati</span><span data-tarjimasiz>' + esc(MKB.pul(y.balans && y.balans.qiymat)) + "</span></div>" +
+      '<div class="xp-qator"><span>Balansda turgan muddat</span><span>' +
+        (m.kiritilmagan ? "<span>Kiritilmagan</span>" : '<span data-tarjimasiz>' + m.turganKun + "</span> <span>kun</span>") + "</span></div>" +
+      '<div class="xp-qator"><span>Umidsiz toifagacha</span><span class="' + (m.qolganKun <= 0 || m.holat === "umidsiz" ? "kech" : "") + '">' + esc(muddat) + "</span></div>" +
+      '<div class="xp-qator"><span>' + "Qo'riqlash" + '</span><span class="' + (q === "yoq" ? "kech" : "") + '">' + esc(qNom) + "</span></div>" +
+      '<div class="xp-qator"><span>' + "Oxirgi ko'rik" + '</span><span class="' + (kechikkan ? "kech" : "") + '">' +
+        (kk ? '<span data-tarjimasiz>' + esc(D.sanaYoz(kk.sana)) + "</span>" + (kechikkan ? " <span>(keyingisi kechikkan)</span>" : "") : "<span>O'tkazilmagan</span>") + "</span></div>" +
+      '<div class="xp-qator"><span>Nazorat indeksi</span><span data-tarjimasiz>' + (nz.ball == null ? "—" : nz.ball) + "</span></div>" +
+      '<div class="xp-qator"><span>Joy aniqligi</span><span>' + joyIzoh + "</span></div>" +
+      '<div class="xp-amal">' + amal.join("") + "</div></div>";
+    tarjimaQil(d);
+    return d;
+  }
+
+  /* ============================================================
+     6. Legenda, ro'yxat, holat qatori
+     ============================================================ */
+  function legendaChiz() {
+    const O = OLCHOVLAR[holat.olchov];
+    $("x-olchov-nom").innerHTML = "<span>" + esc(O.nom) + "</span>";
+    tarjimaQil($("x-olchov-nom"));
+    $("x-legenda-izoh").textContent = O.izoh;
+    tarjimaQil($("x-legenda-izoh"));
+    const el = $("x-legenda");
+    const bor = Object.keys(hududQiymat).filter(k => hududQiymat[k] > 0);
+    if (!bor.length) {
+      el.innerHTML = "<li>" + MKB.boshHolat("xarita", "Filtrga mos aktiv yo'q", "Filtrni kengaytiring yoki tozalang") + "</li>";
+      tarjimaQil(el);
+      return;
+    }
+    const bosh = Object.keys(HK).filter(k => hududQiymat[k] == null).length;
+    /* Bitta hududda ma'lumot qolganda bo'yoq bosqichi ma'no bermaydi: legenda shkala o'rniga
+       o'sha bitta qiymatni yozadi, xarita esa hududni faqat kontur bilan belgilaydi. */
+    if (shkala.yagona) {
+      const bk = bor[0];
+      /* Belgi xaritadagi tanlangan hudud konturini takrorlaydi: bo'yoq emas, kontur */
+      el.innerHTML = '<li class="matn"><i style="background:var(--oq);box-shadow:inset 0 0 0 2px var(--siyoh)"></i><span data-tarjimasiz>' +
+        esc(HK[bk] ? HK[bk].nom : bk) + '</span><b data-tarjimasiz>' +
+        esc(O.matn(hududQiymat[bk]) + (O.birlik ? " " + O.birlik : "")) + "</b></li>" +
+        (bosh ? '<li class="matn"><i class="yoq"></i><span>Filtrga mos aktiv yo\'q</span><b data-tarjimasiz>' + bosh + "</b></li>" : "");
+      tarjimaQil(el);
+      return;
+    }
+    /* Yorliq kuzatilgan qiymatlar bilan emas, bosqich chegaralari bilan yoziladi: shunda shkala
+       uzluksiz bo'ladi. Ilgari "13-15 ta" dan keyin darhol "23-27 ta" kelar, 16 dan 22 gacha
+       oraliq esa hech qaysi pog'onada ko'rinmasdi. */
+    const oraliqlar = [];
+    for (let i = 0; i < shkala.pogona; i++) {
+      const ch = shkala.oraliq(i);
+      oraliqlar.push({rang: SHKALA[i], son: bor.filter(k => bosqich(hududQiymat[k]) === i).length,
+        past: ch.past, yuqori: ch.yuqori});
+    }
+    const birlikli = v => esc(O.matn(v) + (O.birlik ? " " + O.birlik : ""));
+    el.innerHTML = oraliqlar.map((x, i) => {
+      /* Uch ko'rinish: eng past pog'ona "... va undan kam", o'rtasi "a – b", eng yuqorisi
+         "... va undan ko'p". Sonlar tarjimadan chetda, izoh so'zi lug'atdan o'tadi. */
+      const matn = x.past == null
+        ? '<span data-tarjimasiz>' + birlikli(x.yuqori) + "</span> <span>va undan kam</span>"
+        : x.yuqori == null
+          ? '<span data-tarjimasiz>' + birlikli(x.past) + "</span> <span>va undan ko'p</span>"
+          : '<span data-tarjimasiz>' + esc(O.matn(x.past) + " – " + O.matn(x.yuqori)) + "</span>" +
+            (O.birlik ? " <span>" + O.birlik + "</span>" : "");
+      return '<li><button type="button" data-bosqich="' + i + '">' +
+        '<i style="background:' + x.rang + '"></i>' + matn +
+        '<b data-tarjimasiz>' + x.son + "</b></button></li>";
+    }).join("") +
+      (bosh ? '<li class="matn"><i class="yoq"></i><span>Filtrga mos aktiv yo\'q</span><b data-tarjimasiz>' + bosh + "</b></li>" : "");
+    /* Qator bosilsa shu oralig'idagi hududlargina qoladi: tugma ko'rinishidagi element
+       haqiqatda ham filtr bo'ladi, panel.html dagi legenda bilan bir xil ishlaydi. */
+    el.querySelectorAll("[data-bosqich]").forEach(b => {
+      const i = +b.dataset.bosqich;
+      b.setAttribute("aria-pressed", String(holat.bosqich == null || holat.bosqich === i));
+      b.title = holat.bosqich === i ? "Oraliq tanlovini bekor qilish" : "Faqat shu oraliqdagi hududlarni ko'rish";
+      const yorit = holatBor => Object.keys(asos.shakl || {}).forEach(k => {
+        const v = hududQiymat[k];
+        asos.yorit(k, holatBor && v != null && bosqich(v) === i);
+      });
+      b.addEventListener("mouseenter", () => yorit(true));
+      b.addEventListener("mouseleave", () => yorit(false));
+      b.addEventListener("focus", () => yorit(true));
+      b.addEventListener("blur", () => yorit(false));
+      b.addEventListener("click", () => {
+        yorit(false);
+        holat.bosqich = holat.bosqich === i ? null : i;
+        holat.tanlangan = null;
+        yangila();
+      });
     });
     tarjimaQil(el);
   }
 
-  function taxminiyChiz(){
-    const el = document.getElementById("taxminiy-blok");
-    if (!taxminiy.length){ el.innerHTML = ""; return; }
-    el.innerHTML = '<h3><span>Koordinatasi kiritilmagan:</span> <span data-tarjimasiz>' + taxminiy.length + "</span> <span>ta</span></h3>" +
-      '<p class="yon-izoh">Bu obyektlar xaritada aniq nuqta sifatida chizilmaydi. Koordinatani obyekt tahririda kiriting.</p>' +
-      '<ul class="taxminiy-royxat">' + taxminiy.slice(0, 60).map(y =>
-        '<li><a href="obyekt.html?id=' + encodeURIComponent(y.id) + '" title="' + esc(y.qisqa || y.nom) + '">' + esc(y.qisqa || y.nom) + "</a>" +
-        (yozaOladi ? '<a class="tahrir" href="obyekt-tahrir.html?id=' + encodeURIComponent(y.id) + '">' + ik("tahrir") + "<span>Kiritish</span></a>" : "") + "</li>").join("") + "</ul>" +
-      (taxminiy.length > 60 ? '<p class="yon-izoh"><span>Ro&#39;yxatda birinchi 60 tasi.</span> <a href="obyektlar.html" style="text-decoration:underline">Reyestrga o&#39;tish</a></p>' : "");
+  /* manba — toifa o'chirgichidan oldingi ro'yxat: o'chirilgan toifaning soni ko'rinib turadi,
+     aks holda uni qaytarib yoqish uchun qator qolmas edi. */
+  function belgiLegenda(manba) {
+    const B = BELGILAR[holat.belgi];
+    const r = manba || korinadigan;
+    const sanoq = {};
+    const toifasi = new Map();
+    r.forEach(y => { const k = B.toifa(y); toifasi.set(y.id, k); sanoq[k] = (sanoq[k] || 0) + 1; });
+    const el = $("x-belgi-legenda");
+    el.innerHTML = B.toifalar.filter(t => sanoq[t.kalit]).map(t =>
+      '<li><button type="button" data-toifa="' + esc(t.kalit) + '" aria-pressed="' + !holat.yashirin.has(t.kalit) +
+      '"><i style="background:' + MKB.rangQiymat(t.rang) + '"></i>' +
+      "<span>" + esc(t.nom) + '</span><b data-tarjimasiz>' + sanoq[t.kalit] + "</b></button></li>").join("") ||
+      "<li>" + MKB.boshHolat("xarita", "Metka yo'q") + "</li>";
+    el.querySelectorAll("[data-toifa]").forEach(b => {
+      const kalit = b.dataset.toifa;
+      b.title = holat.yashirin.has(kalit) ? "Toifani qaytarish" : "Bu toifani xaritadan olib turish";
+      /* So'ndirish alohida metkaga ham, jamlagich doirasiga ham qo'llanadi: mamlakat
+         ko'rinishida metkalar doira ichida turadi, aks holda legenda jonsiz ko'rinardi. */
+      const yorit = on => {
+        r.forEach(y => { const m = klaster.metkasi(y.id); if (m) MKBxarita.sindir(m, on && toifasi.get(y.id) !== kalit); });
+        (klaster.klasterlar ? klaster.klasterlar() : []).forEach(m =>
+          MKBxarita.sindir(m, on && !(m.mkbIchi || []).some(id => toifasi.get(id) === kalit)));
+      };
+      b.addEventListener("mouseenter", () => yorit(true));
+      b.addEventListener("mouseleave", () => yorit(false));
+      b.addEventListener("focus", () => yorit(true));
+      b.addEventListener("blur", () => yorit(false));
+      b.addEventListener("click", () => {
+        yorit(false);
+        if (holat.yashirin.has(kalit)) holat.yashirin.delete(kalit); else holat.yashirin.add(kalit);
+        holat.tanlangan = null;
+        yangila();
+      });
+    });
     tarjimaQil(el);
   }
+
+  const TARTIB = {
+    nom: (a, b) => String(a.qisqa || a.nom).localeCompare(String(b.qisqa || b.nom), "uz"),
+    qiymat: (a, b) => ((b.balans && b.balans.qiymat) || 0) - ((a.balans && a.balans.qiymat) || 0),
+    nazorat: (a, b) => ((D.nazoratIndeksi(a) || {}).ball || 0) - ((D.nazoratIndeksi(b) || {}).ball || 0),
+    muddat: (a, b) => (D.muddatHisobi(a).qolganKun || 0) - (D.muddatHisobi(b).qolganKun || 0)
+  };
+  function royxatChiz() {
+    const B = BELGILAR[holat.belgi];
+    const el = $("x-royxat");
+    const r = korinadigan.slice().sort(TARTIB[holat.tartib] || TARTIB.nom);
+    $("x-royxat-son").innerHTML = '<b data-tarjimasiz>' + korinadigan.length + "</b> / <span data-tarjimasiz>" + obyektlar.length + "</span>";
+    if (!r.length) {
+      el.innerHTML = "<li>" + MKB.boshHolat("xarita", "Filtrga mos aktiv yo'q", "Filtrni kengaytiring yoki tozalang") + "</li>";
+      $("x-royxat-izoh").textContent = "";
+      tarjimaQil($("x-royxat-son").parentNode);
+      return;
+    }
+    const kes = r.slice(0, 120);
+    el.innerHTML = kes.map(y => {
+      const t = B.toifalar.find(x => x.kalit === B.toifa(y));
+      const j = JOY.get(y.id);
+      return '<li><button type="button" class="x-qator" data-id="' + esc(y.id) + '">' +
+        '<span class="nuqta" style="background:' + MKB.rangQiymat(t ? t.rang : "var(--matn-4)") + '"></span>' +
+        '<span class="matn"><span class="nom" data-tarjimasiz>' + esc(y.qisqa || y.nom) + "</span>" +
+        '<span class="tag"><span data-tarjimasiz>' + esc(y.id) + "</span> · <span>" + esc(y.tur) + "</span>" +
+        (j && j.daraja !== "aniq" ? " · <span>taxminiy joy</span>" : "") + "</span></span>" +
+        '<span class="son" data-tarjimasiz>' + esc(MKB.pul(y.balans && y.balans.qiymat)) + "</span></button></li>";
+    }).join("");
+    $("x-royxat-izoh").innerHTML = r.length > kes.length
+      ? "<span>Ro'yxatda birinchi</span> <span data-tarjimasiz>" + kes.length + "</span> <span>tasi. Qolganini CSV faylida oling.</span>"
+      : "<span>Qatorni bosing — xarita shu metkaga uchadi.</span>";
+    tarjimaQil(el);
+    tarjimaQil($("x-royxat-izoh"));
+    tarjimaQil($("x-royxat-son").parentNode);
+    royxatBelgila();
+  }
+  function royxatBelgila() {
+    document.querySelectorAll("#x-royxat .x-qator").forEach(b =>
+      b.classList.toggle("tanlangan", b.dataset.id === holat.tanlangan));
+  }
+  function qatorYorit(id, on) {
+    const b = document.querySelector('#x-royxat .x-qator[data-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"]');
+    if (b) b.classList.toggle("yoritilgan", !!on);
+  }
+  $("x-royxat").addEventListener("click", e => {
+    const b = e.target.closest("[data-id]");
+    if (b) metkagaUch(b.dataset.id);
+  });
+  $("x-royxat").addEventListener("mouseover", e => {
+    const b = e.target.closest("[data-id]");
+    if (b) { const m = klaster.metkasi(b.dataset.id); if (m) MKBxarita.yorit(m, true); }
+  });
+  $("x-royxat").addEventListener("mouseout", e => {
+    const b = e.target.closest("[data-id]");
+    if (b) { const m = klaster.metkasi(b.dataset.id); if (m) MKBxarita.yorit(m, false); }
+  });
+
+  /* ---------- Kamerani ko'chirish ----------
+     Varaq old planda bo'lmaganda (xodim boshqa varaqqa o'tgan, havola yangi varaqda ochilgan)
+     CSS o'tishi ishlamaydi: flyTo boshlanadi-yu tugamaydi, moveend kelmaydi va xarita
+     butunlay javob bermay qoladi — quti ochilmaydi, zoom tugmalari ham ishlamaydi.
+     Shuning uchun ko'rinmas varaqda kamera animatsiyasiz ko'chiriladi. Ko'rinadigan varaqda
+     ham qorovul taymer qo'yiladi: siljish belgilangan vaqtda tugamasa xarita to'xtatiladi va
+     maqsad ko'rinish animatsiyasiz o'rnatiladi, shunda boshqaruv xodimga qaytadi. */
+  const KOCHISH = .6;                                   /* siljish davomiyligi, soniya */
+  let qorovul = 0;
+  xarita.on("moveend", () => clearTimeout(qorovul));
+  const tinch = darhol => !!darhol || document.visibilityState === "hidden";
+  function kameraKochir(darhol, chek, joy, zoom, soz, tugadi) {
+    clearTimeout(qorovul);
+    const jim = tinch(darhol);
+    const joyla = animatsiyasiz => chek
+      ? xarita.fitBounds(chek, Object.assign({}, soz, {animate: !animatsiyasiz, duration: KOCHISH}))
+      : xarita.setView(joy, zoom, Object.assign({}, soz, {animate: !animatsiyasiz, duration: KOCHISH}));
+    if (jim) { joyla(true); if (tugadi) tugadi(); return; }
+    if (chek) xarita.flyToBounds(chek, Object.assign({}, soz, {duration: KOCHISH}));
+    else xarita.flyTo(joy, zoom, Object.assign({}, soz, {duration: KOCHISH}));
+    const oxir = () => { clearTimeout(qorovul); if (tugadi) tugadi(); };
+    xarita.once("moveend", oxir);
+    qorovul = setTimeout(() => {
+      xarita.off("moveend", oxir);
+      xarita.stop();
+      joyla(true);
+      if (tugadi) tugadi();
+    }, KOCHISH * 1000 + 900);
+  }
+
+  /* darhol — sahifa ochilishidagi birinchi joylashtirish: animatsiyasiz */
+  function obyektgaOch(id, darhol) {
+    const j = JOY.get(id);
+    if (!j) return false;
+    holat.tanlangan = id;
+    varaqYop();
+    const jim = tinch(darhol);
+    const daraja = Math.max(jim ? 0 : xarita.getZoom(), j.daraja === "aniq" ? 14 : 10);
+    const korsat = () => {
+      const m = klaster.korsat(id);
+      if (m && !m.isPopupOpen()) {
+        /* Leaflet qutini o'zi suradi, lekin animatsiya bilan: fonda ochilgan varaqda u tugamaydi va
+           quti xarita tepasidan qirqilib qoladi. Sahifa ochilishida siljish o'lchov bo'yicha,
+           animatsiyasiz bajariladi. */
+        const quti = jim ? m.getPopup() : null;
+        if (quti) quti.options.autoPan = false;
+        m.openPopup();
+        if (quti) { qutiniSig(); quti.options.autoPan = true; }
+      }
+      royxatBelgila();
+    };
+    kameraKochir(darhol, null, [j.lat, j.lng], daraja, null, korsat);
+    const y = obyektlar.find(x => x.id === id);
+    $("x-eshittir").innerHTML = y ? '<span data-tarjimasiz>' + esc(y.qisqa || y.nom) + "</span> — <span>xaritada ko'rsatildi</span>" : "";
+    tarjimaQil($("x-eshittir"));
+    return true;
+  }
+  function metkagaUch(id) { obyektgaOch(id, false); }
+
+  /* Quti xarita ustidagi boshqaruvlar ostiga tushmasin: chap tepada qatlam tanlovi va holat yozuvi,
+     o'ngda asboblar ustuni turadi. To'ldirish bindPopup dagi qiymatlar bilan bir xil. */
+  function qutiniSig() {
+    const el = document.querySelector(".leaflet-popup");
+    if (!el) return;
+    /* Telefonda karta ekranning pastida qoladi va quti unga sig'maydi: bunday holatda sahifa
+       avval kartaga suriladi (silliq surish yo'q: fonda ochilgan varaqda u tugamaydi). */
+    let r = xarita.getContainer().getBoundingClientRect();
+    let q = el.getBoundingClientRect();
+    if (r.top > 8 && Math.min(r.bottom, innerHeight) - Math.max(r.top, 0) < q.height + 54) {
+      window.scrollBy(0, r.top - 8);
+      r = xarita.getContainer().getBoundingClientRect();
+      q = el.getBoundingClientRect();
+    }
+    /* Karta oynadan baland bo'lishi mumkin: hisob faqat ko'rinib turgan qismi bo'yicha yuritiladi,
+       aks holda quti oynaning pastidan chiqib ketadi. */
+    const k = {top: Math.max(r.top, 0), bottom: Math.min(r.bottom, innerHeight),
+      left: Math.max(r.left, 0), right: Math.min(r.right, innerWidth)};
+    k.height = k.bottom - k.top;
+    /* Odatda quti tepadan 150 px pastda turadi (u yerda qatlam tanlovi va holat yozuvi bor).
+       Baland quti sig'masa, bu oraliq qisqaradi: yozuvning to'liq ko'rinishi muhimroq. */
+    const bosh = k.top + Math.max(8, Math.min(150, k.height - 46 - q.height));
+    let dx = 0, dy = 0;
+    if (q.top < bosh) dy = q.top - bosh;
+    else if (q.bottom > k.bottom - 46) dy = Math.min(q.bottom - (k.bottom - 46), q.top - bosh);
+    if (q.left < k.left + 30) dx = q.left - (k.left + 30);
+    else if (q.right > k.right - 76) dx = Math.min(q.right - (k.right - 76), q.left - (k.left + 30));
+    /* panBy animatsiya bilan suradi (fonda tugamaydi), shuning uchun markaz to'g'ridan-to'g'ri hisoblanadi */
+    if (dx || dy) xarita.setView(xarita.unproject(xarita.project(xarita.getCenter()).add([dx, dy])),
+      xarita.getZoom(), {animate: false});
+  }
+
+  /* Sahifa ochilishidagi ko'rinish: havolada aktiv ko'rsatilgan bo'lsa o'sha metka, aks holda hudud.
+     Metka bir marta ochiladi: karta o'lchami keyin o'zgarsa ham ko'rinish qayta markazlashtirilmaydi,
+     aks holda quti sig'ishi uchun qilingan siljish bekor bo'lib, quti chekkadan qirqilib qoladi. */
+  let boshKorsatildi = false;
+  /* Filtr qo'yilmagan bo'lsa xarita xodimning filiali hududidan ochiladi: kichik ekranda ham
+     birinchi ko'rinishda o'z hududi ko'rinadi, butun mamlakat emas. Filtr o'zgarmaydi. */
+  const FILIAL_HUDUD = (() => {
+    const fk = MKB.filialKod && MKB.filialKod();
+    if (!fk) return null;
+    const f = (D.FILIALLAR || []).find(x => (x.id || x.kod) === fk);
+    return f && HK[f.hudud] ? f.hudud : null;
+  })();
+  function boshlangichKorinish(darhol) {
+    if (boshId) {
+      if (boshKorsatildi) return;
+      if (obyektgaOch(boshId, darhol)) { boshKorsatildi = true; return; }
+    }
+    hududgaUch(holat.hudud || (urlBor ? null : FILIAL_HUDUD), darhol);
+  }
+
+  function holatQatori() {
+    const el = $("x-holat");
+    if (olchagich.holati()) return;
+    if (!korinadigan.length) {
+      el.innerHTML = "<span>Filtrga mos aktiv yo'q. Filtrni kengaytiring yoki tozalang.</span>";
+    } else {
+      const s = {aniq: 0, tuman: 0, hudud: 0};
+      korinadigan.forEach(y => { const j = JOY.get(y.id); if (j) s[j.daraja]++; });
+      const qism = [];
+      const q = (son, matn) => { if (son) qism.push("<b data-tarjimasiz>" + son + "</b> <span>" + matn + "</span>"); };
+      q(s.aniq, "tasi aniq koordinatada");
+      q(s.tuman, "tasi tuman markazida");
+      q(s.hudud, "tasi viloyat markazida");
+      /* Aktivlar soni hujjat shapkasida turibdi, bu yerda takrorlanmaydi: bu satr faqat
+         metkalar joyi qanchalik aniq ekanini aytadi */
+      el.innerHTML = "<span>Joy aniqligi</span>: " + qism.join(", ") + ".";
+    }
+    tarjimaQil(el);
+  }
+
+  /* ============================================================
+     7. Yangilash: bitta joydan hamma ko'rinish
+     ============================================================ */
+  function yangila() {
+    const B = BELGILAR[holat.belgi];
+    /* Bo'yoq shkalasi legenda filtridan oldingi to'plamdan hisoblanadi: legendadagi oraliqlar
+       va sonlar bitta bosqich tanlanganda ham joyida qoladi. */
+    korinadigan = obyektlar.filter(y => mos(y) && JOY.has(y.id));
+    shkalaQur();
+    if (holat.bosqich != null) korinadigan = korinadigan.filter(y => {
+      const v = hududQiymat[hududKod(y)];
+      return v != null && bosqich(v) === holat.bosqich;
+    });
+    const toifaAsosi = korinadigan;
+    if (holat.yashirin.size) korinadigan = korinadigan.filter(y => !holat.yashirin.has(B.toifa(y)));
+    if (holat.tanlangan && !korinadigan.some(y => y.id === holat.tanlangan)) holat.tanlangan = null;
+    asos.uslubla();
+    asos.tanla(holat.hudud);
+    klaster.malumot(korinadigan.map(y => {
+      const j = JOY.get(y.id);
+      const t = B.toifalar.find(x => x.kalit === B.toifa(y));
+      return {id: y.id, lat: j.lat, lng: j.lng, daraja: j.daraja, kod: j.kod,
+        rang: MKB.rangQiymat(t ? t.rang : "var(--matn-4)"), yozuv: y};
+    }));
+    if (holat.tanlangan) klaster.belgila(holat.tanlangan);
+    legendaChiz();
+    belgiLegenda(toifaAsosi);
+    hududYozuvlari();
+    royxatChiz();
+    holatQatori();
+    const filtrSoni = ["hudud", "tur", "holat", "himoya", "muddat", "filial"].filter(k => holat[k]).length +
+      (holat.q ? 1 : 0) + (holat.bosqich != null ? 1 : 0) + (holat.yashirin.size ? 1 : 0);
+    $("x-filtr-son").innerHTML = filtrSoni ? '<b data-tarjimasiz>' + filtrSoni + "</b>" : "";
+    $("x-tozala").hidden = !filtrSoni;
+    $("hs-meta").innerHTML = '<span>Xaritada</span> <b data-tarjimasiz>' + korinadigan.length + "</b> " +
+      '<span>ta aktiv</span> · <span data-tarjimasiz>' + esc(MKB.pul(D.yaxlit(korinadigan.reduce((a, y) => a + ((y.balans && y.balans.qiymat) || 0), 0)))) + "</span>";
+    tarjimaQil($("hs-meta"));
+    eslab();
+    havolaYangila();
+  }
+
+  /* ---------- Hudud tanlash ---------- */
+  /* darhol — sahifa ochilishidagi birinchi joylashtirish: animatsiyasiz, chunki hali ko'rish kerak narsa yo'q.
+     animate:false shart: Leaflet ikki pog'onadan kichik farqni fitBounds'da ham siljish bilan chizadi,
+     siljish esa CSS o'tishiga bog'liq. Sahifa fonda ochilsa (boshqa ilovaga o'tilgan, havola yangi
+     varaqda ochilgan) o'tish tugamaydi va xarita boshlang'ich ko'rinishida qotib qoladi. */
+  function hududgaUch(kod, darhol) {
+    if (!kod) { qaytaKor(darhol); return; }
+    const chek = MKB.geo.chegara(kod);
+    if (chek) kameraKochir(darhol, chek, null, null, {padding: [30, 30], maxZoom: 11});
+    else if (HK[kod]) kameraKochir(darhol, null, [HK[kod].lat, HK[kod].lng], 8, null);
+  }
+  function hududTanla(kod) {
+    if (olchagich.holati()) return;   /* o'lchash paytida bosish chiziq nuqtasi bo'ladi, filtr emas */
+    holat.hudud = kod || null;
+    holat.tanlangan = null;
+    const s = $("x-f-hudud");
+    if (s) s.value = holat.hudud || "";
+    xarita.closePopup();
+    hududgaUch(holat.hudud);
+    yangila();
+    varaqYop();
+  }
+  function qaytaKor(darhol) {
+    const q = asos.hududQatlam && asos.hududQatlam.getBounds();
+    if (q && q.isValid()) kameraKochir(darhol, q, null, null, {padding: [24, 24]});
+    else kameraKochir(darhol, null, [41.4, 63.9], 6, null);
+  }
+
+  /* ============================================================
+     8. Asboblar
+     ============================================================ */
+  function olchovTugmalari() {
+    $("x-olchov-tanlov").innerHTML = Object.keys(OLCHOVLAR).map(k =>
+      '<button type="button" data-olchov="' + k + '" aria-pressed="' + (holat.olchov === k) + '">' + esc(OLCHOVLAR[k].nom) + "</button>").join("");
+    tarjimaQil($("x-olchov-tanlov"));
+  }
+  $("x-olchov-tanlov").addEventListener("click", e => {
+    const b = e.target.closest("[data-olchov]");
+    if (!b) return;
+    holat.olchov = b.dataset.olchov;
+    olchovTugmalari();
+    yangila();
+  });
+
+  function belgiTugmalari() {
+    $("x-belgi-tanlov").innerHTML = Object.keys(BELGILAR).map(k =>
+      '<button type="button" data-belgi="' + k + '" aria-pressed="' + (holat.belgi === k) + '">' + esc(BELGILAR[k].nom) + "</button>").join("");
+    tarjimaQil($("x-belgi-tanlov"));
+  }
+  $("x-belgi-tanlov").addEventListener("click", e => {
+    const b = e.target.closest("[data-belgi]");
+    if (!b) return;
+    holat.belgi = b.dataset.belgi;
+    belgiTugmalari();
+    yangila();
+  });
+
+  /* Ko'cha qatlami tugmasi bir marta qo'shiladi va faqat ichki plitka serveri sozlangan
+     bo'lsa: aks holda tanlov bitta variantdan iborat bo'lib qoladi va guruh ko'rsatilmaydi. */
+  function asosQurildi() {
+    const el = $("x-asos");
+    if (el.dataset.qurildi) return;
+    el.dataset.qurildi = "1";
+    const r = raster.royxat || [];
+    if (!r.length) { el.hidden = true; return; }
+    r.forEach(x => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.dataset.asos = x.kalit;
+      b.title = x.nom;
+      b.innerHTML = '<svg class="ic"><use href="#ik-manzil"/></svg><span>' + esc(x.nom) + "</span>";
+      el.appendChild(b);
+    });
+    tarjimaQil(el);
+  }
+  function asosTugmalari() {
+    asosQurildi();
+    document.querySelectorAll("#x-asos [data-asos]").forEach(b =>
+      b.setAttribute("aria-pressed", String((b.dataset.asos || "") === (holat.asos || ""))));
+  }
+  $("x-asos").addEventListener("click", e => {
+    const b = e.target.closest("[data-asos]");
+    if (!b) return;
+    holat.asos = b.dataset.asos || "";
+    if (holat.asos) raster.qoy(holat.asos); else raster.ochir();
+    asos.uslubla();
+    asosTugmalari();
+    eslab();
+    havolaYangila();
+  });
+
+  $("x-qidiruv").value = holat.q;
+  let qidiruvT = 0;
+  $("x-qidiruv").addEventListener("input", e => {
+    clearTimeout(qidiruvT);
+    qidiruvT = setTimeout(() => { holat.q = e.target.value.trim(); yangila(); }, 180);
+  });
+  $("x-tartib").value = holat.tartib;
+  $("x-tartib").addEventListener("change", e => { holat.tartib = e.target.value; eslab(); royxatChiz(); });
+  $("x-tozala").addEventListener("click", () => {
+    ["hudud", "tur", "holat", "himoya", "muddat", "filial"].forEach(k => { holat[k] = null; });
+    holat.q = "";
+    holat.bosqich = null;
+    holat.yashirin.clear();
+    $("x-qidiruv").value = "";
+    filtrChiz();
+    qaytaKor();
+    yangila();
+  });
+  $("x-qayta").addEventListener("click", () => { xarita.closePopup(); klaster.yoyYop(); qaytaKor(); });
+  $("x-olchagich").addEventListener("click", () => {
+    const yoq = !olchagich.holati();
+    if (yoq) { olchagich.yoq(); xarita.closePopup(); } else olchagich.ochir();
+    $("x-olchagich").setAttribute("aria-pressed", String(yoq));
+    if (!yoq) holatQatori();
+    else {
+      $("x-holat").innerHTML = "<span>Masofa o'lchash: xaritada ikkita yoki undan ko'p nuqta belgilang.</span>";
+      tarjimaQil($("x-holat"));
+    }
+  });
+  $("x-toliq").addEventListener("click", () => {
+    const k = $("x-karta");
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (k.requestFullscreen) k.requestFullscreen().catch(() => MKB.toast("Brauzer to'liq ekranni ochmadi", "xavf"));
+  });
+  document.addEventListener("fullscreenchange", () => {
+    $("x-toliq").setAttribute("aria-pressed", String(!!document.fullscreenElement));
+    setTimeout(() => xarita.invalidateSize(), 120);
+  });
+  $("x-ulash").addEventListener("click", async () => {
+    havolaYangila();
+    try {
+      await navigator.clipboard.writeText(location.href);
+      MKB.toast("Havola nusxalandi: shu ko'rinish ochiladi", "nusxa");
+    } catch (e) {
+      MKB.toast("Havolani nusxalab bo'lmadi: " + (e && e.message ? e.message : "brauzer ruxsat bermadi"), "xavf");
+    }
+  });
+  function csv() {
+    const r = korinadigan.slice().sort(TARTIB[holat.tartib] || TARTIB.nom);
+    MKB.csv("xarita-" + D.sanaYoz(D.bugun()).replace(/\./g, "-") + ".csv",
+      /* Hudud ustuniga viloyat yoziladi, manzil tafsiloti esa alohida ustunda turadi: ilgari
+         ikkalasi aralashib, Hudud ustuniga tuman nomi tushar va Excelda hudud bo'yicha
+         yig'ilgan raqamlar reyestrga to'g'ri kelmasdi. */
+      ["Reyestr raqami", "Nomi", "Turi", "Hudud", "Tuman", "Manzil boshi", "Filial", "Holati", "Balans qiymati, mln so'm",
+        "Balans sanasi", "Muddat holati", "Qo'riqlash", "Nazorat indeksi", "Kenglik", "Uzunlik", "Joy aniqligi"],
+      r.map(y => {
+        const j = JOY.get(y.id) || {};
+        const q = qoriqlashTuri(y);
+        const hk = hududKod(y);
+        return [y.id, y.qisqa || y.nom, y.tur,
+          (hk && HK[hk] ? HK[hk].nom : null) || y.hudud || "", y.tuman || "", y.hududToliq || "", y.filial || "", y.holat,
+          (y.balans && y.balans.qiymat) || "", (y.balans && y.balans.sana) || "",
+          (D.MUDDAT_HOLATLARI[D.muddatHisobi(y).holat] || {}).nom || "",
+          q === "yoq" ? "Qo'riqlanmaydi" : ((D.QORIQLASH_TURLARI || []).find(t => t.kalit === q) || {}).nom || q,
+          (D.nazoratIndeksi(y) || {}).ball || "", j.lat || "", j.lng || "", JOY_NOMI[j.daraja] || ""];
+      }));
+    MKB.toast("CSV fayl yuklab olindi: " + r.length + " ta qator", "yuklab");
+  }
+  $("x-csv").addEventListener("click", csv);
+  $("x-csv2").addEventListener("click", csv);
 
   /* ---------- Pastki varaq (telefon) ---------- */
-  const yon = document.getElementById("xarita-yon"), parda = document.getElementById("varaq-parda"), vt = document.getElementById("varaq-tugma");
-  function varaqYop(){ yon.classList.remove("ochiq"); parda.classList.remove("ochiq"); vt.setAttribute("aria-expanded", "false"); }
-  vt.addEventListener("click", () => { yon.classList.add("ochiq"); parda.classList.add("ochiq"); vt.setAttribute("aria-expanded", "true"); });
+  const yon = $("x-yon"), parda = $("x-parda"), vt = $("x-varaq-tugma");
+  function varaqYop() { yon.classList.remove("ochiq"); parda.classList.remove("ochiq"); vt.setAttribute("aria-expanded", "false"); }
+  vt.addEventListener("click", () => {
+    yon.classList.add("ochiq");
+    parda.classList.add("ochiq");
+    vt.setAttribute("aria-expanded", "true");
+    const s = yon.querySelector("select");
+    if (s) s.focus();
+  });
   parda.addEventListener("click", varaqYop);
-  document.addEventListener("keydown", e => { if (e.key === "Escape") varaqYop(); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (olchagich.holati()) { olchagich.ochir(); $("x-olchagich").setAttribute("aria-pressed", "false"); holatQatori(); return; }
+    varaqYop();
+  });
 
-  document.querySelectorAll("[data-qatlam]").forEach(b => b.addEventListener("click", () => {
-    holat.qatlam = b.dataset.qatlam;
-    holat.yashirin.clear();
-    eslab();
-    const p = new URLSearchParams(location.search);
-    p.set("qatlam", holat.qatlam);
-    history.replaceState(null, "", location.pathname + "?" + p.toString());
-    qatlamTugmalari();
-    chiz();
-  }));
-  function qatlamTugmalari(){
-    document.querySelectorAll("[data-qatlam]").forEach(b => { const f = b.dataset.qatlam === holat.qatlam; b.classList.toggle("faol", f); b.setAttribute("aria-pressed", f); });
+  /* ============================================================
+     9. Ishga tushirish
+     ============================================================ */
+  olchovTugmalari();
+  belgiTugmalari();
+  asosTugmalari();
+  filtrChiz();
+  zoomHolati();
+  if (holat.asos) raster.qoy(holat.asos);
+  yangila();
+
+  /* Havoladagi aktiv xaritaga tushmasa — sababi aytiladi, ko'rinish odatdagidek quriladi */
+  if (boshId && !JOY.has(boshId)) {
+    const bor = obyektlar.some(y => y.id === boshId);
+    MKB.toast(bor ? "Bu aktivning joylashuvi kiritilmagan: xaritada ko'rsatib bo'lmadi"
+      : "Bu aktiv xaritada yo'q: u balansdan chiqarilgan yoki sizga ochiq emas", "xavf");
+    boshId = null;
   }
 
-  qatlamTugmalari();
-  hududChiz();
-  taxminiyChiz();
-  chiz();
-  const boshNuqtalar = korinishNuqtalari(holat.hudud);
-  if (boshNuqtalar.length > 1) xarita.fitBounds(boshNuqtalar, {padding: [30, 30], maxZoom: holat.hudud ? 12 : 11});
-  else if (boshNuqtalar.length) xarita.setView(boshNuqtalar[0], 10);
+  /* Karta o'lchami o'zgarganda (yon menyu yig'ilishi, oyna kengligi, to'liq ekran) Leaflet o'z
+     o'lchamini qayta o'qishi kerak. Xodim xaritaga hali tegmagan bo'lsa ko'rinish qaytadan moslanadi. */
+  let avtoKorinish = !eskiKorinish;
+  if (eskiKorinish) xodimKorinishi = true;   /* tiklangan ko'rinish yana saqlanaveradi */
+  ["mousedown", "wheel", "touchstart", "keydown"].forEach(t =>
+    $("x-joy").addEventListener(t, () => { avtoKorinish = false; xodimKorinishi = true; }, {passive: true}));
+  /* Zoom tugmalari ham xodimning tanlovi: ular xarita maydonidan tashqarida turadi */
+  ["x-qayta", "x-toliq", "x-kattalash", "x-kichraytir"].forEach(k => { const b = $(k); if (b) b.addEventListener("click", () => { xodimKorinishi = true; }); });
+  if (window.ResizeObserver) new ResizeObserver(() => {
+    xarita.invalidateSize({animate: false});
+    if (avtoKorinish && asos.hududQatlam) boshlangichKorinish(true);
+  }).observe($("x-karta"));
+
+  asos.tayyor.then(() => {
+    xarita.invalidateSize({animate: false});
+    asos.uslubla();
+    asos.tanla(holat.hudud);
+    hududYozuvlari();
+    if (eskiKorinish) return;   /* xodim oxirgi marta qoldirgan ko'rinish tiklandi */
+    boshlangichKorinish(true);
+  }).catch(() => {
+    $("x-holat").innerHTML = "<span>Chegara fayli ochilmadi: xarita metkalar bilan ishlaydi, hududlar bo'yalmaydi.</span>";
+    tarjimaQil($("x-holat"));
+  });
+  if (chegaraXato) MKB.toast("Chegara fayli ochilmadi. Metkalar hudud markaziga qo'yildi", "xavf");
   setTimeout(() => xarita.invalidateSize(), 200);
+  } catch (e) {
+    /* Xatoning o'z matni saqlanadi: "Ma'lumotni yuklab bo'lmadi" sarlavhasi ostida aynan
+       shu satr turadi, shuning uchun unda sabab yozilgan bo'lishi kerak */
+    throw new Error((e && e.message) || "Xarita ma'lumotini yuklab bo'lmadi");
+  }
   },
 });
 </script>

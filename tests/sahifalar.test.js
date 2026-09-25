@@ -119,10 +119,10 @@ tekshir("olib tashlangan sahifalar yo'q va ularga havola qolmagan", () => {
 console.log("\n3. Umumiy talablar");
 tekshir("har bir sahifada keshlash kaliti yagona, ish sahifalarida bir xil", () => {
   const umumiy = new Map();
-  sahifalar.filter(f => !ALOHIDA_VERSIYA.has(f)).forEach(f => {
+  sahifalar.forEach(f => {
     const v = new Set([...matn(f).matchAll(/\?v=(\d+)/g)].map(m => m[1]));
     talab(v.size <= 1, f + ": bir sahifada turli kalitlar " + [...v].join(", "));
-    if (v.size) { const k = [...v][0]; umumiy.set(k, (umumiy.get(k) || []).concat(f)); }
+    if (v.size && !ALOHIDA_VERSIYA.has(f)) { const k = [...v][0]; umumiy.set(k, (umumiy.get(k) || []).concat(f)); }
   });
   if (umumiy.size > 1){
     const kam = [...umumiy.entries()].sort((a, b) => a[1].length - b[1].length)[0];

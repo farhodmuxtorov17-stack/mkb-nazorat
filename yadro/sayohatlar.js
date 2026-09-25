@@ -140,7 +140,10 @@ window.MKB_SAYOHATLAR = {
     sarlavha: T("Inspektor paneli bilan tanishuv", "Знакомство с панелью инспектора"),
     tavsif: T("Ko'rik navbati, kechikkanlar, inventarizatsiya va hodisalar. 2 daqiqa", "Очередь осмотров, просроченные, инвентаризация и инциденты. 2 минуты"),
     qadamlar: [
-      Q("panel-nazorat.html", S("kpi"), "Bugungi raqamlar", "Цифры на сегодня", "7 kundagi ko'riklar, kechikkanlar, ochiq hodisalar va sug'urtasiz aktivlar.", "Осмотры на 7 дней, просроченные, открытые инциденты и активы без страховки."),
+      Q("panel-nazorat.html", S("doira"), "Ko'riklar doirasi", "Охват осмотров", "«Mening ko'riklarim» sizga tayinlanganlarini, «Barcha ko'riklar» filialdagi hammasini ko'rsatadi. Tanlov raqamlarga ham ta'sir qiladi va eslab qolinadi.",
+        "«Mening ko'riklarim» показывает назначенные вам осмотры, «Barcha ko'riklar» — все по филиалу. Выбор влияет и на цифры, и запоминается."),
+      Q("panel-nazorat.html", S("kpi"), "Bugungi raqamlar", "Цифры на сегодня", "7 kundagi ko'riklar, kechikkanlar, ochiq hodisalar, sug'urtasiz aktivlar va 24 soatdan ortiq aloqasiz qurilmalar.",
+        "Осмотры на 7 дней, просроченные, открытые инциденты, активы без страховки и устройства без связи более 24 часов."),
       Q("panel-nazorat.html", S("bugun-koriklar"), "Ko'rik navbati", "Очередь осмотров", "Kechikkan, bugungi va rejadagi ko'riklar. «Ko'rikni boshlash» eng shoshilinchining dalolatnomasini ochadi.",
         "Просроченные, сегодняшние и плановые осмотры. «Ko'rikni boshlash» открывает акт самого срочного."),
       Q("panel-nazorat.html", S("hodisalar"), "Ochiq hodisalar", "Открытые инциденты", "Jiddiylik bo'yicha. Hodisani bossangiz, uning varaqasi ochiladi.", "По важности. Нажмите на инцидент, чтобы открыть его карточку."),

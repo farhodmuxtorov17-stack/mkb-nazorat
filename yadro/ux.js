@@ -1147,7 +1147,8 @@ window.MKB_UX_SOF = (function(){
         const gid = sid + "-g" + (k++);
         return '<div class="bp-guruh natija-guruh" role="group" aria-labelledby="' + gid + '"><div class="bp-guruh-nom natija-nom" id="' + gid + '">' + e_(gr.nom) + "</div>" +
           gr.bandlar.map(b => '<a class="bp-band natija-band" role="option" tabindex="-1" aria-selected="false" id="' + sid + "-b" + (k++) + '" href="' + e_(b.havola) + '">' +
-            ik_(b.ikonka || "hujjat") + '<span class="matn"><b>' + e_(b.sarlavha) + "</b>" + (b.izoh ? (/\d/.test(b.izoh) ? '<span data-tarjimasiz>' : "<span>") + e_(b.izoh) + "</span>" : "") + "</span>" +
+            ik_(b.ikonka || "hujjat") + '<span class="matn"><b>' + MKB.matnQismlari(b.sarlavha) + "</b>" +
+            (b.izoh ? "<span>" + MKB.matnQismlari(b.izoh) + "</span>" : "") + "</span>" +
             ik_("ong", "mitti") + "</a>").join("") + "</div>";
       }).join("") : '<div class="bp-bosh">' + ik_("izlash") + "<b>Hech narsa topilmadi</b><span>Boshqa so&#39;z yoki yozuv raqamini yozib ko&#39;ring</span></div>";
       tarjima(royxat);
@@ -1868,7 +1869,7 @@ window.MKB_UX_SOF = (function(){
         kartaniAyir();
       });
     };
-    const ro = window.ResizeObserver ? new ResizeObserver(joylash) : null;
+    const ro = window.ResizeObserver ? new ResizeObserver(() => { if (ro.mkbTekshir) ro.mkbTekshir(); joylash(); }) : null;
     if (ro && nishon) ro.observe(nishon);
     window.addEventListener("resize", joylash);
     window.addEventListener("scroll", joylash, true);
@@ -1934,10 +1935,11 @@ window.MKB_UX_SOF = (function(){
     };
     karta.addEventListener("click", tugmaBos);
     document.addEventListener("keydown", klav, true);
-    let eskiSkrollChek = null;
+    let eskiSkrollChek = null, eskiSkrollChekYuq = null;
     function yop(fokusQaytar){
       cancelAnimationFrame(rafT); clearTimeout(avtoT);
       if (nishon && eskiSkrollChek !== null) nishon.style.scrollMarginBottom = eskiSkrollChek;
+      if (nishon && eskiSkrollChekYuq !== null) nishon.style.scrollMarginTop = eskiSkrollChekYuq;
       if (ro) ro.disconnect();
       window.removeEventListener("resize", joylash);
       window.removeEventListener("scroll", joylash, true);
@@ -1948,7 +1950,12 @@ window.MKB_UX_SOF = (function(){
       if (fokusQaytar === false) return;
       /* Sayohat dastur orqali boshlangan bo'lsa oldingi fokus BODY bo'ladi — u holda ma'noli nishonga qaytariladi */
       let qayt = oldingi && oldingi.focus && oldingi !== document.body && document.contains(oldingi) ? oldingi : null;
-      if (!qayt && nishon && nishon.isConnected) qayt = nishon;
+      /* Nishon odatda butun <section class="karta"> bo'ladi: unga fokus berilsa kartaning atrofida
+         qora kontur qolib ketadi. Shuning uchun fokus nishon ichidagi birinchi boshqaruvga beriladi. */
+      if (!qayt && nishon && nishon.isConnected)
+        qayt = /^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(nishon.tagName) ? nishon
+          : Array.from(nishon.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex="0"]'))
+            .find(x => x.offsetParent !== null) || null;
       if (!qayt) qayt = document.getElementById("yordam-tugma");
       if (!qayt || !qayt.focus) return;
       if (qayt.tabIndex < 0 && !/^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(qayt.tagName)) qayt.tabIndex = -1;
@@ -1961,10 +1968,31 @@ window.MKB_UX_SOF = (function(){
       karta.classList.toggle("varaq", torEkran);
       eskiSkrollChek = nishon.style.scrollMarginBottom;
       if (torEkran) nishon.style.scrollMarginBottom = (karta.offsetHeight + 16) + "px";
-      nishon.scrollIntoView({block: "center", behavior: kamHarakat() ? "auto" : "smooth"});
+      /* Ekranga sig'maydigan blok (jadval, doska, uzun ro'yxat) markazga surilsa uning sarlavhasi,
+         ustun nomlari va asboblari ekrandan yuqorida qolib ketadi — karta ko'rinmaydigan narsa haqida
+         gapiradi. Bunday nishon yuqori chetiga tekislanadi: yoritilgan soha blok boshidan boshlanadi. */
+      const bandPast = () => (torEkran ? karta.offsetHeight + 16 : 0);
+      const baland = nishon.getBoundingClientRect().height > window.innerHeight - bandPast() - 32;
+      eskiSkrollChekYuq = nishon.style.scrollMarginTop;
+      if (baland) nishon.style.scrollMarginTop = "96px";
+      const surish = tez => nishon.scrollIntoView({block: baland ? "start" : "center",
+        behavior: tez ? "auto" : (kamHarakat() ? "auto" : "smooth")});
+      surish(false);
+      /* Sahifa yuklanishda nishondan yuqoridagi kontent hali chizilayotgan bo'lsa nishon ekrandan
+         chiqib ketadi va teshik balandligi nolga tushadi: har takrorda joyi tekshirilib qayta suriladi */
+      const joydami = () => {
+        if (!nishon.isConnected) return true;
+        const r = nishon.getBoundingClientRect();
+        return r.bottom > 0 && r.top < window.innerHeight - bandPast();
+      };
       let n2 = 0;
-      const barqaror = () => { joylash(); if (++n2 < 12) setTimeout(barqaror, 60); };
+      const barqaror = () => {
+        if (!joydami()) surish(true);
+        joylash();
+        if (++n2 < 12) setTimeout(barqaror, 60);
+      };
       barqaror();
+      if (ro) ro.mkbTekshir = () => { if (!joydami()) surish(true); };
     } else joylash();
     karta.tabIndex = -1;
     setTimeout(() => { const b = karta.querySelector('[data-sy="keyingi"]'); (b || karta).focus(); }, 40);

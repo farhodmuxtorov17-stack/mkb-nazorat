@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKB — Obyektni tahrirlash</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
+<link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css?v=26092200">
 <style>
 .forma-bolim{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--matn-3);font-weight:600;margin:6px 0 -4px}
 .forma-bolim:not(:first-child){margin-top:18px;padding-top:18px;border-top:1px solid var(--chiziq-2)}
@@ -15,6 +16,20 @@
 .ozg-royxat b{font-weight:500}
 .ozg-royxat span{color:var(--matn-3);overflow-wrap:anywhere}
 .ozg-royxat del{color:var(--matn-4)}
+/* Koordinatani xaritadan belgilash */
+.ot-xarita{position:relative;height:316px;border-radius:var(--r-plitka);overflow:hidden;background:var(--plitka)}
+#ot-leaflet{position:absolute;inset:0;z-index:1;cursor:crosshair}
+.ot-xarita .leaflet-container{font-family:var(--shrift);background:var(--plitka)}
+.ot-xarita .leaflet-control-zoom a{width:40px;height:40px;line-height:40px;font-size:20px}
+.ot-xarita .leaflet-control-attribution{padding:2px 8px;border-radius:9px 0 0 0;font-size:9.5px;line-height:1.35;
+  color:var(--matn-3);background:rgba(255,255,255,.9)}
+.ot-xarita .leaflet-control-attribution a{color:var(--matn-2)}
+.ot-amallar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ot-holat{display:block;margin-top:8px;font-size:12.5px;color:var(--matn-3)}
+.ot-holat b{font-weight:500;color:var(--matn-2);font-variant-numeric:tabular-nums}
+.ot-holat.xato{color:var(--xavf-matn-yorqin)}
+.ot-holat.xato b{color:var(--xavf-matn-yorqin)}
+@media (max-width:480px){.ot-xarita{height:260px}.ot-amallar .tugma{flex:1;justify-content:center}}
 </style>
 </head>
 <body data-sahifa="aktivlar">
@@ -54,6 +69,24 @@
 <script src="malumot-kirish.js?v=26092200"></script>
 <script src="malumot-indeks.js?v=26092200"></script>
 <script src="tarjima.js?v=26092200"></script>
+<script>
+/* Koordinata maydonining matnlari. Lug'atda bo'lmagan kalitgina qo'shiladi:
+   tarjima.js dagi yozuv ustun turadi (yadro/app.js bilan bir xil qoida). */
+(function(){
+  const L = window.MKB_LUGAT;
+  if (!L || typeof L !== "object") return;
+  const Y = {
+    "Xaritada belgilash": "Отметить на карте",
+    "Xaritani bosing: metka o'sha nuqtaga qo'yiladi": "Нажмите на карту: метка встанет в эту точку",
+    "Metkani surib aniqlashtiring": "Уточните перетаскиванием метки",
+    "Nuqta O'zbekiston chegarasidan tashqarida": "Точка за пределами Узбекистана",
+    "Nuqta obyekt hududidan tashqarida": "Точка вне региона объекта",
+    "Manzildagi tuman topilmadi": "Район из адреса не найден",
+    "Xarita chegaralarini yuklab bo'lmadi": "Не удалось загрузить границы карты"
+  };
+  Object.keys(Y).forEach(k => { if (L[k] == null) L[k] = Y[k]; });
+})();
+</script>
 <script src="yadro/ikonlar.js?v=26092200"></script>
 <script src="yadro/daraxt.js?v=26092200"></script>
 <script src="yadro/chizma.js?v=26092200"></script>
@@ -61,6 +94,9 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="yadro/geo.js?v=26092200"></script>
+<script src="assets/vendor/leaflet/leaflet.js?v=26092200"></script>
+<script src="yadro/xarita.js?v=26092200"></script>
 <script>
 MKB.sahifaYukla({joylar: {forma: ["qator", 8], ozgarishlar: ["qator", 3], oxirgi: ["qator", 3]}, xato: "Obyekt ma'lumotlarini yuklab bo'lmadi", ish: async () => {
   if (document.readyState === "loading") await new Promise(r => document.addEventListener("DOMContentLoaded", r));
@@ -77,7 +113,11 @@ MKB.sahifaYukla({joylar: {forma: ["qator", 8], ozgarishlar: ["qator", 3], oxirgi
 
   const bugun = D.bugun();
   const iso = s => { const d = D.sanaOqi(s); return d ? d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") : ""; };
-  const b = y.balans || {}, h = y.huquq || {}, md = y.maydon || {}, joy = y.joy || {};
+  /* Koordinata maydonlariga faqat aniq nuqta yoziladi. Tuman yoki viloyat markaziga qo'yilgan
+     taxminiy joy (joy.aniq === false) bu yerda ko'rsatilmaydi: u xodim kiritgan koordinata emas,
+     maydonda turgani esa uni aniq deb saqlashga olib keladi. */
+  const b = y.balans || {}, h = y.huquq || {}, md = y.maydon || {};
+  const joy = y.joy && y.joy.aniq ? y.joy : {};
   /* Lot, ijara, bo'lib to'lash va chiqim holatlari tegishli amal orqali o'rnatiladi */
   const QOLDA = ["Balansda", "Rasmiylashtirilmoqda", "Sotuvga tayyorlanmoqda"];
   const holatlar = D.HOLATLAR.filter(x => QOLDA.indexOf(x.nom) >= 0 || x.nom === y.holat);
@@ -104,6 +144,12 @@ MKB.sahifaYukla({joylar: {forma: ["qator", 8], ozgarishlar: ["qator", 3], oxirgi
     maydon("manzil", "Manzil", inp("manzil", y.manzil, ' maxlength="200" required data-xato="Manzilni kiriting"'), {keng: true, majburiy: true}) +
     maydon("lat", "Kenglik", inp("lat", joy.lat, ' type="number" step="any" inputmode="decimal" placeholder="41.3111"'), {izoh: "37 dan 46 gacha"}) +
     maydon("lng", "Uzunlik", inp("lng", joy.lng, ' type="number" step="any" inputmode="decimal" placeholder="69.2797"'), {izoh: "55 dan 74 gacha"}) +
+    '<div class="maydon keng" id="joy"><span class="maydon-yorliq">Xaritada belgilash</span>' +
+      '<div class="ot-xarita"><div id="ot-leaflet" role="application" aria-label="Xaritada belgilash"></div></div>' +
+      '<div class="ot-amallar">' +
+        '<button type="button" class="tugma tugma-oq tugma-kichik" id="ot-markaz">' + ik("manzil") + "<span>Markazlash</span></button>" +
+        '<button type="button" class="tugma tugma-oq tugma-kichik" id="ot-tozala">' + ik("yopish") + "<span>Tozalash</span></button>" +
+      "</div><span class=\"ot-holat\" id=\"ot-holat\" role=\"status\"></span></div>" +
     '<p class="forma-bolim keng" data-guruh="bino">Maydon, m²</p>' +
     maydon("yer", "Yer maydoni", son("yer", md.yer, "kasr", ' min="0.1"'), {guruh: "bino"}) +
     maydon("qurilishOsti", "Qurilish osti", son("qurilishOsti", md.qurilishOsti, "kasr", ' min="0.1"'), {guruh: "bino"}) +
@@ -146,18 +192,224 @@ MKB.sahifaYukla({joylar: {forma: ["qator", 8], ozgarishlar: ["qator", 3], oxirgi
   const raqam = v => { const s = String(v == null ? "" : v).replace(/\s/g, "").replace(",", "."); if (!s) return null; const n = Number(s); return Number.isFinite(n) ? n : NaN; };
   const QOIDA = {
     hisobvaraq: v => !v || /^\d{5}$/.test(v) || "5 xonali hisobvaraq raqamini kiriting",
+    /* Chekka qiymatlar avval tekshiriladi, keyin nuqta chindan ham O'zbekiston chegarasi ichidami:
+       to'rtburchak Turkmaniston va Qozog'iston cho'lini ham qamrab oladi, poligon esa yo'q. */
     lat: (v, qv) => {
       const lng = raqam($("lng").value);
       if (v == null && lng != null) return "Kenglikni ham kiriting";
-      return v == null || (v >= 37 && v <= 46) || "Kenglik 37 dan 46 gacha bo'ladi";
+      if (v == null) return true;
+      if (!(v >= 37 && v <= 46)) return "Kenglik 37 dan 46 gacha bo'ladi";
+      return lng == null || ichkarida(v, lng) || "Nuqta O'zbekiston chegarasidan tashqarida";
     },
     lng: v => {
       const lat = raqam($("lat").value);
       if (v == null && lat != null) return "Uzunlikni ham kiriting";
-      return v == null || (v >= 55 && v <= 74) || "Uzunlik 55 dan 74 gacha bo'ladi";
+      if (v == null) return true;
+      if (!(v >= 55 && v <= 74)) return "Uzunlik 55 dan 74 gacha bo'ladi";
+      return lat == null || ichkarida(lat, v) || "Nuqta O'zbekiston chegarasidan tashqarida";
     },
     vin: v => turInfo($("rasmTuri").value).turKalit !== "transport" || !v || /^[A-HJ-NPR-Z0-9]{17}$/i.test(v) || "VIN 17 ta belgidan iborat bo'ladi",
   };
+
+  /* ---------- Koordinatani xaritadan belgilash ----------
+     Chegaralar repodagi assets/geo dan o'qiladi: na tashqi geokoder, na tashqi tayl serveri talab qilinadi.
+     Manzildan faqat ko'rinish hisoblanadi — koordinata xodim bosgan nuqtadan olinadi. Tuman markazini
+     koordinata o'rniga yozib qo'yish taqiqlangan: u aniq nuqta emas, reyestrga esa aniq nuqta yoziladi. */
+  let GEO = null;                     /* {hududlar, tumanlar} — yuklangandan keyin */
+  let xKarta = null, xMetka = null, xAsos = null, xTuman = null;
+  const hudKod = y.hududKod || D.hududKodi(y.hudud) || null;
+  const past = s => String(s == null ? "" : s).toLowerCase().replace(/[‘’ʻʼ`´]/g, "'").replace(/\s+/g, " ");
+  const tumanKalit = s => past(s).replace(/\s+(tumani|tuman|shahri|shahar|sh\.)$/, "").trim();
+
+  /* Nuqta poligon ichidami: nur usuli. Teshikli poligonda ichki halqalar chiqarib tashlanadi. */
+  function halqaIchida(r, lat, lng){
+    let ichida = false;
+    for (let i = 0, j = r.length - 1; i < r.length; j = i++){
+      const xi = r[i][0], yi = r[i][1], xj = r[j][0], yj = r[j][1];
+      if ((yi > lat) !== (yj > lat) && lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) ichida = !ichida;
+    }
+    return ichida;
+  }
+  function shaklIchida(f, lat, lng){
+    const g = f && f.geometry;
+    if (!g) return false;
+    const pol = p => p.length && halqaIchida(p[0], lat, lng) && !p.slice(1).some(r => halqaIchida(r, lat, lng));
+    return g.type === "Polygon" ? pol(g.coordinates) : g.coordinates.some(pol);
+  }
+  const hududTop = (lat, lng) => GEO ? GEO.hududlar.features.find(f => shaklIchida(f, lat, lng)) || null : null;
+  const tumanTop = (lat, lng) => GEO ? GEO.tumanlar.features.find(f => shaklIchida(f, lat, lng)) || null : null;
+  /* Chegara fayli hali yuklanmagan bo'lsa tekshiruv o'tkazib yuboriladi: forma bloklanmaydi */
+  function ichkarida(lat, lng){ return !GEO || !!hududTop(lat, lng); }
+
+  /* Manzil matnidan tuman: chegara faylidagi nomlar manzil ichidan qidiriladi. Bu repodagi
+     ma'lumot bo'yicha joylashtirish — tashqi xizmatga so'rov yuborilmaydi. */
+  function manzildanTuman(){
+    if (!GEO) return null;
+    const matn = " " + past((($("manzil") && $("manzil").value) || "") + " " + (y.tuman || "")) + " ";
+    let eng = null;
+    GEO.tumanlar.features.forEach(f => {
+      if (hudKod && f.properties.hudud !== hudKod) return;
+      [f.properties.nom_uz, f.properties.nom_ru].forEach(n => {
+        const k = tumanKalit(n);
+        if (k.length < 4) return;
+        const i = matn.indexOf(k);
+        if (i < 0 || /[a-z0-9']/.test(matn[i - 1] || " ")) return;
+        if (!eng || k.length > eng.uzun) eng = {f: f, uzun: k.length};
+      });
+    });
+    return eng ? eng.f : null;
+  }
+
+  const kord = () => {
+    const lat = raqam($("lat").value), lng = raqam($("lng").value);
+    return Number.isFinite(lat) && Number.isFinite(lng) ? [lat, lng] : null;
+  };
+  function holatYoz(){
+    const el = document.getElementById("ot-holat");
+    if (!el) return;
+    const k = kord();
+    if (!k){
+      const t = manzildanTuman();
+      el.className = "ot-holat";
+      el.innerHTML = (t ? "<b data-tarjimasiz>" + esc(t.properties[document.documentElement.lang === "ru" ? "nom_ru" : "nom_uz"]) + "</b>"
+        : "<span>Manzildagi tuman topilmadi</span>") +
+        " · <span>Xaritani bosing: metka o'sha nuqtaga qo'yiladi</span>";
+    } else if (!ichkarida(k[0], k[1])){
+      el.className = "ot-holat xato";
+      el.innerHTML = "<span>Nuqta O'zbekiston chegarasidan tashqarida</span>";
+    } else {
+      const h = hududTop(k[0], k[1]), t = tumanTop(k[0], k[1]);
+      const nomi = [t && t.properties[document.documentElement.lang === "ru" ? "nom_ru" : "nom_uz"],
+        h && h.properties[document.documentElement.lang === "ru" ? "nom_ru" : "nom_uz"]].filter(Boolean).join(", ");
+      const boshqa = h && hudKod && h.properties.kod !== hudKod;
+      /* Tuman darajasidagi tekshiruv: nuqta hudud ichida, lekin yozuvdagi tumandan boshqasiga
+         tushishi mumkin — namoyish ma'lumotida aynan shunday to'rtta yozuv bor edi va metka
+         xaritada boshqa tumanda turardi. Bu xatoni faqat tuman konturi ko'rsatib beradi. */
+      const kutilgan = manzildanTuman();
+      const tumanBoshqa = !boshqa && kutilgan && t && t.properties.kod !== kutilgan.properties.kod;
+      const kutilganNom = kutilgan && kutilgan.properties[document.documentElement.lang === "ru" ? "nom_ru" : "nom_uz"];
+      el.className = "ot-holat" + (boshqa || tumanBoshqa ? " xato" : "");
+      el.innerHTML = "<b data-tarjimasiz>" + MKB.fmt(D.yaxlit(k[0], 5)) + ", " + MKB.fmt(D.yaxlit(k[1], 5)) + "</b>" +
+        (nomi ? ' · <b data-tarjimasiz>' + esc(nomi) + "</b>" : "") +
+        (boshqa ? " · <span>Nuqta obyekt hududidan tashqarida</span>"
+          : tumanBoshqa ? ' · <span>Nuqta manzildagi tumanga tushmadi:</span> <b data-tarjimasiz>' + esc(kutilganNom) + "</b>"
+          : " · <span>Metkani surib aniqlashtiring</span>");
+    }
+    tarjimaQil(el);
+  }
+
+  function metkaKorsat(){
+    if (!xKarta) return;
+    const k = kord();
+    if (!k){
+      if (xMetka){ xKarta.removeLayer(xMetka); xMetka = null; }
+      return;
+    }
+    if (!xMetka){
+      xMetka = MKBxarita.metka(k, {nom: y.qisqa || y.nom,
+        tur: turInfo($("rasmTuri").value).turKalit || y.turKalit, rang: "var(--siyoh)"});
+      xMetka.options.draggable = true;
+      xMetka.addTo(xKarta);
+      if (xMetka.dragging) xMetka.dragging.enable();
+      xMetka.on("dragend", () => { const p = xMetka.getLatLng(); nuqtaYoz(p.lat, p.lng, false); });
+    } else xMetka.setLatLng(k);
+  }
+  /* Maydonlarga yozish: forma o'z hodisalarini eshitadi (o'zgarishlar ro'yxati, qoralama, tekshiruv) */
+  function nuqtaYoz(lat, lng, metkaniHam){
+    const a = $("lat"), b = $("lng");
+    a.value = D.yaxlit(lat, 6);
+    b.value = D.yaxlit(lng, 6);
+    [a, b].forEach(el => {
+      MKB.maydonXato(el, "");
+      el.dispatchEvent(new Event("input", {bubbles: true}));
+      el.dispatchEvent(new Event("change", {bubbles: true}));
+    });
+    if (metkaniHam !== false) metkaKorsat();
+    holatYoz();
+  }
+  /* Manzildan tanilgan tuman uzuq kontur bilan chiziladi: bu taxmin, tasdiqlangan nuqta emas */
+  function tumanChiz(){
+    if (!xKarta) return;
+    if (xTuman){ xKarta.removeLayer(xTuman); xTuman = null; }
+    const t = manzildanTuman();
+    if (!t) return;
+    xTuman = L.geoJSON(t, {pane: "mkb-tuman", interactive: false,
+      style: {color: MKB.rangQiymat("var(--siyoh)"), weight: 2, opacity: .85, dashArray: "5 4",
+        fillColor: MKB.rangQiymat("var(--lavanda)"), fillOpacity: .6}}).addTo(xKarta);
+  }
+  function markazla(){
+    if (!xKarta) return;
+    const k = kord();
+    if (k){ xKarta.setView(k, Math.max(xKarta.getZoom(), 13)); return; }
+    const t = manzildanTuman();
+    const chek = t && MKB.geo.chegara(t.properties.kod);
+    if (chek){ xKarta.fitBounds(chek, {padding: [18, 18], maxZoom: 13}); return; }
+    const hc = hudKod && MKB.geo.chegara(hudKod);
+    if (hc){ xKarta.fitBounds(hc, {padding: [18, 18], maxZoom: 11}); return; }
+    const hammasi = xAsos && xAsos.hududQatlam && xAsos.hududQatlam.getBounds();
+    if (hammasi && hammasi.isValid()) xKarta.fitBounds(hammasi, {padding: [14, 14]});
+  }
+
+  async function xaritaQur(){
+    const idish = document.getElementById("ot-leaflet");
+    if (!idish || !window.L) return;
+    try { GEO = await MKB.geo.yukla(); }
+    catch (_) {
+      idish.parentElement.innerHTML = MKB.xatoHolat(null, "Xarita chegaralarini yuklab bo'lmadi");
+      idish.parentElement.classList.remove("ot-xarita");
+      holatYoz();
+      return;
+    }
+    /* Formadagi maydon: g'ildirak bilan kattalashtirish sahifa aylanishini o'g'irlaydi, shuning uchun
+       masshtab faqat tugma va ikki marta bosish bilan o'zgaradi. */
+    xKarta = L.map("ot-leaflet", {zoomControl: false, attributionControl: true, scrollWheelZoom: false,
+      minZoom: 4, zoomSnap: .25, zoomDelta: 1}).setView([41.3, 64.6], 6);
+    MKBxarita.zoomTugmalari(xKarta);
+    xAsos = MKBxarita.asos(xKarta, {
+      uslub: kod => kod === hudKod ? {rang: "var(--lavanda)", shaffof: .5} : {rang: "var(--oq)"},
+      nom: kod => "<b>" + esc(((D.HUDUD_KODLAR || {})[kod] || {}).toliq || MKB.geo.nomi(kod, document.documentElement.lang) || kod) + "</b>"
+    });
+    MKBxarita.yorliqlarniKuzat(xKarta);
+    xKarta.on("click", ev => { nuqtaYoz(ev.latlng.lat, ev.latlng.lng); });
+    tumanChiz();
+    metkaKorsat();
+    holatYoz();
+    const mosla = () => { xKarta.invalidateSize({animate: false}); markazla(); };
+    mosla();
+    if (xAsos && xAsos.tayyor) xAsos.tayyor.then(mosla).catch(() => {});
+    setTimeout(mosla, 220);
+    requestAnimationFrame(() => MKBxarita.yorliqlarniTekisla(xKarta));
+  }
+
+  document.getElementById("ot-markaz").addEventListener("click", markazla);
+  /* Manzil o'zgarsa taxminiy tuman qayta hisoblanadi: geokoder emas, repodagi chegara nomlari bo'yicha */
+  $("manzil").addEventListener("input", () => { tumanChiz(); holatYoz(); });
+  document.getElementById("ot-tozala").addEventListener("click", () => {
+    const a = $("lat"), b = $("lng");
+    a.value = ""; b.value = "";
+    [a, b].forEach(el => {
+      MKB.maydonXato(el, "");
+      el.dispatchEvent(new Event("input", {bubbles: true}));
+      el.dispatchEvent(new Event("change", {bubbles: true}));
+    });
+    metkaKorsat();
+    holatYoz();
+  });
+  [$("lat"), $("lng")].forEach(el => {
+    el.addEventListener("input", () => { metkaKorsat(); holatYoz(); });
+    /* Qo'lda yozilgan nuqta ko'rinishdan tashqarida qolsa, xodim xatoni ko'rmaydi: maydondan
+       chiqqanda xarita o'sha nuqtaga suriladi. Har bosishda emas — aks holda yozayotganda sakraydi. */
+    el.addEventListener("change", () => {
+      const k = kord();
+      if (k && xKarta && !xKarta.getBounds().contains(k)) xKarta.panTo(k);
+    });
+  });
+  /* Obyekt kartochkasidan "Tahrirlash" havolasi shu maydonga olib keladi */
+  if (location.hash === "#joy") setTimeout(() => {
+    const t = document.getElementById("joy");
+    if (t) t.scrollIntoView({block: "center", behavior: "smooth"});
+  }, 400);
+  xaritaQur();
 
   /* Qo'shimcha qoida xatosi maydondan chiqqanda ham qoladi (yadro blur tekshiruvi faqat HTML atributlarini ko'radi) */
   function qoidaJonli(forma, qoidalar){
@@ -207,7 +459,7 @@ MKB.sahifaYukla({joylar: {forma: ["qator", 8], ozgarishlar: ["qator", 3], oxirgi
       ozg.push(["Turi", turInfo(y.rasmTuri).nom, t.nom]);
     }
     tekshirQosh("Manzil", y.manzil, f.manzil, v => { patch.manzil = v; });
-    const eskiJoy = y.joy && y.joy.lat != null ? [y.joy.lat, y.joy.lng].join(", ") : null;
+    const eskiJoy = joy.lat != null ? [joy.lat, joy.lng].join(", ") : null;
     if (Number.isFinite(lat) && Number.isFinite(lng)) tekshirQosh("Koordinata", eskiJoy, [lat, lng].join(", "), () => { patch.joy = {lat, lng, aniq: true}; });
     else if (lat == null && lng == null) tekshirQosh("Koordinata", eskiJoy, null, () => { patch.joy = null; });
     if (bino){

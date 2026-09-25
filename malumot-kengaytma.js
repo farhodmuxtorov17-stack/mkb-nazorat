@@ -54,28 +54,35 @@
   D.filial = kod => D.FILIALLAR.find(f => f.id === kod || f.nom === kod) || null;
 
   /* ---------- Eski generator ro'yxatlari (tartib o'zgartirilmaydi) ---------- */
+  /* [hudud, manzil boshi, filial, tuman]. To'rtinchi ustun — haqiqiy tuman nomi.
+     Manzil boshining oxirgi bo'lagi ko'p yozuvda ko'cha yoki mahalla nomi ("Registon",
+     "Kogon yo'li"), shuning uchun undan tuman olinmaydi: aks holda xaritada metka o'z
+     tumani markaziga emas, viloyat markaziga tushib qolardi. Nom assets/geo/tumanlar.geojson
+     dagi nom_uz bilan bir xil yozilgan — xarita shu bo'yicha tumanni topadi. */
   const HUDUDLAR = [
-    ["Toshkent sh.", "Toshkent sh., Yunusobod", "Toshkent shahar BXO"],
-    ["Toshkent sh.", "Toshkent sh., Chilonzor", "Chilonzor BXM"],
-    ["Toshkent sh.", "Toshkent sh., Mirzo Ulug'bek", "Toshkent shahar BXO"],
-    ["Toshkent vil.", "Toshkent vil., Qibray", "Toshkent viloyat BXO"],
-    ["Toshkent vil.", "Toshkent vil., Zangiota", "Toshkent viloyat BXO"],
-    ["Samarqand", "Samarqand sh., Registon", "Samarqand BXO"],
-    ["Samarqand", "Urgut tumani", "Samarqand BXO"],
-    ["Namangan", "Namangan sh., Davlatobod", "Namangan BXO"],
-    ["Farg'ona", "Farg'ona sh., Yangi bozor", "Farg'ona BXO"],
-    ["Andijon", "Andijon sh., Bog'ishamol", "Andijon BXO"],
-    ["Buxoro", "Buxoro sh., Kogon yo'li", "Buxoro BXO"],
-    ["Xorazm", "Urganch sh., Al-Xorazmiy", "Urganch BXO"],
-    ["Qashqadaryo", "Qarshi sh., Mustaqillik", "Qarshi BXO"],
-    ["Surxondaryo", "Termiz sh., Sharq", "Termiz BXO"],
-    ["Jizzax", "Jizzax sh., Sharof Rashidov", "Jizzax BXO"],
-    ["Navoiy", "Navoiy sh., G'alaba", "Navoiy BXO"],
-    ["Sirdaryo", "Guliston sh., Ahillik", "Guliston BXM"],
-    ["Qoraqalpog'iston", "Nukus sh., Do'stlik", "Nukus BXO"],
-    ["Surxondaryo", "Denov tumani", "Denov BXM"],
-    ["Jizzax", "Zarbdor tumani", "Zarbdor BXM"],
-    ["Buxoro", "G'ijduvon tumani", "G'ijduvon BXM"]
+    /* Yunusobod tumanidagi aktivlar o'sha tumandagi filialga biriktirilgan: ilgari ular
+       shahar bosh ofisiga tushar, Yunusobod BXM esa bitta aktiv bilan qolardi */
+    ["Toshkent sh.", "Toshkent sh., Yunusobod", "Yunusobod BXM", "Yunusobod tumani"],
+    ["Toshkent sh.", "Toshkent sh., Chilonzor", "Chilonzor BXM", "Chilonzor tumani"],
+    ["Toshkent sh.", "Toshkent sh., Mirzo Ulug'bek", "Toshkent shahar BXO", "Mirzo Ulug'bek tumani"],
+    ["Toshkent vil.", "Toshkent vil., Qibray", "Toshkent viloyat BXO", "Qibray tumani"],
+    ["Toshkent vil.", "Toshkent vil., Zangiota", "Toshkent viloyat BXO", "Zangiota tumani"],
+    ["Samarqand", "Samarqand sh., Registon", "Samarqand BXO", "Samarqand shahri"],
+    ["Samarqand", "Urgut tumani", "Samarqand BXO", "Urgut tumani"],
+    ["Namangan", "Namangan sh., Davlatobod", "Namangan BXO", "Namangan shahri"],
+    ["Farg'ona", "Farg'ona sh., Yangi bozor", "Farg'ona BXO", "Farg'ona shahri"],
+    ["Andijon", "Andijon sh., Bog'ishamol", "Andijon BXO", "Andijon shahri"],
+    ["Buxoro", "Buxoro sh., Kogon yo'li", "Buxoro BXO", "Buxoro shahri"],
+    ["Xorazm", "Urganch sh., Al-Xorazmiy", "Urganch BXO", "Urganch shahri"],
+    ["Qashqadaryo", "Qarshi sh., Mustaqillik", "Qarshi BXO", "Qarshi shahri"],
+    ["Surxondaryo", "Termiz sh., Sharq", "Termiz BXO", "Termiz shahri"],
+    ["Jizzax", "Jizzax sh., Sharof Rashidov", "Jizzax BXO", "Jizzax shahri"],
+    ["Navoiy", "Navoiy sh., G'alaba", "Navoiy BXO", "Navoiy shahri"],
+    ["Sirdaryo", "Guliston sh., Ahillik", "Guliston BXM", "Guliston shahri"],
+    ["Qoraqalpog'iston", "Nukus sh., Do'stlik", "Nukus BXO", "Nukus shahri"],
+    ["Surxondaryo", "Denov tumani", "Denov BXM", "Denov tumani"],
+    ["Jizzax", "Zarbdor tumani", "Zarbdor BXM", "Zarbdor tumani"],
+    ["Buxoro", "G'ijduvon tumani", "G'ijduvon BXM", "G'ijduvon tumani"]
   ];
   /* [tur, surat turi, maydon oralig'i, birlik, qiymat oralig'i (mln so'm), ulush]. Ulushlar haqiqiy
      reyestr tarkibini takrorlaydi, jami 267 ta. */
@@ -142,7 +149,7 @@
   const RAQAM_SANASI = new Date(2026, 8, 21);
   function eskiNavbat() {
     const t = tanla(TUR_HAVZA);
-    const [hudud, manzilBosh, filial] = tanla(HUDUDLAR);
+    const [hudud, manzilBosh, filial, tumanNomi] = tanla(HUDUDLAR);
     const yur = rnd() < 0.42;
     const ega = yur ? tanla(EGA_YUR) : tanla(EGA_JIS);
     /* nom navbat bilan beriladi (tasodifiy son baribir olinadi, keyingi qiymatlar ketma-ketligi o'zgarmaydi) */
@@ -169,7 +176,7 @@
     oraliq(0, 1); oraliq(0, 1); oraliq(0, 1); oraliq(0, 1);         /* eski muddat va tarix */
     oraliq(0, 1); oraliq(0, 1); oraliq(0, 1); oraliq(0, 1);         /* eski hujjat hajmlari */
     for (let k = 0; k < 12; k++) rnd();                             /* eski to'lov intizomi */
-    return {t, hudud, manzilBosh, filial, yur, ega, nomQisqa, baho, qoplash, kunlar, maydon, uy, masul};
+    return {t, hudud, manzilBosh, filial, tumanNomi, yur, ega, nomQisqa, baho, qoplash, kunlar, maydon, uy, masul};
   }
 
   /* ============================================================
@@ -253,7 +260,7 @@
       const y = D.aktivQolip({
         id, nom: e.nomQisqa + ", " + e.manzilBosh, qisqa: e.nomQisqa,
         tur: D.ASOSIY_TURLAR.find(a => a.kalit === turKalit).nom, turKalit, rasmTuri, binoli,
-        hudud: e.hudud, hududKod, hududToliq: e.manzilBosh, tuman: e.manzilBosh.split(", ").pop(), manzil,
+        hudud: e.hudud, hududKod, hududToliq: e.manzilBosh, tuman: e.tumanNomi, manzil,
         /* Namoyish manzili aniq nuqtani bildirmaydi: joy hudud markazi, aniq:false (xarita "taxminiy joy" deb ko'rsatadi).
            r2() ikki marta chaqiriladi, shunda keyingi tasodifiy qiymatlar ketma-ketligi o'zgarmaydi */
         joy: hk.lat ? (r2(), r2(), {lat: hk.lat, lng: hk.lng, aniq: false}) : null,

@@ -798,7 +798,7 @@ function izlashUlash(el){
     oyna.innerHTML = (g.length ? g.map(gr =>
       '<div class="iz-guruh natija-guruh"><span class="iz-nom natija-nom">' + gr.nom + "</span>" +
       gr.bandlar.map(b => '<a class="iz-band natija-band" role="option" id="iz-' + (k++) + '" href="' + esc(b.havola) + '">' +
-        ik(gr.ikonka) + '<span class="matn"><b>' + esc(b.sarlavha) + "</b><span>" + esc(b.izoh) + "</span></span>" + ik("ong", "mitti") + "</a>").join("") +
+        ik(gr.ikonka) + '<span class="matn"><b>' + MKB.matnQismlari(b.sarlavha) + "</b><span>" + MKB.matnQismlari(b.izoh) + "</span></span>" + ik("ong", "mitti") + "</a>").join("") +
       "</div>").join("")
       : '<div class="iz-bosh">Hech narsa topilmadi</div>') +
       (sahifaRuxsatlimi("obyektlar.html")
@@ -1891,6 +1891,18 @@ const MKB = {
   },
   esc,
   ik,
+  /* Yig'ma qator ("AK-2026/4471 · Toshkent sh. · Sotuvga tayyorlanmoqda", "Baholash hisoboti № BH-5323")
+     lug'atga yaxlit holda tushsa hech qanday kalitga to'g'ri kelmaydi va rus tilida o'zbekcha qolib ketadi.
+     Shuning uchun qator bo'laklarga ajratiladi: raqamli bo'lak (kod, raqam, sana) o'z holicha qoladi,
+     qolgani (hudud, holat, hujjat nomi) lug'atdan o'giriladi. */
+  matnQismlari(matn){
+    const t = String(matn == null ? "" : matn);
+    if (!t) return "";
+    return t.split(/( · | № )/).map(q =>
+      /^( · | № )$/.test(q) || /\d/.test(q)
+        ? '<span data-tarjimasiz>' + esc(q) + "</span>"
+        : "<span>" + esc(q) + "</span>").join("");
+  },
 
   /* ---------- Huquqlar ----------
      MKB.huquq("qiymat", "yoz") · MKB.huquq("tasdiq") (joriy bo'lim) · amal: oqi | yoz | tasdiq */

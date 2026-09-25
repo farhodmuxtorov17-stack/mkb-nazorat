@@ -825,6 +825,13 @@ const YANGILIKLAR = [
     VAZIFALAR.forEach(v => t.push({tur: "Vazifa", nom: v.nom, havola: "#vazifa-" + v.id, matnlar: [v.nom, v.izoh].concat(v.qadamlar)}));
     ATAMALAR.forEach(a => t.push({tur: "Atama", nom: a.nom, havola: "#atama-" + a.id, matnlar: [a.nom, a.izoh]}));
     SAVOLLAR.forEach(s => t.push({tur: "Savol", nom: s.savol, havola: "#savol-" + s.id, matnlar: [s.savol, s.javob]}));
+    /* Jarayon xaritalari ham qidiriladi: «hayot sikli» yozgan xodim bo'sh natija ko'rmasin */
+    t.push({tur: "Jarayon", nom: X("Aktivning hayot sikli", "Жизненный цикл актива"), havola: "#jarayonlar",
+      matnlar: [X("Aktivning hayot sikli", "Жизненный цикл актива"), X("Jarayon xaritasi: aktiv balansga qabuldan balansdan chiqarilgunga qadar qaysi bosqichlardan o'tadi va har bosqich kimda turadi.",
+        "Карта процесса: через какие этапы проходит актив от приёма на баланс до списания и кто отвечает за каждый этап.")].concat(HAYOT.flatMap(b => [b[1], b[2]]))});
+    t.push({tur: "Jarayon", nom: X("Undiruvdan balansga qabul", "Из взыскания на приём на баланс"), havola: "#jarayonlar",
+      matnlar: [X("Undiruvdan balansga qabul", "Из взыскания на приём на баланс"), X("Jarayon xaritasi: garov ogohlantirishdan sud va ijro orqali balansga o'tish yo'li — yurist, Rahbariyat va obyekt menejeri.",
+        "Карта процесса: путь залога от предупреждения через суд и исполнение до баланса — юрист, Руководство и менеджер по объектам.")].concat(TOPSHIRISH.flatMap(b => [b[1], YOLAKLAR[b[2]]]))});
     return t;
   }
   function qidir(q){
@@ -840,7 +847,7 @@ const YANGILIKLAR = [
       if (!sozlar.every(s => hammasi.includes(s))) return;
       const nom = norm2(tr(x.nom));
       let ball = sozlar.reduce((b, s) => b + (nom.includes(s) ? 10 : 0) + (nom.startsWith(s) ? 5 : 0), 0);
-      ball += {Vazifa: 3, Sahifa: 2, Rol: 2, Atama: 2, Savol: 1}[x.tur] || 0;
+      ball += {Vazifa: 3, Jarayon: 3, Sahifa: 2, Rol: 2, Atama: 2, Savol: 1}[x.tur] || 0;
       const parcha = matnlar.slice(1).find(m => sozlar.some(s => norm2(m).includes(s))) || matnlar[1] || "";
       nat.push({x, ball, parcha});
     });
