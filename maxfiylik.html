@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MKB — Maxfiylik va shaxsga doir ma'lumotlar bildirishnomasi</title>
+<link rel="stylesheet" href="yadro/app.css?v=26092200">
+<style>
+.h-sahna{min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px 16px 40px;
+  background:
+    radial-gradient(900px 620px at 50% -12%, var(--fon-issiq) 0%, transparent 60%),
+    linear-gradient(168deg,var(--fon-sovuq) 0%,var(--fon-sovuq) 50%,var(--fon-mint) 100%)}
+.h-shapka{width:min(820px,100%);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.h-varaq{width:min(820px,100%);background:var(--oq);border-radius:var(--r-karta);box-shadow:var(--soya-suzuvchi);padding:40px 46px 38px}
+.h-varaq h1{font:500 30px/1.16 var(--shrift-displey);letter-spacing:-.035em}
+.h-ost{font-size:14px;color:var(--matn-3);margin-top:8px}
+.h-tahrir{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:8px 15px;border-radius:var(--r-pilyula);
+  background:var(--plitka);font-size:12.5px;color:var(--matn-2)}
+.h-tahrir .ic{width:16px;height:16px;color:var(--matn-3)}
+.h-band{margin-top:28px;padding-top:22px;border-top:1px solid var(--chiziq-2)}
+.h-band h2{font:500 17.5px/1.32 var(--shrift-displey);letter-spacing:-.022em}
+.h-band p{margin-top:10px;font-size:14.5px;line-height:1.68;color:var(--matn-2)}
+.h-band ul{margin-top:11px;display:flex;flex-direction:column;gap:9px;list-style:none}
+.h-band li{position:relative;padding-left:21px;font-size:14.5px;line-height:1.62;color:var(--matn-2)}
+.h-band li::before{content:"";position:absolute;left:4px;top:9px;width:6px;height:6px;border-radius:999px;background:var(--matn-4)}
+.h-oyoq{width:min(820px,100%);display:flex;justify-content:center;font-size:13px}
+.h-oyoq a{color:var(--matn-2);text-decoration:underline;text-underline-offset:3px}
+.h-oyoq a:hover{color:var(--siyoh)}
+@media (max-width:560px){
+  .h-sahna{padding:16px 14px 30px}
+  .h-varaq{padding:26px 20px 24px;border-radius:24px}
+  .h-varaq h1{font-size:24px}
+  .h-shapka .tugma{flex:1 1 auto;justify-content:center}
+}
+</style>
+</head>
+<body data-sahifa="kirish" data-ochiq="1">
+<div class="h-sahna">
+  <header class="h-shapka">
+    <a class="tugma tugma-oq" id="ortga" href="kirish.html"><svg class="ic"><use href="#ik-chap"/></svg><span id="ortga-matn">Kirish sahifasiga qaytish</span></a>
+    <div class="til-almash" role="group" aria-label="Interfeys tili" id="til-almash">
+      <button type="button" data-til="uz" lang="uz" aria-pressed="true" class="faol">UZ</button>
+      <button type="button" data-til="ru" lang="ru" aria-pressed="false">RU</button>
+    </div>
+  </header>
+  <main class="h-varaq" id="hujjat"></main>
+  <nav class="h-oyoq" aria-label="Boshqa hujjatlar">
+    <a href="oferta.html" id="juft">Ommaviy oferta va foydalanish shartlari</a>
+  </nav>
+</div>
+<script src="tarjima.js?v=26092200"></script>
+<script src="yadro/ikonlar.js?v=26092200"></script>
+<script src="yadro/daraxt.js?v=26092200"></script>
+<script src="yadro/api.js?v=26092200"></script>
+<script src="yadro/app.js?v=26092200"></script>
+<script>
+/* Maxfiylik bildirishnomasi. Tahrir kirish sahifasidagi HUJJAT_TAHRIR bilan bir xil bo'lishi shart. */
+(function(){
+  const TAHRIR = "1.0", SANA = "25.09.2026";
+  const JUFT = {uz: "Ommaviy oferta va foydalanish shartlari", ru: "Публичная оферта и условия использования"};
+  const MATN = {
+  uz: {
+    sarlavha: "Maxfiylik va shaxsga doir ma'lumotlar to'g'risida bildirishnoma",
+    ost: "“Balans aktivlari nazorati” tizimi",
+    tahrir: "Tahrir " + TAHRIR + " · " + SANA + " dan kuchda",
+    bandlar: [
+      {n: "1. Kim qayta ishlaydi", p: [
+        "Operator — “Mikrokreditbank” ATB, O'zbekiston Respublikasi. “Balans aktivlari nazorati” tizimi Bankning ichki axborot tizimi: undan hisob ochilgan xodimlar va shartnoma asosidagi pudratchilar foydalanadi.",
+        "Bildirishnoma faqat shu Tizim doirasidagi qayta ishlashni tushuntiradi. Mijozlarga xizmat ko'rsatish bo'yicha alohida hujjatlar o'z kuchida qoladi."
+      ]},
+      {n: "2. Qanday ma'lumot qayta ishlanadi", r: [
+        "Hisob ma'lumotlari: familiya va ism, login, lavozim, bo'lim yoki filial, rol, hisob ochilgan sana, xizmat surati.",
+        "Foydalanish izlari: kirish va chiqish vaqti, muvaffaqiyatsiz urinishlar, sessiya davomiyligi, amallar tarixi — qaysi yozuvning qaysi maydoni qaysi qiymatdan qaysi qiymatga o'zgargani.",
+        "Aktiv ma'lumotlari: balansdagi obyekt va uning manzili, balans qiymati, baholash natijasi, hujjatlar, suratlar, ko'rik dalolatnomalari, qo'riqlash, sug'urta va ijara shartnomalari.",
+        "Qurilma qaydlari: kamera, harakat datchigi va eshik kontaktining holati, signal vaqti, texnik xizmat yozuvlari.",
+        "Obyektga kirgan shaxslar: ism, tashkilot, kirish va chiqish vaqti hamda kirish uchun asos."
+      ], p: [
+        "Tizim sog'liq, diniy e'tiqod va biometrik ma'lumotlarni yig'maydi. Yuzni tanish ishlatilmaydi."
+      ]},
+      {n: "3. Nima uchun qayta ishlanadi", r: [
+        "Bank aktivlarining butligini nazorat qilish, huquqiy va moliyaviy zararning oldini olish.",
+        "Markaziy bank uchun va ichki hisobotlarni tayyorlash.",
+        "Xizmat tekshiruvi va nizolarda faktni aniqlash: kim, qachon, nimani o'zgartirgan.",
+        "Axborot xavfsizligi: ruxsatsiz kirishni va huquqdan tashqari amalni aniqlash."
+      ]},
+      {n: "4. Huquqiy asos", p: [
+        "Qayta ishlash mehnat munosabatlariga, Bankning qonundan kelib chiqadigan majburiyatlariga va ichki hujjatlariga asoslanadi. Xodim ma'lumoti faqat rozilik bilan emas, “Shaxsga doir ma'lumotlar to'g'risida”, “Banklar va bank faoliyati to'g'risida” hamda “Kiberxavfsizlik to'g'risida” gi qonunlar talabi bilan ham qayta ishlanadi.",
+        "Kirish sahifasidagi belgi ofertani qabul qilishni va shu bildirishnoma bilan tanishganlikni tasdiqlaydi. U Bankning qonuniy majburiyatlarini almashtirmaydi."
+      ]},
+      {n: "5. Qayerda saqlanadi", p: [
+        "Shaxsga doir ma'lumotlar O'zbekiston Respublikasi hududida joylashgan texnik vositalarda qayta ishlanadi va saqlanadi (O'RQ-1125). Ular chegaradan tashqariga uzatilmaydi va tashqi bulut xizmatlariga chiqarilmaydi.",
+        "Namoyish ko'rinishida shartli ma'lumot ishlatiladi: unda haqiqiy obyekt nomi, manzili, egasi va summasi yo'q."
+      ]},
+      {n: "6. Kim ko'radi", r: [
+        "Ko'rish huquqi rol bilan cheklanadi: rahbariyat — jamlama va qarorlar; obyekt menejeri — o'ziga biriktirilgan aktivlar; ko'rik va xavfsizlik inspektori — ko'rik, qurilma va obyektga kirish; buxgalteriya va risk — qiymat, zaxira va xarajat; administrator — hisoblar va jurnal.",
+        "Administrator biznes qarorini qabul qilmaydi: unga tasdiqlash huquqi berilmagan.",
+        "Pudratchiga faqat topshiriq doirasidagi ma'lumot ochiladi; muddat tugaganda hisob yopiladi.",
+        "Tashqi shaxsga ma'lumot faqat qonuniy so'rov asosida beriladi va bu amallar tarixida qoladi."
+      ]},
+      {n: "7. Qancha saqlanadi", p: [
+        "Amallar tarixi va kirish jurnali Bankning ish yuritish nomenklaturasida belgilangan muddat davomida saqlanadi.",
+        "Aktivga oid hujjat va suratlar aktiv balansdan chiqarilgandan keyin ham arxivda qoladi: ular bitim va hisobotning asosi.",
+        "Hisob yopilganda jurnaldagi yozuvlar o'chirilmaydi — aks holda tarix butligini yo'qotadi. Ortiqcha shaxsiy maydonlar talab bo'yicha yopiladi."
+      ]},
+      {n: "8. Xavfsizlik choralari", r: [
+        "Sessiya 8 soatdan uzoq yashamaydi va 30 daqiqa harakatsizlikdan keyin yopiladi; muddat sozlamada o'zgartiriladi.",
+        "Huquq har bir sahifada va har bir so'rovda rol hamda bo'lim kesimida tekshiriladi.",
+        "Pul va huquqqa ta'sir qiladigan qarorlar “to'rt ko'z” qoidasi bilan: so'rovchi va tasdiqlovchi turli xodim.",
+        "Fayl 20 MB gacha qabul qilinadi, faqat surat, PDF, Word, Excel va matn formatlarida.",
+        "Har bir o'zgarish jurnalda eski va yangi qiymati bilan saqlanadi; jurnalni foydalanuvchi o'chira olmaydi."
+      ]},
+      {n: "9. Brauzer xotirasi", p: [
+        "Tizim reklama va tahlil kuzatuvchilarini ishlatmaydi, uchinchi tomon kodini yuklamaydi.",
+        "Brauzer xotirasida faqat sessiya belgisi, tanlangan til va to'ldirilayotgan formaning qoralamasi saqlanadi. Qoralama shu qurilmadan chiqmaydi, parol va maxfiy maydonlar unga yozilmaydi; forma saqlangach yoki yetti kundan keyin o'chadi."
+      ]},
+      {n: "10. Xodimning huquqlari", r: [
+        "O'zi haqidagi ma'lumot bilan tanishish.",
+        "Noaniq yoki eskirgan ma'lumotni tuzattirish.",
+        "Qonunda belgilangan doirada qayta ishlashga e'tiroz bildirish.",
+        "Davlat personallashtirish markaziga murojaat qilish."
+      ], p: [
+        "So'rov Bankning shaxsga doir ma'lumotlar himoyasi bo'yicha mas'ul xodimiga yozma shaklda beriladi; javob qonunda belgilangan muddatda yuboriladi."
+      ]},
+      {n: "11. Bildirishnomaning o'zgarishi va aloqa", p: [
+        "Tahrir o'zgarganda keyingi kirishda rozilik qaytadan so'raladi, eski tahrirdagi rozilik tarixda qoladi.",
+        "Shaxsga doir ma'lumotlar bo'yicha savollar — mas'ul xodimga; hisob va texnik masalalar — Axborot texnologiyalari departamenti xizmat stoliga. Aloqa ma'lumotlari bankning ichki portalida."
+      ]}
+    ]
+  },
+  ru: {
+    sarlavha: "Уведомление о конфиденциальности и персональных данных",
+    ost: "Система «Контроль балансовых активов»",
+    tahrir: "Редакция " + TAHRIR + " · действует с " + SANA,
+    bandlar: [
+      {n: "1. Кто обрабатывает", p: [
+        "Оператор — АКБ «Микрокредитбанк», Республика Узбекистан. Система «Контроль балансовых активов» — внутренняя информационная система Банка: ею пользуются сотрудники с открытой учётной записью и подрядчики по договору.",
+        "Уведомление описывает обработку только в рамках этой Системы. Отдельные документы по обслуживанию клиентов сохраняют силу."
+      ]},
+      {n: "2. Какие данные обрабатываются", r: [
+        "Учётные данные: фамилия и имя, логин, должность, отдел или филиал, роль, дата открытия записи, служебное фото.",
+        "Следы работы: время входа и выхода, неудачные попытки, длительность сессии, история действий — какое поле какой записи и с какого значения на какое изменено.",
+        "Данные активов: объект на балансе и его адрес, балансовая стоимость, результат оценки, документы, снимки, акты осмотра, договоры охраны, страхования и аренды.",
+        "Записи устройств: состояние камеры, датчика движения и дверного контакта, время сигнала, записи техобслуживания.",
+        "Лица, посетившие объект: имя, организация, время входа и выхода, основание доступа."
+      ], p: [
+        "Система не собирает данные о здоровье, вероисповедании и биометрию. Распознавание лиц не применяется."
+      ]},
+      {n: "3. Для чего обрабатываются", r: [
+        "Контроль сохранности активов банка, предотвращение правового и финансового ущерба.",
+        "Подготовка отчётности для Центрального банка и внутренней отчётности.",
+        "Установление факта при служебных проверках и спорах: кто, когда и что изменил.",
+        "Информационная безопасность: выявление несанкционированного доступа и действий вне прав."
+      ]},
+      {n: "4. Правовое основание", p: [
+        "Обработка основана на трудовых отношениях, обязанностях Банка по закону и внутренних документах. Данные сотрудника обрабатываются не только по согласию, но и по требованию законов «О персональных данных», «О банках и банковской деятельности» и «О кибербезопасности».",
+        "Отметка на странице входа подтверждает акцепт оферты и ознакомление с настоящим уведомлением. Она не заменяет законных обязанностей Банка."
+      ]},
+      {n: "5. Где хранятся", p: [
+        "Персональные данные обрабатываются и хранятся на технических средствах, расположенных на территории Республики Узбекистан (ЗРУ-1125). Трансграничная передача и вынос во внешние облачные сервисы не производятся.",
+        "В демонстрационном режиме используются условные данные: в них нет настоящих наименований объектов, адресов, владельцев и сумм."
+      ]},
+      {n: "6. Кто видит", r: [
+        "Право просмотра ограничено ролью: руководство — сводные данные и решения; менеджер объекта — закреплённые за ним активы; инспектор осмотра и безопасности — осмотры, устройства и доступ на объект; бухгалтерия и риск — стоимость, резерв и расходы; администратор — учётные записи и журнал.",
+        "Администратор не принимает деловых решений: права утверждения ему не выданы.",
+        "Подрядчику открываются данные только в пределах задания; по истечении срока запись закрывается.",
+        "Внешним лицам данные передаются исключительно по законному запросу, и это остаётся в истории действий."
+      ]},
+      {n: "7. Сколько хранятся", p: [
+        "История действий и журнал входов хранятся в течение срока, установленного номенклатурой дел Банка.",
+        "Документы и снимки по активу остаются в архиве и после его списания с баланса: они являются основанием сделки и отчётности.",
+        "При закрытии учётной записи записи журнала не удаляются — иначе история теряет целостность. Избыточные персональные поля закрываются по требованию."
+      ]},
+      {n: "8. Меры защиты", r: [
+        "Сессия живёт не дольше 8 часов и закрывается после 30 минут без действий; срок настраивается.",
+        "Права проверяются на каждой странице и в каждом запросе в разрезе роли и раздела.",
+        "Решения, влияющие на деньги и права, проходят по правилу «четырёх глаз»: запрашивающий и утверждающий — разные сотрудники.",
+        "Файл принимается размером до 20 МБ и только в форматах изображения, PDF, Word, Excel и текста.",
+        "Каждое изменение сохраняется в журнале со старым и новым значением; журнал пользователю недоступен для удаления."
+      ]},
+      {n: "9. Память браузера", p: [
+        "Система не использует рекламные и аналитические трекеры и не загружает сторонний код.",
+        "В памяти браузера хранятся только признак сессии, выбранный язык и черновик заполняемой формы. Черновик не покидает это устройство, пароли и конфиденциальные поля в него не пишутся; он удаляется после сохранения формы или через семь дней."
+      ]},
+      {n: "10. Права сотрудника", r: [
+        "Ознакомиться со сведениями о себе.",
+        "Потребовать исправления неточных или устаревших сведений.",
+        "Возразить против обработки в пределах, установленных законом.",
+        "Обратиться в Государственный центр персонализации."
+      ], p: [
+        "Запрос подаётся в письменной форме ответственному сотруднику Банка по защите персональных данных; ответ направляется в установленный законом срок."
+      ]},
+      {n: "11. Изменение уведомления и связь", p: [
+        "При смене редакции согласие запрашивается заново при следующем входе, а согласие с прежней редакцией остаётся в истории.",
+        "Вопросы по персональным данным — ответственному сотруднику; учётная запись и технические вопросы — в службу поддержки департамента информационных технологий. Контактные данные публикуются на внутреннем портале банка."
+      ]}
+    ]
+  }};
+
+  const esc = s => String(s).replace(/[&<>]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;"}[c]));
+  const varaq = document.getElementById("hujjat");
+  const tilJoy = document.getElementById("til-almash");
+  function chiz(){
+    const ru = joriyTil() === "ru";
+    const t = ru ? MATN.ru : MATN.uz;
+    document.documentElement.lang = ru ? "ru" : "uz";
+    document.title = "MKB — " + t.sarlavha;
+    document.getElementById("juft").textContent = ru ? JUFT.ru : JUFT.uz;
+    varaq.innerHTML =
+      "<h1>" + esc(t.sarlavha) + "</h1>" +
+      '<p class="h-ost">' + esc(t.ost) + "</p>" +
+      '<p class="h-tahrir"><svg class="ic"><use href="#ik-qalqon"/></svg><span>' + esc(t.tahrir) + "</span></p>" +
+      t.bandlar.map(b =>
+        '<section class="h-band"><h2>' + esc(b.n) + "</h2>" +
+        (b.r ? "<ul>" + b.r.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>" : "") +
+        (b.p || []).map(x => "<p>" + esc(x) + "</p>").join("") +
+        "</section>").join("");
+    tilJoy.querySelectorAll("button").forEach(b => {
+      const f = b.dataset.til === (ru ? "ru" : "uz");
+      b.classList.toggle("faol", f);
+      b.setAttribute("aria-pressed", String(f));
+    });
+  }
+  chiz();
+  tilJoy.addEventListener("click", e => {
+    const b = e.target.closest("button[data-til]");
+    if (!b) return;
+    try{ localStorage.setItem("mkb-til", b.dataset.til); }catch(_){ }
+    chiz();
+    tarjimaQil();
+  });
+  /* Ortga: hujjat tizim ichidan ochilgan bo'lsa — o'sha sahifaga, aks holda kirish sahifasiga */
+  const ortga = document.getElementById("ortga");
+  const kel = document.referrer;
+  if (kel && kel.indexOf(location.origin) === 0 && !/\/(kirish|oferta|maxfiylik)\.html/.test(kel) && history.length > 1){
+    document.getElementById("ortga-matn").textContent = "Orqaga";
+    ortga.addEventListener("click", e => { e.preventDefault(); history.back(); });
+  }
+})();
+</script>
+</body>
+</html>

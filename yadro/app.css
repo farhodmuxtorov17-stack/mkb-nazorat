@@ -137,16 +137,19 @@ p,li,dd{text-wrap:pretty}
 }
 
 /* ---------- Yon panel (sidebar 296px) ----------
-   900px balandlikda ichki skrollsiz sig'adi: band 42px, ichki band 30px, faqat joriy bo'lim ochiq */
+   900px balandlikda ichki skrollsiz sig'adi: band 44px, ichki band 30px, faqat joriy bo'lim ochiq.
+   Vertikal ritm: belgi bloki — 18px bo'sh joy + ingichka chiziq + 18px — bandlar ro'yxati — pastki blok. */
 .yon{
   position:sticky;top:0;height:100vh;overflow-y:auto;overscroll-behavior:contain;
   background:var(--panel);border-right:1px solid var(--chiziq);
-  padding:16px 16px 12px;display:flex;flex-direction:column;gap:4px;z-index:40;
+  padding:18px 16px 14px;display:flex;flex-direction:column;gap:0;z-index:40;
 }
 .yon::-webkit-scrollbar{width:6px}
 .yon::-webkit-scrollbar-thumb{background:var(--chiziq-3);border-radius:var(--r-pilyula)}
-.yon-bandlar{display:flex;flex-direction:column;gap:4px}
-.yon-logo{display:flex;align-items:center;gap:11px;padding:0 10px;margin-bottom:10px;min-height:40px}
+.yon-bandlar{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+/* Belgi bandlarga yopishmaydi: ostida bo'sh joy va bandlar eni bilan bir xil ingichka chiziq */
+.yon-logo{display:flex;align-items:center;gap:12px;padding:2px 10px 18px;margin:0 0 18px;min-height:40px;
+  border-bottom:1px solid var(--chiziq-2)}
 .yon-logo .belgi{width:36px;height:36px;border-radius:12px;background:var(--oq);box-shadow:var(--soya-past);display:grid;place-items:center;flex:none}
 .yon-nom{display:flex;flex-direction:column;gap:3px;min-width:0}
 .yon-logo b{font:600 19px/1 var(--shrift-displey);letter-spacing:-.03em}
@@ -161,7 +164,7 @@ p,li,dd{text-wrap:pretty}
 
 .yon-band{
   display:flex;align-items:center;gap:12px;width:100%;text-align:left;
-  padding:0 16px;height:42px;border-radius:var(--r-orta);background:var(--band);
+  padding:0 14px 0 16px;min-height:44px;border-radius:var(--r-orta);background:var(--band);
   font-size:14px;font-weight:400;color:var(--siyoh);
   transition:background var(--tez),color var(--tez);position:relative;flex:none;
 }
@@ -172,8 +175,17 @@ p,li,dd{text-wrap:pretty}
 .yon-band .ic{width:19px;height:19px;color:var(--matn-2)}
 .yon-band .strelka{margin-left:auto;width:16px;height:16px;color:var(--matn-3);transition:transform var(--tez)}
 .yon-band[aria-expanded="true"] .strelka{transform:rotate(180deg)}
-.yon-band.faol{background:var(--siyoh);color:var(--oq)}
+.yon-band.faol{background:var(--siyoh);color:var(--oq);font-weight:500;box-shadow:var(--soya-past)}
 .yon-band.faol .ic,.yon-band.faol .strelka{color:rgba(255,255,255,.8)}
+/* ---------- Bo'lim bandidagi hisoblagich ----------
+   Shu xodimni kutayotgan ishlar soni. Nol bo'lsa belgi umuman chizilmaydi (yadro/app.js yonSonlar). */
+.yon-son{
+  margin-left:auto;flex:none;min-width:24px;height:22px;padding:0 7px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:var(--r-pilyula);background:var(--chiziq-3);color:var(--siyoh);
+  font:500 12px/1 var(--shrift);font-variant-numeric:tabular-nums;letter-spacing:0;
+}
+.yon-band.faol .yon-son{background:rgba(255,255,255,.22);color:var(--oq)}
 .yon-guruh{display:flex;flex-direction:column;gap:2px}
 .yon-ichki{
   display:none;flex-direction:column;gap:2px;margin:2px 0 6px 25px;
@@ -193,9 +205,9 @@ p,li,dd{text-wrap:pretty}
 .yon-ichki a:hover{background:var(--band);color:var(--siyoh)}
 .yon-ichki a.faol{background:var(--siyoh);color:var(--oq)}
 .yon-ichki a.faol::before{background:var(--siyoh)}
-.yon-past{margin-top:auto;padding-top:10px;display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--chiziq-2)}
-.yon-juft{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.yon-band.ixcham{height:40px;padding:0 12px;gap:9px;font-size:13px;color:var(--matn-2);background:transparent}
+.yon-past{margin-top:auto;padding-top:14px;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--chiziq-2)}
+.yon-juft{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.yon-band.ixcham{min-height:40px;height:40px;padding:0 12px;gap:9px;font-size:13px;color:var(--matn-2);background:transparent}
 .yon-band.ixcham:hover{background:var(--band)}
 .yon-band.ixcham .ic{width:17px;height:17px}
 .sana-belgisi{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--sariq-matn);
@@ -308,6 +320,26 @@ p,li,dd{text-wrap:pretty}
 .hs-meta{font-size:14px;color:var(--matn-3)}
 .hs-amallar{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .hs-yorliq .yangilangan{margin-left:auto}
+/* Yo'lakchaning birinchi bandidagi bo'lim belgisi: yon paneldagi belgining o'zi */
+.hs-yorliq .yolak-ic{width:15px;height:15px;margin-right:7px;color:var(--matn-4);flex:none}
+/* Sarlavha yonidagi "Orqaga": kelib chiqilgan sahifaga qaytaradi (yadro/app.js, MKB.orqaga).
+   Oq pilyula — asosiy amal tugmasidan past, lekin fon gradientida aniq ko'rinadi */
+.orqaga-tugma{
+  display:inline-flex;align-items:center;gap:8px;flex:none;
+  height:38px;padding:0 17px 0 14px;border-radius:var(--r-pilyula);
+  background:var(--oq);color:var(--matn-2);box-shadow:var(--soya-past);
+  font:400 13.5px var(--shrift);white-space:nowrap;cursor:pointer;
+  transition:box-shadow var(--tez),color var(--tez),transform var(--tez);
+}
+.orqaga-tugma:hover{color:var(--siyoh);box-shadow:var(--soya)}
+.orqaga-tugma:active{transform:scale(.975)}
+.orqaga-tugma .ic{width:17px;height:17px}
+/* data-ikonka bilan e'lon qilingan belgi: KPI plitkasi, karta sarlavhasi, chip va bo'sh holat */
+.metrika .m-yorliq:has(> .sarlavha-ic){display:inline-flex;align-items:center;gap:7px}
+.metrika .m-yorliq .sarlavha-ic{width:16px;height:16px;color:var(--matn-4)}
+.karta-bosh h2:has(> .sarlavha-ic){display:inline-flex;align-items:center;gap:10px}
+.karta-bosh h2 .sarlavha-ic{width:20px;height:20px;color:var(--matn-3)}
+.chip .sarlavha-ic,.beyj .sarlavha-ic{width:15px;height:15px}
 
 /* ---------- Tugmalar ---------- */
 .tugma{
@@ -828,7 +860,7 @@ button.tanlov:focus-visible{outline:none;box-shadow:0 0 0 2px var(--siyoh),var(-
 .chop-varaq th{background:#f1f1f1}
 .chop-varaq .cv-imzo{margin-top:22px;display:flex;gap:60px;font-size:11px}
 @media print{
-  .yon,.shapka,.hs-amallar,.jadval-asbob,.jadval-past,.toast-qutisi,
+  .yon,.shapka,.hs-amallar,.jadval-asbob,.jadval-past,.toast-qutisi,.orqaga-tugma,
   .rejim-belgisi,.bolim-tablar,.chop-yashir,.menyu-tugma,.sana-belgisi,.izlash-natija{display:none!important}
   .surat-yoq{background:none;border:1px solid #bbb}
   .fs-fon{display:none}
