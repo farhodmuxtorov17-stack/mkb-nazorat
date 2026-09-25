@@ -401,7 +401,7 @@
       qosh(q, y.id, qaytish, "Davaktivdan qaytarish so'rovi", nom(y.id) + ": " + D.param("davaktivQaytarishOy") + " oyda sotilmadi.",
         "obyekt.html?id=" + encodeURIComponent(y.id), D.ishKuniQosh(qaytish, 10), "orta");
     });
-    /* Sud majlisi: bir kun oldin va majlis kuni Yuristga eslatma; o'tgan majlis natijasi kiritilmagan bo'lsa vazifa */
+    /* Sud majlisi: bir kun oldin va majlis kuni mas'ul xodimga eslatma; o'tgan majlis natijasi kiritilmagan bo'lsa vazifa */
     q = qoida("Q-MAJLIS");
     if (q) (D.SUD_MAJLISLAR || []).forEach(m => {
       if (!m || m.__ochirilgan || m.holat !== "rejada") return;

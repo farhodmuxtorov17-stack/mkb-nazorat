@@ -1418,3 +1418,149 @@ Object.assign(window.MKB_LUGAT, {
 /* Son bilan kelishik: 1 подробная справка · 3 подробные справки · 8 подробных справок */
 if (window.MKB_RU_SON) window.MKB_RU_SON["подробных справок"] =
   ["подробная справка", "подробные справки"];
+
+/* --- muallif B: 06 · Rollar, 07 · Ishlash sxemasi, 08 · Natija --- */
+window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
+
+  /* --- 06 · Rollar --- */
+  "Bitta obyekt kartochkasini yetti xil odam boshqa maqsadda ochadi": "Одну карточку объекта семь сотрудников открывают с разной целью",
+  "Tizim yangi bo'lim ochmaydi va yangi shtat so'ramaydi. U bugungi yetti rolning ish kunidan safarni va qo'lda solishtirishni olib tashlaydi.": "Система не создаёт новый отдел и не требует новых штатных единиц. Она убирает из рабочего дня сегодняшних семи ролей выезды и ручные сверки.",
+  "Tizimda": "В системе",
+  "Obyektlar holatini oy oxiridagi jamlanma hisobotdan biladi.": "О состоянии объектов узнаёт из сводного отчёта в конце месяца.",
+  "Panelda zaxira yuki va «umidsiz» toifagacha 90 kundan kam qolgan aktivlar; tasdiq kutayotgan qarorlar bitta navbatda.": "На панели — нагрузка резерва и активы, которым до категории «безнадёжный» осталось меньше 90 дней; решения на утверждение в одной очереди.",
+  "Obyektda nima bo'layotganini bilish uchun o'zi borib ko'radi.": "Чтобы понять, что происходит на объекте, едет туда сам.",
+  "Kartochkada nazorat indeksi; servis arizasi, montaj topshirig'i va xarajat yozuvi shu yerdan ochiladi.": "В карточке индекс контроля; отсюда же открываются сервисная заявка, задание на монтаж и запись расхода.",
+  "Har bir ko'rik alohida safar, dalolatnoma qaytgandan keyin yoziladi.": "Каждый осмотр — отдельный выезд, акт пишется уже после возвращения.",
+  "Ko'rik rejasi, dalolatnoma va muddati o'tganlar ro'yxati; kamerali obyektda masofaviy ko'rik.": "План осмотров, акт и список просроченных; на объекте с камерой — удалённый осмотр.",
+  "Tungi hodisani ertasi kuni, obyektga borilganda biladi.": "О ночном происшествии узнаёт на следующий день, когда приедет на объект.",
+  "Hodisa navbati va jonli video; eshik va sirena buyrug'i. Tasdiqlansa — IIV Qo'riqlash departamenti pultiga.": "Очередь событий и живое видео; команды на дверь и сирену. При подтверждении — на пульт Департамента охраны при МВД.",
+  "Zaxira toifasini balans ma'lumoti bilan qo'lda solishtiradi.": "Категорию резерва сверяет с балансовыми данными вручную.",
+  "Zaxira toifasi, Markaziy bank uchun oylik hisobot va obyekt bo'yicha xarajat kesimi bitta bazadan.": "Категория резерва, месячный отчёт для Центрального банка и разрез расходов по объекту — из одной базы.",
+  "E'longa arxivdagi eski surat qo'yiladi, har ko'rsatishga xodim boradi.": "В объявление идёт старое фото из архива, на каждый показ выезжает сотрудник.",
+  "Lot kartasida shu haftadagi kadr, tashriflar jurnali va takliflar yonma-yon turadi.": "В карточке лота рядом стоят кадр этой недели, журнал визитов и предложения.",
+  "Nazorat qilinadigan qurilma ham, unga biriktirilgan rol ham yo'q.": "Нет ни устройства, которым нужно управлять, ни привязанной к нему роли.",
+  "Qurilma ulash, rol berish, adapter sozlash. Audit jurnalini administratorning o'zi ham tahrirlay olmaydi.": "Подключение устройства, выдача роли, настройка адаптера. Журнал аудита не может править и сам администратор.",
+  "Rol bank AD guruhidan olinadi — tizimda alohida parol yaratilmaydi. Xodim boshqa bo'limga o'tsa, huquqi ertasiga o'zgaradi.": "Роль берётся из группы AD банка — отдельный пароль в системе не создаётся. Если сотрудник перешёл в другое подразделение, его права меняются на следующий день.",
+  "Rol jadvali: nima qila olmaydi va nima bilan o'lchanadi": "Таблица ролей: чего не может и чем измеряется",
+
+  /* --- 07 · Ishlash sxemasi --- */
+  "Ishlash sxemasi": "Схема работы",
+  "Tunda qayd etilgan harakat ertalab hujjatga aylanadi": "Движение, замеченное ночью, к утру становится документом",
+  "Yechim beshta bo'g'indan iborat: obyekt, komplekt, aloqa, platforma va qaror. Shu yo'lni bitta tungi hodisa boshidan oxirigacha bosib o'tadi.": "Решение состоит из пяти звеньев: объект, комплект, связь, платформа и решение. Этот путь от начала до конца проходит одно ночное событие.",
+  "Shartli misol": "Условный пример",
+  "Dekabr kechasi, Qarshi tumanidagi ombor. Soat 03:12 da hovliga odam kiradi. Obyektda elektr ham, internet ham, qorovul ham yo'q.": "Декабрьская ночь, склад в Каршинском районе. В 03:12 во двор заходит человек. На объекте нет ни света, ни интернета, ни сторожа.",
+  "Harakat datchigi yoki kamera qo'zg'alishni qayd etadi va kadrni o'sha zahoti obyektning o'zida yozadi.": "Датчик движения или камера фиксирует движение и тут же пишет кадр на самом объекте.",
+  "Komplekt": "Комплект",
+  "Quvvat quyosh panelidan yoki batareyadan. Yozuv microSD yoki NVR da qoladi; aloqa uzilgan bo'lsa, bufer kanal tiklangach 15 daqiqada markazga ko'chadi.": "Питание от солнечной панели или батареи. Запись остаётся на microSD или NVR; если связь оборвалась, буфер уходит в центр за 15 минут после её восстановления.",
+  "Yozuv yopiq kanal orqali bank konturiga kiradi. Ochiq internetda hech narsa yurmaydi, tashqaridan qurilmaga ulanib bo'lmaydi.": "Запись попадает в контур банка по закрытому каналу. В открытом интернете не ходит ничего, подключиться к устройству снаружи нельзя.",
+  "Hodisa obyekt kartochkasiga bog'lanadi. Qoidalar mexanizmi kimni va qaysi kanal bilan xabardor qilishni hal qiladi.": "Событие привязывается к карточке объекта. Механизм правил решает, кого и по какому каналу уведомить.",
+  "Navbatchi videoni ochadi, kerak bo'lsa IIV pultiga xabar beradi. Ertalab obyekt menejeriga topshiriq tushadi, oy oxirida shu hodisa hisobotga kiradi.": "Дежурный открывает видео, при необходимости сообщает на пульт МВД. Утром менеджеру объекта приходит задание, в конце месяца событие попадает в отчёт.",
+  "03:14 va ertalab": "03:14 и утром",
+  "Qurilma o'rnatilmagan obyektda zanjirning 04 va 05 bo'g'ini ishlaydi: ko'rik, hujjat va muddat. Qurilma birinchi uchta bo'g'inni yopadi.": "На объекте без оборудования работают звенья 04 и 05: осмотр, документ и срок. Устройство закрывает первые три звена.",
+  "Vaqtlar shartli misolniki: aloqa ishlab turgan tun uchun.": "Время указано для условного примера: для ночи, когда связь работает.",
+
+  /* --- 08 · Natija --- */
+  "Yangi xarajat yiliga 1,6 mlrd so'm — u nimani qoplaydi": "Новый расход — 1,6 млрд сумов в год. Что он закрывает",
+  "Bu slaydda yangi dalil yo'q: taqdimotdagi raqamlar bank tilida bir joyga yig'ilgan. Har kartochkada hisob-kitob turgan slayd raqami ko'rsatilgan.": "Новых доводов на этом слайде нет: цифры презентации собраны в одном месте на языке банка. В каждой карточке указан слайд, где лежит расчёт.",
+  "Bir yillik zaxira komplektdan 80 barobar qimmat": "Годовой резерв в 80 раз дороже комплекта",
+  "800 mln so'mlik obyekt 12 oyda sotilmasa, MB 2696-son nizomining 20-bandi bo'yicha zaxira 100% bo'ladi. O'sha obyektdagi 10 mln so'mlik komplekt esa": "Если объект за 800 млн сумов не продан за 12 месяцев, по пункту 20 положения ЦБ № 2696 резерв составит 100%. А комплект за 10 млн сумов на этом объекте —",
+  "mulk qiymatining 1,3% i.": "1,3% стоимости имущества.",
+  "Iqtisodiy asos · slayd": "Экономическое обоснование · слайд",
+  "Qo'riqlash narxi": "Цена охраны",
+  "Bir obyekt uchun 5,9 yoki 55 mln so'm": "На один объект — 5,9 или 55 млн сумов",
+  "Masofaviy nazorat bir obyektga yiliga 5,9 mln so'm turadi. Qo'riqlash departamenti posti 55 mln, bankning o'z qorovuli 145 mln —": "Удалённый мониторинг обходится в 5,9 млн сумов на объект в год. Пост Департамента охраны — 55 млн, собственный сторож банка — 145 млн:",
+  "eng arzon variantdan 9,3 baravar farq.": "разница с самым дешёвым вариантом — 9,3 раза.",
+  "E'longa shu haftada olingan kadr qo'yiladi": "В объявление идёт кадр, снятый на этой неделе",
+  "Xaridor obyektni masofadan ko'radi, tashriflar va takliflar lot kartochkasida qoladi. O'lchov bitta:": "Покупатель смотрит объект удалённо, визиты и предложения остаются в карточке лота. Показатель один:",
+  "e'londan shartnomagacha necha kun o'tdi.": "сколько дней прошло от объявления до договора.",
+  "Tez sotuv · slayd": "Быстрая продажа · слайд",
+  "To'rtta talab loyihaga shart bo'lib kirgan": "Четыре требования вошли в проект как условия",
+  "Qo'riqlash faqat davlat xizmati — O'RQ-778. Biometrik ma'lumot O'zbekistonda saqlanadi — O'RQ-1125. Yong'in signalizatsiyasi VMQ-649 ning 9-ilovasi bo'yicha. Kamera oldida ogohlantirish belgisi turadi.": "Охрана — только государственная услуга, ЗРУ-778. Биометрия хранится в Узбекистане, ЗРУ-1125. Пожарная сигнализация — по приложению 9 к ПКМ-649. У камеры стоит предупреждающий знак.",
+  "Me'yorlar · slayd": "Нормы · слайд",
+  "Qaysi obyekt nazoratsiz qolgani har kuni ko'rinadi": "Какой объект остался без контроля, видно каждый день",
+  "Har bir aktivga nazorat indeksi qo'yiladi. Qo'riqlash shartnomasi ham, qurilmasi ham yo'q obyektlar ro'yxati kunda yangilanadi, qamrov foizi oylik hisobotda o'lchanadi.": "Каждому активу присваивается индекс контроля. Список объектов без договора охраны и без устройства обновляется ежедневно, процент охвата измеряется в месячном отчёте.",
+  "Platforma · slayd": "Платформа · слайд",
+  "267 obyektga yiliga 1 575 mln so'm": "На 267 объектов — 1 575 млн сумов в год",
+  "Komplekt besh yilda eskiradi, SIM va servis yiliga 3 mln, markaz 240 mln so'm. Qorovul posti qo'yilganda shu obyektlarga": "Комплект изнашивается за пять лет, SIM и сервис — 3 млн в год, центр — 240 млн сумов. Если на эти объекты поставить пост сторожа,",
+  "yiliga 13 160 mln so'm ko'p to'lanardi.": "платить пришлось бы на 13 160 млн сумов в год больше.",
+  "Endi obyektlarning o'zi: ular bir xil emas · slayd": "Теперь сами объекты: они не одинаковы · слайд"
+});
+
+/* --- muallif B: 07 va 08 slayd qo'shimchalari --- */
+window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
+  "Qoladigan iz": "Что остаётся",
+  "kadr va klip qurilma xotirasida": "кадр и клип в памяти устройства",
+  "bufer navbati va batareya foizi": "очередь буфера и процент заряда",
+  "qabul vaqti va kanal holati": "время приёма и состояние канала",
+  "obyekt kartochkasidagi hodisa yozuvi": "запись события в карточке объекта",
+  "jurnalda ko'rish, buyruq va yakun": "просмотр, команда и итог в журнале",
+  "Yangi dalil yo'q: taqdimotdagi raqamlar bank tilida bir joyga yig'ilgan. Har kartochkada hisob-kitob turgan slayd raqami turibdi.": "Новых доводов нет: цифры презентации собраны в одном месте на языке банка. В каждой карточке указан слайд с расчётом.",
+  "Qo'riqlash faqat davlat xizmati — O'RQ-778. Biometrik ma'lumot O'zbekistonda — O'RQ-1125. Yong'in signalizatsiyasi VMQ-649 ning 9-ilovasi bo'yicha. Kamera oldida ogohlantirish belgisi.": "Охрана — только государственная услуга, ЗРУ-778. Биометрия — в Узбекистане, ЗРУ-1125. Пожарная сигнализация — по приложению 9 к ПКМ-649. У камеры — предупреждающий знак.",
+  "Endi obyektlarning o'zi · slayd": "Теперь сами объекты · слайд",
+  /* ruscha sarlavha va lid qisqartirildi: ikki qatorga cho'zilib, jadvalni pastga surardi */
+  "Bitta obyekt kartochkasini yetti xil odam boshqa maqsadda ochadi": "Одну карточку объекта семь ролей открывают с разной целью",
+  "Tizim yangi bo'lim ochmaydi va yangi shtat so'ramaydi. U bugungi yetti rolning ish kunidan safarni va qo'lda solishtirishni olib tashlaydi.": "Система не создаёт отдел и не требует новых штатных единиц: она убирает из дня семи ролей выезды и ручные сверки.",
+  "Panelda zaxira yuki va «umidsiz» toifagacha 90 kundan kam qolgan aktivlar; tasdiq kutayotgan qarorlar bitta navbatda.": "На панели — нагрузка резерва и активы, которым до «безнадёжных» меньше 90 дней; решения на утверждение в одной очереди."
+});
+
+/* --- kirish bobi: 03 · Taklif, 04 · Muammo oyoq yozuvi, 05 · Tizim --- */
+window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
+  /* 03 · Taklif */
+  "Tizim ishlab turibdi, unga obyektning o'zi ulanadi": "Система уже работает — к ней подключается сам объект",
+  "Reyestr, obyekt kartochkasi, muddat va zaxira sanog'i, ko'rik va realizatsiya bugun bitta bazada ishlaydi. Loyiha qolgan bo'shliqni yopadi: elektri, interneti va qorovuli yo'q obyekt kartochkasida bugungi kadr, eshik holati va aloqa belgisi paydo bo'ladi.": "Реестр, карточка объекта, отсчёт сроков и резерва, осмотры и реализация уже сегодня работают в одной базе. Проект закрывает оставшийся пробел: в карточке объекта без света, интернета и охраны появляются сегодняшний кадр, состояние двери и признак связи.",
+  "aktiv bank balansida": "активов на балансе банка",
+  "bino va inshoot, ko'char mulk": "здания и сооружения, движимое имущество",
+  "mln so'm bir obyekt jihoziga": "млн сумов на оборудование одного объекта",
+  "Loyiha qamrovi": "Охват проекта",
+  "Balansga qabuldan chiqimgacha butun yo'l. Ko'char mulkka kamera emas: plomba va GPS.": "Весь путь от приёма на баланс до выбытия. Движимому имуществу не камера, а пломба и GPS.",
+  "Bugun ishlaydi": "Работает сегодня",
+  "Reyestr, kartochka, muddat sanog'i, ko'rik, realizatsiya, hisobot. Bugun ochiladi.": "Реестр, карточка, отсчёт сроков, осмотры, реализация, отчётность. Открывается сегодня.",
+  "Qo'shiladi": "Добавляется",
+  "Qurilmalar reyestri, hodisa shinasi, media shlyuz. Obyektga o'rtacha to'rt qurilma.": "Реестр устройств, шина событий, медиашлюз. В среднем четыре устройства на объект.",
+  "Narx bir qatorda": "Цена одной строкой",
+  "Jihoz 0,8–5,3 mlrd so'm, o'rtacha 2,7 mlrd. Ekspluatatsiya yiliga 1,6 mlrd.": "Оборудование 0,8–5,3 млрд сумов, в среднем 2,7 млрд. Эксплуатация — 1,6 млрд в год.",
+  "Bugun so'raladigan qaror": "Решения, которые просим сегодня",
+  "10 ta pilot obyekt, 6 hafta": "10 пилотных объектов, 6 недель",
+  "Jihoz byudjeti 30–200 mln so'm": "Бюджет на оборудование 30–200 млн сумов",
+
+  /* 04 · Muammo — yangi oyoq yozuvi */
+  "Balansda turgan har bir oy pulga aylanadi: bir yil to'lganda mulk «umidsiz» toifaga o'tib,": "Каждый месяц на балансе стоит денег: через год имущество уходит в «безнадёжную» категорию и",
+  "100% zaxira talab qiladi": "требует резерва 100%",
+  ". Shu vaqt ichida soliq, saqlash va sug'urta xarajati to'xtamaydi.": ". Всё это время налог, хранение и страховка продолжают начисляться.",
+
+  /* 05 · Tizim */
+  "Aktiv balansga qabul qilingan kundan chiqimgacha bitta kartochkada": "Актив от приёма на баланс до выбытия — в одной карточке",
+  "Quyidagi uch ekran maket emas — ular namoyish bazasida hozir ishlab turibdi. Raqamlar shartli, mantiq haqiqiy.": "Три экрана ниже — не макеты, они работают прямо сейчас на демонстрационной базе. Цифры условные, логика настоящая.",
+  "Ekranlar, rollar, nazorat indeksi va o'sish": "Экраны, роли, индекс контроля и рост",
+  "267 aktiv, qiymat va bosqich": "267 активов, стоимость и стадия",
+  "Muddat va zaxira": "Сроки и резерв",
+  "Qabul sanasi, 12 oylik chegara": "Дата приёма, граница 12 месяцев",
+  "Reja, dalolatnoma, kechikkanlar": "План, акт, просроченные",
+  "Qurilma, hodisa, qo'riqlash": "Устройство, событие, охрана",
+  "Lot, tashrif, shartnoma": "Лот, показ, договор",
+  "Obyekt kartochkasi · namuna ma'lumot": "Карточка объекта · пример данных",
+  "Ko'rik rejasi · namuna ma'lumot": "План осмотров · пример данных",
+  "Monitoring markazi · namuna ma'lumot": "Центр мониторинга · пример данных"
+});
+
+/* --- Kirish bobi joriy etilgandan keyingi tuzatishlar: mundarija, s-muammo,
+       s-sxema, s-tarkib va s-platforma matnlari --- */
+window.MKB_LUGAT = Object.assign(window.MKB_LUGAT || {}, {
+  "Muqova va mundarija": "Обложка и содержание",
+  "Loyiha va tizim": "Проект и система",
+  "Taklif, tizim, rollar, xatar": "Предложение, система, роли, риски",
+  "Platforma, reja, pilot": "Платформа, план, пилот",
+  "Nima so'ralmoqda va nima o'zgaradi": "Что просят утвердить и что изменится",
+  "Bugun nima ishlaydi, nimasi yetishmaydi": "Что работает сегодня и чего не хватает",
+  "Yiliga 1,6 mlrd so'm nimani qoplaydi": "Что покрывают 1,6 млрд сумов в год",
+  "Bitta hodisa besh bo'g'indan o'tadi": "Одно событие проходит пять звеньев",
+  "Realizatsiya mutaxassisi nima ko'radi": "Что видит специалист по реализации",
+  "Panelda qaror qanday tug'iladi": "Как на панели рождается решение",
+  "Bank mulkni kommunal xizmatlardan uzilgan holda qabul qiladi: hisoblagich nolga tushirilgan yoki olib qo'yilgan. Keyingi ko'rikkacha obyekt haqida hech qanday ma'lumot kelmaydi.": "Банк принимает имущество отключённым от коммунальных услуг: счётчик обнулён или снят. До следующего осмотра об объекте не поступает никаких сведений.",
+  "Quvvat quyosh panelidan yoki batareyadan keladi — elektr shartnomasi tiklanmaydi. Yozuv qurilmaning o'zida qoladi, shuning uchun aloqa uzilgan tunda ham hodisa yo'qolmaydi.": "Питание — от солнечной панели или аккумулятора: договор на электричество не восстанавливается. Запись остаётся на самом устройстве, поэтому в ночь без связи событие не пропадает.",
+  "Ro'yxatning uchdan biri umuman bino emas: avtotransport, maxsus texnika va asbob-uskuna. Bitta universal komplekt bu ro'yxatning yarmiga ham mos kelmaydi.": "Треть списка — вообще не здания: автотранспорт, спецтехника и оборудование. Один универсальный комплект не подойдёт и половине этого списка.",
+  "Qaror shu ekrandan chiqadi": "Решение принимается на этом экране",
+  "Obyektdan kelgan hodisa oxir-oqibat shu panelga yig'iladi: zaxira yuki, tasdiq kutayotgan qarorlar va «umidsiz» toifagacha qolgan kunlar bitta ekranda.": "Событие с объекта в итоге попадает на эту панель: нагрузка резерва, решения в ожидании утверждения и дни до перехода в «безнадёжные» — на одном экране.",
+  "Joriy etish bosqichlari": "Этапы внедрения",
+  "Obyektlar reyestri · namuna ma'lumot": "Реестр объектов · пример данных"
+});

@@ -36,9 +36,9 @@ window.MKB_QISQA = {
       },
       {
         nom: "Iqtisod",
-        raqam: "7,4",
+        raqam: "5,9",
         birlik: "mln so'm yiliga",
-        matn: "Bugun obyektlar qo'riqlanmaydi, nazorat bank uchun yangi xarajat: bir obyektga yiliga 7,4 mln, 267 obyektga taxminan 1,6 mlrd so'm. Jamoa, server va sug'urta alohida qator. Taqqoslash: departament posti 55 mln, bank qorovuli 145 mln so'm.",
+        matn: "Bugun obyektlar qo'riqlanmaydi, nazorat bank uchun yangi xarajat: bir obyektga yiliga 5,9 mln, 267 obyektga 1 575 mln so'm. Jamoa, server va sug'urta alohida qator. Taqqoslash: departament posti 55 mln, bank qorovuli 145 mln so'm.",
         slayd: "#s-iqtisod",
         qoshimcha: []
       },
@@ -100,9 +100,9 @@ window.MKB_QISQA = {
       },
       {
         nom: "Экономика",
-        raqam: "7,4",
+        raqam: "5,9",
         birlik: "млн сумов в год",
-        matn: "Сегодня объекты не охраняются, контроль — новый расход банка: 5,9 млн сумов в год на объект, около 1,6 млрд на 267 объектов. Команда, серверы и страховка — отдельные строки. Для сравнения: пост Департамента охраны 55 млн, сторож банка 145 млн сумов.",
+        matn: "Сегодня объекты не охраняются, контроль — новый расход банка: 5,9 млн сумов в год на объект, 1 575 млн на 267 объектов. Команда, серверы и страховка — отдельные строки. Для сравнения: пост Департамента охраны 55 млн, сторож банка 145 млн сумов.",
         slayd: "#s-iqtisod",
         qoshimcha: []
       },

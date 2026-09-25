@@ -25,6 +25,8 @@
     <div class="hs-qator"><h1>Himoya hisoboti</h1><span class="hs-meta" id="hs-meta">—</span>
       <div class="hs-amallar"><a class="tugma tugma-oq" href="himoya.html"><svg class="ic"><use href="#ik-qalqon"/></svg>Monitoring markazi</a></div></div>
   </div>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">Nazorat indeksi</a><a href="hisobot-hudud.html">Hududlar</a></nav>
+
   <div class="davr" role="group" aria-label="Davr" data-tur="kirish-hisoboti-davr">
     <button type="button" class="pill" data-kun="7">7 kun</button>
     <button type="button" class="pill faol" data-kun="30">30 kun</button>
@@ -90,6 +92,28 @@
   const iso = d => D.sanaYoz(d).split(".").reverse().join("-");
   const bugun = D.bugun();
   $("dv-t").value = iso(bugun); $("dv-b").value = iso(D.kunQosh(bugun, -29));
+  /* Hisobotlar markazidan kelgan davr: markaz kaliti aniq sanalarga keltiriladi, ?kun= tayyor oraliqni tanlaydi */
+  (function davrniOl(){
+    const q = new URLSearchParams(location.search);
+    const kun = q.get("kun"), kalit = q.get("davr");
+    const pill = k => document.querySelectorAll("[data-kun]").forEach(x => x.classList.toggle("faol", x.dataset.kun === String(k)));
+    if (["7", "30", "90"].indexOf(kun) >= 0){
+      $("dv-b").value = iso(D.kunQosh(bugun, -(+kun - 1)));
+      pill(kun);
+      return;
+    }
+    const y = bugun.getFullYear(), m = bugun.getMonth();
+    const oraliq = {
+      oy: [new Date(y, m, 1), bugun],
+      otgan: [new Date(y, m - 1, 1), new Date(y, m, 0)],
+      chorak: [new Date(y, m - m % 3, 1), bugun],
+      yil: [new Date(y, 0, 1), bugun],
+      hammasi: [new Date(y - 3, 0, 1), bugun],
+    }[kalit];
+    if (!oraliq) return;
+    $("dv-b").value = iso(oraliq[0]); $("dv-t").value = iso(oraliq[1]);
+    pill(0);
+  })();
   const TUR = {}; D.QORIQLASH_TURLARI.forEach(t => { TUR[t.kalit] = t.nom; });
   const XH_OCHIQ = ["ochiq", "tekshiruvda", "bartaraf"], GH_OCHIQ = ["yangi", "tekshirilmoqda", "tekshiruvda", "bartaraf"];
 

@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css?v=26092200">
 <style>
-/* Panel tasmasi: keng ekranda yon menyu aynan shu uchta havolani ko'rsatib turadi,
+/* Panel tasmasi: keng ekranda yon menyu rolning o'z panelini ko'rsatib turadi,
    shuning uchun tasma faqat yon menyu yopiq bo'lgan ekranlarda ko'rinadi */
 @media (min-width:1025px){#panel-tablar{display:none}}
 .metrika .m-qiymat small{white-space:nowrap}
@@ -54,6 +54,7 @@
 .xx-olchov span{flex:1;min-width:0}
 .xx-olchov b{font-weight:500;font-variant-numeric:tabular-nums}
 .xx-izoh{margin:0;font-size:12.5px;color:var(--matn-3)}
+.kirish-izoh{font-size:12.5px;color:var(--matn-3);margin-top:12px}
 @media (max-width:1040px){
   .xx-tor{grid-template-columns:minmax(0,1fr)}
   .xx-olchov{flex-direction:row;flex-wrap:wrap}
@@ -70,7 +71,7 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="panel.html">Boshqaruv paneli</a><span class="ajratgich">/</span><span>Ko'rik va xavfsizlik</span></div>
+    <div class="hs-yorliq"><span>Boshqaruv paneli</span><span class="ajratgich">/</span><span>Ko'rik va xavfsizlik</span></div>
     <div class="hs-qator"><h1>Ko'rik va xavfsizlik</h1><span class="hs-meta" id="hs-meta"><span id="hs-sana">—</span></span>
       <div class="hs-amallar"><a class="tugma tugma-oq" href="hodisalar.html" data-sayohat="hodisalar-tugma"><svg class="ic"><use href="#ik-ogoh"/></svg>Hodisalar</a><a class="tugma tugma-asosiy" href="korik-rejasi.html" id="reja-tugma" data-sayohat="korik-rejasi"><svg class="ic"><use href="#ik-korik"/></svg>Ko'rik rejasi</a></div></div>
   </div>
@@ -78,6 +79,7 @@
     <a href="panel.html">Rahbariyat</a>
     <a href="panel-obyekt.html">Obyekt menejeri</a>
     <a href="panel-nazorat.html" class="faol" aria-current="page">Ko'rik va xavfsizlik</a>
+    <a href="panel-moliya.html">Moliya</a>
   </nav>
 
 <div class="bosh-qator" id="doira-joy" hidden>
@@ -136,6 +138,19 @@
     </div>
   </div>
 
+  <div class="tor-2-teng">
+    <section class="karta" aria-labelledby="v-kirish" data-sayohat="kirish-sorovlari">
+      <div class="karta-bosh"><h2 id="v-kirish">Kirish so'rovlari</h2><span class="soni" id="kirish-soni"></span>
+        <a class="karta-havola" href="ruxsatlar.html">Ruxsatlar<svg class="ic"><use href="#ik-ong"/></svg></a></div>
+      <div id="kirish"></div>
+    </section>
+    <section class="karta" aria-labelledby="v-tashrif" data-sayohat="tashriflar">
+      <div class="karta-bosh"><h2 id="v-tashrif">Obyektdagi tashriflar</h2><span class="soni" id="tashrif-soni"></span>
+        <a class="karta-havola" href="tashriflar.html">Tashriflar<svg class="ic"><use href="#ik-ong"/></svg></a></div>
+      <div id="tashriflar"></div>
+    </section>
+  </div>
+
   <section class="karta" aria-labelledby="v-xavf" data-sayohat="xavf-xarita">
     <div class="karta-bosh"><h2 id="v-xavf">Xavf xaritasi</h2><span class="soni" id="xavf-soni"></span>
       <a class="karta-havola" href="xarita.html" id="xavf-havola">Xaritada<svg class="ic"><use href="#ik-ong"/></svg></a></div>
@@ -186,7 +201,7 @@
 <script>
 (async () => {
   const JOYLAR = {koriklar: ["qator", 4], hodisalar: ["qator", 3], qurilmalar: ["qator", 3],
-    "xavf-xarita": ["qator", 3], sugurta: ["qator", 3]};
+    kirish: ["qator", 3], tashriflar: ["qator", 3], "xavf-xarita": ["qator", 3], sugurta: ["qator", 3]};
   Object.keys(JOYLAR).forEach(id => { document.getElementById(id).innerHTML = MKB.skelet(JOYLAR[id][1]); });
   await MKBapi.tayyor;
   const D = MKB_DATA;
@@ -203,7 +218,9 @@
   const tablar = $("panel-tablar");
   if (tablar && tablar.querySelectorAll("a").length < 2) tablar.hidden = true;
 
-  const KOLLAR = ["YOZUVLAR", "KORIKLAR", "HODISALAR", "XAVFSIZLIK_HODISALARI", "SUGURTALAR", "QURILMALAR"];
+  /* Xavfsizlik xizmati ishi shu rolga o'tdi: kirish so'rovlari, tashriflar va signallar ham shu panelda */
+  const KOLLAR = ["YOZUVLAR", "KORIKLAR", "HODISALAR", "XAVFSIZLIK_HODISALARI", "SUGURTALAR", "QURILMALAR",
+    "KIRISH_SOROVLARI", "TASHRIFLAR", "KIRISH_VOQEALARI", "SHAXSLAR"];
 
   const sessiya = MKBapi.sessiya() || {};
   const ism = sessiya.ism || "";
@@ -299,6 +316,48 @@
       .concat(batareya.slice(0, 2).map(x => qQator(x, '<span class="qolgan"><span>Batareya</span> <b data-tarjimasiz>' + (x.q.batareya == null ? "—" : x.q.batareya + "%") + "</b></span>")));
     $("qurilmalar").innerHTML = qRoyxat.length ? qRoyxat.join("")
       : MKB.boshHolat("qurilma", "Nosoz qurilma yo'q", D.MANBA === "mahalliy" ? "Mahalliy reyestrda qurilmalar hali ro'yxatga olinmagan" : "Barcha qurilmalar aloqada");
+
+    /* ---------- Kirish so'rovlari ----------
+       To'rt ko'z matritsasi bo'yicha so'rovni inspektor yozadi, qarorni obyekt menejeri yoki rahbariyat qabul qiladi:
+       shu sababli bu yerda tasdiq tugmasi yo'q, faqat holat va ochish havolasi. */
+    const sorovlar = MKB.doira(D.KIRISH_SOROVLARI || []).filter(x => idlar.has(x.obyektId));
+    const kutmoqda = sorovlar.filter(x => x.holat === "kutilmoqda")
+      .sort((a, b) => D.sanaOqi(a.sana) - D.sanaOqi(b.sana));
+    const shaxsNomi = id => (D.shaxsNomi ? D.shaxsNomi(id) : "");
+    $("kirish-soni").innerHTML = kutmoqda.length
+      ? '<b data-tarjimasiz>' + kutmoqda.length + "</b> <span>ta tasdiqda</span>" : "";
+    const sorovYoza = MKB.huquq("nazorat", "yoz") && MKB.ruxsat("kirish-soravi.html");
+    $("kirish").innerHTML = kutmoqda.length ? kutmoqda.slice(0, 5).map(x =>
+      '<a class="qator" href="kirish-soravi.html?id=' + encodeURIComponent(x.id) + '">' +
+        '<span class="belgi lavanda">' + MKB.ik("ruxsat") + "</span>" +
+        '<span class="matn"><b>' + e(nomi(x.obyektId)) + '</b><span><span data-tarjimasiz>' + e(shaxsNomi(x.shaxsId)) + "</span> · <span>" +
+          e(x.maqsad || "") + "</span> · <span data-tarjimasiz>" + e(x.sana || "") + " " + e(x.vaqt || "") + "</span></span></span>" +
+        '<span class="ong"><span class="chip chip-kichik chip-sariq">Tasdiqda</span>' + kunHTML(qoldi(x.sana)) + "</span></a>").join("") +
+      '<p class="kirish-izoh">' + "So'rovni siz yozasiz, qarorni obyekt menejeri yoki rahbariyat qabul qiladi." + "</p>"
+      : MKB.boshHolat("ruxsat", "Tasdiqda turgan so'rov yo'q",
+        sorovYoza ? "Yangi so'rov «Ruxsatlar» sahifasidan yoziladi" : "Obyektga kirish so'rovlari shu yerda kuzatiladi");
+
+    /* ---------- Obyektdagi tashriflar va bugungi signallar ---------- */
+    const jonli = MKB.doira(D.TASHRIFLAR || []).filter(x => x.holat === "obyektda" && idlar.has(x.obyektId));
+    const bugunSana = D.sanaYoz(bugun());
+    const signal = MKB.doira(D.KIRISH_VOQEALARI || []).filter(v => v.sana === bugunSana &&
+      (v.natija === "ogohlantirish" || v.natija === "rad") && idlar.has(v.obyektId));
+    $("tashrif-soni").innerHTML = jonli.length
+      ? '<b data-tarjimasiz>' + jonli.length + "</b> <span>ta odam obyektda</span>" : "";
+    const signalHTML = signal.length
+      ? '<a class="qator" href="kirish-voqealari.html">' +
+          '<span class="belgi pushti">' + MKB.ik("signal") + "</span>" +
+          '<span class="matn"><b><span>Bugungi signallar</span> <span data-tarjimasiz>' + signal.length + "</span></b>" +
+            "<span><span>rad etilgan va ish vaqtidan tashqari ochilish</span></span></span>" +
+          '<svg class="ic" aria-hidden="true" style="color:var(--matn-4)"><use href="#ik-ong"/></svg></a>' : "";
+    $("tashriflar").innerHTML = (jonli.length ? jonli.slice(0, 4).map(x =>
+      '<a class="qator" href="tashrif-jonli.html?id=' + encodeURIComponent(x.id) + '">' +
+        '<span class="belgi mint">' + MKB.ik("tashrif") + "</span>" +
+        '<span class="matn"><b>' + e(nomi(x.obyektId)) + '</b><span><span data-tarjimasiz>' + e(shaxsNomi(x.shaxsId)) + "</span> · <span>" +
+          e(x.maqsad || "") + "</span>" + (x.hamroh ? ' · <span>hamroh</span> <span data-tarjimasiz>' + e(x.hamroh) + "</span>" : "") + "</span></span>" +
+        '<span class="ong"><span class="vaqt" data-tarjimasiz>' + e(x.kirish || "") + "</span><span class=\"chip chip-kichik chip-kok\">Obyektda</span></span></a>").join("") : "") +
+      signalHTML ||
+      MKB.boshHolat("tashrif", "Hozir obyektda hech kim yo'q", "Tashrif boshlanganda va signal kelganda shu yerda chiqadi");
 
     /* ---------- Sug'urtasiz aktivlar: sugurta.html bilan bir xil ta'rif ----------
        Talab qilingan turdagi amaldagi polis yo'q: transport uchun OSAGO, qolganlari uchun mol-mulk. */

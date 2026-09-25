@@ -25,7 +25,7 @@
         <button type="button" class="tugma tugma-asosiy" id="hx-csv" data-sayohat="csv"><svg class="ic"><use href="#ik-csv"/></svg>Barcha yozuvlar, CSV</button>
       </div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html" class="faol">Xarajatlar</a><a href="hisobot-kpi.html">KPI</a><a href="hisobot-hudud.html">Hududlar</a><a href="hisobot-undiruv.html">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-eksport.html">Eksport</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html" class="faol" aria-current="page">Xarajatlar</a><a href="hisobot-kpi.html">Nazorat indeksi</a><a href="hisobot-hudud.html">Hududlar</a></nav>
 
   <div class="hx-asbob" data-sayohat="filtr">
     <label class="tanlov"><span class="t-old">Davr:</span><select id="hx-davr" aria-label="Davr"></select></label>
@@ -131,7 +131,16 @@ async function boshla(){
   $("hx-filial").innerHTML = '<option value="">Barchasi</option>' + filiallar.map(f => '<option>' + esc(f) + "</option>").join("");
   if (filiallar.length < 2) $("hx-filial").closest(".tanlov").hidden = true;
   $("hx-toifa-f").innerHTML = '<option value="">Barchasi</option>' + (D.XARAJAT_TOIFALARI || []).map(t => '<option value="' + t.kalit + '">' + esc(t.nom) + "</option>").join("");
-  const h = {davr: "12", filial: "", toifa: ""};
+  /* Hisobotlar markazidan kelgan davr, filial va toifa: markaz kalitlari shu sahifadagi davrga keltiriladi */
+  const q = new URLSearchParams(location.search);
+  const MARKAZ_DAVR = {oy: "12", otgan: "12", chorak: "12", yil: String(b.getFullYear()), hammasi: "hammasi"};
+  const soralganDavr = MARKAZ_DAVR[q.get("davr")] || q.get("davr") || "";
+  const h = {davr: DAVR.some(d => d.k === soralganDavr) ? soralganDavr : "12",
+    filial: filiallar.indexOf(q.get("filial")) >= 0 ? q.get("filial") : "",
+    toifa: (D.XARAJAT_TOIFALARI || []).some(t => t.kalit === q.get("toifa")) ? q.get("toifa") : ""};
+  $("hx-davr").value = h.davr;
+  $("hx-filial").value = h.filial;
+  $("hx-toifa-f").value = h.toifa;
 
   function tanlangan(){
     const d = DAVR.find(x => x.k === h.davr) || DAVR[0];

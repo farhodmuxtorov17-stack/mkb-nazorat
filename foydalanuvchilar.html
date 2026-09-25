@@ -139,7 +139,7 @@
       ],
       korinishlar: {tayyor: [
         {nom: "Bloklangan hisoblar", filtrlar: {holatNomi: HOLAT.blok}},
-        {nom: "Filial rahbarlari", filtrlar: {rol: "Filial rahbari"}},
+        {nom: "Rahbariyat hisoblari", filtrlar: {rol: "Rahbariyat"}},
       ]},
       bosh: {sarlavha: "Foydalanuvchilar yo'q", izoh: "Birinchi hisobni qo'shing."},
       ustunlar: [
@@ -237,7 +237,7 @@
           '<div class="kirish"><select id="yf-rol" name="rol" required data-xato="Rolni tanlang"><option value="">Tanlang</option>' +
             ROLLAR.map(r => '<option value="' + esc(r) + '">' + esc(r) + "</option>").join("") + "</select></div></div>" +
         '<div class="maydon"><label class="maydon-yorliq" for="yf-filial">Filial</label>' +
-          '<div class="kirish"><select id="yf-filial" name="filialKod" data-xato="Filial rahbariga filial biriktiring">' + filialVariant() + "</select></div>" +
+          '<div class="kirish"><select id="yf-filial" name="filialKod">' + filialVariant() + "</select></div>" +
           '<span class="maydon-izoh" id="yf-filial-izoh"></span></div>' +
         '<div class="maydon"><label class="maydon-yorliq" for="yf-bolim">Bo&#39;lim <b>*</b></label>' +
           '<div class="kirish"><input id="yf-bolim" name="bolim" maxlength="80" placeholder="Muammoli aktivlar bo&#39;limi" required data-xato="Bo&#39;limni kiriting"></div></div>' +
@@ -278,9 +278,11 @@
     }});
     const rol = parda.querySelector("#yf-rol"), filial = parda.querySelector("#yf-filial"), izoh = parda.querySelector("#yf-filial-izoh");
     const rolIzoh = () => {
-      const fr = ROL_KALIT[rol.value] === "filial";
-      filial.required = fr;
-      izoh.textContent = fr ? "Filial rahbari uchun majburiy" : "Bosh ofis xodimi uchun bo'sh qoldiring";
+      /* Filial endi alohida rol emas: bo'sh bo'lsa hisob butun bank bo'yicha ishlaydi */
+      filial.required = false;
+      izoh.textContent = filial.value
+        ? "Bu hisob faqat shu filial yozuvlarini ko'radi va o'zgartiradi"
+        : "Bosh ofis xodimi uchun bo'sh qoldiring";
       tarjimaQil(izoh);
     };
     rol.addEventListener("change", rolIzoh); rolIzoh();

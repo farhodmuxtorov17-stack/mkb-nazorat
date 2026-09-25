@@ -1,10 +1,19 @@
-/* Bo'lim -> sahifalar daraxti. MKB_DARAXT — yon paneldagi bandlar; MKB_ICHKI — bo'limga tegishli ichki sahifalar.
-   Bo'lim kalitlari yadro/app.js dagi BOLIMLAR bilan bir xil. Eski kalitlar (kn, baholash) app.js da taxallus orqali o'qiladi. */
+/* Bo'lim -> sahifalar daraxti.
+   MKB_DARAXT — bo'limning nomlangan sahifalari: yozuv raqamisiz ochiladi. Bo'lim markazidagi
+   "Bo'lim sahifalari" kartasi, Ctrl+K qidiruvi va havola tekshiruvi shu ro'yxatdan oziqlanadi.
+   Yon panel endi yassi: bir bo'lim — bir band (yadro/app.js ROL_YON), shuning uchun bu ro'yxat
+   yon panelda ochilmaydi, lekin hech bir sahifa ro'yxatdan tushmaydi.
+   MKB_ICHKI — yozuv kartochkasi, sehrgar qadami va chop etiladigan dalolatnomalar: ?id= yoki
+   oldingi qadamsiz ma'nosi yo'q, shuning uchun sahifa qidiruvida ko'rsatilmaydi.
+   Bo'lim kalitlari yadro/app.js dagi BOLIMLAR bilan bir xil. Sahifalardagi eski data-sahifa
+   kalitlari (himoya, korik, realizatsiya, yuridik, vazifa, kn, baholash) app.js dagi
+   BOLIM_TAXALLUS orqali yangi kalitga keltiriladi. */
 window.MKB_DARAXT = {
  "panel": [
   {"f": "panel.html", "n": "Rahbariyat paneli"},
   {"f": "panel-obyekt.html", "n": "Obyekt menejeri paneli"},
-  {"f": "panel-nazorat.html", "n": "Ko&#39;rik va xavfsizlik"}
+  {"f": "panel-nazorat.html", "n": "Ko&#39;rik va xavfsizlik paneli"},
+  {"f": "panel-moliya.html", "n": "Moliya paneli"}
  ],
  "aktivlar": [
   {"f": "obyektlar.html", "n": "Reyestr"},
@@ -14,23 +23,21 @@ window.MKB_DARAXT = {
   {"f": "rasmiylashtirish.html", "n": "Huquqni rasmiylashtirish"},
   {"f": "arxiv.html", "n": "Arxiv va chiqim"}
  ],
- "himoya": [
+ "nazorat": [
   {"f": "himoya.html", "n": "Monitoring markazi"},
-  {"f": "qoriqlash.html", "n": "Qo&#39;riqlash"},
-  {"f": "kommunal.html", "n": "Kommunal"},
+  {"f": "korik-rejasi.html", "n": "Ko&#39;rik rejasi"},
+  {"f": "inventarizatsiya.html", "n": "Inventarizatsiya"},
   {"f": "qurilmalar.html", "n": "Qurilmalar"},
   {"f": "hodisalar.html", "n": "Hodisalar"},
-  {"f": "tashriflar.html", "n": "Tashriflar"},
-  {"f": "masofaviy-korik.html", "n": "Masofaviy ko&#39;rik"},
-  {"f": "ruxsatlar.html", "n": "Ruxsatlar"},
-  {"f": "kirish-voqealari.html", "n": "Signallar"}
- ],
- "korik": [
-  {"f": "korik-rejasi.html", "n": "Ko&#39;rik rejasi"},
-  {"f": "korik-kechikkan.html", "n": "Kechikkanlar"},
+  {"f": "qoriqlash.html", "n": "Qo&#39;riqlash"},
+  {"f": "korik-kechikkan.html", "n": "Kechikkan ko&#39;riklar"},
   {"f": "korik-tarixi.html", "n": "Ko&#39;riklar tarixi"},
   {"f": "korik-tayinlash.html", "n": "Ko&#39;rik tayinlash"},
-  {"f": "inventarizatsiya.html", "n": "Inventarizatsiya"}
+  {"f": "masofaviy-korik.html", "n": "Masofaviy ko&#39;rik"},
+  {"f": "kommunal.html", "n": "Kommunal"},
+  {"f": "ruxsatlar.html", "n": "Ruxsatlar"},
+  {"f": "tashriflar.html", "n": "Tashriflar"},
+  {"f": "kirish-voqealari.html", "n": "Signallar"}
  ],
  "qiymat": [
   {"f": "baholash.html", "n": "Baholash"},
@@ -39,29 +46,31 @@ window.MKB_DARAXT = {
   {"f": "soliq.html", "n": "Soliq"},
   {"f": "sugurta.html", "n": "Sug&#39;urta polislari"}
  ],
- "realizatsiya": [
+ "sotuv": [
   {"f": "realizatsiya.html", "n": "Sotuv rejasi"},
   {"f": "lotlar.html", "n": "E-auksion lotlari"},
   {"f": "takliflar.html", "n": "Takliflar"},
   {"f": "shartnomalar.html", "n": "Shartnomalar va to&#39;lovlar"},
-  {"f": "ijara.html", "n": "Ijara"}
- ],
- "yuridik": [
+  {"f": "ijara.html", "n": "Ijara"},
   {"f": "undiruv.html", "n": "Undiruv ishlari"},
   {"f": "sud-kalendar.html", "n": "Sud kalendari"},
   {"f": "davo-tayyorlash.html", "n": "Da&#39;vo tayyorlash"}
+ ],
+ "ishlar": [
+  {"f": "vazifalar.html", "n": "Vazifalar"},
+  {"f": "tasdiqlar.html", "n": "Qarorlar"},
+  {"f": "bildirishnomalar.html", "n": "Bildirishnomalar"}
  ],
  "hisobot": [
   {"f": "hisobotlar.html", "n": "Hisobotlar markazi"},
   {"f": "hisobot-portfel.html", "n": "Balans aktivlari"},
   {"f": "hisobot-mb.html", "n": "MB oylik hisoboti"},
   {"f": "hisobot-xarajat.html", "n": "Xarajatlar"},
-  {"f": "hisobot-kpi.html", "n": "KPI"}
- ],
- "vazifa": [
-  {"f": "vazifalar.html", "n": "Vazifalar"},
-  {"f": "tasdiqlar.html", "n": "Qarorlar"},
-  {"f": "bildirishnomalar.html", "n": "Bildirishnomalar"}
+  {"f": "hisobot-kpi.html", "n": "Nazorat indeksi"},
+  {"f": "hisobot-hudud.html", "n": "Hududlar kesimi"},
+  {"f": "hisobot-undiruv.html", "n": "Undiruv va sud ishlari"},
+  {"f": "kirish-hisoboti.html", "n": "Kirish nazorati"},
+  {"f": "hisobot-eksport.html", "n": "Ma&#39;lumot eksporti"}
  ],
  "sozlama": [
   {"f": "sozlamalar.html", "n": "Profil va qoidalar"},
@@ -93,7 +102,10 @@ window.MKB_ICHKI = {
   "arxiv-obyekt.html",
   "chiqim-tasdiqlash.html"
  ],
- "himoya": [
+ "nazorat": [
+  "korik-otkazish.html",
+  "korik-akti.html",
+  "inventar-dalolatnoma.html",
   "qurilma.html",
   "qurilma-ornatish.html",
   "servis-topshirigi.html",
@@ -103,31 +115,18 @@ window.MKB_ICHKI = {
   "tashrif-chiqish.html",
   "kirish-voqea.html"
  ],
- "korik": [
-  "korik-otkazish.html",
-  "korik-akti.html",
-  "inventar-dalolatnoma.html"
- ],
  "qiymat": [
   "baholash-hisobot-kiritish.html",
   "baholash-hisobot.html",
   "sugurta-polis.html",
   "sugurta-yangilash.html"
  ],
- "realizatsiya": [
+ "sotuv": [
   "lot.html",
-  "shartnoma.html"
- ],
- "yuridik": [
+  "shartnoma.html",
   "ish.html",
   "sud-majlis.html",
   "qaror-kiritish.html"
- ],
- "hisobot": [
-  "hisobot-hudud.html",
-  "hisobot-eksport.html",
-  "hisobot-undiruv.html",
-  "kirish-hisoboti.html"
  ],
  "sozlama": [
   "foydalanuvchi.html"

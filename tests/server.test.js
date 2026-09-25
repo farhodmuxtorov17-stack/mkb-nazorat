@@ -118,11 +118,32 @@ async function kirish(login, parol, qoshimcha){
 
     /* ---------- rollar ---------- */
     const yur = await kirish("u.sobirov", PAROL);
-    tekshir("yurist hisobi bilan kirish ishlaydi", !!yur.j.token && yur.j.rol === "Yurist");
-    const by = {"X-Sessiya": yur.j.token};
-    tekshir("amallar jurnali yuristga yopiq (403)", (await ol("/api/amallar", by)).status === 403);
-    tekshir("yopiq bo'lim to'plami 403 qaytaradi", (await ol("/api/qurilmalar", by)).status === 403);
-    tekshir("undiruv bo'limi yuristga ochiq (200)", (await ol("/api/sud_majlislar", by)).status === 200);
+    tekshir("obyekt menejeri hisobi bilan kirish ishlaydi", !!yur.j.token && yur.j.rol === "Obyekt menejeri");
+    const by = {"X-Sessiya": yur.j.token, "Content-Type": "application/json"};
+    tekshir("amallar jurnali obyekt menejeriga yopiq (403)", (await ol("/api/amallar", by)).status === 403);
+    tekshir("nazorat bo'limi obyekt menejeriga ochiq (200)", (await ol("/api/qurilmalar", by)).status === 200);
+    tekshir("undiruv bo'limi obyekt menejeriga ochiq (200)", (await ol("/api/sud_majlislar", by)).status === 200);
+    const obySozlama = await fetch(ASOS + "/api/filiallar", {method: "POST", headers: by, body: JSON.stringify({nom: "Sinov"})});
+    tekshir("sozlamalarga yozish obyekt menejeriga yopiq (403)", obySozlama.status === 403, "holat: " + obySozlama.status);
+    /* Buxgalteriya hamma narsani o'qiydi, lekin nazorat yozuvlarini yozmaydi */
+    const bux = await kirish("z.xolmatova", PAROL);
+    const bb = {"X-Sessiya": bux.j.token, "Content-Type": "application/json"};
+    tekshir("buxgalteriya ko'riklarni o'qiydi (200)", (await ol("/api/koriklar", bb)).status === 200);
+    const buxKorik = await fetch(ASOS + "/api/koriklar", {method: "POST", headers: bb, body: JSON.stringify({id: "KO-SINOV/1", obyektId: "X"})});
+    tekshir("buxgalteriya ko'rik yoza olmaydi (403)", buxKorik.status === 403, "holat: " + buxKorik.status);
+    /* Kirish so'rovi: inspektor yuboradi, lekin o'zi hal qilmaydi (to'rt ko'z ikki bo'limga bo'linadi) */
+    const insp = await kirish("f.karimova", PAROL);
+    const bi = {"X-Sessiya": insp.j.token, "Content-Type": "application/json"};
+    const inspSorovlar = await ol("/api/kirish_sorovlari", bi).then(r => r.json()).catch(() => []);
+    const inspSorov = Array.isArray(inspSorovlar) ? inspSorovlar.find(x => x.holat === "kutilmoqda") || inspSorovlar[0] : null;
+    if (inspSorov){
+      const ip2 = await fetch(ASOS + "/api/kirish_sorovlari/" + encodeURIComponent(inspSorov.id),
+        {method: "PATCH", headers: bi, body: JSON.stringify({holat: "tasdiqlangan"})});
+      tekshir("inspektor kirish so'rovini o'zi tasdiqlay olmaydi (403)", ip2.status === 403, "holat: " + ip2.status);
+      const ip3 = await fetch(ASOS + "/api/kirish_sorovlari/" + encodeURIComponent(inspSorov.id),
+        {method: "PATCH", headers: by, body: JSON.stringify({holat: inspSorov.holat})});
+      tekshir("obyekt menejeri kirish so'rovi holatini yoza oladi", ip3.status === 200, "holat: " + ip3.status);
+    } else tekshir("kirish so'rovi topildi", false);
     tekshir("noto'g'ri parol 401 qaytaradi", (await kirish("u.sobirov", "noto'g'ri")).status === 401);
     tekshir("noma'lum login 401 qaytaradi", (await kirish("mavjud-emas", PAROL)).status === 401);
     /* Rahbariyat kirish so'rovini tasdiqlaydi (mijozda himoya: "ot"): so'rov, ruxsat va tashrif to'plamlariga yozadi */
@@ -136,20 +157,34 @@ async function kirish(login, parol, qoshimcha){
       rahPatch ? "holat: " + rahPatch.status : "so'rov topilmadi");
     const rahSozlama = await fetch(ASOS + "/api/filiallar", {method: "POST", headers: br, body: JSON.stringify({nom: "Sinov"})});
     tekshir("rahbariyatga sozlamalarga yozish yopiq (403)", rahSozlama.status === 403, "holat: " + rahSozlama.status);
-    tekshir("rol mijoz so'rovidan olinmaydi", (await kirish("u.sobirov", PAROL, {rol: "Administrator"})).j.rol === "Yurist");
+    /* Bo'limlar birlashgani rahbariyatga ko'rik va undiruv yozuvlarini ochib yubormaydi (ROL_KOL_TAQIQ) */
+    for (const kol of ["koriklar", "inventarizatsiyalar", "inventar", "undiruv_ishlar", "sud_majlislar"]){
+      tekshir("rahbariyat " + kol + " ro'yxatini o'qiydi (200)", (await ol("/api/" + kol, br)).status === 200);
+      const pp = await fetch(ASOS + "/api/" + kol, {method: "POST", headers: br, body: JSON.stringify({id: "SINOV-" + kol})});
+      tekshir("rahbariyat " + kol + " to'plamiga yoza olmaydi (403)", pp.status === 403, "holat: " + pp.status);
+    }
+    const rahIsh = (await ol("/api/undiruv_ishlar", br).then(r => r.json()).catch(() => []))[0];
+    if (rahIsh){
+      const rp = await fetch(ASOS + "/api/undiruv_ishlar/" + encodeURIComponent(rahIsh.id),
+        {method: "PATCH", headers: br, body: JSON.stringify({izoh: "sinov"})});
+      tekshir("rahbariyat undiruv ishini o'zgartira olmaydi (403)", rp.status === 403, "holat: " + rp.status);
+    }
+    tekshir("rol mijoz so'rovidan olinmaydi", (await kirish("u.sobirov", PAROL, {rol: "Administrator"})).j.rol === "Obyekt menejeri");
     tekshir("amallar jurnali administratorga ochiq", (await ol2("/api/amallar")).status === 200);
     tekshir("noma'lum to'plam 404", (await ol2("/api/mavjudmas")).status === 404);
     const faqat = await fetch(ASOS + "/api/qurilma_katalog", {method: "POST", headers: b2, body: "{}"});
     tekshir("faqat o'qiladigan to'plamga yozish 405", faqat.status === 405);
 
-    /* ---------- balansga qabul: obyekt menejeri va yurist oxirigacha yetkaza oladi ---------- */
+    /* ---------- balansga qabul: obyekt menejeri o'z bo'limida, inspektor esa qabul istisnosi bilan ---------- */
     const ochiqIshlar = ishlar.filter(i => !i.aktivId && i.holat !== "yopilgan");
     const oldinOzg = JSON.parse(JSON.stringify(omborOl("shartli").ozg.UNDIRUV_ISHLAR || {}));
-    for (const [n, login] of [[0, "n.ismoilova"], [1, "u.sobirov"]]){
+    for (const [n, login] of [[0, "n.ismoilova"], [1, "j.sattorov"]]){
       const ish = ochiqIshlar[n];
       const k = await kirish(login, PAROL);
       const bh = {"X-Sessiya": k.j.token, "Content-Type": "application/json"};
       const rol = k.j.rol;
+      /* Inspektor undiruv ishini o'z bo'limida yuritmaydi: faqat qabul istisnosi bilan yopadi */
+      const istisno = login === "j.sattorov";
       if (!ish){ tekshir(rol + ": qabul uchun ochiq undiruv ishi bor", false); continue; }
       const post = (yol, tana) => fetch(ASOS + yol, {method: "POST", headers: bh, body: JSON.stringify(tana)});
       const ishYol = "/api/undiruv_ishlar/" + encodeURIComponent(ish.id);
@@ -163,28 +198,24 @@ async function kirish(login, parol, qoshimcha){
       const kr = await ol("/api/koriklar", bh);
       const krJ = await kr.json().catch(() => null);
       tekshir(rol + ": keyingi ko'rik raqami uchun ro'yxatni o'qiydi", kr.status === 200 && Array.isArray(krJ));
-      if (rol === "Yurist")
-        tekshir("yuristga ko'riklar ro'yxatidan faqat id beriladi", Array.isArray(krJ) && krJ.every(x => Object.keys(x).join() === "id"));
       const korikId = "KO-2099/" + String(9001 + n);
       qabulSinov.koriklar.push(korikId);
       const korik = {id: korikId, obyektId: aktivId, korikTuri: "Birlamchi", tur: "Birlamchi", sana: "01.10.2026", holat: "rejada",
         inspektor: null, holatBall: null, chekList: [], kamchiliklar: "", xarajatTaklifi: null, keyingiKorikSana: null, xulosa: "", izoh: "Sinov"};
-      if (rol === "Yurist"){
-        const boshqa = await post("/api/koriklar", Object.assign({}, korik, {id: korikId + "X", korikTuri: "Rejali", tur: "Rejali"}));
-        tekshir("yurist birlamchidan boshqa ko'rik yarata olmaydi (403)", boshqa.status === 403, "holat: " + boshqa.status);
-      }
       const kp = await post("/api/koriklar", korik);
       tekshir(rol + ": birlamchi ko'rikni rejalashtiradi", kp.status === 201, "holat: " + kp.status);
       const tarix = (ish.tarix || []).concat([{sana: "21.09.2026", voqea: "Garov balansga qabul qilindi", izoh: "Sinov"}]);
       const pt = tana => fetch(ASOS + ishYol, {method: "PATCH", headers: bh, body: JSON.stringify(tana)});
-      if (rol === "Obyekt menejeri"){
+      if (istisno){
         const begona = await pt({izoh: "sinov"});
-        tekshir("obyekt menejeri undiruv ishining boshqa maydonini o'zgartira olmaydi (403)", begona.status === 403, "holat: " + begona.status);
+        tekshir("inspektor undiruv ishining boshqa maydonini o'zgartira olmaydi (403)", begona.status === 403, "holat: " + begona.status);
       }
       const ip = await pt({holat: "yopilgan", bosqich: "qabul", aktivId, yopilganSana: "21.09.2026", tarix});
       tekshir(rol + ": qabul tugagach undiruv ishini yopadi", ip.status === 200, "holat: " + ip.status);
-      const qayta = await pt({holat: "yopilgan", bosqich: "qabul", aktivId, yopilganSana: "21.09.2026", tarix});
-      tekshir(rol + ": yopilgan ishni qayta yopish o'tmaydi", rol === "Yurist" || qayta.status === 403, "holat: " + qayta.status);
+      if (istisno){
+        const qayta = await pt({holat: "yopilgan", bosqich: "qabul", aktivId, yopilganSana: "21.09.2026", tarix});
+        tekshir("inspektor yopilgan ishni qayta yopa olmaydi (403)", qayta.status === 403, "holat: " + qayta.status);
+      }
     }
     qabulSinov.ishOzg = oldinOzg;
 

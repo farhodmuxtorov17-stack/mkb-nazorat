@@ -46,7 +46,7 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="baholash.html">Qiymat, zaxira va sug'urta</a><span class="ajratgich">/</span><span>Zaxira</span></div>
+    <div class="hs-yorliq"><a href="baholash.html">Qiymat va moliya</a><span class="ajratgich">/</span><span>Zaxira</span></div>
     <div class="hs-qator"><h1>Zaxira (MB 2696)</h1><span class="hs-meta" id="hs-meta">—</span>
       <div class="hs-amallar"><button type="button" class="tugma tugma-oq" id="zx-csv"><svg class="ic"><use href="#ik-csv"/></svg><span>Hisobni yuklab olish</span></button></div></div>
   </div>
@@ -229,7 +229,7 @@
     /* Dinamika: oylik suratlar + joriy hisob */
     const davrlar = [...new Set((D.ZAXIRA_TARIX || []).map(z => z.davr))].sort();
     const doiraId = new Set(aktivlar.map(y => y.id).concat(MKB.doira(D.ARXIV || []).map(a => a.id)));
-    const filialmi = MKB.rol() === "filial";
+    const filialmi = MKB.filialXodimi();
     const surat = d => (D.ZAXIRA_TARIX || []).filter(z => z.davr === d && (!filialmi || doiraId.has(z.obyektId) || MKB.doira([{obyektId: z.obyektId}]).length));
     const oxirgi12 = davrlar.filter(d => d !== joriyDavr).slice(-11);
     const dj = el("zx-dinamika");

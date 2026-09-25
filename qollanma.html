@@ -169,15 +169,10 @@ const X = window.mkbIkkiTil || (s => s);
 
 /* Rol kirish nuqtalari: "Men ..." */
 const ROL_KIRISH = {
-  rahbariyat:   {ik: "bank",      men: X("Men raisman yoki boshqaruv a'zosiman", "Я председатель или член правления")},
-  filial:       {ik: "bino",      men: X("Men filial rahbariman", "Я руководитель филиала")},
+  rahbariyat:   {ik: "bank",      men: X("Men rais, boshqaruv a'zosi yoki filial rahbariman", "Я председатель, член правления или руководитель филиала")},
   obyekt:       {ik: "aktivlar",  men: X("Men obyekt menejeriman", "Я менеджер по объектам")},
-  nazorat:      {ik: "korik",     men: X("Men ko'rik inspektoriman", "Я инспектор по осмотрам")},
-  baholash:     {ik: "baholash",  men: X("Men baholovchiman", "Я оценщик")},
-  realizatsiya: {ik: "savdo",     men: X("Men realizatsiya mutaxassisiman", "Я специалист по реализации")},
-  yurist:       {ik: "sud",       men: X("Men yuristman", "Я юрист")},
+  nazorat:      {ik: "qalqon",    men: X("Men ko'rik va xavfsizlik inspektoriman", "Я инспектор по осмотрам и безопасности")},
   buxgalteriya: {ik: "zaxira",    men: X("Men buxgalteriya va risk xodimiman", "Я сотрудник бухгалтерии и рисков")},
-  xavfsizlik:   {ik: "qalqon",    men: X("Men xavfsizlik xizmati xodimiman", "Я сотрудник службы безопасности")},
   admin:        {ik: "sozlama",   men: X("Men administratorman", "Я администратор")},
 };
 
@@ -185,8 +180,16 @@ const ROL_KIRISH = {
 const V = (id, ik, nu, nr, iu, ir, rollar, qadamlar, sahifalar, sayohat, namoyish) =>
   ({id, ik, nom: X(nu, nr), izoh: X(iu, ir), rollar, qadamlar: qadamlar.map(q => X(q[0], q[1])), sahifalar, sayohat, namoyish});
 const VAZIFALAR = [
+  V("topish", "izlash", "Kerakli sahifani topish", "Найти нужную страницу", "Yon panelda olti band, qolgani bo'lim tasmasida, kartochkada va Ctrl+K da.", "В боковом меню шесть пунктов, остальное — в ленте раздела, в карточке и в Ctrl+K.",
+    "hammasi", [
+      ["Ctrl+K yoki / bosing, obyekt raqami, sahifa nomi yoki amalni yozing.", "Нажмите Ctrl+K или /, введите номер объекта, название страницы или действие."],
+      ["Enter birinchi natijani ochadi, strelkalar bilan boshqasini tanlaysiz.", "Enter открывает первый результат, стрелками выбирается другой."],
+      ["Yon paneldagi bo'lim bandini bosing: sahifa tepasida shu bo'lim sahifalari tasmasi turadi.", "Нажмите пункт раздела в боковом меню: вверху страницы — лента страниц этого раздела."],
+      ["Aktivga tegishli sahifalar obyekt kartochkasining tablarida: Moliya, Hujjatlar, Ko'riklar, Himoya, Sotuv.", "Страницы по активу — во вкладках карточки объекта: финансы, документы, осмотры, охрана, продажа."],
+      ["Hisobotlar bitta markazda: MB hisoboti tepada, qolganlari ro'yxatda.", "Отчёты в одном центре: отчёт ЦБ сверху, остальные в списке."],
+    ], ["obyektlar.html", "obyekt.html", "hisobotlar.html"], "navigatsiya"),
   V("qabul", "aktivlar", "Obyektni balansga qabul qilish", "Принять объект на баланс", "Uch qadam: asos va obyekt, hujjatlar va komissiya, balans qiymati.", "Три шага: основание и объект, документы и комиссия, балансовая стоимость.",
-    ["obyekt", "filial", "yurist", "admin"], [
+    ["obyekt", "admin"], [
       ["«Balansga qabul qilish» tugmasini bosing yoki panelda «Qabul qilish»ni tanlang.", "Нажмите «Balansga qabul qilish» или выберите «Qabul qilish» на панели."],
       ["Nima qabul qilinishini va qabul asosini tanlang, hujjat raqami va sanasini yozing.", "Выберите, что принимается, и основание, укажите номер и дату документа."],
       ["Obyekt nomi, turi, hududi, filiali va manzilini kiriting, «Davom etish».", "Внесите название, тип, регион, филиал и адрес объекта, «Davom etish»."],
@@ -202,7 +205,7 @@ const VAZIFALAR = [
       ["Nazorat indeksi past bo'lsa, qizil bandni bosib sababini oching.", "Если индекс контроля низкий, нажмите на красный пункт и узнайте причину."],
     ], ["obyekt.html", "obyekt-tarix.html"], "obyekt-kartochkasi", "qanday-obyekt"),
   V("korik", "korik", "Ko'rik o'tkazish", "Провести осмотр", "Rejadan dalolatnomagacha, joyida, qoralama bilan.", "От плана до акта, на месте, с черновиком.",
-    ["nazorat", "obyekt", "filial", "admin"], [
+    ["nazorat", "obyekt", "admin"], [
       ["Panelda «Ko'rikni boshlash» yoki rejada «O'tkazish»ni bosing.", "Нажмите «Ko'rikni boshlash» на панели или «O'tkazish» в плане."],
       ["Har nazorat bandini belgilang. Kamchilikka surat biriktiring.", "Отметьте каждый контрольный пункт. К недостатку приложите фото."],
       ["«Aniqlash» bilan joylashuvni yozing.", "Запишите местоположение кнопкой «Aniqlash»."],
@@ -210,21 +213,21 @@ const VAZIFALAR = [
       ["«Dalolatnomani yakunlash». Baho 2 yoki 1 bo'lsa, hodisa o'zi ochiladi.", "«Dalolatnomani yakunlash». При оценке 2 или 1 инцидент откроется сам."],
     ], ["korik-rejasi.html", "korik-otkazish.html", "korik-akti.html"], "korik-otkazish"),
   V("inventar", "skaner", "Inventarizatsiya o'tkazish", "Провести инвентаризацию", "Ko'char mulkni inventar raqami bo'yicha sanash.", "Пересчёт движимого имущества по инвентарным номерам.",
-    ["nazorat", "obyekt", "filial", "admin"], [
+    ["nazorat", "obyekt", "admin"], [
       ["«Yangi inventarizatsiya»: tur, sana, obyektlar va komissiya.", "«Yangi inventarizatsiya»: вид, дата, объекты и комиссия."],
       ["«Sanashni boshlash» va har birlikni «Topildi» yoki «Topilmadi» deb belgilang.", "«Sanashni boshlash» и отметьте каждую единицу «Topildi» или «Topilmadi»."],
       ["Ro'yxatda yo'q narsani «Ortiqcha birlik» bilan qo'shing.", "То, чего нет в списке, добавьте через «Ortiqcha birlik»."],
       ["«Yakunlash»: kamomad va ortiqcha dalolatnomaga yoziladi.", "«Yakunlash»: недостача и излишки попадают в акт."],
     ], ["inventarizatsiya.html", "inventar-dalolatnoma.html"], "inventarizatsiya"),
   V("qurilma", "qurilma", "Qurilma o'rnatish", "Установить устройство", "Himoya komplekti va qurilmani ro'yxatga olish.", "Комплект охраны и регистрация устройства.",
-    ["xavfsizlik", "obyekt", "filial", "nazorat", "admin"], [
+    ["nazorat", "obyekt", "admin"], [
       ["Obyekt kartochkasida «Himoya» tabini oching va smetani ko'ring.", "Откройте вкладку «Himoya» в карточке объекта и посмотрите смету."],
       ["«Qurilma o'rnatish»ni bosing.", "Нажмите «Qurilma o'rnatish»."],
       ["Joy, qurilma, quvvat va aloqa ma'lumotini kiriting.", "Внесите место, устройство, питание и связь."],
       ["Xulosani tekshirib «Ro'yxatga olish»ni bosing.", "Проверьте итог и нажмите «Ro'yxatga olish»."],
     ], ["obyekt-himoya.html", "qurilma-ornatish.html", "qurilma.html"], "himoya-qurilma"),
   V("hodisa", "signal", "Hodisani yopish", "Закрыть инцидент", "Qabul qilish, bartaraf etish, hal qilish va yopish.", "Принять, устранить, решить и закрыть.",
-    ["xavfsizlik", "nazorat", "obyekt", "filial", "admin"], [
+    ["nazorat", "obyekt", "admin"], [
       ["Hodisani oching va «Qabul qilish»ni bosing.", "Откройте инцидент и нажмите «Qabul qilish»."],
       ["Kerak bo'lsa mas'ulni «Almashtirish» bilan o'zgartiring.", "При необходимости смените ответственного кнопкой «Almashtirish»."],
       ["Dalil fayllarini yuklang, zarar bo'lsa sug'urta da'vosini oching.", "Загрузите доказательства; при ущербе откройте страховое требование."],
@@ -232,7 +235,7 @@ const VAZIFALAR = [
       ["«Hodisani yopish». Keyin kerak bo'lsa «Qayta ochish» mumkin.", "«Hodisani yopish». При необходимости потом можно «Qayta ochish»."],
     ], ["hodisalar.html", "hodisa.html"], "hodisa-hal-qilish"),
   V("eshik", "ochiq-qulf", "Eshikni masofadan ochish", "Удалённо открыть дверь", "Ruxsatni tekshirish, asos va jurnal. Tizim qulfga buyruq yubormaydi.", "Проверка допуска, основание и журнал. Система не отправляет команду замку.",
-    ["xavfsizlik", "nazorat", "obyekt", "filial", "admin"], [
+    ["nazorat", "obyekt", "admin"], [
       ["Qulf yoki yuzni tanish terminali sahifasini oching.", "Откройте страницу замка или терминала распознавания лиц."],
       ["Kamera ilovasida eshik oldini ko'ring.", "Посмотрите вход в приложении камеры."],
       ["Kim kirishini va yo'nalishni tanlang. Amaldagi ruxsati bo'lishi shart.", "Выберите, кто входит, и направление. Нужен действующий допуск."],
@@ -240,21 +243,21 @@ const VAZIFALAR = [
       ["Eshikni joyidagi xodim ochadi. Qaror jurnalga yozilgan.", "Дверь открывает сотрудник на месте. Решение записано в журнал."],
     ], ["qurilma.html", "ruxsatlar.html", "kirish-voqealari.html"], "eshik-ochish"),
   V("lot", "savdo", "Lot chiqarish", "Выставить лот", "Lot yaratish, e'lon, savdo natijasi va shartnoma.", "Создание лота, объявление, итог торгов и договор.",
-    ["realizatsiya", "admin"], [
+    ["obyekt", "admin"], [
       ["«Lot yaratish»: aktiv, usul, narx, zakalat va sanalar.", "«Lot yaratish»: актив, способ, цена, задаток и даты."],
       ["«Boshqa amallar» → «E'lon qilish».", "«Boshqa amallar» → «E'lon qilish»."],
       ["Savdodan keyin «G'olib taklifini kiritish» yoki «Savdo o'tkazilmadi».", "После торгов — «G'olib taklifini kiritish» или «Savdo o'tkazilmadi»."],
       ["G'olib to'lagach «Shartnoma tuzish».", "После оплаты победителем — «Shartnoma tuzish»."],
     ], ["lotlar.html", "lot.html", "shartnoma.html"], "lot-chiqarish"),
   V("taklif", "tasdiq", "Taklifni tasdiqlash", "Утвердить предложение", "AML tekshiruvi, Rahbariyat qarori va shartnoma.", "Проверка ПОД/ФТ, решение Руководства и договор.",
-    ["realizatsiya", "rahbariyat", "admin"], [
-      ["Realizatsiya mutaxassisi «Taklif kiritish» bilan taklifni qayd etadi.", "Специалист по реализации фиксирует предложение через «Taklif kiritish»."],
+    ["rahbariyat", "admin"], [
+      ["Obyekt menejeri «Taklif kiritish» bilan taklifni qayd etadi.", "Менеджер по объектам фиксирует предложение через «Taklif kiritish»."],
       ["AML natijasini tekshirib «Yuborish» bilan qarorga jo'natadi.", "Проверяет результат ПОД/ФТ и отправляет на решение через «Yuborish»."],
       ["Rahbariyat «Qarorlar»da «Tasdiqlash» yoki sabab bilan «Rad etish».", "Руководство в «Qarorlar» нажимает «Tasdiqlash» или «Rad etish» с причиной."],
       ["Tasdiqlangach 10 ish kunida «Shartnomani imzolash».", "После утверждения в течение 10 рабочих дней — «Shartnomani imzolash»."],
     ], ["takliflar.html", "tasdiqlar.html"], "taklif-tasdiqlash"),
   V("zaxira", "zaxira", "Zaxira va muddatlarni tekshirish", "Проверить резерв и сроки", "Umidsiz toifa chegarasi va oraliq stavkalar.", "Порог безнадёжной категории и промежуточные ставки.",
-    ["buxgalteriya", "rahbariyat", "filial", "admin"], [
+    ["buxgalteriya", "rahbariyat", "admin"], [
       ["«Muddatlar»da 30, 60 va 90 kunda chegaraga yetadiganlarni ko'ring.", "В «Muddatlar» посмотрите, кто достигнет порога через 30, 60 и 90 дней."],
       ["«Zaxira»da taxminiy stavkalarni tekshiring.", "В «Zaxira» проверьте предварительные ставки."],
       ["Buxgalteriya stavkani «Tasdiqqa yuborish», Rahbariyat «Tasdiqlash».", "Бухгалтерия — «Tasdiqqa yuborish», Руководство — «Tasdiqlash»."],
@@ -274,29 +277,29 @@ const VAZIFALAR = [
       ["Ta'tilga chiqsangiz, «O'rinbosar tayinlash».", "Если уходите в отпуск — «O'rinbosar tayinlash»."],
     ], ["tasdiqlar.html"], ["tasdiqlar-maker-checker", "tasdiqlar-yuborganlarim"], "qanday-qarorlar"),
   V("chiqim", "arxiv", "Aktivni balansdan chiqarish", "Списать актив с баланса", "So'rov, Rahbariyat tasdig'i va arxiv.", "Запрос, утверждение Руководства и архив.",
-    ["obyekt", "filial", "rahbariyat", "yurist", "admin"], [
+    ["obyekt", "rahbariyat", "admin"], [
       ["«Arxiv va chiqim»da «Balansdan chiqarish»ni bosing.", "В «Arxiv va chiqim» нажмите «Balansdan chiqarish»."],
       ["Obyektni tanlang, asos va moliyaviy natijani tekshiring.", "Выберите объект, проверьте основание и финансовый результат."],
       ["«Qaror so'rovini yuborish».", "«Qaror so'rovini yuborish»."],
       ["Rahbariyat obyekt raqamini yozib «Chiqarishni tasdiqlash». Aktiv arxivga o'tadi.", "Руководство вводит номер объекта и нажимает «Chiqarishni tasdiqlash». Актив уходит в архив."],
     ], ["arxiv.html", "chiqim-tasdiqlash.html", "arxiv-obyekt.html"], ["chiqim", "tasdiqlar-maker-checker"]),
-  V("undiruv", "sud", "Garovni undiruvdan balansga o'tkazish", "Передать залог из взыскания на баланс", "Yurist, Rahbariyat va obyekt menejeri o'rtasida.", "Между юристом, руководством и менеджером по объектам.",
-    ["yurist", "rahbariyat", "obyekt", "admin"], [
-      ["Yurist qarorni kiritadi va «Undiruv garov mulkiga qaratildi»ni belgilaydi.", "Юрист вносит решение и отмечает «Undiruv garov mulkiga qaratildi»."],
+  V("undiruv", "sud", "Garovni undiruvdan balansga o'tkazish", "Передать залог из взыскания на баланс", "Obyekt menejeri so'raydi, Rahbariyat tasdiqlaydi.", "Менеджер по объектам запрашивает, Руководство утверждает.",
+    ["obyekt", "rahbariyat", "admin"], [
+      ["Obyekt menejeri sud qarorini kiritadi va «Undiruv garov mulkiga qaratildi»ni belgilaydi.", "Менеджер по объектам вносит решение суда и отмечает «Undiruv garov mulkiga qaratildi»."],
       ["Ijro tugagach ishda «Balansga qabul qilish» — Rahbariyat qarori so'raladi.", "После исполнения в деле — «Balansga qabul qilish», запрашивается решение Руководства."],
       ["Rahbariyat «Qarorlar»da tasdiqlaydi.", "Руководство утверждает в «Qarorlar»."],
       ["Obyekt menejeri panelidagi navbatdan «Qabul qilish» va uch qadam.", "Менеджер по объектам — «Qabul qilish» из очереди на панели и три шага."],
     ], ["ish.html", "qaror-kiritish.html", "tasdiqlar.html", "qabul-boshlash.html"], "undiruv-qabul"),
   V("baho", "baholash", "Baholash hisobotini kiritish", "Внести отчёт об оценке", "Buyurtma, hisobot va tasdiq.", "Заказ, отчёт и утверждение.",
-    ["baholash", "admin"], [
+    ["obyekt", "admin"], [
       ["Baholash reyestrida aktivga «Buyurtma» bering.", "Оформите «Buyurtma» на актив в реестре оценки."],
       ["Hisobot kelgach «Hisobot kiritish»: qiymatlar, raqam, sana, PDF.", "Когда придёт отчёт — «Hisobot kiritish»: стоимости, номер, дата, PDF."],
       ["«Tasdiqqa yuborish». Holatini «Men yuborganlar»da kuzating.", "«Tasdiqqa yuborish». Следите за статусом в «Men yuborganlar»."],
-    ], ["baholash.html", "baholash-buyurtma.html", "baholash-hisobot-kiritish.html"], "baholash-tanishuv"),
+    ], ["baholash.html", "baholash-buyurtma.html", "baholash-hisobot-kiritish.html"], "obyekt-tanishuv"),
   V("xodim", "foyd", "Xodimga hisob ochish", "Открыть учётную запись сотруднику", "Rol, filial va vaqtinchalik parol.", "Роль, филиал и временный пароль.",
     ["admin"], [
       ["«Foydalanuvchilar»da «Foydalanuvchi qo'shish».", "В «Foydalanuvchilar» — «Foydalanuvchi qo'shish»."],
-      ["Ism, login, rol, filial va bo'limni kiriting, «Hisob ochish».", "Внесите имя, логин, роль, филиал и подразделение, «Hisob ochish»."],
+      ["Ism, login, to'rt ish rolidan birini, filial va bo'limni kiriting, «Hisob ochish».", "Внесите имя, логин, одну из четырёх рабочих ролей, филиал и подразделение, «Hisob ochish»."],
       ["Server rejimida «Parol o'rnatish» bilan vaqtinchalik parol bering.", "В серверном режиме выдайте временный пароль через «Parol o'rnatish»."],
     ], ["foydalanuvchilar.html", "foydalanuvchi.html"], "admin-tanishuv"),
 ];
@@ -310,7 +313,7 @@ const ATAMALAR = [
   A("balans-qiymati", "Balans qiymati", "Балансовая стоимость", "Aktiv balansga qabul qilingan summa, mln so'mda. 16701 hisobvarag'ida hisobga olinadi.", "Сумма, по которой актив принят на баланс, в млн сум. Учитывается на счёте 16701.", ["obyekt-moliya.html"]),
   A("bhm", "BHM", "БРВ", "Bazaviy hisoblash miqdori. Auksion qadami chegarasi shu miqdorda o'lchanadi.", "Базовая расчётная величина. Порог шага аукциона измеряется в ней.", ["lot.html"]),
   A("bolib-tolash", "Bo'lib to'lash", "Рассрочка", "Xaridor narxni jadval bo'yicha to'laydi, avans kamida 15%. Mulk to'lov tugaguncha taqiqda turadi.", "Покупатель платит по графику, аванс не меньше 15%. Имущество под запретом до полной оплаты.", ["shartnoma.html"]),
-  A("bozor-qiymati", "Bozor qiymati", "Рыночная стоимость", "Baholovchi hisobotida ko'rsatilgan narx. 12 oy amal qiladi.", "Цена, указанная в отчёте оценщика. Действует 12 месяцев.", ["baholash.html"]),
+  A("bozor-qiymati", "Bozor qiymati", "Рыночная стоимость", "Baholovchi tashkilot hisobotida ko'rsatilgan narx. 12 oy amal qiladi.", "Цена, указанная в отчёте оценочной организации. Действует 12 месяцев.", ["baholash.html"]),
   A("dalolatnoma", "Dalolatnoma", "Акт", "Fakt qayd etilgan imzoli hujjat: qabul-topshirish, ko'rik, inventarizatsiya, tashrif chiqishi.", "Подписанный документ, фиксирующий факт: приём-передача, осмотр, инвентаризация, выход посетителя.", ["qabul-dalolatnoma.html", "korik-akti.html", "inventar-dalolatnoma.html"]),
   A("davaktiv", "Davaktiv", "Давактив", "Davlat aktivlarini boshqarish agentligiga sotish uchun topshirilgan mulk. 1 yilda sotilmasa bankka qaytariladi.", "Имущество, переданное Агентству по управлению государственными активами для продажи. Если не продано за год, возвращается банку.", ["realizatsiya.html", "arxiv.html"]),
   A("davo", "Da'vo", "Иск", "Qarzni undirish uchun sudga beriladigan ariza. Undiruv ishining ikkinchi bosqichi.", "Заявление в суд о взыскании долга. Второй этап дела о взыскании.", ["davo-tayyorlash.html"]),
@@ -355,6 +358,9 @@ const ATAMALAR = [
 const S = (id, rol, su, sr, ju, jr) => ({id, rol, savol: X(su, sr), javob: X(ju, jr)});
 const SAVOLLAR = [
   S("umumiy-til", "umumiy", "Tilni qanday almashtiraman?", "Как сменить язык?", "Shapkadagi UZ yoki RU tugmasini bosing. Tanlov shu brauzerda saqlanadi.", "Нажмите UZ или RU в шапке. Выбор сохраняется в этом браузере."),
+  S("umumiy-bolim", "umumiy", "Kerakli sahifa yon panelda yo'q. Qayerdan topaman?", "Нужной страницы нет в боковом меню. Где её найти?", "Yon panelda har bir rolga ko'pi bilan olti band qoldirilgan. Qolgan sahifalar bo'lim tasmasida, obyekt kartochkasining tablarida va Ctrl+K qidiruvida turadi; eski havola ham ishlaydi.", "В боковом меню каждой роли оставлено не больше шести пунктов. Остальные страницы — в ленте раздела, во вкладках карточки объекта и в поиске Ctrl+K; прежняя ссылка тоже работает."),
+  S("umumiy-hisobot", "umumiy", "Hisobotlar alohida bandlar edi. Endi qayerda?", "Отчёты были отдельными пунктами. Где они теперь?", "Hammasi «Hisobotlar» markazida: MB hisoboti topshirish muddati bilan tepada, qolganlari ro'yxatda. Davr va filial bir marta tanlanadi.", "Все — в центре «Hisobotlar»: отчёт ЦБ со сроком сдачи сверху, остальные в списке. Период и филиал выбираются один раз."),
+  S("umumiy-rol", "umumiy", "Mening rolim o'zgardimi?", "Изменилась ли моя роль?", "Tizimda to'rt ish roli va administrator qoldi. Baholash, sotuv va undiruv ishlari obyekt menejerida, qo'riqlash va qurilmalar inspektorda, filial rahbari Rahbariyat rolida ishlaydi. Ishning o'zi, hujjatlar va muddatlar o'zgarmadi.", "В системе остались четыре рабочие роли и администратор. Оценка, продажа и взыскание — у менеджера по объектам, охрана и устройства — у инспектора, руководитель филиала работает в роли Руководства. Сама работа, документы и сроки не изменились."),
   S("umumiy-yordam", "umumiy", "Sahifada nima qilishni bilmasam-chi?", "Что делать, если не понимаю страницу?", "Shapkadagi «?» tugmasini bosing: shu sahifa bo'yicha maqola va sayohat ochiladi.", "Нажмите «?» в шапке: откроются статья и тур по этой странице."),
   S("umumiy-qaytarish", "umumiy", "Adashib vazifani yopdim. Qanday qaytaraman?", "Ошибочно закрыл задачу. Как вернуть?", "Pastda 8 soniya «Qaytarish» tugmasi turadi. Uni yoki Ctrl+Z ni bosing.", "Внизу 8 секунд видна кнопка «Qaytarish». Нажмите её или Ctrl+Z."),
   S("umumiy-qoralama", "umumiy", "Forma to'ldirayotganda aloqa uzildi. Ma'lumot yo'qoldimi?", "Пока заполнял форму, пропала связь. Данные потеряны?", "Yo'q. Uzun formalar qoralama bo'lib shu qurilmada saqlanadi. Qayta ochsangiz, «Qoralamani tiklash» taklif qilinadi.", "Нет. Длинные формы сохраняются как черновик на этом устройстве. При повторном открытии будет предложено «Qoralamani tiklash»."),
@@ -364,26 +370,28 @@ const SAVOLLAR = [
   S("rahbariyat-oz", "rahbariyat", "Nega ba'zi qarorlarda tasdiqlash tugmasi yo'q?", "Почему у некоторых решений нет кнопки утверждения?", "Bu siz yuborgan so'rov. To'rt ko'z qoidasi bo'yicha uni boshqa xodim tasdiqlaydi.", "Это ваш запрос. По принципу четырёх глаз его утверждает другой сотрудник."),
   S("rahbariyat-ommaviy", "rahbariyat", "Bir nechta taklifni birdan tasdiqlasa bo'ladimi?", "Можно утвердить несколько предложений сразу?", "Ha, «Mendan kutilmoqda»da bir turdagi so'rovlarni belgilab. Balansdan chiqarish faqat bittadan tasdiqlanadi.", "Да, отметив в «Mendan kutilmoqda» запросы одного типа. Списание утверждается только по одному."),
   S("rahbariyat-tatil", "rahbariyat", "Ta'tilga chiqaman. Qarorlar to'xtab qoladimi?", "Ухожу в отпуск. Решения остановятся?", "«O'rinbosar tayinlash» bilan davr va o'rinbosarni belgilang. Shu davrda u qaror qabul qiladi.", "Через «O'rinbosar tayinlash» укажите период и заместителя. В этот период решения принимает он."),
-  S("filial-boshqa", "filial", "Nega boshqa filial aktivlarini ko'rmayman?", "Почему я не вижу активы других филиалов?", "Filial rahbari faqat o'z filiali yozuvlarini ko'radi. Bu rol qoidasi.", "Руководитель филиала видит только записи своего филиала. Это правило роли."),
-  S("filial-kochirish", "filial", "Kechikkan ko'riklarni qanday birdan ko'chiraman?", "Как перенести просроченные осмотры разом?", "«Kechikkanlar» sahifasida qatorlarni belgilang, yangi sana va sababni yozing, «Ko'chirish»ni bosing.", "На странице «Kechikkanlar» отметьте строки, укажите новую дату и причину, нажмите «Ko'chirish»."),
+  S("rahbariyat-filial", "rahbariyat", "Nega boshqa filial aktivlarini ko'rmayman?", "Почему я не вижу активы других филиалов?", "Hisobingizga filial biriktirilgan. Shunda tizim faqat o'sha filial yozuvlarini ko'rsatadi; doirani administrator o'zgartiradi.", "К вашей учётной записи привязан филиал. Тогда система показывает только его записи; охват меняет администратор."),
+  S("rahbariyat-kochirish", "rahbariyat", "Kechikkan ko'riklarni qanday birdan ko'chiraman?", "Как перенести просроченные осмотры разом?", "«Kechikkan ko'riklar» sahifasida qatorlarni belgilang, yangi sana va sababni yozing, «Ko'chirish»ni bosing.", "На странице «Kechikkan ko'riklar» отметьте строки, укажите новую дату и причину, нажмите «Ko'chirish»."),
   S("obyekt-hujjat", "obyekt", "Qaysi hujjatlar majburiy?", "Какие документы обязательны?", "Obyekt kartochkasining «Hujjatlar» tabida joriy bosqichgacha kerakli ro'yxat va yetishmayotganlar ko'rinadi.", "Во вкладке «Hujjatlar» карточки объекта виден список, нужный до текущего этапа, и недостающие."),
   S("obyekt-holat", "obyekt", "Nega holatni «Lotda» qilib bo'lmaydi?", "Почему нельзя поставить статус «Lotda»?", "Lot, ijara va chiqim holati tegishli amal orqali o'rnatiladi: lot yaratilganda, ijaraga berilganda, chiqim tasdiqlanganda.", "Статусы лота, аренды и выбытия ставятся соответствующим действием: при создании лота, сдаче в аренду, утверждении выбытия."),
   S("obyekt-qoldirish", "obyekt", "Vazifani keyinroqqa qanday qoldiraman?", "Как отложить задачу?", "Navbatdagi vazifada «Qoldirish»ni bosing va sanani tanlang. Sana kelganda vazifa qaytadi.", "Нажмите «Qoldirish» у задачи и выберите дату. В этот день задача вернётся."),
+  S("obyekt-baho", "obyekt", "Nega o'zim kiritgan baholash hisobotini tasdiqlay olmayman?", "Почему я не могу утвердить отчёт об оценке, который внёс сам?", "Baho aktiv qiymatini o'zgartiradi, shuning uchun uni Rahbariyat yoki buxgalteriya tasdiqlaydi. So'rov holati «Men yuborganlar» ro'yxatida ko'rinadi.", "Оценка меняет стоимость актива, поэтому её утверждает Руководство или бухгалтерия. Статус запроса виден в списке «Men yuborganlar»."),
+  S("obyekt-tugatish", "obyekt", "Tugatish qiymati maydoni xato ko'rsatyapti.", "Поле ликвидационной стоимости показывает ошибку.", "Tugatish qiymati bozor qiymatidan oshmasligi kerak. Summani mln so'mda yozing.", "Ликвидационная стоимость не должна превышать рыночную. Пишите сумму в млн сум."),
+  S("obyekt-lot30", "obyekt", "Lot saqlanmayapti: «30 kun» xatosi.", "Лот не сохраняется: ошибка «30 дней».", "E'londan savdogacha kamida 30 kun bo'lishi kerak (VM 18). Savdo sanasini keyinroqqa qo'ying.", "От объявления до торгов должно быть не меньше 30 дней (ПКМ 18). Перенесите дату торгов."),
+  S("obyekt-narx", "obyekt", "Narxni qachon pasaytirish mumkin?", "Когда можно снизить цену?", "Lot 3 oy sotilmasa. «Narxni pasaytirish» Rahbariyatga so'rov yuboradi, narx tasdiqdan keyin o'zgaradi.", "Если лот не продан 3 месяца. «Narxni pasaytirish» отправляет запрос Руководству, цена меняется после утверждения."),
+  S("obyekt-garov", "obyekt", "Garov qabul navbatiga tushmadi.", "Залог не попал в очередь приёма.", "Sud qarorini kiritishda «Undiruv garov mulkiga qaratildi» belgilanmagan bo'lishi mumkin. Qarorni tekshiring; qabul uchun Rahbariyat tasdig'i ham kerak.", "Возможно, при вводе решения не отмечено «Undiruv garov mulkiga qaratildi». Проверьте решение; для приёма нужно и утверждение Руководства."),
+  S("obyekt-majlis", "obyekt", "Majlis natijasini qayerga kiritaman?", "Куда вносить результат заседания?", "Majlisni oching va «Natijani saqlash». Qaror e'lon qilingan bo'lsa, «Qaror kiritish» taklif qilinadi.", "Откройте заседание и нажмите «Natijani saqlash». Если решение объявлено, будет предложено «Qaror kiritish»."),
   S("nazorat-surat", "nazorat", "Nega dalolatnomani yakunlab bo'lmayapti?", "Почему не получается завершить акт?", "Kamchilik belgilangan bandga surat kerak. Surat yuklang yoki bandni to'g'rilang.", "К пункту с недостатком нужно фото. Загрузите фото или исправьте пункт."),
   S("nazorat-oflayn", "nazorat", "Obyektda internet yo'q. Ko'rikni qanday o'tkazaman?", "На объекте нет интернета. Как провести осмотр?", "Formani to'ldiravering: u qoralama bo'lib saqlanadi. Aloqa tiklangach «Dalolatnomani yakunlash»ni bosing.", "Заполняйте форму: она сохраняется как черновик. Когда связь появится, нажмите «Dalolatnomani yakunlash»."),
-  S("baholash-tasdiq", "baholash", "Nega o'z hisobotimni tasdiqlay olmayman?", "Почему я не могу утвердить свой отчёт?", "Baho aktiv qiymatini o'zgartiradi, shuning uchun uni Rahbariyat yoki Buxgalteriya tasdiqlaydi.", "Оценка меняет стоимость актива, поэтому её утверждает Руководство или Бухгалтерия."),
-  S("baholash-tugatish", "baholash", "Tugatish qiymati maydoni xato ko'rsatyapti.", "Поле ликвидационной стоимости показывает ошибку.", "Tugatish qiymati bozor qiymatidan oshmasligi kerak. Summani mln so'mda yozing.", "Ликвидационная стоимость не должна превышать рыночную. Пишите сумму в млн сум."),
-  S("realizatsiya-30", "realizatsiya", "Lot saqlanmayapti: «30 kun» xatosi.", "Лот не сохраняется: ошибка «30 дней».", "E'londan savdogacha kamida 30 kun bo'lishi kerak (VM 18). Savdo sanasini keyinroqqa qo'ying.", "От объявления до торгов должно быть не меньше 30 дней (ПКМ 18). Перенесите дату торгов."),
-  S("realizatsiya-narx", "realizatsiya", "Narxni qachon pasaytirish mumkin?", "Когда можно снизить цену?", "Lot 3 oy sotilmasa. «Narxni pasaytirish» Rahbariyatga so'rov yuboradi, narx tasdiqdan keyin o'zgaradi.", "Если лот не продан 3 месяца. «Narxni pasaytirish» отправляет запрос Руководству, цена меняется после утверждения."),
-  S("yurist-qabul", "yurist", "Garov qabul navbatiga tushmadi.", "Залог не попал в очередь приёма.", "Sud qarorini kiritishda «Undiruv garov mulkiga qaratildi» belgilanmagan bo'lishi mumkin. Qarorni tekshiring.", "Возможно, при вводе решения не отмечено «Undiruv garov mulkiga qaratildi». Проверьте решение."),
-  S("yurist-majlis", "yurist", "Majlis natijasini qayerga kiritaman?", "Куда вносить результат заседания?", "Majlisni oching va «Natijani saqlash». Qaror e'lon qilingan bo'lsa, «Qaror kiritish» taklif qilinadi.", "Откройте заседание и нажмите «Natijani saqlash». Если решение объявлено, будет предложено «Qaror kiritish»."),
+  S("nazorat-video", "nazorat", "Kamera videosini qayerda ko'raman?", "Где смотреть видео с камеры?", "Tizim videoni ko'rsatmaydi. Uni kamera ilovasida ko'rasiz, tizimda qurilmaning oxirgi signal vaqti turadi.", "Система не показывает видео. Смотрите его в приложении камеры, в системе — время последнего сигнала устройства."),
+  S("nazorat-eshik", "nazorat", "«Ochishga ruxsatni qayd etish» eshikni ochadimi?", "Открывает ли дверь «Ochishga ruxsatni qayd etish»?", "Yo'q. Qulf tizimga ulanmagan. Qaror asos bilan jurnalga yoziladi, eshikni joyidagi xodim ochadi.", "Нет. Замок не подключён к системе. Решение с основанием пишется в журнал, дверь открывает сотрудник на месте."),
+  S("nazorat-chora", "nazorat", "Hodisani yopolmayapman.", "Не получается закрыть инцидент.", "Ko'rilgan chorani yozing, kamida 5 belgi. Bosqichlar ketma-ket o'tkaziladi.", "Опишите принятые меры, не меньше 5 символов. Этапы проходятся по порядку."),
   S("buxgalteriya-taxminiy", "buxgalteriya", "«Taxminiy» belgisi nimani bildiradi?", "Что означает отметка «Taxminiy»?", "Qiymat hali tasdiqlanmagan. Stavka Rahbariyat tasdiqlagach belgi olinadi.", "Значение ещё не утверждено. Отметка снимается после утверждения ставки Руководством."),
   S("buxgalteriya-mb", "buxgalteriya", "MB hisobotini xato «Topshirilgan» deb belgiladim.", "Ошибочно отметил отчёт ЦБ как сданный.", "«Belgini bekor qilish» tugmasini bosing. Bu amal tarixda qoladi.", "Нажмите «Belgini bekor qilish». Действие останется в истории."),
-  S("xavfsizlik-video", "xavfsizlik", "Kamera videosini qayerda ko'raman?", "Где смотреть видео с камеры?", "Tizim videoni ko'rsatmaydi. Uni kamera ilovasida ko'rasiz, tizimda qurilmaning oxirgi signal vaqti turadi.", "Система не показывает видео. Смотрите его в приложении камеры, в системе — время последнего сигнала устройства."),
-  S("xavfsizlik-eshik", "xavfsizlik", "«Ochishga ruxsatni qayd etish» eshikni ochadimi?", "Открывает ли дверь «Ochishga ruxsatni qayd etish»?", "Yo'q. Qulf tizimga ulanmagan. Qaror asos bilan jurnalga yoziladi, eshikni joyidagi xodim ochadi.", "Нет. Замок не подключён к системе. Решение с основанием пишется в журнал, дверь открывает сотрудник на месте."),
-  S("xavfsizlik-chora", "xavfsizlik", "Hodisani yopolmayapman.", "Не получается закрыть инцидент.", "Ko'rilgan chorani yozing, kamida 5 belgi. Bosqichlar ketma-ket o'tkaziladi.", "Опишите принятые меры, не меньше 5 символов. Этапы проходятся по порядку."),
+  S("buxgalteriya-tolov", "buxgalteriya", "To'lovni qayerdan belgilayman?", "Где отметить платёж?", "«Shartnomalar va to'lovlar» sahifasida shartnomani oching va jadvaldagi oyga belgi qo'ying. Kechikkanlar moliya panelida alohida ro'yxatda.", "Откройте договор на странице «Shartnomalar va to'lovlar» и отметьте месяц в графике. Просроченные — отдельным списком на финансовой панели."),
   S("admin-parol", "admin", "Xodim parolini unutdi.", "Сотрудник забыл пароль.", "Foydalanuvchi kartochkasida «Parol o'rnatish» bilan vaqtinchalik parol bering. Namoyish rejimida hamma bitta parol bilan kiradi.", "В карточке пользователя выдайте временный пароль через «Parol o'rnatish». В демонстрационном режиме все входят с одним паролем."),
   S("admin-kim", "admin", "Yozuvni kim o'zgartirganini qanday bilaman?", "Как узнать, кто изменил запись?", "«Amallar tarixi»da xodim, bo'lim yoki davr bo'yicha filtrlang. Har yozuvda eski va yangi qiymat bor.", "В «Amallar tarixi» отфильтруйте по сотруднику, разделу или периоду. В каждой записи есть старое и новое значение."),
+  S("admin-eski-rol", "admin", "Eski rolli hisoblar bilan nima bo'ladi?", "Что будет с учётными записями со старыми ролями?", "Eski rol nomi kirishda yangi rolga keltiriladi: baholovchi, realizatsiya mutaxassisi va yurist — obyekt menejeriga, xavfsizlik xizmati — inspektorga, filial rahbari — Rahbariyatga. Hisob kartochkasida rolni yangisiga o'zgartirib qo'ying.", "Старое название роли приводится к новой при входе: оценщик, специалист по реализации и юрист — к менеджеру по объектам, служба безопасности — к инспектору, руководитель филиала — к Руководству. В карточке учётной записи смените роль на новую."),
 ];
 
 /* Klaviatura */
@@ -404,8 +412,16 @@ const TUGMALAR = [
 
 /* Nima yangi */
 const YANGILIKLAR = [
+  X("Tuzilma soddalashtirildi: yon panelda har bir rolga ko'pi bilan olti band qoladi. Yon paneldan tushgan sahifa bo'lim tasmasida, obyekt kartochkasida, Ctrl+K qidiruvida va eski havolada ochiq turadi.",
+    "\u0421\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u0430 \u0443\u043f\u0440\u043e\u0449\u0435\u043d\u0430: \u0432 \u0431\u043e\u043a\u043e\u0432\u043e\u043c \u043c\u0435\u043d\u044e \u0443 \u043a\u0430\u0436\u0434\u043e\u0439 \u0440\u043e\u043b\u0438 \u043d\u0435 \u0431\u043e\u043b\u044c\u0448\u0435 \u0448\u0435\u0441\u0442\u0438 \u043f\u0443\u043d\u043a\u0442\u043e\u0432. \u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430, \u0443\u0431\u0440\u0430\u043d\u043d\u0430\u044f \u0438\u0437 \u043c\u0435\u043d\u044e, \u043e\u0441\u0442\u0430\u0451\u0442\u0441\u044f \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e\u0439 \u0438\u0437 \u043b\u0435\u043d\u0442\u044b \u0440\u0430\u0437\u0434\u0435\u043b\u0430, \u0438\u0437 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438 \u043e\u0431\u044a\u0435\u043a\u0442\u0430, \u0438\u0437 \u043f\u043e\u0438\u0441\u043a\u0430 Ctrl+K \u0438 \u043f\u043e \u043f\u0440\u0435\u0436\u043d\u0435\u0439 \u0441\u0441\u044b\u043b\u043a\u0435."),
+  X("To'rt ish roli va administrator: Rahbariyat, obyekt menejeri, ko'rik va xavfsizlik inspektori, buxgalteriya va risk. Baholash, sotuv va undiruv ishlari obyekt menejerida, qo'riqlash va qurilmalar inspektorda.",
+    "\u0427\u0435\u0442\u044b\u0440\u0435 \u0440\u0430\u0431\u043e\u0447\u0438\u0435 \u0440\u043e\u043b\u0438 \u0438 \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440: \u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e, \u043c\u0435\u043d\u0435\u0434\u0436\u0435\u0440 \u043f\u043e \u043e\u0431\u044a\u0435\u043a\u0442\u0430\u043c, \u0438\u043d\u0441\u043f\u0435\u043a\u0442\u043e\u0440 \u043f\u043e \u043e\u0441\u043c\u043e\u0442\u0440\u0430\u043c \u0438 \u0431\u0435\u0437\u043e\u043f\u0430\u0441\u043d\u043e\u0441\u0442\u0438, \u0431\u0443\u0445\u0433\u0430\u043b\u0442\u0435\u0440\u0438\u044f \u0438 \u0440\u0438\u0441\u043a\u0438. \u041e\u0446\u0435\u043d\u043a\u0430, \u043f\u0440\u043e\u0434\u0430\u0436\u0430 \u0438 \u0432\u0437\u044b\u0441\u043a\u0430\u043d\u0438\u0435 \u2014 \u0443 \u043c\u0435\u043d\u0435\u0434\u0436\u0435\u0440\u0430 \u043f\u043e \u043e\u0431\u044a\u0435\u043a\u0442\u0430\u043c, \u043e\u0445\u0440\u0430\u043d\u0430 \u0438 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430 \u2014 \u0443 \u0438\u043d\u0441\u043f\u0435\u043a\u0442\u043e\u0440\u0430."),
+  X("Bitta hisobotlar markazi: to'qqizta hisobot sahifasi bitta ro'yxatga yig'ildi, MB hisoboti topshirish muddati bilan tepada turadi.",
+    "\u041e\u0434\u0438\u043d \u0446\u0435\u043d\u0442\u0440 \u043e\u0442\u0447\u0451\u0442\u043d\u043e\u0441\u0442\u0438: \u0434\u0435\u0432\u044f\u0442\u044c \u0441\u0442\u0440\u0430\u043d\u0438\u0446 \u0441\u043e\u0431\u0440\u0430\u043d\u044b \u0432 \u043e\u0434\u0438\u043d \u0441\u043f\u0438\u0441\u043e\u043a, \u043e\u0442\u0447\u0451\u0442 \u0426\u0411 \u0441\u043e \u0441\u0440\u043e\u043a\u043e\u043c \u0441\u0434\u0430\u0447\u0438 \u0441\u0442\u043e\u0438\u0442 \u0441\u0432\u0435\u0440\u0445\u0443."),
+  X("To'rt ko'z qoidasi saqlandi: obyekt menejeri va buxgalteriya so'raydi, Rahbariyat tasdiqlaydi. O'z so'rovini hech kim, jumladan administrator ham, tasdiqlay olmaydi.",
+    "\u041f\u0440\u0438\u043d\u0446\u0438\u043f \u0447\u0435\u0442\u044b\u0440\u0451\u0445 \u0433\u043b\u0430\u0437 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d: \u043c\u0435\u043d\u0435\u0434\u0436\u0435\u0440 \u043f\u043e \u043e\u0431\u044a\u0435\u043a\u0442\u0430\u043c \u0438 \u0431\u0443\u0445\u0433\u0430\u043b\u0442\u0435\u0440\u0438\u044f \u0437\u0430\u043f\u0440\u0430\u0448\u0438\u0432\u0430\u044e\u0442, \u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442. \u0421\u0432\u043e\u0439 \u0437\u0430\u043f\u0440\u043e\u0441 \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0443\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c \u043d\u0438\u043a\u0442\u043e, \u0432 \u0442\u043e\u043c \u0447\u0438\u0441\u043b\u0435 \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440."),
   X("Yordam markazi: rol, sahifa va vazifa bo'yicha yo'riqnomalar, jarayon xaritalari, atamalar va savollar, chop etiladigan to'liq qo'llanma.", "Центр помощи: инструкции по ролям, страницам и задачам, карты процессов, термины и вопросы, полное руководство для печати."),
-  X("Sayohatlar: har rol uchun tanishuv va 14 ta vazifa sayohati. Ekran qorayadi, kerakli joy yoritiladi.", "Туры: знакомство для каждой роли и 14 туров по задачам. Экран затемняется, нужное место подсвечивается."),
+  X("Sayohatlar: besh rol uchun tanishuv va 16 ta vazifa sayohati. Ekran qorayadi, kerakli joy yoritiladi.", "Туры: знакомство для пяти ролей и 16 туров по задачам. Экран затемняется, нужное место подсвечивается."),
   X("«Qanday ishlaydi» rejimi: sahifa o'zi ko'rsatiladi, qadamlar 6 soniyada almashadi.", "Режим «Qanday ishlaydi»: страница показывает себя сама, шаги меняются каждые 6 секунд."),
   X("Qarorlar sahifasi: uch ko'rinish, «Nima o'zgaradi» bloki, bir turdagi so'rovlarni birdan tasdiqlash va o'rinbosar.", "Страница решений: три представления, блок «Nima o'zgaradi», массовое утверждение однотипных запросов и заместитель."),
   X("To'rt ko'z qoidasi: o'z so'rovingizni tasdiqlay olmaysiz, administrator ham.", "Принцип четырёх глаз: свой запрос утвердить нельзя, даже администратору."),
@@ -461,7 +477,7 @@ const YANGILIKLAR = [
     ["Bu sahifa ro'yxatdan yozuv tanlanganda ochiladi", "Эта страница открывается при выборе записи из списка"], ["Ro'yxatni ochish", "Открыть список"],
     ["Sahifa rolingizga yopiq", "Страница закрыта для вашей роли"], ["Yozadi", "Пишет"], ["Ko'radi", "Видит"], ["Rasmni kattalashtirish", "Увеличить изображение"],
     ["Aktivning hayot sikli", "Жизненный цикл актива"], ["Har bosqichni bosing: tegishli maqola ochiladi.", "Нажмите на этап: откроется нужная статья."],
-    ["Undiruvdan balansga qabul", "Из взыскания на приём на баланс"], ["Garov uch rol orqali o'tadi: yurist, Rahbariyat va obyekt menejeri.", "Залог проходит через три роли: юрист, руководство и менеджер по объектам."],
+    ["Undiruvdan balansga qabul", "Из взыскания на приём на баланс"], ["Garov ikki rol orasida o'tadi: obyekt menejeri ishni yuritadi va so'raydi, Rahbariyat tasdiqlaydi.", "Залог проходит между двумя ролями: менеджер по объектам ведёт дело и запрашивает, Руководство утверждает."],
     ["Atamalar lug'ati", "Словарь терминов"], ["Qayerda", "Где"], ["Tugma", "Клавиша"], ["Yoki", "Или"], ["Amal", "Действие"],
     ["Klaviatura tugmalari", "Сочетания клавиш"], ["Matn kiritayotganda tugmalar ishlamaydi, Ctrl+K, Ctrl+S va Esc bundan mustasno.", "Во время ввода текста клавиши не работают, кроме Ctrl+K, Ctrl+S и Esc."],
     ["Shu versiyada", "В этой версии"], ["Qidiruv natijalari", "Результаты поиска"], ["Hech narsa topilmadi", "Ничего не найдено"],
@@ -472,6 +488,11 @@ const YANGILIKLAR = [
     ["Qo'llanma chop etish uchun tayyor. Mundarija birinchi varaqda.", "Руководство готово к печати. Содержание — на первом листе."],
     ["Namoyish faqat shartli ma'lumotda ishlaydi", "Демонстрация работает только на условных данных"], ["Maqola topilmadi", "Статья не найдена"],
     ["Bo'limga qaytish", "Вернуться к разделу"], ["Hamma rollar", "Все роли"], ["Qidiruv", "Поиск"], ["Sayohat", "Тур"],
+    ["Qayerdan topiladi", "Где это найти"],
+    ["Yon panelda har bir rolga ko'pi bilan olti band ko'rinadi. Bu sahifa yon panelda bo'lmasa ham, bo'lim tasmasida, Ctrl+K qidiruvida va to'g'ridan-to'g'ri havolada ochiq turadi.",
+     "В боковом меню у каждой роли не больше шести пунктов. Даже если этой страницы там нет, она открыта из ленты раздела, из поиска Ctrl+K и по прямой ссылке."],
+    ["Bu sahifa obyekt kartochkasining tabi: reyestrdan aktivni oching va kerakli tabni tanlang.",
+     "Это вкладка карточки объекта: откройте актив из реестра и выберите нужную вкладку."],
   ].forEach(p => X(p[0], p[1]));
   if (typeof window.mkbYordamTuzat === "function") window.mkbYordamTuzat();
 
@@ -479,6 +500,15 @@ const YANGILIKLAR = [
   const MENYU = [["", "Bosh sahifa"], ["rollar", "Rollar"], ["sahifalar", "Sahifalar"], ["jarayonlar", "Jarayonlar"], ["atamalar", "Atamalar"], ["savollar", "Savollar"], ["klaviatura", "Klaviatura"], ["yangi", "Nima yangi"]];
   const ikon = (nom, kls) => '<span class="' + (kls || "ym-ikon") + '" aria-hidden="true">' + ik(nom) + "</span>";
   const sahifaNomi = f => (Y[f] && Y[f].sarlavha) || f;
+  /* Bo'lim markazi: yon paneldan tushgan sahifa shu yerdagi tasmada qoladi (yadro/app.js BOLIMLAR) */
+  const bolimMarkazi = b => {
+    if (!b || b === "kirish") return null;
+    if (b === "sozlama") return "sozlamalar.html";
+    const x = BOLIMLAR.find(k => k.kalit === b);
+    if (!x) return null;
+    const rolga = typeof BOLIM_BOSH_ROL === "object" && BOLIM_BOSH_ROL[b] ? BOLIM_BOSH_ROL[b][joriyRol] : null;
+    return rolga || faylNomi(x.href);
+  };
   const rolNomi = k => (Q[k] && Q[k].nom) || k;
   const rolOchadimi = (rol, f) => {
     if (rol === "admin") return true;
@@ -613,6 +643,17 @@ const YANGILIKLAR = [
       nam.map(t => '<button type="button" class="tugma tugma-oq" data-ym-sayohat="' + esc(t.id) + '">' + ik("korish") + "<span>Qanday ishlaydi</span></button>").join("");
     const blok = (nom, bandlar) => bandlar && bandlar.length ? '<div class="qol-blok"><h4>' + esc(nom) + '</h4><dl class="ym-dl">' +
       bandlar.map(b => "<div><dt>" + esc(b.nom) + "</dt><dd>" + esc(b.izoh) + "</dd></div>").join("") + "</dl></div>" : "";
+    /* Yon panel qisqargan: har bir maqola sahifaning qayerdan ochilishini aytadi */
+    const markaz = bolimMarkazi(bolim);
+    const kartochkada = (window.MKB_OBYEKT_TABLAR || []).some(t => t.f === f);
+    const qayerdan = (!toliq && markaz && markaz !== f && !KIRISH_SAHIFALAR.includes(f))
+      ? '<div class="qol-blok"><h4>Qayerdan topiladi</h4><p class="maydon-izoh" style="margin:0 0 10px">' +
+        esc(kartochkada ? "Bu sahifa obyekt kartochkasining tabi: reyestrdan aktivni oching va kerakli tabni tanlang."
+          : "Yon panelda har bir rolga ko\'pi bilan olti band ko\'rinadi. Bu sahifa yon panelda bo\'lmasa ham, bo\'lim tasmasida, Ctrl+K qidiruvida va to\'g\'ridan-to\'g\'ri havolada ochiq turadi.") +
+        '</p><div class="ym-havolalar"><a href="#' + esc(markaz) + '">' + esc(sahifaNomi(markaz)) + "</a>" +
+        (kartochkada && Y["obyektlar.html"] ? '<a href="#obyektlar.html">' + esc(sahifaNomi("obyektlar.html")) + "</a>" : "") +
+        "</div></div>"
+      : "";
     const amallar = m.amallar && m.amallar.length ? '<div class="qol-blok"><h4>Tugmalar va ulardan keyin nima bo&#39;ladi</h4><ol class="qol-qadamlar">' +
       m.amallar.map((a, i) => '<li class="qol-qadam"><span class="raqam" data-tarjimasiz>' + (i + 1) + '</span><span class="matn"><b>' + esc(a.nom) + "</b><span>" + esc(a.izoh) + "</span></span></li>").join("") + "</ol></div>" : "";
     return '<article class="' + (toliq ? "ym-toliq-maqola karta" : "karta") + '" id="' + (toliq ? "m-" + esc(f.replace(".html", "")) : "ym-maqola") + '">' +
@@ -622,6 +663,7 @@ const YANGILIKLAR = [
         ((ochish || turTugmalar) ? '<div class="ym-tugmalar">' + turTugmalar + ochish + "</div>" : "") + "</div></div>" +
       (kim.length && !KIRISH_SAHIFALAR.includes(f) ? '<div class="qol-blok"><h4>Kim foydalanadi</h4><div class="ym-chiplar">' +
         kim.map(k => '<span class="chip ' + (yozadi.includes(k) ? "chip-kok" : "chip-kul") + '"><span>' + esc(rolNomi(k)) + "</span> · <span>" + (yozadi.includes(k) ? "Yozadi" : "Ko'radi") + "</span></span>").join("") + "</div></div>" : "") +
+      qayerdan +
       (r ? rasm(r.src, m.sarlavha) : "") +
       blok("Ekrandagi bloklar", m.bloklar) + amallar +
       royxatBlok("Ko'p uchraydigan xatolar", m.xatolar, "qol-yopiq") + royxatBlok("Qoidalar", m.qoidalar, "qol-meyor") +
@@ -665,11 +707,11 @@ const YANGILIKLAR = [
   /* ---------- Jarayon xaritalari (SVG, kenglikka qarab gorizontal yoki vertikal) ---------- */
   const HAYOT = [
     ["qabul-boshlash.html", X("Balansga qabul", "Приём на баланс"), X("Obyekt menejeri", "Менеджер по объектам")],
-    ["rasmiylashtirish.html", X("Rasmiylashtirish", "Оформление права"), X("Obyekt menejeri, yurist", "Менеджер, юрист")],
-    ["baholash.html", X("Baholash", "Оценка"), X("Baholovchi", "Оценщик")],
-    ["korik-rejasi.html", X("Ko'rik va himoya", "Осмотры и охрана"), X("Inspektor, xavfsizlik", "Инспектор, безопасность")],
+    ["rasmiylashtirish.html", X("Rasmiylashtirish", "Оформление права"), X("Obyekt menejeri", "Менеджер по объектам")],
+    ["baholash.html", X("Baholash", "Оценка"), X("Obyekt menejeri buyurtma beradi", "Заказывает менеджер по объектам")],
+    ["korik-rejasi.html", X("Ko'rik va himoya", "Осмотры и охрана"), X("Ko'rik va xavfsizlik inspektori", "Инспектор по осмотрам и безопасности")],
     ["zaxira.html", X("Zaxira va muddatlar", "Резерв и сроки"), X("Buxgalteriya va risk", "Бухгалтерия и риски")],
-    ["lotlar.html", X("Sotuv yoki ijara", "Продажа или аренда"), X("Realizatsiya", "Реализация")],
+    ["lotlar.html", X("Sotuv yoki ijara", "Продажа или аренда"), X("Obyekt menejeri", "Менеджер по объектам")],
     ["chiqim-tasdiqlash.html", X("Balansdan chiqarish", "Списание с баланса"), X("Rahbariyat tasdiqlaydi", "Утверждает руководство")],
   ];
   const TOPSHIRISH = [
@@ -679,10 +721,10 @@ const YANGILIKLAR = [
     ["qaror-kiritish.html", X("Sud qarori", "Решение суда"), 0],
     ["ish.html", X("Ijro va qabul so'rovi", "Исполнение и запрос приёма"), 0],
     ["tasdiqlar.html", X("Rahbariyat qarori", "Решение руководства"), 1],
-    ["qabul-boshlash.html", X("Balansga qabul", "Приём на баланс"), 2],
-    ["rasmiylashtirish.html", X("Rasmiylashtirish", "Оформление права"), 2],
+    ["qabul-boshlash.html", X("Balansga qabul", "Приём на баланс"), 0],
+    ["rasmiylashtirish.html", X("Rasmiylashtirish", "Оформление права"), 0],
   ];
-  const YOLAKLAR = [X("Yurist", "Юрист"), X("Rahbariyat", "Руководство"), X("Obyekt menejeri", "Менеджер по объектам")];
+  const YOLAKLAR = [X("Obyekt menejeri", "Менеджер по объектам"), X("Rahbariyat", "Руководство")];
   const svgMatn = s => esc(tr(s));
   function xaritaSVG(tur, en){
     const tor = en < 720;
@@ -754,7 +796,7 @@ const YANGILIKLAR = [
       '</span><span class="matn"><b>' + esc(b[1]) + "</b><span>" + esc(rolIdx ? YOLAKLAR[b[2]] : b[2]) + '</span><a href="#' + esc(b[0]) + '"><span>' + esc(sahifaNomi(b[0])) + "</span>" + ik("ong", "mitti") + "</a></span></li>").join("") + "</ol>";
     return '<section class="karta"><div class="karta-bosh"><h2>Aktivning hayot sikli</h2></div><p class="maydon-izoh" style="margin:-8px 0 16px">Har bosqichni bosing: tegishli maqola ochiladi.</p>' +
         '<div class="ym-xarita" data-xarita="hayot"></div>' + izoh(HAYOT, false) + "</section>" +
-      '<section class="karta" style="margin-top:20px"><div class="karta-bosh"><h2>Undiruvdan balansga qabul</h2></div><p class="maydon-izoh" style="margin:-8px 0 16px">Garov uch rol orqali o&#39;tadi: yurist, Rahbariyat va obyekt menejeri.</p>' +
+      '<section class="karta" style="margin-top:20px"><div class="karta-bosh"><h2>Undiruvdan balansga qabul</h2></div><p class="maydon-izoh" style="margin:-8px 0 16px">Garov ikki rol orasida o&#39;tadi: obyekt menejeri ishni yuritadi va so&#39;raydi, Rahbariyat tasdiqlaydi.</p>' +
         '<div class="ym-xarita" data-xarita="topshirish"></div>' + izoh(TOPSHIRISH, true) + "</section>";
   }
 
@@ -830,8 +872,8 @@ const YANGILIKLAR = [
       matnlar: [X("Aktivning hayot sikli", "Жизненный цикл актива"), X("Jarayon xaritasi: aktiv balansga qabuldan balansdan chiqarilgunga qadar qaysi bosqichlardan o'tadi va har bosqich kimda turadi.",
         "Карта процесса: через какие этапы проходит актив от приёма на баланс до списания и кто отвечает за каждый этап.")].concat(HAYOT.flatMap(b => [b[1], b[2]]))});
     t.push({tur: "Jarayon", nom: X("Undiruvdan balansga qabul", "Из взыскания на приём на баланс"), havola: "#jarayonlar",
-      matnlar: [X("Undiruvdan balansga qabul", "Из взыскания на приём на баланс"), X("Jarayon xaritasi: garov ogohlantirishdan sud va ijro orqali balansga o'tish yo'li — yurist, Rahbariyat va obyekt menejeri.",
-        "Карта процесса: путь залога от предупреждения через суд и исполнение до баланса — юрист, Руководство и менеджер по объектам.")].concat(TOPSHIRISH.flatMap(b => [b[1], YOLAKLAR[b[2]]]))});
+      matnlar: [X("Undiruvdan balansga qabul", "Из взыскания на приём на баланс"), X("Jarayon xaritasi: garov ogohlantirishdan sud va ijro orqali balansga o'tish yo'li — obyekt menejeri va Rahbariyat.",
+        "Карта процесса: путь залога от предупреждения через суд и исполнение до баланса — менеджер по объектам и Руководство.")].concat(TOPSHIRISH.flatMap(b => [b[1], YOLAKLAR[b[2]]]))});
     return t;
   }
   function qidir(q){

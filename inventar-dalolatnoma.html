@@ -54,7 +54,7 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><a href="korik-rejasi.html">Ko'rik va inventarizatsiya</a><span class="ajratgich">/</span><a href="inventarizatsiya.html">Inventarizatsiya</a><span class="ajratgich">/</span><span>Dalolatnoma</span></div>
+    <div class="hs-yorliq"><a href="himoya.html">Nazorat va himoya</a><span class="ajratgich">/</span><a href="inventarizatsiya.html">Inventarizatsiya</a><span class="ajratgich">/</span><span>Dalolatnoma</span></div>
     <div class="hs-qator"><h1>Inventarizatsiya dalolatnomasi</h1><span class="hs-meta" id="hs-meta" data-tarjimasiz>—</span>
       <div class="hs-amallar" id="id-amallar"></div></div>
   </div>
@@ -84,7 +84,7 @@
   await MKB.kolYukla(["INVENTAR", "INVENTARIZATSIYALAR"]);
   const id = new URLSearchParams(location.search).get("id");
   const z = id ? (D.INVENTARIZATSIYALAR || []).find(x => x.id === id) : null;
-  const doirada = z && (MKB.rol() !== "filial" || (z.obyektlar || []).some(o => MKB.doira([{obyektId: o}]).length));
+  const doirada = z && (!MKB.filialXodimi() || (z.obyektlar || []).some(o => MKB.doira([{obyektId: o}]).length));
   if (!z || !doirada){
     akt.innerHTML = MKB.boshHolat("skaner", "Inventarizatsiya topilmadi", "Inventarizatsiyani ro'yxatdan tanlang",
       '<a class="tugma tugma-asosiy" href="inventarizatsiya.html" style="margin-top:12px">Inventarizatsiya</a>');

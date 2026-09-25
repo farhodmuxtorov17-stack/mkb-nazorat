@@ -34,6 +34,10 @@ const app = matn("yadro/app.js");
 /* BOLIMLAR dagi ish bo'limlari va alohida chiziladigan "sozlama" */
 const bolimKalitlari = [...app.matchAll(/\{kalit: "([a-z]+)",\s+yorliq:/g)].map(m => m[1]);
 if (!bolimKalitlari.includes("sozlama")) bolimKalitlari.push("sozlama");
+/* Sahifalardagi eski data-sahifa kalitlari yangi bo'limga keltiriladi (app.js BOLIM_TAXALLUS) */
+const TAXALLUS = vm.runInNewContext("(" + /const BOLIM_TAXALLUS = (\{[\s\S]*?\});/.exec(app)[1] + ")");
+const kanon = k => TAXALLUS[k] || k;
+const sahifaBolimi = f => { const m = /data-sahifa="([^"]+)"/.exec(matn(f)); return m ? kanon(m[1]) : null; };
 const royxatdagi = {};
 Object.keys(DARAXT).forEach(k => DARAXT[k].forEach(s => { royxatdagi[s.f] = k; }));
 Object.keys(ICHKI).forEach(k => ICHKI[k].forEach(f => { royxatdagi[f] = k; }));
@@ -45,21 +49,30 @@ tekshir("daraxtdagi har bir sahifa mavjud", () => {
 tekshir("ichki sahifalar ro'yxatidagi har bir fayl mavjud", () => {
   Object.values(ICHKI).forEach(r => r.forEach(f => talab(bor(f), "fayl yo'q: " + f)));
 });
-tekshir("o'nta bo'lim: reyestr va daraxt kalitlari mos, 'Undiruv va sud' saqlangan", () => {
+tekshir("sakkizta bo'lim kaliti: olti ish bo'limi, panel va sozlama; reyestr va daraxt mos", () => {
   talab(bolimKalitlari.length >= 6, "BOLIMLAR o'qilmadi");
   bolimKalitlari.forEach(k => talab(DARAXT[k] && DARAXT[k].length, "daraxtda bo'lim yo'q: " + k));
   Object.keys(DARAXT).forEach(k => talab(bolimKalitlari.includes(k), "daraxtdagi bo'lim reyestrda yo'q: " + k));
-  talab(bolimKalitlari.length === 10, "bo'limlar soni 10 bo'lishi kerak, hozir: " + bolimKalitlari.length);
-  talab(bolimKalitlari.includes("yuridik"), "undiruv bo'limi (yuridik) yo'q");
+  Object.keys(ICHKI).forEach(k => talab(bolimKalitlari.includes(k), "ichki ro'yxatdagi bo'lim reyestrda yo'q: " + k));
+  talab(bolimKalitlari.length === 8, "bo'limlar soni 8 bo'lishi kerak, hozir: " + bolimKalitlari.length);
+  ["panel", "aktivlar", "nazorat", "qiymat", "sotuv", "ishlar", "hisobot", "sozlama"].forEach(k =>
+    talab(bolimKalitlari.includes(k), "bo'lim yo'q: " + k));
+});
+tekshir("har bir ish sahifasi aynan bitta bo'limga tegishli", () => {
+  const joy = {};
+  Object.keys(DARAXT).forEach(k => DARAXT[k].forEach(x => { (joy[x.f] = joy[x.f] || []).push(k); }));
+  Object.keys(ICHKI).forEach(k => ICHKI[k].forEach(x => { (joy[x] = joy[x] || []).push(k); }));
+  const kop = Object.keys(joy).filter(x => joy[x].length > 1);
+  talab(!kop.length, "bir necha bo'limda: " + kop.map(x => x + " (" + joy[x].join(", ") + ")").join("; "));
 });
 tekshir("har bir ish sahifasi daraxtda yoki ichki ro'yxatda qayd etilgan", () => {
   const yoq = sahifalar.filter(f => !royxatdagi[f] && !ochiqmi(f));
   talab(!yoq.length, "ro'yxatga olinmagan sahifalar: " + yoq.join(", "));
 });
-tekshir("har bir sahifaning bo'lim kaliti daraxtdagi bo'limiga mos", () => {
+tekshir("har bir sahifaning bo'lim kaliti daraxtdagi bo'limiga mos (eski kalitlar taxallus orqali)", () => {
   Object.keys(royxatdagi).forEach(f => {
-    const m = /data-sahifa="([^"]+)"/.exec(matn(f));
-    talab(m && m[1] === royxatdagi[f], f + ": data-sahifa=" + (m && m[1]) + ", kutilgan " + royxatdagi[f]);
+    const b = sahifaBolimi(f);
+    talab(b === royxatdagi[f], f + ": data-sahifa=" + b + ", kutilgan " + royxatdagi[f]);
   });
 });
 tekshir("obyekt kartochkasi tablari: kelishilgan o'nta tab, fayllari bor", () => {
@@ -92,11 +105,11 @@ tekshir("bo'lim tasmalaridagi bandlar o'z bo'limidagi sahifalarga olib boradi", 
   sahifalar.filter(f => royxatdagi[f]).forEach(f => {
     const s = matn(f), t = /<nav class="bolim-tablar".*?<\/nav>/s.exec(s);
     if (!t || /data-id-qoshib/.test(t[0])) return;
-    const bolim = /data-sahifa="([^"]+)"/.exec(s)[1];
+    const bolim = kanon(/data-sahifa="([^"]+)"/.exec(s)[1]);
     for (const m of t[0].matchAll(/href="([^"?#]+)/g)){
       talab(bor(m[1]), f + ": tasmada yo'q fayl " + m[1]);
-      const b = /data-sahifa="([^"]+)"/.exec(matn(m[1]));
-      talab(b && b[1] === bolim, f + ": tasmadagi " + m[1] + " boshqa bo'limda (" + (b && b[1]) + ")");
+      const b = sahifaBolimi(m[1]);
+      talab(b === bolim, f + ": tasmadagi " + m[1] + " boshqa bo'limda (" + b + ")");
     }
   });
 });
@@ -168,7 +181,7 @@ tekshir("server va mijozdagi bo'limlar bir xil", () => {
   const ruxsat = /const ROL_RUXSAT = \{[\s\S]*?\n\};/.exec(app)[0];
   for (const m of ruxsat.matchAll(/\b([a-z]+): "[oyt]+"/g))
     talab(mijoz.includes(m[1]), "ROL_RUXSAT da noma'lum bo'lim: " + m[1]);
-  ["arxiv", "xarita", "sugurta", "hujjat", "kn", "baholash"].forEach(k =>
+  ["arxiv", "xarita", "sugurta", "hujjat", "kn", "baholash", "himoya", "korik", "realizatsiya", "yuridik", "vazifa"].forEach(k =>
     talab(!new RegExp('"' + k + '"').test(/const ROL_BOLIMLAR = \{[\s\S]*?\};/.exec(srv)[0]), "serverda eskirgan bo'lim: " + k));
 });
 tekshir("mijoz va serverdagi har bir rolning o'qish bo'limlari bir xil", () => {

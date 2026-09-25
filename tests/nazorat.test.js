@@ -12,7 +12,7 @@
    ============================================================ */
 
 const path = require("path");
-const fs = require("fs");
+const vm = require("vm"), fs = require("fs");
 const ILDIZ = path.join(__dirname, "..");
 const FAYLLAR = ["malumot.js", "malumot-qoshimcha.js", "malumot-kengaytma.js", "malumot-kirish.js", "malumot-indeks.js"];
 
@@ -184,8 +184,10 @@ const app = matn("yadro/app.js");
 const blok = (bosh, oxir) => app.slice(app.indexOf(bosh), app.indexOf(oxir, app.indexOf(bosh)));
 const rollar = [...blok("const ROL_KALIT", "};").matchAll(/"([^"]+)":\s*"([a-z]+)"/g)].map(m => ({nom: m[1], kalit: m[2]}));
 
-sinov("o'nta rol: nomlar mijoz, server va namoyish hisoblarida bir xil", () => {
-  tekshir(rollar.length === 10, "ROL_KALIT da " + rollar.length + " ta rol");
+sinov("beshta rol: to'rt ish roli va administrator, nomlar mijoz, server va namoyish hisoblarida bir xil", () => {
+  tekshir(rollar.length === 5, "ROL_KALIT da " + rollar.length + " ta rol");
+  ["admin", "rahbariyat", "obyekt", "nazorat", "buxgalteriya"].forEach(k =>
+    tekshir(rollar.some(r => r.kalit === k), "rol kaliti yo'q: " + k));
   const srv = matn("server/server.js");
   const srvRollar = [...(/const ROL_BOLIMLAR = \{([\s\S]*?)\n\};/.exec(srv) || [])[1].matchAll(/^\s*"([^"]+)":/gm)].map(m => m[1]);
   rollar.forEach(r => tekshir(srvRollar.includes(r.nom), r.nom + " serverda yo'q"));
@@ -205,6 +207,70 @@ sinov("har bir rolning bosh sahifasi mavjud va rolga ochiq", () => {
     tekshir(m, r.kalit + ": bosh sahifa belgilanmagan");
     tekshir(fs.existsSync(path.join(ILDIZ, m[1])), m[1] + " topilmadi");
   });
+});
+
+
+/* ---------- 6. Yon panel va to'rt ko'z ---------- */
+const bolimlar = [...blok("const BOLIMLAR", "];").matchAll(/kalit: "([a-z]+)"/g)].map(m => m[1]).concat(["sozlama"]);
+const obj = (nom) => vm.runInNewContext("(" + new RegExp("const " + nom + " = (\\{[\\s\\S]*?\\n\\});").exec(app)[1] + ")");
+const ROL_YON = obj("ROL_YON");
+const ROL_RUXSAT = obj("ROL_RUXSAT");
+
+sinov("hech bir rol yon panelda 6 banddan ko'p ko'rmaydi", () => {
+  rollar.forEach(r => {
+    const y = ROL_YON[r.kalit];
+    tekshir(Array.isArray(y) && y.length, r.kalit + ": ROL_YON belgilanmagan");
+    tekshir(y.length <= 6, r.kalit + ": yon panelda " + y.length + " band");
+    y.forEach(k => tekshir(bolimlar.includes(k), r.kalit + ": noma'lum bo'lim " + k));
+    tekshir(new Set(y).size === y.length, r.kalit + ": takrorlangan bo'lim");
+  });
+});
+
+sinov("yon paneldagi har bir bo'lim rolga ochiq (ROL_RUXSAT yon paneldan keng)", () => {
+  rollar.forEach(r => {
+    const h = ROL_RUXSAT[r.kalit];
+    if (h === null) return;                       /* administrator */
+    ROL_YON[r.kalit].forEach(k =>
+      tekshir((h[k] || "").indexOf("o") >= 0, r.kalit + ": yon paneldagi " + k + " bo'limi yopiq"));
+  });
+});
+
+sinov("eski rol nomlari yangi rolga keltiriladi va mijoz bilan server bir xil jadvaldan foydalanadi", () => {
+  const mijoz = obj("ROL_YANGI");
+  const srv = matn("server/server.js");
+  const srvY = vm.runInNewContext("(" + /const ROL_YANGI = (\{[\s\S]*?\n\});/.exec(srv)[1] + ")");
+  tekshir(JSON.stringify(mijoz) === JSON.stringify(srvY), "ROL_YANGI mijoz va serverda farq qiladi");
+  Object.keys(mijoz).forEach(eski => {
+    tekshir(rollar.some(r => r.nom === mijoz[eski]), eski + " -> " + mijoz[eski] + ": bunday rol yo'q");
+    tekshir(!rollar.some(r => r.nom === eski), eski + " hali ham amaldagi rol");
+  });
+});
+
+sinov("qoidalar va namoyish hisoblari faqat amaldagi rollarni ishlatadi", () => {
+  const nomlar = rollar.map(r => r.nom);
+  (D.QOIDALAR || []).forEach(q => {
+    if (q.qabulQiluvchiRol) tekshir(nomlar.includes(q.qabulQiluvchiRol), q.id + ": qabul qiluvchi rol " + q.qabulQiluvchiRol);
+    if (q.eskalatsiyaRol) tekshir(nomlar.includes(q.eskalatsiyaRol), q.id + ": eskalatsiya roli " + q.eskalatsiyaRol);
+  });
+  (D.MENING_VAZIFALARIM || []).forEach(v => {
+    if (v.rol) tekshir(nomlar.includes(v.rol), v.id + ": vazifa roli " + v.rol);
+  });
+});
+
+sinov("to'rt ko'z: so'rovchi va qaror qiluvchi ajralgan", () => {
+  const amal = matn("yadro/amal.js");
+  tekshir(/TASDIQ_SORUVCHI = \{zaxira: \["buxgalteriya", "admin"\]\}/.test(amal), "zaxira so'rovini faqat buxgalteriya yuboradi");
+  tekshir(/if \(TK\.ozimi\(t, s\)\) return null;/.test(amal), "o'z so'rovini hal qilish taqiqi yo'q");
+  const srv = matn("server/server.js");
+  ["tortKozXatosi", "kirishSorovXatosi", "chiqimXatosi", "zaxiraIstisnosi"].forEach(fn =>
+    tekshir(new RegExp("function " + fn + "|async function " + fn).test(srv), "serverda " + fn + " yo'q"));
+  tekshir(/if \(s\.rol !== "Rahbariyat"\) return null;/.test(srv), "zaxira stavkasini faqat Rahbariyat tasdiqlaydi");
+  /* Kirish so'rovini yuborgan bo'lim uni o'zi hal qilmaydi: nazorat rolida tasdiq huquqi yo'q */
+  tekshir((ROL_RUXSAT.nazorat.nazorat || "").indexOf("t") < 0, "nazorat o'z kirish so'rovini tasdiqlamasligi kerak");
+  tekshir((ROL_RUXSAT.obyekt.nazorat || "").indexOf("t") >= 0, "kirish so'rovini obyekt menejeri hal qiladi");
+  tekshir((ROL_RUXSAT.rahbariyat.nazorat || "").indexOf("t") >= 0, "kirish so'rovini rahbariyat ham hal qiladi");
+  tekshir((ROL_RUXSAT.buxgalteriya.qiymat || "").indexOf("y") >= 0, "zaxira so'rovini buxgalteriya yozadi");
+  tekshir((ROL_RUXSAT.rahbariyat.qiymat || "").indexOf("t") >= 0, "zaxira so'rovini rahbariyat tasdiqlaydi");
 });
 
 /* ---------- Ishga tushirish ---------- */

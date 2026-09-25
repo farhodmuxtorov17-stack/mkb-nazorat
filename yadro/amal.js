@@ -112,13 +112,13 @@ window.MKB_TORT_KOZ = (function(){
   /* ============================================================
      Tasdiqlar (TASDIQLAR): taklif, pasaytirish, baho, qabul, chiqim, zaxira
      ============================================================ */
-  const TASDIQ_BOLIM = {taklif: "realizatsiya", pasaytirish: "realizatsiya", baho: "qiymat", qabul: "aktivlar", chiqim: "aktivlar",
+  const TASDIQ_BOLIM = {taklif: "sotuv", pasaytirish: "sotuv", baho: "qiymat", qabul: "aktivlar", chiqim: "aktivlar",
     zaxira: "qiymat"};
   /* Faqat shu rollar yubora oladigan so'rov turlari (qolganlari — bo'limda yozish huquqi bilan) */
   const TASDIQ_SORUVCHI = {zaxira: ["buxgalteriya", "admin"]};
   /* So'rovni shu bo'limlardan birida yozish huquqi bilan yuborish mumkin: balansdan chiqarishni
-     obyekt menejeri va filial rahbari (aktivlar) yoki sotuv natijasida realizatsiya mutaxassisi boshlaydi (UX 7.1) */
-  const TASDIQ_SORUV_BOLIM = {chiqim: ["aktivlar", "realizatsiya"]};
+     obyekt menejeri reyestrdan (aktivlar) yoki sotuv natijasidan (sotuv) boshlaydi (UX 7.1) */
+  const TASDIQ_SORUV_BOLIM = {chiqim: ["aktivlar", "sotuv"]};
   /* Zaxira va soliq guruhidan tashqari tasdiq bilan o'zgaradigan parametr: vaqtinchalik soliq imtiyozi muddati */
   const ZAXIRA_QOSHIMCHA = ["soliqImtiyozOy"];
   const TK = window.MKB_TORT_KOZ;
@@ -126,9 +126,10 @@ window.MKB_TORT_KOZ = (function(){
   /* Rol (to'liq nomi) bu qarorni o'zi hal qila oladimi: mas'ul rol yoki bo'limdagi tasdiq huquqi */
   function rolHalQiladimi(rolNomi, t){
     if (!rolNomi || !t) return false;
-    if (rolNomi === "Administrator") return true;
-    if (t.masulRol) return t.masulRol === rolNomi;
-    return MKB.rolHuquqi ? MKB.rolHuquqi(rolNomi, TASDIQ_BOLIM[t.tur] || "vazifa", "tasdiq") : false;
+    const nom = MKB.rolNomi ? MKB.rolNomi(rolNomi) : rolNomi;
+    if (nom === "Administrator") return true;
+    if (t.masulRol) return (MKB.rolNomi ? MKB.rolNomi(t.masulRol) : t.masulRol) === nom;
+    return MKB.rolHuquqi ? MKB.rolHuquqi(nom, TASDIQ_BOLIM[t.tur] || "ishlar", "tasdiq") : false;
   }
   /* Qaror vakolati: null — yo'q; {tur: "o'z"} yoki {tur: "o'rinbosar", nomidan: login, ism} */
   function vakolat(t){
@@ -139,7 +140,7 @@ window.MKB_TORT_KOZ = (function(){
     if (MKB.rol() === "admin") return {tur: "o'z"};
     if (!MKB.doira([t]).length) return null;
     /* Mas'ul rol ko'rsatilgan qarorni faqat shu rol hal qiladi (bo'limdagi tasdiq huquqi yetarli emas) */
-    if (t.masulRol ? t.masulRol === s.rol : MKB.huquq(TASDIQ_BOLIM[t.tur] || "vazifa", "tasdiq")) return {tur: "o'z"};
+    if (t.masulRol ? rolHalQiladimi(s.rol, t) : MKB.huquq(TASDIQ_BOLIM[t.tur] || "ishlar", "tasdiq")) return {tur: "o'z"};
     /* O'rinbosarlik: vakolat bergan xodim bu qarorni hal qila olsa va so'rov uniki bo'lmasa */
     const ega = TK.orinbosarlar(D().FOYDLAR || [], s.login, bugun())
       .find(f => rolHalQiladimi(f.rol, t) && !TK.ozimi(t, {login: f.login, ism: f.nom || f.ism}));
@@ -187,7 +188,7 @@ window.MKB_TORT_KOZ = (function(){
       if (y) await MKBapi.yangilash("YOZUVLAR", y.id, {tarix: tarixQosh(y, "Taklif tasdiqlandi", tk.xaridor + ", " + pul(tk.summa))});
       const lotYangi = natija.lotId ? await top("LOTLAR", natija.lotId) : null;
       const v = await vazifaQosh({nom: "Shartnoma tuzish: " + (y ? (y.qisqa || y.nom) : tk.obyektId), tur: "Realizatsiya",
-        rol: "Realizatsiya mutaxassisi", obyektId: tk.obyektId, kod: tk.id, muhimlik: "yuqori",
+        rol: "Obyekt menejeri", obyektId: tk.obyektId, kod: tk.id, muhimlik: "yuqori",
         muddat: lotYangi && lotYangi.shartnomaMuddati ? lotYangi.shartnomaMuddati : yoz(ishKuniQosh(bugun(), param("shartnomaIshKuni", 10))),
         izoh: "Taklif " + tk.id + " tasdiqlandi. Xaridor: " + tk.xaridor + ", " + pul(tk.summa)});
       if (v) natija.vazifaId = v.id;

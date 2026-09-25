@@ -54,7 +54,7 @@
   const D = MKB_DATA;
   const esc = MKB.esc;
   const $ = id => document.getElementById(id);
-  const fk = MKB.rol() === "filial" ? MKB.filialKod() : null;
+  const fk = MKB.filialDoirasi();
 
   const FOYD = (await MKBapi.royxat("FOYDLAR")).filter(f => f.faol !== false);
   const aktivlar = MKB.doira(await MKBapi.royxat("YOZUVLAR")).filter(y => y.holat !== "Chiqarildi");
@@ -96,7 +96,7 @@
       "<span>zaxira 100% gacha oshadi</span>") +
     m("obyektlar.html?muddat=umidsiz", "Umidsiz toifada", MKB.fmt(jami("umidsiz")),
       (jami("uchYil") ? '<span>shundan 3 yildan oshgan</span> <b data-tarjimasiz>' + jami("uchYil") + "</b>" : "<span>zaxira 100%</span>"));
-  /* Filial rahbari: sarlavhada o'z filiali; qolganlar uchun son KPI da (takrorlanmaydi) */
+  /* Filiali ko'rsatilgan hisob: sarlavhada o'z filiali; qolganlar uchun son KPI da (takrorlanmaydi) */
   $("hs-meta").hidden = !fk;
   if (fk) $("hs-meta").innerHTML = '<span data-tarjimasiz>' + esc((D.filial(fk) || {}).nom || fk) + "</span>";
 

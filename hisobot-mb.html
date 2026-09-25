@@ -43,7 +43,7 @@
         <button type="button" class="tugma tugma-oq" id="mb-csv" data-sayohat="csv"><svg class="ic"><use href="#ik-csv"/></svg>Ilovani yuklab olish</button>
       </div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html" class="faol">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">KPI</a><a href="hisobot-hudud.html">Hududlar</a><a href="hisobot-undiruv.html">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-eksport.html">Eksport</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html" class="faol" aria-current="page">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">Nazorat indeksi</a><a href="hisobot-hudud.html">Hududlar</a></nav>
 
   <div class="tor-2">
     <section class="karta" id="mb-tanlangan" aria-label="Tanlangan davr" data-sayohat="hisobot"></section>
@@ -115,7 +115,7 @@ async function boshla(){
 
   /* Filial rahbari: hisobot bank bo'yicha topshiriladi, lekin raqamlar MKB.doira orqali faqat o'z filiali aktivlaridan
      hisoblanadi. Kapitalga nisbat bank kapitaliga bog'liq, filial kesimida hisoblanmaydi. */
-  const filialKesim = MKB.rol() === "filial" && !!MKB.filialKod();
+  const filialKesim = !!MKB.filialDoirasi();
   function kesim(x){
     if (!filialKesim || !D.mbHisobotHisobla) return x;
     const y = D.mbHisobotHisobla(x.davr, a => MKB.doira(a));

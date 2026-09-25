@@ -13,72 +13,98 @@ const MKB_VERSIYA = "26092200";
 /* Sahifa ochilgandagi so'rov qatori: sahifa skripti manzilni keyin almashtirsa ham (?sayohat=, ?korinish=) o'qiladi */
 window.MKB_BOSH_URL = location.search;
 
-/* ---------- Bo'limlar reyestri (yon panel tartibi) ---------- */
+/* ---------- Bo'limlar reyestri (yon panel tartibi) ----------
+   Olti ish bo'limi + rolning bosh sahifasi (panel) + pastki blok (sozlama).
+   Yon panelda bir bo'lim — bir band: bo'lim ichidagi sahifalar bo'lim markazida va Ctrl+K da. */
 const BOLIMLAR = [
-  {kalit: "panel",        yorliq: "Boshqaruv paneli",           qisqa: "Panel",        ikonka: "panel",    href: "panel.html"},
-  {kalit: "aktivlar",     yorliq: "Balans aktivlari",           qisqa: "Aktivlar",     ikonka: "aktivlar", href: "obyektlar.html"},
-  {kalit: "himoya",       yorliq: "Himoya va monitoring",       qisqa: "Himoya",       ikonka: "qalqon",   href: "himoya.html"},
-  {kalit: "korik",        yorliq: "Ko'rik va inventarizatsiya", qisqa: "Ko'rik",       ikonka: "korik",    href: "korik-rejasi.html"},
-  {kalit: "qiymat",       yorliq: "Qiymat, zaxira va sug'urta", qisqa: "Qiymat",       ikonka: "baholash", href: "baholash.html"},
-  {kalit: "realizatsiya", yorliq: "Realizatsiya",               qisqa: "Realizatsiya", ikonka: "savdo",    href: "realizatsiya.html"},
-  {kalit: "yuridik",      yorliq: "Undiruv va sud",             qisqa: "Undiruv",      ikonka: "yuridik",  href: "undiruv.html"},
-  {kalit: "hisobot",      yorliq: "Hisobotlar",                 qisqa: "Hisobotlar",   ikonka: "hisobot",  href: "hisobotlar.html"},
-  {kalit: "vazifa",       yorliq: "Vazifalar",                  qisqa: "Vazifalar",    ikonka: "vazifa",   href: "vazifalar.html"},
+  {kalit: "panel",    yorliq: "Boshqaruv paneli",   qisqa: "Panel",      ikonka: "panel",    href: "panel.html"},
+  {kalit: "aktivlar", yorliq: "Balans aktivlari",   qisqa: "Aktivlar",   ikonka: "aktivlar", href: "obyektlar.html"},
+  {kalit: "nazorat",  yorliq: "Nazorat va himoya",  qisqa: "Nazorat",    ikonka: "qalqon",   href: "himoya.html"},
+  {kalit: "qiymat",   yorliq: "Qiymat va moliya",   qisqa: "Moliya",     ikonka: "baholash", href: "baholash.html"},
+  {kalit: "sotuv",    yorliq: "Sotuv va undiruv",   qisqa: "Sotuv",      ikonka: "savdo",    href: "realizatsiya.html"},
+  {kalit: "ishlar",   yorliq: "Ishlar va qarorlar", qisqa: "Ishlar",     ikonka: "vazifa",   href: "vazifalar.html"},
+  {kalit: "hisobot",  yorliq: "Hisobotlar",         qisqa: "Hisobotlar", ikonka: "hisobot",  href: "hisobotlar.html"},
 ];
-/* Eski data-sahifa kalitlari yangi bo'limga tushadi */
-const BOLIM_TAXALLUS = {kn: "himoya", baholash: "qiymat"};
+/* Eski data-sahifa kalitlari yangi bo'limga tushadi (sahifalardagi data-sahifa o'zgarmaydi) */
+const BOLIM_TAXALLUS = {kn: "nazorat", himoya: "nazorat", korik: "nazorat", baholash: "qiymat",
+  realizatsiya: "sotuv", yuridik: "sotuv", vazifa: "ishlar"};
+/* Bo'lim markazi rolga qarab boshqacha: buxgalteriya moliyada zaxiradan, sotuvda shartnomalardan boshlaydi;
+   rahbariyat va administrator uchun "Ishlar" bandi to'g'ridan-to'g'ri qarorlar navbatini ochadi */
+const BOLIM_BOSH_ROL = {
+  qiymat: {buxgalteriya: "zaxira.html"},
+  sotuv:  {buxgalteriya: "shartnomalar.html"},
+  ishlar: {rahbariyat: "tasdiqlar.html", admin: "tasdiqlar.html"},
+};
+/* Yon panel bandining rolga bog'liq yorlig'i */
+const BOLIM_YORLIQ_ROL = {ishlar: {rahbariyat: "Qarorlar", admin: "Qarorlar"}};
 
 /* ---------- Rollar ----------
+   To'rt ish roli (rahbariyat, obyekt, nazorat, buxgalteriya) va texnik administrator.
    Nomlar MKB_DATA.FOYDLAR va server bilan bir xil. Kalit bosh sahifani va huquqlarni belgilaydi. */
-const ROL_ESKI = {"Ko'rik inspektori": "nazorat", "Baholovchi mutaxassis": "baholash"};
 const ROL_KALIT = {
   "Administrator": "admin",
-  "Rahbariyat": "rahbariyat",                        /* ko'radi va tasdiqlaydi */
-  "Filial rahbari": "filial",                        /* faqat o'z filiali */
-  "Obyekt menejeri": "obyekt",
-  "Ko'rik va xavfsizlik inspektori": "nazorat",
-  "Baholovchi": "baholash",
-  "Realizatsiya mutaxassisi": "realizatsiya",
-  "Yurist": "yurist",                                /* undiruv va huquqni rasmiylashtirish */
-  "Buxgalteriya va risk": "buxgalteriya",            /* zaxira, soliq, MB hisoboti */
-  "Xavfsizlik xizmati": "xavfsizlik",                /* monitoring, hodisalar, qurilmalar */
+  "Rahbariyat": "rahbariyat",                        /* rais, boshqaruv a'zosi, filial rahbari: ko'radi va tasdiqlaydi */
+  "Obyekt menejeri": "obyekt",                       /* reyestr, qabul, hujjat, baholash buyurtmasi, sotuv, ijara, undiruv */
+  "Ko'rik va xavfsizlik inspektori": "nazorat",      /* ko'rik, inventarizatsiya, qurilma, hodisa, qo'riqlash */
+  "Buxgalteriya va risk": "buxgalteriya",            /* zaxira, soliq, MB hisoboti, to'lovlar */
 };
-/* Bo'lim huquqlari: o — ko'rish, y — yozish, t — tasdiqlash. Ro'yxatda yo'q bo'lim yopiq. */
+/* Eski rol nomlari yangi rolga o'tadi: saqlangan sessiya, eski yozuv va qoidalarda uchraydi.
+   ROL_YANGI — nomni almashtirish jadvali; rolNomiKanon undan boshqa hech narsa qilmaydi. */
+const ROL_YANGI = {
+  "Filial rahbari": "Rahbariyat",
+  "Baholovchi": "Obyekt menejeri",
+  "Baholovchi mutaxassis": "Obyekt menejeri",
+  "Realizatsiya mutaxassisi": "Obyekt menejeri",
+  "Yurist": "Obyekt menejeri",
+  "Xavfsizlik xizmati": "Ko'rik va xavfsizlik inspektori",
+  "Ko'rik inspektori": "Ko'rik va xavfsizlik inspektori",
+};
+/* Sof funksiya: eski rol nomini yangisiga keltiradi, notanish nomni o'zgartirmaydi */
+function rolNomiKanon(nom){ return ROL_YANGI[String(nom == null ? "" : nom).trim()] || nom; }
+/* Eski rol nomi -> yangi rol kaliti (eski sessiya va yozuvlar uchun) */
+const ROL_ESKI = (function(){
+  const x = {};
+  Object.keys(ROL_YANGI).forEach(k => { const y = ROL_KALIT[ROL_YANGI[k]]; if (y) x[k] = y; });
+  return x;
+})();
+/* Bo'lim huquqlari: o — ko'rish, y — yozish, t — tasdiqlash. Ro'yxatda yo'q bo'lim yopiq.
+   Rahbariyat forma to'ldirmaydi: "t" faqat tasdiq amali bor bo'limlarda, "y" esa faqat ishlarda
+   (o'z vazifasini bajarildi deb belgilaydi va topshiriq beradi). */
 const ROL_RUXSAT = {
   admin: null,
-  /* Rahbariyat forma to'ldirmaydi. Vazifalar bo'limida yozadi: o'z vazifasini bajarildi deb belgilaydi va topshiriq beradi.
-     "t" faqat tasdiq amali bor bo'limlarda: aktivlar (qabul, chiqim), himoya (kirish so'rovi), qiymat (baho), realizatsiya (taklif) */
-  rahbariyat:   {panel: "o", aktivlar: "ot", himoya: "ot", korik: "o", qiymat: "ot", realizatsiya: "ot",
-                 yuridik: "o", hisobot: "o", vazifa: "oyt", sozlama: "o"},
-  filial:       {panel: "o", aktivlar: "oyt", himoya: "oy", korik: "oy", qiymat: "o", realizatsiya: "o",
-                 yuridik: "o", hisobot: "o", vazifa: "oyt", sozlama: "o"},
-  obyekt:       {panel: "o", aktivlar: "oy", himoya: "oy", korik: "oy", qiymat: "o", realizatsiya: "o",
-                 hisobot: "o", vazifa: "oy", sozlama: "o"},
-  nazorat:      {panel: "o", aktivlar: "o", himoya: "oy", korik: "oy", qiymat: "o",
-                 hisobot: "o", vazifa: "oy", sozlama: "o"},
-  baholash:     {aktivlar: "o", qiymat: "oy", realizatsiya: "o", hisobot: "o", vazifa: "oy", sozlama: "o"},
-  realizatsiya: {aktivlar: "o", qiymat: "o", realizatsiya: "oy", hisobot: "o", vazifa: "oy", sozlama: "o"},
-  yurist:       {aktivlar: "oy", yuridik: "oy", realizatsiya: "o", hisobot: "o", vazifa: "oy", sozlama: "o"},
-  buxgalteriya: {aktivlar: "o", qiymat: "oyt", realizatsiya: "o", hisobot: "oy", vazifa: "oy", sozlama: "o"},
-  xavfsizlik:   {aktivlar: "o", himoya: "oyt", korik: "o", hisobot: "o", vazifa: "oy", sozlama: "o"},
+  rahbariyat:   {panel: "o", aktivlar: "ot", nazorat: "ot",  qiymat: "ot",  sotuv: "ot", hisobot: "o",  ishlar: "oyt", sozlama: "o"},
+  obyekt:       {panel: "o", aktivlar: "oy", nazorat: "oyt", qiymat: "oy",  sotuv: "oy", hisobot: "o",  ishlar: "oy",  sozlama: "o"},
+  nazorat:      {panel: "o", aktivlar: "o",  nazorat: "oy",  qiymat: "o",   sotuv: "o",  hisobot: "o",  ishlar: "oy",  sozlama: "o"},
+  buxgalteriya: {panel: "o", aktivlar: "o",  nazorat: "o",   qiymat: "oyt", sotuv: "o",  hisobot: "oy", ishlar: "oy",  sozlama: "o"},
 };
-/* Uchta panel: rahbariyat, obyekt menejeri, ko'rik va xavfsizlik. Qolgan rollar o'z bo'limining bosh sahifasida ochiladi */
+/* Yon panelda ko'rinadigan bo'limlar (faqat menyu; huquq ROL_RUXSAT da qoladi).
+   Har bir rolda ko'pi bilan 6 band: qolgan sahifalar bo'lim markazida, obyekt kartochkasida,
+   Ctrl+K qidiruvida va to'g'ridan-to'g'ri havolada ochiq turadi. */
+const ROL_YON = {
+  admin:        ["panel", "ishlar", "hisobot"],
+  rahbariyat:   ["panel", "ishlar", "aktivlar", "nazorat", "sotuv", "hisobot"],
+  obyekt:       ["panel", "aktivlar", "qiymat", "sotuv", "ishlar", "hisobot"],
+  nazorat:      ["panel", "nazorat", "aktivlar", "ishlar", "hisobot"],
+  buxgalteriya: ["panel", "qiymat", "sotuv", "aktivlar", "ishlar", "hisobot"],
+};
+const ROL_YON_MAX = 6;
+/* Rolning bosh sahifasi: har bir rol o'z panelidan boshlaydi */
 const ROL_BOSH = {
-  admin: "panel.html", rahbariyat: "panel.html", filial: "panel.html", obyekt: "panel-obyekt.html",
-  nazorat: "panel-nazorat.html", baholash: "baholash.html", realizatsiya: "realizatsiya.html",
-  yurist: "undiruv.html", buxgalteriya: "zaxira.html", xavfsizlik: "himoya.html",
+  admin: "panel.html", rahbariyat: "panel.html", obyekt: "panel-obyekt.html",
+  nazorat: "panel-nazorat.html", buxgalteriya: "panel-moliya.html",
 };
 /* Faqat shu rollarga ochiq sahifalar (bo'lim huquqidan tashqari) */
 const SAHIFA_MAXSUS = {
-  "panel.html":              ["admin", "rahbariyat", "filial"],
+  "panel.html":              ["admin", "rahbariyat"],
   "panel-obyekt.html":       ["admin", "rahbariyat", "obyekt"],
   "panel-nazorat.html":      ["admin", "rahbariyat", "nazorat"],
+  "panel-moliya.html":       ["admin", "rahbariyat", "buxgalteriya"],
   "foydalanuvchilar.html":   ["admin"],
   "foydalanuvchi.html":      ["admin"],
   "rollar.html":             ["admin"],
   "integratsiyalar.html":    ["admin"],
   "amallar-tarixi.html":     ["admin", "rahbariyat"],
-  "filiallar.html":          ["admin", "rahbariyat", "filial"],
+  "filiallar.html":          ["admin", "rahbariyat"],
 };
 /* Forma sahifalari: o'z bo'limida yozish (yoki tasdiqlash) huquqi talab qilinadi */
 const SAHIFA_AMAL = {
@@ -92,21 +118,25 @@ const SAHIFA_AMAL = {
   "baholash-buyurtma.html": "yoz", "baholash-hisobot-kiritish.html": "yoz", "sugurta-yangilash.html": "yoz",
   "davo-tayyorlash.html": "yoz", "qaror-kiritish.html": "yoz",
 };
-/* Forma sahifasi o'z bo'limidan tashqari shu rollarga ham ochiq (o'z bo'limida yozish huquqi bilan):
-   realizatsiya mutaxassisi sotuv natijasida balansdan chiqarish so'rovini yuboradi (UX 7.1) */
-const SAHIFA_AMAL_ROL = {"chiqim-tasdiqlash.html": {realizatsiya: "realizatsiya"}};
+/* Bo'limdan tashqari rol istisnosi. Obyekt menejeri endi aktivlar va sotuv bo'limlarida o'zi yozadi,
+   shuning uchun ro'yxat bo'sh; tuzilma saqlanadi (sahifaRuxsatlimi shu jadvalni o'qiydi). */
+const SAHIFA_AMAL_ROL = {};
 const AMAL_HARF = {oqi: "o", yoz: "y", tasdiq: "t"};
 /* Ikkinchi bo'lim talabi: hisobot bo'limidagi sahifa boshqa bo'lim ma'lumotini ochadi,
    shuning uchun o'sha bo'limni ko'rish huquqi ham kerak (server shu to'plamlarga 403 qaytaradi) */
-const SAHIFA_BOLIM2 = {"hisobot-undiruv.html": "yuridik", "kirish-hisoboti.html": "himoya"};
+const SAHIFA_BOLIM2 = {"hisobot-undiruv.html": "sotuv", "kirish-hisoboti.html": "nazorat"};
 /* Bo'lim huquqidan tashqari yangi yozuv qo'shish (server/server.js YARATISH_ISTISNO bilan bir xil) */
-const YARATISH_ISTISNO = {SUGURTA_DAVOLARI: ["xavfsizlik"], KORIKLAR: ["xavfsizlik"]};
+const YARATISH_ISTISNO = {SUGURTA_DAVOLARI: ["nazorat"]};
+/* Rahbariyat tasdiq amali uchun bo'limga yozadi, lekin shu to'plamlarni hech qachon o'zgartirmaydi
+   (server/server.js ROL_KOL_TAQIQ bilan bir xil) */
+const ROL_KOL_TAQIQ = {rahbariyat: ["KORIKLAR", "INVENTARIZATSIYALAR", "INVENTAR", "UNDIRUV_ISHLAR", "SUD_MAJLISLAR"]};
 
 function joriySessiya(){ return window.MKBapi ? MKBapi.sessiya() : null; }
 function joriyRolKalit(){
   const s = joriySessiya();
   if (!s) return null;
-  return ROL_KALIT[s.rol] || ROL_ESKI[s.rol] || null;   /* noma'lum rol hech qanday huquq olmaydi */
+  /* Saqlangan sessiyada eski rol nomi bo'lishi mumkin: avval yangi nomga keltiriladi */
+  return ROL_KALIT[rolNomiKanon(s.rol)] || ROL_ESKI[s.rol] || null;   /* noma'lum rol hech qanday huquq olmaydi */
 }
 function bolimKanon(k){ return BOLIM_TAXALLUS[k] || k || null; }
 function huquqBor(rol, bolim, harf){
@@ -142,8 +172,9 @@ function bolimTopish(fayl){
 function joriyBolim(){
   return bolimTopish(faylNomi()) || bolimKanon(document.body && document.body.dataset.sahifa);
 }
-function sahifaRuxsatlimi(href){
-  const rol = joriyRolKalit();
+/* Sahifa shu rolga ochiqmi. rol berilmasa joriy sessiya roli olinadi (yon panel rolni o'zi uzatadi) */
+function sahifaRuxsatlimi(href, rolKaliti){
+  const rol = rolKaliti === undefined ? joriyRolKalit() : rolKaliti;
   if (!rol) return false;
   const fayl = faylNomi(href);
   if (SAHIFA_MAXSUS[fayl] && !SAHIFA_MAXSUS[fayl].includes(rol)) return false;
@@ -473,6 +504,47 @@ function bolimNomi(kalit){
   return kalit === "sozlama" ? "Sozlamalar" : "Tizim";
 }
 
+/* Bo'limning shu rol uchun kirish sahifasi: panel — rolning bosh sahifasi,
+   qolganlari BOLIM_BOSH_ROL yoki reyestrdagi umumiy markaz */
+function bolimHavolasi(kalit, rol){
+  if (kalit === "panel") return rolBoshSahifasi(rol);
+  const maxsus = BOLIM_BOSH_ROL[kalit] && BOLIM_BOSH_ROL[kalit][rol];
+  if (maxsus) return maxsus;
+  const b = BOLIMLAR.find(x => x.kalit === kalit);
+  if (b) return b.href;
+  const d = (window.MKB_DARAXT || {})[kalit] || [];
+  return d.length ? d[0].f : null;
+}
+/* Bo'lim bandining shu rol uchun yorlig'i */
+function bolimYorligi(kalit, rol){
+  const maxsus = BOLIM_YORLIQ_ROL[kalit] && BOLIM_YORLIQ_ROL[kalit][rol];
+  if (maxsus) return maxsus;
+  const b = BOLIMLAR.find(x => x.kalit === kalit);
+  return b ? b.yorliq : kalit === "sozlama" ? "Sozlamalar" : kalit;
+}
+/* Yon paneldagi bandlar ro'yxati (sof mantiq, DOMsiz — testlar shu funksiyani chaqiradi).
+   ROL_YON menyuni qisqartiradi, ROL_RUXSAT esa o'zgarmaydi: menyuda yo'q sahifa ham ochiq turadi. */
+function yonBandlar(rol){
+  const tartib = ROL_YON[rol] || BOLIMLAR.map(b => b.kalit);
+  const korilgan = new Set();
+  const r = [];
+  const panelSahifalari = ((window.MKB_DARAXT || {}).panel || []).map(x => x.f);
+  tartib.forEach(kalit => {
+    if (!bolimRuxsatlimi(kalit, rol)) return;
+    const havola = bolimHavolasi(kalit, rol);
+    if (!havola || !sahifaRuxsatlimi(havola, rol)) return;
+    /* Rolning o'z paneli hali yo'q bo'lsa "Panel" bandi chizilmaydi: bosh sahifaga yon paneldagi
+       belgi olib boradi, band esa o'sha sahifani ikkinchi marta takrorlamaydi */
+    if (kalit === "panel" && panelSahifalari.indexOf(havola) < 0) return;
+    /* Bir sahifaga ikki band olib bormaydi */
+    if (korilgan.has(havola)) return;
+    korilgan.add(havola);
+    r.push({kalit, yorliq: bolimYorligi(kalit, rol), havola,
+      ikonka: (BOLIMLAR.find(b => b.kalit === kalit) || {}).ikonka || "hujjat"});
+  });
+  return r.slice(0, ROL_YON_MAX);
+}
+
 function yonChiz(){
   const el = document.getElementById("yon");
   if (!el) return;
@@ -480,8 +552,14 @@ function yonChiz(){
   const bolim = joriyBolim();
   const joriyFayl = faylNomi();
   const daraxt = window.MKB_DARAXT || {};
-  const bandlar = BOLIMLAR.filter(b => bolimRuxsatlimi(b.kalit, rol));
 
+  /* Yassi band: bir bo'lim — bir havola */
+  const bandHTML = b => {
+    const ochiq = b.kalit === bolim;
+    return '<a class="yon-band' + (ochiq ? " faol" : "") + '" href="' + b.havola + '"' +
+      (ochiq ? ' aria-current="page"' : "") + ">" + ik(b.ikonka) + "<span>" + b.yorliq + "</span></a>";
+  };
+  /* Pastki blok (Sozlamalar) bugungidek ochiladigan guruh bo'lib qoladi */
   const guruhHTML = (kalit, yorliq, ikonka) => {
     const sahifalar = (daraxt[kalit] || []).filter(s => sahifaRuxsatlimi(s.f));
     const ochiq = kalit === bolim;
@@ -503,7 +581,7 @@ function yonChiz(){
     '<a class="yon-logo" href="' + rolBoshSahifasi(rol) + '">' +
       '<span class="belgi">' + LOGO_SVG + "</span>" +
       "<span class=\"yon-nom\"><b>Mikrokreditbank</b><span>Balans aktivlarini boshqarish tizimi</span></span></a>" +
-    '<div class="yon-bandlar">' + bandlar.map(b => guruhHTML(b.kalit, b.yorliq, b.ikonka)).join("") + "</div>" +
+    '<div class="yon-bandlar">' + yonBandlar(rol).map(bandHTML).join("") + "</div>" +
     '<div class="yon-past">' +
       guruhHTML("sozlama", "Sozlamalar", "sozlama") +
       '<div class="yon-juft">' +
@@ -857,7 +935,7 @@ function oqilmaganlar(){
   if (!s) return [];
   const hammasi = rol === "admin" || rol === "rahbariyat";
   const olinmaydi = new Set(bildirishSozlama().olinmaydi);
-  return MKB.doira((D_().BILDIRISHLAR || []).filter(b => b && !bildirishOqildimi(b) && (hammasi || !b.rol || b.rol === s.rol) &&
+  return MKB.doira((D_().BILDIRISHLAR || []).filter(b => b && !bildirishOqildimi(b) && (hammasi || !b.rol || rolNomiKanon(b.rol) === rolNomiKanon(s.rol)) &&
     !(b.qoidaId && olinmaydi.has(b.qoidaId))));
 }
 /* Xodimning bildirishnoma sozlamasi (FOYDLAR.bildirishSozlama): {olinmaydi: [qoidaId, ...]} — shu qoidalar xabari qo'ng'iroqqa tushmaydi.
@@ -1872,6 +1950,10 @@ const MKB = {
     return mln >= 1000 ? (mln / 1000).toFixed(2).replace(".", ",") + " mlrd so'm" : String(mln).replace(".", ",") + " mln so'm";
   },
   rol(){ return joriyRolKalit(); },
+  /* Rolning to'liq nomi (eski nom yangisiga keltirilgan holda) */
+  rolNomi(nom){ return rolNomiKanon(nom === undefined ? (joriySessiya() || {}).rol : nom); },
+  /* Yon paneldagi bandlar (rol bo'yicha; sinov va sahifalar uchun) */
+  yonBandlar(rol){ return yonBandlar(rol === undefined ? joriyRolKalit() : rol); },
   /* Matnni joriy tilda qaytaradi. Maydonning oldindan to'ldirilgan qiymati (input value) va
      shunga o'xshash joylar uchun: tarjimaQil faqat matn tugunlari va atributlar bilan ishlaydi. */
   matn(uz){
@@ -1912,7 +1994,7 @@ const MKB = {
   },
   /* Boshqa rol (to'liq nomi bilan) huquqi: MKB.rolHuquqi("Rahbariyat", "qiymat", "tasdiq") — o'rinbosarlik tekshiruvi uchun */
   rolHuquqi(rolNomi, bolim, amal){
-    return huquqBor(ROL_KALIT[rolNomi] || ROL_ESKI[rolNomi] || null, bolim, AMAL_HARF[amal || "oqi"] || "o");
+    return huquqBor(ROL_KALIT[rolNomiKanon(rolNomi)] || ROL_ESKI[rolNomi] || null, bolim, AMAL_HARF[amal || "oqi"] || "o");
   },
   /* Bildirishnoma: MKB.bildirish.oqildimi(b) — joriy xodim uchun; await MKB.bildirish.oqildi(id|b) — o'qilgan deb belgilash */
   bildirish: {oqildimi: b => bildirishOqildimi(b), oqildi: x => bildirishOqildiDeb(x), oqilmaganlar: () => oqilmaganlar(),
@@ -1920,13 +2002,29 @@ const MKB = {
     sozlama: () => bildirishSozlama(), sozlamaYoz: x => bildirishSozlamaYoz(x)},
   /* To'lov jadvaliga belgi (IJARA.tolovlar, SHARTNOMALAR.jadval): realizatsiyada yozish huquqi yoki Buxgalteriya va risk
      (server TOLOV_ISTISNO bilan bir xil: buxgalteriya faqat to'lov maydonlari va holatni o'zgartiradi) */
-  tolovBelgilaydimi(){ return MKB.huquq("realizatsiya", "yoz") || joriyRolKalit() === "buxgalteriya"; },
+  tolovBelgilaydimi(){ return MKB.huquq("sotuv", "yoz") || joriyRolKalit() === "buxgalteriya"; },
   /* To'plamga yangi yozuv qo'sha oladimi: bo'limda yozish huquqi yoki server bilan bir xil istisno.
-     MKB.yaratadimi("SUGURTA_DAVOLARI", "qiymat") — Xavfsizlik xizmati hodisadan da'vo ochadi */
+     MKB.yaratadimi("SUGURTA_DAVOLARI", "qiymat") — ko'rik va xavfsizlik inspektori hodisadan da'vo ochadi */
   yaratadimi(kol, bolim){
+    if (MKB.kolYopiqmi(kol)) return false;
     return MKB.huquq(bolim, "yoz") || (YARATISH_ISTISNO[kol] || []).indexOf(joriyRolKalit()) >= 0;
   },
-  /* Filial rahbari faqat o'z filiali yozuvlarini ko'radi. Boshqa rollar uchun ro'yxat o'zgarmaydi. */
+  /* To'plam shu rolga butunlay yopiqmi (server ROL_KOL_TAQIQ bilan bir xil): bo'limlar birlashgani
+     rahbariyatga ko'rik va undiruv yozuvlarini ochib yubormasligi kerak */
+  kolYopiqmi(kol){ return (ROL_KOL_TAQIQ[joriyRolKalit()] || []).indexOf(kol) >= 0; },
+  /* Filiali ko'rsatilgan hisob (masalan filial boshqaruvchisi) faqat o'z filiali yozuvlarini ko'radi.
+     Filial endi rol emas, hisob belgisi: shuning uchun tekshiruv filialKod bo'yicha ketadi. */
+  filialXodimi(){ return !!MKB.filialDoirasi(); },
+  /* Doira uchun filial kodi: faqat hisobga biriktirilgan kod (bo'lim nomi bo'yicha taxmin qilinmaydi) */
+  filialDoirasi(){
+    const s = joriySessiya();
+    if (!s) return null;
+    if (s.filialKod) return s.filialKod;
+    const D = D_();
+    const f = (D.FOYDLAR || []).find(x => x && (s.login ? x.login === s.login : x.nom === s.ism));
+    return (f && f.filialKod) || null;
+  },
+  /* Ko'rsatish uchun filial kodi: hisobda bo'lmasa, sessiyadagi bo'lim nomi bo'yicha topiladi */
   filialKod(){
     const s = joriySessiya();
     if (!s) return null;
@@ -1938,8 +2036,8 @@ const MKB = {
     return fl ? fl.id || fl.kod : null;
   },
   doira(royxat){
-    if (!Array.isArray(royxat) || joriyRolKalit() !== "filial") return royxat;
-    const fk = MKB.filialKod();
+    if (!Array.isArray(royxat)) return royxat;
+    const fk = MKB.filialDoirasi();
     if (!fk) return royxat;
     const D = D_();
     const obFilial = id => {

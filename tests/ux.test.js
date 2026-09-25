@@ -10,6 +10,7 @@
 "use strict";
 const fs = require("fs"), path = require("path"), vm = require("vm");
 const ILDIZ = path.join(__dirname, "..");
+global.window = global;
 const PORT = 8792;
 const PAROL = "sinov-parol-8792";
 process.env.MKB_PAROL = PAROL;
@@ -135,13 +136,144 @@ tekshir("kirishdan keyingi qaytish faqat shu saytdagi sahifaga", () => {
     .forEach(x => talab(!S.xavfsizQaytish(x), "rad etilishi kerak: " + x));
 });
 
+
+/* ---------- 2b. Yon panel va rollar (yadro/app.js sof qismi) ---------- */
+console.log("\n2b. Yon panel va rollar");
+const NAV = (function(){
+  const a = matn("yadro/app.js");
+  const kes = (bosh, oxir) => {
+    const i = a.indexOf(bosh);
+    if (i < 0) throw new Error("app.js: topilmadi " + bosh);
+    const j = a.indexOf(oxir, i);
+    if (j < 0) throw new Error("app.js: topilmadi " + oxir);
+    return a.slice(i, j + oxir.length);
+  };
+  const kod = kes("/* ---------- Bo'limlar reyestri", 'function rolBoshSahifasi(rol){ return ROL_BOSH[rol] || "kirish.html"; }') +
+    "\n" + kes("/* Bo'limning shu rol uchun kirish sahifasi", "\n  return r.slice(0, ROL_YON_MAX);\n}");
+  const w = {};
+  const c = {window: w, console, MKBapi: {sessiya: () => null}};
+  c.window.MKBapi = c.MKBapi;
+  c.globalThis = c;
+  require(path.join(ILDIZ, "yadro", "daraxt.js").replace(/\\/g, "/"));
+  c.window.MKB_DARAXT = global.MKB_DARAXT;
+  c.window.MKB_ICHKI = global.MKB_ICHKI;
+  c.location = {pathname: "/panel.html", search: ""};
+  c.document = {body: {dataset: {}}};
+  vm.runInNewContext(kod +
+    "\n;this.__nav = {yonBandlar, sahifaRuxsatlimi, rolNomiKanon, bolimTopish, bolimKanon," +
+    " ROL_YON, ROL_BOSH, ROL_RUXSAT, ROL_KALIT, ROL_YANGI, ROL_YON_MAX, BOLIMLAR, SAHIFA_MAXSUS};", c, {filename: "app-nav.js"});
+  return c.__nav;
+})();
+const ROLLAR_KALIT = Object.keys(NAV.ROL_KALIT).map(n => NAV.ROL_KALIT[n]);
+
+tekshir("beshta rol bor va har birining bosh sahifasi mavjud hamda o'ziga ochiq", () => {
+  teng(ROLLAR_KALIT.slice().sort(), ["admin", "buxgalteriya", "nazorat", "obyekt", "rahbariyat"]);
+  ROLLAR_KALIT.forEach(r => {
+    const bosh = NAV.ROL_BOSH[r];
+    talab(bosh && fs.existsSync(path.join(ILDIZ, bosh)), r + ": bosh sahifa yo'q (" + bosh + ")");
+    talab(NAV.sahifaRuxsatlimi(bosh, r), r + ": o'z bosh sahifasi yopiq (" + bosh + ")");
+  });
+});
+
+tekshir("hech bir rol yon panelda 6 banddan ko'p ko'rmaydi, bandlar takrorlanmaydi", () => {
+  ROLLAR_KALIT.forEach(r => {
+    const b = NAV.yonBandlar(r);
+    talab(b.length >= 3, r + ": yon panelda atigi " + b.length + " band");
+    talab(b.length <= NAV.ROL_YON_MAX, r + ": yon panelda " + b.length + " band");
+    const h = b.map(x => x.havola);
+    talab(new Set(h).size === h.length, r + ": takrorlangan havola " + h.join(", "));
+    b.forEach(x => talab(fs.existsSync(path.join(ILDIZ, x.havola)), r + ": yo'q sahifa " + x.havola));
+    b.forEach(x => talab(NAV.sahifaRuxsatlimi(x.havola, r), r + ": yopiq sahifa yon panelda " + x.havola));
+  });
+});
+
+tekshir("rahbariyat va administrator ishlar bandida to'g'ridan-to'g'ri qarorlar navbatini ochadi", () => {
+  ["rahbariyat", "admin"].forEach(r => {
+    const b = NAV.yonBandlar(r).find(x => x.kalit === "ishlar");
+    talab(b, r + ": ishlar bandi yo'q");
+    talab(b.havola === "tasdiqlar.html", r + ": ishlar bandi " + b.havola);
+    talab(b.yorliq === "Qarorlar", r + ": ishlar bandining yorlig'i " + b.yorliq);
+  });
+  const bux = NAV.yonBandlar("buxgalteriya");
+  const band = (r, k) => (NAV.yonBandlar(r).find(x => x.kalit === k) || {}).havola;
+  teng(band("buxgalteriya", "qiymat"), "zaxira.html", "buxgalteriya moliyada zaxiradan boshlaydi");
+  teng(band("buxgalteriya", "sotuv"), "shartnomalar.html", "buxgalteriya sotuvda shartnomalardan boshlaydi");
+  /* Buxgalteriya o'z panelidan boshlaydi: "Panel" bandi panel-moliya.html ga olib boradi */
+  teng(band("buxgalteriya", "panel"), "panel-moliya.html", "buxgalteriya panel bandi");
+  teng(NAV.ROL_BOSH.buxgalteriya, "panel-moliya.html", "buxgalteriya bosh sahifasi");
+  talab(bux.length <= NAV.ROL_YON_MAX, "buxgalteriya yon panelida " + bux.length + " band");
+});
+
+tekshir("yon panelda yo'q sahifa rolga ochiq qoladi (menyu qisqardi, huquq emas)", () => {
+  const yashirin = [["rahbariyat", "zaxira.html"], ["rahbariyat", "baholash.html"], ["obyekt", "himoya.html"],
+    ["obyekt", "korik-rejasi.html"], ["nazorat", "realizatsiya.html"], ["buxgalteriya", "muddatlar.html"],
+    ["rahbariyat", "muddatlar.html"], ["nazorat", "korik-tarixi.html"], ["obyekt", "ijara.html"]];
+  yashirin.forEach(([r, f]) => {
+    talab(NAV.sahifaRuxsatlimi(f, r), r + ": " + f + " yopilib qolgan");
+    talab(!NAV.yonBandlar(r).some(x => x.havola === f), r + ": " + f + " hali yon panelda");
+  });
+});
+
+tekshir("rolga yopiq sahifa yopiq qoladi (403)", () => {
+  const yopiq = [["nazorat", "foydalanuvchilar.html"], ["obyekt", "rollar.html"], ["buxgalteriya", "amallar-tarixi.html"],
+    ["nazorat", "panel-obyekt.html"], ["buxgalteriya", "panel.html"], ["obyekt", "integratsiyalar.html"],
+    ["nazorat", "korik-tayinlash.html"] /* ko'rik tayinlash — yozish huquqi bor, quyida tekshiriladi */];
+  yopiq.slice(0, 6).forEach(([r, f]) => talab(!NAV.sahifaRuxsatlimi(f, r), r + ": " + f + " ochiq qolgan"));
+  talab(NAV.sahifaRuxsatlimi("korik-tayinlash.html", "nazorat"), "inspektor ko'rik tayinlay olishi kerak");
+  talab(!NAV.sahifaRuxsatlimi("korik-tayinlash.html", "buxgalteriya"), "buxgalteriya ko'rik tayinlamaydi");
+  talab(!NAV.sahifaRuxsatlimi("obyekt-tahrir.html", "nazorat"), "inspektor aktiv kartochkasini tahrirlamaydi");
+});
+
+tekshir("eski rol nomi yangi rolga keltiriladi (sessiya, yozuv va qoidalar uchun)", () => {
+  teng(NAV.rolNomiKanon("Yurist"), "Obyekt menejeri");
+  teng(NAV.rolNomiKanon("Filial rahbari"), "Rahbariyat");
+  teng(NAV.rolNomiKanon("Xavfsizlik xizmati"), "Ko'rik va xavfsizlik inspektori");
+  teng(NAV.rolNomiKanon("Rahbariyat"), "Rahbariyat");
+  teng(NAV.rolNomiKanon("Noma'lum rol"), "Noma'lum rol");
+  Object.keys(NAV.ROL_YANGI).forEach(eski =>
+    talab(NAV.ROL_KALIT[NAV.ROL_YANGI[eski]], eski + " -> " + NAV.ROL_YANGI[eski] + ": bunday rol yo'q"));
+});
+
+tekshir("har bir ish sahifasi aynan bitta bo'limga tegishli", () => {
+  const joy = {};
+  Object.keys(global.MKB_DARAXT).forEach(k => global.MKB_DARAXT[k].forEach(x => { (joy[x.f] = joy[x.f] || []).push(k); }));
+  Object.keys(global.MKB_ICHKI).forEach(k => global.MKB_ICHKI[k].forEach(f => { (joy[f] = joy[f] || []).push(k); }));
+  const kop = Object.keys(joy).filter(f => joy[f].length > 1);
+  talab(!kop.length, "bir necha bo'limda: " + kop.join(", "));
+  const sahifalar = fs.readdirSync(ILDIZ).filter(f => f.endsWith(".html") && !f.startsWith("_") && !/^taqdimot/.test(f));
+  const tashqari = new Set(["index.html", "kirish.html", "parol-tiklash.html", "parol-yangilash.html", "xato-403.html", "xato-404.html"]);
+  const yoq = sahifalar.filter(f => !joy[f] && !tashqari.has(f));
+  talab(!yoq.length, "bo'limsiz sahifalar: " + yoq.join(", "));
+});
+
+tekshir("to'rt ko'z juftlari: so'rovchi va qaror qiluvchi bir rolda emas", () => {
+  const R = NAV.ROL_RUXSAT;
+  /* obyekt so'raydi -> rahbariyat tasdiqlaydi (taklif, pasaytirish, baho, qabul, chiqim) */
+  ["aktivlar", "sotuv", "qiymat"].forEach(b => {
+    talab((R.obyekt[b] || "").indexOf("y") >= 0, "obyekt " + b + " bo'limida yozmaydi");
+    talab((R.obyekt[b] || "").indexOf("t") < 0, "obyekt " + b + " bo'limida o'z so'rovini tasdiqlaydi");
+    talab((R.rahbariyat[b] || "").indexOf("t") >= 0, "rahbariyat " + b + " bo'limida tasdiqlamaydi");
+    talab((R.rahbariyat[b] || "").indexOf("y") < 0, "rahbariyat " + b + " bo'limida forma to'ldiradi");
+  });
+  /* buxgalteriya zaxira stavkasini so'raydi -> rahbariyat tasdiqlaydi */
+  talab((R.buxgalteriya.qiymat || "").indexOf("y") >= 0, "buxgalteriya zaxira so'rovini yozmaydi");
+  /* nazorat kirish so'rovini yuboradi -> obyekt yoki rahbariyat hal qiladi */
+  talab((R.nazorat.nazorat || "").indexOf("y") >= 0, "nazorat kirish so'rovini yozmaydi");
+  talab((R.nazorat.nazorat || "").indexOf("t") < 0, "nazorat o'z kirish so'rovini tasdiqlaydi");
+  talab((R.obyekt.nazorat || "").indexOf("t") >= 0, "obyekt kirish so'rovini hal qilmaydi");
+  talab((R.rahbariyat.nazorat || "").indexOf("t") >= 0, "rahbariyat kirish so'rovini hal qilmaydi");
+});
+
 /* ---------- 3. To'rt ko'z qoidasi: yadro/amal.js ---------- */
 console.log("\n3. To'rt ko'z qoidasi (amal.js)");
 function amalQum(sessiya, D){
   const w = {MKB_DATA: D, MKB_TAYYOR: false};
-  const RUXSAT = {"Rahbariyat": {aktivlar: "ot", qiymat: "ot", realizatsiya: "ot"}, "Buxgalteriya va risk": {qiymat: "oyt"},
-    "Realizatsiya mutaxassisi": {realizatsiya: "oy"}, "Obyekt menejeri": {aktivlar: "oy"}};
-  const KALIT = {"Administrator": "admin", "Rahbariyat": "rahbariyat", "Buxgalteriya va risk": "buxgalteriya", "Realizatsiya mutaxassisi": "realizatsiya", "Obyekt menejeri": "obyekt"};
+  const RUXSAT = {"Rahbariyat": {aktivlar: "ot", qiymat: "ot", sotuv: "ot", nazorat: "ot"},
+    "Buxgalteriya va risk": {qiymat: "oyt"},
+    "Obyekt menejeri": {aktivlar: "oy", sotuv: "oy", qiymat: "oy", nazorat: "oyt"},
+    "Ko'rik va xavfsizlik inspektori": {nazorat: "oy"}};
+  const KALIT = {"Administrator": "admin", "Rahbariyat": "rahbariyat", "Buxgalteriya va risk": "buxgalteriya",
+    "Obyekt menejeri": "obyekt", "Ko'rik va xavfsizlik inspektori": "nazorat"};
   const huquqi = (rolNomi, b, a) => rolNomi === "Administrator" || ((RUXSAT[rolNomi] || {})[b] || "").indexOf({oqi: "o", yoz: "y", tasdiq: "t"}[a || "oqi"]) >= 0;
   const bugun = new Date(2026, 8, 21);
   const ikki = n => String(n).padStart(2, "0");

@@ -59,56 +59,62 @@ const TAXALLUS = {POLISLAR: "SUGURTALAR", SOTUV: "LOTLAR", VAZIFALAR: "MENING_VA
 const KOLLEKSIYA_BOLIM = {
   YOZUVLAR: "aktivlar", HUJJATLAR: "aktivlar", FAYLLAR: "aktivlar", ARXIV: "aktivlar", XARAJATLAR: "aktivlar",
   HUDUDLAR: "aktivlar",
-  KORIKLAR: "korik", INVENTAR: "korik", INVENTARIZATSIYALAR: "korik",
+  KORIKLAR: "nazorat", INVENTAR: "nazorat", INVENTARIZATSIYALAR: "nazorat",
   BAHOLASHLAR: "qiymat", SUGURTALAR: "qiymat", SUGURTA_DAVOLARI: "qiymat", SOLIQ: "qiymat", ZAXIRA_TARIX: "qiymat",
   MB_HISOBOTLAR: "hisobot", HISOBOTLAR: "hisobot",
-  LOTLAR: "realizatsiya", TAKLIFLAR: "realizatsiya", XARIDORLAR: "realizatsiya", SHARTNOMALAR: "realizatsiya",
-  IJARA: "realizatsiya", PAKETLAR: "realizatsiya",
-  UNDIRUV_ISHLAR: "yuridik", SUD_MAJLISLAR: "yuridik", ADVOKATLAR: "yuridik", RESTRUKTURIZATSIYA: "yuridik",
-  MULOQOTLAR: "yuridik",
-  HODISALAR: "himoya", QORIQLASH: "himoya", KOMMUNAL_ARIZALAR: "himoya", QURILMA_KATALOG: "himoya",
-  HIMOYA_ANDOZALARI: "himoya", SHAXSLAR: "himoya", KIRISH_NUQTALARI: "himoya", QURILMALAR: "himoya",
-  KIRISH_VOQEALARI: "himoya", RUXSATLAR: "himoya", KIRISH_SOROVLARI: "himoya", TASHRIFLAR: "himoya",
-  XAVFSIZLIK_HODISALARI: "himoya", MASOFAVIY_SESSIYALAR: "himoya", XIZMAT_ISHLARI: "himoya",
-  TASDIQLAR: "vazifa", MENING_VAZIFALARIM: "vazifa", BILDIRISHLAR: "vazifa",
+  LOTLAR: "sotuv", TAKLIFLAR: "sotuv", XARIDORLAR: "sotuv", SHARTNOMALAR: "sotuv",
+  IJARA: "sotuv", PAKETLAR: "sotuv",
+  UNDIRUV_ISHLAR: "sotuv", SUD_MAJLISLAR: "sotuv", ADVOKATLAR: "sotuv", RESTRUKTURIZATSIYA: "sotuv",
+  MULOQOTLAR: "sotuv",
+  HODISALAR: "nazorat", QORIQLASH: "nazorat", KOMMUNAL_ARIZALAR: "nazorat", QURILMA_KATALOG: "nazorat",
+  HIMOYA_ANDOZALARI: "nazorat", SHAXSLAR: "nazorat", KIRISH_NUQTALARI: "nazorat", QURILMALAR: "nazorat",
+  KIRISH_VOQEALARI: "nazorat", RUXSATLAR: "nazorat", KIRISH_SOROVLARI: "nazorat", TASHRIFLAR: "nazorat",
+  XAVFSIZLIK_HODISALARI: "nazorat", MASOFAVIY_SESSIYALAR: "nazorat", XIZMAT_ISHLARI: "nazorat",
+  TASDIQLAR: "ishlar", MENING_VAZIFALARIM: "ishlar", BILDIRISHLAR: "ishlar",
   FOYDLAR: "sozlama", FILIALLAR: "sozlama", PARAMETRLAR: "sozlama", BAYRAMLAR: "sozlama", QOIDALAR: "sozlama",
   INTEGRATSIYALAR: "sozlama",
 };
 
 /* Rol -> o'qish va yozish ochiq bo'limlar (null = hammasi).
+   To'rt ish roli va texnik administrator; eski rol nomlari ROL_YANGI orqali shu beshtaga keltiriladi.
    Sozlamalar bo'limiga yozish faqat administratorga; PARAMETRLAR istisnosi pastda. */
-const HAMMA_OQISH = ["panel", "aktivlar", "himoya", "korik", "qiymat", "realizatsiya", "yuridik", "hisobot", "vazifa", "sozlama"];
+const HAMMA_OQISH = ["panel", "aktivlar", "nazorat", "qiymat", "sotuv", "hisobot", "ishlar", "sozlama"];
 const ROL_BOLIMLAR = {
   "Administrator":                   {oqi: null, yoz: null},
   /* Rahbariyat forma to'ldirmaydi (mijozda yozish tugmalari yopiq), lekin qarorni tasdiqlaganda amal.js
      taklif, lot, baholash va aktiv yozuvlarini o'zgartiradi, kirish so'rovini tasdiqlash esa ruxsat va tashrif
-     yozadi — mijozdagi "t" bo'limlari (yadro/app.js ROL_RUXSAT) bilan bir xil */
-  "Rahbariyat":                      {oqi: HAMMA_OQISH, yoz: ["vazifa", "aktivlar", "himoya", "realizatsiya", "qiymat"]},
-  "Filial rahbari":                  {oqi: HAMMA_OQISH, yoz: ["aktivlar", "himoya", "korik", "realizatsiya", "yuridik", "vazifa"]},
-  "Obyekt menejeri":                 {oqi: ["panel", "aktivlar", "himoya", "korik", "qiymat", "realizatsiya", "hisobot", "vazifa", "sozlama"],
-                                      yoz: ["aktivlar", "himoya", "korik", "vazifa"]},
-  "Ko'rik va xavfsizlik inspektori": {oqi: ["panel", "aktivlar", "himoya", "korik", "qiymat", "hisobot", "vazifa", "sozlama"],
-                                      yoz: ["aktivlar", "himoya", "korik", "vazifa"]},
-  "Baholovchi":                      {oqi: ["aktivlar", "qiymat", "realizatsiya", "hisobot", "vazifa", "sozlama"],
-                                      yoz: ["aktivlar", "qiymat", "vazifa"]},
-  "Realizatsiya mutaxassisi":        {oqi: ["aktivlar", "qiymat", "realizatsiya", "hisobot", "vazifa", "sozlama"],
-                                      yoz: ["aktivlar", "realizatsiya", "vazifa"]},
-  "Yurist":                          {oqi: ["aktivlar", "yuridik", "realizatsiya", "hisobot", "vazifa", "sozlama"],
-                                      yoz: ["aktivlar", "yuridik", "vazifa"]},
-  "Buxgalteriya va risk":            {oqi: ["aktivlar", "qiymat", "realizatsiya", "hisobot", "vazifa", "sozlama"],
-                                      yoz: ["aktivlar", "qiymat", "hisobot", "vazifa"]},
-  "Xavfsizlik xizmati":              {oqi: ["aktivlar", "himoya", "korik", "hisobot", "vazifa", "sozlama"],
-                                      yoz: ["aktivlar", "himoya", "vazifa"]},
+     yozadi — mijozdagi "t" bo'limlari (yadro/app.js ROL_RUXSAT) bilan bir xil.
+     Ko'rik va undiruv yozuvlari esa ROL_KOL_TAQIQ bilan yopiladi. */
+  "Rahbariyat":                      {oqi: HAMMA_OQISH, yoz: ["ishlar", "aktivlar", "nazorat", "sotuv", "qiymat"]},
+  "Obyekt menejeri":                 {oqi: HAMMA_OQISH, yoz: ["aktivlar", "nazorat", "qiymat", "sotuv", "ishlar"]},
+  "Ko'rik va xavfsizlik inspektori": {oqi: HAMMA_OQISH, yoz: ["aktivlar", "nazorat", "ishlar"]},
+  "Buxgalteriya va risk":            {oqi: HAMMA_OQISH, yoz: ["qiymat", "hisobot", "ishlar"]},
 };
 const ROLLAR = Object.keys(ROL_BOLIMLAR);
+/* Eski rol nomi -> yangi rol nomi (yadro/app.js ROL_YANGI bilan bir xil).
+   Sof funksiya: kirishda, yozuvlarda va qoidalarda nomni almashtirishdan boshqa hech narsa qilmaydi. */
+const ROL_YANGI = {
+  "Filial rahbari": "Rahbariyat",
+  "Baholovchi": "Obyekt menejeri",
+  "Baholovchi mutaxassis": "Obyekt menejeri",
+  "Realizatsiya mutaxassisi": "Obyekt menejeri",
+  "Yurist": "Obyekt menejeri",
+  "Xavfsizlik xizmati": "Ko'rik va xavfsizlik inspektori",
+  "Ko'rik inspektori": "Ko'rik va xavfsizlik inspektori",
+};
+function rolNomiKanon(nom){ return ROL_YANGI[String(nom == null ? "" : nom).trim()] || nom; }
+/* Bo'limlar birlashgandan keyin rol o'zi hech qachon yuritmaydigan to'plamlar: har qanday
+   o'zgartirish so'roviga 403 (mijozda ham yozish tugmasi yo'q — yadro/app.js ROL_KOL_TAQIQ) */
+const ROL_KOL_TAQIQ = {
+  "Rahbariyat": ["KORIKLAR", "INVENTARIZATSIYALAR", "INVENTAR", "UNDIRUV_ISHLAR", "SUD_MAJLISLAR"],
+};
 const PARAMETR_YOZUVCHI = ["Administrator", "Buxgalteriya va risk"];
 /* Bo'lim huquqidan tashqari: shu rollar to'plamga faqat yangi yozuv qo'sha oladi (POST).
-   Xavfsizlik xizmati hodisa bo'yicha sug'urta da'vosini ochadi; da'voni keyin qiymat bo'limi yuritadi.
-   Xavfsizlik xizmati masofaviy ko'rikni o'tkazadi va natijasini ko'riklar tarixiga yozadi (masofaviy-korik.html); tahrirlay olmaydi. */
-const YARATISH_ISTISNO = {SUGURTA_DAVOLARI: ["Xavfsizlik xizmati"], KORIKLAR: ["Xavfsizlik xizmati"]};
+   Ko'rik va xavfsizlik inspektori hodisa bo'yicha sug'urta da'vosini ochadi; da'voni keyin qiymat bo'limi yuritadi. */
+const YARATISH_ISTISNO = {SUGURTA_DAVOLARI: ["Ko'rik va xavfsizlik inspektori"]};
 /* Da'vo ochish uchun polis va da'volar ro'yxatini ko'rish kerak */
-const OQISH_ISTISNO = {SUGURTALAR: ["Xavfsizlik xizmati"], SUGURTA_DAVOLARI: ["Xavfsizlik xizmati"]};
-/* To'lov belgisi: Buxgalteriya va risk realizatsiya bo'limida faqat to'lov jadvali va holatni o'zgartiradi
+const OQISH_ISTISNO = {SUGURTALAR: ["Ko'rik va xavfsizlik inspektori"], SUGURTA_DAVOLARI: ["Ko'rik va xavfsizlik inspektori"]};
+/* To'lov belgisi: Buxgalteriya va risk sotuv bo'limida faqat to'lov jadvali va holatni o'zgartiradi
    (mijozda MKB.tolovBelgilaydimi bilan bir xil) */
 const TOLOV_ISTISNO = {IJARA: ["tolovlar", "holat"], SHARTNOMALAR: ["jadval", "holat"]};
 const TOLOV_BELGILOVCHI = ["Buxgalteriya va risk"];
@@ -116,8 +122,8 @@ const TOLOV_BELGILOVCHI = ["Buxgalteriya va risk"];
 const MUALLIFLI = new Set(["XARAJATLAR", "KIRISH_SOROVLARI", "MENING_VAZIFALARIM"]);
 
 /* Balansga qabul (qabul-tasdiqlash.html) oxirida boshqa bo'limga ham yoziladi: undiruv ishi yopiladi va birlamchi
-   ko'rik rejalashtiriladi. Qabulni aktivlar bo'limiga yoza oladigan rol bajaradi (Obyekt menejeri vazifadan,
-   Yurist undiruv ishidan). Unga butun bo'lim ochilmaydi: faqat shu ikki yozuv va ular uchun kerakli o'qish.
+   ko'rik rejalashtiriladi. Qabulni aktivlar bo'limiga yoza oladigan rol bajaradi (Obyekt menejeri
+   vazifadan yoki undiruv ishidan). Unga butun bo'lim ochilmaydi: faqat shu ikki yozuv va ular uchun kerakli o'qish.
    Qaytaradi: null (ruxsat yo'q) yoki {tana} (o'qilgan so'rov tanasi) / {faqatId} (ro'yxatdan faqat id'lar). */
 async function qabulIstisnosi(o, s, kol, req, id){
   if (!bolimRuxsatlimi(s.rol, "aktivlar", "yoz")) return null;
@@ -568,7 +574,8 @@ function yangiId(kol){
   return p + "-" + Date.now().toString(36).toUpperCase() + crypto.randomBytes(2).toString("hex").toUpperCase();
 }
 
-/* Filial rahbari faqat o'z filiali obyektlarini o'zgartiradi */
+/* Filiali ko'rsatilgan hisob (masalan filial boshqaruvchisi) faqat o'z filiali obyektlarini o'zgartiradi.
+   Filial endi alohida rol emas: fence hisobdagi filialKod bo'yicha ishlaydi. */
 function filialKodi(o, kol, yozuv){
   if (!yozuv) return undefined;
   if (yozuv.filialKod !== undefined && (kol === "YOZUVLAR" || kol === "UNDIRUV_ISHLAR")) return yozuv.filialKod;
@@ -588,7 +595,7 @@ function filialKodi(o, kol, yozuv){
   return undefined;
 }
 function filialRuxsatmi(o, s, kol, ...yozuvlar){
-  if (s.rol !== "Filial rahbari") return true;
+  if (!s.filialKod) return true;
   for (const y of yozuvlar){
     const k = filialKodi(o, kol, y);
     if (k !== undefined && k !== s.filialKod) return false;
@@ -621,9 +628,13 @@ function tortKozXatosi(x, t, s){
   return null;
 }
 
+/* Obyektga kirish so'rovini hal qiladigan rollar (mijozdagi nazorat: "t" bilan bir xil).
+   Ko'rik va xavfsizlik inspektori so'rovni yuboradi, lekin hal qilmaydi: to'rt ko'z shu yerda ikki bo'limga bo'linadi. */
+const KIRISH_TASDIQLOVCHI = ["Administrator", "Rahbariyat", "Obyekt menejeri"];
 /* Kirish so'rovini yuborgan xodim uni o'zi tasdiqlamaydi va rad etmaydi (administrator ham) */
 function kirishSorovXatosi(x, t, s){
   if (!("holat" in t) || t.holat === x.holat || !["tasdiqlangan", "rad etilgan"].includes(t.holat)) return null;
+  if (!KIRISH_TASDIQLOVCHI.includes(s.rol)) return "Kirish so'rovini boshqa bo'lim xodimi hal qiladi";
   const ozi = x.muallifLogin ? kichikMatn(x.muallifLogin) === kichikMatn(s.login) : (!!x.sorovchi && x.sorovchi === s.ism);
   return ozi ? "O'z so'rovingizni o'zingiz tasdiqlay olmaysiz" : null;
 }
@@ -777,17 +788,19 @@ async function api(req, res, yol){
       amalYoz(o, null, "SESSIYA", login || "-", "kirish rad etildi");
       return jsonJavob(res, 401, {xato: "Login yoki parol noto'g'ri"});
     }
-    if (!ROLLAR.includes(f.rol))
+    /* Eski rol nomi bilan qolgan hisob rad etilmaydi: nomi yangi rolga keltiriladi va jurnalga yoziladi */
+    const rol = rolNomiKanon(f.rol);
+    if (!ROLLAR.includes(rol))
       return jsonJavob(res, 403, {xato: "Rol tizimda ro'yxatdan o'tmagan"});
     URINISHLAR.delete(kalit);
     const token = crypto.randomBytes(24).toString("hex");
     /* Rol faqat hisob yozuvidan olinadi — mijoz tanlovi hisobga olinmaydi */
-    const s = {token, id: f.id, login: f.login, ism: f.nom || f.ism || login, rol: f.rol,
+    const s = {token, id: f.id, login: f.login, ism: f.nom || f.ism || login, rol,
                filial: f.bolim || f.filial || "", filialKod: f.filialKod || null, manba,
                tugash: Date.now() + SESSIYA_MUDDATI};
     SESSIYALAR.set(token, s);
     FAOLLIK.set(token, Date.now());
-    amalYoz(o, s, "SESSIYA", s.ism, "kirish");
+    amalYoz(o, s, "SESSIYA", s.ism, rol === f.rol ? "kirish" : "kirish (rol " + f.rol + " -> " + rol + ")");
     return jsonJavob(res, 200, s, {"Set-Cookie": "mkb_s=" + token + "; HttpOnly; SameSite=Strict; Path=/; Max-Age=" + SESSIYA_MUDDATI / 1000});
   }
 
@@ -860,6 +873,8 @@ async function api(req, res, yol){
     if (q.xato) return jsonJavob(res, q.kod || 400, {xato: q.xato});
     oldTana = q.tana; ozYozuv = true;
   }
+  if (!oqishmi && (ROL_KOL_TAQIQ[sessiya.rol] || []).includes(kol))
+    return jsonJavob(res, 403, {xato: "bu to'plamni rolingiz yuritmaydi"});
   if (!ozYozuv && bolim && !bolimRuxsatlimi(sessiya.rol, bolim, oqishmi ? "oqi" : "yoz")){
     let ruxsat = (kol === "PARAMETRLAR" && !oqishmi && PARAMETR_YOZUVCHI.includes(sessiya.rol)) ||
       (req.method === "POST" && !id && (YARATISH_ISTISNO[kol] || []).includes(sessiya.rol)) ||

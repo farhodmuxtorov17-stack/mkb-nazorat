@@ -52,7 +52,7 @@ a.metrika:focus-visible{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq"><span>Undiruv va sud</span></div>
+    <div class="hs-yorliq"><a href="realizatsiya.html">Sotuv va undiruv</a><span class="ajratgich">/</span><span>Undiruv ishlari</span></div>
     <div class="hs-qator"><h1>Undiruv ishlari</h1>
       <div class="hs-amallar"><a class="tugma tugma-oq" href="hisobot-undiruv.html" data-sayohat="hisobot"><svg class="ic"><use href="#ik-hisobot"/></svg>Hisobot</a><button type="button" class="tugma tugma-asosiy" id="yangi-ish" data-huquq="yoz" data-yozadi data-sayohat="yangi"><svg class="ic"><use href="#ik-qoshish"/></svg>Yangi ish ochish</button></div></div>
   </div>
@@ -251,7 +251,7 @@ a.metrika:focus-visible{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
       const tugma = MKB.huquq("yuridik", "yoz")
         ? '<button type="button" class="tugma tugma-asosiy" id="bosh-yangi" data-yozadi>' + ik("qoshish") + "Yangi ish ochish</button>" : "";
       joy.innerHTML = MKB.boshHolat("yuridik", D.MANBA === "mahalliy" ? "Undiruv ishlari hali kiritilmagan" : "Undiruv ishi yo'q",
-        MKB.rol() === "filial" ? "Filialingiz bo'yicha undiruv ishi ro'yxatga olinmagan." :
+        MKB.filialXodimi() ? "Filialingiz bo'yicha undiruv ishi ro'yxatga olinmagan." :
         "Kredit bo'yicha garovni undirish boshlanganda ish shu yerda ochiladi. Ish sud qarori va ijrodan so'ng balansga qabul bilan yopiladi.", tugma);
       const b = document.getElementById("bosh-yangi");
       if (b) b.addEventListener("click", yangiIsh);
@@ -356,7 +356,7 @@ a.metrika:focus-visible{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     if (!MKB.huquq("yuridik", "yoz")) return;
     const fil = (D.FILIALLAR || []).slice().sort((a, b) => String(a.nom).localeCompare(String(b.nom), "uz"));
     const meniki = MKB.filialKod();
-    const yuristlar = [...new Set([MKB.kim()].concat((D.FOYDLAR || []).filter(f => f.rol === "Yurist" && f.faol !== false).map(f => f.nom))
+    const masullar = [...new Set([MKB.kim()].concat((D.FOYDLAR || []).filter(f => f.rol === "Obyekt menejeri" && f.faol !== false).map(f => f.nom))
       .filter(x => x && x !== "—"))];
     const kreditTur = [...new Set(ishlar.map(i => i.shartnoma && i.shartnoma.tur).filter(Boolean))].sort();
     const m = (id, nom, yorliq, kirish, o) => { o = o || {};
@@ -370,7 +370,7 @@ a.metrika:focus-visible{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
       m("yi-gnom", "gNom", "Garov mulki", '<input id="yi-gnom" name="gNom" required data-xato="Garov mulkini kiriting" placeholder="Masalan: Savdo do\'koni" autocomplete="off">', {majburiy: true}) +
       m("yi-filial", "filial", "Filial", '<select id="yi-filial" name="filial" required' + (meniki ? " disabled" : "") + '><option value="">Tanlang</option>' +
         fil.map(f => '<option value="' + esc(f.id) + '"' + (f.id === meniki ? " selected" : "") + ">" + esc(f.nom) + "</option>").join("") + "</select>", {majburiy: true}) +
-      m("yi-masul", "masul", "Mas'ul yurist", '<select id="yi-masul" name="masul" required>' + yuristlar.map(n => "<option>" + esc(n) + "</option>").join("") + "</select>", {majburiy: true}) +
+      m("yi-masul", "masul", "Mas'ul xodim", '<select id="yi-masul" name="masul" required>' + masullar.map(n => "<option>" + esc(n) + "</option>").join("") + "</select>", {majburiy: true}) +
       m("yi-ogoh", "ogoh", "Talabnoma yuborilgan sana", '<input id="yi-ogoh" name="ogoh" type="date" required max="' + iso(bugun) + '" value="' + iso(bugun) + '">', {majburiy: true}) +
       m("yi-javob", "javob", "Javob muddati", '<input id="yi-javob" name="javob" type="date" data-dan="ogoh">', {izoh: "Nazorat muddati sifatida ishda ko'rinadi"}) +
       '<details class="qoshimcha" id="yi-qosh"><summary>Qo\'shimcha ma\'lumotlar <span>qarzdor turi, STIR, telefon, shartnoma va garov tafsilotlari</span></summary><div class="forma-tor">' +

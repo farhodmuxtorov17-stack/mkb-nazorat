@@ -51,7 +51,7 @@
 <header class="shapka" id="shapka"></header>
 <main class="kontent">
   <div class="hujjat-shapka">
-    <div class="hs-yorliq" id="iv-yorliq"><a href="korik-rejasi.html">Ko'rik va inventarizatsiya</a><span class="ajratgich">/</span><span>Inventarizatsiya</span></div>
+    <div class="hs-yorliq" id="iv-yorliq"><a href="himoya.html">Nazorat va himoya</a><span class="ajratgich">/</span><span>Inventarizatsiya</span></div>
     <div class="hs-qator"><h1 id="iv-sarlavha">Inventarizatsiya</h1><span class="hs-meta" id="hs-meta">—</span>
       <div class="hs-amallar" id="iv-amallar"></div></div>
   </div>
@@ -213,7 +213,7 @@ function qrSvg(matn){
     const invObyekt = new Set((D.INVENTAR || []).map(x => x.obyektId));
     const olinmagan = aktivlar.filter(y => !D.binolimi(y) && !invObyekt.has(y.id));
     const s12 = inv.filter(sanalmagan12);
-    const royxat = (D.INVENTARIZATSIYALAR || []).filter(z => MKB.rol() !== "filial" || (z.obyektlar || []).some(o => MKB.doira([{obyektId: o}]).length))
+    const royxat = (D.INVENTARIZATSIYALAR || []).filter(z => !MKB.filialXodimi() || (z.obyektlar || []).some(o => MKB.doira([{obyektId: o}]).length))
       .slice().sort((a, c) => D.sanaOqi(c.sana) - D.sanaOqi(a.sana));
     const oxirgiYak = royxat.find(z => z.holat === "yakunlangan");
     const faol = royxat.filter(z => z.holat !== "yakunlangan").sort((a, c) => D.sanaOqi(a.sana) - D.sanaOqi(c.sana))[0];
@@ -326,7 +326,7 @@ function qrSvg(matn){
   /* Yangi inventarizatsiya rejasi */
   function yangiInventarizatsiya(){
     const inv = inventar();
-    const foydlar = (D.FOYDLAR || []).filter(f => f.faol !== false && ["Obyekt menejeri", "Ko'rik va xavfsizlik inspektori", "Buxgalteriya va risk", "Filial rahbari"].includes(f.rol));
+    const foydlar = (D.FOYDLAR || []).filter(f => f.faol !== false && ["Obyekt menejeri", "Ko'rik va xavfsizlik inspektori", "Buxgalteriya va risk", "Rahbariyat"].includes(f.rol));
     const filiallar = [...new Set(inv.map(x => (D.OBYEKT_INDEKS[x.obyektId] || {}).filialKod).filter(Boolean))].sort();
     const qamrov = {
       hammasi: inv, s12: inv.filter(sanalmagan12), butlik: inv.filter(x => x.butlik === false),

@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
 <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css?v=26092200">
 <style>
-/* Panel tasmasi: keng ekranda yon menyu aynan shu uchta havolani ko'rsatib turadi,
+/* Panel tasmasi: keng ekranda yon menyu rolning o'z panelini ko'rsatib turadi,
    shuning uchun tasma faqat yon menyu yopiq bo'lgan ekranlarda ko'rinadi */
 @media (min-width:1025px){#panel-tablar{display:none}}
 /* Qarorlar navbati */
@@ -130,6 +130,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     <a href="panel.html" class="faol" aria-current="page">Rahbariyat</a>
     <a href="panel-obyekt.html">Obyekt menejeri</a>
     <a href="panel-nazorat.html">Ko'rik va xavfsizlik</a>
+    <a href="panel-moliya.html">Moliya</a>
   </nav>
 
   <section class="karta" id="bugun-karta" data-sayohat="bugun" aria-labelledby="v-bugun">
@@ -320,7 +321,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     const yil = bugun().getFullYear();
     const muddatlar = new Map(faol.map(y => [y.id, D.muddatHisobi(y)]));
 
-    $("hs-sana").textContent = (MKB.rol() === "filial" && MKB.filialKod()
+    $("hs-sana").textContent = (MKB.filialDoirasi()
       ? ((D.filial && D.filial(MKB.filialKod()) || {}).nom || MKB.filialKod()) + " · "
       : "") + D.sanaYoz(bugun()) + " holatiga";
 
@@ -346,7 +347,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
       MKB.doira(D.SHARTNOMALAR || []).filter(s => s.holat !== "bekor" && !arxivId.has(s.obyektId) && yilda(s.sana)).reduce((a, s) => a + (s.narx || 0), 0));
     const reja = D.param("yillikRejaMlrd");
     const adminmi = MKB.huquq("sozlama", "yoz");
-    const filialmi = MKB.rol() === "filial";
+    const filialmi = MKB.filialXodimi();
     const rejaYorliq = $("k-reja-quti").querySelector(".m-yorliq");
     const rejaTugma = adminmi ? '<button type="button" class="tugma tugma-oq tugma-kichik m-tugma" id="reja-kirit">' +
       MKB.ik("tahrir") + (reja ? "Rejani o'zgartirish" : "Rejani kiritish") + "</button>" : "";
@@ -551,7 +552,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     });
     MKB.doira(D.SUGURTALAR || []).filter(s => idlar.has(s.obyektId)).forEach(s =>
       qosh(s.tugash, "Sug'urta polisi tugaydi", nomi(s.obyektId), "sugurta-polis.html?id=" + encodeURIComponent(s.id), "sugurta"));
-    if (MKB.rol() !== "filial") (D.MB_HISOBOTLAR || []).filter(h => h.holat !== "topshirilgan" && h.muddat).forEach(h =>
+    if (!MKB.filialXodimi()) (D.MB_HISOBOTLAR || []).filter(h => h.holat !== "topshirilgan" && h.muddat).forEach(h =>
       qosh(h.muddat, "Markaziy bank hisoboti", h.davr, "hisobot-mb.html", "hisobot"));
     yaqin.sort((a, b) => a.n - b.n);
     $("yaqin").innerHTML = yaqin.length ? yaqin.slice(0, 7).map(m =>
@@ -707,7 +708,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     if (!xChegara){
       xChegara = true;
       /* Ko'rinish chegarasi hudud geometriyasidan olinadi va konteyner yakuniy o'lchamini olgach moslanadi:
-         shunda mamlakat blokka to'liq sig'adi, shimoli qirqilmaydi. Filial rahbari faqat o'z hududini ko'radi. */
+         shunda mamlakat blokka to'liq sig'adi, shimoli qirqilmaydi. Filiali ko'rsatilgan hisob faqat o'z hududini ko'radi. */
       const kodlar = Array.from(new Set(faol.map(hududKod).filter(Boolean)));
       const zaxira = aniq.map(y => [y.joy.lat, y.joy.lng])
         .concat(Object.keys(barchaGuruh).map(k => (MKB.geo && MKB.geo.markaz && MKB.geo.markaz(k)) || [HK[k].lat, HK[k].lng]));
@@ -778,7 +779,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     MKB.doira(D.SUGURTALAR || []).filter(s => idlar.has(s.obyektId)).forEach(s =>
       qosh(s.tugash, "Sug'urta polisi tugadi", nomi(s.obyektId), "sugurta-polis.html?id=" + encodeURIComponent(s.id), "sugurta"));
     faol.forEach(y => qosh(muddatlar.get(y.id).chegaraSana, "Umidsiz toifaga o'tdi", nomi(y.id), "obyekt.html?id=" + encodeURIComponent(y.id), "ogoh"));
-    if (MKB.rol() !== "filial") (D.MB_HISOBOTLAR || []).filter(h => h.holat !== "topshirilgan").forEach(h =>
+    if (!MKB.filialXodimi()) (D.MB_HISOBOTLAR || []).filter(h => h.holat !== "topshirilgan").forEach(h =>
       qosh(h.muddat, "Markaziy bank hisoboti", h.davr, "hisobot-mb.html", "hisobot"));
     otgan.sort((a, b) => D.sanaOqi(b.sana) - D.sanaOqi(a.sana));
 
@@ -820,7 +821,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     };
     const oraliqMatn = D.sanaYoz(O.dan) === D.sanaYoz(O.gacha) ? D.sanaYoz(O.dan) : D.sanaYoz(O.dan) + "–" + D.sanaYoz(O.gacha);
     const muddatIzoh = '<span data-tarjimasiz>' + e(oraliqMatn) + "</span> · <span>vazifa, ko'rik, qaror, to'lov va polis muddatlari</span>";
-    $("bugun-izoh").innerHTML = MKB.rol() === "filial" && MKB.filialKod() ? "<span>Filial doirasida</span>" : "";
+    $("bugun-izoh").innerHTML = MKB.filialDoirasi() ? "<span>Filial doirasida</span>" : "";
     $("bugun").innerHTML = '<div class="brifing-tor">' +
       (qRoyxat.length
         ? qator({anker: "bugun-qarorlar", ikonka: "tasdiq", diqqat: qOtgan > 0, href: "tasdiqlar.html?filtr=" + (menga.length ? "mening" : "kutilmoqda"),
@@ -888,7 +889,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
   const TASIR = {
     taklif: {sarlavha: "Taklifni tasdiqlash", matn: "Xaridor taklifi tasdiqlanadi va lot g'olibi belgilanadi.",
       oqibat: ["G'olib 5 ish kunida to'lashi, shartnoma 10 ish kunida tuzilishi kerak", "Lotdagi boshqa ochiq takliflar rad etiladi",
-        "Realizatsiya mutaxassisiga shartnoma tuzish vazifasi yaratiladi"]},
+        "Obyekt menejeriga shartnoma tuzish vazifasi yaratiladi"]},
     pasaytirish: {sarlavha: "Narx pasaytirishni tasdiqlash", matn: "Lotning boshlang'ich narxi so'rovdagi summaga tushiriladi.",
       oqibat: ["Keyingi pasaytirish sanasi qayta hisoblanadi"]},
     baho: {sarlavha: "Baholash natijasini tasdiqlash", matn: "Obyektning bozor qiymati baholash hisobotidagi qiymatga yangilanadi.",
@@ -1035,8 +1036,8 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     const qm = (k, v) => "<dt>" + k + "</dt><dd>" + v + "</dd>";
     const kutil = MKB.doira(D.TASDIQLAR || []).filter(t => t.holat === "kutilmoqda")
       .sort((a, b) => (D.sanaOqi(a.javobMuddati) || 0) - (D.sanaOqi(b.javobMuddati) || 0));
-    const rejaFoiz = H.reja && MKB.rol() !== "filial" ? Math.round(H.sotilgan / 1000 / H.reja * 100) + "%" : null;
-    const filialNom = MKB.rol() === "filial" && MKB.filialKod() ? (((D.filial && D.filial(MKB.filialKod())) || {}).nom || MKB.filialKod()) : "";
+    const rejaFoiz = H.reja && !MKB.filialXodimi() ? Math.round(H.sotilgan / 1000 / H.reja * 100) + "%" : null;
+    const filialNom = MKB.filialDoirasi() ? (((D.filial && D.filial(MKB.filialKod())) || {}).nom || MKB.filialKod()) : "";
     /* Sarlavha, chop sanasi va tuzuvchi chop sarlavhasida (yadro) turadi: bu yerda takrorlanmaydi */
     ch.innerHTML = '<div class="cv-meta"><span data-tarjimasiz>' + e(D.sanaYoz(bugun())) + "</span> <span>holatiga</span>" +
         (filialNom ? ' · <span data-tarjimasiz>' + e(filialNom) + "</span>" : "") +

@@ -79,6 +79,19 @@
   function $(s, o) { return (o || document).querySelector(s); }
   function $$(s, o) { return [].slice.call((o || document).querySelectorAll(s)); }
   function ikki(n) { return (n < 10 ? "0" : "") + n; }
+
+  /* Matndagi slayd raqami: <span data-slayd-raqam="#s-api"></span>.
+     Slaydlar DOM tartibidan raqamlanadi, shuning uchun havola id bilan
+     yoziladi va raqam shu yerda qo'yiladi. Batafsil panelining mazmuni
+     keyinroq quriladi — panelOch shu funksiyani panel tanasiga qayta chaqiradi. */
+  function raqamlarQoy(ildiz) {
+    var idRoyxat = slaydlar.map(function (x) { return "#" + x.id; });
+    $$("[data-slayd-raqam]", ildiz || document).forEach(function (el) {
+      var i = idRoyxat.indexOf(el.getAttribute("data-slayd-raqam"));
+      el.textContent = i >= 0 ? ikki(i + 1) : "–";
+      el.setAttribute("data-tarjimasiz", "");
+    });
+  }
   function saqla(k, v) { try { localStorage.setItem(k, v); } catch (_) {} }
   function oqi(k) { try { return localStorage.getItem(k); } catch (_) { return null; } }
 
@@ -155,13 +168,7 @@
     mundarijaQur();
     ishoraQur();
 
-    /* slayd raqami matnda: <span data-slayd-raqam="#s-api"></span> */
-    var idRoyxat = slaydlar.map(function (x) { return "#" + x.id; });
-    $$("[data-slayd-raqam]").forEach(function (el) {
-      var i = idRoyxat.indexOf(el.getAttribute("data-slayd-raqam"));
-      el.textContent = i >= 0 ? ikki(i + 1) : "–";
-      el.setAttribute("data-tarjimasiz", "");
-    });
+    raqamlarQoy();
     /* tablar: [data-tablar] ichida button[data-tab="x"] va [data-panel="x"] */
     $$("[data-tablar]").forEach(function (t) {
       var bir = $("[data-tab].faol", t) || $("[data-tab]", t);
@@ -570,6 +577,7 @@
     panelYorliq.textContent = d.yorliq || "Batafsil";
     panelSarlavha.textContent = d.sarlavha || "";
     panelTana.innerHTML = d.tana || "";
+    raqamlarQoy(panelTana);
     panelManba.innerHTML = (d.manba && d.manba.length)
       ? "<b>Manba</b>" + d.manba.map(function (m) {
           return '<a href="' + m[1] + '" target="_blank" rel="noopener">' + m[0] + IK.tashqi + "</a>";

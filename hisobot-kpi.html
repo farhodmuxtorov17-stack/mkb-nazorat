@@ -29,7 +29,7 @@
         <button type="button" class="tugma tugma-oq" id="hk-chop" data-sayohat="chop"><svg class="ic"><use href="#ik-chop"/></svg>Chop etish</button>
       </div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html" class="faol">KPI</a><a href="hisobot-hudud.html">Hududlar</a><a href="hisobot-undiruv.html">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-eksport.html">Eksport</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html" class="faol" aria-current="page">Nazorat indeksi</a><a href="hisobot-hudud.html">Hududlar</a></nav>
 
   <section class="metrika-qator besh" id="hk-kpi" aria-label="Realizatsiya ko'rsatkichlari" data-sayohat="kpi"></section>
   <div id="hk-reja"></div>
@@ -126,7 +126,12 @@ async function boshla(){
   const yillar = [...new Set(sotuvlar.map(s => s.yil).filter(Boolean))].sort().reverse();
   const joriyYil = String(D.bugun().getFullYear());
   $("hk-davr").innerHTML = yillar.map(y => '<option value="' + y + '">' + y + "-yil</option>").join("") + '<option value="">Barcha davr</option>';
-  let davr = yillar.indexOf(joriyYil) >= 0 ? joriyYil : (yillar[0] || "");
+  /* Hisobotlar markazidan kelgan davr: "yil" — joriy yil, "hammasi" — barcha davr, YYYY ham qabul qilinadi */
+  const q = new URLSearchParams(location.search);
+  const MARKAZ_DAVR = {oy: joriyYil, otgan: joriyYil, chorak: joriyYil, yil: joriyYil, hammasi: ""};
+  const soralgan = q.get("davr") in MARKAZ_DAVR ? MARKAZ_DAVR[q.get("davr")] : q.get("davr");
+  let davr = soralgan === "" || yillar.indexOf(soralgan) >= 0 ? soralgan
+    : (yillar.indexOf(joriyYil) >= 0 ? joriyYil : (yillar[0] || ""));
   $("hk-davr").value = davr;
 
   let sj = null, hj = null, joriy = [], scfgJoriy = null;

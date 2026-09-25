@@ -54,7 +54,7 @@
       "Nurmatov Otabek", "Sodiqova Kamola", "Bekmurodov Shohruh", "Yo'ldosheva Mavluda", "Qosimov Farrux", "Tursunova Zebo",
       "Ochilov Bahodir", "G'aniyeva Munisa", "Xudoyberdiyev Alisher", "Saidova Nasiba", "Muhammadiyev Temur", "Rasulova Shahnoza"];
     const LAVOZIM = {
-      xodim: ["Obyekt menejeri", "Ko'rik va xavfsizlik inspektori", "Baholovchi", "Realizatsiya mutaxassisi", "Yurist"],
+      xodim: ["Obyekt menejeri", "Ko'rik va xavfsizlik inspektori", "Buxgalteriya va risk"],
       pudratchi: ["Qurilma o'rnatuvchisi", "Elektrik", "Ta'mirchi", "Akkumulyator xizmati ustasi"],
       tashrifchi: ["Potensial xaridor", "Xaridor vakili", "Mustaqil baholovchi", "Kadastr muhandisi", "Sug'urta eksperti"]
     };
@@ -79,13 +79,13 @@
         rasm: "assets/xodim_" + ((i % 10) + 1) + ".webp", hujjat: "AA " + oraliq(1000000, 9999999),
         tel: "+998 " + oraliq(90, 99) + " " + oraliq(100, 999) + " " + oraliq(10, 99) + " " + oraliq(10, 99), faol: ehtimol(0.9)});
     });
-    /* Joyga chiqadigan faol xodimlar; ko'rik inspektori va xavfsizlik xizmati alohida */
+    /* Joyga chiqadigan faol xodimlar; ko'rik va xavfsizlik inspektori alohida */
     const faolXodim = SHAXSLAR.filter(s => s.tur === "xodim" && s.faol);
     const rolli = (...r) => { const x = faolXodim.filter(s => r.indexOf(s.rol) >= 0); return x.length ? x : faolXodim; };
-    const xodimlar = rolli("Obyekt menejeri", "Ko'rik va xavfsizlik inspektori", "Xavfsizlik xizmati");
-    const inspektorlar = rolli("Ko'rik va xavfsizlik inspektori", "Xavfsizlik xizmati");
-    const xavfsizlar = rolli("Xavfsizlik xizmati");
-    const sorovchilar = rolli("Obyekt menejeri", "Realizatsiya mutaxassisi", "Baholovchi", "Ko'rik va xavfsizlik inspektori");
+    const xodimlar = rolli("Obyekt menejeri", "Ko'rik va xavfsizlik inspektori");
+    const inspektorlar = rolli("Ko'rik va xavfsizlik inspektori");
+    const xavfsizlar = rolli("Ko'rik va xavfsizlik inspektori");
+    const sorovchilar = rolli("Obyekt menejeri", "Ko'rik va xavfsizlik inspektori");
 
     /* ---------- kirish nuqtalari va qurilmalar ---------- */
     let qN = 0;

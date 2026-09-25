@@ -203,10 +203,12 @@
     tarjimaQil(document.querySelector(".kontent"));
   }
   function filialIzoh(){
-    const filialRol = ROL_KALIT[$("fk-rol").value] === "filial";
-    $("fk-filial").required = filialRol;
-    $("fk-filial").setAttribute("data-xato", "Filial rahbariga filial biriktiring");
-    $("fk-filial-izoh").textContent = filialRol ? "Filial rahbari faqat shu filial yozuvlarini ko'radi" : "Bosh ofis xodimi uchun bo'sh qoldiring";
+    /* Filial endi alohida rol emas: filiali ko'rsatilgan hisob faqat shu filial yozuvlarini ko'radi */
+    $("fk-filial").required = false;
+    $("fk-filial").setAttribute("data-xato", "Filialni tanlang yoki bo'sh qoldiring");
+    $("fk-filial-izoh").textContent = $("fk-filial").value
+      ? "Bu hisob faqat shu filial yozuvlarini ko'radi va o'zgartiradi"
+      : "Bosh ofis xodimi uchun bo'sh qoldiring";
     tarjimaQil($("fk-filial-izoh"));
   }
 
@@ -328,7 +330,7 @@
       if ("rol" in patch) tafsilot.push(["Rol", (f.rol || "—") + " → " + rol]);
       if ("filialKod" in patch) tafsilot.push(["Filial", filialNomi(f.filialKod) + " → " + filialNomi(yangi.filialKod)]);
       const oqibat = ["Xodim keyingi kirishda yangi huquqlar bilan ishlaydi"];
-      if (ROL_KALIT[rol] === "filial") oqibat.push("Faqat " + filialNomi(yangi.filialKod) + " yozuvlarini ko'radi");
+      if (yangi.filialKod) oqibat.push("Faqat " + filialNomi(yangi.filialKod) + " yozuvlarini ko'radi");
       oqibat.push("Bosh sahifa: " + String(sahifaNomi(rolBoshSahifasi(ROL_KALIT[rol]))).replace(/&#39;/g, "'"));
       const t = await MKB.tasdiqla({
         sarlavha: "rol" in patch ? "Rolni o'zgartirish" : "Filialni o'zgartirish",

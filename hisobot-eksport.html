@@ -28,7 +28,7 @@
     <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>Eksport</span></div>
     <div class="hs-qator"><h1>Ma'lumot eksporti</h1><span class="hs-meta" id="hs-meta">—</span></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">KPI</a><a href="hisobot-hudud.html">Hududlar</a><a href="hisobot-undiruv.html">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-eksport.html" class="faol">Eksport</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">Nazorat indeksi</a><a href="hisobot-hudud.html">Hududlar</a></nav>
 
   <div class="tor-2-teng">
     <section class="karta" aria-label="Eksport sozlamalari">
@@ -201,18 +201,24 @@ async function boshla(){
       ustunlar: [["Raqam", k("id")], ["Vazifa", k("nom")], ["Turi", k("tur")]].concat(OBYEKT, [["Qo'yilgan", k("sana")], ["Muddat", k("muddat")], ["Ijrochi", k("ijrochi")],
         ["Rol", k("rol")], ["Muhimlik", x => holat(x.muhimlik)], ["Bajarildi", x => ha(x.bajarildi)]])},
   ];
-  const BOLIM = {aktivlar: "Balans aktivlari", korik: "Ko'rik va inventarizatsiya", qiymat: "Qiymat, zaxira va sug'urta", realizatsiya: "Realizatsiya",
-    yuridik: "Undiruv va sud", himoya: "Himoya va monitoring", hisobot: "Hisobotlar", vazifa: "Vazifalar"};
+  /* To'plamlar yangi bo'lim kalitlari bo'yicha guruhlanadi: eski kalitlar shu yerda keltiriladi */
+  const BOLIM_KANON = {korik: "nazorat", himoya: "nazorat", realizatsiya: "sotuv", yuridik: "sotuv", vazifa: "ishlar", baholash: "qiymat"};
+  const kanon = b => BOLIM_KANON[b] || b;
+  const BOLIM = {aktivlar: "Balans aktivlari", nazorat: "Nazorat va himoya", qiymat: "Qiymat va moliya",
+    sotuv: "Sotuv va undiruv", ishlar: "Ishlar va qarorlar", hisobot: "Hisobotlar"};
   const ochiq = T.filter(t => MKB.huquq(t.bolim, "oqi"));
   const TUR_MOS = {portfel: "YOZUVLAR", reyestr: "YOZUVLAR", xarajat: "XARAJATLAR", mb: "MB_HISOBOTLAR", undiruv: "UNDIRUV_ISHLAR"};
 
   /* ---------- Forma ---------- */
   const sel = $("ek-kol");
-  sel.innerHTML = Object.keys(BOLIM).filter(b => ochiq.some(t => t.bolim === b)).map(b =>
-    '<optgroup label="' + esc(BOLIM[b]) + '">' + ochiq.filter(t => t.bolim === b).map(t => '<option value="' + t.kol + '">' + esc(t.nom) + "</option>").join("") + "</optgroup>").join("");
+  sel.innerHTML = Object.keys(BOLIM).filter(b => ochiq.some(t => kanon(t.bolim) === b)).map(b =>
+    '<optgroup label="' + esc(BOLIM[b]) + '">' + ochiq.filter(t => kanon(t.bolim) === b).map(t => '<option value="' + t.kol + '">' + esc(t.nom) + "</option>").join("") + "</optgroup>").join("");
   const q = new URLSearchParams(location.search);
   const bosh = TUR_MOS[q.get("tur")] || q.get("kol");
   if (ochiq.some(t => t.kol === bosh)) sel.value = bosh;
+  /* Hisobotlar markazidan kelgan davr va format */
+  if ([...$("ek-davr").options].some(o => o.value === q.get("davr"))) $("ek-davr").value = q.get("davr");
+  if ([...$("ek-format").options].some(o => o.value === q.get("format"))) $("ek-format").value = q.get("format");
   tarjimaQil($("ek-forma"));
 
   function oraliq(k){

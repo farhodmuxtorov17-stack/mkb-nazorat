@@ -41,10 +41,10 @@ const matn = f => fs.readFileSync(path.join(ILDIZ, f), "utf8");
     talab(/if \(!MKB\.formaQoriqla\)/.test(a) && /if \(!MKB\.formaTekshir\)/.test(a), "vaqtinchalik formaQoriqla/formaTekshir yo'q");
     talab(/xato-403\.html\?sahifa=/.test(a), "403 sahifasiga sahifa nomi uzatilmaydi");
   });
-  tekshir("amal.js: to'g'ridan-to'g'ri MKB.chiqim yo'q, chiqim so'rovini realizatsiya ham yuboradi", () => {
+  tekshir("amal.js: to'g'ridan-to'g'ri MKB.chiqim yo'q, chiqim so'rovi sotuv bo'limidan ham yuboriladi", () => {
     const a = matn("yadro/amal.js");
     talab(/MKB\.chiqim = function\(\)\{ return Promise\.reject/.test(a), "MKB.chiqim hali to'g'ridan-to'g'ri chiqaradi");
-    talab(/TASDIQ_SORUV_BOLIM = \{chiqim: \["aktivlar", "realizatsiya"\]\}/.test(a), "realizatsiya chiqim so'rovini yubora olmaydi");
+    talab(/TASDIQ_SORUV_BOLIM = \{chiqim: \["aktivlar", "sotuv"\]\}/.test(a), "sotuv bo'limidan chiqim so'rovi yuborilmaydi");
     talab(/ZAXIRA_QOSHIMCHA = \["soliqImtiyozOy"\]/.test(a), "soliqImtiyozOy tasdiqqa yuborilmaydi");
   });
 
@@ -57,8 +57,8 @@ const matn = f => fs.readFileSync(path.join(ILDIZ, f), "utf8");
     const b = D.PARAMETRLAR.find(p => p.id === "korikSuratBino"), t = D.PARAMETRLAR.find(p => p.id === "korikSuratTransport");
     talab(b && t && b.qiymat > 0 && t.qiymat > 0 && b.guruh === "korik", "parametr yo'q");
   });
-  tekshir("Q-MAJLIS: majlisdan bir kun oldin va majlis kuni Yuristga eslatma, o'tgan majlis natijasiz bo'lsa vazifa", () => {
-    talab((D.QOIDALAR || []).some(q => q.id === "Q-MAJLIS" && q.qabulQiluvchiRol === "Yurist"), "qoida yo'q");
+  tekshir("Q-MAJLIS: majlisdan bir kun oldin va majlis kuni obyekt menejeriga eslatma, o'tgan majlis natijasiz bo'lsa vazifa", () => {
+    talab((D.QOIDALAR || []).some(q => q.id === "Q-MAJLIS" && q.qabulQiluvchiRol === "Obyekt menejeri"), "qoida yo'q");
     const m = (D.SUD_MAJLISLAR || []).find(x => x.holat === "rejada");
     talab(m, "rejadagi majlis yo'q");
     const s = D.sanaOqi(m.sana);
@@ -66,7 +66,7 @@ const matn = f => fs.readFileSync(path.join(ILDIZ, f), "utf8");
     const n1 = D.qoidaNatijalari(oldin).filter(n => n.qoidaId === "Q-MAJLIS" && n.havola.indexOf(encodeURIComponent(m.id)) >= 0);
     const n2 = D.qoidaNatijalari(kuni).filter(n => n.qoidaId === "Q-MAJLIS" && n.havola.indexOf(encodeURIComponent(m.id)) >= 0);
     const n3 = D.qoidaNatijalari(keyin).filter(n => n.qoidaId === "Q-MAJLIS" && n.havola.indexOf(encodeURIComponent(m.id)) >= 0);
-    teng(n1.map(n => [n.tur, n.sarlavha, n.rol]), [["bildirish", "Sud majlisi ertaga", "Yurist"]], "bir kun oldin");
+    teng(n1.map(n => [n.tur, n.sarlavha, n.rol]), [["bildirish", "Sud majlisi ertaga", "Obyekt menejeri"]], "bir kun oldin");
     teng(n2.map(n => [n.tur, n.sarlavha]), [["bildirish", "Sud majlisi bugun"]], "majlis kuni");
     teng(n3.map(n => [n.tur, n.sarlavha]), [["vazifa", "Majlis natijasini kiriting"]], "o'tgan majlis");
     talab(/^Ish \S+: .+, \d{2}\.\d{2}\.\d{4}( \d{2}:\d{2})?\.$/.test(n1[0].matn), "matn ko'rinishi: " + n1[0].matn);

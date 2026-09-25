@@ -884,9 +884,9 @@
     [["Ko'rik dalolatnomasini imzolatish", "Ko'rik", "AK-2025/1187", 0, "Karimova Feruza", "Ko'rik va xavfsizlik inspektori", "yuqori"],
      ["Gaz bo'yicha qarz yo'qligi haqidagi ma'lumotnomani olish", "Kommunal", "AK-2026/4471", 2, "Ismoilova Nilufar", "Obyekt menejeri", "orta"],
      ["Sug'urta polisini yangilash", "Sug'urta", "AK-2025/0934", 1, "Tosheva Barno", "Obyekt menejeri", "yuqori"],
-     ["Kadastrga taqiq yechilganini tasdiqlovchi xatni topshirish", "Rasmiylashtirish", "AK-2026/2210", 4, "Sobirov Ulug'bek", "Yurist", "orta"],
+     ["Kadastrga taqiq yechilganini tasdiqlovchi xatni topshirish", "Rasmiylashtirish", "AK-2026/2210", 4, "Sobirov Ulug'bek", "Obyekt menejeri", "orta"],
      ["Birlamchi ko'rik o'tkazish", "Ko'rik", "AK-2026/0141", -1, "Sattorov Javohir", "Ko'rik va xavfsizlik inspektori", "yuqori"],
-     ["Baholash buyurtmasini berish", "Baholash", "AK-2026/0141", 3, "Nazarov Aziz", "Baholovchi", "orta"]
+     ["Baholash buyurtmasini berish", "Baholash", "AK-2026/0141", 3, "Nazarov Aziz", "Obyekt menejeri", "orta"]
     ].forEach(([nom, tur, obyektId, kun, ijrochi, rol, muhimlik], i) => MENING_VAZIFALARIM.push({
       id: "VZ-" + BUGUN.getFullYear() + "-" + String(71 + i), nom, tur, obyektId, kod: obyektId, qoidaId: null,
       sana: nisbiy(Math.min(0, kun) - 1), muddat: nisbiy(kun), ijrochi, rol, muhimlik, bajarildi: false}));
@@ -954,17 +954,17 @@
      ============================================================ */
   const QOIDALAR = [
     {id: "Q-UMIDSIZ",   trigger: "umidsiz",          nom: "Umidsiz toifagacha qolgan kun", kunlar: [90, 60, 30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 30, faol: true, manba: "MB 2696, 20-band"},
-    {id: "Q-POLIS",     trigger: "polis",            nom: "Sug'urta polisi 30 kunda tugaydi", kunlar: [30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Filial rahbari", eskalatsiyaKun: 7, faol: true, manba: "Ichki tartib"},
-    {id: "Q-BAHO",      trigger: "baholash",         nom: "Baholash eskirmoqda", kunlar: [30], natija: "ikkalasi", qabulQiluvchiRol: "Baholovchi", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "Yagona milliy baholash standarti"},
-    {id: "Q-KORIK",     trigger: "korik",            nom: "Ko'rik kechikdi", kunlar: [0], natija: "ikkalasi", qabulQiluvchiRol: "Ko'rik va xavfsizlik inspektori", eskalatsiyaRol: "Filial rahbari", eskalatsiyaKun: 7, faol: true, manba: "Ichki me'yor"},
-    {id: "Q-QURILMA",   trigger: "qurilma-oflayn",   nom: "Qurilma 24 soatdan ortiq aloqasiz", kunlar: [1], natija: "ikkalasi", qabulQiluvchiRol: "Xavfsizlik xizmati", eskalatsiyaRol: "Obyekt menejeri", eskalatsiyaKun: 3, faol: true, manba: "Ichki me'yor"},
-    {id: "Q-TOLOV",     trigger: "eauksion-tolov",   nom: "E-auksion g'olibining to'lov muddati (5 ish kuni)", kunlar: [2], natija: "ikkalasi", qabulQiluvchiRol: "Realizatsiya mutaxassisi", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "VM 18, 31-band"},
-    {id: "Q-YHXX",      trigger: "yhxx",             nom: "Transportni YHXXda 10 kun ichida qayta qayd etish", kunlar: [3], natija: "ikkalasi", qabulQiluvchiRol: "Yurist", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "VM 683, 6-band"},
+    {id: "Q-POLIS",     trigger: "polis",            nom: "Sug'urta polisi 30 kunda tugaydi", kunlar: [30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 7, faol: true, manba: "Ichki tartib"},
+    {id: "Q-BAHO",      trigger: "baholash",         nom: "Baholash eskirmoqda", kunlar: [30], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "Yagona milliy baholash standarti"},
+    {id: "Q-KORIK",     trigger: "korik",            nom: "Ko'rik kechikdi", kunlar: [0], natija: "ikkalasi", qabulQiluvchiRol: "Ko'rik va xavfsizlik inspektori", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 7, faol: true, manba: "Ichki me'yor"},
+    {id: "Q-QURILMA",   trigger: "qurilma-oflayn",   nom: "Qurilma 24 soatdan ortiq aloqasiz", kunlar: [1], natija: "ikkalasi", qabulQiluvchiRol: "Ko'rik va xavfsizlik inspektori", eskalatsiyaRol: "Obyekt menejeri", eskalatsiyaKun: 3, faol: true, manba: "Ichki me'yor"},
+    {id: "Q-TOLOV",     trigger: "eauksion-tolov",   nom: "E-auksion g'olibining to'lov muddati (5 ish kuni)", kunlar: [2], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "VM 18, 31-band"},
+    {id: "Q-YHXX",      trigger: "yhxx",             nom: "Transportni YHXXda 10 kun ichida qayta qayd etish", kunlar: [3], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 0, faol: true, manba: "VM 683, 6-band"},
     {id: "Q-SOLIQ",     trigger: "soliq-imtiyoz",    nom: "Soliq imtiyozi tugaydi", kunlar: [30], natija: "bildirish", qabulQiluvchiRol: "Buxgalteriya va risk", eskalatsiyaRol: null, eskalatsiyaKun: null, faol: true, manba: "Prezident farmoni, 2026-yil 28-avgust"},
     {id: "Q-MB",        trigger: "mb-hisobot",       nom: "Markaziy bank hisoboti oyning 10-sanasigacha", kunlar: [5], natija: "ikkalasi", qabulQiluvchiRol: "Buxgalteriya va risk", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 1, faol: true, manba: "MB 3441, 16-band"},
-    {id: "Q-PASAYTIR",  trigger: "pasaytirish",      nom: "Lot 3 oy sotilmadi: narx pasaytirish tasdiqqa", kunlar: [0], natija: "vazifa", qabulQiluvchiRol: "Realizatsiya mutaxassisi", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 5, faol: true, manba: "Bank realizatsiya tartibi"},
-    {id: "Q-DAVAKTIV",  trigger: "davaktiv",         nom: "Davaktivda 1 yil: qaytarish so'rovi", kunlar: [0], natija: "vazifa", qabulQiluvchiRol: "Realizatsiya mutaxassisi", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 10, faol: true, manba: "Prezident farmoni, 2026-yil 28-avgust"},
-    {id: "Q-MAJLIS",    trigger: "sud-majlis",       nom: "Sud majlisi eslatmasi", kunlar: [1, 0], natija: "ikkalasi", qabulQiluvchiRol: "Yurist", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 3, faol: true, manba: "Ichki tartib"},
+    {id: "Q-PASAYTIR",  trigger: "pasaytirish",      nom: "Lot 3 oy sotilmadi: narx pasaytirish tasdiqqa", kunlar: [0], natija: "vazifa", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 5, faol: true, manba: "Bank realizatsiya tartibi"},
+    {id: "Q-DAVAKTIV",  trigger: "davaktiv",         nom: "Davaktivda 1 yil: qaytarish so'rovi", kunlar: [0], natija: "vazifa", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 10, faol: true, manba: "Prezident farmoni, 2026-yil 28-avgust"},
+    {id: "Q-MAJLIS",    trigger: "sud-majlis",       nom: "Sud majlisi eslatmasi", kunlar: [1, 0], natija: "ikkalasi", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: "Rahbariyat", eskalatsiyaKun: 3, faol: true, manba: "Ichki tartib"},
     {id: "Q-KONSERV",   trigger: "konservatsiya",    nom: "Mavsumiy konservatsiya chek-listi (15-noyabr)", kunlar: [0], natija: "vazifa", qabulQiluvchiRol: "Obyekt menejeri", eskalatsiyaRol: null, eskalatsiyaKun: null, faol: true, manba: "Ichki tartib"}
   ];
 

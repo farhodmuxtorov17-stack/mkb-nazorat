@@ -29,7 +29,7 @@
         <button type="button" class="tugma tugma-oq" id="hu-chop" data-sayohat="chop"><svg class="ic"><use href="#ik-chop"/></svg>Chop etish</button>
       </div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">KPI</a><a href="hisobot-hudud.html">Hududlar</a><a href="hisobot-undiruv.html" class="faol" aria-current="page">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-eksport.html">Eksport</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">Nazorat indeksi</a><a href="hisobot-hudud.html">Hududlar</a></nav>
 
   <div id="kpi-joy"></div>
   <p class="hisobot-tamga" id="hu-tamga"></p>
@@ -95,6 +95,11 @@
   const ochilgan = i => (i.tarix || []).map(x => D.sanaOqi(x.sana)).filter(Boolean).sort((a, b) => a - b)[0] || null;
   let davr = 12;
   try{ davr = +(localStorage.getItem(MKBapi.kalit("mkb4-hu-davr")) || 12) || 12; }catch(_){ }
+  /* Hisobotlar markazidan kelgan davr saqlangan tanlovdan ustun: markaz kalitlari oy soniga keltiriladi */
+  const MARKAZ_DAVR = {oy: 6, otgan: 6, chorak: 6, yil: 12, hammasi: 24};
+  const soralgan = new URLSearchParams(location.search).get("davr");
+  const oySoni = MARKAZ_DAVR[soralgan] || +soralgan;
+  if ([6, 12, 24].indexOf(oySoni) >= 0) davr = oySoni;
   $("hu-davr").value = String(davr);
 
   let ishlar = [], aktivlar = [], dinamika = () => {};

@@ -1,8 +1,29 @@
 # Ekranlar reyestri
 
-Jami: **100 ekran**, 10 bo'lim. Qobiq ichida 93 ta, ochiq sahifalar 7 ta.
-Har bir qobiq sahifasi `yadro/daraxt.js` da qayd etilgan: yon paneldagi band (`MKB_DARAXT`) yoki bo'limning ichki sahifasi (`MKB_ICHKI`).
-Sahifaning `data-sahifa` kaliti shu bo'lim kalitiga teng. Buni `tests/sahifalar.test.js` tekshiradi.
+Jami: **101 ekran**. Qobiq ichida 94 ta, ochiq sahifalar 7 ta.
+Bo'limlar: **olti ish bo'limi** (`aktivlar`, `nazorat`, `qiymat`, `sotuv`, `ishlar`, `hisobot`), ularning ustida rol paneli (`panel`) va pastki sozlama bloki (`sozlama`).
+Har bir qobiq sahifasi `yadro/daraxt.js` da qayd etilgan: bo'lim markazidan ochiladigan sahifa (`MKB_DARAXT`) yoki bo'limning ichki sahifasi (`MKB_ICHKI`).
+Sahifaning `data-sahifa` kaliti shu bo'lim kalitiga teng yoki `yadro/app.js` dagi `BOLIM_TAXALLUS` orqali unga keltiriladi. Buni `tests/sahifalar.test.js` tekshiradi.
+
+## Yon panel va ekranlar munosabati
+
+Yon panel yassi: **bir bo'lim — bir band**, va hech bir rol 6 banddan ko'p ko'rmaydi (`yadro/app.js`, `ROL_YON`, `ROL_YON_MAX`).
+Bo'limning qolgan sahifalari yo'qolmaydi. Ular to'rt yo'l bilan ochiladi:
+
+1. **Bo'lim tasmasi** — har bir bo'lim sahifasining tepasidagi `nav.bolim-tablar`. Bandlari o'z bo'limidagi sahifaga olib borishini `tests/sahifalar.test.js` tekshiradi.
+2. **`Ctrl+K` buyruqlar oynasi** — ro'yxat to'g'ridan-to'g'ri `MKB_DARAXT` dan olinadi (`yadro/ux.js`), shuning uchun daraxtdagi har bir sahifa shu yerdan topiladi.
+3. **Obyekt kartochkasi** — aktivga bog'liq sahifalar (ko'rik, hujjat, xarajat, sotuv) kartochka tablaridan.
+4. **To'g'ridan-to'g'ri havola** — sahifalar o'chirilmagani uchun eski havolalar ishlayveradi.
+
+Hisobotlar bo'limida bundan tashqari **«Bo'lim sahifalari» kartasi** bor (`hisobotlar.html`): u ro'yxatni `MKB_DARAXT.hisobot` dan oladi, shuning uchun daraxtga yangi hisobot qo'shilsa, markazda o'zi paydo bo'ladi.
+
+| Rol | Yon paneldagi bandlar | Bosh sahifa |
+|---|---|---|
+| Rahbariyat | Panel · Qarorlar · Aktivlar · Nazorat · Sotuv · Hisobotlar | `panel.html` |
+| Obyekt menejeri | Panel · Aktivlar · Moliya · Sotuv · Ishlar · Hisobotlar | `panel-obyekt.html` |
+| Ko'rik va xavfsizlik inspektori | Panel · Nazorat · Aktivlar · Ishlar · Hisobotlar | `panel-nazorat.html` |
+| Buxgalteriya va risk | Panel · Moliya · Sotuv · Aktivlar · Ishlar · Hisobotlar | `panel-moliya.html` |
+| Administrator | Panel · Qarorlar · Hisobotlar | `panel.html` |
 
 ## Ochiq sahifalar (7)
 
@@ -16,24 +37,29 @@ Sahifaning `data-sahifa` kaliti shu bo'lim kalitiga teng. Buni `tests/sahifalar.
 | `xato-403.html` | Ruxsat yo'q | qobiqsiz |
 | `xato-404.html` | Sahifa topilmadi | qobiqsiz |
 
-## Boshqaruv paneli (`panel`, 3)
+## Rol panellari (`panel`, 4)
 
-| Fayl | Ekran | Joyi |
+Har bir rol o'z panelidan boshlaydi. Panel — bo'lim emas, rolning bosh sahifasi: bugungi ish, muddat va so'rovlar.
+
+| Fayl | Ekran | Kimga |
 |---|---|---|
-| `panel.html` | Boshqaruv paneli | yon panel |
-| `panel-obyekt.html` | Obyekt menejeri paneli | yon panel |
-| `panel-nazorat.html` | Ko'rik va xavfsizlik paneli | yon panel |
+| `panel.html` | Rahbariyat paneli | Rahbariyat, Administrator |
+| `panel-obyekt.html` | Obyekt menejeri paneli | Obyekt menejeri |
+| `panel-nazorat.html` | Ko'rik va xavfsizlik paneli | Ko'rik va xavfsizlik inspektori |
+| `panel-moliya.html` | Moliya paneli | Buxgalteriya va risk |
 
 ## Balans aktivlari (`aktivlar`, 23)
 
+Bo'lim markazi: `obyektlar.html`.
+
 | Fayl | Ekran | Joyi |
 |---|---|---|
-| `obyektlar.html` | Obyektlar reyestri | yon panel |
-| `muddatlar.html` | Muddatlar | yon panel |
-| `xarita.html` | Xaritada | yon panel |
-| `qabul-boshlash.html` | Balansga qabul | yon panel |
-| `rasmiylashtirish.html` | Huquqni rasmiylashtirish | yon panel |
-| `arxiv.html` | Arxiv va chiqim | yon panel |
+| `obyektlar.html` | Reyestr | bo'lim markazi |
+| `muddatlar.html` | Muddatlar | bo'lim markazi |
+| `xarita.html` | Xaritada | bo'lim markazi |
+| `qabul-boshlash.html` | Balansga qabul | bo'lim markazi |
+| `rasmiylashtirish.html` | Huquqni rasmiylashtirish | bo'lim markazi |
+| `arxiv.html` | Arxiv va chiqim | bo'lim markazi |
 | `obyekt.html` | Obyekt kartochkasi | ichki sahifa |
 | `obyekt-suratlar.html` | Obyekt suratlari | ichki sahifa |
 | `obyekt-moliya.html` | Obyekt moliyasi | ichki sahifa |
@@ -52,18 +78,29 @@ Sahifaning `data-sahifa` kaliti shu bo'lim kalitiga teng. Buni `tests/sahifalar.
 | `arxiv-obyekt.html` | Arxiv yozuvi | ichki sahifa |
 | `chiqim-tasdiqlash.html` | Balansdan chiqarish | ichki sahifa |
 
-## Himoya va monitoring (`himoya`, 17)
+## Nazorat va himoya (`nazorat`, 25)
+
+Bo'lim markazi: `himoya.html`. Eski `himoya` va `korik` bo'limlari shu yerga birlashtirildi; sahifalarning `data-sahifa` kaliti o'zgarmadi, `BOLIM_TAXALLUS` ularni `nazorat` ga keltiradi.
 
 | Fayl | Ekran | Joyi |
 |---|---|---|
-| `himoya.html` | Monitoring markazi | yon panel |
-| `qoriqlash.html` | Qo'riqlash shartnomalari | yon panel |
-| `kommunal.html` | Kommunal holat | yon panel |
-| `qurilmalar.html` | Qurilmalar | yon panel |
-| `hodisalar.html` | Hodisalar | yon panel |
-| `tashriflar.html` | Tashriflar | yon panel |
-| `ruxsatlar.html` | Ruxsatlar | yon panel |
-| `kirish-voqealari.html` | Signallar va voqealar | yon panel |
+| `himoya.html` | Monitoring markazi | bo'lim markazi |
+| `korik-rejasi.html` | Ko'rik rejasi | bo'lim markazi |
+| `inventarizatsiya.html` | Inventarizatsiya | bo'lim markazi |
+| `qurilmalar.html` | Qurilmalar | bo'lim markazi |
+| `hodisalar.html` | Hodisalar | bo'lim markazi |
+| `qoriqlash.html` | Qo'riqlash | bo'lim markazi |
+| `korik-kechikkan.html` | Kechikkan ko'riklar | bo'lim markazi |
+| `korik-tarixi.html` | Ko'riklar tarixi | bo'lim markazi |
+| `korik-tayinlash.html` | Ko'rik tayinlash | bo'lim markazi |
+| `masofaviy-korik.html` | Masofaviy ko'rik | bo'lim markazi |
+| `kommunal.html` | Kommunal | bo'lim markazi |
+| `ruxsatlar.html` | Ruxsatlar | bo'lim markazi |
+| `tashriflar.html` | Tashriflar | bo'lim markazi |
+| `kirish-voqealari.html` | Signallar | bo'lim markazi |
+| `korik-otkazish.html` | Ko'rik o'tkazish | ichki sahifa |
+| `korik-akti.html` | Ko'rik dalolatnomasi | ichki sahifa |
+| `inventar-dalolatnoma.html` | Inventarizatsiya dalolatnomasi | ichki sahifa |
 | `qurilma.html` | Qurilma | ichki sahifa |
 | `qurilma-ornatish.html` | Qurilma o'rnatish | ichki sahifa |
 | `servis-topshirigi.html` | Servis topshirig'i | ichki sahifa |
@@ -72,92 +109,85 @@ Sahifaning `data-sahifa` kaliti shu bo'lim kalitiga teng. Buni `tests/sahifalar.
 | `tashrif-jonli.html` | Tashrif | ichki sahifa |
 | `tashrif-chiqish.html` | Tashrif chiqishi | ichki sahifa |
 | `kirish-voqea.html` | Kirish voqeasi | ichki sahifa |
-| `masofaviy-korik.html` | Masofaviy ko'rik | ichki sahifa |
 
-## Ko'rik va inventarizatsiya (`korik`, 8)
+## Qiymat va moliya (`qiymat`, 9)
 
-| Fayl | Ekran | Joyi |
-|---|---|---|
-| `korik-rejasi.html` | Ko'rik rejasi | yon panel |
-| `korik-kechikkan.html` | Kechikkan ko'riklar | yon panel |
-| `korik-tarixi.html` | Ko'riklar tarixi | yon panel |
-| `korik-tayinlash.html` | Ko'rik tayinlash | yon panel |
-| `inventarizatsiya.html` | Inventarizatsiya | yon panel |
-| `korik-otkazish.html` | Ko'rik o'tkazish | ichki sahifa |
-| `korik-akti.html` | Ko'rik dalolatnomasi | ichki sahifa |
-| `inventar-dalolatnoma.html` | Inventarizatsiya dalolatnomasi | ichki sahifa |
-
-## Qiymat, zaxira va sug'urta (`qiymat`, 9)
+Bo'lim markazi: `baholash.html`; buxgalteriya uchun `zaxira.html`.
 
 | Fayl | Ekran | Joyi |
 |---|---|---|
-| `baholash.html` | Baholash | yon panel |
-| `baholash-buyurtma.html` | Baholash buyurtmasi | yon panel |
-| `zaxira.html` | Zaxira | yon panel |
-| `soliq.html` | Soliq | yon panel |
-| `sugurta.html` | Sug'urta polislari | yon panel |
+| `baholash.html` | Baholash | bo'lim markazi |
+| `baholash-buyurtma.html` | Baholash buyurtmasi | bo'lim markazi |
+| `zaxira.html` | Zaxira (MB 2696) | bo'lim markazi |
+| `soliq.html` | Soliq | bo'lim markazi |
+| `sugurta.html` | Sug'urta polislari | bo'lim markazi |
 | `baholash-hisobot-kiritish.html` | Baholash hisobotini kiritish | ichki sahifa |
 | `baholash-hisobot.html` | Baholash hisoboti | ichki sahifa |
 | `sugurta-polis.html` | Sug'urta polisi | ichki sahifa |
 | `sugurta-yangilash.html` | Polisni yangilash | ichki sahifa |
 
-## Realizatsiya (`realizatsiya`, 7)
+## Sotuv va undiruv (`sotuv`, 13)
+
+Bo'lim markazi: `realizatsiya.html`; buxgalteriya uchun `shartnomalar.html`. Eski `realizatsiya` va `yuridik` bo'limlari shu yerga birlashtirildi.
 
 | Fayl | Ekran | Joyi |
 |---|---|---|
-| `realizatsiya.html` | Sotuv rejasi | yon panel |
-| `lotlar.html` | E-auksion lotlari | yon panel |
-| `takliflar.html` | Takliflar | yon panel |
-| `shartnomalar.html` | Shartnomalar va to'lovlar | yon panel |
-| `ijara.html` | Ijara | yon panel |
+| `realizatsiya.html` | Sotuv rejasi | bo'lim markazi |
+| `lotlar.html` | E-auksion lotlari | bo'lim markazi |
+| `takliflar.html` | Takliflar | bo'lim markazi |
+| `shartnomalar.html` | Shartnomalar va to'lovlar | bo'lim markazi |
+| `ijara.html` | Ijara | bo'lim markazi |
+| `undiruv.html` | Undiruv ishlari | bo'lim markazi |
+| `sud-kalendar.html` | Sud kalendari | bo'lim markazi |
+| `davo-tayyorlash.html` | Da'vo tayyorlash | bo'lim markazi |
 | `lot.html` | Lot | ichki sahifa |
 | `shartnoma.html` | Shartnoma | ichki sahifa |
-
-## Undiruv va sud (`yuridik`, 6)
-
-| Fayl | Ekran | Joyi |
-|---|---|---|
-| `undiruv.html` | Undiruv ishlari | yon panel |
-| `sud-kalendar.html` | Sud kalendari | yon panel |
-| `davo-tayyorlash.html` | Da'vo tayyorlash | yon panel |
 | `ish.html` | Ish varaqasi | ichki sahifa |
 | `sud-majlis.html` | Sud majlisi | ichki sahifa |
 | `qaror-kiritish.html` | Sud qarorini kiritish | ichki sahifa |
 
+## Ishlar va qarorlar (`ishlar`, 3)
+
+Bo'lim markazi: `vazifalar.html`; rahbariyat va administrator uchun band to'g'ridan-to'g'ri `tasdiqlar.html` ni ochadi va «Qarorlar» deb nomlanadi.
+
+| Fayl | Ekran | Joyi |
+|---|---|---|
+| `vazifalar.html` | Vazifalar | bo'lim markazi |
+| `tasdiqlar.html` | Qarorlar | bo'lim markazi |
+| `bildirishnomalar.html` | Bildirishnomalar | bo'lim markazi |
+
 ## Hisobotlar (`hisobot`, 9)
 
-| Fayl | Ekran | Joyi |
-|---|---|---|
-| `hisobotlar.html` | Hisobotlar markazi | yon panel |
-| `hisobot-portfel.html` | Portfel hisoboti | yon panel |
-| `hisobot-mb.html` | MB oylik hisoboti | yon panel |
-| `hisobot-xarajat.html` | Xarajatlar hisoboti | yon panel |
-| `hisobot-kpi.html` | Samaradorlik ko'rsatkichlari | yon panel |
-| `hisobot-hudud.html` | Hududlar kesimi | ichki sahifa |
-| `hisobot-eksport.html` | Ma'lumot eksporti | ichki sahifa |
-| `hisobot-undiruv.html` | Undiruv hisoboti | ichki sahifa |
-| `kirish-hisoboti.html` | Himoya hisoboti | ichki sahifa |
-
-## Vazifalar (`vazifa`, 3)
+Bo'lim markazi — yagona **hisobot markazi** `hisobotlar.html`. Yon panelda bitta band turadi; qolgan sakkiz sahifa shu markazdagi kartalardan ochiladi.
 
 | Fayl | Ekran | Joyi |
 |---|---|---|
-| `vazifalar.html` | Vazifalar | yon panel |
-| `tasdiqlar.html` | Qarorlar | yon panel |
-| `bildirishnomalar.html` | Bildirishnomalar | yon panel |
+| `hisobotlar.html` | Hisobotlar markazi | bo'lim markazi |
+| `hisobot-portfel.html` | Balans aktivlari | markaz kartasi |
+| `hisobot-hudud.html` | Hududlar kesimi | markaz kartasi |
+| `hisobot-xarajat.html` | Xarajatlar | markaz kartasi |
+| `hisobot-kpi.html` | Nazorat indeksi | markaz kartasi |
+| `hisobot-undiruv.html` | Undiruv va sud ishlari | markaz kartasi |
+| `kirish-hisoboti.html` | Kirish nazorati | markaz kartasi |
+| `hisobot-mb.html` | MB oylik hisoboti | markaz kartasi |
+| `hisobot-eksport.html` | Ma'lumot eksporti | markaz kartasi |
 
 ## Sozlamalar (`sozlama`, 8)
 
+Yon panelning pastki bloki. Ish bo'limi emas: hisob, qoida va ma'lumotnomalar.
+
 | Fayl | Ekran | Joyi |
 |---|---|---|
-| `sozlamalar.html` | Sozlamalar | yon panel |
-| `foydalanuvchilar.html` | Foydalanuvchilar | yon panel |
-| `rollar.html` | Rollar | yon panel |
-| `filiallar.html` | Filiallar | yon panel |
-| `integratsiyalar.html` | Integratsiyalar | yon panel |
-| `amallar-tarixi.html` | Amallar tarixi | yon panel |
-| `qollanma.html` | Qo'llanma | yon panel |
+| `sozlamalar.html` | Profil va qoidalar | pastki blok |
+| `foydalanuvchilar.html` | Foydalanuvchilar | pastki blok |
+| `rollar.html` | Rollar | pastki blok |
+| `filiallar.html` | Filiallar | pastki blok |
+| `integratsiyalar.html` | Integratsiyalar | pastki blok |
+| `amallar-tarixi.html` | Amallar tarixi | pastki blok |
+| `qollanma.html` | Qo'llanma | pastki blok |
 | `foydalanuvchi.html` | Foydalanuvchi | ichki sahifa |
+
+`foydalanuvchilar.html`, `foydalanuvchi.html`, `rollar.html` va `integratsiyalar.html` faqat administratorga ochiq; `filiallar.html` va `amallar-tarixi.html` — administrator bilan rahbariyatga (`yadro/app.js`, `SAHIFA_MAXSUS`).
 
 ## Obyekt kartochkasi tablari
 
@@ -174,8 +204,23 @@ Sahifaning `data-sahifa` kaliti shu bo'lim kalitiga teng. Buni `tests/sahifalar.
 
 Pasport (`obyekt-pasport.html`) va tahrir (`obyekt-tahrir.html`) kartochkadagi amal tugmalari orqali ochiladi.
 
+## Yon paneldan chiqqan, lekin qolgan sahifalar
+
+Soddalashtirishda **birorta sahifa o'chirilmadi**. Yon panelda bandlar soni kamaydi, sahifalar esa yuqorida sanalgan to'rt yo'l bilan ochiq qoldi. Har bir sahifa daraxtda qayd etilganini va bo'lim tasmasidagi bandlar o'z bo'limiga olib borishini `tests/sahifalar.test.js` tekshiradi.
+
+To'qqizta alohida hisobot sahifasi o'rniga yon panelda bitta **hisobot markazi** turadi; sahifalarning o'zi markazdagi kartalardan ochiladi.
+
+**Ochiq joy: birlashtirilgan bo'limlarda ikkita tasma.** `nazorat` va `sotuv` bo'limlari ikkitadan eski bo'limdan yig'ilgan, lekin tasmalar birlashtirilmagan:
+
+| Bo'lim | Markaz | Tasmada bor | Tasmada yo'q |
+|---|---|---|---|
+| `nazorat` | `himoya.html` | qo'riqlash, kommunal, qurilmalar, hodisalar, tashriflar, masofaviy ko'rik, ruxsatlar, signallar | `korik-rejasi.html`, `korik-kechikkan.html`, `korik-tarixi.html`, `korik-tayinlash.html`, `inventarizatsiya.html` (ular `korik-rejasi.html` dagi ikkinchi tasmada) |
+| `sotuv` | `realizatsiya.html` | lotlar, takliflar, shartnomalar, ijara | `undiruv.html`, `sud-kalendar.html`, `davo-tayyorlash.html` (ular `undiruv.html` dagi ikkinchi tasmada) |
+
+Ya'ni ko'rik rejasiga `himoya.html` dan, undiruv ishlariga `realizatsiya.html` dan tasma orqali o'tib bo'lmaydi. Ko'rik guruhiga `panel-nazorat.html` va `obyektlar.html` dan havola bor; `undiruv.html` ga esa obyekt menejerining bosh sahifasi `panel-obyekt.html` dan havola yo'q — faqat `Ctrl+K`, ish kartochkasi yoki hisobot orqali ochiladi. «Rolning bosh sahifasidan uch bosishda» shartini to'liq bajarish uchun shu ikki tasmani birlashtirish yoki markazga bo'lim sahifalari kartasini qo'yish kerak.
+
 ## Olib tashlangan sahifalar
 
-`obyekt-3d.html`, `obyekt-qavat.html` (3D navigator va qavat rejasi o'rniga haqiqiy suratlar tabi), `kirish-nazorati.html`, `kirish-nuqtalari.html`, `kirish-nuqtasi.html` (himoya markazi va qurilmalar reyestriga birlashtirildi). Ularga havola qolmagan.
+`obyekt-3d.html`, `obyekt-qavat.html` (3D navigator va qavat rejasi o'rniga haqiqiy suratlar tabi), `kirish-nazorati.html`, `kirish-nuqtalari.html`, `kirish-nuqtasi.html` (monitoring markazi va qurilmalar reyestriga birlashtirildi). Ularga havola qolmagan.
 
-Rol panellari uchtaga qisqardi: rahbariyat (`panel.html`), obyekt menejeri (`panel-obyekt.html`), ko'rik va xavfsizlik (`panel-nazorat.html`). `panel-filial.html`, `panel-baholash.html`, `panel-realizatsiya.html`, `panel-yurist.html`, `panel-buxgalteriya.html` va `panel-xavfsizlik.html` olib tashlandi. Filial rahbari `panel.html` da faqat o'z filialini ko'radi; baholovchi `baholash.html`, realizatsiya mutaxassisi `realizatsiya.html`, yurist `undiruv.html`, buxgalteriya `zaxira.html`, xavfsizlik xizmati `himoya.html` da ishni boshlaydi. Nazorat indeksi past obyektlar bloki `panel.html` ga, bozor qiymatining balansga nisbati `baholash.html` ga, zaxira stavkalarini tasdiqlash `zaxira.html` ga ko'chirildi.
+Rol panellari to'rtta: `panel.html`, `panel-obyekt.html`, `panel-nazorat.html`, `panel-moliya.html`. `panel-filial.html`, `panel-baholash.html`, `panel-realizatsiya.html`, `panel-yurist.html`, `panel-buxgalteriya.html` va `panel-xavfsizlik.html` olib tashlandi: ularning bloklari qolgan to'rt panelga va bo'lim markazlariga ko'chirildi. Filialga biriktirilgan rahbariyat hisobi `panel.html` da faqat o'sha filial raqamlarini ko'radi (`MKB.doira`).

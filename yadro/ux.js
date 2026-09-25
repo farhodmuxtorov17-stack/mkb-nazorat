@@ -1028,19 +1028,21 @@ window.MKB_UX_SOF = (function(){
      8.1 Buyruqlar oynasi: Ctrl+K va "/"
      ============================================================ */
   window.MKB_AMALLAR = window.MKB_AMALLAR || [
-    {nom: "Hodisa qayd etish", ikonka: "ogoh", havola: "hodisalar.html?yangi=1", bolim: "himoya", huquq: "yoz"},
-    {nom: "Lot yaratish", ikonka: "savdo", havola: "lotlar.html?yangi=1", bolim: "realizatsiya", huquq: "yoz"},
-    {nom: "Vazifa qo'shish", ikonka: "vazifa", havola: "vazifalar.html?yangi=1", bolim: "vazifa", huquq: "yoz"},
-    {nom: "Ko'rik tayinlash", ikonka: "korik", havola: "korik-tayinlash.html", bolim: "korik", huquq: "yoz"},
+    {nom: "Hodisa qayd etish", ikonka: "ogoh", havola: "hodisalar.html?yangi=1", bolim: "nazorat", huquq: "yoz"},
+    {nom: "Lot yaratish", ikonka: "savdo", havola: "lotlar.html?yangi=1", bolim: "sotuv", huquq: "yoz"},
+    {nom: "Vazifa qo'shish", ikonka: "vazifa", havola: "vazifalar.html?yangi=1", bolim: "ishlar", huquq: "yoz"},
+    {nom: "Ko'rik tayinlash", ikonka: "korik", havola: "korik-tayinlash.html", bolim: "nazorat", huquq: "yoz"},
     {nom: "Balansga qabul", ikonka: "aktivlar", havola: "qabul-boshlash.html", bolim: "aktivlar", huquq: "yoz"},
-    {nom: "Yangi undiruv ishi", ikonka: "yuridik", havola: "undiruv.html?yangi=1", bolim: "yuridik", huquq: "yoz"},
-    {nom: "Majlis tayinlash", ikonka: "sud", havola: "sud-kalendar.html?yangi=1", bolim: "yuridik", huquq: "yoz"},
-    {nom: "Taklif kiritish", ikonka: "karta-pul", havola: "takliflar.html?yangi=1", bolim: "realizatsiya", huquq: "yoz"},
-    {nom: "Ruxsat berish", ikonka: "ruxsat", havola: "ruxsatlar.html?yangi=1", bolim: "himoya", huquq: "yoz"},
-    {nom: "Qo'riqlash shartnomasi qo'shish", ikonka: "qalqon", havola: "qoriqlash.html?yangi=1", bolim: "himoya", huquq: "yoz"},
+    {nom: "Yangi undiruv ishi", ikonka: "yuridik", havola: "undiruv.html?yangi=1", bolim: "sotuv", huquq: "yoz"},
+    {nom: "Majlis tayinlash", ikonka: "sud", havola: "sud-kalendar.html?yangi=1", bolim: "sotuv", huquq: "yoz"},
+    {nom: "Taklif kiritish", ikonka: "karta-pul", havola: "takliflar.html?yangi=1", bolim: "sotuv", huquq: "yoz"},
+    {nom: "Ruxsat berish", ikonka: "ruxsat", havola: "ruxsatlar.html?yangi=1", bolim: "nazorat", huquq: "yoz"},
+    {nom: "Qo'riqlash shartnomasi qo'shish", ikonka: "qalqon", havola: "qoriqlash.html?yangi=1", bolim: "nazorat", huquq: "yoz"},
     {nom: "Foydalanuvchi qo'shish", ikonka: "foyd", havola: "foydalanuvchilar.html?yangi=1", bolim: "sozlama", huquq: "yoz"},
-    {nom: "Inventarizatsiya boshlash", ikonka: "skaner", havola: "inventarizatsiya.html?yangi=1", bolim: "korik", huquq: "yoz"},
-    {nom: "Paket yaratish", ikonka: "portfel", havola: "realizatsiya.html?yangi=1", bolim: "realizatsiya", huquq: "yoz"},
+    {nom: "Inventarizatsiya boshlash", ikonka: "skaner", havola: "inventarizatsiya.html?yangi=1", bolim: "nazorat", huquq: "yoz"},
+    {nom: "Paket yaratish", ikonka: "portfel", havola: "realizatsiya.html?yangi=1", bolim: "sotuv", huquq: "yoz"},
+    {nom: "Servis topshirig'i", ikonka: "qurilma", havola: "servis-topshirigi.html", bolim: "nazorat", huquq: "yoz"},
+    {nom: "Stavka so'rovi", ikonka: "karta-pul", havola: "zaxira.html?yangi=1", bolim: "qiymat", huquq: "yoz"},
   ];
   const amalRuxsatli = a => ruxsat(a.havola) && (!a.bolim || MKB.huquq(a.bolim, a.huquq || "yoz"));
   /* Yozuv turi: to'plam, sahifa, ikonka, nomi */

@@ -17,14 +17,15 @@
 
   /* Slayd raqamlari: ?dan= qiymatidan taqdimotdagi o'ringa o'tish uchun */
   var SLAYD = {
-    "s-muqova": 1, "s-mundarija": 2, "s-muammo": 3, "s-tarkib": 4, "s-xatar": 5,
-    "s-shart": 6, "s-matritsa": 7, "s-y01": 8, "s-y02": 9, "s-y03": 10, "s-y04": 11,
-    "s-y05": 12, "s-y06": 13, "s-y07": 14, "s-y08": 15, "s-y09": 16, "s-y10": 17,
-    "s-narx": 18, "s-arx": 19, "s-savol": 20, "s-api": 21, "s-adapter": 22, "s-video": 23,
-    "s-masshtab": 24, "s-kirish": 25, "s-uzilish": 26, "s-korik": 27, "s-montaj": 28,
-    "s-quvvat": 29, "s-qabul": 30, "s-iqtisod": 31, "s-bom": 32, "s-meyor": 33,
-    "s-hamkor": 34, "s-sotuv": 35, "s-istiqbol": 36, "s-platforma": 37, "s-yol": 38,
-    "s-pilot": 39, "s-faq": 40
+    "s-muqova": 1, "s-mundarija": 2, "s-taklif": 3, "s-muammo": 4, "s-tizim": 5,
+    "s-rol": 6, "s-sxema": 7, "s-foyda": 8, "s-tarkib": 9, "s-xatar": 10,
+    "s-shart": 11, "s-matritsa": 12, "s-y01": 13, "s-y02": 14, "s-y03": 15,
+    "s-y04": 16, "s-y05": 17, "s-y06": 18, "s-y07": 19, "s-y08": 20,
+    "s-y09": 21, "s-y10": 22, "s-narx": 23, "s-arx": 24, "s-savol": 25,
+    "s-api": 26, "s-adapter": 27, "s-video": 28, "s-masshtab": 29, "s-kirish": 30,
+    "s-uzilish": 31, "s-korik": 32, "s-montaj": 33, "s-quvvat": 34, "s-qabul": 35,
+    "s-iqtisod": 36, "s-bom": 37, "s-meyor": 38, "s-hamkor": 39, "s-sotuv": 40,
+    "s-istiqbol": 41, "s-platforma": 42, "s-yol": 43, "s-pilot": 44, "s-faq": 45
   };
 
   function ik(d, q) {

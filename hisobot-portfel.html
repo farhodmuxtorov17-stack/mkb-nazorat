@@ -27,7 +27,7 @@
         <button type="button" class="tugma tugma-oq" id="hp-chop" data-sayohat="chop"><svg class="ic"><use href="#ik-chop"/></svg>Chop etish</button>
       </div></div>
   </div>
-  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html" class="faol">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">KPI</a><a href="hisobot-hudud.html">Hududlar</a><a href="hisobot-undiruv.html">Undiruv</a><a href="kirish-hisoboti.html">Kirish nazorati</a><a href="hisobot-eksport.html">Eksport</a></nav>
+  <nav class="bolim-tablar" aria-label="Bo'lim ichi"><a href="hisobotlar.html">Markaz</a><a href="hisobot-portfel.html" class="faol" aria-current="page">Balans aktivlari</a><a href="hisobot-mb.html">MB hisoboti</a><a href="hisobot-xarajat.html">Xarajatlar</a><a href="hisobot-kpi.html">Nazorat indeksi</a><a href="hisobot-hudud.html">Hududlar</a></nav>
 
   <section class="metrika-qator tort" id="hp-kpi" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi"></section>
   <div id="hp-otgan"></div>
@@ -112,7 +112,7 @@ async function boshla(){
   const jami = (r, f) => D.yaxlit(r.reduce((a, x) => a + (Number(f(x)) || 0), 0), 1);
   const pulHTML = mln => { const m = /^(.*?)\s*(mlrd so'm|mln so'm)$/.exec(MKB.pul(mln)); return m ? '<span data-tarjimasiz>' + esc(m[1]) + "</span><small>" + m[2] + "</small>" : esc(MKB.pul(mln)); };
   const TOIFA = k => (D.ZAXIRA_TOIFALARI || []).find(t => t.kalit === k) || {kalit: k, nom: k === "standart" ? "Standart" : (k || "Kiritilmagan"), rang: "var(--mint-matn)", chip: "chip-yashil"};
-  const fk = MKB.rol() === "filial" ? MKB.filialKod() : null;
+  const fk = MKB.filialDoirasi();
 
   /* Qator: joriy yoki o'tgan oy uchun bir xil shakl */
   function joriyQatorlar(){
@@ -139,7 +139,12 @@ async function boshla(){
   $("hp-davr").innerHTML = '<option value="">' + D.sanaYoz(D.bugun()) + " (bugun)</option>" +
     davrlar.filter(d => d !== bugunDavr).map(d => '<option value="' + d + '">' + D.sanaYoz(oyOxiri(d)) + " · " + oyNomi(d) + "</option>").join("");
   const p = new URLSearchParams(location.search);
-  let davr = davrlar.indexOf(p.get("davr")) >= 0 && p.get("davr") !== bugunDavr ? p.get("davr") : "";
+  /* Hisobotlar markazidan kelgan davr kaliti oylik suratga keltiriladi: "o'tgan oy" — o'tgan oy surati,
+     qolgan kalitlar bugungi holatni ochadi. To'g'ridan-to'g'ri YYYY-MM ham qabul qilinadi. */
+  const otganOy = new Date(D.bugun().getFullYear(), D.bugun().getMonth() - 1, 1);
+  const MARKAZ_DAVR = {oy: "", otgan: otganOy.getFullYear() + "-" + String(otganOy.getMonth() + 1).padStart(2, "0"), chorak: "", yil: "", hammasi: ""};
+  const soralgan = p.get("davr") in MARKAZ_DAVR ? MARKAZ_DAVR[p.get("davr")] : p.get("davr");
+  let davr = davrlar.indexOf(soralgan) >= 0 && soralgan !== bugunDavr ? soralgan : "";
   $("hp-davr").value = davr;
 
   let jadval = null, qatorlar = [], jcfg = null;

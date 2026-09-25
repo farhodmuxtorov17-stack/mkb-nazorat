@@ -101,26 +101,28 @@ GET  /api/salomat                           → {holat: "ok", vaqt, manbalar}
 
 ## 4. Разграничение доступа
 
-Роли: `Administrator`, `Rahbariyat`, `Filial rahbari`, `Obyekt menejeri`,
-`Ko'rik va xavfsizlik inspektori`, `Baholovchi`, `Realizatsiya mutaxassisi`,
-`Yurist`, `Buxgalteriya va risk`, `Xavfsizlik xizmati`. Разделы: `panel`,
-`aktivlar`, `himoya`, `korik`, `qiymat`, `realizatsiya`, `yuridik`, `hisobot`,
-`vazifa`, `sozlama`.
+Роли: `Administrator`, `Rahbariyat`, `Obyekt menejeri`,
+`Ko'rik va xavfsizlik inspektori`, `Buxgalteriya va risk` — четыре рабочие
+роли и технический администратор. Снятые имена (`Filial rahbari`,
+`Baholovchi`, `Baholovchi mutaxassis`, `Realizatsiya mutaxassisi`, `Yurist`,
+`Xavfsizlik xizmati`, `Ko'rik inspektori`) сервер приводит к действующим по
+таблице `ROL_YANGI`, поэтому сохранённая сессия и старая запись продолжают
+работать. Разделы: `panel`, `aktivlar`, `nazorat`, `qiymat`, `sotuv`,
+`hisobot`, `ishlar`, `sozlama`.
 
 Клиентская матрица (`ROL_RUXSAT` в `yadro/app.js`) строит меню и скрывает
 кнопки; решение принимает сервер (`ROL_BOLIMLAR`): для каждой роли — список
-разделов на чтение и на запись. Каждая коллекция отнесена к разделу:
+разделов на чтение и на запись. Каждая коллекция отнесена к разделу
+(`KOLLEKSIYA_BOLIM`):
 
 | Раздел | Коллекции |
 |---|---|
 | `aktivlar` | `yozuvlar`, `hujjatlar`, `fayllar`, `arxiv`, `xarajatlar`, `hududlar` |
-| `korik` | `koriklar`, `inventar`, `inventarizatsiyalar` |
+| `nazorat` | `koriklar`, `inventar`, `inventarizatsiyalar`, `hodisalar`, `qoriqlash`, `kommunal_arizalar`, `qurilma_katalog`, `himoya_andozalari`, `shaxslar`, `kirish_nuqtalari`, `qurilmalar`, `kirish_voqealari`, `ruxsatlar`, `kirish_sorovlari`, `tashriflar`, `xavfsizlik_hodisalari`, `masofaviy_sessiyalar`, `xizmat_ishlari` |
 | `qiymat` | `baholashlar`, `sugurtalar` (`polislar`), `sugurta_davolari`, `soliq`, `zaxira_tarix` |
+| `sotuv` | `lotlar` (`sotuv`), `takliflar`, `xaridorlar`, `shartnomalar`, `ijara`, `paketlar`, `undiruv_ishlar`, `sud_majlislar`, `advokatlar`, `restrukturizatsiya`, `muloqotlar` |
 | `hisobot` | `mb_hisobotlar`, `hisobotlar` |
-| `realizatsiya` | `lotlar` (`sotuv`), `takliflar`, `xaridorlar`, `shartnomalar`, `ijara`, `paketlar` |
-| `yuridik` | `undiruv_ishlar`, `sud_majlislar`, `advokatlar`, `restrukturizatsiya`, `muloqotlar` |
-| `himoya` | `hodisalar`, `qoriqlash`, `kommunal_arizalar`, `qurilma_katalog`, `himoya_andozalari`, `shaxslar`, `kirish_nuqtalari`, `qurilmalar`, `kirish_voqealari`, `ruxsatlar`, `kirish_sorovlari`, `tashriflar`, `xavfsizlik_hodisalari`, `masofaviy_sessiyalar`, `xizmat_ishlari` |
-| `vazifa` | `tasdiqlar`, `mening_vazifalarim` (`vazifalar`), `bildirishlar` |
+| `ishlar` | `tasdiqlar`, `mening_vazifalarim` (`vazifalar`), `bildirishlar` |
 | `sozlama` | `foydlar`, `filiallar`, `parametrlar`, `bayramlar`, `qoidalar`, `integratsiyalar` |
 
 В скобках — псевдонимы. Дополнительные правила:
