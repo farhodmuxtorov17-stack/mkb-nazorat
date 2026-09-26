@@ -481,7 +481,12 @@ MKB.sahifaYukla({joylar: {keyingi: ["qator", 1], kpi: ["karta", 3], yol: ["qator
     if (!faolLot && y.holat === "Sotuvga tayyorlanmoqda" && MKB.huquq("realizatsiya", "yoz"))
       variantlar.push({belgi: "savdo", rang: "mint", nom: T("Obyekt sotuvga tayyor"), izoh: baholangan ? T("Bozor qiymati") + " " + N(MKB.pul(y.qiymat.bozor)) : T("Lot yaratish uchun baholash kerak"),
         havola: "obyekt-sotuv.html?id=" + q + "&yangi=1", tugma: "Sotuvga chiqarish", sahifa: "obyekt-sotuv.html"});
-    if (faolLot && ruxsat("lot.html"))
+    /* Savdo o'tmagan lot: kartochka eski sanani emas, keyingi qarorni aytadi (takroriy savdo yoki narx pasaytirish lot sahifasida) */
+    if (faolLot && faolLot.holat === "otkazilmagan" && ruxsat("lot.html"))
+      variantlar.push({belgi: "savdo", rang: "pushti", nom: T("Savdo bo'lmadi") + " · " + N(faolLot.id),
+        izoh: T("Takroriy savdoni e'lon qiling yoki narxni pasaytiring") + (faolLot.savdoSana ? " · " + T("Savdo sanasi") + " " + N(faolLot.savdoSana) : ""),
+        havola: "lot.html?id=" + encodeURIComponent(faolLot.id) + "#amallar", tugma: "Keyingi savdoni tayyorlash", sahifa: "lot.html"});
+    else if (faolLot && ruxsat("lot.html"))
       variantlar.push({belgi: "savdo", rang: "lavanda", nom: T("Lot") + " " + N(faolLot.id) + " · " + T(MKB.holatNomi(faolLot.holat)),
         izoh: faolLot.savdoSana ? T("Savdo sanasi") + " " + N(faolLot.savdoSana) : T("Savdo sanasi belgilanmagan"), havola: "lot.html?id=" + encodeURIComponent(faolLot.id), tugma: "Lotni ochish", sahifa: "lot.html"});
   }

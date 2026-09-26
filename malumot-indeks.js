@@ -295,10 +295,13 @@
     const j = joriy ? sanaOqi(joriy) : BUGUN;
     const qoida = id => (D.QOIDALAR || []).find(q => q.id === id && q.faol !== false);
     const natija = [];
-    const qosh = (q, obyektId, triggerSana, sarlavha, matn, havola, muddat, muhimlik, kalit) => {
+    /* ijrochi: yozuvning o'z mas'uli (ko'rik inspektori, obyekt menejeri). Berilsa vazifa shu xodimga tushadi,
+       aks holda qoidadagi rolning hammasiga: "Menga tegishli" rol paneli bilan bir xil sanaydi */
+    const qosh = (q, obyektId, triggerSana, sarlavha, matn, havola, muddat, muhimlik, kalit, ijrochi) => {
       const id = q.id + "|" + (kalit || obyektId || "-") + "|" + sanaYoz(triggerSana);
       const n = {id, qoidaId: q.id, obyektId: obyektId || null, sana: sanaYoz(triggerSana), sarlavha, matn, havola,
-        rol: q.qabulQiluvchiRol, eskalatsiyaRol: q.eskalatsiyaRol, muddat: muddat ? sanaYoz(muddat) : null, muhimlik: muhimlik || "orta"};
+        rol: q.qabulQiluvchiRol, eskalatsiyaRol: q.eskalatsiyaRol, muddat: muddat ? sanaYoz(muddat) : null, muhimlik: muhimlik || "orta",
+        ijrochi: ijrochi || null};
       if (q.natija === "bildirish" || q.natija === "ikkalasi") natija.push(Object.assign({tur: "bildirish"}, n));
       if (q.natija === "vazifa" || q.natija === "ikkalasi") natija.push(Object.assign({tur: "vazifa"}, n, {id: "V|" + id}));
     };
@@ -331,14 +334,14 @@
       const qolgan = kunFarqi(j, tugash);
       if (qolgan > q.kunlar[0]) return;
       qosh(q, y.id, kunQosh(tugash, -q.kunlar[0]), qolgan < 0 ? "Baholash eskirgan" : "Baholash " + qolgan + " kunda eskiradi",
-        nom(y.id) + ": oxirgi baholash " + sanaYoz(b) + ".", "baholash-buyurtma.html?obyekt=" + encodeURIComponent(y.id), tugash, qolgan < 0 ? "yuqori" : "orta");
+        nom(y.id) + ": oxirgi baholash " + sanaYoz(b) + ".", "baholash-buyurtma.html?obyekt=" + encodeURIComponent(y.id), tugash, qolgan < 0 ? "yuqori" : "orta", null, y.masul);
     });
     q = qoida("Q-KORIK");
     if (q) (D.KORIKLAR || []).forEach(k => {
       const s = sanaOqi(k.sana);
       if (!s || ["otkazildi", "bekor"].indexOf(k.holat) >= 0 || s >= j) return;
       qosh(q, k.obyektId, s, "Ko'rik kechikdi", nom(k.obyektId) + ": " + k.sana + "-dagi ko'rik o'tkazilmagan.",
-        "korik-otkazish.html?id=" + encodeURIComponent(k.id), s, "yuqori");   /* muddat = rejadagi sana: kechikkan ko'rik muddati o'tgan vazifa */
+        "korik-otkazish.html?id=" + encodeURIComponent(k.id), s, "yuqori", null, k.inspektor);   /* muddat = rejadagi sana: kechikkan ko'rik muddati o'tgan vazifa */
     });
     q = qoida("Q-QURILMA");
     if (q) (D.QURILMALAR || []).forEach(x => {
@@ -492,7 +495,7 @@
       if (n.tur === "bildirish") D.BILDIRISHLAR.push({id: n.id, qoidaId: n.qoidaId, obyektId: n.obyektId, sarlavha: n.sarlavha, matn: n.matn,
         havola: n.havola, sana: n.sana, rol: n.rol, oqildi: kunFarqi(n.sana, BUGUN) > 10, ikon: HAVOLA_IKON[n.qoidaId] || "i-ogoh"});
       else D.MENING_VAZIFALARIM.push({id: n.id, nom: n.sarlavha, tur: (D.QOIDALAR.find(x => x.id === n.qoidaId) || {}).nom || "",
-        obyektId: n.obyektId, kod: n.obyektId, qoidaId: n.qoidaId, sana: n.sana, muddat: n.muddat, ijrochi: null, rol: n.rol,
+        obyektId: n.obyektId, kod: n.obyektId, qoidaId: n.qoidaId, sana: n.sana, muddat: n.muddat, ijrochi: n.ijrochi || null, rol: n.rol,
         muhimlik: n.muhimlik, bajarildi: false});
     });
   }

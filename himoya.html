@@ -22,10 +22,7 @@
 #mm-kartalar{margin-top:20px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
 .mm-kadr{min-height:0;padding:14px 14px 0}
 .mm-kadr img,.mm-kadr .surat-yoq{aspect-ratio:16/10;border-radius:16px}
-.mm-kadr:has(> .kadr-qora){background:var(--qora-yuza);padding:14px}
-.mm-kadr:has(> .kadr-och){background:var(--plitka);padding:14px}
 .mm-kadr .beyj-qator{position:absolute;left:24px;top:24px;z-index:2;display:flex;gap:6px;flex-wrap:wrap;max-width:calc(100% - 48px)}
-.mm-kadr:has(> .kadr-yoq) .beyj-qator{left:24px;top:24px}
 /* Holat chipi suratdan tashqarida, matn qatorida: surat kamera kadriga o'xshab qolmasligi uchun */
 .mm-holat{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 /* O'lchami .chip-kichik bilan bir xil (28px, 0 12px, 12px); faqat rangi surat ustida o'qilishi uchun parda */
@@ -35,15 +32,6 @@
 .kadr-yorliq{left:24px}
 /* Surat muallifi va litsenziyasi kartaning oxirida: ochiq litsenziya ko'rinib turishni talab qiladi, birinchi o'rinda turishni emas */
 .mm-manba{margin:12px 0 0;font-size:12px;line-height:1.45;color:var(--matn-3)}
-.kadr-yoq{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;width:100%;
-  aspect-ratio:16/10;border-radius:16px;font-size:12.5px;line-height:1.5;padding:16px}
-.kadr-qora{background:var(--qora-yuza);color:var(--qora-matn-2)}
-.kadr-qora b{color:var(--oq)}
-.kadr-och{background:var(--band);color:var(--matn-3)}
-.kadr-och b{color:var(--matn-2)}
-.kadr-yoq .ic{width:28px;height:28px}
-.kadr-yoq b{font-size:14px;font-weight:500}
-.kadr-yoq span{max-width:280px}
 .mm-chiplar{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .mm-amallar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .mm-past{margin-top:12px;gap:14px;flex-wrap:wrap}
@@ -56,11 +44,20 @@
 .mm-sahifa{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:13.5px;color:var(--matn-3);padding:14px 2px 0}
 .mm-tanlov select{max-width:230px}
 .smeta-izoh{font-size:12.5px;color:var(--matn-3);margin-top:14px;line-height:1.6}
-/* Diqqat talab qiladigan kameralar: grid ustidagi qisqa ro'yxat, birinchi taassurot ishlaydigan kadrlar */
-#mm-diqqat{margin-top:20px}
-#mm-diqqat .karta-bosh{margin-bottom:8px}
-#mm-diqqat .qator .ong .tugma{flex:none}
-</style>
+/* Diqqat talab qiladi: KPI ostidagi bir qatorlik tasma. Qatorlar tugma bosilganda ochiladi,
+   birinchi ekranda kameralar turadi */
+#mm-diqqat{padding-top:14px;padding-bottom:14px}
+#mm-diqqat .karta-bosh{margin-bottom:0;flex-wrap:wrap;row-gap:8px}
+#mm-diqqat .mm-diqqat-xulosa{font-size:13.5px;color:var(--matn-2)}
+#mm-diqqat .mm-diqqat-amal{display:flex;align-items:center;gap:8px 14px;margin-left:auto;flex-wrap:wrap}
+#mm-diqqat .mm-diqqat-amal .karta-havola{margin-left:0}
+#mm-diqqat-qatorlar{margin-top:10px}
+#mm-diqqat .qator .ong .tugma,#mm-kadrsiz .qator .ong .tugma{flex:none}
+#mm-diqqat:not([hidden]) + #mm-jadval{margin-top:20px}
+/* Kadrsiz obyektlar: katta bo'sh ramka o'rniga bir qator — sabab va keyingi amal */
+#mm-kadrsiz{margin-top:20px}
+#mm-kadrsiz .karta-bosh{margin-bottom:6px;flex-wrap:wrap;row-gap:2px}
+#mm-kadrsiz .karta-bosh p{flex:1 1 100%;margin:2px 0 0;font-size:13px;color:var(--matn-3)}</style>
 </head>
 <body data-sahifa="himoya">
 <div class="qobiq">
@@ -80,15 +77,13 @@
 
   <section class="metrika-qator tort" id="hm-metrika" aria-label="Kameralar holati" data-sayohat="holat-xarita" data-tur="himoya-kpi"></section>
 
-  <!-- Ochiq manbalardagi ulanish namunasi: yig'ilgan holda KPI dan keyin, ochilganda o'z joyida kengayadi -->
-  <section class="karta" id="jl-namuna" aria-labelledby="jl-s" data-sayohat="jonli-namuna"></section>
-
   <section aria-labelledby="hm-kam-s" data-tur="himoya-kameralar">
     <h2 id="hm-kam-s" class="sr-only">Kameralar va obyekt holati</h2>
-    <div id="mm-jadval" data-sayohat="kameralar" data-tur="himoya-kamera-jadval"></div>
     <section class="karta" id="mm-diqqat" aria-labelledby="mm-diqqat-s" data-tur="himoya-diqqat" hidden></section>
+    <div id="mm-jadval" data-sayohat="kameralar" data-tur="himoya-kamera-jadval"></div>
     <div class="obyekt-tor" id="mm-kartalar" hidden></div>
     <div class="mm-sahifa" id="mm-sahifa" hidden></div>
+    <section class="karta" id="mm-kadrsiz" aria-labelledby="mm-kadrsiz-s" data-tur="himoya-kadrsiz" hidden></section>
   </section>
 
   <p class="mm-tahlil" id="hm-tahlil" data-tur="himoya-tahlil"></p>
@@ -110,6 +105,9 @@
       <div id="hm-mk"></div>
     </section>
   </div>
+
+  <!-- Ochiq manbalardagi jonli ulanish namunalari: sahifa oxirida, yig'ilgan holda; holati eslab qolinadi -->
+  <section class="karta" id="jl-namuna" aria-labelledby="jl-s" data-sayohat="jonli-namuna"></section>
 </main>
 </div>
 </div>
@@ -131,6 +129,21 @@
 (() => {
   const D = MKB_DATA, esc = MKB.esc, $ = id => document.getElementById(id);
   const KOLLAR = ["QURILMALAR", "XAVFSIZLIK_HODISALARI", "HODISALAR", "KIRISH_VOQEALARI", "QORIQLASH", "MASOFAVIY_SESSIYALAR"];
+  /* Shu sahifadagi yangi matnlarning ruscha muqobili */
+  Object.assign(window.MKB_LUGAT = window.MKB_LUGAT || {}, {
+    "ta kamera jim": "камер молчат",
+    "ta kamera batareyasi past": "камер с низким зарядом",
+    "Kadrsiz obyektlar": "Объекты без кадра",
+    "ta kamera surati yuklanmagan": "камер без загруженного фото",
+    "ta obyektda kamera yo'q": "объектов без камеры",
+  });
+  /* Son bilan kelishuv: 1 камера молчит, 3 камеры молчат, 7 камер молчат */
+  if (window.MKB_RU_SON) Object.assign(window.MKB_RU_SON, {
+    "камер молчат": ["камера молчит", "камеры молчат"],
+    "камер с низким зарядом": ["камера с низким зарядом", "камеры с низким зарядом"],
+    "камер без загруженного фото": ["камера без загруженного фото", "камеры без загруженного фото"],
+    "объектов без камеры": ["объект без камеры", "объекта без камеры"],
+  });
   /* Ochiq manbalar kartasi bank ma'lumotini kutmaydi: yig'ilgan holda darhol chiziladi */
   if (MKB.jonli) MKB.jonli.namunaKarta($("jl-namuna"));
   let ulandi = false;
@@ -278,23 +291,11 @@
     jadval.yangila();
   });
 
-  /* ---------- Kadr maydoni: hech qachon jonli video o'rnini bosmaydi ---------- */
+  /* ---------- Kadr maydoni: hech qachon jonli video o'rnini bosmaydi ----------
+     Gridga faqat surati bor, kamerasi aloqadagi obyekt tushadi (x.surat). Qolganlari kadrsizChiz da.
+     Foto ikonkasi va "surat" so'zi ataylab: bu saqlangan surat, o'sha daqiqadagi kadr emas.
+     Oxirgi signal vaqti kartaning pastki qatorida turadi, kadr ustida takrorlanmaydi. */
   function kadrHTML(x){
-    if (!x.kam) return '<div class="kadr-yoq kadr-qora">' + ik("kamera") + "<b>Kamera o'rnatilmagan</b>" +
-      "<span>Obyektda kamera yo'q: kadr olib bo'lmaydi. Boshqa qurilmalar signal beradi.</span></div>";
-    /* Sabab matni bo'laklarga bo'lingan: son tarjima qilinmaydi, so'zlar lug'atdan o'giriladi */
-    const sabab = x.kam.holat === "nosoz" ? "<span>Qurilma nosoz deb belgilangan</span>"
-      : x.kam.holat === "xizmatda" ? "<span>Qurilma xizmatda</span>"
-      : x.soat == null ? "<span>Qurilmadan signal kelmagan</span>"
-      : "<span>Jim turgani:</span> <b data-tarjimasiz>" + kunSoat(x.soat)[0] + "</b> <span>" + kunSoat(x.soat)[1] + "</span>";
-    if (x.jim) return '<div class="kadr-yoq kadr-qora">' + ik("kamera") + "<b>Kadr yangilanmadi</b>" +
-      "<span>" + sabab + (x.signal ? ' \u00b7 <span>Oxirgi signal:</span> <span data-tarjimasiz>' + esc(qisqaVaqt(x.signal)) + "</span>" : "") + "</span></div>";
-    const bor = !!(x.y.rasm || x.y.rasmKichik);
-    /* Kamera aloqada, lekin ko'rsatadigan kadr yo'q: tizim video saqlamaydi, obyekt surati ham yuklanmagan */
-    if (!bor) return '<div class="kadr-yoq kadr-och">' + ik("foto") + "<b>Kadr yo'q</b>" +
-      "<span><span>Kamera aloqada, tizim video saqlamaydi.</span> <span>Obyekt surati yuklanmagan.</span></span></div>";
-    /* Foto ikonkasi va "surat" so'zi ataylab: bu saqlangan surat, o'sha daqiqadagi kadr emas.
-       Oxirgi signal vaqti kartaning pastki qatorida turadi, kadr ustida takrorlanmaydi. */
     return MKB.obyektSurati(x.y, {kichik: !!x.y.rasmKichik}) +
       '<span class="kadr-belgi kadr-yorliq">' + ik("foto") + "<span>Obyekt surati, kamera kadri emas</span></span>";
   }
@@ -305,11 +306,9 @@
       : x.holat === H_ALOQASIZ ? chip("chip-xavf", x.kam.holat === "nosoz" ? "Nosoz" : "Jim") : chip("chip-kul", "Kamera yo'q");
     const amal = (sinf, href, ikon, matn, yoz) =>
       '<a class="tugma ' + sinf + ' tugma-kichik" href="' + href + '"' + (yoz ? ' data-huquq="yoz"' : "") + ">" + ik(ikon) + "<span>" + matn + "</span></a>";
-    const amallar = [];
-    if (x.kam && x.jim) amallar.push(amal("tugma-asosiy", "servis-topshirigi.html?qurilma=" + encodeURIComponent(x.kam.id), "sozlama", "Servis topshirig'i", true));
-    else if (x.kam) amallar.push(amal("tugma-oq", "masofaviy-korik.html?obyekt=" + encodeURIComponent(x.id), "korish", "Masofaviy ko'rik", true));
-    else amallar.push(amal("tugma-oq", "qurilma-ornatish.html?obyekt=" + encodeURIComponent(x.id) + "&tur=kamera-4G", "qoshish", "Kamera o'rnatish", true));
-    amallar.push(amal("tugma-oq", "obyekt-himoya.html?id=" + encodeURIComponent(x.id), "qalqon", "Obyekt himoyasi", false));
+    /* Kartadagi kamera aloqada (x.surat): keyingi ish masofaviy ko'rik */
+    const amallar = [amal("tugma-oq", "masofaviy-korik.html?obyekt=" + encodeURIComponent(x.id), "korish", "Masofaviy ko'rik", true),
+      amal("tugma-oq", "obyekt-himoya.html?id=" + encodeURIComponent(x.id), "qalqon", "Obyekt himoyasi", false)];
     /* Nomi qurilma sahifasidagi tugma bilan bir xil: tizim qulfga buyruq bermaydi, ruxsatni jurnalga yozadi */
     if (x.qulf) amallar.push(amal("tugma-oq", "qurilma.html?id=" + encodeURIComponent(x.qulf.id) + "#qr-ochish-karta", "ochiq-qulf", "Ochishga ruxsatni qayd etish", true));
     else amallar.push(amal("tugma-oq", "hodisalar.html?yangi=1&obyekt=" + encodeURIComponent(x.id), "xavf", "Hodisa qayd etish", true));
@@ -361,9 +360,9 @@
     return h + '<button type="button" data-kp="keyin" aria-label="Keyingi sahifa"' + (joriy >= jami ? " disabled" : "") + ">" + ik("ong") + "</button></div>";
   }
   /* ---------- Diqqat talab qiladi: jim kamera va kamera batareyasi past ----------
-     Son va har biri bitta qatorda: sabab va keyingi amal. Holat filtri yoqilganda yoki ro'yxat
-     ko'rinishida yashiriladi: u yerda jadvalning o'zi e'tibor tartibida. */
-  const DIQQAT_KORINADI = 3;
+     Bir qatorlik tasma: son va sabablar xulosasi. Har kamera o'z qatori bilan (sabab va keyingi amal)
+     "Ko'rsatish" bosilganda ochiladi. Holat filtri yoqilganda yoki ro'yxat ko'rinishida yashiriladi:
+     u yerda jadvalning o'zi e'tibor tartibida. */
   let diqqatHammasi = false;
   function diqqatChiz(kartada){
     const joy = $("mm-diqqat");
@@ -372,10 +371,11 @@
       .sort((a, b) => (b.jim - a.jim) || ((b.soat || 0) - (a.soat || 0)) || (a.kamBat - b.kamBat));
     joy.hidden = !r.length;
     if (!r.length){ joy.innerHTML = ""; return; }
-    const korinadi = diqqatHammasi ? r : r.slice(0, DIQQAT_KORINADI);
+    const jimSoni = r.filter(x => x.jim).length, batSoni = r.length - jimSoni;
     const qator = x => {
       const sabab = x.jim
         ? (x.kam.holat === "nosoz" ? "<span>Kamera nosoz deb belgilangan</span>"
+          : x.kam.holat === "xizmatda" ? "<span>Qurilma xizmatda</span>"
           : x.soat == null ? "<span>Kameradan signal kelmagan</span>"
           : "<span>Kamera jim:</span> <b data-tarjimasiz>" + kunSoat(x.soat)[0] + "</b> <span>" + kunSoat(x.soat)[1] + "</span>") +
           (x.signal ? " · <span>oxirgi signal</span> <span data-tarjimasiz>" + esc(qisqaVaqt(x.signal)) + "</span>" : "")
@@ -386,11 +386,15 @@
         '<span class="ong"><a class="tugma tugma-oq tugma-kichik" data-huquq="yoz" href="servis-topshirigi.html?qurilma=' + encodeURIComponent(x.kam.id) + '">' +
           ik("sozlama") + "<span>Servis topshirig'i</span></a></span></div>";
     };
-    joy.innerHTML = '<div class="karta-bosh"><h2 id="mm-diqqat-s" data-ikonka="ogoh">Diqqat talab qiladi</h2><span class="soni" data-tarjimasiz>' + r.length + "</span>" +
-        '<button type="button" class="karta-havola" data-diqqat-royxat style="margin-left:auto"><span>Ro\'yxatda ochish</span>' + ik("ong") + "</button></div>" +
-      korinadi.map(qator).join("") +
-      (r.length > DIQQAT_KORINADI ? '<div class="yigma-havola"><button type="button" class="karta-havola" style="margin-left:0" data-diqqat-hammasi aria-expanded="' + diqqatHammasi + '">' +
-        (diqqatHammasi ? "<span>Qisqartirish</span>" + ik("yuqori") : "<span>Yana " + (r.length - DIQQAT_KORINADI) + " ta</span>" + ik("past")) + "</button></div>" : "");
+    const xulosa = [jimSoni ? '<b data-tarjimasiz>' + jimSoni + "</b> <span>ta kamera jim</span>" : "",
+      batSoni ? '<b data-tarjimasiz>' + batSoni + "</b> <span>ta kamera batareyasi past</span>" : ""].filter(Boolean).join(" · ");
+    /* Umumiy son alohida chiqarilmaydi: xulosa sonni sababi bilan aytadi */
+    joy.innerHTML = '<div class="karta-bosh"><h2 id="mm-diqqat-s" data-ikonka="ogoh">Diqqat talab qiladi</h2>' +
+        '<span class="mm-diqqat-xulosa">' + xulosa + "</span>" +
+        '<span class="mm-diqqat-amal"><button type="button" class="tugma tugma-oq tugma-kichik" data-diqqat-hammasi aria-expanded="' + diqqatHammasi + '" aria-controls="mm-diqqat-qatorlar">' +
+          ik(diqqatHammasi ? "yuqori" : "past") + "<span>" + (diqqatHammasi ? "Yashirish" : "Ko'rsatish") + "</span></button>" +
+        '<button type="button" class="karta-havola" data-diqqat-royxat><span>Ro\'yxatda ochish</span>' + ik("ong") + "</button></span></div>" +
+      '<div id="mm-diqqat-qatorlar"' + (diqqatHammasi ? "" : " hidden") + ">" + (diqqatHammasi ? r.map(qator).join("") : "") + "</div>";
     tarjimaQil(joy);
   }
   $("mm-diqqat").addEventListener("click", e => {
@@ -409,28 +413,83 @@
 
   function kartalarChiz(){
     const kartada = kor === "karta";
-    const kj = $("mm-kartalar"), ks = $("mm-sahifa");
+    const kj = $("mm-kartalar"), ks = $("mm-sahifa"), kz = $("mm-kadrsiz");
     $("mm-jadval").classList.toggle("karta-rejim", kartada);
-    kj.hidden = !kartada; ks.hidden = !kartada;
+    kj.hidden = !kartada; ks.hidden = !kartada; kz.hidden = !kartada;
     diqqatChiz(kartada);
     if (!kartada || !jadval) return;
-    /* Kartalarda birinchi taassurot — ishlayotgan kameralar, eng yangi kadr boshida. Jim kameralar
-       grid oxirida va yuqoridagi "Diqqat talab qiladi" ro'yxatida turadi. Ro'yxat ko'rinishi va
-       foydalanuvchi tanlagan saralash o'zgarmaydi. */
+    /* Kartalarda faqat ko'rsatadigan surati bor obyektlar, eng yangi qayd boshida. Surati yo'q obyekt
+       (kamera jim, kamera yo'q yoki surat yuklanmagan) katta bo'sh ramka o'rniga grid ostidagi ixcham
+       ro'yxatda bir qator bo'lib turadi. Ro'yxat ko'rinishi va foydalanuvchi tanlagan saralash o'zgarmaydi. */
     let r = jadval.moslar();
     if (jadval.holat.saralash === "daraja"){
       const tartib = x => x.holat === H_ALOQADA ? (x.surat ? 0 : 1) : x.jim ? 2 : 3;
       r = r.slice().sort((a, b) => tartib(a) - tartib(b) || signalKalit(b.signal).localeCompare(signalKalit(a.signal)) || String(a.nom).localeCompare(String(b.nom)));
     }
-    const sahifalar = Math.max(1, Math.ceil(r.length / KARTA_HAJMI));
+    const kadrli = r.filter(x => x.surat), kadrsiz = r.filter(x => !x.surat);
+    const sahifalar = Math.max(1, Math.ceil(kadrli.length / KARTA_HAJMI));
     kartaSahifa = Math.min(Math.max(1, kartaSahifa), sahifalar);
-    const bolak = r.slice((kartaSahifa - 1) * KARTA_HAJMI, kartaSahifa * KARTA_HAJMI);
+    const bolak = kadrli.slice((kartaSahifa - 1) * KARTA_HAJMI, kartaSahifa * KARTA_HAJMI);
+    /* Kadrli obyekt yo'q, lekin kadrsizlari bor: bo'sh grid chizilmaydi, ro'yxatning o'zi javob */
+    kj.hidden = !bolak.length && kadrsiz.length > 0;
     kj.innerHTML = bolak.length ? bolak.map(kartaHTML).join("")
-      : '<div class="karta" style="grid-column:1/-1">' + MKB.boshHolat("filtr", "Filtrga mos obyekt yo'q", "Qidiruv yoki filtr shartlarini o'zgartiring") + "</div>";
-    ks.innerHTML = r.length ? '<span><span>Ko&#39;rsatilmoqda</span> <b data-tarjimasiz>' + ((kartaSahifa - 1) * KARTA_HAJMI + 1) + "–" +
-      ((kartaSahifa - 1) * KARTA_HAJMI + bolak.length) + "</b> / <b data-tarjimasiz>" + r.length + "</b></span>" + sahifalashHTML(kartaSahifa, sahifalar) : "";
+      : kadrsiz.length ? "" : '<div class="karta" style="grid-column:1/-1">' + MKB.boshHolat("filtr", "Filtrga mos obyekt yo'q", "Qidiruv yoki filtr shartlarini o'zgartiring") + "</div>";
+    ks.hidden = !kadrli.length;
+    ks.innerHTML = kadrli.length ? '<span><span>Ko&#39;rsatilmoqda</span> <b data-tarjimasiz>' + ((kartaSahifa - 1) * KARTA_HAJMI + 1) + "–" +
+      ((kartaSahifa - 1) * KARTA_HAJMI + bolak.length) + "</b> / <b data-tarjimasiz>" + kadrli.length + "</b></span>" + sahifalashHTML(kartaSahifa, sahifalar) : "";
+    kadrsizChiz(kadrsiz);
     tarjimaQil(kj); tarjimaQil(ks);
   }
+
+  /* ---------- Kadrsiz obyektlar: bir qatorda sabab va amal ----------
+     Tartib: jim kamera (eng uzoq jim turgani boshida), surati yuklanmagan kamera, kamerasiz obyekt.
+     Dastlab KADRSIZ_KORINADI ta qator, qolgani bir bosishda ochiladi. */
+  const KADRSIZ_KORINADI = 6;
+  let kadrsizHammasi = false;
+  function kadrsizQator(x, yoz){
+    const qism = !x.kam ? 2 : x.jim ? 0 : 1;
+    const sabab = !x.kam ? "<span>Kamera o'rnatilmagan</span> · <b data-tarjimasiz>" + x.qurilmaSoni + "</b>&nbsp;<span>ta qurilma</span>"
+      : x.jim ? (x.kam.holat === "nosoz" ? "<span>Kamera nosoz deb belgilangan</span>"
+          : x.kam.holat === "xizmatda" ? "<span>Qurilma xizmatda</span>"
+          : x.soat == null ? "<span>Kameradan signal kelmagan</span>"
+          : "<span>Kamera jim:</span> <b data-tarjimasiz>" + kunSoat(x.soat)[0] + "</b> <span>" + kunSoat(x.soat)[1] + "</span>") +
+        (x.signal ? " · <span>oxirgi signal</span> <span data-tarjimasiz>" + esc(qisqaVaqt(x.signal)) + "</span>" : "")
+      : "<span>" + H_ALOQADA + "</span> · <span>Surat yuklanmagan</span>";
+    const tugma = (href, ikon, matn) => '<a class="tugma tugma-oq tugma-kichik" href="' + href + '">' + ik(ikon) + "<span>" + matn + "</span></a>";
+    /* Yozish huquqi bo'lsa keyingi ish, bo'lmasa obyekt himoyasi sahifasi */
+    const amal = !yoz ? tugma("obyekt-himoya.html?id=" + encodeURIComponent(x.id), "qalqon", "Obyekt himoyasi")
+      : qism === 0 ? tugma("servis-topshirigi.html?qurilma=" + encodeURIComponent(x.kam.id), "sozlama", "Servis topshirig'i")
+      : qism === 1 ? tugma("masofaviy-korik.html?obyekt=" + encodeURIComponent(x.id), "korish", "Masofaviy ko'rik")
+      : tugma("qurilma-ornatish.html?obyekt=" + encodeURIComponent(x.id) + "&tur=kamera-4G", "qoshish", "Kamera o'rnatish");
+    return '<div class="qator"><span class="belgi' + (qism === 0 ? " pushti" : qism === 1 ? " lavanda" : "") + '">' + ik(qism === 1 ? "foto" : "kamera") + "</span>" +
+      '<span class="matn"><b><a href="obyekt-himoya.html?id=' + encodeURIComponent(x.id) + '">' + esc(x.nom) + "</a></b>" +
+      "<span>" + sabab + " · " + esc(x.hudud) + "</span></span>" +
+      '<span class="ong">' + amal + "</span></div>";
+  }
+  function kadrsizChiz(r){
+    const joy = $("mm-kadrsiz");
+    if (!r.length){ joy.hidden = true; joy.innerHTML = ""; return; }
+    const qism = x => !x.kam ? 2 : x.jim ? 0 : 1;
+    r = r.slice().sort((a, b) => qism(a) - qism(b) || (qism(a) === 0 ? (b.soat || 0) - (a.soat || 0) : 0) || String(a.nom).localeCompare(String(b.nom)));
+    const yoz = MKB.huquq("yoz");
+    const korinadi = kadrsizHammasi ? r : r.slice(0, KADRSIZ_KORINADI);
+    const soni = k => r.filter(x => qism(x) === k).length;
+    const xulosa = [[0, "ta kamera jim"], [1, "ta kamera surati yuklanmagan"], [2, "ta obyektda kamera yo'q"]]
+      .filter(([k]) => soni(k)).map(([k, m]) => '<b data-tarjimasiz>' + soni(k) + "</b> <span>" + m + "</span>").join(" · ");
+    joy.innerHTML = '<div class="karta-bosh"><h2 id="mm-kadrsiz-s" data-ikonka="kamera">Kadrsiz obyektlar</h2><span class="soni" data-tarjimasiz>' + r.length + "</span>" +
+        "<p>" + xulosa + "</p></div>" +
+      korinadi.map(x => kadrsizQator(x, yoz)).join("") +
+      (r.length > KADRSIZ_KORINADI ? '<div class="yigma-havola"><button type="button" class="karta-havola" style="margin-left:0" data-kadrsiz-hammasi aria-expanded="' + kadrsizHammasi + '">' +
+        (kadrsizHammasi ? "<span>Qisqartirish</span>" + ik("yuqori") : "<span>Yana " + (r.length - KADRSIZ_KORINADI) + " ta</span>" + ik("past")) + "</button></div>" : "");
+    joy.hidden = false;
+    tarjimaQil(joy);
+  }
+  $("mm-kadrsiz").addEventListener("click", e => {
+    if (!e.target.closest("[data-kadrsiz-hammasi]")) return;
+    kadrsizHammasi = !kadrsizHammasi;
+    kartalarChiz();
+    const t = $("mm-kadrsiz").querySelector("[data-kadrsiz-hammasi]"); if (t) t.focus();
+  });
 
   const USTUNLAR = [
     {kalit: "nom", nom: "Obyekt", chiz: x => "<b>" + esc(x.nom) + '</b><div class="kod-mono" data-tarjimasiz>' + esc(x.id) + "</div>", csv: x => x.nom},

@@ -407,6 +407,8 @@
   const TUR_NOM = {obyekt: "Obyekt", lot: "Lot", ish: "Undiruv ishi", hodisa: "Hodisa", qurilma: "Qurilma", shartnoma: "Shartnoma", tasdiq: "Qaror"};
   function yaqindaChiz(){
     const r = (MKB.yaqinda && MKB.yaqinda.royxat ? MKB.yaqinda.royxat() : []).slice(0, 5);
+    /* Bo'sh karta birinchi ekranda joy egallamaydi: birinchi obyekt ochilgach paydo bo'ladi */
+    $("yaqinda").closest("section").hidden = !r.length;
     $("yaqinda").innerHTML = r.length ? r.map(x => '<a class="qator" href="' + e(x.havola) + '">' +
       '<span class="belgi">' + MKB.ik(TUR_BELGI[x.tur] || "aktivlar") + "</span>" +
       '<span class="matn"><b data-tarjimasiz>' + e(x.nom) + "</b><span><span>" + e(TUR_NOM[x.tur] || "") + '</span> · <span data-tarjimasiz>' + e(x.id) + "</span></span></span>" +

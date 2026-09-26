@@ -62,6 +62,18 @@ window.MKBchizma = (function(){
     return t;
   }
 
+  /* O'q chegaralari yaxlit qadamda (1, 2, 5 × 10^n): yorliqlar 149 / 235 / 321 emas, 150 / 200 / 250 bo'ladi.
+     n — oraliqlar soni, qatMin berilsa pastki chegara o'zgarmaydi */
+  function yaxlitOq(min, maks, n, qatMin){
+    if (!(maks > min)) return {min, maks};
+    const d = Math.pow(10, Math.floor(Math.log10((maks - min) / n)));
+    for (const k of [1, 2, 5, 10, 20, 50]){
+      const s = k * d, a = qatMin ? min : Math.floor(min / s + 1e-9) * s;
+      if (a + s * n >= maks - 1e-9) return {min: a, maks: a + s * n};
+    }
+    return {min, maks};
+  }
+
   /* ---------- AREA (silliq egri) ---------- */
   function maydon(orin, cfg){
     orin = typeof orin === "string" ? document.getElementById(orin) : orin;
@@ -72,7 +84,9 @@ window.MKBchizma = (function(){
       const H = cfg.balandlik || 190;
       const P = {t: 14, r: 10, b: 26, l: cfg.oqlSiz ? 8 : 42};
       const q = cfg.qiymatlar, y = cfg.yorliqlar;
-      const maks = (cfg.maks || Math.max(...q) * 1.15), min = cfg.min != null ? cfg.min : Math.min(...q) * 0.82;
+      const oq = cfg.maks ? {maks: cfg.maks, min: cfg.min != null ? cfg.min : Math.min(...q) * 0.82}
+        : yaxlitOq(cfg.min != null ? cfg.min : Math.min(...q) * 0.9, Math.max(...q) * 1.05, 3, cfg.min != null);
+      const maks = oq.maks, min = oq.min;
       const X = i => P.l + (W - P.l - P.r) * (q.length === 1 ? 0.5 : i / (q.length - 1));
       const Y = v => P.t + (H - P.t - P.b) * (1 - (v - min) / (maks - min));
       const nuqtalar = q.map((v, i) => [X(i), Y(v)]);
@@ -114,7 +128,8 @@ window.MKBchizma = (function(){
       /* x yorliqlar */
       (y || []).forEach((t, i) => {
         if (y.length > 9 && i % 2) return;
-        svg.appendChild(el("text", {x: X(i), y: H - 8, "text-anchor": "middle",
+        /* Oxirgi yorliq o'ng chetga tegib turadi: kesilmasligi uchun o'ngdan tekislanadi */
+        svg.appendChild(el("text", {x: X(i), y: H - 8, "text-anchor": i === y.length - 1 && y.length > 1 ? "end" : "middle",
           "font-size": 10.5, fill: rang("--iz")}, t));
       });
       /* hover: eng yaqin nuqta */
@@ -159,7 +174,7 @@ window.MKBchizma = (function(){
       const H = cfg.balandlik || 190;
       const P = {t: 14, r: 6, b: 26, l: cfg.oqlSiz ? 6 : 40};
       const q = cfg.qiymatlar, y = cfg.yorliqlar;
-      const maks = cfg.maks || Math.max(...q) * 1.12;
+      const maks = cfg.maks || yaxlitOq(0, Math.max(...q) * 1.05, 3, true).maks;
       const joy = (W - P.l - P.r) / q.length;
       const en = Math.min(cfg.en || 30, joy * 0.62);
       const asosiy = rang(cfg.rang || "--siyoh");

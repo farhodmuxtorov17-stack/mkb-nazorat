@@ -125,6 +125,8 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
 .chop-varaq .kh-izoh{font-size:9.5px;color:#444;margin:4px 0 0;line-height:1.4}
 .chop-varaq ol{font-size:10.5px;margin:0;padding-left:18px;line-height:1.45}
 .chop-varaq table{margin-bottom:2px}
+.chop-varaq h2{margin:9px 0 4px}
+.chop-varaq .cv-imzo{margin-top:14px;break-inside:avoid;break-before:avoid}
 @media (max-width:900px){.brifing-tor{grid-template-columns:minmax(0,1fr)}}
 @media print{body.chop-faol .kontent > .chop-sarlavha{display:grid!important}}
 @media (max-width:480px){
@@ -1172,7 +1174,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     const qatorlar = [
       qator("Balansdagi aktivlar, davr oxirida", ta(bA.soni), ta(bB.soni), farq(bA.soni, bB.soni)),
       qator("Balans qiymati, davr oxirida", pl(bA.qiymat), pl(bB.qiymat), farq(bA.qiymat, bB.qiymat, true)),
-      qator("Zaxira, davr oxirida" + (zA.taxminiy ? " *" : ""), pl(zA.summa), pl(zB.summa), farq(zA.summa, zB.summa, true)),
+      qator("<span>Zaxira, davr oxirida</span>" + (zA.taxminiy ? " *" : ""), pl(zA.summa), pl(zB.summa), farq(zA.summa, zB.summa, true)),
       qator("Balansga olingan", taPul(A.qabul.length, A.jami.qabul), taPul(B.qabul.length, B.jami.qabul), farq(A.jami.qabul, B.jami.qabul, true)),
       qator("Sotilgan: imzolangan shartnomalar", taPul(A.shartnoma.length, A.jami.shartnoma), taPul(B.shartnoma.length, B.jami.shartnoma), farq(A.jami.shartnoma, B.jami.shartnoma, true)),
       qator("Sotuvdan tushum", pl(A.jami.tushum), pl(B.jami.tushum), farq(A.jami.tushum, B.jami.tushum, true)),
@@ -1185,7 +1187,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
       solQator("hodisaYangi", "Yangi hodisalar", ta(A.hodisaYangi.length), ta(B.hodisaYangi.length), farq(A.hodisaYangi.length, B.hodisaYangi.length)),
       solQator("korikKech", "Kechikkan ko'riklar, davr oxirida", ta(A.korikKech.length), ta(B.korikKech.length), farq(A.korikKech.length, B.korikKech.length)),
       qator("Qiymati pasaygan aktivlar", ta(new Set(A.pasaygan.map(x => x.obyektId)).size) + (A.jami.pasayish ? " · −" + pl(A.jami.pasayish) : ""),
-        ta(new Set(B.pasaygan.map(x => x.obyektId)).size) + (B.jami.pasayish ? " · −" + pl(B.jami.pasayish) : ""), farq(A.jami.pasayish, B.jami.pasayish, true)),
+        ta(new Set(B.pasaygan.map(x => x.obyektId)).size) + (B.jami.pasayish ? " · −" + pl(B.jami.pasayish) : ""), farq(-A.jami.pasayish, -B.jami.pasayish, true)),
       reja ? qator("Yillik reja bajarilishi", Math.round(A.jami.shartnoma / 1000 / reja * 100) + "% · " + pl(A.jami.shartnoma) + " / " + pl(reja * 1000), "—", "—") : "",
     ].join("");
     const yoqBor = ["qarorHal", "qarorKutil", "hodisaYangi", "korikKech"].some(yoq);
@@ -1204,7 +1206,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
         : "<span>Davrda sotuv shartnomasi imzolanmagan.</span>") +
       " <span>Tushum — avans va jadval bo'yicha to'langan oylar; ABS ulanmaguncha to'lov kuni jadvaldagi sana deb olinadi.</span></p>";
 
-    const soraladi = qarorlar.map(t => "<li><b data-tarjimasiz>" + e(t.id) + "</b> " + e(t.sarlavha || "") +
+    const soraladi = qarorlar.map(t => "<li><b data-tarjimasiz>" + e(t.id) + "</b> <span>" + e(t.sarlavha || "") + "</span>" +
       (t.summa != null ? ' — <span data-tarjimasiz>' + e(MKB.pul(t.summa)) + "</span>" : "") +
       ". <span>Javob muddati</span> <span data-tarjimasiz>" + e(t.javobMuddati || "—") + "</span>.</li>").join("") +
       (masala ? '<li data-tarjimasiz>' + e(masala) + "</li>" : "");
@@ -1232,12 +1234,14 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     const ch = $("chop");
     ch.innerHTML = html;
     tarjimaQil(ch);
+    /* Ruschada "1 ta" -> "1 ед." bo'ladi: jumla oxiridagi nuqta ikkinchi marta qo'yilmasin */
+    ch.querySelectorAll(".kh-xulosa p").forEach(p => { p.innerHTML = p.innerHTML.replace(/\.<\/b>\.$/, ".</b>"); });
     /* Sarlavha va pastki qator yadroda quriladi: nomi va raqami shu tinglovchida qo'yiladi (yadronikidan keyin) */
     const nomQoy = () => {
       const n = document.querySelector(".chop-sarlavha .cs-nom");
       if (n){ n.innerHTML = "<span>Kengash uchun hisobot</span> <span data-tarjimasiz>" + e(raqam) + "</span>"; tarjimaQil(n.parentNode); }
       const f = document.querySelector(".chop-oyoq span");
-      if (f){ f.innerHTML = '<span data-tarjimasiz>' + e(raqam) + "</span> · <span>Kengash uchun hisobot</span>"; tarjimaQil(f); }
+      if (f){ f.removeAttribute("data-tarjimasiz"); f.innerHTML = '<span data-tarjimasiz>' + e(raqam) + "</span> · <span>Kengash uchun hisobot</span>"; tarjimaQil(f); }
     };
     document.body.classList.add("chop-faol");
     window.addEventListener("beforeprint", nomQoy);

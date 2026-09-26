@@ -419,14 +419,16 @@ async function boshla(){
     }
     const bosh = shakllar.length - bor.length;
     const birlikli = v => esc(O.matn(v) + (O.birlik ? " " + O.birlik : ""));
+    /* Sanoq ko'rsatkichida pog'ona oldingi chegaradan keyingi butun sondan boshlanadi (xarita.html bilan bir xil) */
+    const dan = v => O.birlik === "ta" ? v + 1 : v;
     el.innerHTML = oraliqlar.map(x =>
       '<li><button type="button" data-bosqich="' + x.i + '" aria-pressed="' + (band == null || band === x.i) + '">' +
       '<i style="background:' + x.rang + '"></i>' +
       (x.past == null
         ? '<span data-tarjimasiz>' + birlikli(x.yuqori) + "</span> <span>va undan kam</span>"
         : x.yuqori == null
-          ? '<span data-tarjimasiz>' + birlikli(x.past) + "</span> <span>va undan ko'p</span>"
-          : '<span data-tarjimasiz>' + esc(O.matn(x.past) + " – " + O.matn(x.yuqori) + (O.birlik ? " " + O.birlik : "")) + "</span>") +
+          ? '<span data-tarjimasiz>' + birlikli(dan(x.past)) + "</span> <span>va undan ko'p</span>"
+          : '<span data-tarjimasiz>' + esc((dan(x.past) >= x.yuqori ? "" : O.matn(dan(x.past)) + " – ") + O.matn(x.yuqori) + (O.birlik ? " " + O.birlik : "")) + "</span>") +
       '<b data-tarjimasiz>' + x.son + "</b></button></li>").join("") +
       (bosh ? '<li><button type="button" data-bosqich="yoq" aria-pressed="true" disabled><i class="yoq"></i><span>Balansda aktiv yo\'q</span><b data-tarjimasiz>' + bosh + "</b></button></li>" : "");
     el.querySelectorAll("[data-bosqich]").forEach(b => {
@@ -603,9 +605,10 @@ async function boshla(){
       if (!bor.some(k => bosqich(qiymatKod(k)) === i)) return "";
       const ch = shkala.oraliq(i);
       const b = v => esc(O.matn(v) + (O.birlik ? " " + O.birlik : ""));
+      const dan = v => O.birlik === "ta" ? v + 1 : v;
       const matn = ch.past == null ? b(ch.yuqori) + " va undan kam"
-        : ch.yuqori == null ? b(ch.past) + " va undan ko'p"
-        : esc(O.matn(ch.past) + " – " + O.matn(ch.yuqori) + (O.birlik ? " " + O.birlik : ""));
+        : ch.yuqori == null ? b(dan(ch.past)) + " va undan ko'p"
+        : esc((dan(ch.past) >= ch.yuqori ? "" : O.matn(dan(ch.past)) + " – ") + O.matn(ch.yuqori) + (O.birlik ? " " + O.birlik : ""));
       return '<li><i style="background:' + rang + '"></i><span data-tarjimasiz>' + matn + "</span></li>";
     }).join("");
     const h = tanlangan && hKod[tanlangan];

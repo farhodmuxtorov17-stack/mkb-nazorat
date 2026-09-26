@@ -622,14 +622,17 @@ MKB.sahifaYukla({
         past: ch.past, yuqori: ch.yuqori});
     }
     const birlikli = v => esc(O.matn(v) + (O.birlik ? " " + O.birlik : ""));
+    /* past — oldingi pog'onaning cheti, shu pog'onaga kirmaydi. Sanoq ko'rsatkichida ("ta") pog'ona
+       keyingi butun sondan boshlanadi: "10 ta va undan kam" dan keyin "11 – 12 ta", "10 – 12 ta" emas */
+    const dan = v => O.birlik === "ta" ? v + 1 : v;
     el.innerHTML = oraliqlar.map((x, i) => {
       /* Uch ko'rinish: eng past pog'ona "... va undan kam", o'rtasi "a – b", eng yuqorisi
          "... va undan ko'p". Sonlar tarjimadan chetda, izoh so'zi lug'atdan o'tadi. */
       const matn = x.past == null
         ? '<span data-tarjimasiz>' + birlikli(x.yuqori) + "</span> <span>va undan kam</span>"
         : x.yuqori == null
-          ? '<span data-tarjimasiz>' + birlikli(x.past) + "</span> <span>va undan ko'p</span>"
-          : '<span data-tarjimasiz>' + esc(O.matn(x.past) + " – " + O.matn(x.yuqori)) + "</span>" +
+          ? '<span data-tarjimasiz>' + birlikli(dan(x.past)) + "</span> <span>va undan ko'p</span>"
+          : '<span data-tarjimasiz>' + esc((dan(x.past) >= x.yuqori ? "" : O.matn(dan(x.past)) + " – ") + O.matn(x.yuqori)) + "</span>" +
             (O.birlik ? " <span>" + O.birlik + "</span>" : "");
       return '<li><button type="button" data-bosqich="' + i + '">' +
         '<i style="background:' + x.rang + '"></i>' + matn +

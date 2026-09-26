@@ -24,6 +24,19 @@
 .mb-topshir{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;margin:4px 0 18px}
 .mb-topshir .maydon{margin:0;min-width:200px}
 .mb-qoshimcha{margin-top:12px;display:flex;flex-wrap:wrap;gap:10px}
+/* Topshirish sharti tugma ostida: sabab va solishtirish sahifasiga havola */
+.mb-topshir .mb-ogoh{flex:1 1 100%;margin-top:0;align-items:center;flex-wrap:wrap}
+.mb-topshir .mb-ogoh .ic{color:var(--sariq-matn)}
+.mb-topshir .mb-ogoh > span{flex:1 1 160px;min-width:0}
+.mb-topshir .mb-ogoh a{margin-left:auto;color:var(--siyoh);font-weight:500;display:inline-flex;align-items:center;gap:4px;text-decoration:none}
+/* ABS bilan solishtirish: belgi moliya panelida qo'yiladi, shu yerda o'qiladi */
+.mb-abs{margin-top:16px;padding:14px 16px;border-radius:16px;background:var(--plitka)}
+.mb-abs-bosh{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.mb-abs-bosh b{font-size:14px}
+.mb-abs-bosh a{margin-left:auto;font-size:13px;color:var(--siyoh);display:inline-flex;align-items:center;gap:4px;text-decoration:none}
+.mb-abs-bosh a .ic{width:16px;height:16px}
+.mb-abs .malumot-royxat{margin-top:10px}
+.mb-abs-izoh{margin:8px 0 0;font-size:13px;line-height:1.5;color:var(--matn-3)}
 @page{size:A4;margin:12mm}
 /* tor ekranda davr tanlagichi sarlavha ostiga tushadi, holat chipi yonida qoladi */
 @media (max-width:480px){.mb-davr-bosh{flex-wrap:wrap}.mb-davr-bosh h2{flex:1 1 100%}.mb-davr-bosh > :last-child:not(:first-child){margin-left:0}}
@@ -70,6 +83,7 @@
 <script src="yadro/api.js?v=26092200"></script>
 <script src="yadro/app.js?v=26092200"></script>
 <script src="yadro/amal.js?v=26092200"></script>
+<script src="hisobot-davr.js?v=26092200"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
@@ -112,6 +126,57 @@ async function boshla(){
     return D.sanaOqi(x.muddat) < bugunKun() ? {nom: "Muddati o'tgan", chip: "chip-xavf"} : {nom: "Tayyorlanmoqda", chip: "chip-info"};
   }
   const chip = x => { const h = holatInfo(x); return '<span class="chip chip-kichik ' + h.chip + '">' + esc(h.nom) + "</span>"; };
+
+  /* ---------- ABS bilan solishtirish ----------
+     Belgini buxgalteriya moliya panelida qo'yadi (panel-moliya.html), bu yerda u o'qiladi.
+     Topshirish sharti hisobot-davr.js dagi mbTopshirishTayyormi() dan: ikki sahifa bir xil javob oladi.
+     Ma'lumot modelida MB hisobotiga «solishtirish» maydoni hali qo'shilmagan bo'lsa, belgini saqlab bo'lmaydi:
+     unda shart qo'yilmaydi, aks holda hisobotni umuman topshirib bo'lmay qoladi. */
+  const V = window.MKB_DAVR;
+  const X = window.mkbIkkiTil || (s => s);
+  const belgiYoziladi = () => ((D.SXEMA && D.SXEMA.MB_HISOBOTLAR) || []).indexOf("solishtirish") >= 0;
+  const tayyorlik = x => V && V.mbTopshirishTayyormi && belgiYoziladi() ? V.mbTopshirishTayyormi(x) : {tayyor: true, sabab: ""};
+  const mln3 = n => (window.MKB_UX_SOF ? MKB_UX_SOF.sonMatn(n, 3) : String(n).replace(".", ",")) + " mln so'm";
+  const mlnF = n => (n > 0 ? "+" : n < 0 ? "−" : "") + mln3(Math.abs(n || 0));
+  const absOchiq = () => MKB.ruxsat("panel-moliya.html");
+  const absHavola = matn => absOchiq() ? '<a href="panel-moliya.html#abs-karta"><span>' + matn + "</span>" + ik("ong") + "</a>" : "";
+  X("Farq izohlanmagan", "Разница не пояснена");
+  X("Topshirishdan oldin:", "Перед сдачей:");
+  X("Solishtirishni ochish", "Открыть сверку");
+  X("Moliya panelida ochish", "Открыть в финансовой панели");
+  X("Oy oxiridagi ABS qoldig'i reyestr bilan hali solishtirilmagan. Belgini buxgalteriya moliya panelida qo'yadi.",
+    "Остаток АБС на конец месяца ещё не сверен с реестром. Отметку ставит бухгалтерия в финансовой панели.");
+  X("Hisobot topshirilgan paytda ABS bilan solishtirish qayd etilmagan.",
+    "На момент сдачи отчёта сверка с АБС не была зафиксирована.");
+  X("Belgini tizimda saqlash hali yoqilmagan. Solishtirish dalolatnomasini moliya panelida chop etib, imzolang.",
+    "Сохранение отметки в системе ещё не включено. Распечатайте акт сверки в финансовой панели и подпишите его.");
+  X("Kim solishtirdi", "Кто сверил");
+  X("Qachon", "Когда");
+  X("ABS qoldig'i, 16701", "Остаток АБС, 16701");
+  X("Farq izohi", "Пояснение разницы");
+  X("ABS bilan solishtirilgan", "Сверено с АБС");
+  X("Hisobot topshirilmadi: ABS bilan solishtirilmagan", "Отчёт не сдан: не сверено с АБС");
+  X("Hisobot topshirilmadi: Farq izohlanmagan", "Отчёт не сдан: разница не пояснена");
+  function solishtirishHTML(x){
+    if (x.dastlabki) return "";
+    const s = x.solishtirish || null;
+    const bor = !!(s && s.sana);
+    const t = tayyorlik(x);
+    const holatChip = bor ? (t.tayyor ? '<span class="chip chip-kichik chip-yashil">Solishtirildi</span>' : '<span class="chip chip-kichik chip-sariq">Farq izohlanmagan</span>')
+      : '<span class="chip chip-kichik ' + (x.holat === "topshirilgan" ? "chip-kul" : "chip-sariq") + '">Solishtirilmagan</span>';
+    const izoh = !belgiYoziladi() ? "Belgini tizimda saqlash hali yoqilmagan. Solishtirish dalolatnomasini moliya panelida chop etib, imzolang."
+      : x.holat === "topshirilgan" ? "Hisobot topshirilgan paytda ABS bilan solishtirish qayd etilmagan."
+      : "Oy oxiridagi ABS qoldig'i reyestr bilan hali solishtirilmagan. Belgini buxgalteriya moliya panelida qo'yadi.";
+    return '<div class="mb-abs" id="mb-abs"><div class="mb-abs-bosh"><b>ABS bilan solishtirish</b>' + holatChip + absHavola("Moliya panelida ochish") + "</div>" +
+      (bor ? '<dl class="malumot-royxat">' +
+          "<dt>Kim solishtirdi</dt><dd data-tarjimasiz>" + esc(s.kim || "—") + "</dd>" +
+          "<dt>Qachon</dt><dd data-tarjimasiz>" + esc(s.sana) + "</dd>" +
+          "<dt>Farq: ABS − reyestr</dt><dd data-tarjimasiz>" + esc(mlnF(+s.farq || 0)) + "</dd>" +
+          (s.absQoldiq != null ? "<dt>ABS qoldig'i, 16701</dt><dd data-tarjimasiz>" + esc(mln3(+s.absQoldiq)) + "</dd>" : "") +
+          (String(s.izoh || "").trim() ? "<dt>Farq izohi</dt><dd data-tarjimasiz>" + esc(s.izoh) + "</dd>" : "") +
+        "</dl>"
+        : '<p class="mb-abs-izoh">' + izoh + "</p>") + "</div>";
+  }
 
   /* Filial rahbari: hisobot bank bo'yicha topshiriladi, lekin raqamlar MKB.doira orqali faqat o'z filiali aktivlaridan
      hisoblanadi. Kapitalga nisbat bank kapitaliga bog'liq, filial kesimida hisoblanmaydi. */
@@ -166,6 +231,7 @@ async function boshla(){
     const chegara = D.param("kapitalLimitKoeff") || 1;
     const foiz = nisbat != null ? D.yaxlit(nisbat * 100, 1) : null;
     const h = holatInfo(x);
+    const tay = tayyorlik(x);
     const variant = r.map(v => '<option value="' + esc(v.davr) + '"' + (v.davr === x.davr ? " selected" : "") + ">" + esc(oyNomi(v.davr)) + (v.dastlabki ? " · dastlabki" : "") + "</option>").join("");
     el.innerHTML =
       '<div class="karta-bosh mb-davr-bosh"><h2>Hisobot davri</h2>' +
@@ -175,7 +241,10 @@ async function boshla(){
         ? '<div class="mb-topshir">' +
             '<div class="maydon"><label class="maydon-yorliq" for="mb-sana">Topshirilgan sana</label>' +
               '<div class="kirish"><input type="date" id="mb-sana" name="sana" value="' + iso(bugunKun()) + '" min="' + iso(D.kunQosh(oyOxiri(x.davr), 1)) + '" max="' + iso(bugunKun()) + '"></div></div>' +
-            '<button type="button" class="tugma tugma-asosiy" id="mb-topshir" data-yozadi data-sayohat="topshirish">' + ik("tasdiq") + "Topshirildi deb belgilash</button>" +
+            '<button type="button" class="tugma tugma-asosiy" id="mb-topshir" data-yozadi data-sayohat="topshirish"' +
+              (tay.tayyor ? "" : ' disabled aria-describedby="mb-topshir-sabab"') + ">" + ik("tasdiq") + "Topshirildi deb belgilash</button>" +
+            (tay.tayyor ? "" : '<div class="mb-ogoh" id="mb-topshir-sabab" role="status">' + ik("ogoh") +
+              "<span><span>Topshirishdan oldin:</span> <b>" + esc(tay.sabab) + "</b></span>" + absHavola("Solishtirishni ochish") + "</div>") +
           "</div>" : "") +
       (filialKesim ? '<div class="mb-ogoh">' + ik("info") + "<span>Raqamlar faqat filialingiz aktivlari bo'yicha. Bank Markaziy bankka hisobotni butun portfel bo'yicha topshiradi.</span></div>" : "") +
       (x.dastlabki ? '<div class="mb-ogoh">' + ik("info") + '<span><span class="chip chip-kichik chip-sariq">Taxminiy</span> <span>Davr hali tugamagan. Raqamlar bugungi reyestrdan hisoblangan, me\'yoriy muddat esa oy oxiriga ko\'ra.</span></span></div>' : "") +
@@ -204,6 +273,7 @@ async function boshla(){
         "<dt>Topshirilgan sana</dt><dd" + (x.topshirilganSana ? " data-tarjimasiz>" + esc(x.topshirilganSana) : ">—") + "</dd>" +
         (x.izoh ? "<dt>Izoh</dt><dd>" + esc(x.izoh) + "</dd>" : "") +
       "</dl>" +
+      solishtirishHTML(x) +
       '<div class="mb-qoshimcha">' +
         (!x.dastlabki && x.holat !== "topshirilgan" && yozaOladi() ? '<button type="button" class="tugma tugma-oq" id="mb-qayta" data-yozadi>' + ik("yangilash") + "Raqamlarni yangilash</button>" : "") +
         (!x.dastlabki && x.holat === "topshirilgan" && MKB.rol() === "admin" ? '<button type="button" class="tugma tugma-oq" id="mb-bekor" data-yozadi>' + ik("rad") + "Belgini bekor qilish</button>" : "") +
@@ -298,6 +368,9 @@ async function boshla(){
   const foizMatn = v => v != null ? String(D.yaxlit(v * 100, 1)).replace(".", ",") + "%" : "—";
   /* Topshirildi: sahifadagi sana (standart: bugun) bilan, davr va asosiy raqamlar ko'rsatilgan tasdiqlash oynasi */
   async function topshir(x, tugma){
+    /* Tugma o'chiq turadi, lekin sahifa ochiq turganda belgi boshqa oynada bekor qilingan bo'lishi mumkin */
+    const tay = tayyorlik(x);
+    if (!tay.tayyor){ MKB.toast("Hisobot topshirilmadi: " + tay.sabab, "xavf"); return; }
     const inp = $("mb-sana");
     const bugun = bugunKun(), eng = D.kunQosh(oyOxiri(x.davr), 1);
     const d0 = inp && inp.value ? new Date(inp.value + "T00:00:00") : (inp ? null : bugun);
@@ -314,7 +387,8 @@ async function boshla(){
       matn: "Hisobot Markaziy bankka topshirilgan deb qayd etiladi. Raqamlar shu holatda qotadi va keyin qayta hisoblanmaydi.",
       tafsilot: [["Davr", oyNomi(x.davr)], ["Topshirilgan sana", {matn: sana, tarjimasiz: true}], ["Topshirish muddati", {matn: x.muddat || "—", tarjimasiz: true}],
         ["Obyektlar soni", {matn: MKB.fmt(x.obyektlarSoni), tarjimasiz: true}], ["Jami balans qiymati", {matn: MKB.pul(x.jamiBalansQiymat), tarjimasiz: true}],
-        ["Kapitalga nisbati", {matn: foizMatn(x.kapitalgaNisbat), tarjimasiz: true}], ["Me'yoriy muddat o'tgan", {matn: MKB.fmt(x.umidsizSoni), tarjimasiz: true}]],
+        ["Kapitalga nisbati", {matn: foizMatn(x.kapitalgaNisbat), tarjimasiz: true}], ["Me'yoriy muddat o'tgan", {matn: MKB.fmt(x.umidsizSoni), tarjimasiz: true}]]
+        .concat(x.solishtirish && x.solishtirish.sana ? [["ABS bilan solishtirilgan", {matn: x.solishtirish.sana + " · " + (x.solishtirish.kim || "—") + " · " + mlnF(+x.solishtirish.farq || 0), tarjimasiz: true}]] : []),
       oqibat: kech ? ["Muddat o'tgan: hisobot kechikib topshirilgan deb belgilanadi"] : [],
       sabab: {yorliq: "Xat raqami yoki izoh", maks: 160, namuna: "Masalan, 04-12/3381"},
       okMatn: "Topshirildi deb belgilash",
@@ -416,7 +490,9 @@ async function boshla(){
       "<dl><dt>Obyektlar soni</dt><dd data-tarjimasiz>" + x.obyektlarSoni + "</dd><dt>Jami balans qiymati</dt><dd data-tarjimasiz>" + esc(MKB.pul(x.jamiBalansQiymat)) + "</dd>" +
       "<dt>1-darajali kapital</dt><dd" + (kapital ? " data-tarjimasiz>" + esc(MKB.pul(kapital * 1000)) : ">kiritilmagan") + "</dd>" +
       "<dt>Kapitalga nisbati</dt><dd" + (nisbat != null ? " data-tarjimasiz>" + String(D.yaxlit(nisbat * 100, 1)).replace(".", ",") + "%" : ">—") + "</dd>" +
-      "<dt>Me'yoriy muddat o'tgan</dt><dd data-tarjimasiz>" + x.umidsizSoni + "</dd></dl>" +
+      "<dt>Me'yoriy muddat o'tgan</dt><dd data-tarjimasiz>" + x.umidsizSoni + "</dd>" +
+      (x.solishtirish && x.solishtirish.sana ? "<dt>ABS bilan solishtirilgan</dt><dd data-tarjimasiz>" + esc(x.solishtirish.sana + " · " + (x.solishtirish.kim || "—") + " · " +
+        mlnF(+x.solishtirish.farq || 0) + (String(x.solishtirish.izoh || "").trim() ? " · " + x.solishtirish.izoh : "")) + "</dd>" : "") + "</dl>" +
       "<table><thead><tr>" + ILOVA_USTUN.map(u => "<th>" + esc(u[0]) + "</th>").join("") + "</tr></thead><tbody>" +
       r.map(q => "<tr>" + ILOVA_USTUN.map(u => "<td data-tarjimasiz>" + esc(String(u[1](q))) + "</td>").join("") + "</tr>").join("") + "</tbody></table>" +
       '<div class="cv-imzo"><span>Tuzdi: ____________ <span data-tarjimasiz>' + esc(MKB.kim()) + "</span></span><span>Bosh buxgalter: ____________</span></div>";

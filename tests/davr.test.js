@@ -117,11 +117,28 @@ tekshir("yopilish vaqti yo'q yopiq hodisa haftaga taqsimlanmaydi, jurnal vaqti b
   const h = V.harakat(D, o);
   const yopiq = D.HODISALAR.concat(D.XAVFSIZLIK_HODISALARI).filter(x => x.ustun === "yopildi" || x.holat === "yopildi");
   teng(h.hodisaSanasiz, yopiq.filter(x => !x.yopilganVaqt).length);
+  /* Namoyishdagi yopiq hodisalarda yopilganVaqt yozilgan: jurnal zaxirasini tekshirish uchun bittasida vaqt vaqtincha olinadi */
   const x = D.HODISALAR.find(q => q.ustun === "yopildi");
-  if (x){
+  talab(x, "yopiq hodisa yo'q");
+  const asl = x.yopilganVaqt;
+  delete x.yopilganVaqt;
+  try {
+    teng(V.harakat(D, o).hodisaSanasiz, h.hodisaSanasiz + 1, "vaqtsiz yopiq hodisa sanalmadi");
     const j = V.harakat(D, o, null, {yopilish: {["HODISALAR:" + x.id]: "22.09.2026 10:15"}});
     talab(j.hodisaYopilgan.some(q => q.id === x.id), "jurnal vaqti hisobga olinmadi");
-  }
+  } finally { x.yopilganVaqt = asl; }
+});
+tekshir("namoyishdagi yopiq hodisalarda yopilish vaqti bor: hodisadan keyin, holat vaqtidan oldin", () => {
+  const yopiq = D.HODISALAR.concat(D.XAVFSIZLIK_HODISALARI).filter(x => x.ustun === "yopildi" || x.holat === "yopildi");
+  talab(yopiq.length > 0, "yopiq hodisa yo'q");
+  yopiq.forEach(x => {
+    const v = D.sanaOqi(x.vaqt), y = D.sanaOqi(x.yopilganVaqt);
+    talab(y, x.id + ": yopilganVaqt yo'q");
+    talab(y >= v, x.id + ": hodisadan oldin yopilgan");
+    talab(y <= D.HOZIR, x.id + ": holat vaqtidan keyin yopilgan");
+  });
+  D.HODISALAR.concat(D.XAVFSIZLIK_HODISALARI).filter(x => !(x.ustun === "yopildi" || x.holat === "yopildi"))
+    .forEach(x => talab(!x.yopilganVaqt, x.id + ": ochiq hodisada yopilganVaqt"));
 });
 
 console.log("\n3. ABS bilan solishtirish");

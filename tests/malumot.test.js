@@ -581,6 +581,11 @@ sinov("mahalliy rejimda moslik tekshiruvi toza", () => {
   teng(x.length, 0, x.join(" | "));
 });
 
+sinov("yillik realizatsiya rejasi mahalliy rejimda bo'sh, namoyishda kiritilgan", () => {
+  teng(M8.param("yillikRejaMlrd"), null, "mahalliy reja");
+  ok(D.param("yillikRejaMlrd") > 0, "namoyishda reja yo'q");
+});
+
 /* ============================================================
    9. tarjima.js
    ============================================================ */
@@ -750,6 +755,74 @@ sinov("tarjimasiz qism ichida ham aktiv turi o'giriladi, xos nom va manzil qolad
   teng(f("Chevrolet Cobalt (2022)"), "Chevrolet Cobalt (2022)");
   const yoq = (TARJIMA_OYNA.MKB_AKTIV_TURLARI || []).filter(t => L[t] == null);
   teng(yoq.length, 0, "turlar ro'yxatida lug'atsiz nom: " + yoq.join(" | "));
+});
+
+/* ============================================================
+   Namoyish portfeli: yaxshi yuritilayotgan, lekin bosim ostidagi portfel manzarasi.
+   Rahbariyatga ko'rsatiladigan raqamlar bank uchun ishonarli oraliqda (267 aktiv)
+   ============================================================ */
+guruh("Namoyish portfeli: ochiq hodisa, kechikish va reja");
+
+const NP = yukla();
+const npKun = x => NP.kunFarqi(x, NP.BUGUN);
+
+sinov("ochiq hodisalar 8–15 ta, so'nggi 7 kunda 3–6 ta yangi", () => {
+  const HD = NP.HODISALAR.concat(NP.XAVFSIZLIK_HODISALARI);
+  const ochiq = NP.kirishJamlama().ochiqHodisa;
+  ok(ochiq >= 8 && ochiq <= 15, "ochiq hodisa " + ochiq);
+  const yangi = HD.filter(h => { const k = npKun(h.vaqt || h.sana); return k >= 0 && k < 7; }).length;
+  ok(yangi >= 3 && yangi <= 6, "7 kunda yangi hodisa " + yangi);
+});
+
+sinov("kechikkan ko'rik 5–12 ta, muddati o'tgan qaror 2–5 ta", () => {
+  const korik = NP.KORIKLAR.filter(k => k.holat !== "otkazildi" && NP.sanaOqi(k.sana) < NP.BUGUN).length;
+  ok(korik >= 5 && korik <= 12, "kechikkan ko'rik " + korik);
+  const qaror = NP.TASDIQLAR.filter(t => t.holat === "kutilmoqda" && NP.sanaOqi(t.javobMuddati) < NP.BUGUN).length;
+  ok(qaror >= 2 && qaror <= 5, "muddati o'tgan qaror " + qaror);
+});
+
+sinov("hech narsa 60 kundan ortiq kechikmagan: vazifa, qaror, ko'rik, ochiq hodisa", () => {
+  const kech = [];
+  NP.MENING_VAZIFALARIM.filter(v => !v.bajarildi && v.muddat).forEach(v => kech.push([npKun(v.muddat), "vazifa " + v.id]));
+  NP.TASDIQLAR.filter(t => t.holat === "kutilmoqda" && t.javobMuddati).forEach(t => kech.push([npKun(t.javobMuddati), t.id]));
+  NP.KORIKLAR.filter(k => k.holat !== "otkazildi").forEach(k => kech.push([npKun(k.sana), k.id]));
+  NP.HODISALAR.concat(NP.XAVFSIZLIK_HODISALARI).filter(NP.ochiqHodisami).forEach(h => kech.push([npKun(h.vaqt), h.id]));
+  const oshgan = kech.filter(x => x[0] > 60);
+  teng(oshgan.length, 0, oshgan.slice(0, 3).map(x => x[1] + " " + x[0] + " kun").join("; "));
+});
+
+sinov("yillik reja kiritilgan, bajarilish foizi 100 dan past", () => {
+  const reja = NP.param("yillikRejaMlrd");
+  ok(reja > 0, "reja yo'q");
+  const yil = NP.BUGUN.getFullYear(), arxivId = new Set(NP.ARXIV.map(a => a.id));
+  const sotilgan = NP.ARXIV.filter(a => NP.sanaOqi(a.sotuvSana).getFullYear() === yil).reduce((s, a) => s + a.sotuvNarxi, 0) +
+    NP.SHARTNOMALAR.filter(s => s.holat !== "bekor" && !arxivId.has(s.obyektId) && NP.sanaOqi(s.sana).getFullYear() === yil).reduce((s, x) => s + x.narx, 0);
+  ok(sotilgan > 0 && sotilgan / 1000 < reja, "sotilgan " + sotilgan + " mln, reja " + reja + " mlrd");
+});
+
+sinov("qurilma holati: xavfsizlik hodisasi qurilmaga mos, kirish nuqtasi holati qurilmalardan", () => {
+  NP.XAVFSIZLIK_HODISALARI.forEach(h => {
+    const q = NP.qurilma(h.qurilmaId);
+    ok(q && q.obyektId === h.obyektId, h.id + ": qurilma yoki obyekt mos emas");
+    if (h.hodisa === "Qurilma 24 soatdan ortiq aloqasiz" && NP.ochiqHodisami(h)) ok(q.oflaynSoat >= 24, h.id + ": qurilma aloqada, hodisa ochiq");
+    if (/^Batareya zaryadi /.test(h.hodisa) && NP.ochiqHodisami(h)) ok(q.batareya < 20, h.id + ": zaryad joyida, hodisa ochiq");
+  });
+  NP.QURILMALAR.filter(q => q.oflaynSoat >= 24).forEach(q =>
+    ok(NP.XAVFSIZLIK_HODISALARI.some(h => h.qurilmaId === q.id && h.hodisa === "Qurilma 24 soatdan ortiq aloqasiz"), q.id + ": aloqasiz qurilmada hodisa yo'q"));
+  teng(new Set(NP.XAVFSIZLIK_HODISALARI.map(h => h.id)).size, NP.XAVFSIZLIK_HODISALARI.length, "takrorlangan hodisa raqami");
+  NP.KIRISH_NUQTALARI.filter(n => (n.qurilmalar || []).length).forEach(n => {
+    const qs = n.qurilmalar.map(id => NP.qurilma(id));
+    const kutilgan = qs.every(q => q.holat === "onlayn") ? "onlayn" : qs.some(q => q.holat === "nosoz") ? "nosoz" : "oflayn";
+    teng(n.holat, kutilgan, n.id);
+  });
+});
+
+sinov("sxema: MB hisobotida solishtirish, hodisalarda yopilganVaqt, foydalanuvchida rozilik", () => {
+  ok(NP.SXEMA.MB_HISOBOTLAR.indexOf("solishtirish") >= 0, "MB_HISOBOTLAR.solishtirish yo'q");
+  teng(NP.QOSHIMCHA_MAYDONLAR.HODISALAR.yopilganVaqt, "string");
+  teng(NP.QOSHIMCHA_MAYDONLAR.XAVFSIZLIK_HODISALARI.yopilganVaqt, "string");
+  teng(NP.QOSHIMCHA_MAYDONLAR.FOYDLAR.rozilik, "object");
+  NP.MB_HISOBOTLAR.forEach(h => ok("solishtirish" in h, h.id + ": solishtirish maydoni yo'q"));
 });
 
 /* ============================================================

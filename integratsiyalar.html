@@ -13,8 +13,19 @@
 .int-sanoq{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .int-guruh{display:flex;flex-direction:column;gap:14px}
 .int-guruh + .int-guruh{margin-top:12px}
-.int-guruh > h2{font:500 17px/1.3 var(--shrift-displey);letter-spacing:-.02em;color:var(--matn-2)}
-.int-royxat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.int-guruh > h2{font:500 17px/1.3 var(--shrift-displey);letter-spacing:-.02em;color:var(--matn-2);scroll-margin-top:calc(var(--shapka-boyi, 64px) + 16px)}
+.int-guruh > h2 .soni{font:400 14px var(--shrift);color:var(--matn-3);margin-left:6px}
+.int-nav-qator{display:flex;gap:10px 16px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:16px}
+.int-nav{display:flex;gap:8px;flex-wrap:wrap}
+.int-nav a{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:var(--r-pilyula);background:var(--plitka);font-size:13.5px;color:var(--matn-2)}
+.int-nav a:hover{color:var(--siyoh)}
+.int-nav a b{font-weight:500;color:var(--siyoh)}
+.int-royxat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.int{scroll-margin-top:calc(var(--shapka-boyi, 64px) + 16px)}
+.int-beradi{font-size:14px;line-height:1.55;color:var(--siyoh)}
+.int-xavf{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:13.5px;line-height:1.55;color:var(--matn-2)}
+.int-xavf .ic{width:17px;height:17px;flex:none;margin-top:2px;color:var(--matn-3)}
+.int-xavf b{display:block;font-weight:500;color:var(--siyoh)}
 @media (max-width:1100px){.int-royxat{grid-template-columns:minmax(0,1fr)}}
 .int{display:flex;flex-direction:column;gap:14px;min-width:0}
 .int-sar{display:flex;align-items:center;gap:12px}
@@ -77,6 +88,10 @@
         </div>
         <div class="int-sanoq" id="int-sanoq"></div>
       </div>
+      <div class="int-nav-qator">
+        <nav class="int-nav" id="int-nav" aria-label="Tizim guruhlari"></nav>
+        <button type="button" class="tugma tugma-oq tugma-kichik" id="int-hammasi" aria-pressed="false"><svg class="ic"><use href="#ik-past"/></svg><span>Barcha ulash shartlarini ochish</span></button>
+      </div>
     </section>
 
     <div id="guruhlar" data-sayohat="tizimlar"></div>
@@ -95,6 +110,70 @@
 <script src="malumot-kirish.js?v=26092200"></script>
 <script src="malumot-indeks.js?v=26092200"></script>
 <script src="tarjima.js?v=26092200"></script>
+<script>
+/* Shu sahifaning yangi matnlari ruscha. Umumiy lug'atda kalit bo'lsa, o'sha ustun turadi. */
+(function(){
+  const L = window.MKB_LUGAT = window.MKB_LUGAT || {};
+  const Y = {
+    "Bank tizimlari": "Системы банка",
+    "Davlat xizmatlari": "Государственные сервисы",
+    "Qurilmalar va kanallar": "Устройства и каналы",
+    "Tizim guruhlari": "Группы систем",
+    "Ulash shartlari va xavfsizlik": "Условия подключения и безопасность",
+    "Barcha ulash shartlarini ochish": "Показать условия подключения всех систем",
+    "Barcha ulash shartlarini yopish": "Скрыть условия подключения всех систем",
+    "E-pochta (SMTP)": "Электронная почта (SMTP)",
+    "Telegram bot": "Telegram-бот",
+    "Bank pochta serveri, AT departamenti yuritadi": "Почтовый сервер банка, ведёт департамент ИТ",
+    "Haftalik xulosa havolasi rahbariyatga, muddati o'tgan ko'rik va hujjat eslatmasi mas'ul xodimga, yuqoriga o'tkazish xabari rahbarga.": "Руководству уходит ссылка на итоги недели, ответственному сотруднику напоминание о просроченном осмотре и документе, руководителю сообщение о передаче вышестоящему.",
+    "Yetkazilmagan xat haqida pochta serverining qaytma xabari.": "Уведомление почтового сервера о недоставленном письме.",
+    "SMTP, STARTTLS (587-port) yoki SMTPS (465-port)": "SMTP, STARTTLS (порт 587) или SMTPS (порт 465)",
+    "Bank ichki tarmog'i, bank pochta serveri orqali": "Внутренняя сеть банка, через почтовый сервер банка",
+    "Pochta serveri manzili (FQDN) va porti: 587 yoki 465": "Адрес почтового сервера (FQDN) и порт: 587 или 465",
+    "Jo'natuvchi: bank domenidagi alohida xizmat qutisi, uning logini va paroli": "Отправитель: отдельный служебный ящик в домене банка, его логин и пароль",
+    "Pochta serverida tizim serveri IP manzilidan xat jo'natish ruxsati": "Разрешение на почтовом сервере отправлять письма с IP-адреса сервера системы",
+    "Qabul qiluvchilar: Foydalanuvchilar ro'yxatidagi korporativ e-pochta manzillari": "Получатели: корпоративные адреса электронной почты из списка пользователей",
+    "Haftalik xulosa havolasi nusxalanib qo'lda yuboriladi yoki varaq chop etiladi": "Ссылку на итоги недели копируют и отправляют вручную либо распечатывают лист",
+    "Balans qiymati va zaxira ABS dagi 16701 va 16799 qoldig'i bilan har kuni solishtiriladi. Farq chiqqan aktiv o'sha kuni ko'rinadi.": "Балансовая стоимость и резерв ежедневно сверяются с остатками счетов 16701 и 16799 в АБС. Актив с расхождением виден в тот же день.",
+    "Xizmat hisobi faqat o'qiydi. Zaxira summasi ABS ga provodka bo'lib emas, buxgalter tasdiqlaydigan fayl bo'lib boradi. Kanal ichki tarmoqda, internetga chiqmaydi.": "Служебная учётная запись только читает. Сумма резерва уходит в АБС не проводкой, а файлом, который утверждает бухгалтер. Канал проходит во внутренней сети и в интернет не выходит.",
+    "Dalolatnoma, qaror va hisobot elektron imzolanadi. Chop etish, qo'lda imzolash va skanerlash bosqichi tushib qoladi.": "Акт, решение и отчёт подписываются ЭЦП. Печать, ручная подпись и сканирование больше не нужны.",
+    "Yopiq kalit xodimning kompyuterida yoki tokenida qoladi, serverga yuborilmaydi. Server faqat imzo va sertifikat muddatini tekshiradi.": "Закрытый ключ остаётся на компьютере или токене сотрудника и на сервер не передаётся. Сервер проверяет только подпись и срок действия сертификата.",
+    "Xodim domen paroli bilan kiradi. Domenda bloklangan hisob tizimda keyingi kirishdayoq yopiladi.": "Сотрудник входит по доменному паролю. Учётная запись, заблокированная в домене, закрывается в системе уже при следующем входе.",
+    "LDAPS, 636-port, shifrlangan. Xizmat hisobi faqat o'qiydi, xodim paroli tizimda saqlanmaydi.": "LDAPS, порт 636, канал зашифрован. Служебная учётная запись только читает, пароль сотрудника в системе не хранится.",
+    "Savdo natijasi va yakuniy narx lot kartochkasiga o'zi tushadi, bayonnomadan qayta terilmaydi.": "Итог торгов и окончательная цена сами попадают в карточку лота, повторно набирать их из протокола не нужно.",
+    "API kaliti DMZ shlyuzida saqlanadi, operator bankning IP manzillaridan boshqa so'rovni qabul qilmaydi. Lot e'lonida qarzdorning shaxsiy ma'lumoti bo'lmaydi.": "API-ключ хранится на шлюзе в DMZ, оператор принимает запросы только с IP-адресов банка. В объявлении о лоте нет персональных данных должника.",
+    "Huquq egasi, taqiq va cheklov reyestrdan olinadi. Qog'oz ko'chirmani kutish kerak bo'lmaydi.": "Правообладатель, запреты и ограничения берутся из реестра. Ждать бумажную выписку не нужно.",
+    "So'rov bank ERI kaliti bilan imzolanadi va elektron hukumat VPN kanali orqali ketadi. Har so'rovning muallifi va aktivi amallar tarixiga yoziladi.": "Запрос подписывается ЭЦП банка и идёт по VPN-каналу электронного правительства. Автор и актив каждого запроса записываются в историю действий.",
+    "Transport qayta ro'yxatdan o'tgan sana reyestrdan keladi. 10 kunlik muddat qoidasi haqiqiy sana bo'yicha ishlaydi.": "Дата перерегистрации транспорта приходит из реестра. Правило 10-дневного срока работает по фактической дате.",
+    "So'rov faqat davlat raqami yoki VIN bilan yuboriladi. Javobdagi egasining pasport ma'lumoti tizimda saqlanmaydi.": "Запрос отправляется только по госномеру или VIN. Паспортные данные владельца из ответа в системе не сохраняются.",
+    "Ijro ishi holati va mulkni undiruvchiga o'tkazish dalolatnomasi undiruv ishiga o'zi tushadi. MIB ga xat yozib holat so'ralmaydi.": "Статус исполнительного производства и акт передачи имущества взыскателю сами попадают в дело о взыскании. Запрашивать статус письмом в БПИ не нужно.",
+    "So'rovda qarzdorning STIR yoki PINFL raqami bor. So'rovni faqat undiruv bo'yicha mas'ul xodim yuboradi.": "В запросе есть ИНН или ПИНФЛ должника. Запрос отправляет только сотрудник, ответственный за взыскание.",
+    "Mol-mulk va yer solig'i bo'yicha hisoblangan summa va qarz aktiv kartasida penya yig'ilmasdan oldin ko'rinadi.": "Начисленный налог на имущество и земельный налог, а также задолженность видны в карточке актива до начисления пени.",
+    "Almashuv bank ERI kaliti bilan imzolanadi. DMZ dan faqat soliq xizmatining manziliga chiqiladi.": "Обмен подписывается ЭЦП банка. Из DMZ открыт выход только на адрес налоговой службы.",
+    "Oylik hisobot (MB 3441, 16-band) tizimdan topshiriladi, qabul tasdig'i hisobot yonida saqlanadi.": "Ежемесячный отчёт (ЦБ № 3441, п. 16) сдаётся из системы, подтверждение приёма хранится вместе с отчётом.",
+    "Fayl mas'ul xodimning ERI kaliti bilan imzolanadi va Markaziy bankning himoyalangan kanali orqali ketadi. Imzolangan nusxa tizimda qoladi.": "Файл подписывается ЭЦП ответственного сотрудника и уходит по защищённому каналу Центрального банка. Подписанная копия остаётся в системе.",
+    "Huquqni qayd etish va transportni qayta ro'yxatdan o'tkazish arizasining holati va natija hujjati ish kartasiga keladi.": "Статус заявления на регистрацию права и перерегистрацию транспорта, а также итоговый документ приходят в карточку дела.",
+    "Ariza bank nomidan, mas'ul xodimning ERI kaliti bilan yuboriladi. Xodimning shaxsiy portal hisobi ishlatilmaydi.": "Заявление подаётся от имени банка с ЭЦП ответственного сотрудника. Личная учётная запись сотрудника на портале не используется.",
+    "Elektr, gaz va suv bo'yicha qarz ta'minot uzilishidan oldin obyekt kartasida ko'rinadi.": "Задолженность за электроэнергию, газ и воду видна в карточке объекта до отключения снабжения.",
+    "So'rov faqat shaxsiy hisob raqami bilan. Kanal faqat o'qiydi, bu yo'l bilan to'lov qilinmaydi.": "Запрос только по номеру лицевого счёта. Канал только читает, оплата через него не проводится.",
+    "Pult signali, qo'riqqa olish vaqti va guruh chiqqani obyekt kartasiga tushadi. Shartnomadagi javob vaqti haqiqiy vaqt bilan solishtiriladi.": "Сигнал пульта, время постановки на охрану и выезд группы попадают в карточку объекта. Время реагирования по договору сверяется с фактическим.",
+    "Pult bilan ajratilgan kanal yoki VPN. Pultga obyekt kodi va mas'ul xodimlar ro'yxati beriladi, balans qiymati berilmaydi.": "Выделенный канал с пультом или VPN. Пульту передаются код объекта и список ответственных сотрудников, балансовая стоимость не передаётся.",
+    "Kamera, datchik va GPS-treker voqeasi monitoring markaziga o'zi keladi. Qurilma aloqasi uzilsa yoki batareya tugasa, ogohlantirish chiqadi.": "События камер, датчиков и GPS-трекеров сами поступают в центр мониторинга. При потере связи с устройством или разряде батареи появляется предупреждение.",
+    "Har qurilmaning o'z sertifikati bor (MQTT TLS, 8883-port). Qurilmalar tarmog'i alohida VLAN yoki xususiy APN, internetdan kirib bo'lmaydi.": "У каждого устройства свой сертификат (MQTT TLS, порт 8883). Сеть устройств выделена в отдельный VLAN или частный APN, доступа из интернета нет.",
+    "Haftalik xulosa va muddat eslatmasi korporativ pochtaga o'zi boradi. Havolani nusxalab, qo'lda jo'natish to'xtaydi.": "Итоги недели и напоминания о сроках сами приходят на корпоративную почту. Копировать ссылку и рассылать её вручную больше не нужно.",
+    "Xat bank pochta serveridan chiqmaydi va faqat bank domenidagi manzillarga boradi. Xatda summa va shaxsiy ma'lumot yo'q, faqat havola: ma'lumot tizimga kirgandan keyin ochiladi. Xizmat qutisining paroli serverda saqlanadi, brauzerga berilmaydi.": "Письмо не покидает почтовый сервер банка и уходит только на адреса в домене банка. В письме нет сумм и персональных данных, только ссылка: данные открываются после входа в систему. Пароль служебного ящика хранится на сервере и в браузер не передаётся.",
+    "Muddat, yuqoriga o'tkazish va xavf xabari xodim tizimga kirmagan bo'lsa ham telefoniga yetadi.": "Сообщение о сроке, передаче вышестоящему или тревоге доходит до телефона сотрудника, даже если он не заходил в систему.",
+    "SMS matnida obyekt kodi va hodisa turi bo'ladi, manzil va summa bo'lmaydi. Agregator shartnomasiga ma'lumot O'zbekistonda qolishi yoziladi.": "В тексте SMS есть код объекта и тип происшествия, адреса и суммы нет. В договор с агрегатором вносится условие о хранении данных в Узбекистане.",
+    "Navbatchi xavf signalini telefonida oladi va «Qabul qildim» deb javob beradi, javob vaqti hodisaga yoziladi. Rahbariyat guruhiga har hafta xulosa havolasi keladi.": "Дежурный получает тревожный сигнал на телефон и отвечает «Принял», время ответа записывается в происшествие. Группа руководства каждую неделю получает ссылку на итоги недели.",
+    "Xavf signali (eshik ochildi, qurilma aloqasi uzildi) navbatchilar guruhiga, haftalik xulosa havolasi rahbariyat guruhiga. Xabar shaxsiy ma'lumotsiz: obyekt kodi va hodisa turi.": "Тревожный сигнал (открыта дверь, пропала связь с устройством) уходит в группу дежурных, ссылка на итоги недели в группу руководства. Сообщение без персональных данных: код объекта и тип происшествия.",
+    "Bot tokeni: AT departamenti @BotFather orqali bank nomidan oladi va faqat serverda saqlaydi": "Токен бота: департамент ИТ получает его через @BotFather от имени банка и хранит только на сервере",
+    "Navbatchilar va rahbariyat guruhlarining chat ID raqami, bot ikkala guruhga qo'shilgan": "Chat ID групп дежурных и руководства, бот добавлен в обе группы",
+    "DMZ dan api.telegram.org ga 443-port chiqish ruxsati, «Qabul qildim» javobi uchun webhook HTTPS manzili": "Разрешение на выход из DMZ на api.telegram.org по порту 443, HTTPS-адрес webhook для ответа «Принял»",
+    "Token parol bilan teng: brauzerga, hujjatga va chatga yozilmaydi. Sizib chiqsa, AT uni @BotFather da bekor qiladi va serverga yangisini qo'yadi. Telegram serveri O'zbekistondan tashqarida, shuning uchun xabarda ism, telefon, manzil va summa bo'lmaydi (O'RQ-547).": "Токен равнозначен паролю: его не вписывают в браузер, документы и чаты. При утечке ИТ отзывает его через @BotFather и ставит на сервер новый. Серверы Telegram находятся за пределами Узбекистана, поэтому в сообщении нет имён, телефонов, адресов и сумм (ЗРУ-547)."
+  };
+  Object.keys(Y).forEach(k => { if (L[k] == null) L[k] = Y[k]; });
+})();
+</script>
 <script src="yadro/ikonlar.js?v=26092200"></script>
 <script src="yadro/daraxt.js?v=26092200"></script>
 <script src="yadro/chizma.js?v=26092200"></script>
@@ -118,49 +197,146 @@
       ADMIN = MKB.huquq("sozlama", "yoz");
       ROYXAT = await MKBapi.royxat("INTEGRATSIYALAR");
       chiz();
+      hashOch();
     },
   });
   const HOLATLAR = () => D.INTEGRATSIYA_HOLATLARI || [];
   const holat = t => B.tizimHolati(t.id, ROYXAT, HOLATLAR());
 
+  /* ---------- Sahifa qatlami ----------
+     Katalog boshqaruv.js da. Bu yerda uchta narsa: guruhlar tartibi, katalogda hali yo'q e-pochta kanali
+     va har karta uchun "bankka nima beradi" hamda xavfsizlik izohi. Katalogga smtp qo'shilsa, sahifa o'z nusxasini ishlatmaydi. */
+  const GURUH_TARTIB = [
+    {kalit: "bank", nom: "Bank tizimlari"},
+    {kalit: "davlat", nom: "Davlat xizmatlari"},
+    {kalit: "qoriqlash", nom: "Qurilmalar va kanallar"},
+    {kalit: "xabar", nom: "Bildirishnomalar"}
+  ];
+  const GURUHLAR = GURUH_TARTIB.concat(B.TIZIM_GURUHLARI.filter(g => !GURUH_TARTIB.some(x => x.kalit === g.kalit)));
+  const SMTP = {id: "smtp", guruh: "xabar", ikonka: "xat", nom: "E-pochta (SMTP)", javobgar: "Bank pochta serveri, AT departamenti yuritadi",
+    yonalish: "ketadi",
+    ketadi: "Haftalik xulosa havolasi rahbariyatga, muddati o'tgan ko'rik va hujjat eslatmasi mas'ul xodimga, yuqoriga o'tkazish xabari rahbarga.",
+    keladi: "Yetkazilmagan xat haqida pochta serverining qaytma xabari.",
+    protokol: "SMTP, STARTTLS (587-port) yoki SMTPS (465-port)", kanal: "Bank ichki tarmog'i, bank pochta serveri orqali",
+    kerak: ["Pochta serveri manzili (FQDN) va porti: 587 yoki 465",
+      "Jo'natuvchi: bank domenidagi alohida xizmat qutisi, uning logini va paroli",
+      "Pochta serverida tizim serveri IP manzilidan xat jo'natish ruxsati",
+      "Qabul qiluvchilar: Foydalanuvchilar ro'yxatidagi korporativ e-pochta manzillari"],
+    qolda: "Haftalik xulosa havolasi nusxalanib qo'lda yuboriladi yoki varaq chop etiladi", havola: "haftalik.html", havolaNomi: "Haftalik xulosa"};
+  const SAHIFA = {
+    abs: {beradi: "Balans qiymati va zaxira ABS dagi 16701 va 16799 qoldig'i bilan har kuni solishtiriladi. Farq chiqqan aktiv o'sha kuni ko'rinadi.",
+      xavfsizlik: "Xizmat hisobi faqat o'qiydi. Zaxira summasi ABS ga provodka bo'lib emas, buxgalter tasdiqlaydigan fayl bo'lib boradi. Kanal ichki tarmoqda, internetga chiqmaydi."},
+    eimzo: {beradi: "Dalolatnoma, qaror va hisobot elektron imzolanadi. Chop etish, qo'lda imzolash va skanerlash bosqichi tushib qoladi.",
+      xavfsizlik: "Yopiq kalit xodimning kompyuterida yoki tokenida qoladi, serverga yuborilmaydi. Server faqat imzo va sertifikat muddatini tekshiradi."},
+    ad: {beradi: "Xodim domen paroli bilan kiradi. Domenda bloklangan hisob tizimda keyingi kirishdayoq yopiladi.",
+      xavfsizlik: "LDAPS, 636-port, shifrlangan. Xizmat hisobi faqat o'qiydi, xodim paroli tizimda saqlanmaydi."},
+    eauksion: {beradi: "Savdo natijasi va yakuniy narx lot kartochkasiga o'zi tushadi, bayonnomadan qayta terilmaydi.",
+      xavfsizlik: "API kaliti DMZ shlyuzida saqlanadi, operator bankning IP manzillaridan boshqa so'rovni qabul qilmaydi. Lot e'lonida qarzdorning shaxsiy ma'lumoti bo'lmaydi."},
+    kadastr: {beradi: "Huquq egasi, taqiq va cheklov reyestrdan olinadi. Qog'oz ko'chirmani kutish kerak bo'lmaydi.",
+      xavfsizlik: "So'rov bank ERI kaliti bilan imzolanadi va elektron hukumat VPN kanali orqali ketadi. Har so'rovning muallifi va aktivi amallar tarixiga yoziladi."},
+    yhxx: {beradi: "Transport qayta ro'yxatdan o'tgan sana reyestrdan keladi. 10 kunlik muddat qoidasi haqiqiy sana bo'yicha ishlaydi.",
+      xavfsizlik: "So'rov faqat davlat raqami yoki VIN bilan yuboriladi. Javobdagi egasining pasport ma'lumoti tizimda saqlanmaydi."},
+    mib: {beradi: "Ijro ishi holati va mulkni undiruvchiga o'tkazish dalolatnomasi undiruv ishiga o'zi tushadi. MIB ga xat yozib holat so'ralmaydi.",
+      xavfsizlik: "So'rovda qarzdorning STIR yoki PINFL raqami bor. So'rovni faqat undiruv bo'yicha mas'ul xodim yuboradi."},
+    soliq: {beradi: "Mol-mulk va yer solig'i bo'yicha hisoblangan summa va qarz aktiv kartasida penya yig'ilmasdan oldin ko'rinadi.",
+      xavfsizlik: "Almashuv bank ERI kaliti bilan imzolanadi. DMZ dan faqat soliq xizmatining manziliga chiqiladi."},
+    mb: {beradi: "Oylik hisobot (MB 3441, 16-band) tizimdan topshiriladi, qabul tasdig'i hisobot yonida saqlanadi.",
+      xavfsizlik: "Fayl mas'ul xodimning ERI kaliti bilan imzolanadi va Markaziy bankning himoyalangan kanali orqali ketadi. Imzolangan nusxa tizimda qoladi."},
+    mygov: {beradi: "Huquqni qayd etish va transportni qayta ro'yxatdan o'tkazish arizasining holati va natija hujjati ish kartasiga keladi.",
+      xavfsizlik: "Ariza bank nomidan, mas'ul xodimning ERI kaliti bilan yuboriladi. Xodimning shaxsiy portal hisobi ishlatilmaydi."},
+    kommunal: {beradi: "Elektr, gaz va suv bo'yicha qarz ta'minot uzilishidan oldin obyekt kartasida ko'rinadi.",
+      xavfsizlik: "So'rov faqat shaxsiy hisob raqami bilan. Kanal faqat o'qiydi, bu yo'l bilan to'lov qilinmaydi."},
+    qoriqlash: {beradi: "Pult signali, qo'riqqa olish vaqti va guruh chiqqani obyekt kartasiga tushadi. Shartnomadagi javob vaqti haqiqiy vaqt bilan solishtiriladi.",
+      xavfsizlik: "Pult bilan ajratilgan kanal yoki VPN. Pultga obyekt kodi va mas'ul xodimlar ro'yxati beriladi, balans qiymati berilmaydi."},
+    iot: {beradi: "Kamera, datchik va GPS-treker voqeasi monitoring markaziga o'zi keladi. Qurilma aloqasi uzilsa yoki batareya tugasa, ogohlantirish chiqadi.",
+      xavfsizlik: "Har qurilmaning o'z sertifikati bor (MQTT TLS, 8883-port). Qurilmalar tarmog'i alohida VLAN yoki xususiy APN, internetdan kirib bo'lmaydi."},
+    smtp: {beradi: "Haftalik xulosa va muddat eslatmasi korporativ pochtaga o'zi boradi. Havolani nusxalab, qo'lda jo'natish to'xtaydi.",
+      xavfsizlik: "Xat bank pochta serveridan chiqmaydi va faqat bank domenidagi manzillarga boradi. Xatda summa va shaxsiy ma'lumot yo'q, faqat havola: ma'lumot tizimga kirgandan keyin ochiladi. Xizmat qutisining paroli serverda saqlanadi, brauzerga berilmaydi."},
+    sms: {ikonka: "tel", beradi: "Muddat, yuqoriga o'tkazish va xavf xabari xodim tizimga kirmagan bo'lsa ham telefoniga yetadi.",
+      xavfsizlik: "SMS matnida obyekt kodi va hodisa turi bo'ladi, manzil va summa bo'lmaydi. Agregator shartnomasiga ma'lumot O'zbekistonda qolishi yoziladi."},
+    telegram: {nom: "Telegram bot",
+      beradi: "Navbatchi xavf signalini telefonida oladi va «Qabul qildim» deb javob beradi, javob vaqti hodisaga yoziladi. Rahbariyat guruhiga har hafta xulosa havolasi keladi.",
+      ketadi: "Xavf signali (eshik ochildi, qurilma aloqasi uzildi) navbatchilar guruhiga, haftalik xulosa havolasi rahbariyat guruhiga. Xabar shaxsiy ma'lumotsiz: obyekt kodi va hodisa turi.",
+      kerak: ["Bot tokeni: AT departamenti @BotFather orqali bank nomidan oladi va faqat serverda saqlaydi",
+        "Navbatchilar va rahbariyat guruhlarining chat ID raqami, bot ikkala guruhga qo'shilgan",
+        "DMZ dan api.telegram.org ga 443-port chiqish ruxsati, «Qabul qildim» javobi uchun webhook HTTPS manzili",
+        "Axborot xavfsizligi xizmati roziligi: server O'zbekistondan tashqarida"],
+      xavfsizlik: "Token parol bilan teng: brauzerga, hujjatga va chatga yozilmaydi. Sizib chiqsa, AT uni @BotFather da bekor qiladi va serverga yangisini qo'yadi. Telegram serveri O'zbekistondan tashqarida, shuning uchun xabarda ism, telefon, manzil va summa bo'lmaydi (O'RQ-547)."}
+  };
+  const TIZIMLAR = (B.TIZIMLAR.some(t => t.id === SMTP.id) ? B.TIZIMLAR : B.TIZIMLAR.concat([SMTP]))
+    .map(t => Object.assign({}, t, SAHIFA[t.id] || {}));
+  let hammasiOchiq = false;
+  const hammasiTugma = $("int-hammasi");
+  function hammasiYoz(){
+    hammasiTugma.setAttribute("aria-pressed", String(hammasiOchiq));
+    hammasiTugma.querySelector("span").textContent = hammasiOchiq ? "Barcha ulash shartlarini yopish" : "Barcha ulash shartlarini ochish";
+    hammasiTugma.querySelector("use").setAttribute("href", hammasiOchiq ? "#ik-yuqori" : "#ik-past");
+    tarjimaQil(hammasiTugma);
+  }
+  hammasiTugma.addEventListener("click", () => {
+    hammasiOchiq = !hammasiOchiq;
+    document.querySelectorAll(".int-tafsilot").forEach(d => { d.open = hammasiOchiq; });
+    hammasiYoz();
+  });
+  /* Boshqa sahifadan integratsiyalar.html#t-smtp kabi havola bilan kelinganda o'sha karta ochilib, ko'rinishga keladi */
+  function hashOch(){
+    const m = /^#t-([a-z0-9-]+)$/.exec(location.hash);
+    const k = m && document.getElementById("t-" + m[1]);
+    if (!k) return;
+    const d = k.querySelector(".int-tafsilot");
+    if (d) d.open = true;
+    k.scrollIntoView({block: "start"});
+  }
+  window.addEventListener("hashchange", hashOch);
+
   function chiz(){
-    const h = B.TIZIMLAR.map(holat);
+    const h = TIZIMLAR.map(holat);
     const soni = k => h.filter(x => x.kalit === k).length;
     const ulangan = soni("ulangan");
-    $("hs-meta").innerHTML = '<b data-tarjimasiz>' + B.TIZIMLAR.length + '</b> <span>ta tashqi tizim</span>';
+    $("hs-meta").innerHTML = '<b data-tarjimasiz>' + TIZIMLAR.length + '</b> <span>ta tashqi tizim</span>';
     $("int-sarlavha").innerHTML = ulangan
-      ? '<span data-tarjimasiz>' + B.TIZIMLAR.length + "</span> <span>ta tizimdan</span> <span data-tarjimasiz>" + ulangan + "</span> <span>tasi ulangan</span>"
+      ? '<span data-tarjimasiz>' + TIZIMLAR.length + "</span> <span>ta tizimdan</span> <span data-tarjimasiz>" + ulangan + "</span> <span>tasi ulangan</span>"
       : "<span>Tashqi tizimlar hali ulanmagan</span>";
     $("int-sanoq").innerHTML = HOLATLAR().map(x =>
       '<span class="chip ' + x.chip + '"><span>' + esc(x.nom) + '</span>&nbsp;<b data-tarjimasiz>' + soni(x.kalit) + "</b></span>").join("");
 
-    $("guruhlar").innerHTML = B.TIZIM_GURUHLARI.map(g => {
-      const r = B.TIZIMLAR.filter(t => t.guruh === g.kalit);
-      return r.length ? '<section class="int-guruh"><h2>' + esc(g.nom) + '</h2><div class="int-royxat">' + r.map(karta).join("") + "</div></section>" : "";
-    }).join("");
-    $("guruhlar").querySelectorAll("[data-holat]").forEach(b => b.addEventListener("click", () => holatOzgartir(B.TIZIMLAR.find(t => t.id === b.dataset.holat))));
+    /* Qayta chizishda ochiq kartalar ochiq qoladi */
+    const ochiqlar = new Set([...document.querySelectorAll(".int-tafsilot[open]")].map(d => d.closest(".int").id));
+    const toplam = GURUHLAR.map(g => ({g, r: TIZIMLAR.filter(t => t.guruh === g.kalit)})).filter(x => x.r.length);
+    $("int-nav").innerHTML = toplam.map(({g, r}) =>
+      '<a href="#g-' + esc(g.kalit) + '"><span>' + esc(g.nom) + '</span><b data-tarjimasiz>' + r.length + "</b></a>").join("");
+    $("guruhlar").innerHTML = toplam.map(({g, r}) =>
+      '<section class="int-guruh"><h2 id="g-' + esc(g.kalit) + '"><span>' + esc(g.nom) + '</span><span class="soni" data-tarjimasiz>' + r.length + '</span></h2><div class="int-royxat">' +
+        r.map(t => karta(t, hammasiOchiq || ochiqlar.has("t-" + t.id))).join("") + "</div></section>").join("");
+    $("guruhlar").querySelectorAll("[data-holat]").forEach(b => b.addEventListener("click", () => holatOzgartir(TIZIMLAR.find(t => t.id === b.dataset.holat))));
     const sinov = $("mqtt-tugma");
     if (sinov) sinov.addEventListener("click", mqttBoshla);
+    const kadrT = $("kadr-tugma");
+    if (kadrT) kadrT.addEventListener("click", kadrBoshla);
     /* Holat saqlanib kartalar qayta chizilganda oxirgi sinov natijasi o'chib ketmaydi */
     if (mqttNatija && $("mqtt-natija")) $("mqtt-natija").innerHTML = mqttNatija;
+    if (kadrNatija && $("kadr-natija")) $("kadr-natija").innerHTML = kadrNatija;
     tarjimaQil(document.querySelector(".kontent"));
   }
 
-  /* Telefonda karta yig'ilgan holda chiqadi: holat, protokol va qo'lda kiritish qatori ko'rinadi, tafsilot bir bosishda ochiladi */
-  const tor = window.matchMedia("(max-width:720px)").matches;
-  function karta(t){
+  /* Karta yig'ilgan holda chiqadi: nom, holat, bankka nima berishi va hozirgi qo'lda tartib. 30 soniyada butun ro'yxat
+     ko'zdan kechiriladi. Oqim, protokol, bank tayyorlaydigan narsalar va xavfsizlik izohi bir bosishda ochiladi. */
+  function karta(t, ochiqmi){
     const h = holat(t);
     const y = h.yozuv || {};
     const ochiq = sahifaRuxsatlimi(t.havola);
-    const meta = [B.YONALISH[t.yonalish], t.protokol, t.kanal].filter(Boolean);
+    const qator = (dt, dd) => dd ? "<dt>" + dt + "</dt><dd>" + esc(dd) + "</dd>" : "";
     return '<section class="karta int" id="t-' + esc(t.id) + '">' +
       '<div class="int-sar"><span class="belgi">' + ik(t.ikonka) + '</span><span class="nom"><b>' + esc(t.nom) + "</b><span>" + esc(t.javobgar) + "</span></span>" +
         '<span class="chip chip-kichik ' + h.chip + '">' + esc(h.nom) + "</span></div>" +
-      '<div class="int-meta">' + meta.map(m => "<span>" + esc(m) + "</span>").join(" · ") + "</div>" +
-      '<details class="int-tafsilot"' + (tor ? "" : " open") + '><summary>' + ik("past", "strelka") + "<span>Oqim va ulash shartlari</span></summary>" +
-      "<dl><dt>Tizimga keladi</dt><dd>" + esc(t.keladi) + "</dd><dt>Tizimdan ketadi</dt><dd>" + esc(t.ketadi) + "</dd></dl>" +
-      '<div class="int-kerak"><b>Ulash uchun kerak</b><ul>' + t.kerak.map(k => "<li>" + esc(k) + "</li>").join("") + "</ul></div></details>" +
-      (t.sinov === "mqtt" ? sinovBlok() : "") +
+      (t.beradi ? '<p class="int-beradi">' + esc(t.beradi) + "</p>" : "") +
+      '<details class="int-tafsilot"' + (ochiqmi ? " open" : "") + '><summary>' + ik("past", "strelka") + "<span>Ulash shartlari va xavfsizlik</span></summary>" +
+      "<dl>" + qator("Tizimga keladi", t.keladi) + qator("Tizimdan ketadi", t.ketadi) + qator("Yo'nalish", B.YONALISH[t.yonalish]) +
+        qator("Protokol", t.protokol) + qator("Kanal", t.kanal) + "</dl>" +
+      '<div class="int-kerak"><b>Ulash uchun kerak</b><ul>' + t.kerak.map(k => "<li>" + esc(k) + "</li>").join("") + "</ul></div>" +
+      (t.xavfsizlik ? '<div class="int-xavf">' + ik("qalqon") + "<span><b>Xavfsizlik</b><span>" + esc(t.xavfsizlik) + "</span></span></div>" : "") +
+      "</details>" +
+      (t.sinov === "mqtt" ? sinovBlok() + kadrBlok() : "") +
       (y.masul || y.izoh ? '<div class="int-admin"><span class="m">' +
         (y.masul ? "<span>Mas&#39;ul:</span> <span data-tarjimasiz>" + esc(y.masul) + "</span>" : "") +
         (y.izoh ? (y.masul ? " · " : "") + '<span data-tarjimasiz>' + esc(y.izoh) + "</span>" : "") + "</span></div>" : "") +
@@ -222,7 +398,7 @@
   function sinovBlok(){
     return '<div class="int-sinov" data-sayohat="sinov">' +
       '<div class="int-sinov-bosh"><b>Ommaviy sinov: qurilma xabari qanday keladi</b><span class="chip chip-kichik chip-sariq">Ommaviy namuna, bank qurilmasi emas</span></div>' +
-      "<p>Tugma bosilganda brauzer ommaviy MQTT sinov serveriga sinov datchigi nomidan xabar yuboradi va o&#39;sha xabarni obuna orqali qaytarib oladi. Shlyuz ulanganda qurilma xabari xuddi shu yo&#39;l bilan keladi: datchik, broker, tizim. Monitoring markazidagi «Ulanish namunasi» ham shu kanalni ishlatadi.</p>" +
+      "<p>Tugma bosilganda brauzer ommaviy MQTT sinov serveriga sinov datchigi nomidan xabar yuboradi va o&#39;sha xabarni obuna orqali qaytarib oladi. Shlyuz ulanganda qurilma xabari xuddi shu yo&#39;l bilan keladi: datchik, broker, tizim.</p>" +
       '<div><button type="button" class="tugma tugma-oq tugma-kichik" id="mqtt-tugma">' + ik("signal") + "Sinov xabarini yuborish</button></div>" +
       '<div id="mqtt-natija" aria-live="polite"></div>' +
       '<p class="int-manba">Manba: test.mosquitto.org (Eclipse Mosquitto), zaxira: broker.emqx.io. Ikkalasi ham faqat sinov uchun ochiq: xabarni istalgan kishi ko&#39;ra oladi, shuning uchun unda bank ma&#39;lumoti yo&#39;q.</p>' +
@@ -264,6 +440,60 @@
     }
     tarjimaQil(joy);
     mqttNatija = joy.innerHTML;
+  }
+
+  /* ---------- Texnik tekshiruv: kamera kadrini olish ----------
+     Monitoring markazida ochiq kamera ko'rsatilmaydi (assets/jonli/MANBA.md). Bu yerda faqat kanal tekshiriladi:
+     yadro/jonli.js jamoat mulki bo'lgan bitta JPEG kadrni oladi, javob, hajm, o'lcham va Last-Modified ni qaytaradi.
+     Kadrning o'zi ekranga chiqmaydi. */
+  Object.assign(window.MKB_LUGAT = window.MKB_LUGAT || {}, {
+    "Texnik tekshiruv: kamera kadri qanday keladi": "Техническая проверка: как приходит кадр камеры",
+    "Ommaviy manba, bank kamerasi emas": "Публичный источник, не камера банка",
+    "Tugma bosilganda brauzer ochiq kameradan bitta JPEG kadr so'raydi va javobni, hajmni, rasm o'lchamini hamda kadr olingan vaqtni (Last-Modified) ko'rsatadi. Shlyuz ulanganda bank kamerasining hodisa kadri shu tekshiruvdan o'tadi. Kadrning o'zi ekranga chiqmaydi.": "По нажатию браузер запрашивает один JPEG-кадр с открытой камеры и показывает ответ, объём, размер изображения и время съёмки кадра (Last-Modified). После подключения шлюза кадр происшествия с камеры банка проходит ту же проверку. Сам кадр на экран не выводится.",
+    "Kadrni tekshirish": "Проверить кадр",
+    "HTTP javobi": "Ответ HTTP",
+    "Rasm o'lchami": "Размер изображения",
+    "Kadr vaqti": "Время кадра",
+    "Kadr vaqtini o'qib bo'lmadi": "Не удалось прочитать время кадра",
+    "Kadrni 8 soniyada olib bo'lmadi. Bank tarmog'i tashqi HTTPS so'rovini (volcanoes.usgs.gov) yopgan bo'lishi mumkin. Bu tekshiruv bank kameralariga ta'sir qilmaydi.": "Не удалось получить кадр за 8 секунд. Возможно, сеть банка закрывает внешние HTTPS-запросы (volcanoes.usgs.gov). Проверка не влияет на камеры банка.",
+    "Manba: AQSh Geologiya xizmati (USGS), Kilauea vulqoni kamerasi, jamoat mulki. O'zbekistonda egasi saytga joylashtirishga ruxsat bergan jonli kamera topilmadi (26.09.2026), shuning uchun Monitoring markazida ochiq kamera ko'rsatilmaydi.": "Источник: Геологическая служба США (USGS), камера вулкана Килауэа, общественное достояние. Живой камеры в Узбекистане, владелец которой разрешил встраивание на сайт, не найдено (26.09.2026), поэтому в центре мониторинга открытая камера не показывается.",
+  });
+  let kadrNatija = "";
+  function kadrBlok(){
+    return '<div class="int-sinov">' +
+      '<div class="int-sinov-bosh"><b>Texnik tekshiruv: kamera kadri qanday keladi</b><span class="chip chip-kichik chip-sariq">Ommaviy manba, bank kamerasi emas</span></div>' +
+      "<p>Tugma bosilganda brauzer ochiq kameradan bitta JPEG kadr so&#39;raydi va javobni, hajmni, rasm o&#39;lchamini hamda kadr olingan vaqtni (Last-Modified) ko&#39;rsatadi. Shlyuz ulanganda bank kamerasining hodisa kadri shu tekshiruvdan o&#39;tadi. Kadrning o&#39;zi ekranga chiqmaydi.</p>" +
+      '<div><button type="button" class="tugma tugma-oq tugma-kichik" id="kadr-tugma">' + ik("kamera") + "Kadrni tekshirish</button></div>" +
+      '<div id="kadr-natija" aria-live="polite"></div>' +
+      "<p class=\"int-manba\">Manba: AQSh Geologiya xizmati (USGS), Kilauea vulqoni kamerasi, jamoat mulki. O&#39;zbekistonda egasi saytga joylashtirishga ruxsat bergan jonli kamera topilmadi (26.09.2026), shuning uchun Monitoring markazida ochiq kamera ko&#39;rsatilmaydi.</p>" +
+      "</div>";
+  }
+  async function kadrBoshla(){
+    const joy = $("kadr-natija"), J = MKB.jonli;
+    let n = null, xato = null;
+    await MKB.band($("kadr-tugma"), async () => {
+      if (!J || !J.kadrTekshir){ xato = new Error("yadro/jonli.js yuklanmadi"); return; }
+      try{ n = await J.kadrTekshir(); }catch(e){ xato = e; }
+    });
+    const ikki = x => String(x).padStart(2, "0");
+    if (n){
+      joy.innerHTML = '<dl class="int-sinov-dl">' +
+        '<dt>HTTP javobi</dt><dd data-tarjimasiz>' + n.http + " · " + esc(n.tur) + " · " + n.kb + " KB · " + n.ms + " ms</dd>" +
+        "<dt>Rasm o&#39;lchami</dt><dd data-tarjimasiz>" + (n.en ? n.en + " × " + n.boy + " px" : "—") + "</dd>" +
+        "<dt>Kadr vaqti</dt><dd>" + (n.olingan
+          ? '<span data-tarjimasiz>' + ikki(n.olingan.getHours()) + ":" + ikki(n.olingan.getMinutes()) + "</span> · " +
+            (n.daqiqa < 1 ? "<span>hozirgina</span>" : '<span data-tarjimasiz>' + n.daqiqa + "</span> <span>daqiqa oldin</span>") +
+            (n.eskirgan ? ' <span class="chip chip-kichik chip-sariq">Kadr eskirgan</span>' : "")
+          : "<span>Kadr vaqtini o&#39;qib bo&#39;lmadi</span>") + "</dd></dl>";
+    } else {
+      const tarmoq = !xato || xato.tur === "tarmoq";
+      joy.innerHTML = '<div class="info-qator" style="display:flex;gap:10px;font-size:13px;line-height:1.5;color:var(--matn-2)">' + ik("info") +
+        "<span>" + (tarmoq && navigator.onLine === false && J ? esc(J.OFLAYN)
+          : "Kadrni 8 soniyada olib bo&#39;lmadi. Bank tarmog&#39;i tashqi HTTPS so&#39;rovini (volcanoes.usgs.gov) yopgan bo&#39;lishi mumkin. Bu tekshiruv bank kameralariga ta&#39;sir qilmaydi.") + "</span></div>";
+      if (xato) console.info("Kadr tekshiruvi: " + (xato.message || xato.tur || xato));
+    }
+    tarjimaQil(joy);
+    kadrNatija = joy.innerHTML;
   }
 })();
 </script>

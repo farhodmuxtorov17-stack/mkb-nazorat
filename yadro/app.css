@@ -697,7 +697,7 @@ button.tanlov:focus-visible{outline:none;box-shadow:0 0 0 2px var(--siyoh),var(-
 @keyframes parda{from{opacity:0}}
 .modal{
   width:min(580px,100%);background:var(--oq);border-radius:var(--r-karta);
-  box-shadow:var(--soya-suzuvchi);padding:28px;max-height:88vh;overflow-y:auto;
+  box-shadow:var(--soya-suzuvchi);--modal-p:28px;padding:var(--modal-p);max-height:88vh;overflow-y:auto;
   animation:modal-kir 240ms cubic-bezier(.23,1,.32,1);
 }
 @keyframes modal-kir{from{opacity:0;transform:scale(.965) translateY(10px)}}
@@ -706,7 +706,9 @@ button.tanlov:focus-visible{outline:none;box-shadow:0 0 0 2px var(--siyoh),var(-
 .modal-yop{margin-left:auto;flex:none;width:40px;height:40px;border-radius:var(--r-pilyula);background:var(--band);
   display:grid;place-items:center;color:var(--siyoh);transition:background var(--tez)}
 .modal-yop:hover{background:var(--band-hover)}
-.modal-oyoq{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+/* Oyna uzun bo'lsa ham asosiy tugma ko'rinib turadi: oyoq pastki chetga yopishadi */
+.modal-oyoq{display:flex;justify-content:flex-end;gap:10px;margin:8px 0 calc(-1 * var(--modal-p));
+  padding:16px 0 var(--modal-p);position:sticky;bottom:calc(-1 * var(--modal-p));z-index:2;background:var(--oq)}
 
 .toast-qutisi{position:fixed;right:26px;bottom:26px;display:flex;flex-direction:column;gap:10px;z-index:100}
 .toast{
@@ -1257,7 +1259,7 @@ a.qator:active{background:var(--band)}
   .gl-old{left:4px}
   .gl-keyin{right:4px}
   .modal-parda{padding:12px}
-  .modal{padding:22px}
+  .modal{--modal-p:22px}
   .toast-qutisi{left:16px;right:16px;bottom:16px}
   .toast{max-width:none}
 }

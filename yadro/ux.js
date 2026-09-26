@@ -2150,7 +2150,7 @@ window.MKB_UX_SOF = (function(){
         '<div class="cs-meta"><span>Chop etildi:</span> <span data-tarjimasiz></span></div>';
       b.querySelector(".cs-nom").textContent = h1 ? h1.textContent.trim() : document.title;
       if (filtrlar.length) b.querySelector(".cs-filtr").textContent = filtrlar.join(" · ");
-      b.querySelector(".cs-meta [data-tarjimasiz]").textContent = sanaVaqt(new Date()) + " · " + (s.ism || "") + (s.rol ? ", " + s.rol : "");
+      b.querySelector(".cs-meta [data-tarjimasiz]").textContent = sanaVaqt(new Date()) + " · " + (s.ism || "") + (s.rol ? ", " + ((joriyTilRu() && window.MKB_LUGAT && MKB_LUGAT[s.rol]) || s.rol) : "");
       main.insertBefore(b, main.firstChild);
       const o = document.createElement("div");
       o.className = "chop-oyoq";

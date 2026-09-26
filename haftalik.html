@@ -79,12 +79,12 @@
     <div class="hs-yorliq"><a href="hisobotlar.html">Hisobotlar</a><span class="ajratgich">/</span><span>Haftalik xulosa</span></div>
     <div class="hs-qator"><h1>Haftalik xulosa</h1><span class="hs-meta" id="hs-meta"></span>
       <div class="hs-amallar">
-        <button type="button" class="tugma tugma-oq" id="hx-havola"><svg class="ic"><use href="#ik-nusxa"/></svg>Havolani nusxalash</button>
+        <button type="button" class="tugma tugma-oq" id="hx-havola" title="Havolani nusxalab, e-pochta yoki Telegram orqali yuboring"><svg class="ic"><use href="#ik-nusxa"/></svg>Havolani nusxalash</button>
         <button type="button" class="tugma tugma-oq" id="hx-chop"><svg class="ic"><use href="#ik-chop"/></svg>Chop etish</button>
       </div></div>
   </div>
 
-  <p class="hx-yuborish" id="hx-yuborish"><svg class="ic" aria-hidden="true"><use href="#ik-xat"/></svg><span><b>Yuborish:</b> <span>e-pochta, Telegram</span> <span class="chip chip-kichik chip-kul">ulanmagan</span>
+  <p class="hx-yuborish" id="hx-yuborish" hidden><svg class="ic" aria-hidden="true"><use href="#ik-xat"/></svg><span><b>Yuborish:</b> <span>e-pochta, Telegram</span> <span class="chip chip-kichik chip-kul">ulanmagan</span>
     <span>Ulash uchun bank pochta serveri (SMTP) va Telegram bot kerak. Hozircha havolani nusxalab yuboring yoki varaqni chop eting.</span></span></p>
 
   <div class="hx-hafta" role="group" aria-label="Hafta">
@@ -264,7 +264,7 @@
   /* ---------- Chop: bitta A4, pastki qatorda hisobot raqami ---------- */
   function oyoqQoy(){
     const o = document.querySelector(".chop-oyoq span");
-    if (o && J){ o.innerHTML = '<span data-tarjimasiz>' + e(V.raqam(J.joriy)) + "</span> · <span>Haftalik xulosa</span>"; tarjimaQil(o); }
+    if (o && J){ o.removeAttribute("data-tarjimasiz"); o.innerHTML = '<span data-tarjimasiz>' + e(V.raqam(J.joriy)) + "</span> · <span>Haftalik xulosa</span>"; tarjimaQil(o); }
   }
   /* Yadro chop sarlavhasi va oyog'ini o'z tinglovchisida quradi: shu sahifaniki undan keyin ishlashi kerak */
   const uxKut = setInterval(() => {
@@ -322,6 +322,8 @@
   $("hx-keyin").addEventListener("click", () => { if (!hafta || hafta.gacha >= MKB.bugun()) return; hafta = V.keyingi(hafta); urlYoz(); chiz(); });
   $("hx-chop").addEventListener("click", () => window.print());
   $("hx-havola").addEventListener("click", () => { if (J) havolaNusxa(); });
+  /* Pochta va Telegram ulanishi sozlama ishi: xabarni faqat uni ulay oladigan rol ko'radi */
+  $("hx-yuborish").hidden = !MKB.huquq("sozlama", "yoz");
   document.addEventListener("mkb:qoidalar", () => { try{ if (H) chiz(); }catch(_){ } });
 })();
 </script>

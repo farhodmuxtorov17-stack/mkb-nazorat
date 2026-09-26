@@ -264,12 +264,16 @@
     $("korik-soni").innerHTML = ochiq.length ? '<b data-tarjimasiz>' + ochiq.length + "</b> <span>ta ochiq</span>" : "";
     const yoza = MKB.huquq("korik", "yoz") && MKB.ruxsat("korik-otkazish.html");
     /* Keyingi aniq amal: bugungi birinchi ko'rik, bugun bo'lmasa eng ko'p kechikkani */
-    /* Inspektorning o'z ko'riklari: bugungi va kechikkanlar bitta marshrutga tiziladi — eng ko'p kechikkanidan boshlab, keyin har safar eng yaqini */
-    const H = window.MKB_HUJJAT;
-    const marshrut = doira === "mening" && H && bugungi.length + kech.length > 1
-      ? H.marshrut(kech.concat(bugungi).map(x => { const o = D.topish(x.k.obyektId) || {}; return Object.assign({x}, o.joy && o.joy.lat != null ? {lat: o.joy.lat, lng: o.joy.lng, aniq: o.joy.aniq !== false} : {}); }), null)
-          .map((r, i) => Object.assign({}, r.nuqta.x, {tartib: i + 1, masofa: r.masofa, taxminiy: r.taxminiy}))
+    /* Inspektorning o'z ko'riklari: bugungi va kechikkanlar bitta marshrutga tiziladi — eng ko'p kechikkanidan boshlab, keyin har safar eng yaqini.
+       Marshrutga faqat birinchi obyektdan 150 km radiusdagilar kiradi: bir kunda yetib boriladigan masofa. Qolganlari "Kechikkan" va "Bugun" ro'yxatida */
+    const H = window.MKB_HUJJAT, KUN_RADIUS = 150000;
+    const nuqtalar = H ? kech.concat(bugungi).map(x => { const o = D.topish(x.k.obyektId) || {}; return Object.assign({x}, o.joy && o.joy.lat != null ? {lat: o.joy.lat, lng: o.joy.lng, aniq: o.joy.aniq !== false} : {}); }) : [];
+    const boshNuqta = nuqtalar.find(p => p.lat != null);
+    const yaqin = boshNuqta ? nuqtalar.filter(p => p.lat != null && H.masofa(boshNuqta, p) <= KUN_RADIUS) : [];
+    const marshrut = doira === "mening" && yaqin.length > 1
+      ? H.marshrut(yaqin, null).map((r, i) => Object.assign({}, r.nuqta.x, {tartib: i + 1, masofa: r.masofa, taxminiy: r.taxminiy}))
       : null;
+    const yolda = new Set((marshrut || []).map(x => x.k));
     const navbatdagi = yoza ? (marshrut ? marshrut[0] : (bugungi[0] || kech[0] || null)) : null;
     const korikQator = x => {
       const {k, n} = x, asosiy = x === navbatdagi;
@@ -287,7 +291,7 @@
     /* Har qatorda amal bir xil nomlanadi, faqat navbatdagisi asosiy tugma. Asosiy tugma bitta: ro'yxatda "Ko'rikni boshlash" asosiy bo'lsa, sarlavhadagi reja tugmasi oddiy bo'ladi */
     $("reja-tugma").className = "tugma " + (navbatdagi ? "tugma-oq" : "tugma-asosiy");
     const M = marshrut ? marshrut.slice(0, 6) : [];
-    const B = marshrut ? [] : bugungi.slice(0, 4), K = marshrut ? [] : kech.slice(0, 4);
+    const B = bugungi.filter(x => !yolda.has(x.k)).slice(0, 4), K = kech.filter(x => !yolda.has(x.k)).slice(0, 4);
     const Q = keyin.slice(0, Math.max(2, 8 - B.length - K.length - M.length));
     const korsatildi = M.length + B.length + K.length + Q.length;
     const jamiKm = marshrut ? marshrut.reduce((s, x) => s + (x.masofa || 0), 0) : 0, jamiTaxminiy = !!marshrut && marshrut.some(x => x.taxminiy);

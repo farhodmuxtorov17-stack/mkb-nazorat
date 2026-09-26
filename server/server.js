@@ -218,6 +218,17 @@ function urugVersiyasi(manba){
 function mahalliyBormi(){ return fs.existsSync(path.join(ILDIZ, "mahalliy", "obyektlar.json")); }
 
 /* ---------- Maydonlar oq ro'yxati va turlar ---------- */
+/* Server o'zi tuzilmasini tekshiradigan maydonlar (yangiMaydonXatosi). Ma'lumot modeli (malumot.js) ularni
+   hali e'lon qilmagan bo'lsa ham qabul qilinadi va urug' yangilanganda o'zgarishlar qatlamidan o'chmaydi:
+   solishtirish — MB hisobotining ABS bilan solishtirish belgisi (panel-moliya.html);
+   yopilganVaqt — hodisa yopilgan vaqt, "dd.mm.yyyy HH:MM" (hodisa.html; haftalik xulosa shu vaqtdan sanaydi);
+   rozilik — oferta va maxfiylik bildirishnomasiga rozilik (kirish.html), faqat xodimning o'z yozuvida. */
+const SERVER_MAYDONLAR = {
+  MB_HISOBOTLAR: {solishtirish: "object"},
+  HODISALAR: {yopilganVaqt: "string"},
+  XAVFSIZLIK_HODISALARI: {yopilganVaqt: "string"},
+  FOYDLAR: {rozilik: "object"},
+};
 let SXEMA_KESH = null;
 function sxema(){
   if (SXEMA_KESH) return SXEMA_KESH;
@@ -240,6 +251,11 @@ function sxema(){
       maydon.add(m);
       if (!turlar[m]) turlar[m] = new Set([t === "array" ? "array" : t]);
     }
+    /* Sxemasiz to'plamga qo'shilmaydi: aks holda u birdan faqat shu maydonlarni qabul qiladigan bo'lib qoladi */
+    if (maydon.size) for (const [m, t] of Object.entries(SERVER_MAYDONLAR[k] || {})){
+      maydon.add(m);
+      if (!turlar[m]) turlar[m] = new Set([t]);
+    }
     if (maydon.size){ maydon.add("id"); maydon.add("izoh"); }
     if (k === "FOYDLAR") maydon.add("parol");
     S[k] = {maydon, turlar};
@@ -253,6 +269,59 @@ function turi(v){
   return typeof v;
 }
 function oddiyObyektmi(v){ return v && typeof v === "object" && !Array.isArray(v); }
+
+/* "dd.mm.yyyy HH:MM" (soat ixtiyoriy): kalendarda bor kun va to'g'ri soat */
+function vaqtTogrimi(v){
+  const m = /^(\d{2})\.(\d{2})\.(\d{4})(?: (\d{2}):(\d{2}))?$/.exec(String(v == null ? "" : v));
+  if (!m) return false;
+  const d = new Date(+m[3], +m[2] - 1, +m[1]);
+  if (d.getFullYear() !== +m[3] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[1]) return false;
+  return m[4] === undefined || (+m[4] < 24 && +m[5] < 60);
+}
+const matnmi = (v, maks) => typeof v === "string" && v.length <= maks;
+/* MB hisobotining ABS bilan solishtirish belgisi (panel-moliya.html absBelgila) */
+const SOLISHTIRISH_MAYDON = ["sana", "kim", "kimLogin", "absQoldiq", "reyestr", "farq", "manba", "fayl", "nomuvofiq", "izoh"];
+function solishtirishXatosi(s){
+  if (s === null) return null;
+  if (!oddiyObyektmi(s)) return "solishtirish obyekt bo'lishi kerak";
+  const ortiq = Object.keys(s).find(k => !SOLISHTIRISH_MAYDON.includes(k));
+  if (ortiq) return "solishtirish: noma'lum maydon " + ortiq;
+  if (!vaqtTogrimi(s.sana)) return "solishtirish vaqti noto'g'ri";
+  for (const k of ["absQoldiq", "reyestr", "farq"])
+    if (typeof s[k] !== "number" || !Number.isFinite(s[k])) return "solishtirish: " + k + " son bo'lishi kerak";
+  /* farq = ABS − reyestr, ming so'mgacha yaxlitlangan */
+  if (Math.abs(s.absQoldiq - s.reyestr - s.farq) > 0.002) return "solishtirish: farq ABS qoldig'i va reyestr ayirmasiga teng emas";
+  if (s.kim !== undefined && !matnmi(s.kim, 120)) return "solishtirish: kim noto'g'ri";
+  if (s.kimLogin != null && !matnmi(s.kimLogin, 60)) return "solishtirish: login noto'g'ri";
+  if (s.manba !== undefined && !matnmi(s.manba, 40)) return "solishtirish: manba noto'g'ri";
+  if (s.fayl != null && !matnmi(s.fayl, 200)) return "solishtirish: fayl nomi noto'g'ri";
+  if (s.nomuvofiq != null && !(Number.isInteger(s.nomuvofiq) && s.nomuvofiq >= 0)) return "solishtirish: mos kelmagan qatorlar soni noto'g'ri";
+  if (s.izoh !== undefined && !matnmi(s.izoh, 500)) return "solishtirish: izoh 500 belgidan oshmasin";
+  /* 0,05 mln so'mdan katta farq izohsiz belgilanmaydi (panel-moliya.html dagi forma bilan bir xil: kamida 10 belgi) */
+  if (Math.abs(s.farq) > 0.05 && String(s.izoh || "").trim().length < 10) return "solishtirish: farq izohi kamida 10 belgi bo'lsin";
+  return null;
+}
+/* Yangi maydonlarning tuzilmasi (SERVER_MAYDONLAR) */
+function yangiMaydonXatosi(kol, t){
+  if (kol === "MB_HISOBOTLAR" && "solishtirish" in t) return solishtirishXatosi(t.solishtirish);
+  if (kol === "FOYDLAR" && "rozilik" in t) return rozilikXatosi(t.rozilik);
+  if ((kol === "HODISALAR" || kol === "XAVFSIZLIK_HODISALARI") && t.yopilganVaqt != null && !vaqtTogrimi(t.yopilganVaqt))
+    return "yopilish vaqti noto'g'ri: dd.mm.yyyy HH:MM kutiladi";
+  return null;
+}
+/* Hodisa yopiqmi: HODISALAR da ustun, XAVFSIZLIK_HODISALARI da holat (hisobot-davr.js dagi ta'rif) */
+const hodisaYopiqmi = h => !!h && (h.ustun === "yopildi" || h.holat === "yopildi" || h.holat === "Yopildi");
+/* MB hisobotini "topshirilgan" qilish sharti hisobot-davr.js dan: mijozdagi tugma bilan bir qoida.
+   Ma'lumot modeli «solishtirish» maydonini e'lon qilmaguncha shart qo'yilmaydi (mijoz ham belgini saqlay olmaydi) */
+let DAVR = null;
+function mbTopshirishXatosi(D, joriy, t){
+  if (t.holat !== "topshirilgan" || joriy.holat === "topshirilgan") return null;
+  if (((D.SXEMA && D.SXEMA.MB_HISOBOTLAR) || []).indexOf("solishtirish") < 0) return null;
+  if (!DAVR) DAVR = require(path.join(ILDIZ, "hisobot-davr.js"));
+  const s = "solishtirish" in t ? (t.solishtirish && Object.assign({}, joriy.solishtirish || {}, t.solishtirish)) : joriy.solishtirish;
+  const r = DAVR.mbTopshirishTayyormi({solishtirish: s});
+  return r.tayyor ? null : "MB hisoboti topshirilmaydi: " + r.sabab;
+}
 
 const SANA_MAYDON = /^(sana|boshlanish|tugash)$|Sana$/;
 function tekshir(kol, t, D, yangimi){
@@ -272,6 +341,8 @@ function tekshir(kol, t, D, yangimi){
       return "sana noto'g'ri: " + m;
   }
   if (JSON.stringify(t).includes("assets/obyekt/")) return "eskirgan rasm yo'li: assets/obyekt/";
+  const yx = yangiMaydonXatosi(kol, t);
+  if (yx) return yx;
   if (kol === "YOZUVLAR"){
     if (t.holat != null && D.HOLATLAR && !D.HOLATLAR.some(h => h.nom === t.holat)) return "holat noto'g'ri";
     if (t.bosqich != null && D.BOSQICHLAR && !D.BOSQICHLAR.some(b => b.kalit === t.bosqich)) return "bosqich noto'g'ri";
@@ -662,6 +733,20 @@ function rozilikQatoriTogrimi(v){
   if (Object.keys(v).some(k => !["tahrir", "hujjatSana", "sana"].includes(k))) return false;
   return ["tahrir", "hujjatSana", "sana"].every(k => typeof v[k] === "string" && v[k].length > 0 && v[k].length <= 40);
 }
+/* Rozilik yozuvi: joriy tahrir va eski tahrirlar tarixi (30 tagacha).
+   Joriy qator qat'iy shaklda: tahrir "1.1", ikkala sana "dd.mm.yyyy" (kirish.html HUJJAT_TAHRIR, HUJJAT_SANA, bugungiSana).
+   Tarix qatorlari avval saqlangani uchun faqat umumiy shaklda tekshiriladi */
+const kunSanami = v => /^\d{2}\.\d{2}\.\d{4}$/.test(String(v)) && vaqtTogrimi(v);
+function rozilikXatosi(r){
+  if (r === null) return null;
+  if (!oddiyObyektmi(r) || Object.keys(r).some(k => !["tahrir", "hujjatSana", "sana", "tarix"].includes(k)) ||
+      !rozilikQatoriTogrimi({tahrir: r.tahrir, hujjatSana: r.hujjatSana, sana: r.sana}) ||
+      !/^\d{1,3}(\.\d{1,3}){0,2}$/.test(r.tahrir) || !kunSanami(r.hujjatSana) || !kunSanami(r.sana))
+    return "rozilik yozuvi noto'g'ri";
+  if ("tarix" in r && (!Array.isArray(r.tarix) || r.tarix.length > 30 || !r.tarix.every(rozilikQatoriTogrimi)))
+    return "rozilik tarixi noto'g'ri";
+  return null;
+}
 function sanaTogrimi(v){ const m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(String(v || "")); return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null; }
 async function ozYozuvIstisnosi(o, s, req, id){
   const x = (o.D.FOYDLAR || []).find(f => f && String(f.id) === String(id) && !f.__ochirilgan);
@@ -671,13 +756,9 @@ async function ozYozuvIstisnosi(o, s, req, id){
   delete t.id;
   const ortiqcha = Object.keys(t).filter(k => !OZ_MAYDONLAR.includes(k));
   if (ortiqcha.length) return {xato: "o'z hisobingizda faqat aloqa, o'rinbosar, sayohatlar, bildirishnoma sozlamasi va hujjatlarga rozilik o'zgaradi", kod: 403};
-  if ("rozilik" in t && t.rozilik !== null){
-    const r = t.rozilik;
-    if (!oddiyObyektmi(r) || Object.keys(r).some(k => !["tahrir", "hujjatSana", "sana", "tarix"].includes(k)) ||
-        !rozilikQatoriTogrimi({tahrir: r.tahrir, hujjatSana: r.hujjatSana, sana: r.sana}))
-      return {xato: "rozilik yozuvi noto'g'ri"};
-    if ("tarix" in r && (!Array.isArray(r.tarix) || r.tarix.length > 30 || !r.tarix.every(rozilikQatoriTogrimi)))
-      return {xato: "rozilik tarixi noto'g'ri"};
+  if ("rozilik" in t){
+    const xr = rozilikXatosi(t.rozilik);
+    if (xr) return {xato: xr};
   }
   if ("bildirishSozlama" in t && t.bildirishSozlama !== null){
     const b = t.bildirishSozlama;
@@ -971,6 +1052,10 @@ async function api(req, res, yol){
       if (t.holat && t.holat !== "kutilmoqda") return jsonJavob(res, 400, {xato: "yangi so'rov faqat kutilmoqda holatida yaratiladi"});
     }
     if (MUALLIFLI.has(kol)) t.muallifLogin = tizimYozuvimi(req) ? null : (sessiya.login || null);
+    if (kol === "FOYDLAR" && t.rozilik != null) return jsonJavob(res, 400, {xato: "rozilikni xodim birinchi kirishda o'zi qayd etadi"});
+    if (kol === "MB_HISOBOTLAR" && t.solishtirish){ t.solishtirish.kim = sessiya.ism; t.solishtirish.kimLogin = sessiya.login || null; }
+    if ((kol === "HODISALAR" || kol === "XAVFSIZLIK_HODISALARI") && t.yopilganVaqt != null && !hodisaYopiqmi(t))
+      return jsonJavob(res, 400, {xato: "yopilish vaqti faqat yopilgan hodisaga yoziladi"});
     if (kol === "ARXIV"){
       const xc = chiqimXatosi(o, sessiya, t.obyektId || t.id);
       if (xc) return jsonJavob(res, 403, {xato: xc});
@@ -1015,6 +1100,17 @@ async function api(req, res, yol){
       const xc = chiqimXatosi(o, sessiya, x.id);
       if (xc) return jsonJavob(res, 403, {xato: xc});
     }
+    if (kol === "MB_HISOBOTLAR"){
+      /* Solishtirgan xodim sessiyadan yoziladi */
+      if (t.solishtirish){ t.solishtirish.kim = sessiya.ism; t.solishtirish.kimLogin = sessiya.login || null; }
+      const xm = mbTopshirishXatosi(o.D, x, t);
+      if (xm) return jsonJavob(res, 409, {xato: xm});
+    }
+    if ((kol === "HODISALAR" || kol === "XAVFSIZLIK_HODISALARI") && t.yopilganVaqt != null && !hodisaYopiqmi(Object.assign({}, x, t)))
+      return jsonJavob(res, 400, {xato: "yopilish vaqti faqat yopilgan hodisaga yoziladi"});
+    /* Rozilikni xodimning o'zi qayd etadi: administrator boshqa xodim nomidan rozilik yozmaydi */
+    if (kol === "FOYDLAR" && "rozilik" in t && String(x.id) !== String(sessiya.id))
+      return jsonJavob(res, 403, {xato: "rozilikni faqat xodimning o'zi qayd etadi"});
     /* filial tekshiruvi: joriy yozuv ham, o'zgargandan keyingi holat ham o'z filialida bo'lsin */
     if (!filialRuxsatmi(o, sessiya, kol, x, Object.assign({}, x, t)))
       return jsonJavob(res, 403, {xato: "boshqa filial obyekti"});

@@ -431,8 +431,12 @@ window.MKB_YORDAM = {
       B("Tasdiqlash", "Утвердить", "Oynada «Nima o'zgaradi» qatorlari chiqadi: summa, holat va lot narxi. Tasdiqlagach so'rov «Hal qilinganlar»ga o'tadi, bog'liq yozuv (lot, taklif, aktiv) darhol yangilanadi.",
         "В окне появляются строки «Nima o'zgaradi»: сумма, статус и цена лота. После утверждения запрос переходит в «Hal qilinganlar», связанная запись (лот, предложение, актив) обновляется сразу."),
       B("Rad etish", "Отклонить", "Sabab majburiy, kamida 5 belgi. Sabab so'rov muallifiga ko'rinadi.", "Причина обязательна, не меньше 5 символов. Её увидит автор запроса."),
-      B("Kengash uchun hisobot", "Отчёт для правления", "Panel raqamlaridan bir sahifalik A4 varaq tuziladi va chop etish oynasi ochiladi. Varaqda kim va qachon chop etgani yoziladi.",
-        "Из цифр панели собирается одностраничный лист A4 и открывается окно печати. На листе указано, кто и когда его распечатал."),
+      B("Kengash uchun hisobot", "Отчёт для наблюдательного совета", "Oynada davr tanlanadi: oxirgi uch oy, ikki chorak yoki ikki yil. Pastda kutilayotgan qarorlar turadi, summasi eng katta uchtasi oldindan belgilangan; kerak bo'lsa kun tartibiga qo'shimcha masala yoziladi. " +
+        "«Chop etish» bitta A4 varaq beradi: to'rt jumlali xulosa, davr va oldingi davr ustunlari farqi bilan, sotuv zanjiri va kengashdan so'raladigan qarorlar. Davr tugamagan bo'lsa, me'yoriy muddati tugashiga eng yaqin beshtagacha aktiv ham qo'shiladi. " +
+        "Varaq raqami davrga bog'liq: KH-2026/09 oy, KH-2026/Q3 chorak, KH-2026 yil uchun.",
+        "В окне выбирается период: последние три месяца, два квартала или два года. Ниже — ожидающие решения, три с наибольшей суммой отмечены заранее; при необходимости в повестку добавляется ещё один вопрос. " +
+        "«Chop etish» даёт один лист A4: вывод из четырёх предложений, столбцы периода и предыдущего периода с разницей, цепочка продаж и решения, которые выносятся на совет. Если период не закончился, добавляются до пяти активов, ближайших к истечению нормативного срока. " +
+        "Номер листа зависит от периода: KH-2026/09 — месяц, KH-2026/Q3 — квартал, KH-2026 — год."),
     ],
     xatolar: [
       X("O'zingiz yuborgan so'rovda tasdiqlash tugmasi bo'lmaydi. Bu xato emas: so'rovni boshqa xodim tasdiqlaydi", "В запросе, который вы отправили сами, кнопки утверждения нет. Это не ошибка: запрос утверждает другой сотрудник"),
@@ -440,8 +444,12 @@ window.MKB_YORDAM = {
     ],
     qoidalar: [
       X("Panel ma'lumoti har ochilganda qayta hisoblanadi. «Yangilandi» yonidagi tugma raqamlarni qo'lda yangilaydi", "Данные панели пересчитываются при каждом открытии. Кнопка рядом с «Yangilandi» обновляет цифры вручную"),
+      X("Kengash hisobotida tugamagan davr oldingi davrning xuddi shuncha kuni bilan solishtiriladi: 1–25 sentabr to'liq avgust bilan emas, 1–25 avgust bilan",
+        "В отчёте для совета незавершённый период сравнивается с тем же числом дней предыдущего: 1–25 сентября — не со всем августом, а с 1–25 августа"),
+      X("Oldingi davr uchun yozuv bo'lmasa, katakda 0 emas, «ma'lumot yo'q ***» turadi va farq hisoblanmaydi. Kengash hisoboti, haftalik xulosa va MB hisoboti raqamlari bitta qoidadan hisoblanadi",
+        "Если за предыдущий период записей нет, в ячейке стоит не 0, а «нет данных ***», и разница не считается. Цифры отчёта для совета, итогов недели и отчёта ЦБ считаются по одному правилу"),
     ],
-    bogliq: ["tasdiqlar.html", "muddatlar.html", "realizatsiya.html", "hisobot-mb.html"],
+    bogliq: ["tasdiqlar.html", "muddatlar.html", "realizatsiya.html", "haftalik.html", "hisobot-mb.html"],
   },
 
   "panel-obyekt.html": {
@@ -503,8 +511,12 @@ window.MKB_YORDAM = {
         "Действующая ставка по категориям и предложение на утверждении. Ставку утверждает Руководство."),
       B("Mening so'rovlarim", "Мои запросы", "Siz yuborgan stavka, baho va chiqim so'rovlari javob muddati bilan. O'z so'rovingizni o'zingiz tasdiqlay olmaysiz.",
         "Отправленные вами запросы по ставке, оценке и списанию со сроком ответа. Свой запрос утвердить нельзя."),
-      B("MB oylik hisoboti", "Ежемесячный отчёт ЦБ", "Oxirgi davrlar va ularning holati: topshirilgan, muddati yaqin yoki o'tgan.",
-        "Последние периоды и их статус: сдан, срок близок или прошёл."),
+      B("MB oylik hisoboti", "Ежемесячный отчёт ЦБ", "Oxirgi davrlar va ularning holati: topshirilgan, muddati yaqin yoki o'tgan. Yopilgan oy qatorida ABS bilan solishtirilgani ham yoziladi.",
+        "Последние периоды и их статус: сдан, срок близок или прошёл. В строке закрытого месяца указано, сверен ли он с АБС."),
+      B("ABS bilan solishtirish", "Сверка с АБС", "Yopilgan oy tanlanadi. Reyestr jami o'sha oy oxirida balansda turgan aktivlardan hisoblanadi. Buxgalteriya 16701 hisobvarag'ining oy oxiridagi qoldig'ini aylanma-saldo qaydnomasidan kiritadi va farq (ABS − reyestr) shu zahoti chiqadi. " +
+        "ABS ulanmagan, shuning uchun qoldiq qo'lda kiritiladi. Standart tanlov — hali solishtirilmagan va topshirilmagan eng eski oy.",
+        "Выбирается закрытый месяц. Итог реестра считается по активам, которые стояли на балансе на конец этого месяца. Бухгалтерия вносит остаток по счёту 16701 на конец месяца из оборотно-сальдовой ведомости, и разница (АБС − реестр) появляется сразу. " +
+        "АБС не подключена, поэтому остаток вносится вручную. По умолчанию выбран самый ранний месяц, который ещё не сверен и не сдан."),
       B("Mening navbatim", "Моя очередь", "Qoidalar yaratgan va sizga berilgan vazifalar. Belgini 8 soniya ichida qaytarish mumkin.",
         "Задачи, созданные правилами и поставленные вам. Отметку можно отменить в течение 8 секунд."),
     ],
@@ -515,11 +527,25 @@ window.MKB_YORDAM = {
         "Открывается страница расчёта налога за квартал и отметки об оплате."),
       B("Bajarildi deb belgilash", "Отметить выполненной", "Vazifa navbatdan chiqadi; 8 soniya ichida «Qaytarish» bilan bekor qilinadi.",
         "Задача уходит из очереди; в течение 8 секунд отменяется кнопкой «Qaytarish»."),
+      B("CSV faylni tanlash", "Выбрать файл CSV", "ABS dan olingan 16701 bo'yicha analitik ko'chirma yuklanadi. Kerakli ustunlar: reyestr raqami, balansga olingan sana, summa. Summa so'mda kelsa, mln so'mga o'tkaziladi. " +
+        "Har aktiv reyestr bilan solishtiriladi va farqlar to'rt guruhda chiqadi: summa farq qiladi, ABS ko'chirmasida yo'q, reyestrda yo'q, sana farq qiladi. O'qilmagan qatorlar raqami fayl nomi ostida yoziladi.",
+        "Загружается аналитическая выписка по 16701 из АБС. Нужные столбцы: номер в реестре, дата принятия на баланс, сумма. Если сумма в сумах, она переводится в млн сум. " +
+        "Каждый актив сверяется с реестром, расхождения выводятся четырьмя группами: сумма отличается, нет в выписке АБС, нет в реестре, отличается дата. Номера непрочитанных строк указаны под именем файла."),
+      B("Solishtirildi deb belgilash", "Отметить как сверено", "Belgi shu oyning MB hisobotiga yoziladi: kim va qachon solishtirgani, ABS qoldig'i, reyestr, farq va izoh. Farq 0,05 mln so'mdan katta bo'lsa, izoh majburiy, kamida 10 belgi: farq sababi va uni kim, qachon bartaraf etadi. " +
+        "Belgisiz va izohsiz farqli oyning MB hisobotida «Topshirildi deb belgilash» o'chiq turadi.",
+        "Отметка записывается в отчёт ЦБ этого месяца: кто и когда сверил, остаток АБС, реестр, разница и пояснение. Если разница больше 0,05 млн сум, пояснение обязательно, не короче 10 символов: причина разницы, кто и когда её устранит. " +
+        "Пока отметки нет или разница не пояснена, в отчёте ЦБ за этот месяц кнопка «Topshirildi deb belgilash» недоступна."),
+      B("Dalolatnoma", "Акт", "Solishtirish dalolatnomasi bitta A4 da chop etiladi: qoldiqlar, farq, manba, mos kelmagan 30 tagacha qator va ikki imzo joyi. «Farqlar CSV» mos kelmagan qatorlarning to'liq ro'yxatini faylga yuklaydi.",
+        "Акт сверки печатается на одном листе A4: остатки, разница, источник, до 30 несовпавших строк и два места для подписи. «Farqlar CSV» выгружает полный список несовпавших строк в файл."),
     ],
     xatolar: [X("Stavkani taklif qilib, uni o'zingiz tasdiqlashga urinish. To'rt ko'z qoidasi bo'yicha stavkani Rahbariyat tasdiqlaydi",
-                "Пытаться утвердить ставку, которую предложили сами. По принципу четырёх глаз ставку утверждает Руководство")],
-    qoidalar: [X("MB oylik hisoboti har oyning 10-sanasigacha topshiriladi", "Ежемесячный отчёт ЦБ сдаётся до 10-го числа каждого месяца")],
-    bogliq: ["zaxira.html", "soliq.html", "hisobot-mb.html", "shartnomalar.html", "tasdiqlar.html"],
+                "Пытаться утвердить ставку, которую предложили сами. По принципу четырёх глаз ставку утверждает Руководство"),
+              X("Ko'chirma jami kiritilgan ABS qoldig'iga teng bo'lmasa, qizil satr chiqadi: ko'chirma to'liq emas yoki boshqa sanaga olingan. Ko'chirmani oy oxiri sanasi bilan qayta oling",
+                "Если итог выписки не равен внесённому остатку АБС, появляется красная строка: выписка неполная или снята на другую дату. Получите выписку заново на дату конца месяца")],
+    qoidalar: [X("MB oylik hisoboti har oyning 10-sanasigacha topshiriladi", "Ежемесячный отчёт ЦБ сдаётся до 10-го числа каждого месяца"),
+               X("0,05 mln so'mgacha farq yaxlitlash hisoblanadi va izoh talab qilmaydi. Ko'chirma jami ming so'mgacha aniqlikda solishtiriladi",
+                 "Разница до 0,05 млн сум считается округлением и пояснения не требует. Итог выписки сверяется с точностью до тысячи сум")],
+    bogliq: ["zaxira.html", "soliq.html", "hisobot-mb.html", "shartnomalar.html", "tasdiqlar.html", "integratsiyalar.html"],
   },
 
   /* ================= Balans aktivlari ================= */
@@ -918,23 +944,48 @@ window.MKB_YORDAM = {
   /* ================= Himoya va monitoring ================= */
   "himoya.html": {
     sarlavha: X("Monitoring markazi", "Центр мониторинга"),
-    nimaUchun: X("Ko'rik va xavfsizlik inspektorining kamera ekrani. Har bir kameradan kelgan oxirgi kadr, batareya va signal vaqti, ochiq hodisalar va masofaviy ko'riklar bir joyda.",
-                 "Экран камер инспектора по осмотрам и безопасности. Последний кадр каждой камеры, заряд и время сигнала, открытые происшествия и дистанционные осмотры — в одном месте."),
+    nimaUchun: X("Kamera va datchik o'rnatilgan obyektlar bitta ekranda: qaysi kamera oxirgi qayd bo'yicha aloqada, qaysi biri jim, qayerda kamera yo'q va nechta hodisa ochiq. " +
+                 "NVR va IoT shlyuzi hali ulanmagan, shuning uchun «aloqada» jonli signalni emas, qurilma holatining oxirgi qaydini bildiradi. Tizim video saqlamaydi va jonli oqim bermaydi.",
+                 "Объекты с камерами и датчиками на одном экране: какая камера на связи по последней записи, какая молчит, где камеры нет и сколько происшествий открыто. " +
+                 "NVR и IoT-шлюз ещё не подключены, поэтому «на связи» означает не живой сигнал, а последнюю запись о состоянии устройства. Система не хранит видео и не даёт прямой трансляции."),
     bloklar: [
-      B("Kameralar holati", "Состояние камер", "To'rt plitka: kadr beradigan kameralar, kadr bermayotganlari, kamerasiz obyektlar va ochiq hodisalar. Plitkani bossangiz, ro'yxat shu holat bo'yicha saralanadi.", "Четыре плитки: камеры, дающие кадр, не дающие кадр, объекты без камеры и открытые происшествия. Нажмите на плитку — список отберётся по этому состоянию."),
-      B("Kameralar ro'yxati", "Список камер", "Har bir kamera kartochkasi va jadvali: obyekt, hudud, kamera, batareya, oxirgi signal, ochiq hodisa va holat. Kadr — kameradan kelgan oxirgi surat, jonli video emas.", "Карточка и таблица по каждой камере: объект, регион, камера, заряд, последний сигнал, открытое происшествие и статус. Кадр — последний снимок с камеры, а не живое видео."),
-      B("So'nggi signallar", "Последние сигналы", "Qurilma va kirish signallari vaqt bo'yicha. Filtr: Hammasi, Qurilma, Kirish.", "Сигналы устройств и доступа по времени. Фильтр: Hammasi, Qurilma, Kirish."),
-      B("Masofaviy ko'riklar", "Дистанционные осмотры", "Bugungi va jarayondagi masofaviy ko'riklar. «Barchasi» to'liq ro'yxatni ochadi.", "Сегодняшние и текущие дистанционные осмотры. «Barchasi» открывает полный список."),
-      B("Tahlil qatori", "Строка анализа", "Jim qurilmalar va batareyasi past qurilmalar qurilmalar.html da, qo'riqlanmayotgan obyektlar va himoya smetasi qoriqlash.html da ochiladi.", "Молчащие устройства и устройства с низким зарядом открываются в qurilmalar.html, объекты без охраны и смета охраны — в qoriqlash.html."),
+      B("Holat plitkalari", "Плитки состояния", "Kamerasi aloqada obyektlar (oxirgi qayd vaqti bilan), kamerasi jim obyektlar, kamerasiz obyektlar va ochiq hodisalar. Uchta plitka kamerani emas, obyektni sanaydi; kameralar soni sarlavha yonida. " +
+        "Plitkani bossangiz ro'yxat shu holatga filtrlanadi, yana bossangiz filtr olinadi. «Ochiq hodisalar» yangi, tekshiruvdagi va bartaraf etilayotgan hodisalar ro'yxatini ochadi.",
+        "Объекты с камерой на связи (со временем последней записи), объекты с молчащей камерой, объекты без камеры и открытые происшествия. Три плитки считают объекты, а не камеры; число камер — рядом с заголовком. " +
+        "Нажатие на плитку фильтрует список по этому состоянию, повторное нажатие снимает фильтр. «Ochiq hodisalar» открывает список новых, проверяемых и устраняемых происшествий."),
+      B("Ulanish namunasi: ochiq manbalar", "Пример подключения: открытые источники", "Yig'ilgan holda turadi, «Ko'rsatish» bilan ochiladi. Bank obyekti emas: 14 hudud markazidagi ob-havo va quyosh nurlanishi (Open-Meteo), MQTT sinov kanalidagi qurilma xabari va egasi hammaga ochgan davlat idorasi kamerasi. " +
+        "Har blok tugma bosilgandagina internetga chiqadi, 8 soniyada javob kelmasa sababini yozadi. Shamol zarbi 72 km/soat, bir sutkalik yog'in 20 mm yoki harorat −10 °C chegarasidan o'tsa, hudud qatorida navbatdan tashqari ko'rik asosi chiqadi.",
+        "Свёрнут, открывается кнопкой «Ko'rsatish». Это не объекты банка: погода и солнечная радиация в 14 областных центрах (Open-Meteo), сообщение устройства в тестовом канале MQTT и камера госучреждения, открытая владельцем для всех. " +
+        "Каждый блок выходит в интернет только по нажатию кнопки; если ответа нет 8 секунд, пишет причину. Когда порыв ветра превышает 72 км/ч, осадки за сутки — 20 мм или температура опускается ниже −10 °C, в строке области появляется основание для внепланового осмотра."),
+      B("Diqqat talab qiladi", "Требует внимания", "Kameralar ko'rinishida, kartalar ustida: jim kameralar va batareyasi past kameralar, jimlari birinchi. Har qatorda sabab (necha soat jim turgani yoki batareya foizi) va «Servis topshirig'i». " +
+        "Uchtasi ko'rinadi, qolgani «Yana» bilan ochiladi. «Ro'yxatda ochish» jadvalga e'tibor tartibida o'tadi.",
+        "В режиме камер, над карточками: молчащие камеры и камеры с низким зарядом, молчащие первыми. В каждой строке причина (сколько часов камера молчит или процент заряда) и «Servis topshirig'i». " +
+        "Видны три строки, остальные раскрываются кнопкой «Yana». «Ro'yxatda ochish» переключает на таблицу в порядке внимания."),
+      B("Kameralar va ro'yxat", "Камеры и список", "Ikki ko'rinish, tanlov shu brauzerda eslab qolinadi. Kartada obyekt surati «Obyekt surati, kamera kadri emas» yorlig'i bilan turadi: bu saqlangan surat. Jim kamera kartasida surat o'rniga jim turgan vaqt va oxirgi signal yoziladi. " +
+        "Kartalar 24 tadan, jadval 12 qatordan sahifalanadi. Qidiruv obyekt, hudud yoki qurilma ID bo'yicha, filtrlar: holat, hudud va qurilma turi.",
+        "Два представления, выбор запоминается в этом браузере. На карточке фото объекта с пометкой «Obyekt surati, kamera kadri emas»: это сохранённый снимок. На карточке молчащей камеры вместо фото указано, сколько она молчит, и время последнего сигнала. " +
+        "Карточки идут по 24 на странице, таблица — по 12 строк. Поиск по объекту, региону или ID устройства, фильтры: состояние, регион и тип устройства."),
+      B("So'nggi signallar", "Последние сигналы", "Avval xavfsizlik signallari (8 tagacha), keyin qurilma signallari: aloqa va batareya bo'yicha, uch va undan ko'p bo'lsa bitta qatorga yig'iladi. Filtr: Hammasi, Qurilma, Kirish. «Barcha signallar» kirish voqealari jurnalini ochadi.",
+        "Сначала сигналы безопасности (до 8), затем сигналы устройств по связи и заряду; если их три и больше, они сворачиваются в одну строку. Фильтр: Hammasi, Qurilma, Kirish. «Barcha signallar» открывает журнал событий доступа."),
+      B("Masofaviy ko'riklar va tahlil qatori", "Дистанционные осмотры и строка анализа", "Bugun rejadagi va jarayondagi masofaviy ko'riklar, «Barchasi» to'liq ro'yxatni ochadi. Tahlil qatorida 24 soatdan ortiq jim qurilmalar, batareyasi past qurilmalar va qo'riqlanmayotgan obyektlar soni: har biri o'z ro'yxatini ochadi.",
+        "Дистанционные осмотры на сегодня и в процессе, «Barchasi» открывает полный список. В строке анализа — число устройств, молчащих больше 24 часов, устройств с низким зарядом и объектов без охраны: каждое открывает свой список."),
     ],
     amallar: [
       B("Qurilma o'rnatish", "Установить устройство", "Qurilmani ro'yxatga olish formasi ochiladi.", "Открывается форма регистрации устройства."),
-      B("Hodisa qayd etish", "Зарегистрировать происшествие", "Hodisa formasi ochiladi: obyekt, turi, jiddiylik va tavsif.", "Открывается форма происшествия: объект, тип, важность и описание."),
-      B("Yangilash", "Обновить", "Ma'lumot qayta yuklanadi, «Yangilandi» vaqti o'zgaradi.", "Данные загружаются заново, время «Yangilandi» меняется."),
+      B("Hodisa qayd etish", "Зарегистрировать происшествие", "Hodisa formasi ochiladi: obyekt, turi, jiddiylik va tavsif. Kartadan ochilsa, obyekt oldindan tanlangan.", "Открывается форма происшествия: объект, тип, важность и описание. Если открыть с карточки, объект уже выбран."),
+      B("Servis topshirig'i", "Сервисное задание", "Jim yoki nosoz kamera uchun montajchiga topshiriq formasi ochiladi, qurilma oldindan tanlangan.", "Для молчащей или неисправной камеры открывается форма задания монтажнику, устройство уже выбрано."),
+      B("Masofaviy ko'rik", "Дистанционный осмотр", "Kamerasi aloqada bo'lgan obyekt uchun masofaviy ko'rik sessiyasi ochiladi. Kamerasiz obyektda o'rniga «Kamera o'rnatish» turadi.", "Для объекта с камерой на связи открывается сеанс дистанционного осмотра. У объекта без камеры вместо неё — «Kamera o'rnatish»."),
+      B("Ochishga ruxsatni qayd etish", "Зафиксировать разрешение на открытие", "Obyektda qulf bo'lsa ko'rinadi. Tizim qulfga buyruq bermaydi: ruxsatni kim va qachon bergani jurnalga yoziladi.", "Видна, если на объекте есть замок. Система не отправляет команду замку: в журнал записывается, кто и когда дал разрешение."),
+      B("Kanalga ulanish", "Подключиться к каналу", "Ulanish namunasida. Brauzer ommaviy MQTT sinov brokeriga shifrlangan WebSocket orqali ulanadi, «Sinov signalini yuborish» xabar yuboradi va shu mavzudan qaytarib oladi; kechikish to'liq yo'l uchun ms da. Xabarda bank ma'lumoti yo'q.",
+        "В примере подключения. Браузер подключается к публичному тестовому брокеру MQTT по шифрованному WebSocket, «Sinov signalini yuborish» отправляет сообщение и получает его обратно из той же темы; задержка — за весь путь, в мс. Данных банка в сообщении нет."),
     ],
-    xatolar: [X("Kamera kadrini jonli video deb tushunish. Tizim jonli oqim bermaydi: kadr — oxirgi surat, yonida uning vaqti turadi", "Принимать кадр камеры за живое видео. Система не даёт прямой трансляции: кадр — это последний снимок, рядом с ним указано его время")],
-    qoidalar: [X("Qurilma 24 soatdan ortiq aloqasiz bo'lsa, vazifa ochiladi", "Если устройство без связи больше 24 часов, открывается задача")],
-    bogliq: ["hodisalar.html", "qurilmalar.html", "kirish-voqealari.html", "qoriqlash.html"],
+    xatolar: [X("Kartadagi suratni kamera kadri deb o'qish. Bu obyektning saqlangan surati, yorlig'ida shunday yozilgan. Tizim jonli oqim bermaydi va video saqlamaydi",
+                "Принимать фото на карточке за кадр с камеры. Это сохранённый снимок объекта, так и написано на пометке. Система не даёт прямой трансляции и не хранит видео"),
+              X("«Aloqada»ni jonli signal deb tushunish. Shlyuz ulanmaguncha holat qurilma haqidagi oxirgi qayd bo'yicha, uning vaqti plitkada va kartada yozilgan",
+                "Считать «на связи» живым сигналом. Пока шлюз не подключён, состояние берётся из последней записи об устройстве, её время указано на плитке и на карточке")],
+    qoidalar: [X("Qurilma 24 soatdan ortiq aloqasiz bo'lsa, vazifa ochiladi", "Если устройство без связи больше 24 часов, открывается задача"),
+               X("Ma'lumot 60 soniyada o'zi yangilanadi, «Yangilandi» yonidagi tugma darhol yangilaydi", "Данные обновляются сами каждые 60 секунд, кнопка рядом с «Yangilandi» обновляет сразу")],
+    bogliq: ["hodisalar.html", "qurilmalar.html", "kirish-voqealari.html", "qoriqlash.html", "masofaviy-korik.html", "integratsiyalar.html"],
   },
 
   "qoriqlash.html": {
@@ -1072,7 +1123,8 @@ window.MKB_YORDAM = {
       B("Qabul qilish", "Принять", "Hodisa «Tekshiruvda» bo'ladi.", "Происшествие переходит в «Tekshiruvda»."),
       B("Bartaraf etishga o'tkazish", "Перевести на устранение", "Hodisa «Bartaraf etilmoqda» bo'ladi.", "Происшествие переходит в «Bartaraf etilmoqda»."),
       B("Hal qilindi deb belgilash", "Отметить решённым", "Chora matni majburiy. Hal qilish vaqti hisobotga yoziladi.", "Текст мер обязателен. Время решения попадает в отчёт."),
-      B("Hodisani yopish", "Закрыть происшествие", "Chora matni majburiy. Yopilgan hodisani «Qayta ochish» mumkin.", "Текст мер обязателен. Закрытое происшествие можно «Qayta ochish»."),
+      B("Hodisani yopish", "Закрыть происшествие", "Chora hali yozilmagan bo'lsa, matni majburiy. Yopilish vaqti hodisaga yoziladi va ma'lumot blokida ko'rinadi: haftalik xulosa yopilgan hodisani shu vaqt bo'yicha haftaga qo'yadi. «Qayta ochish» sabab bilan bajariladi va yopilish vaqtini o'chiradi.",
+        "Если меры ещё не описаны, текст обязателен. Время закрытия записывается в происшествие и видно в блоке сведений: итоги недели относят закрытое происшествие к неделе по этому времени. «Qayta ochish» выполняется с указанием причины и стирает время закрытия."),
       B("Sug'urta da'vosi yaratish", "Создать страховое требование", "Zarar summasi bilan da'vo polisga bog'lanadi.", "Требование с суммой ущерба привязывается к полису."),
       B("Vazifa yaratish", "Создать задачу", "Mas'ulga muddatli vazifa ketadi.", "Ответственному уходит задача со сроком."),
     ],
@@ -1714,6 +1766,40 @@ window.MKB_YORDAM = {
     bogliq: ["hisobot-mb.html", "hisobot-eksport.html"],
   },
 
+  "haftalik.html": {
+    sarlavha: X("Haftalik xulosa", "Итоги недели"),
+    nimaUchun: X("Dushanbadan yakshanbagacha bo'lgan hafta o'tgan hafta bilan yonma-yon: qarorlar, balansga olingan va chiqarilgan aktivlar, tushum, hodisalar, kechikkan ko'riklar va qiymati pasaygan aktivlar. " +
+                 "Raqamlar kengash hisoboti bilan bitta qoidadan hisoblanadi. Varaq raqami ISO hafta raqami bilan: HX-2026/39.",
+                 "Неделя с понедельника по воскресенье рядом с прошлой: решения, принятые на баланс и списанные активы, поступления, происшествия, просроченные осмотры и активы с упавшей стоимостью. " +
+                 "Цифры считаются по тому же правилу, что и в отчёте для совета. Номер листа — по номеру недели ISO: HX-2026/39."),
+    bloklar: [
+      B("Hafta tanlovi", "Выбор недели", "Chap va o'ng strelka haftani almashtiradi, kelgusi haftaga o'tilmaydi. Dushanba kuni o'tgan hafta ochiladi, qolgan kunlarda joriy hafta.",
+        "Стрелки влево и вправо меняют неделю, в будущую перейти нельзя. В понедельник открывается прошлая неделя, в остальные дни — текущая."),
+      B("Hafta ko'rsatkichlari", "Показатели недели", "To'qqiz qator, har birida shu hafta, o'tgan hafta va farq. Yashil farq yaxshilanishni, pushti farq yomonlashuvni bildiradi; qarorlar soni va balansga olish rangsiz. " +
+        "Qatorni bossangiz, o'sha haftaning yozuvlari yon panelda ochiladi va har biri o'z sahifasiga olib boradi. Yozuvi yo'q qator bosilmaydi.",
+        "Девять строк, в каждой — эта неделя, прошлая и разница. Зелёная разница — улучшение, розовая — ухудшение; число решений и принятие на баланс без цвета. " +
+        "Нажмите на строку — записи этой недели откроются в боковой панели, каждая ведёт на свою страницу. Строка без записей не нажимается."),
+      B("Izohlar", "Примечания", "Jadval ostida hafta oxiridagi balans, tushum qanday sanalgani, yopilish vaqti yozilmagan hodisalar soni va «ma'lumot yo'q» kataklar sababi.",
+        "Под таблицей — баланс на конец недели, как считаются поступления, число происшествий без времени закрытия и причина ячеек «ma'lumot yo'q»."),
+    ],
+    amallar: [
+      B("Havolani nusxalash", "Скопировать ссылку", "Havola haftani o'zi bilan olib yuradi (?hafta=21.09.2026): oluvchi siz yuborgan haftani ko'radi, ochgan kunidagisini emas. Brauzer nusxalashga ruxsat bermasa, havola oynada chiqadi.",
+        "Ссылка несёт неделю с собой (?hafta=21.09.2026): получатель увидит ту неделю, которую вы отправили, а не ту, что будет в день открытия. Если браузер не разрешает копирование, ссылка показывается в окне."),
+      B("Chop etish", "Распечатать", "Bitta A4, pastki qatorda varaq raqami.", "Один лист A4, в нижней строке номер листа."),
+    ],
+    xatolar: [X("Yopilgan hodisalar qatorini to'liq deb o'qish. Yopilish vaqti yozilmagan yopiq hodisa haftaga taqsimlanmaydi, ularning soni jadval ostida turadi. Hodisa varaqasidagi «Hodisani yopish» vaqtni o'zi yozadi",
+                "Считать строку закрытых происшествий полной. Закрытое происшествие без времени закрытия не распределяется по неделям, их число указано под таблицей. «Hodisani yopish» в карточке происшествия записывает время сама"),
+              X("Tugamagan haftani to'liq hafta bilan solishtirish kutish. Hafta davom etsa, o'tgan haftaning xuddi shu kunlari olinadi: payshanba kuni dushanba–payshanba dushanba–payshanba bilan",
+                "Ждать сравнения незавершённой недели с полной. Пока неделя идёт, берутся те же дни прошлой: в четверг понедельник–четверг сравнивается с понедельником–четвергом")],
+    qoidalar: [X("Tushum — avans va jadval bo'yicha to'langan oylar. ABS ulanmaguncha to'lov kuni jadvaldagi sana deb olinadi",
+                 "Поступления — аванс и оплаченные по графику месяцы. Пока АБС не подключена, днём оплаты считается дата по графику"),
+               X("Kutilayotgan qarorlar va kechikkan ko'riklar hafta oxiridagi holat bo'yicha sanaladi",
+                 "Ожидающие решения и просроченные осмотры считаются по состоянию на конец недели"),
+               X("E-pochta va Telegram orqali yuborish ulanmagan: bank pochta serveri (SMTP) va Telegram bot kerak. Hozircha havolani nusxalab yuboring yoki varaqni chop eting",
+                 "Отправка по почте и в Telegram не подключена: нужны почтовый сервер банка (SMTP) и Telegram-бот. Пока скопируйте ссылку или распечатайте лист")],
+    bogliq: ["panel.html", "hisobotlar.html", "hodisalar.html", "tasdiqlar.html"],
+  },
+
   "hisobot-portfel.html": {
     sarlavha: X("Balans aktivlari hisoboti", "Отчёт по активам на балансе"),
     nimaUchun: X("Portfelning to'liq surati: aktivlar soni, balans va bozor qiymati, zaxira, toifalar, holatlar, mulk turlari va me'yoriy muddatlar.",
@@ -1734,16 +1820,25 @@ window.MKB_YORDAM = {
       B("Ko'rsatkichlar", "Показатели", "Obyektlar soni, jami balans qiymati (16701 hisobvarag'i), kapitalga nisbat, me'yoriy muddati o'tganlar.", "Число объектов, общая балансовая стоимость (счёт 16701), отношение к капиталу, объекты с истёкшим нормативным сроком."),
       B("Muddat", "Срок", "Har oyning 10-sanasigacha; dam olish kuniga to'g'ri kelsa, keyingi ish kuni.", "До 10-го числа каждого месяца; если это выходной, то следующий рабочий день."),
       B("Hisobotlar tarixi", "История отчётов", "Qaysi oy qachon topshirilgani va o'z vaqtida bo'lganmi.", "Какой месяц когда сдан и вовремя ли."),
+      B("ABS bilan solishtirish", "Сверка с АБС", "Oy yopilgach buxgalteriya 16701 qoldig'ini moliya panelida reyestr bilan solishtiradi. Bu yerda natija ko'rinadi: kim solishtirgan, qachon, farq (ABS − reyestr), ABS qoldig'i va farq izohi. Belgi bo'lmasa, qaysi sahifada qo'yilishi yoziladi.",
+        "Когда месяц закрыт, бухгалтерия сверяет остаток 16701 с реестром в финансовой панели. Здесь виден результат: кто сверил, когда, разница (АБС − реестр), остаток АБС и пояснение разницы. Если отметки нет, указано, на какой странице её ставят."),
     ],
     amallar: [
       B("Raqamlarni yangilash", "Обновить цифры", "Hisobot raqamlari reyestrdan qayta olinadi. Farq bo'lmasa, shuni aytadi.", "Цифры отчёта заново берутся из реестра. Если разницы нет, так и сообщается."),
       B("Kapitalni kiritish", "Внести капитал", "1-darajali kapital saqlanadi, nisbat hisoblanadi.", "Сохраняется капитал первого уровня, считается отношение."),
-      B("Topshirildi deb belgilash", "Отметить как сданный", "Tasdiqlash oynasida davr va raqamlar ko'rinadi. Bu amal qaytarib bo'lmaydigan tugma bilan emas, «Belgini bekor qilish» orqali bekor qilinadi.", "В окне подтверждения видны период и цифры. Отмена — только через «Belgini bekor qilish», а не кнопкой возврата."),
+      B("Topshirildi deb belgilash", "Отметить как сданный", "Oy ABS bilan solishtirilmaguncha yoki 0,05 mln so'mdan katta farq izohlanmaguncha tugma o'chiq turadi, ostida sababi va «Solishtirishni ochish» havolasi. " +
+        "Tasdiqlash oynasida davr, raqamlar va solishtirish belgisi ko'rinadi; xat raqamini izohga yozing. Belgini faqat administrator «Belgini bekor qilish» bilan, sabab yozib bekor qiladi.",
+        "Пока месяц не сверен с АБС или разница больше 0,05 млн сум не пояснена, кнопка недоступна, под ней указаны причина и ссылка «Solishtirishni ochish». " +
+        "В окне подтверждения видны период, цифры и отметка о сверке; номер письма впишите в комментарий. Снять отметку может только администратор кнопкой «Belgini bekor qilish», указав причину."),
       B("Ilovani yuklab olish", "Скачать приложение", "Hisobot ilovasi CSV fayl bo'lib yuklanadi.", "Приложение к отчёту скачивается CSV-файлом."),
     ],
-    xatolar: [X("Kapital kiritilmasa, nisbat bo'sh qoladi va hisobot to'liq emas. Avval «Kapitalni kiritish»", "Без капитала отношение остаётся пустым и отчёт неполный. Сначала «Kapitalni kiritish»")],
-    qoidalar: [X("MB hisoboti har oyning 10-sanasigacha topshiriladi (MB 3441, 16-band)", "Отчёт ЦБ сдаётся до 10-го числа каждого месяца (ЦБ 3441, п. 16)")],
-    bogliq: ["hisobotlar.html", "zaxira.html"],
+    xatolar: [X("Kapital kiritilmasa, nisbat bo'sh qoladi va hisobot to'liq emas. Avval «Kapitalni kiritish»", "Без капитала отношение остаётся пустым и отчёт неполный. Сначала «Kapitalni kiritish»"),
+              X("«Topshirildi deb belgilash» bosilmayapti: tugma ostidagi sababni o'qing. Ko'pincha oy ABS bilan solishtirilmagan yoki farq izohsiz qolgan",
+                "«Topshirildi deb belgilash» не нажимается: прочитайте причину под кнопкой. Чаще всего месяц не сверен с АБС или разница осталась без пояснения")],
+    qoidalar: [X("MB hisoboti har oyning 10-sanasigacha topshiriladi (MB 3441, 16-band)", "Отчёт ЦБ сдаётся до 10-го числа каждого месяца (ЦБ 3441, п. 16)"),
+               X("Hisobot ABS bilan solishtirilgandan keyin topshiriladi. Topshirish sharti moliya panelidagi belgi bilan bitta qoidadan tekshiriladi, server ham shu qoidani qo'llaydi",
+                 "Отчёт сдаётся после сверки с АБС. Условие сдачи проверяется по тому же правилу, что и отметка в финансовой панели; сервер применяет это же правило")],
+    bogliq: ["hisobotlar.html", "panel-moliya.html", "zaxira.html"],
   },
 
   "hisobot-xarajat.html": {
@@ -1952,13 +2047,37 @@ window.MKB_YORDAM = {
 
   "integratsiyalar.html": {
     sarlavha: X("Integratsiyalar", "Интеграции"),
-    nimaUchun: X("Tashqi tizimlar ro'yxati: E-auksion, kadastr, YHXX, bank ABS, kommunal ta'minotchilar, NVR va IoT shlyuzi, SMS. Hozir hech biri ulanmagan, ularning ma'lumoti tegishli sahifada qo'lda kiritiladi.",
-                 "Список внешних систем: электронный аукцион, кадастр, ГУБДД, АБС банка, коммунальные поставщики, NVR и IoT-шлюз, SMS. Сейчас ни одна не подключена, их данные вносятся вручную на соответствующих страницах."),
-    bloklar: [B("Tizim kartalari", "Карточки систем", "Nima keladi, hozir qanday kiritiladi va qaysi sahifada.", "Что поступает, как это вносится сейчас и на какой странице.")],
-    amallar: [],
-    xatolar: [],
-    qoidalar: [X("Har ulanish uchun axborot xavfsizligi xizmatining roziligi va shartnoma kerak", "Для каждого подключения нужны согласие службы информационной безопасности и договор")],
-    bogliq: ["rasmiylashtirish.html", "lotlar.html", "qurilmalar.html"],
+    nimaUchun: X("15 ta tashqi tizim to'rt guruhda: davlat tizimlari, bank ichidagi tizimlar, xabar yuborish, qo'riqlash va qurilmalar. Har kartada nima keladi, nima ketadi, qaysi protokol va kanal, ulash uchun nima kerak va ma'lumot hozir qaysi sahifada qo'lda kiritiladi. " +
+                 "Ulanmagan tizimning ma'lumoti qo'lda kiritiladi, maydon yonida «Manba: qo'lda · integratsiya ulanmagan» yoziladi.",
+                 "15 внешних систем в четырёх группах: государственные системы, внутренние системы банка, отправка сообщений, охрана и устройства. На каждой карточке — что поступает, что уходит, какой протокол и канал, что нужно для подключения и на какой странице данные сейчас вносятся вручную. " +
+                 "Данные неподключённой системы вносятся вручную, рядом с полем указано «Manba: qo'lda · integratsiya ulanmagan»."),
+    bloklar: [
+      B("Holat", "Статус", "Sarlavhada nechta tizim ulangani, yonida uch holat bo'yicha son: Ulanmagan, Sozlanmoqda, Ulangan. Ulangan tizim yo'q bo'lsa, sarlavha shuni ochiq yozadi.",
+        "В заголовке — сколько систем подключено, рядом число по трём статусам: Ulanmagan, Sozlanmoqda, Ulangan. Если подключённых систем нет, заголовок так и говорит."),
+      B("Tizim kartasi", "Карточка системы", "Nomi, javobgar tashkilot, yo'nalish (tizimga, tizimdan yoki ikki tomonlama), protokol va kanal. «Oqim va ulash shartlari» ichida nima keladi, nima ketadi va ulash uchun kerakli hujjatlar. " +
+        "Pastki qatorda ma'lumot hozir qanday kiritilishi va o'sha sahifaga havola. Telefonda tafsilot yig'ilgan holda chiqadi, bir bosishda ochiladi.",
+        "Название, ответственная организация, направление (в систему, из системы или в обе стороны), протокол и канал. Внутри «Oqim va ulash shartlari» — что поступает, что уходит и какие документы нужны для подключения. " +
+        "В нижней строке — как данные вносятся сейчас и ссылка на эту страницу. На телефоне подробности свёрнуты и открываются одним нажатием."),
+      B("Ommaviy sinov: qurilma xabari", "Публичная проверка: сообщение устройства", "NVR va IoT shlyuzi kartasida. Qurilma xabari shlyuz ulangach qaysi yo'l bilan kelishini ommaviy sinov serverida ko'rsatadi: datchik, broker, tizim. Bank qurilmasi emas, xabarda bank ma'lumoti yo'q.",
+        "На карточке NVR и IoT-шлюза. Показывает на публичном тестовом сервере, каким путём придёт сообщение устройства после подключения шлюза: датчик, брокер, система. Это не устройство банка, данных банка в сообщении нет."),
+    ],
+    amallar: [
+      B("Sinov xabarini yuborish", "Отправить тестовое сообщение", "Brauzer ommaviy MQTT brokeriga (test.mosquitto.org, zaxira broker.emqx.io) sinov datchigi nomidan xabar yuboradi va obuna orqali qaytarib oladi. Natijada broker, qurilma ID, yuborilgan matn va qaytish vaqti ms da. " +
+        "8 soniyada qaytmasa, bank tarmog'i 8081 va 8084-portlardagi tashqi WebSocket ulanishini yopgan bo'lishi mumkinligi yoziladi.",
+        "Браузер отправляет сообщение от имени тестового датчика на публичный брокер MQTT (test.mosquitto.org, резервный broker.emqx.io) и получает его обратно по подписке. В результате — брокер, ID устройства, отправленный текст и время возврата в мс. " +
+        "Если за 8 секунд сообщение не вернулось, выводится, что сеть банка, возможно, закрыла внешние WebSocket-подключения на портах 8081 и 8084."),
+      B("Holatni o'zgartirish", "Изменить статус", "Faqat administrator. Holat, mas'ul xodim va izoh saqlanadi. «Ulangan» birinchi ma'lumot kelgan sana bilan saqlanadi: sanasiz belgi «Ulangan deb belgilangan, ma'lumot hali kelmagan» deb sariq chiqadi va ulangan hisoblanmaydi.",
+        "Только администратор. Сохраняются статус, ответственный сотрудник и комментарий. «Ulangan» сохраняется вместе с датой поступления первых данных: отметка без даты выводится жёлтой как «Ulangan deb belgilangan, ma'lumot hali kelmagan» и подключением не считается."),
+    ],
+    xatolar: [X("Loyiha boshlanishi bilan «Ulangan» qo'yish. Kelishuv va sozlash davrida holat «Sozlanmoqda»; «Ulangan» ma'lumot tizimga haqiqatda kela boshlagach qo'yiladi",
+                "Ставить «Ulangan» в начале проекта. На время согласования и настройки статус — «Sozlanmoqda»; «Ulangan» ставится, когда данные действительно начали поступать в систему")],
+    qoidalar: [X("Har ulanish uchun axborot xavfsizligi xizmati xulosasi va ma'lumot beruvchi tashkilot bilan kelishuv kerak",
+                 "Для каждого подключения нужны заключение службы информационной безопасности и соглашение с организацией, которая передаёт данные"),
+               X("Tizim ulangach, qo'lda kiritiladigan maydon yonidagi manba qatori tizim nomiga almashadi",
+                 "После подключения системы строка источника рядом с полем ручного ввода меняется на название системы"),
+               X("Fuqarolarning shaxsga doir ma'lumotlari O'zbekiston hududidagi serverlarda qayta ishlanadi (O'RQ-547, 27-1-modda). Chet eldagi xizmatga (Telegram) faqat shaxsiy ma'lumotsiz xabar ketadi",
+                 "Персональные данные граждан обрабатываются на серверах в Узбекистане (ЗРУ-547, статья 27-1). Во внешний сервис за рубежом (Telegram) уходят только сообщения без персональных данных")],
+    bogliq: ["rasmiylashtirish.html", "lotlar.html", "qurilmalar.html", "panel-moliya.html", "himoya.html"],
   },
 
   "amallar-tarixi.html": {

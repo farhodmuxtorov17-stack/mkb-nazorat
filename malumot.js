@@ -728,8 +728,10 @@ const SXEMA = {
     "butlikIzoh", "akkumulyator", "kalit", "saqlashJoyi", "holatBall", "oxirgiSanash"],
   INVENTARIZATSIYALAR: ["id", "sana", "turi", "komissiya", "obyektlar", "natijalar", "kamomad", "ortiqcha", "holat"],
   SOLIQ: ["id", "obyektId", "davr", "baza", "stavka", "summa", "imtiyoz", "yerSoligi", "holat"],
+  /* solishtirish: {sana, kim, kimLogin, absQoldiq, reyestr, farq, manba, fayl, nomuvofiq, izoh} — 16701 hisobvarag'i
+     ABS bilan solishtirilgani (panel-moliya.html yozadi). Hisobot shu belgidan keyin topshiriladi; bo'lmasa null */
   MB_HISOBOTLAR: ["id", "davr", "muddat", "topshirilganSana", "obyektlarSoni", "jamiBalansQiymat", "kapital1Daraja",
-    "kapitalgaNisbat", "umidsizSoni", "holat"],
+    "kapitalgaNisbat", "umidsizSoni", "holat", "solishtirish"],
   QOIDALAR: ["id", "trigger", "nom", "kunlar", "natija", "qabulQiluvchiRol", "eskalatsiyaRol", "eskalatsiyaKun", "faol", "manba"],
   FAYLLAR: ["id", "obyektId", "kolleksiya", "yozuvId", "nom", "tur", "hajm", "yuklangan", "yuklagan", "yol"],
   /* To'rt ko'z qoidasi: muallifLogin — so'rovni yuborgan xodim logini; qarorKim — qaror qilgan xodim logini;
@@ -752,8 +754,10 @@ const SXEMA = {
 /* Sxemasi namoyish kalitlaridan olinadigan to'plamlarga qo'shimcha maydonlar va ularning turi.
    Mijoz (yadro/api.js) va server (server/server.js) oq ro'yxatga shularni ham qo'shadi. */
 const QOSHIMCHA_MAYDONLAR = {
-  HODISALAR: {zarar: "number", chora: "string"},
-  XAVFSIZLIK_HODISALARI: {zarar: "number", izoh: "string"},
+  /* yopilganVaqt — hodisa yopilgan vaqt (dd.mm.yyyy HH:MM). Haftalik xulosa yopilgan hodisani shu vaqt bo'yicha
+     haftaga qo'yadi; yozilmagan eski yozuv uchun amallar jurnalidagi vaqt olinadi */
+  HODISALAR: {zarar: "number", chora: "string", yopilganVaqt: "string"},
+  XAVFSIZLIK_HODISALARI: {zarar: "number", izoh: "string", yopilganVaqt: "string"},
   XIZMAT_ISHLARI: {narx: "number"},
   /* muallifLogin — yozuvni kiritgan xodim logini (server sessiyadan yozadi, keyin o'zgarmaydi) */
   XARAJATLAR: {manbaId: "string", muallifLogin: "string"},
@@ -1164,31 +1168,31 @@ const HODISALAR = MAH ? [] : [
    tavsif: "Ko'rikda yerto'lada suv to'planib qolgani aniqlandi. Suv sathi 12 sm. Poydevorga ta'siri baholanadi, sug'urta kompaniyasiga xabarnoma tayyorlanadi.",
    masul: "Karimova Feruza", bolim: "Aktivlar nazorati bo'limi", iibAriza: null},
   {id: "GH-2026-00213", kod: "#GH-2026-00213", obyektId: "AK-2025/1187", rang: "#4338CA",
-   hodisa: "Inventar ro'yxatida kamomad", vaqt: vaqtNisbiy(0, 8, 52), jiddiylik: "yuqori", ustun: "yangi", holat: "Yangi", manba: "korik",
+   hodisa: "Inventar ro'yxatida kamomad", vaqt: vaqtNisbiy(0, 8, 52), jiddiylik: "yuqori", ustun: "tekshirilmoqda", holat: "Tekshirilmoqda", manba: "korik",
    tavsif: "Rejali ko'rikda inventar ro'yxatidagi 2 ta to'quv dastgohi joyida topilmadi. Xavfsizlik xizmati politsiyaga ariza berdi.",
    masul: "Karimova Feruza", bolim: "Aktivlar nazorati bo'limi", iibAriza: {raqam: "IIB-SA-2026/3312", sana: nisbiy(0)}},
   {id: "GH-2026-00211", kod: "#GH-2026-00211", obyektId: "AK-2025/0934", rang: "#F2994A",
-   hodisa: "Sug'urta polisi muddati o'tgan", vaqt: vaqtNisbiy(-1, 13, 48), jiddiylik: "o'rta", ustun: "tekshirilmoqda", holat: "Tekshirilmoqda", manba: "qo'lda",
+   hodisa: "Sug'urta polisi muddati o'tgan", vaqt: vaqtNisbiy(-17, 13, 48), jiddiylik: "o'rta", ustun: "tekshirilmoqda", holat: "Tekshirilmoqda", manba: "qo'lda",
    tavsif: "Mulk sug'urtasi polisi tugagan, yangi polis rasmiylashtirilmagan. Ijaradagi obyekt qamrovsiz qolgan.",
    masul: "Tosheva Barno", bolim: "Muammoli aktivlar bo'limi", iibAriza: null},
   {id: "GH-2026-00209", kod: "#GH-2026-00209", obyektId: "AK-2026/5512", rang: "#8B5CF6",
-   hodisa: "GPS-treker saqlash maydonidan chiqishni qayd etdi", vaqt: vaqtNisbiy(-2, 22, 33), jiddiylik: "yuqori", ustun: "bartaraf", holat: "Bartaraf etilmoqda", manba: "qurilma",
+   hodisa: "GPS-treker saqlash maydonidan chiqishni qayd etdi", vaqt: vaqtNisbiy(-8, 22, 33), jiddiylik: "yuqori", ustun: "bartaraf", holat: "Bartaraf etilmoqda", manba: "qurilma",
    tavsif: "Avtomobil 23:10 da maydon chegarasidan 40 metr chiqdi va qaytdi. Qo'riqchi evakuator haydovchisi manevr qilganini tasdiqladi. Video yozuv so'raldi.",
    masul: "Sattorov Javohir", bolim: "Xavfsizlik xizmati", iibAriza: null},
   {id: "GH-2026-00206", kod: "#GH-2026-00206", obyektId: "AK-2023/0755", rang: "#F2C230",
-   hodisa: "Hududga ruxsatsiz kirish", vaqt: vaqtNisbiy(-3, 3, 5), jiddiylik: "yuqori", ustun: "tekshirilmoqda", holat: "Tekshirilmoqda", manba: "qo'lda",
+   hodisa: "Hududga ruxsatsiz kirish", vaqt: vaqtNisbiy(-24, 3, 5), jiddiylik: "yuqori", ustun: "tekshirilmoqda", holat: "Tekshirilmoqda", manba: "qo'lda",
    tavsif: "Qo'riqchi tungi soat 03:05 da hududda ikki kishini ko'rdi va xabar berdi. Mobil guruh 18 daqiqada yetib keldi, shaxslar ketib qolgan. Darvoza qulfi kesilgan.",
-   masul: "Sattorov Javohir", bolim: "Xavfsizlik xizmati", iibAriza: {raqam: "IIB-TV-2026/1905", sana: nisbiy(-3)}},
+   masul: "Sattorov Javohir", bolim: "Xavfsizlik xizmati", iibAriza: {raqam: "IIB-TV-2026/1905", sana: nisbiy(-24)}},
   {id: "GH-2026-00204", kod: "#GH-2026-00204", obyektId: "AK-2026/4471", rang: "#F2C230",
-   hodisa: "Gaz bo'yicha avvalgi egasidan qolgan qarz", vaqt: vaqtNisbiy(-4, 11, 17), jiddiylik: "past", ustun: "bartaraf", holat: "Bartaraf etilmoqda", manba: "qo'lda",
+   hodisa: "Gaz bo'yicha avvalgi egasidan qolgan qarz", vaqt: vaqtNisbiy(-38, 11, 17), jiddiylik: "past", ustun: "bartaraf", holat: "Bartaraf etilmoqda", manba: "qo'lda",
    tavsif: "Gaz shaxsiy hisobida 1,9 mln so'm qarz qolgan. Qayta ulash uchun qarz yo'qligi haqidagi ma'lumotnoma kerak. Masala yurist bilan hal qilinmoqda.",
    masul: "Ismoilova Nilufar", bolim: "Muammoli aktivlar bo'limi", iibAriza: null},
   {id: "GH-2026-00198", kod: "#GH-2026-00198", obyektId: "AK-2025/3308", rang: "#059669",
-   hodisa: "Xaridorga kalitlar topshirildi", vaqt: vaqtNisbiy(-6, 16, 23), jiddiylik: "past", ustun: "yopildi", holat: "Yopildi", manba: "qo'lda",
+   hodisa: "Xaridorga kalitlar topshirildi", vaqt: vaqtNisbiy(-16, 16, 23), jiddiylik: "past", ustun: "yopildi", holat: "Yopildi", manba: "qo'lda", yopilganVaqt: vaqtNisbiy(-16, 17, 5),
    tavsif: "Bo'lib to'lash shartnomasi bo'yicha xonadon xaridorga topshirildi. Hisoblagich ko'rsatkichlari dalolatnomaga yozildi.",
    masul: "Ismoilova Nilufar", bolim: "Muammoli aktivlar bo'limi", iibAriza: null},
   {id: "GH-2026-00195", kod: "#GH-2026-00195", obyektId: "AK-2026/2210", rang: "#059669",
-   hodisa: "Birlamchi ko'rik o'tkazildi", vaqt: vaqtNisbiy(-8, 10, 8), jiddiylik: "past", ustun: "yopildi", holat: "Yopildi", manba: "korik",
+   hodisa: "Birlamchi ko'rik o'tkazildi", vaqt: vaqtNisbiy(-20, 10, 8), jiddiylik: "past", ustun: "yopildi", holat: "Yopildi", manba: "korik", yopilganVaqt: vaqtNisbiy(-20, 12, 40),
    tavsif: "Xonadon yashash holatida, ta'mir talab qilinmaydi. Dalolatnoma imzolandi, keyingi ko'rik 90 kundan keyin.",
    masul: "Karimova Feruza", bolim: "Aktivlar nazorati bo'limi", iibAriza: null}
 ];

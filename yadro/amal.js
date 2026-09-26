@@ -683,7 +683,7 @@ window.MKB_BILDIRISH_DOIRA = (function(){
             } else if (n.tur === "vazifa" && !V.has(n.id)){
               await MKBapi.yangi("MENING_VAZIFALARIM", {id: n.id, nom: n.sarlavha, tur: qoidaNomi(n.qoidaId), obyektId: n.obyektId || null,
                 kod: n.obyektId || "", qoidaId: n.qoidaId || null, sana: n.sana || bugunMatn(), muddat: n.muddat || null,
-                ijrochi: null, rol: n.rol || null, muhimlik: n.muhimlik || "orta", bajarildi: false}, TIZIM);
+                ijrochi: n.ijrochi || null, rol: n.rol || null, muhimlik: n.muhimlik || "orta", bajarildi: false}, TIZIM);
               V.add(n.id); hisob.vazifa++;
             }
           }catch(_){ /* boshqa oynada yozilgan yoki server rad etgan — keyingisiga o'tiladi */ }

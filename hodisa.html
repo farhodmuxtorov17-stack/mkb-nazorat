@@ -123,9 +123,21 @@
   /* Chora yozuvlari qo'shiladi, o'chirilmaydi: har bir qator kim va qachon yozganini saqlaydi */
   const choraQosh = matn => [String(h[xulosaMaydon] || "").trim(), vaqtBelgi() + ": " + matn].filter(Boolean).join("\n");
 
+  /* Yopilish vaqti yozuvning o'zida saqlanadi: haftalik xulosa va kengash hisoboti yopilgan hodisani shu vaqt bo'yicha
+     haftaga qo'yadi (hisobot-davr.js). Qayta ochilganda o'chiriladi, keyingi yopilishda yangisi yoziladi.
+     Ma'lumot modeli bu maydonni hali qabul qilmasa, u yuborilmaydi: aks holda hodisani yopib bo'lmay qoladi */
+  const yopilishYoziladi = () => {
+    const q = ((D.QOSHIMCHA_MAYDONLAR || {})[kol]) || {};
+    return "yopilganVaqt" in q || (D[kol] || []).some(x => x && "yopilganVaqt" in x);
+  };
   function holatPatch(kalit){
-    if (kol === "XAVFSIZLIK_HODISALARI") return {holat: kalit === "yangi" ? "ochiq" : kalit};
-    return {ustun: kalit === "tekshiruvda" ? "tekshirilmoqda" : kalit, holat: NOM[kalit]};
+    const p = kol === "XAVFSIZLIK_HODISALARI" ? {holat: kalit === "yangi" ? "ochiq" : kalit}
+      : {ustun: kalit === "tekshiruvda" ? "tekshirilmoqda" : kalit, holat: NOM[kalit]};
+    if (yopilishYoziladi()){
+      if (kalit === "yopildi") p.yopilganVaqt = D.sanaYoz(D.bugun()) + " " + MKB.soat();
+      else if (h.yopilganVaqt) p.yopilganVaqt = null;
+    }
+    return p;
   }
 
   function shapka(){
@@ -157,6 +169,7 @@
     q.push(["Obyekt", obyekt ? '<a href="obyekt-himoya.html?id=' + encodeURIComponent(obyekt.id) + '">' + esc(obyekt.qisqa || obyekt.nom) + '</a> <span class="kod-mono" data-tarjimasiz>' + esc(obyekt.id) + "</span>" : esc(h.obyektId || "—")]);
     q.push(["Manzil", esc(obyekt ? (obyekt.manzil || obyekt.hududToliq || "—") : (h.joy || "—"))]);
     q.push(["Qayd etilgan", '<span data-tarjimasiz>' + esc(h.vaqt || h.sana || "—") + "</span>"]);
+    if (holati() === "yopildi" && h.yopilganVaqt) q.push([(window.mkbIkkiTil || (s => s))("Yopilish vaqti", "Время закрытия"), '<span data-tarjimasiz>' + esc(h.yopilganVaqt) + "</span>"]);
     q.push(["Manba", kol === "XAVFSIZLIK_HODISALARI" ? "<span>Qurilma signali</span>" : "<span>" + ({korik: "Ko'rik", qurilma: "Qurilma signali"}[h.manba] || "Qo'lda qayd etilgan") + "</span>"]);
     if (qurilma) q.push(["Qurilma", '<a href="qurilma.html?id=' + encodeURIComponent(qurilma.id) + '">' + esc(qurilma.turNomi) + '</a> <span class="kod-mono" data-tarjimasiz>' + esc(qurilma.id) + "</span>"]);
     if (nuqta) q.push(["Kirish nuqtasi", esc(nuqta.nom)]);
@@ -208,9 +221,12 @@
     const qiymat = (k, v) => v == null ? "—" : typeof v === "object" ? (v.raqam || JSON.stringify(v)) : (k === "chora" || k === "izoh") ? String(v).split("\n").pop() : (NOM[XH_MOS[v] || GH_MOS[v]] || String(v));
     const qatorlar = r.map(a => {
       const oz = a.ozgarish || {};
-      const bandlar = Object.keys(oz).filter(k => k !== "ustun" || !oz.holat).map(k => (MAYDON_NOMI[k] || k) + ": " + qiymat(k, oz[k].yangi));
+      /* Yopilish vaqti qatorning o'z vaqtida ko'rinadi: bandlarda takrorlanmaydi */
+      /* Maydon nomi va holat lug'atdan o'giriladi; chora matni, mas'ul va raqam o'z holicha qoladi */
+      const bandlar = Object.keys(oz).filter(k => (k !== "ustun" || !oz.holat) && k !== "yopilganVaqt").map(k => "<span>" + esc(MAYDON_NOMI[k] || k) + "</span>: <span" +
+        (k === "holat" || k === "ustun" ? "" : " data-tarjimasiz") + ">" + esc(qiymat(k, oz[k].yangi)) + "</span>");
       return '<div class="qator"><span class="belgi">' + ik(a.turi === "yaratish" ? "qoshish" : "tahrir") + '</span><span class="matn"><b>' +
-        esc(a.turi === "yaratish" ? "Hodisa qayd etildi" : bandlar.join(" · ") || "O'zgartirildi") + "</b><span>" + esc(a.kim || "") + '</span></span><span class="ong"><span class="vaqt" data-tarjimasiz>' + esc(a.vaqt || "") + "</span></span></div>";
+        (a.turi === "yaratish" ? "<span>Hodisa qayd etildi</span>" : bandlar.join(" · ") || "<span>O'zgartirildi</span>") + "</b><span>" + esc(a.kim || "") + '</span></span><span class="ong"><span class="vaqt" data-tarjimasiz>' + esc(a.vaqt || "") + "</span></span></div>";
     });
     qatorlar.push('<div class="qator"><span class="belgi mint">' + ik("signal") + '</span><span class="matn"><b>Hodisa qayd etildi</b><span>' +
       esc(kol === "XAVFSIZLIK_HODISALARI" ? "Qurilma signali" : (h.masul || "")) + '</span></span><span class="ong"><span class="vaqt" data-tarjimasiz>' + esc(h.vaqt || "") + "</span></span></div>");

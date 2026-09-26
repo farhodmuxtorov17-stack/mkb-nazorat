@@ -45,7 +45,7 @@ window.MKB_SAYOHATLAR = {
   "rahbariyat-tanishuv": {
     rol: ["rahbariyat"], birinchi: true, rejim: "sayohat",
     sarlavha: T("Rahbariyat paneli bilan tanishuv", "Знакомство с панелью руководства"),
-    tavsif: T("Bugungi qarorlar, muddatlar va kengashga hisobot. 2 daqiqa", "Решения на сегодня, сроки и отчёт для правления. 2 минуты"),
+    tavsif: T("Bugungi qarorlar, muddatlar va kengashga hisobot. 2 daqiqa", "Решения на сегодня, сроки и отчёт для наблюдательного совета. 2 минуты"),
     qadamlar: [
       Q("panel.html", S("bugun"), "Bugun", "Сегодня", "Kunni shu blokdan boshlang. To'rt qatorda qaroringizni kutayotgan so'rovlar, kechadan beri muddati o'tgan ishlar, qiymati pasaygan obyektlar va eng katta xavflar turadi. Qatorni bossangiz, ro'yxat ochiladi.",
         "Начинайте день с этого блока. В четырёх строках — запросы, ждущие вашего решения, дела, просроченные со вчера, объекты с упавшей стоимостью и крупнейшие риски. Нажмите на строку, чтобы открыть список."),
@@ -168,7 +168,7 @@ window.MKB_SAYOHATLAR = {
       Q("obyektlar.html", ".bolim-tablar", "Bo'lim tasmasi", "Лента раздела", "Yon panelda har bir rolga ko'pi bilan olti band qoldi. Sahifa tepasidagi tasma esa shu bo'limning hamma sahifasini ko'rsatadi: reyestr, muddatlar, xarita, qabul, rasmiylashtirish, arxiv.",
         "В боковом меню у каждой роли осталось не больше шести пунктов. А лента вверху страницы показывает все страницы раздела: реестр, сроки, карта, приём, оформление, архив."),
       Q("obyektlar.html", "#global-izlash-qutisi", "Ctrl+K qidiruvi", "Поиск Ctrl+K", "Ctrl+K yoki / bosing va obyekt raqamini, sahifa nomini yoki amalni yozing, masalan «zaxira» yoki AK-2026/3775. Enter birinchi natijani ochadi.",
-        "Нажмите Ctrl+K или / и введите номер объекта, название страницы или действие, например «zaxira» или AK-2026/3775. Enter откроет первый результат."),
+        "Нажмите Ctrl+K или / и введите номер объекта, название страницы или действие, например «резерв» или AK-2026/3775. Enter откроет первый результат."),
       Q("obyektlar.html", "#izlash-tugma", "Telefonda qidiruv", "Поиск на телефоне", "Tor ekranda qidiruv maydoni shu tugma ostida turadi. Bosing va yozishni boshlang.",
         "На узком экране поле поиска спрятано под этой кнопкой. Нажмите и начните вводить."),
       Q("obyektlar.html", S("jadval"), "Reyestrdan kartochkaga", "Из реестра в карточку", "Qatorni bossangiz obyekt kartochkasi ochiladi. Moliya, Hujjatlar, Ko'riklar, Kommunal, Himoya va Sotuv sahifalari shu kartochkaning tablarida.",

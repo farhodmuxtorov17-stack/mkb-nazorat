@@ -165,6 +165,10 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
             <div class="matn"><b>Bildirishnomalar</b><span id="bl-matn">—</span></div>
             <a class="tugma tugma-oq" href="bildirishnomalar.html"><svg class="ic"><use href="#ik-qongiroq"/></svg><span>Bildirishnomalarni ochish</span></a>
           </div>
+          <div class="sozlama-qator" id="xk-qator">
+            <div class="matn"><b>Haftalik xulosani yuborish</b><span id="xk-matn">—</span></div>
+            <a class="tugma tugma-oq" href="integratsiyalar.html#t-smtp" id="xk-havola"><svg class="ic"><use href="#ik-xat"/></svg><span>Ulash shartlari</span></a>
+          </div>
           <div class="sozlama-qator" data-sayohat="sayohatlar">
             <div class="matn"><b>Tanishuv sayohatlari</b><span id="sy-matn">—</span></div>
             <button type="button" class="tugma tugma-oq" id="sy-tikla" data-yozadi><svg class="ic"><use href="#ik-yangilash"/></svg><span>Qayta ko&#39;rsatish</span></button>
@@ -279,6 +283,21 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
 <script src="malumot-kirish.js?v=26092200"></script>
 <script src="malumot-indeks.js?v=26092200"></script>
 <script src="tarjima.js?v=26092200"></script>
+<script>
+/* Shu sahifaning yangi matnlari ruscha. Umumiy lug'atda kalit bo'lsa, o'sha ustun turadi. */
+(function(){
+  const L = window.MKB_LUGAT = window.MKB_LUGAT || {};
+  const Y = {
+    "Haftalik xulosani yuborish": "Рассылка итогов недели",
+    "Ulash shartlari": "Условия подключения",
+    "E-pochta (SMTP)": "Электронная почта (SMTP)",
+    "Telegram bot": "Telegram-бот",
+    "Xulosa havolasi har hafta shu kanallar orqali ketadi.": "Ссылка на итоги недели еженедельно уходит по этим каналам.",
+    "Ulash uchun AT departamenti pochta serveri manzili, jo'natuvchi quti va Telegram bot tokenini beradi. Hozircha havola haftalik xulosa sahifasidan nusxalanadi.": "Для подключения департамент ИТ предоставляет адрес почтового сервера, ящик отправителя и токен Telegram-бота. Пока ссылку копируют со страницы итогов недели."
+  };
+  Object.keys(Y).forEach(k => { if (L[k] == null) L[k] = Y[k]; });
+})();
+</script>
 <script src="yadro/ikonlar.js?v=26092200"></script>
 <script src="yadro/daraxt.js?v=26092200"></script>
 <script src="yadro/chizma.js?v=26092200"></script>
@@ -425,6 +444,22 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
     tarjimaQil($("bl-matn"));
   }
   bildirishChiz();
+
+  /* Tashqi xabar kanallari: haftalik xulosadagi "Yuborish" qatori bilan bir manba (INTEGRATSIYALAR to'plami).
+     smtp va telegram yozuvi bo'lmasa, kanal ulanmagan */
+  let INT = [];
+  try { INT = await MKBapi.royxat("INTEGRATSIYALAR"); } catch (_) { INT = []; }
+  function kanalChiz(){
+    const h = id => BQ.tizimHolati(id, INT, D.INTEGRATSIYA_HOLATLARI || []);
+    const k = [["E-pochta (SMTP)", h("smtp")], ["Telegram bot", h("telegram")]];
+    const ulangan = k.filter(([, x]) => x.kalit === "ulangan").length;
+    $("xk-matn").innerHTML = k.map(([nom, x]) => "<span>" + esc(nom) + "</span>: <span>" + esc(x.nom) + "</span>").join(". ") + ". " +
+      (ulangan === k.length ? "<span>Xulosa havolasi har hafta shu kanallar orqali ketadi.</span>"
+        : "<span>Ulash uchun AT departamenti pochta serveri manzili, jo&#39;natuvchi quti va Telegram bot tokenini beradi. Hozircha havola haftalik xulosa sahifasidan nusxalanadi.</span>");
+    if (typeof sahifaRuxsatlimi === "function" && !sahifaRuxsatlimi("integratsiyalar.html")) $("xk-havola").hidden = true;
+    tarjimaQil($("xk-qator"));
+  }
+  kanalChiz();
 
   /* Sayohatlar: rolga mos sayohatlar va ularning holati; qayta ko'rsatish holatni tozalaydi */
   const rolSayohatlari = () => Object.keys(window.MKB_SAYOHATLAR || {}).filter(id => {

@@ -6,9 +6,11 @@
      2. Ommaviy MQTT sinov brokeri (test.mosquitto.org, zaxira:
         broker.emqx.io) shifrlangan WebSocket orqali. Mavzu tasodifiy,
         xabarda bank ma'lumoti yo'q. MQTT 3.1.1 mijozi shu faylda.
-     3. Kamera kadri: faqat egasi hammaga e'lon qilgan va joylashtirishga
-        ruxsat bergan kadr yoki oqim (davlat idorasi kamerasi, YouTube).
-        Ro'yxat assets/jonli/kameralar.json da.
+     3. Kamera kadrini olish (faqat Integratsiyalar sahifasida, texnik
+        tekshiruv): jamoat mulki bo'lgan JPEG kadr, manbasi
+        assets/jonli/kameralar.json da. Monitoring markazida ochiq kamera
+        ko'rsatilmaydi: O'zbekistonda joylashtirishga ruxsat berilgan jonli
+        kamera topilmadi (assets/jonli/MANBA.md).
    Internet yopiq bo'lsa har blok 8 soniyadan keyin halol xabar beradi,
    sahifaning qolgan qismi ishlayveradi.
 
@@ -17,8 +19,9 @@
 
    Sahifa uchun:
      MKB.jonli.obHavoBlok(el, {lat, lng, quyoshli, obyektId, korik})
-     MKB.jonli.namunaKarta(el)       — monitoring markazi
-     MKB.jonli.sinovQurilma(el)      — qurilmalar ro'yxati
+     MKB.jonli.namunaKarta(el)       — monitoring markazi, «Jonli ulanish namunalari»
+     MKB.jonli.kadrTekshir()         — integratsiyalar: kadr keldimi, hajmi, olingan vaqti
+     MKB.jonli.kanal                 — MQTT sinov kanali (monitoring markazi va integratsiyalar)
      MKB.jonli.quyoshIqlimi(lat, lng) — NASA POWER oylik nurlanishi va panel hisobi
                                         (obHavoBlok quyoshli qurilmada chaqiradi)
      MKB.jonli.obHavo([{lat, lng}])   — Open-Meteo: joriy holat va 24 soatlik prognoz (obHavoBlok ichida)
@@ -151,6 +154,18 @@
 
   /* ---------- 2. Brauzer qismi ---------- */
   const MKB = G.MKB, esc = MKB.esc;
+  /* Shu fayl chizadigan yangi matnlarning ruscha muqobili (tarjima.js dagi lug'atga qo'shiladi) */
+  Object.assign(G.MKB_LUGAT = G.MKB_LUGAT || {}, {
+    "Jonli ulanish namunalari": "Примеры живого подключения",
+    "14 hudud ob-havosi va quyoshli qurilmalar zaryadi, MQTT sinov kanalida qurilma xabari.": "Погода в 14 областях и заряд устройств на солнечных панелях, сообщение устройства в тестовом канале MQTT.",
+    "Tashqi ma'lumot platformaga qanday kelishini bank obyektiga tegmasdan ko'rsatadi. Har blok internetga faqat tugma bosilganda chiqadi.": "Показывает, как внешние данные поступают в платформу, не затрагивая объекты банка. Каждый блок обращается к интернету только после нажатия кнопки.",
+    "Harorat, °C": "Температура, °C",
+    "Bulut, %": "Облачность, %",
+    "Quyosh, Vt/m²": "Солнце, Вт/м²",
+    "Zaryad oladi": "Заряжается",
+    "Navbatdan tashqari ko'rik asosi:": "Основание для внепланового осмотра:",
+    "Litiy akkumulyator 0 °C dan past zaryad olmaydi: BMS zaryadni to'xtatadi. Harorat havo bo'yicha, akkumulyator qutisidagi haroratni qurilmaning o'z datchigi beradi.": "Литиевый аккумулятор не заряжается ниже 0 °C: BMS останавливает заряд. Температура указана по воздуху, температуру в корпусе аккумулятора передаёт датчик самого устройства.",
+  });
   const KUTISH = 8000;
   const OFLAYN = "Internet yo'q: jonli namuna ko'rsatilmaydi";
   const OFLAYN_IZOH = "Bank tarmog'i tashqi manzillarni yopgan bo'lsa ham shu xabar chiqadi. Sahifaning qolgan qismi ishlayveradi.";
@@ -190,20 +205,16 @@
       ".jl-kuzatuv b{font-size:17px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums}",
       ".jl-xulosa{margin-top:12px;font-size:13.5px;line-height:1.6;color:var(--matn-2)}",
       ".jl-xulosa .chip{margin-right:6px}",
-      ".jl-kadr{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--qora-yuza);margin-top:10px}",
-      ".jl-kadr iframe{position:absolute;inset:0;width:100%;height:100%;border:0}",
-      ".jl-kadr img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}",
-      ".jl-kadr .jl-kadr-belgi{position:absolute;left:10px;top:10px;max-width:calc(100% - 20px);white-space:normal;height:auto;line-height:1.35;padding-top:4px;padding-bottom:4px}",
-      ".jl-kam-tor{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:10px}",
-      ".jl-kam-tor .jl-kadr{margin-top:0}",
-      ".jl-kam-matn{display:flex;flex-direction:column;gap:4px;margin-top:8px;font-size:13px;line-height:1.5;color:var(--matn-3)}",
-      ".jl-kam-matn b{color:var(--matn-2);font-weight:500;font-size:14px}",
-      ".jl-rad{margin:8px 0 0;padding:0;list-style:none}",
-      ".jl-rad-yig summary{cursor:pointer;padding:10px 0}",
-      ".jl-qatorlar .qator .matn > span{display:block;-webkit-line-clamp:unset;line-clamp:unset;overflow:visible}",
-      ".jl-rad li{padding:10px 0;font-size:13px;line-height:1.55;color:var(--matn-3);box-shadow:inset 0 -1px 0 var(--chiziq-2)}",
-      ".jl-rad li:last-child{box-shadow:none}",
-      ".jl-rad b{color:var(--matn-2);font-weight:500}",
+      /* Ob-havo jadvali: 14 qator bir ekranga sig'ishi uchun qator balandligi kichik, shrift o'zgarmaydi */
+      ".jl-jadval-orash{margin:10px -4px 0}",
+      ".jl-jadval{max-width:820px}",
+      ".jl-jadval th:first-child,.jl-jadval td:first-child{padding-left:4px}",
+      ".jl-jadval th:last-child,.jl-jadval td:last-child{padding-right:4px}",
+      ".jl-jadval td{height:44px}",
+      /* Telefonda besh ustun kartaga sig'adi: hudud nomi qatorga o'raladi, chekinish kichrayadi, shrift o'zgarmaydi */
+      "@media (max-width:560px){.jl-jadval-orash{margin:10px -8px 0}.jl-jadval th,.jl-jadval td,.jl-jadval th:first-child,.jl-jadval td:first-child,.jl-jadval th:last-child,.jl-jadval td:last-child{padding-left:4px;padding-right:4px}" +
+        ".jl-jadval th{white-space:normal;line-height:1.3;vertical-align:bottom}" +
+        ".jl-jadval td:first-child{white-space:normal;line-height:1.3;padding-top:6px;padding-bottom:6px}.jl-jadval .chip{padding:0 9px}}",
     ].join("\n");
     document.head.appendChild(s);
   }
@@ -452,98 +463,55 @@
       (kanal.holat() === "ulangan" ? " · <span>ulangan broker:</span> " + tj(b.nom) : "");
   }
 
-  /* ---------- Qurilmalar ro'yxati: sinov qurilmasi ---------- */
-  function sinovQurilma(el){
-    uslub();
-    if (!el) return;
-    let ochiq = false, oxirgi = null, kutilmoqda = {};
-    el.innerHTML =
-      '<div class="karta-bosh"><h2 id="jl-sq-s" data-ikonka="signal">Sinov qurilmasi</h2><span class="chip chip-kichik chip-sariq">' + ikon("info") + "<span>Ommaviy namuna, bank obyekti emas</span></span>" +
-        '<button type="button" class="tugma tugma-oq tugma-kichik" data-jl-och aria-expanded="false" aria-controls="jl-sq-tana" style="margin-left:auto">' + ikon("past") + "<span>Ko'rsatish</span></button></div>" +
-      '<p class="jl-izoh" data-jl-yopiq>Virtual eshik datchigi ommaviy MQTT sinov kanaliga xabar yuboradi va uni qaytarib oladi. Haqiqiy qurilma shlyuz orqali platformaga xuddi shu yo\'l bilan xabar beradi.</p>' +
-      '<div id="jl-sq-tana" hidden>' +
-        '<p class="jl-izoh">Xabar platformaning hodisa sxemasida: qurilma ID, tur, hodisa, jiddiylik, batareya va yuborilgan vaqt. Obyekt maydoni bo\'sh: ommaviy brokerni istalgan kishi o\'qiy oladi, shuning uchun bank ma\'lumoti yuborilmaydi.</p>' +
-        '<p class="jl-manba" data-jl-kanal></p>' +
-        '<div class="jl-amallar"><button type="button" class="tugma tugma-asosiy tugma-kichik" data-jl-yubor="eshik">' + ikon("eshik") + "<span>Eshik ochildi xabarini yuborish</span></button>" +
-          '<button type="button" class="tugma tugma-oq tugma-kichik" data-jl-yubor="batareya">' + ikon("batareya") + "<span>Batareya past xabarini yuborish</span></button></div>" +
-        '<div data-jl-natija aria-live="polite"></div>' +
-        '<p class="jl-manba"><span>Qabul qiluvchi tomonni ko\'rish uchun Monitoring markazini yangi oynada oching, «Ulanish namunasi» kartasida «Kanalga ulanish» ni bosing va xabarni shu yerdan yuboring: u ikkala oynada bir xil kechikish bilan chiqadi.</span> <a href="himoya.html#jl-namuna" target="_blank" rel="noopener">Monitoring markazi</a></p>' +
-      "</div>";
-    const $ = s => el.querySelector(s);
-    const natija = $("[data-jl-natija]");
-    const kanalYoz = () => { $("[data-jl-kanal]").innerHTML = kanalMatni(); tarjima($("[data-jl-kanal]")); };
-    kanal.tingla((tur, x) => {
-      if (tur !== "xabar" || !kutilmoqda[x.voqea.yuborildi]) return;
-      delete kutilmoqda[x.voqea.yuborildi];
-      oxirgi = x;
-      natija.innerHTML = xabarQatori(x) + '<p class="jl-manba"><span>Yuborildi</span> ' + tj(vaqtMatn(x.voqea.yuborildi)) + ", <span>brokerdan qaytdi</span> " + tj(son(x.kechikish) + " ms") + " <span>dan keyin.</span></p>";
-      tarjima(natija);
-    });
-    $("[data-jl-och]").addEventListener("click", e => {
-      ochiq = !ochiq;
-      const t = e.currentTarget;
-      t.setAttribute("aria-expanded", String(ochiq));
-      t.innerHTML = ikon(ochiq ? "yuqori" : "past") + "<span>" + (ochiq ? "Yashirish" : "Ko'rsatish") + "</span>";
-      $("#jl-sq-tana").hidden = !ochiq; $("[data-jl-yopiq]").hidden = ochiq;
-      if (ochiq) kanalYoz();
-      tarjima(el);
-    });
-    el.querySelectorAll("[data-jl-yubor]").forEach(b => b.addEventListener("click", async () => {
-      const ish = async () => {
-        await kanal.ulan();
-        kanalYoz();
-        const v = kanal.nashr(SINOV_VOQEALAR[b.dataset.jlYubor]);
-        kutilmoqda[v.yuborildi] = true;
-        /* Xabar 8 soniyada qaytmasa foydalanuvchi bo'sh blok qarshisida qolmaydi */
-        setTimeout(() => {
-          if (!kutilmoqda[v.yuborildi]) return;
-          delete kutilmoqda[v.yuborildi];
-          natija.innerHTML = '<div class="jl-xato" role="status">' + ikon("info") + "<div><b>Xabar brokerdan 8 soniyada qaytmadi</b>" +
-            "<span>Ommaviy broker xabarni yo'qotgan yoki tarmoq sekin. Qayta yuboring.</span></div></div>";
-          tarjima(natija);
-        }, KUTISH);
-        await new Promise(r => setTimeout(r, 50));
-      };
-      try { await (MKB.band ? MKB.band(b, ish) : ish()); }
-      catch (e) { natija.innerHTML = xatoHTML(e, "MQTT"); tarjima(natija); }
-    }));
-    tarjima(el);
-    if (location.hash === "#jl-sinov"){ $("[data-jl-och]").click(); el.scrollIntoView(); }
-  }
-
-  /* ---------- Monitoring markazi: yig'ilgan «Ulanish namunasi» kartasi ---------- */
+  /* ---------- Kamera kadrini olish: texnik tekshiruv (Integratsiyalar sahifasi) ----------
+     Monitoring markazida ochiq kamera ko'rsatilmaydi: O'zbekistonda egasi saytga joylashtirishga ruxsat
+     bergan jonli kamera topilmadi (assets/jonli/MANBA.md). Bu yerda faqat kanal tekshiriladi: jamoat
+     mulki bo'lgan bitta JPEG kadr so'raladi, hajmi, o'lchami va Last-Modified bo'yicha olingan vaqti o'qiladi.
+     Kadr ekranga chiqarilmaydi. */
   async function kameralarRoyxati(){
     const V = G.MKB_VERSIYA ? "?v=" + G.MKB_VERSIYA : "";
     const r = await fetch("assets/jonli/kameralar.json" + V, {cache: "no-cache"});
     if (!r.ok) throw xato("javob", r.status);
     return r.json();
   }
-  /* Kamera embed havolasi faqat ro'yxatdagi ikki ko'rinishdan yasaladi: begona manzil qo'yib bo'lmaydi */
-  function embedManzil(k){
-    if (k.tur === "youtube" && /^[A-Za-z0-9_-]{11}$/.test(k.videoId || "")) return "https://www.youtube-nocookie.com/embed/" + k.videoId + "?autoplay=1&mute=1&rel=0&modestbranding=1";
-    if (k.tur === "youtube-kanal" && /^UC[A-Za-z0-9_-]{22}$/.test(k.kanalId || "")) return "https://www.youtube-nocookie.com/embed/live_stream?channel=" + k.kanalId + "&autoplay=1&mute=1";
-    if (k.tur === "rasm") return rasmManzil(k);
-    return null;
-  }
-  /* Davlat idorasi e'lon qiladigan kamera kadri (JPEG, bir necha daqiqada yangilanadi).
-     Faqat shu xostlardan: kadr jamoat mulki, CORS ochiq, shuning uchun kadr olingan vaqtni o'qish mumkin */
+  /* Kadr faqat shu xostlardan olinadi: jamoat mulki, CORS ochiq, shuning uchun sarlavhalarni o'qish mumkin */
   const RASM_XOSTLAR = ["https://volcanoes.usgs.gov/"];
   function rasmManzil(k){
-    const u = String(k.rasm || "");
+    const u = String((k && k.rasm) || "");
     return RASM_XOSTLAR.some(x => u.indexOf(x) === 0) && /\.jpe?g$/i.test(u) && !/[?#"'<>\s]/.test(u) ? u : null;
   }
-  /* Kadr qachon olingan: Last-Modified sarlavhasidan. O'qib bo'lmasa null */
-  async function kadrVaqti(u){
+  const ESKI_DAQIQA = 30;
+  /* Natija: {manba, nom, havola, shartlar, http, tur, kb, en, boy, olingan: Date|null, daqiqa, eskirgan, ms} */
+  async function kadrTekshir(){
+    if (navigator.onLine === false) throw xato("tarmoq");
+    const R = await kameralarRoyxati();
+    const k = R.texnikTekshiruv || null, u = rasmManzil(k);
+    if (!u) throw xato("javob", "kameralar.json");
     const ctl = typeof AbortController === "function" ? new AbortController() : null;
     const t = setTimeout(() => { if (ctl) ctl.abort(); }, KUTISH);
+    const bosh = Date.now();
+    let r, blob;
     try {
-      const r = await fetch(u, {method: "HEAD", signal: ctl ? ctl.signal : undefined, credentials: "omit", referrerPolicy: "no-referrer", cache: "no-store"});
-      const lm = r.ok ? r.headers.get("last-modified") : null;
-      const d = lm ? new Date(lm) : null;
-      return d && !isNaN(d) ? d : null;
-    } catch (_) { return null; } finally { clearTimeout(t); }
+      r = await fetch(u + "?t=" + Math.floor(bosh / 60000), {signal: ctl ? ctl.signal : undefined, credentials: "omit", referrerPolicy: "no-referrer", cache: "no-store"});
+      if (!r.ok) throw xato("javob", r.status);
+      blob = await r.blob();
+    } catch (e) { throw e && e.tur ? e : xato("tarmoq"); } finally { clearTimeout(t); }
+    const ms = Date.now() - bosh;
+    /* Kadr haqiqatan JPEG ekani: brauzer uni ochib o'lchamini beradi */
+    let en = null, boy = null;
+    try {
+      if (typeof createImageBitmap === "function"){ const b = await createImageBitmap(blob); en = b.width; boy = b.height; if (b.close) b.close(); }
+    } catch (_) { throw xato("javob", "JPEG"); }
+    const lm = r.headers.get("last-modified"), d = lm ? new Date(lm) : null;
+    const olingan = d && !isNaN(d) ? d : null;
+    const daqiqa = olingan ? Math.max(0, Math.round((Date.now() - olingan.getTime()) / 60000)) : null;
+    return {manba: k.egasi, nom: k.nom, havola: k.havola, shartlar: k.shartlar, http: r.status, tur: blob.type || r.headers.get("content-type") || "",
+      kb: Math.round(blob.size / 1024), en, boy, olingan, daqiqa, eskirgan: daqiqa != null && daqiqa > ESKI_DAQIQA, ms};
   }
 
+  /* ---------- Monitoring markazi: «Jonli ulanish namunalari» ----------
+     Sahifa oxirida, yig'ilgan holda (holati shu brauzerda eslab qolinadi). Ichida ikki blok:
+     14 hudud ob-havosi bitta jadvalda va MQTT sinov kanali. */
   function hududlar(){
     const D = G.MKB_DATA || {}, H = D.HUDUD_KODLAR || {};
     const doira = MKB.doira ? MKB.doira : x => x;
@@ -554,20 +522,43 @@
     return Object.keys(H).map(k => ({kod: k, nom: H[k].nom, lat: H[k].lat, lng: H[k].lng, quyosh: soni[k] || 0}));
   }
 
+  /* Hudud, harorat, bulut, quyosh nurlanishi va zaryad olish mumkinmi: har hudud bitta qator */
+  function obHavoJadval(H, r){
+    const toxtagan = H.reduce((s, h, i) => s + (r[i].harorat < 0 ? h.quyosh : 0), 0);
+    const jamiQ = H.reduce((s, h) => s + h.quyosh, 0);
+    const asoslar = H.map((h, i) => ({h, a: SOF.korikAsoslari(r[i].prognoz)})).filter(x => x.a.length);
+    const qator = (h, i) => {
+      const x = r[i], z = SOF.zaryad(x.harorat);
+      return "<tr><td>" + esc(h.nom) + "</td>" +
+        '<td class="son" data-tarjimasiz>' + son(x.harorat, 1) + "</td>" +
+        '<td class="son" data-tarjimasiz>' + son(x.bulut) + "</td>" +
+        '<td class="son" data-tarjimasiz>' + son(x.nur) + "</td>" +
+        "<td>" + (!z ? "—" : z.toxtatilgan ? '<span class="chip chip-kichik chip-sariq">Yo\'q</span>' : '<span class="chip chip-kichik chip-yashil">Ha</span>') + "</td></tr>";
+    };
+    return '<p class="jl-xulosa"><span>Quyoshli qurilmalar:</span> ' + tj(jamiQ) + ". <span>Zaryadi hozir to'xtagani:</span> " + tj(toxtagan) +
+        ". <span>Ma'lumot vaqti</span> " + tj(r[0].vaqt || "—") + ".</p>" +
+      '<div class="jadval-orash jl-jadval-orash"><table class="jadval jl-jadval">' +
+        '<thead><tr><th>Hudud</th><th class="son">Harorat, °C</th><th class="son">Bulut, %</th><th class="son">Quyosh, Vt/m²</th><th>Zaryad oladi</th></tr></thead>' +
+        "<tbody>" + H.map(qator).join("") + "</tbody></table></div>" +
+      (asoslar.length ? '<p class="jl-xulosa"><span>Navbatdan tashqari ko\'rik asosi:</span> ' +
+        asoslar.map(x => "<span>" + esc(x.h.nom) + "</span> " + x.a.map(asosChip).join("")).join(" ") + "</p>" : "") +
+      '<p class="jl-manba"><span>Litiy akkumulyator 0 °C dan past zaryad olmaydi: BMS zaryadni to\'xtatadi. Harorat havo bo\'yicha, akkumulyator qutisidagi haroratni qurilmaning o\'z datchigi beradi.</span> ' +
+        "<span>" + ((G.MKB_DATA || {}).MANBA === "mahalliy" ? "Qurilmalar soni: bank reyestri" : "Qurilmalar soni: bank reyestri (namoyish)") + "</span></p>";
+  }
+
   function namunaKarta(el){
     uslub();
     if (!el) return;
     const K = "mkb4-jonli-karta";
     let ochiq = !!xotira.ol(K) || location.hash === "#jl-namuna";
     el.innerHTML =
-      '<div class="karta-bosh"><h2 id="jl-s" data-ikonka="signal">Ulanish namunasi: ochiq manbalar</h2><span class="chip chip-kichik chip-sariq">' + ikon("info") + "<span>Ommaviy namuna, bank obyekti emas</span></span>" +
+      '<div class="karta-bosh"><h2 id="jl-s" data-ikonka="signal">Jonli ulanish namunalari</h2><span class="chip chip-kichik chip-sariq">' + ikon("info") + "<span>Ommaviy namuna, bank obyekti emas</span></span>" +
         '<button type="button" class="tugma tugma-oq tugma-kichik" data-jl-och aria-controls="jl-tana" style="margin-left:auto"></button></div>' +
-      '<p class="jl-izoh">Platformaga tashqi ma\'lumot qanday kelishini ochiq manbalarda ko\'rsatadi: hududlardagi ob-havo va quyosh, qurilma xabari va shahar kamerasi. Har blok tugma bosilgandagina internetga chiqadi.</p>' +
+      '<p class="jl-izoh" data-jl-yopiq>14 hudud ob-havosi va quyoshli qurilmalar zaryadi, MQTT sinov kanalida qurilma xabari.</p>' +
       '<div id="jl-tana">' +
+        '<p class="jl-izoh">Tashqi ma\'lumot platformaga qanday kelishini bank obyektiga tegmasdan ko\'rsatadi. Har blok internetga faqat tugma bosilganda chiqadi.</p>' +
         '<section class="jl-blok" aria-labelledby="jl-om-s"><div class="jl-blok-bosh"><h3 id="jl-om-s">' + ikon("quyosh") + "<span>Ob-havo va quyosh: 14 hudud markazi</span></h3>" +
           '<button type="button" class="tugma tugma-oq tugma-kichik" data-jl-om>' + ikon("yuklab") + "<span>Ma'lumotni olish</span></button></div>" +
-          '<p class="jl-izoh"><span>Quyoshli qurilmalar uchun ikki raqam muhim: harorat 0 °C dan pastmi (litiy akkumulyator zaryad olmaydi) va bugun panelga qancha quyosh tushadi.</span> ' +
-          '<span>Shamol zarbi</span> ' + tj("72 km/soat") + '<span>, yog\'in 24 soatda</span> ' + tj("20 mm") + ' <span>yoki harorat</span> ' + tj("−10 °C") + ' <span>chegarasidan o\'tsa, qatorda navbatdan tashqari ko\'rik asosi ko\'rinadi.</span></p>' +
           '<div data-jl-om-natija aria-live="polite"></div>' +
           '<p class="jl-manba"><span>Manba:</span> <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">' + OM_MANBA + "</a>. " +
           "<span>Bepul API tijoriy bo'lmagan foydalanish uchun, kuniga 10 000 so'rovgacha. Bank ishida pullik kalit yoki o'z serveri kerak. Javob 15 daqiqa keshda turadi.</span></p></section>" +
@@ -583,23 +574,19 @@
           "<span>(Eclipse Mosquitto loyihasi), faqat sinov uchun, kafolatsiz. Ulanmasa zaxira:</span> " +
           '<a href="https://www.emqx.com/en/mqtt/public-mqtt5-broker" target="_blank" rel="noopener noreferrer">broker.emqx.io</a>. ' +
           "<span>Bankda o'z brokeri TLS va har qurilmaga alohida login bilan ishlaydi.</span></p></section>" +
-        '<section class="jl-blok" aria-labelledby="jl-kam-s"><div class="jl-blok-bosh"><h3 id="jl-kam-s">' + ikon("kamera") + "<span>Kamera kadri: davlat idorasining ochiq kamerasi</span></h3>" +
-          '<button type="button" class="tugma tugma-oq tugma-kichik" data-jl-kam>' + ikon("korish") + "<span>Kadrlarni ko'rsatish</span></button></div>" +
-          '<p class="jl-izoh">4G kamera obyektdan hodisa paytida kadr yuboradi. Bu yerda xuddi shunday kadrni egasi hammaga e\'lon qilgan kameradan olamiz va qachon olinganini ko\'rsatamiz. Himoyasiz qolgan yoki qidiruvda topilgan kameralarga ulanish ruxsatsiz kirish hisoblanadi, ular ishlatilmaydi.</p>' +
-          '<div data-jl-kam-natija aria-live="polite"></div></section>' +
       "</div>";
     const $ = s => el.querySelector(s);
-    const ochT = $("[data-jl-och]"), tana = $("#jl-tana");
+    const ochT = $("[data-jl-och]"), tana = $("#jl-tana"), yopiqIzoh = $("[data-jl-yopiq]");
     const ochChiz = () => {
       ochT.setAttribute("aria-expanded", String(ochiq));
       ochT.innerHTML = ikon(ochiq ? "yuqori" : "past") + "<span>" + (ochiq ? "Yashirish" : "Ko'rsatish") + "</span>";
-      tana.hidden = !ochiq;
+      tana.hidden = !ochiq; yopiqIzoh.hidden = ochiq;
       tarjima(ochT);
     };
     ochT.addEventListener("click", () => { ochiq = !ochiq; xotira.yoz(K, ochiq ? 1 : 0); ochChiz(); });
     ochChiz();
 
-    /* 1. Ob-havo */
+    /* 1. Ob-havo: 14 hudud bitta so'rovda, bitta jadvalda */
     const omJoy = $("[data-jl-om-natija]");
     $("[data-jl-om]").addEventListener("click", async e => {
       const b = e.currentTarget;
@@ -608,24 +595,7 @@
         let r;
         try { r = await obHavo(H); }
         catch (x) { omJoy.innerHTML = xatoHTML(x, "Open-Meteo"); tarjima(omJoy); return; }
-        const toxtagan = H.reduce((s, h, i) => s + (r[i].harorat < 0 ? h.quyosh : 0), 0);
-        const jamiQ = H.reduce((s, h) => s + h.quyosh, 0);
-        omJoy.classList.add("jl-qatorlar");
-        omJoy.innerHTML = '<p class="jl-xulosa"><span>Quyoshli qurilmalar:</span> ' + tj(jamiQ) + ". <span>Zaryadi hozir to'xtagani:</span> " + tj(toxtagan) +
-          ". <span>Ma'lumot vaqti</span> " + tj(r[0].vaqt || "—") + ".</p>" +
-          H.map((h, i) => {
-            const x = r[i], z = SOF.zaryad(x.harorat), a = SOF.korikAsoslari(x.prognoz), hosil = SOF.quyoshHosili(x.kunlikNur);
-            return '<div class="qator"><span class="belgi ' + (z && z.toxtatilgan ? "sariq" : x.nur > 0 ? "mint" : "") + '">' + ikon("quyosh") + "</span>" +
-              '<span class="matn"><b><span>' + esc(h.nom) + "</span> · " + tj(son(x.harorat, 1) + " °C") + "</b>" +
-              "<span><span>bulut</span> " + tj(son(x.bulut) + " %") + " · <span>quyosh</span> " + tj(son(x.nur) + " Vt/m²") +
-              " · <span>bugun</span> " + tj(son(x.kunlikNur, 1) + " kVt·soat/m²") + (hosil != null ? " · " + tj(SOF.PROFIL.panelVt + " Vt") + " <span>panel</span> " + tj(son(hosil) + " Vt·soat") : "") +
-              " · <span>shamol zarbi</span> " + tj(son(x.zarb) + " km/soat") + "</span></span>" +
-              '<span class="ong">' + (h.quyosh ? '<span class="chip chip-kichik chip-oq"><span><b data-tarjimasiz>' + h.quyosh + "</b> <span>ta quyoshli qurilma, reyestrdan</span></span></span>" : "") +
-              (h.quyosh && z ? zaryadChip(z) : "") + a.map(asosChip).join("") + "</span></div>";
-          }).join("") +
-          '<p class="jl-manba"><span>Quyosh hisobi:</span> ' + tj(SOF.PROFIL.panelVt + " Vt") + " <span>panel, yo'qotish</span> " + tj("30 %") +
-          ", <span>kamera sutkasiga</span> " + tj(SOF.PROFIL.ehtiyojVtSoat + " Vt·soat") + " <span>sarflaydi. Harorat havo bo'yicha: akkumulyator qutisidagi haroratni qurilmaning o'z datchigi beradi.</span></p>" +
-          '<p class="jl-manba"><span>Ob-havo: Open-Meteo.</span> <span>' + ((G.MKB_DATA || {}).MANBA === "mahalliy" ? "Qurilmalar soni: bank reyestri" : "Qurilmalar soni: bank reyestri (namoyish)") + "</span></p>";
+        omJoy.innerHTML = obHavoJadval(H, r);
         tarjima(omJoy);
       };
       try { await (MKB.band ? MKB.band(b, ish) : ish()); } catch (_) {}
@@ -662,76 +632,9 @@
     });
     $("[data-jl-mq-uz]").addEventListener("click", () => { kanal.uz(); mqChiz(); ulanT.focus(); });
     kanalYoz();
-
-    /* 3. Shahar kamerasi */
-    const kamJoy = $("[data-jl-kam-natija]");
-    $("[data-jl-kam]").addEventListener("click", async e => {
-      const b = e.currentTarget;
-      const ish = async () => {
-        let R;
-        try { R = await kameralarRoyxati(); }
-        catch (x) { kamJoy.innerHTML = xatoHTML(x, "ruxsatli kameralar ro'yxati"); tarjima(kamJoy); return; }
-        const kam = (R.kameralar || []).filter(k => embedManzil(k));
-        /* Tekshirilgan va rad etilgan manbalar ro'yxati faqat assets/jonli/MANBA.md da */
-        if (!kam.length){ kamJoy.innerHTML = '<p class="jl-manba">Mos oqim topilmasa blok bo\'sh qoladi.</p>'; tarjima(kamJoy); return; }
-        const belgi = k => '<span class="chip chip-kichik chip-sariq jl-kadr-belgi"><span>Ommaviy namuna:</span> <span>' + esc(k.egasi) + "</span> <span>kamerasi, bank obyekti emas</span></span>";
-        kamJoy.innerHTML = '<div class="jl-kam-tor">' + kam.map((k, i) => '<figure style="margin:0">' +
-            (k.tur === "rasm"
-              ? '<div class="jl-kadr"><img alt="' + esc(k.nom) + '" data-jl-rasm="' + i + '" referrerpolicy="no-referrer" decoding="async">' + belgi(k) + "</div>"
-              : '<div class="jl-kadr" data-jl-kadr-joy="' + i + '">' + belgi(k) + "</div>") +
-            '<figcaption class="jl-kam-matn"><b>' + esc(k.nom) + "</b>" +
-              (k.izoh ? "<span>" + esc(k.izoh) + "</span>" : "") +
-              '<span data-jl-vaqt="' + i + '" aria-live="polite"></span>' +
-              (k.tur === "rasm" ? "" : '<span><button type="button" class="tugma tugma-oq tugma-kichik" data-jl-kadr="' + i + '">' + ikon("korish") + "<span>Oqimni ochish</span></button></span>") +
-              '<span><span>Manba:</span> <a href="' + esc(k.havola) + '" target="_blank" rel="noopener noreferrer">' + esc(k.egasi) + "</a> · <span>" + esc(k.shartlar) + "</span> · <span>tekshirildi</span> " + tj(k.tekshirildi || "—") + "</span>" +
-            "</figcaption></figure>").join("") + "</div>";
-        kamJoy.querySelectorAll("[data-jl-kadr]").forEach(t => t.addEventListener("click", () => kadrOch(kam[+t.dataset.jlKadr], kamJoy.querySelector('[data-jl-kadr-joy="' + t.dataset.jlKadr + '"]'), t)));
-        kamJoy.querySelectorAll("[data-jl-rasm]").forEach(img => rasmKuzat(kam[+img.dataset.jlRasm], img, kamJoy.querySelector('[data-jl-vaqt="' + img.dataset.jlRasm + '"]')));
-        tarjima(kamJoy);
-      };
-      try { await (MKB.band ? MKB.band(b, ish) : ish()); } catch (_) {}
-    });
-    /* Kadr har 60 soniyada qayta so'raladi, faqat blok ekranda va sahifa ochiq turganda.
-       Vaqt satri kadr olingan paytni (Last-Modified) ko'rsatadi: kadr eskirgan bo'lsa buni yashirmaydi */
-    function rasmKuzat(k, img, vaqtJoy){
-      const u = rasmManzil(k);
-      if (!u) return;
-      let oxirgi = 0;
-      const yangila = async () => {
-        if (!img.isConnected) { clearInterval(tm); return; }
-        if (document.hidden || tana.hidden) return;
-        if (navigator.onLine === false){ vaqtJoy.innerHTML = "<span>" + OFLAYN + "</span>"; tarjima(vaqtJoy); return; }
-        oxirgi = Date.now();
-        img.onerror = () => { vaqtJoy.innerHTML = "<span>" + OFLAYN + "</span>"; tarjima(vaqtJoy); };
-        img.src = u + "?t=" + Math.floor(oxirgi / 60000);
-        const d = await kadrVaqti(u);
-        if (!d){ vaqtJoy.innerHTML = "<span>Kadr vaqtini o'qib bo'lmadi</span>"; tarjima(vaqtJoy); return; }
-        const daq = Math.max(0, Math.round((Date.now() - d.getTime()) / 60000));
-        const ikki = n => String(n).padStart(2, "0");
-        vaqtJoy.innerHTML = "<span>Kadr olingan:</span> " + tj(ikki(d.getHours()) + ":" + ikki(d.getMinutes())) + " · " +
-          (daq < 1 ? "<span>hozirgina</span>" : tj(daq) + " <span>daqiqa oldin</span>") + (daq > 30 ? ' <span class="chip chip-kichik chip-sariq">Kadr eskirgan</span>' : "");
-        tarjima(vaqtJoy);
-      };
-      const tm = setInterval(yangila, 60000);
-      yangila();
-    }
-    async function kadrOch(k, joy, t){
-      if (!k || !joy) return;
-      if (navigator.onLine === false){ joy.innerHTML = xatoHTML(null); tarjima(joy); return; }
-      const src = embedManzil(k);
-      /* Belgi kadr ustida qoladi: oqim bank obyekti emasligi ko'rinib turadi */
-      const b = joy.querySelector(".jl-kadr-belgi");
-      joy.innerHTML = '<iframe title="' + esc(k.nom) + '" src="' + esc(src) + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>';
-      if (b) joy.appendChild(b);
-      const f = joy.querySelector("iframe");
-      const tm = setTimeout(() => { joy.innerHTML = xatoHTML(null); tarjima(joy); }, KUTISH);
-      f.addEventListener("load", () => clearTimeout(tm), {once: true});
-      if (t) t.hidden = true;
-      tarjima(joy);
-    }
     tarjima(el);
     if (location.hash === "#jl-namuna") setTimeout(() => el.scrollIntoView(), 0);
   }
 
-  MKB.jonli = {obHavo, obHavoBlok, quyoshIqlimi, namunaKarta, sinovQurilma, kanal, xatoHTML, SOF, OFLAYN};
+  MKB.jonli = {obHavo, obHavoBlok, quyoshIqlimi, namunaKarta, kadrTekshir, kanal, xatoHTML, SOF, OFLAYN};
 })();

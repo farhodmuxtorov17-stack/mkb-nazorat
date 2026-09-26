@@ -5,7 +5,10 @@ emas va bank ma'lumotini tashqariga chiqarmaydi. Har manba ekranda nomi va litse
 ko'rsatiladi. Tarmoq yopiq bo'lsa blok 8 soniyadan keyin "Internet yo'q: jonli namuna ko'rsatilmaydi"
 deb yozadi va sahifaning qolgan qismi ishlashda davom etadi.
 
-Tekshiruv sanasi: 25.09.2026.
+Tekshiruv sanasi: 26.09.2026.
+
+Monitoring markazida bu manbalar sahifa oxiridagi yig'ilgan "Jonli ulanish namunalari" bo'limida
+turadi (dastlab yopiq, holati brauzerda eslab qolinadi). Birinchi ekranda bank kameralari.
 
 ## 1. Ob-havo va quyosh: Open-Meteo
 
@@ -21,7 +24,9 @@ Tekshiruv sanasi: 25.09.2026.
 
 Qayerda ko'rinadi:
 
-- Monitoring markazi, "Ulanish namunasi" kartasi: 14 hudud markazi bitta so'rovda, tugma bosilganda.
+- Monitoring markazi, "Jonli ulanish namunalari": 14 hudud markazi bitta so'rovda, tugma bosilganda.
+  Natija bitta jadval: hudud, harorat, bulut, quyosh nurlanishi (Vt/m²), zaryad olish mumkinmi.
+  Prognoz chegaradan o'tgan hudud jadval ostida alohida qatorda chiqadi.
 - Qurilma sahifasi: quyosh yoki akkumulyatordan ishlaydigan qurilma uchun obyekt hududidagi ob-havo.
 - Obyekt kartochkasi, "Himoya" bo'limi: ob-havo va keyingi 24 soat prognozi.
 
@@ -86,36 +91,51 @@ Qoida: faqat egasi hammaga e'lon qilgan va saytga joylashtirishga ruxsat bergan 
 yoqilgan jonli efir). Himoyasiz qolgan, standart parolli yoki Shodan, Insecam kabi qidiruvlarda topilgan
 kameraga ulanish ruxsatsiz kirish hisoblanadi va ishlatilmaydi.
 
-Ro'yxat bitta faylda: `assets/jonli/kameralar.json` (egasi, havola, shartlar, tekshirilgan sana).
-Ekranda har kadr ustida "Ommaviy namuna: <egasi> kamerasi, bank obyekti emas" belgisi turadi.
+Ro'yxat bitta faylda: `assets/jonli/kameralar.json`. Unda uch qism bor:
 
-### Ishlatilayotgan kameralar
+- `kameralar`: Monitoring markazida ko'rsatiladigan O'zbekiston shahar kameralari. **Hozir bo'sh.**
+- `texnikTekshiruv`: Integratsiyalar sahifasidagi kadr olish tekshiruvi uchun bitta JPEG kadr.
+- `rad_etilgan`: tekshirilib, kiritilmagan manbalar va sababi.
+
+### Monitoring markazida kamera namunasi yo'q
+
+26.09.2026 da O'zbekiston shaharlari uchun egasi e'lon qilgan, hozir jonli va saytga joylashtirishga
+ruxsat berilgan kamera qayta qidirildi (quyidagi jadval). Mosi topilmadi. Shuning uchun Monitoring
+markazida ochiq kamera ko'rsatilmaydi. Bank uchun mavzudan tashqari kadr (masalan, Gavayidagi vulqon)
+rahbariyat ekraniga chiqmaydi.
+
+Mos kamera topilsa: `kameralar` ga `youtube` yoki `youtube-kanal` turida qo'shiladi, `jonli.js` ga
+`youtube-nocookie.com` orqali, faqat tugma bosilganda ochiladigan blok qaytariladi. Kadr ustida
+"Ommaviy namuna, bank obyekti emas" belgisi turadi.
+
+### Kadr olish: texnik tekshiruv (Integratsiyalar sahifasi)
+
+"NVR va IoT shlyuzi" kartasida, MQTT sinovi ostida. Tugma bosilganda brauzer bitta JPEG kadrni so'raydi va
+ko'rsatadi: HTTP javobi, turi, hajmi (KB), yetib kelish vaqti (ms), rasm o'lchami (brauzer rasmni ochib
+beradi, ya'ni fayl butun), kadr olingan vaqt (`Last-Modified`) va necha daqiqa oldin olingani. Kadr
+30 daqiqadan eski bo'lsa "Kadr eskirgan" belgisi chiqadi. Kadrning o'zi ekranga chiqmaydi.
+Shlyuz ulanganda bank kamerasining hodisa kadri xuddi shu tekshiruvdan o'tadi.
 
 | | |
 |---|---|
 | Egasi | AQSh Geologiya xizmati (USGS), Gavayi vulqon observatoriyasi |
 | Sahifa | [Kīlauea summit webcams](https://www.usgs.gov/volcanoes/kilauea/summit-webcams) |
-| Kadrlar | `https://volcanoes.usgs.gov/observatories/hvo/cams/KWcam/images/M.jpg` (panorama), `.../F1cam/images/M.jpg` (issiqlik kamerasi) |
+| Kadr | `https://volcanoes.usgs.gov/observatories/hvo/cams/KWcam/images/M.jpg` |
 | Shart | "USGS-authored or produced data and information are considered to be in the U.S. Public Domain" ([copyrights and credits](https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits)); manba ko'rsatiladi |
-| Texnik | JPEG, taxminan har daqiqada yangilanadi; `Access-Control-Allow-Origin: *`, shuning uchun brauzer `Last-Modified` dan kadr olingan vaqtni o'qiydi |
-| Ekranda | kadr 60 soniyada qayta so'raladi, faqat blok ochiq va sahifa ko'rinib turganda; kadr 30 daqiqadan eski bo'lsa "Kadr eskirgan" belgisi |
+| Texnik | JPEG, taxminan har daqiqada yangilanadi; `Access-Control-Allow-Origin: *`, `Last-Modified` bor (26.09.2026 da tekshirildi: HTTP 200, 100 KB) |
+| Tarmoq yopiq | 8 soniyadan keyin "Kadrni 8 soniyada olib bo'lmadi" va sabab; sahifaning qolgan qismi ishlayveradi |
 
-Nega bu kamera: 4G kamera obyektdan hodisa paytida xuddi shunday alohida kadr yuboradi, uzluksiz video
-emas. Kadr vaqti ekranda ko'rinadi, shuning uchun "jonli" deyilgan narsa haqiqatan yangimi, tekshirsa bo'ladi.
-Gavayi vaqti Toshkentdan 15 soat orqada; kunduzgi kadr bizning ish kunimizda qorong'i bo'lishi mumkin,
-issiqlik kamerasi esa kechasi ham tasvir beradi.
+### Tekshirilgan va rad etilgan manbalar
 
-### Tekshirilgan va rad etilgan manbalar (25.09.2026)
-
-| Manba | Natija |
-|---|---|
-| PANOMAX, Toshkent teleminorasi (`tashkent.panomax.com/tv-tower`) | joylashtirish kodi ochiq, oxirgi kadr 04.03.2023: jonli emas |
-| PANOMAX, Amirsoy (`amirsoy.panomax.com`) | oxirgi kadr 01.03.2023: jonli emas |
-| Amirsoy Resort, `amirsoy.com/en/webcams` (5 ta) | pleyer oqimni boshqa saytda ko'rsatmaydi |
-| O'zbekiston 24, Milliy TV, Sevimli, Toshkent, Dunyo bo'ylab, Zo'r TV (YouTube) | tekshiruv paytida jonli efir yo'q; telekanal efiri kamera ham emas |
-| youwebcams, world-cam, worldcams kataloglari | oqim egasi va sharti ko'rsatilmagan |
-| YouTube kanallari (See Jackson Hole, ANNnewsCH, NASA, explore.org) | kanal ID lari tekshirildi, lekin tekshiruv tarmog'ida YouTube pleyeri bloklangan edi: oqim jonli ekanini ko'rib bo'lmadi, ro'yxatga kiritilmadi |
-
-YouTube oqimi qo'shilsa, `youtube-nocookie.com` orqali, faqat tugma bosilganda yuklanadi. Bank tarmog'i
-YouTube'ni yopgan bo'lishi mumkin; USGS kadri oddiy HTTPS so'rovi bo'lgani uchun odatda o'tadi.
-Mos kadr ham, oqim ham bo'lmasa, blok bo'sh qoladi va bitta qator shuni aytadi.
+| Manba | Natija | Sana |
+|---|---|---|
+| PANOMAX, Toshkent teleminorasi (`tashkent.panomax.com/tv-tower`) | joylashtirish kodi ochiq, oxirgi kadr 04.03.2023: jonli emas | 25.09.2026 |
+| PANOMAX, Amirsoy (`amirsoy.panomax.com`) | oxirgi kadr 01.03.2023: jonli emas | 25.09.2026 |
+| Amirsoy Resort, `amirsoy.com/en/webcams` (5 ta) | pleyer oqimni boshqa saytda ko'rsatmaydi | 25.09.2026 |
+| YouTube kanali "Live camera Uzbekistan" (`UC9JenpnDtNkSVeNAWeJfnyw`) | jonli efir yo'q; ikkala yozuv 29.04.2022 da tugagan, kamera joyi va egasi ko'rsatilmagan | 26.09.2026 |
+| YouTube kanali "LIVE UZBEKISTAN" (`UCG_9re-ot41Ivx13Ge8McJA`) | kanal nomi o'zgargan, kamera oqimi yo'q | 26.09.2026 |
+| O'zbekiston Milliy universiteti, `live.nuu.uz` | imtihon zallari va stadion kamerasi, odamlar yuzi ko'rinadi; saytga joylashtirish sharti e'lon qilinmagan | 26.09.2026 |
+| youwebcams, worldviewstream, worldcam, world-cam, worldcams, web-cameri-mira kataloglari | oqim egasi va sharti ko'rsatilmagan yoki oqim katalogning o'z pleyerida | 26.09.2026 |
+| Windy Webcams (Toshkent atrofi) | ro'yxat faqat API kaliti bilan beriladi, kalit uchun hisob ochish kerak | 26.09.2026 |
+| O'zbekiston 24, Milliy TV, Sevimli, Toshkent, Dunyo bo'ylab, Zo'r TV (YouTube) | telekanal efiri kamera emas | 25.09.2026 |
+| Kīlauea (USGS) kadri Monitoring markazida | manba ruxsatli, lekin bank uchun mavzudan tashqari: faqat texnik tekshiruvda qoldirildi | 26.09.2026 |

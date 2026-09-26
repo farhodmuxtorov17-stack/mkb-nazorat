@@ -8358,9 +8358,9 @@ window.MKB_LUGAT = {
   "Xaridor takliflari, tekshiruv natijasi va qaror raqami": "Предложения покупателей, результат проверки и номер решения",
   "Tekshiruvda shubhali": "Подозрительных в проверке",
   "Xaridor tekshiruvi (AML) shubhali natija bergan. Taklifni rahbariyat qaroriga yuborib bo'lmaydi.": "Проверка покупателя (ПОД/ФТ) дала подозрительный результат. Предложение нельзя отправить на решение руководства.",
-  "Xaridor tekshiruvi (AML) tugamagan. Natija «toza» bo'lgach rahbariyat qaroriga yuboriladi.": "Проверка покупателя (ПОД/ФТ) не завершена. После результата «toza» предложение уйдёт на решение руководства.",
+  "Xaridor tekshiruvi (AML) tugamagan. Natija «toza» bo'lgach rahbariyat qaroriga yuboriladi.": "Проверка покупателя (ПОД/ФТ) не завершена. После результата «Чисто» предложение уйдёт на решение руководства.",
   "Xaridor tekshiruvi (AML) shubhali natija bergan. Taklifni tasdiqlab bo'lmaydi.": "Проверка покупателя (ПОД/ФТ) дала подозрительный результат. Предложение нельзя утвердить.",
-  "Xaridor tekshiruvi (AML) tugamagan. Natija «toza» bo'lgach tasdiqlash mumkin.": "Проверка покупателя (ПОД/ФТ) не завершена. Утверждение возможно после результата «toza».",
+  "Xaridor tekshiruvi (AML) tugamagan. Natija «toza» bo'lgach tasdiqlash mumkin.": "Проверка покупателя (ПОД/ФТ) не завершена. Утверждение возможно после результата «Чисто».",
   "Xaridor tekshiruvi, Rahbariyat qarori va shartnoma.": "Проверка покупателя, решение Руководства и договор.",
   /* --- atama: yuqoriga o'tkazish (eski «eskalatsiya» o'rniga) --- */
   "Yuqoriga o'tkazish": "Передача вышестоящему",
@@ -9222,6 +9222,107 @@ window.MKB_LUGAT = {
   "Muddat va nazorat eslatmalari mas'ul rolga boradi, administratorga faqat tizim xabarlari keladi.": "Напоминания о сроках и контроле получает ответственная роль, администратору приходят только системные сообщения.",
   "Signal": "Сигнал",
   "Signal, obyekt yoki mas'ul": "Сигнал, объект или ответственный",
+  /* --- panel, hisobotlar markazi, tizim holati, ochiq manbalar namunasi --- */
+  /* rahbariyat paneli */
+  "stavkalar buxgalteriya tasdig'ida": "ставки на утверждении в бухгалтерии",
+  "Me'yoriy muddati 90 kunda tugaydi": "Нормативный срок истекает в ближайшие 90 дней",
+  "Me'yoriy muddati tugayotganlar": "Истекает нормативный срок",
+  "Bu yil sotilgan (shartnoma bo'yicha)": "Продано в этом году (по договорам)",
+  "balansdan chiqdi": "списано с баланса",
+  "to'lov jarayonida": "ожидает оплаты",
+  "qurilma oxirgi qaydda 24 soatdan ortiq jim": "устройств молчат более 24 ч по последней отметке",
+  "Himoyada: qo'riqlash shartnomasi yoki o'rnatilgan qurilma bor": "Под защитой: есть договор охраны или установлено устройство",
+  "Ulanish namunasini ko'rish": "Посмотреть пример подключения",
+  "Savdo, polis va hisobot sanalari": "Даты торгов, полисов и отчётов",
+  "Barcha": "Все",
+  "tasdiqlangach amalga kiradi": "вступит в силу после утверждения",
+  "bajarilishi": "выполнение",
+  "sotilgan": "продано",
+  "/ reja": "/ план",
+  "kun · muddat tugashiga": "дней · до истечения нормативного срока",
+  /* hisobotlar markazi */
+  "Oy, chorak yoki yil bo'yicha bitta A4 varaq: xulosa, oldingi davr bilan farq va kengashdan so'raladigan qarorlar.": "Один лист A4 за месяц, квартал или год: выводы, сравнение с прошлым периодом и решения, которые выносятся на совет.",
+  "Hisobotni tayyorlash": "Подготовить отчёт",
+  "Dushanbadan yakshanbagacha: qarorlar, balans harakati, tushum, hodisalar va ko'riklar, o'tgan hafta bilan farq.": "С понедельника по воскресенье: решения, движение баланса, поступления, происшествия и осмотры, сравнение с прошлой неделей.",
+  "Xulosani ochish": "Открыть итоги",
+  "Boshqa hisobot sahifalari": "Другие отчёты",
+  "Amaldagi baholar bo'yicha bozor qiymati": "Рыночная стоимость по действующим оценкам",
+  "Bozor qiymati, oxirgi baho bo'yicha": "Рыночная стоимость по последней оценке",
+  "Shundan 3 yildan oshgan": "В том числе старше 3 лет",
+  "Shakllantirildi:": "Сформировано:",
+  "Ish ochildi": "Дело открыто",
+  "bahodan": "к оценке",
+  "Tiklangan": "Восстановлено",
+  /* tizim holati va qurilmalar */
+  "Oxirgi qaydda 24 soatdan ortiq jim": "Без связи более 24 ч по последней отметке",
+  "oxirgi qayd": "последняя отметка",
+  "eng yangi qayd": "последняя отметка",
+  "Eng yangi qayd": "Последняя отметка внесена",
+  "oldin": "назад",
+  "oldin kiritilgan.": "назад.",
+  "ta qurilma oxirgi qaydda 24 soatdan ortiq jim": "устройств молчат более 24 ч по последней отметке",
+  "Shlyuz ulanmagan: holat qo'lda kiritilgan qayd paytidagi holat.": "Шлюз не подключён: показано состояние на момент последней ручной отметки.",
+  "Xodim qayd etgan hodisalar": "Происшествия, зафиксированные сотрудниками",
+  "Qurilma hodisalari": "Происшествия по сигналам устройств",
+  "Aloqasi uzilgan qurilmalar": "Устройства без связи",
+  "Kadrsiz obyektlar": "Объекты без кадров",
+  "ta kamera jim": "камер молчат",
+  "ta kamera surati yuklanmagan": "камер без фото объекта",
+  "ta obyektda kamera yo'q": "объектов без камеры",
+  "Obyekt surati, kamera kadri emas": "Фото объекта, не кадр с камеры",
+  "Kamera o'rnatilmagan": "Камера не установлена",
+  "ta signal": "сигналов",
+  "Qurilma xabari tizimga qanday kelishini ochiq MQTT sinov kanalida ko'rish mumkin:": "Как сообщение устройства попадает в систему, видно на открытом тестовом MQTT-канале:",
+  /* integratsiyalar */
+  "Soliq qo'mitasi": "Налоговый комитет",
+  "Tugma bosilganda brauzer ommaviy MQTT sinov serveriga sinov datchigi nomidan xabar yuboradi va o'sha xabarni obuna orqali qaytarib oladi. Shlyuz ulanganda qurilma xabari xuddi shu yo'l bilan keladi: datchik, broker, tizim. Monitoring markazidagi «Ulanish namunasi» ham shu kanalni ishlatadi.": "По нажатию кнопки браузер отправляет на публичный тестовый MQTT-сервер сообщение от имени тестового датчика и получает его обратно по подписке. Когда шлюз подключён, сообщения устройств приходят тем же путём: датчик, брокер, система. «Пример подключения» в центре мониторинга работает через этот же канал.",
+  "Manba: test.mosquitto.org (Eclipse Mosquitto), zaxira: broker.emqx.io. Ikkalasi ham faqat sinov uchun ochiq: xabarni istalgan kishi ko'ra oladi, shuning uchun unda bank ma'lumoti yo'q.": "Источник: test.mosquitto.org (Eclipse Mosquitto), резервный — broker.emqx.io. Оба открыты только для тестов: сообщение может прочитать кто угодно, поэтому данных банка в нём нет.",
+  /* obyekt himoyasi va qurilma: ob-havo */
+  "Tugma bosilganda hudud koordinatasi 0,1° aniqlikda Open-Meteo ga yuboriladi.": "По нажатию кнопки координаты района с точностью 0,1° передаются в Open-Meteo.",
+  "Bepul API tijoriy bo'lmagan foydalanish uchun (CC BY 4.0). Bank ishida pullik kalit yoki o'z serveri kerak.": "Бесплатный API — только для некоммерческого использования (CC BY 4.0). Для работы банка нужен платный ключ или собственный сервер.",
+  "Ob-havoni olish": "Получить погоду",
+  /* ochiq manbalar namunasi: ob-havo, MQTT, kamera kadri */
+  "Ob-havo: Open-Meteo.": "Погода: Open-Meteo.",
+  "Qurilmalar soni: bank reyestri": "Количество устройств: реестр банка",
+  "Qurilmalar soni: bank reyestri (namoyish)": "Количество устройств: реестр банка (демонстрационные данные)",
+  "Shu hududda quyosh eng kam oy:": "Месяц с наименьшей инсоляцией в этом районе:",
+  "Kamera yil bo'yi ishlashi uchun panel": "Для круглогодичной работы камеры нужна панель",
+  "akkumulyator": "аккумулятор",
+  "Xabar olindi:": "Получено сообщений:",
+  "ta, oxirgi kechikish": "· последняя задержка",
+  "ta quyoshli qurilma, reyestrdan": "устр. на солнечной панели по реестру",
+  "Xabar kutilmoqda. Sinov signalini yuboring.": "Ожидание сообщения. Отправьте тестовый сигнал.",
+  "Kanal uzildi": "Канал разорван",
+  "Broker ulanishni uzdi. Qayta ulaning.": "Брокер разорвал соединение. Подключитесь заново.",
+  "Xabar brokerdan 8 soniyada qaytmadi": "Сообщение не вернулось от брокера за 8 секунд",
+  "Ommaviy broker xabarni yo'qotgan yoki tarmoq sekin. Qayta yuboring.": "Публичный брокер потерял сообщение или сеть работает медленно. Отправьте ещё раз.",
+  "Kamera kadri: davlat idorasining ochiq kamerasi": "Кадр с камеры: открытая камера государственного ведомства",
+  "Kadrlarni ko'rsatish": "Показать кадры",
+  "4G kamera obyektdan hodisa paytida kadr yuboradi. Bu yerda xuddi shunday kadrni egasi hammaga e'lon qilgan kameradan olamiz va qachon olinganini ko'rsatamiz. Himoyasiz qolgan yoki qidiruvda topilgan kameralarga ulanish ruxsatsiz kirish hisoblanadi, ular ishlatilmaydi.": "4G-камера присылает кадр с объекта в момент происшествия. Здесь такой же кадр берётся с камеры, которую владелец открыл для всех, и показывается время съёмки. Подключение к незащищённым камерам или камерам, найденным через поиск, — это несанкционированный доступ, такие камеры не используются.",
+  "Mos oqim topilmasa blok bo'sh qoladi.": "Если подходящего потока нет, блок остаётся пустым.",
+  "Ommaviy namuna:": "Публичный пример:",
+  "kamerasi, bank obyekti emas": "— камера не принадлежит банку",
+  "AQSh Geologiya xizmati (USGS)": "Геологическая служба США (USGS)",
+  "Kilauea vulqoni, Halemaʻumaʻu krateri: g'arbiy chekkadan panorama (KWcam)": "Вулкан Килауэа, кратер Халемаумау: панорама с западного края (KWcam)",
+  "Kilauea vulqoni, Halema'uma'u krateri: g'arbiy chekkadan panorama (KWcam)": "Вулкан Килауэа, кратер Халемаумау: панорама с западного края (KWcam)",
+  "Kilauea vulqoni: issiqlik kamerasi (F1cam)": "Вулкан Килауэа: тепловизионная камера (F1cam)",
+  "Kadr taxminan har daqiqada yangilanadi. Gavayi vaqti Toshkentdan 15 soat orqada: bizning ish kunimizda u yerda kech yoki tun.": "Кадр обновляется примерно раз в минуту. Гавайи отстают от Ташкента на 15 часов: в наш рабочий день там вечер или ночь.",
+  "Issiqlik kamerasi kechasi ham tasvir beradi: qorovulsiz obyektda tunda odamni aniqlaydigan kamera shu turdan.": "Тепловизор даёт изображение и в темноте: именно такая камера замечает человека ночью на объекте без сторожа.",
+  "jamoat mulki (U.S. Public Domain), manba ko'rsatiladi": "общественное достояние (U.S. Public Domain), с указанием источника",
+  "Kadr olingan:": "Кадр снят:",
+  "Kadr vaqtini o'qib bo'lmadi": "Не удалось определить время кадра",
+  "hozirgina": "только что",
+  "Kadr eskirgan": "Кадр устарел",
+  /* kengash hisoboti, moliya paneli, vazifalar, obyekt kartochkasi */
+  "Oldingi davr uchun yozuv yo'q": "Нет записей за предыдущий период",
+  "MB 3441, 16-band": "Положение ЦБ № 3441, п. 16",
+  "Eng eski muddat:": "Самый ранний срок:",
+  "Joriy joylashuvni olish": "Определить местоположение",
+  "Solishtirishni ochish": "Открыть сверку",
+  "Havolani nusxalab, e-pochta yoki Telegram orqali yuboring": "Скопируйте ссылку и отправьте по почте или в Telegram",
+  "Savdo bo'lmadi": "Торги не состоялись",
+  "Takroriy savdoni e'lon qiling yoki narxni pasaytiring": "Объявите повторные торги или снизьте цену",
+  "Keyingi savdoni tayyorlash": "Подготовить следующие торги"
 };
 
 /* Qoida ichidagi nomni lug'atdan o'girish (topilmasa — asl holicha qoladi) */
@@ -10099,3 +10200,63 @@ Object.assign(MKB_RU_SON, {
   "активам присвоены инвентарные номера": ["активу присвоен инвентарный номер", "активам присвоены инвентарные номера"],
   "строк найдено. Сопоставьте столбцы файла.": ["строка найдена. Сопоставьте столбцы файла.", "строки найдено. Сопоставьте столбцы файла."]
 });
+
+/* ---------- Panel, hisobotlar markazi, tizim holati, ochiq manbalar namunasi ---------- */
+Object.assign(MKB_RU_SON, {
+  "устройств молчат более 24 ч по последней отметке": ["устройство молчит более 24 ч по последней отметке", "устройства молчат более 24 ч по последней отметке"],
+  "сигналов": ["сигнал", "сигнала"],
+  "камер молчат": ["камера молчит", "камеры молчат"],
+  "камер без фото объекта": ["камера без фото объекта", "камеры без фото объекта"],
+  "объектов без камеры": ["объект без камеры", "объекта без камеры"],
+  /* "<b>2</b> <span>kun</span>": "2 дня", "1 день" */
+  "дней": ["день", "дня"],
+  "дней осталось": ["день остался", "дня осталось"],
+  "документов не хватает": ["документа не хватает", "документов не хватает"],
+  "активов. Резерв рассчитывается по этому числу.": ["актив. Резерв рассчитывается по этому числу.", "актива. Резерв рассчитывается по этому числу."],
+  "объектов, ориентировочное место": ["объект, ориентировочное место", "объекта, ориентировочное место"],
+  "дней · до истечения нормативного срока": ["день · до истечения нормативного срока", "дня · до истечения нормативного срока"]
+});
+window.MKB_TARJIMA_QOIDALARI.unshift(
+  /* 13 oylik grafikda takrorlangan oy yorlig'i: "sen 25" */
+  [/^(yan|fev|mar|apr|may|iyn|iyl|avg|sen|okt|noy|dek) (\d{2})$/, (_, o, y) => MKB_OY_QISQA_RU[o] + " " + y],
+  /* taklif belgisi izohi va baholash tarixi: "Bozor qiymati 1,25 mlrd so'm" */
+  [/^Bozor qiymati (\d.*)$/, (_, a) => "Рыночная стоимость " + window.mkbBirlikTarjima(a)],
+  /* realizatsiya rejasi halqasi (ekran o'quvchi uchun) */
+  [/^Reja bajarilishi (\d+) foiz$/, "Выполнение плана: $1%"],
+  /* xodim kartochkasidagi so'nggi amallar: "Ko'riklar: o'zgartirdi" */
+  [/^(.+): (o['’ʻʼ`]zgartirdi|yaratdi|o['’ʻʼ`]chirdi|tikladi|fayl yukladi)$/, (_, a, f) => mkbQism(a) + ": " +
+    ({yaratdi: "создано", tikladi: "восстановлено", "fayl yukladi": "загружен файл"}[f] || (/^o.z/.test(f) ? "изменено" : "удалено"))],
+  /* balansga qabul: undiruv ishi tanlovida garov nomi aktiv turi bo'lsa o'giriladi */
+  [new RegExp("^([A-Z]{2,3}-\\d{4}\\/\\d+) — (" + window.MKB_AKTIV_TURLARI.map(t => t.replace(/[.*+?^$()|[\]\\]/g, "\\$&")).join("|") + ")(, qaror (\\S+))?$"),
+    (_, a, b, q, r) => a + " — " + (mkbAktivTuri(b) || b) + (q ? ", решение " + r : "")]
+);
+
+/* Holat, jiddiylik va tur kabi ro'yxatdan olinadigan qiymatlar [data-tarjimasiz] ichida ham
+   o'giriladi (amallar tarixidagi "eski → yangi" qiymati): ular xos nom emas. Ro'yxat namoyish
+   ma'lumotidagi shu maydonlardan yig'iladi, xodim, obyekt va tashkilot nomlari kirmaydi. */
+(function(){
+  const MAYDONLAR = ["holat", "bosqich", "jiddiylik", "ustuvorlik", "muhimlik", "daraja", "toifa", "tur", "turi", "natija", "korikTuri", "sotishUsuli", "rol"];
+  let kesh = null, kalitlar = -1;
+  function qiymatlar(){
+    const D = window.MKB_DATA || {}, n = Object.keys(D).length;
+    if (kesh && n === kalitlar) return kesh;
+    kesh = new Set(["ha", "yo'q", "Mehmon", "Tizim"]); kalitlar = n;
+    Object.keys(D).forEach(k => {
+      if (!Array.isArray(D[k])) return;
+      D[k].forEach(r => {
+        if (!r || typeof r !== "object") return;
+        MAYDONLAR.forEach(m => { const v = r[m]; if (typeof v === "string" && v.length > 1 && v.length <= 40) kesh.add(v.replace(/[’ʼʻ`´]/g, "'")); });
+      });
+    });
+    return kesh;
+  }
+  const asl = window.mkbBirlikTarjima;
+  window.mkbBirlikTarjima = function (m) {
+    const s = String(m), k = s.trim().replace(/[’ʼʻ`´]/g, "'"), L = window.MKB_LUGAT || {};
+    if (k && L[k] != null && qiymatlar().has(k)) return s.replace(s.trim(), L[k]);
+    /* hisobot davri: "Sentabr 2026" */
+    const oy = /^(Yanvar|Fevral|Mart|Aprel|May|Iyun|Iyul|Avgust|Sentabr|Oktabr|Noyabr|Dekabr) (\d{4})$/.exec(k);
+    if (oy) return s.replace(s.trim(), MKB_OY_RU[oy[1]] + " " + oy[2]);
+    return asl(m);
+  };
+})();
