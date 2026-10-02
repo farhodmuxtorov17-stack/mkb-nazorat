@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
 .ts-korinish{align-self:flex-start;justify-self:start;width:fit-content;max-width:100%}
-.ts-korinish button b{font-weight:500;font-variant-numeric:tabular-nums;opacity:.75}
+.ts-korinish button b{font-weight:500;font-variant-numeric:tabular-nums}
 .ts-asbob{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .ts-asbob .izlash{flex:1 1 240px;max-width:340px;background:var(--oq);box-shadow:var(--soya-past)}
 .ts-qator{cursor:pointer}
@@ -96,7 +96,7 @@
 
 async function boshla(){
   if (!window.MKB_TAYYOR) await new Promise(r => document.addEventListener("mkb:tayyor", r, {once: true}));
-  const KOLLAR = ["TASDIQLAR", "TAKLIFLAR", "LOTLAR", "BAHOLASHLAR", "UNDIRUV_ISHLAR", "HUJJATLAR", "FOYDLAR", "PARAMETRLAR"];
+  const KOLLAR = ["TASDIQLAR", "TAKLIFLAR", "LOTLAR", "BAHOLASHLAR", "UNDIRUV_ISHLAR", "HUJJATLAR", "FOYDLAR", "PARAMETRLAR", "ARXIV"];
   await MKB.kolYukla(KOLLAR);
   const D = MKB_DATA, esc = MKB.esc;
   const TK = window.MKB_TORT_KOZ;
@@ -163,7 +163,7 @@ async function boshla(){
   const halmi = t => { if (t.holat === "kutilmoqda") return false; const d = D.sanaOqi(t.qarorSana); return !!d && D.kunFarqi(d, bugun()) <= 90; };
   const KOR_FILTR = {kutilmoqda: menikimi, yuborgan: ozimi, hal: halmi};
   /* Ommaviy tasdiqlash: faqat shu ko'rinishda, chiqim hech qachon ommaviy emas */
-  const tanlasaBoladi = t => h.korinish === "kutilmoqda" && menikimi(t) && t.tur !== "chiqim";
+  const tanlasaBoladi = t => h.korinish === "kutilmoqda" && menikimi(t) && t.tur !== "chiqim" && !tosiq(t);
   const tanlanganTur = () => { const id = tanlangan.values().next().value; const t = id ? top("TASDIQLAR", id) : null; return t ? t.tur : null; };
 
   /* ---------- Sarlavha: o'rinbosar tugmasi va hisoblagich ---------- */
@@ -197,8 +197,9 @@ async function boshla(){
     if (h.korinish === "kutilmoqda"){
       const mumkin = tanlasaBoladi(t);
       const boshqaTur = mumkin && tanlangan.size && tanlanganTur() !== t.tur;
-      const izoh = !mumkin ? (t.tur === "chiqim" ? "Balansdan chiqarish faqat alohida tasdiqlanadi" : "") : boshqaTur ? "Bir vaqtda faqat bir turdagi masalalarni tanlash mumkin" : "";
-      tanla = mumkin || t.tur === "chiqim"
+      const ts = menikimi(t) ? tosiq(t) : "";
+      const izoh = !mumkin ? (t.tur === "chiqim" ? "Balansdan chiqarish faqat alohida tasdiqlanadi" : ts) : boshqaTur ? "Bir vaqtda faqat bir turdagi masalalarni tanlash mumkin" : "";
+      tanla = mumkin || t.tur === "chiqim" || ts
         ? '<label class="ts-tanla' + (!mumkin || boshqaTur ? " ochirilgan" : "") + '"' + (izoh ? ' title="' + esc(izoh) + '"' : "") + '>' +
           '<input type="checkbox" data-tanla="' + esc(t.id) + '"' + (tanlangan.has(t.id) ? " checked" : "") + (!mumkin || boshqaTur ? " disabled" : "") +
           ' aria-label="Tanlash" aria-describedby="' + aid + '-t"></label>'
@@ -222,11 +223,15 @@ async function boshla(){
     return '<span class="chip chip-kichik ' + (tb.foiz < 0 ? "chip-sariq" : "chip-kul") + '" title="' + esc("Bozor qiymati " + MKB.pul(tb.bozor)) + '"><span>bahodan</span> <b data-tarjimasiz>' + esc(tb.foizMatn || "0%") + "</b></span>";
   }
   /* Qaror tugmalari qatorning o'zida: yon panelni ochmasdan tasdiqlash yoki rad etish mumkin */
+  /* Tartib va urg'u panel.html bilan bir xil: "Rad etish" chapda, "Tasdiqlash" o'ngda yashil.
+     To'siq bo'lsa "Tasdiqlash" chiqmaydi, o'rnida sabab yozilgan belgi turadi */
   function qatorAmal(t){
     if (h.korinish !== "kutilmoqda" || !menikimi(t)) return "";
+    const ts = tosiq(t);
     return '<span class="ts-qator-amal">' +
-      '<button type="button" class="tugma tugma-oq tugma-kichik" data-qaror="ok" data-yozadi>' + ik("tasdiq") + "Tasdiqlash</button>" +
       '<button type="button" class="tugma tugma-oq tugma-kichik" data-qaror="rad" data-yozadi>' + ik("rad") + "Rad etish</button>" +
+      (ts ? '<span class="chip chip-kichik chip-xavf" title="' + esc(ts) + '">Tasdiqlab bo\'lmaydi</span>'
+        : '<button type="button" class="tugma tugma-brend tugma-kichik" data-qaror="ok" data-yozadi>' + ik("tasdiq") + "Tasdiqlash</button>") +
     "</span>";
   }
 
@@ -350,8 +355,8 @@ async function boshla(){
       '<span class="tt-soni"><span data-tarjimasiz>' + r.length + "</span> <span>ta tanlandi</span></span>" +
       '<span class="tt-summa"><span>' + esc(turNom(r[0].tur)) + "</span>" + (summa ? ' · <span>jami</span> <b data-tarjimasiz>' + esc(MKB.pul(summa)) + "</b>" : "") + "</span>" +
       '<span class="tt-amal">' +
-        '<button type="button" class="tugma tugma-asosiy tugma-kichik" data-ommaviy="ok" data-yozadi>' + ik("tasdiq") + "Tasdiqlash</button>" +
         '<button type="button" class="tugma tugma-oq tugma-kichik" data-ommaviy="rad" data-yozadi>' + ik("rad") + "Rad etish</button>" +
+        '<button type="button" class="tugma tugma-brend tugma-kichik" data-ommaviy="ok" data-yozadi>' + ik("tasdiq") + "Tasdiqlash</button>" +
         '<button type="button" class="tugma tugma-oq tugma-kichik" data-ommaviy="bekor">' + ik("yopish") + "Tanlovni bekor qilish</button>" +
       "</span></div>";
   }
@@ -522,8 +527,29 @@ async function boshla(){
         (tb && tb.ogoh ? '<div class="ts-izoh xavf">' + esc(tb.ogoh) + "</div>" : "") + "</div>" : "") +
       (r.length ? '<div data-sayohat="nima-ozgaradi"><div class="ts-bolim">Nima o\'zgaradi</div><dl class="malumot-royxat ts-ozgarish">' + qatorlar(r) + "</dl></div>" : "");
   }
+  /* Tasdiqlashni to'sadigan sabab (amal.js dagi tekshiruvlar bilan bir xil). Bo'lsa, faqat rad etish mumkin:
+     qatordagi va paneldagi "Tasdiqlash" yopiladi, ommaviy tanlovga ham kirmaydi */
+  function tosiq(t){
+    if (!t || t.holat !== "kutilmoqda") return "";
+    if (t.tur === "taklif"){
+      const tk = top("TAKLIFLAR", t.manbaId);
+      if (!tk) return "";
+      const aml = tk.amlNatija || "tekshirilmoqda";
+      if (aml === "shubhali") return "AML tekshiruvi shubhali natija bergan. Taklifni tasdiqlab bo'lmaydi.";
+      if (aml !== "toza") return "AML tekshiruvi tugamagan. Natija kelgach tasdiqlash mumkin.";
+      if (tk.affillanganlik && !tk.qarorRaqami) return "Xaridor bank bilan affillangan. Kuzatuv kengashi qarori raqami kiritilmagan.";
+    } else if (t.tur === "pasaytirish"){
+      const lot = top("LOTLAR", t.manbaId);
+      if (lot && lot.minimalNarx && t.summa < lot.minimalNarx) return "Yangi narx minimal narxdan past. Tasdiqlab bo'lmaydi.";
+    } else if (t.tur === "qabul"){
+      const ish = top("UNDIRUV_ISHLAR", t.manbaId);
+      if (ish && ish.aktivId) return "Bu ish bo'yicha aktiv allaqachon balansga qabul qilingan.";
+    }
+    return "";
+  }
   function manbaTafsiloti(t){
-    let html = "", ogoh = "";
+    let html = "";
+    const ogoh = tosiq(t);
     if (t.tur === "taklif"){
       const tk = top("TAKLIFLAR", t.manbaId), lot = tk && tk.lotId ? top("LOTLAR", tk.lotId) : null;
       if (tk){
@@ -533,9 +559,6 @@ async function boshla(){
           dd("To'lov sharti", "<span>" + esc(tk.tolovSharti || "—") + "</span>") +
           dd("AML tekshiruvi", MKB.holatChip(tk.amlNatija || "tekshirilmoqda", true)) +
           dd("Affillanganlik", tk.affillanganlik ? "<span>Ha</span>" + (tk.qarorRaqami ? ' · <span data-tarjimasiz>' + esc(tk.qarorRaqami) + "</span>" : "") : "<span>Yo'q</span>");
-        if (tk.amlNatija === "shubhali") ogoh = "AML tekshiruvi shubhali natija bergan. Taklifni tasdiqlab bo'lmaydi.";
-        else if (tk.amlNatija !== "toza") ogoh = "AML tekshiruvi tugamagan. Natija kelgach tasdiqlash mumkin.";
-        else if (tk.affillanganlik && !tk.qarorRaqami) ogoh = "Xaridor bank bilan affillangan. Kuzatuv kengashi qarori raqami kiritilmagan.";
       }
     } else if (t.tur === "pasaytirish"){
       const lot = top("LOTLAR", t.manbaId);
@@ -543,7 +566,6 @@ async function boshla(){
         html += dd("Lot", havola("lot.html?id=" + encodeURIComponent(lot.id), lot.id), true) +
           dd("Minimal narx", esc(MKB.pul(lot.minimalNarx)), true) +
           dd("Avvalgi pasaytirishlar", '<span data-tarjimasiz>' + (lot.pasaytirishlar || []).length + "</span>");
-        if (lot.minimalNarx && t.summa < lot.minimalNarx) ogoh = "Yangi narx minimal narxdan past. Tasdiqlab bo'lmaydi.";
       }
     } else if (t.tur === "baho"){
       const b = top("BAHOLASHLAR", t.manbaId);
@@ -561,7 +583,6 @@ async function boshla(){
           dd("Garov", esc((ish.garov && ish.garov.nom) || "—"), true) +
           dd("Qarz", esc(MKB.pul(ish.qarz && ish.qarz.jami)), true) +
           dd("Sud qarori", esc(ish.qaror && ish.qaror.raqam ? ish.qaror.raqam + (ish.qaror.sana ? ", " + ish.qaror.sana : "") : "—"), true);
-        if (ish.aktivId) ogoh = "Bu ish bo'yicha aktiv allaqachon balansga qabul qilingan.";
       }
     } else if (t.tur === "chiqim"){
       const a = asosi(t);
@@ -604,20 +625,22 @@ async function boshla(){
         (t.sabab ? '<br><span>Sabab:</span> <span data-tarjimasiz>' + esc(t.sabab) + "</span>" : "") + "</div>";
       html += keyingiQadam(t, natijaQ);
     } else {
-      if (m.ogoh) html += '<div class="ts-izoh xavf">' + esc(m.ogoh) + "</div>";
+      if (m.ogoh) html += '<div class="ts-izoh xavf" id="ts-p-tosiq">' + esc(m.ogoh) + "</div>";
       html += ozgarishHTML(t);
       if (oqibatOl(t)) html += '<div class="ts-izoh"><span>Tasdiqlansa:</span> <span>' + esc(oqibatOl(t)) + "</span></div>";
       if (oz) html += '<div class="ts-izoh"><b>Siz yuborgansiz. Boshqa xodim tasdiqlaydi</b></div>';
       else if (!mumkin) html += '<div class="ts-izoh"><span>Qarorni</span> <b>' + esc(t.masulRol || "mas'ul") + "</b> <span>qabul qiladi.</span></div>";
+      /* Tartib panel.html bilan bir xil: "Rad etish" chapda, "Tasdiqlash" o'ngda. To'siq bo'lsa tasdiqlash o'chiq va sababga bog'langan */
       if (mumkin) html += '<div class="ts-amal">' +
-        '<button type="button" class="tugma ' + (t.tur === "chiqim" ? "tugma-xavf" : "tugma-asosiy") + '" data-a="ok" data-yozadi data-sayohat="tasdiqlash">' + ik("tasdiq") + "Tasdiqlash</button>" +
-        '<button type="button" class="tugma tugma-oq" data-a="rad" data-yozadi data-sayohat="rad">' + ik("rad") + "Rad etish</button></div>";
+        '<button type="button" class="tugma tugma-oq" data-a="rad" data-yozadi data-sayohat="rad">' + ik("rad") + "Rad etish</button>" +
+        '<button type="button" class="tugma ' + (t.tur === "chiqim" ? "tugma-xavf" : "tugma-asosiy") + '" data-a="ok" data-yozadi data-sayohat="tasdiqlash"' +
+          (m.ogoh ? ' disabled aria-describedby="ts-p-tosiq"' : "") + ">" + ik("tasdiq") + "Tasdiqlash</button></div>";
     }
     html += tafsil;
     if (ochiqPanel) ochiqPanel.yop();
     ochiqPanel = MKB.yonPanel(t.sarlavha, html, {yorliq: t.id});
     const p = ochiqPanel.panel;
-    p.querySelectorAll("[data-a]").forEach(b => b.addEventListener("click", () => (b.dataset.a === "ok" ? tasdiqla(t) : radEt(t))));
+    p.querySelectorAll("[data-a]").forEach(b => b.addEventListener("click", () => (b.dataset.a === "ok" ? (tosiq(t) ? MKB.toast(tosiq(t), "xavf") : tasdiqla(t)) : radEt(t))));
   }
 
   /* Qaror qabul qilingandan keyingi qadam: kim nima qiladi va qayerda */
@@ -641,7 +664,7 @@ async function boshla(){
       izoh = "<span>Obyektning bozor qiymati yangilandi.</span>"; if (t.obyektId) amal = tugma("obyekt-moliya.html?id=" + encodeURIComponent(t.obyektId), "Moliya tabini ochish");
     } else if (t.tur === "qabul"){
       const ish = top("UNDIRUV_ISHLAR", t.manbaId);
-      if (ish && ish.aktivId){ izoh = "<span>Aktiv balansga qabul qilingan:</span> <b data-tarjimasiz>" + esc(ish.aktivId) + "</b>"; amal = tugma("obyekt.html?id=" + encodeURIComponent(ish.aktivId), "Obyektni ochish"); }
+      if (ish && ish.aktivId){ izoh = "<span>Aktiv balansga qabul qilingan:</span> <b data-tarjimasiz>" + esc(ish.aktivId) + "</b>"; const hv = MKB.obyektHavola(ish.aktivId); if (hv) amal = tugma(hv, "Obyektni ochish"); }
       else {
         const hv = (natijaQ && natijaQ.havola) || "qabul-boshlash.html?ish=" + encodeURIComponent(t.manbaId);
         izoh = "<span>Balansga qabul ustasi to'ldirilishi kerak.</span>";

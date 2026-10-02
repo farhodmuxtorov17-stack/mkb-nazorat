@@ -109,6 +109,10 @@ const ROL_KOL_TAQIQ = {
   "Rahbariyat": ["KORIKLAR", "INVENTARIZATSIYALAR", "INVENTAR", "UNDIRUV_ISHLAR", "SUD_MAJLISLAR"],
 };
 const PARAMETR_YOZUVCHI = ["Administrator", "Buxgalteriya va risk"];
+/* Zaxira stavkasi va soliq bazasi faqat to'rt ko'z bilan o'zgaradi (UX 7.1): Buxgalteriya ularni
+   to'g'ridan-to'g'ri yozmaydi, "zaxira" qaror so'rovini yuboradi (yadro/amal.js ZAXIRA_QOSHIMCHA bilan bir xil) */
+const ZAXIRA_PARAM_QOSHIMCHA = ["soliqImtiyozOy"];
+const tasdiqParammi = x => !!x && (["zaxira", "soliq"].includes(x.guruh) || ZAXIRA_PARAM_QOSHIMCHA.includes(String(x.id)));
 /* Bo'lim huquqidan tashqari: shu rollar to'plamga faqat yangi yozuv qo'sha oladi (POST).
    Ko'rik va xavfsizlik inspektori hodisa bo'yicha sug'urta da'vosini ochadi; da'voni keyin qiymat bo'limi yuritadi. */
 const YARATISH_ISTISNO = {SUGURTA_DAVOLARI: ["Ko'rik va xavfsizlik inspektori"]};
@@ -685,16 +689,53 @@ function yozuvToza(kol, x){
    Qaror so'rovini yuborgan xodim uni o'zi tasdiqlamaydi va rad etmaydi, administrator ham.
    Muallif maydonlari keyin o'zgartirilmaydi. */
 function kichikMatn(x){ return String(x == null ? "" : x).trim().toLowerCase(); }
-function tortKozXatosi(x, t, s){
+/* Qarorni kim hal qiladi (yadro/amal.js rolHalQiladimi va vakolat bilan bir xil): administrator, mas'ul rol,
+   mas'ul rol ko'rsatilmagan eski so'rovda esa bo'limda tasdiq huquqi bor rol (yadro/app.js ROL_RUXSAT dagi "t") */
+const TASDIQ_BOLIM = {taklif: "sotuv", pasaytirish: "sotuv", baho: "qiymat", qabul: "aktivlar", chiqim: "aktivlar", zaxira: "qiymat"};
+const ROL_TASDIQ = {
+  "Rahbariyat": ["aktivlar", "nazorat", "qiymat", "sotuv", "ishlar"],
+  "Obyekt menejeri": ["nazorat"],
+  "Buxgalteriya va risk": ["qiymat"],
+};
+function sorovMuallifimi(x, login, ism){
+  return x.muallifLogin ? kichikMatn(x.muallifLogin) === kichikMatn(login) : (!!x.muallif && x.muallif === ism);
+}
+function rolHalQiladimi(rolNomi, x){
+  const rol = rolNomiKanon(rolNomi);
+  if (rol === "Administrator") return true;
+  if (x.masulRol) return rolNomiKanon(x.masulRol) === rol;
+  return (ROL_TASDIQ[rol] || []).includes(TASDIQ_BOLIM[x.tur] || "ishlar");
+}
+/* Sessiya xodimi shu so'rovni hal qila oladimi: o'z roli bilan yoki bugun faol o'rinbosar sifatida
+   (vakolat bergan xodim bu qarorni hal qila oladi va so'rov uniki emas). Muallif hech qachon hal qilmaydi. */
+function qarorHuquqi(o, x, s){
+  if (sorovMuallifimi(x, s.login, s.ism)) return false;
+  if (rolHalQiladimi(s.rol, x)) return true;
+  const l = kichikMatn(s.login);
+  if (!l) return false;
+  const b = o.D.bugun ? o.D.bugun() : new Date();
+  const bugun = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+  return (o.D.FOYDLAR || []).some(f => {
+    if (!f || f.__ochirilgan || f.faol === false || !f.orinbosar || kichikMatn(f.login) === l) return false;
+    if (kichikMatn(f.orinbosar.login) !== l) return false;
+    const dan = sanaTogrimi(f.orinbosar.dan), gacha = sanaTogrimi(f.orinbosar.gacha);
+    if (!dan || !gacha || bugun < dan || bugun > gacha) return false;
+    return rolHalQiladimi(f.rol, x) && !sorovMuallifimi(x, f.login, f.nom || f.ism);
+  });
+}
+function tortKozXatosi(x, t, s, o){
   if ("muallifLogin" in t || "muallif" in t){
     const ozgardi = ("muallifLogin" in t && kichikMatn(t.muallifLogin) !== kichikMatn(x.muallifLogin)) ||
       ("muallif" in t && String(t.muallif || "") !== String(x.muallif || ""));
     if (ozgardi) return "so'rov muallifi o'zgartirilmaydi";
   }
+  /* Qabul qilingan qaror yakuniy: holat, qaror va asos endi o'zgarmaydi */
+  if (x.holat && x.holat !== "kutilmoqda" && ["holat", "qaror", "asos"].some(k => k in t && JSON.stringify(t[k]) !== JSON.stringify(x[k])))
+    return "Bu masala bo'yicha qaror allaqachon qabul qilingan";
   const qaror = ["tasdiqlangan", "rad etilgan"].includes(t.holat) || (t.qaror != null && t.qaror !== x.qaror);
   if (!qaror) return null;
-  const ozi = x.muallifLogin ? kichikMatn(x.muallifLogin) === kichikMatn(s.login) : (!!x.muallif && x.muallif === s.ism);
-  if (ozi) return "O'z so'rovingizni o'zingiz tasdiqlay olmaysiz";
+  if (sorovMuallifimi(x, s.login, s.ism)) return "O'z so'rovingizni o'zingiz tasdiqlay olmaysiz";
+  if (o && !qarorHuquqi(o, x, s)) return "Sizda bu qarorni tasdiqlash huquqi yo'q";
   if ("qarorKim" in t && t.qarorKim != null && kichikMatn(t.qarorKim) !== kichikMatn(s.login)) return "qaror qilgan xodim sessiyadan olinadi";
   return null;
 }
@@ -719,8 +760,11 @@ function chiqimXatosi(o, s, obyektId){
   const t = (o.D.TASDIQLAR || []).find(r => r && !r.__ochirilgan && r.tur === "chiqim" && ["kutilmoqda", "tasdiqlangan"].includes(r.holat) &&
     (String(r.obyektId) === String(obyektId) || String(r.manbaId) === String(obyektId)));
   if (!t) return "Balansdan chiqarish qaror so'rovi orqali bajariladi: so'rov yuboring, uni boshqa xodim tasdiqlaydi";
-  const ozi = t.muallifLogin ? kichikMatn(t.muallifLogin) === kichikMatn(s.login) : (!!t.muallif && t.muallif === s.ism);
-  return ozi ? "O'z so'rovingizni o'zingiz tasdiqlay olmaysiz" : null;
+  if (sorovMuallifimi(t, s.login, s.ism)) return "O'z so'rovingizni o'zingiz tasdiqlay olmaysiz";
+  /* Kutilayotgan so'rov bo'yicha faqat uni hal qila oladigan xodim chiqaradi (amal.js avval chiqaradi, keyin
+     qarorni yozadi); boshqa xodim uchun so'rov avval tasdiqlangan bo'lishi kerak */
+  if (t.holat === "kutilmoqda" && !qarorHuquqi(o, t, s)) return "Balansdan chiqarish uchun qaror hali qabul qilinmagan";
+  return null;
 }
 
 /* Xodim o'z hisobida faqat shu maydonlarni o'zgartiradi
@@ -972,7 +1016,11 @@ async function api(req, res, yol){
   if (!oqishmi && (ROL_KOL_TAQIQ[sessiya.rol] || []).includes(kol))
     return jsonJavob(res, 403, {xato: "bu to'plamni rolingiz yuritmaydi"});
   if (!ozYozuv && bolim && !bolimRuxsatlimi(sessiya.rol, bolim, oqishmi ? "oqi" : "yoz")){
-    let ruxsat = (kol === "PARAMETRLAR" && !oqishmi && PARAMETR_YOZUVCHI.includes(sessiya.rol)) ||
+    const tasdiqParam = kol === "PARAMETRLAR" && !oqishmi && id &&
+      tasdiqParammi((o.D.PARAMETRLAR || []).find(x => x && String(x.id) === String(id) && !x.__ochirilgan));
+    if (tasdiqParam && sessiya.rol !== "Rahbariyat")
+      return jsonJavob(res, 403, {xato: "zaxira va soliq stavkasi qaror so'rovi orqali o'zgaradi"});
+    let ruxsat = (kol === "PARAMETRLAR" && !oqishmi && !tasdiqParam && PARAMETR_YOZUVCHI.includes(sessiya.rol)) ||
       (req.method === "POST" && !id && (YARATISH_ISTISNO[kol] || []).includes(sessiya.rol)) ||
       (oqishmi && (OQISH_ISTISNO[kol] || []).includes(sessiya.rol));
     if (!ruxsat && TOLOV_ISTISNO[kol] && req.method === "PATCH" && id && TOLOV_BELGILOVCHI.includes(sessiya.rol)){
@@ -1087,7 +1135,7 @@ async function api(req, res, yol){
     const xato = tekshir(kol, t, o.D, false);
     if (xato) return jsonJavob(res, 400, {xato});
     if (kol === "TASDIQLAR"){
-      const x4 = tortKozXatosi(x, t, sessiya);
+      const x4 = tortKozXatosi(x, t, sessiya, o);
       if (x4) return jsonJavob(res, 403, {xato: x4});
     }
     if (MUALLIFLI.has(kol) && "muallifLogin" in t && kichikMatn(t.muallifLogin) !== kichikMatn(x.muallifLogin))

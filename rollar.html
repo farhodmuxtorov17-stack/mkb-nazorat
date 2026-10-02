@@ -34,7 +34,7 @@
 .rol-karta p{font-size:13px;line-height:1.5;color:var(--matn-3)}
 .rol-karta .past{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:auto;font-size:12.5px}
 .rol-karta .past a.chip:hover{background:var(--chiziq-2)}
-@media (max-width:480px){.rol-karta .past a.chip{height:36px;padding:0 14px;font-size:12.5px}.matritsa tbody th a{display:inline-block;padding:7px 0}}
+@media (max-width:480px){.rol-karta .past a.chip{height:36px;padding:0 14px;font-size:12.5px}.matritsa tbody th a{display:inline-block;padding:10px 0}}
 </style>
 </head>
 <body data-sahifa="sozlama">
@@ -135,7 +135,7 @@
         const n = soni(nom);
         return '<tr class="' + (k === joriy ? "joriy" : "") + '"><th scope="row"><a href="foydalanuvchilar.html?rol=' + encodeURIComponent(nom) + '">' + esc(nom) + "</a>" +
           "<span><span data-tarjimasiz>" + n + "</span> <span>ta faol xodim</span>" +
-            (korikSoni(nom) ? ' · <a href="' + (korikOchiq ? "foydalanuvchilar.html?korinish=" + encodeURIComponent("Ko'rib chiqish kerak") : "#") + '" style="color:var(--sariq-matn)"><span data-tarjimasiz>' + korikSoni(nom) + "</span> <span>tasi ko&#39;rib chiqishda</span></a>" : "") + "</span></th>" +
+            (korikSoni(nom) ? ' · <a href="' + (korikOchiq ? "foydalanuvchilar.html?korinish=" + encodeURIComponent("Ko'rib chiqish kerak") + "&rol=" + encodeURIComponent(nom) : "#") + '" style="color:var(--sariq-matn)"><span data-tarjimasiz>' + korikSoni(nom) + "</span> <span>tasi ko&#39;rib chiqishda</span></a>" : "") + "</span></th>" +
           BOL.map(b => {
             const h = r === null ? "oyt" : ((r || {})[b.kalit] || "");
             if (!h) return '<td><span class="yoq" aria-label="Yopiq">—</span></td>';

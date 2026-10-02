@@ -44,8 +44,7 @@
 .px-xarita{position:relative;height:420px;border-radius:var(--r-plitka);overflow:hidden;background:var(--plitka)}
 #px-leaflet{position:absolute;inset:0;z-index:1}
 .px-xarita .leaflet-container{font-family:var(--shrift);background:var(--plitka)}
-/* Zoom tugmalari xarita.html dagidek barmoqqa qulay o'lchamda */
-.px-xarita .leaflet-control-zoom a{width:40px;height:40px;line-height:40px;font-size:20px}
+/* Zoom tugmalari uslubi yadroda (yadro/app.css): xarita.html asboblar ustuni bilan bir xil */
 /* Metka va hudud belgisi uslublari yadroda: yadro/app.css (.mkb-metka, .mkb-hudud) */
 .px-xarita .mkb-hudud{font-size:12px}
 .px-yon{display:flex;flex-direction:column;gap:10px}
@@ -525,11 +524,11 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
       $("himoya").innerHTML =
         '<div class="qamrov-bosh">' + MKB.halqa(foiz, 64, 7) +
           '<span class="matn"><b>Himoyada</b><span><b data-tarjimasiz>' + MKB.fmt(faol.length - qoriqsiz) +
-          "</b> <span>/</span> <b data-tarjimasiz>" + MKB.fmt(faol.length) + "</b> <span>aktiv</span></span></span></div>" +
+          "</b> <span>/</span> <b data-tarjimasiz>" + MKB.fmt(faol.length) + "</b> <span>ta aktiv</span></span></span></div>" +
         '<div class="qamrov-bandlar">' +
           band("qoriqlash.html?filtr=qoriqlanmagan", qoriqsiz, "himoyasiz aktiv", true) +
           band("qurilmalar.html", qurilmasiz, "qurilmasiz aktiv", false) +
-          band("qurilmalar.html?filtr=oflayn24", aloqasiz, "qurilma oxirgi qaydda 24 soatdan ortiq jim", true) +
+          band("qurilmalar.html?filtr=oflayn24", aloqasiz, "qurilma 24 soatdan ortiq jim", true) +
           band("hodisalar.html", hodisa, "ochiq hodisa", true) +
         "</div>" +
         '<p class="maydon-izoh" style="margin-top:10px"><span>Himoyada: qo\'riqlash shartnomasi yoki o\'rnatilgan qurilma bor</span>' +
@@ -650,10 +649,24 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     const yashirinKodlar = Array.from(xYashirin).concat(xYashirin.has("umidsiz") ? ["3-yildan-oshgan"] : []);
     $("xarita-havola").href = "xarita.html" + (yashirinKodlar.length
       ? "?belgi=muddat&yashir=" + yashirinKodlar.map(encodeURIComponent).join(",") : "");
-    if ((!aniq.length && !Object.keys(barchaGuruh).length) || !window.L){
+    if (!aniq.length && !Object.keys(barchaGuruh).length){
       xKarta && xKarta.remove(); xKarta = null; xChegara = false;
       joy.innerHTML = MKB.boshHolat("xarita", faol.length ? "Koordinatasi kiritilgan aktiv yo'q" : "Balansda aktiv yo'q",
         faol.length ? "Koordinata obyekt tahririda kiritiladi" : "");
+      return;
+    }
+    /* Koordinatalar bor, lekin xarita kutubxonasi yuklanmagan: bu "koordinata yo'q" emas, yuklash xatosi */
+    if (!window.L){
+      xKarta && xKarta.remove(); xKarta = null; xChegara = false;
+      MKB.xatoHolat(joy, "Xaritani yuklab bo'lmadi. Aloqani tekshirib, qayta urinib ko'ring", ev => {
+        const b = ev.currentTarget; b.disabled = true;
+        const s = document.createElement("script");
+        s.src = "assets/vendor/leaflet/leaflet.js?v=26092200";
+        s.onload = () => xaritaChiz(faol, muddatlar, hududlar);
+        s.onerror = () => { s.remove(); b.disabled = false; MKB.toast("Xaritani yuklab bo'lmadi", "xavf"); };
+        document.head.appendChild(s);
+      });
+      tarjimaQil(joy);
       return;
     }
     if (!xKarta){
@@ -753,7 +766,7 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     /* Hudud kesimi: balans qiymati bo'yicha eng katta beshta hudud, to'liq jadval hisobot-hudud.html da */
     const hr = hududlar || [];
     $("px-hudud").innerHTML = hr.length ? '<div class="px-hudud-bosh"><span>Hududlar</span><a href="hisobot-hudud.html"><span>Barcha</span> <b data-tarjimasiz>' + hr.length + "</b></a></div>" +
-      hr.slice(0, 5).map(h => '<a class="px-hudud-q" href="hisobot-hudud.html"><span data-tarjimasiz>' + e(h.nom) + '</span><b data-tarjimasiz>' + e(MKB.pul(D.yaxlit(h.qiymat))) +
+      hr.slice(0, 5).map(h => '<a class="px-hudud-q" href="hisobot-hudud.html"><span>' + e(h.nom) + '</span><b data-tarjimasiz>' + e(MKB.pul(D.yaxlit(h.qiymat))) +
         '</b><small><b data-tarjimasiz>' + h.son + "</b> <span>ta aktiv</span></small></a>").join("") : "";
     $("px-izoh").innerHTML = "<span>Hudud rangi qanchalik to'q bo'lsa, unda shuncha ko'p aktiv turibdi. Hududni bosganda o'sha hududning to'liq xaritasi ochiladi.</span>" +
       (faol.length > aniq.length
@@ -788,8 +801,12 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     const otgan = [];
     const qosh = (sana, nom, izoh, href, ikonka) => { if (O.ichida(sana)) otgan.push({sana, nom, izoh, href, ikonka}); };
     kutil.forEach(t => qosh(t.javobMuddati, "Qaror javob muddati", t.id + " · " + (t.sarlavha || ""), "tasdiqlar.html?id=" + encodeURIComponent(t.id), "tasdiq"));
-    MKB.doira(D.MENING_VAZIFALARIM || []).filter(v => !v.bajarildi).forEach(v =>
-      qosh(v.muddat, "Vazifa muddati", v.nom + (v.ijrochi ? " · " + v.ijrochi : ""), "vazifalar.html?id=" + encodeURIComponent(v.id), "vazifa"));
+    /* Vazifa obyektga bog'langan bo'lsa: qatorda obyekt nomi, havola to'g'ridan-to'g'ri obyektga */
+    MKB.doira(D.MENING_VAZIFALARIM || []).filter(v => !v.bajarildi).forEach(v => {
+      const vy = v.obyektId ? D.topish(v.obyektId) : null;
+      qosh(v.muddat, "Vazifa muddati", v.nom + (vy ? " · " + (vy.qisqa || vy.nom) : "") + (v.ijrochi ? " · " + v.ijrochi : ""),
+        vy && MKB.ruxsat("obyekt.html") ? "obyekt.html?id=" + encodeURIComponent(vy.id) : "vazifalar.html?id=" + encodeURIComponent(v.id), "vazifa");
+    });
     MKB.doira(D.KORIKLAR || []).filter(k => k.holat !== "otkazildi" && idlar.has(k.obyektId)).forEach(k =>
       qosh(k.sana, "Rejadagi ko'rik", nomi(k.obyektId) + (k.inspektor ? " · " + k.inspektor : ""), "obyekt-koriklar.html?id=" + encodeURIComponent(k.obyektId), "korik"));
     MKB.doira(D.LOTLAR || []).filter(l => l.holat === "golib").forEach(l => {

@@ -437,7 +437,7 @@ MKB.sahifaYukla({joylar: {keyingi: ["qator", 1], kpi: ["karta", 3], yol: ["qator
   const polisQolgan = polis ? D.kunFarqi(D.bugun(), polis.tugash) : null;
   rows.push(holatQator(polis ? "sugurta-polis.html?id=" + encodeURIComponent(polis.id) : "sugurta.html", "sugurta",
     polis && polisQolgan > 30 ? "mint" : polis && polisQolgan > 0 ? "lavanda" : "pushti", "<span>Sug'urta</span>",
-    polis ? '<span data-tarjimasiz>' + esc((polis.kompaniya || "") + " · " + polis.polis) + "</span> <span>gacha</span> " + '<span data-tarjimasiz>' + esc(polis.tugash) + "</span>"
+    polis ? '<span data-tarjimasiz>' + esc((polis.kompaniya || "") + " · " + polis.polis) + "</span>, <span>" + esc(polis.tugash + " gacha") + "</span>"
       : "<span>Polis yo'q</span>",
     polis ? (polisQolgan > 0 ? '<span class="chip ' + (polisQolgan > 30 ? "chip-yashil" : "chip-sariq") + '"><span>Amalda</span></span>'
       : '<span class="chip chip-xavf">Muddati tugagan</span>') : '<span class="chip chip-xavf">Sug\'urtalanmagan</span>'));
@@ -457,7 +457,7 @@ MKB.sahifaYukla({joylar: {keyingi: ["qator", 1], kpi: ["karta", 3], yol: ["qator
   } else {
     const toliq = D.hujjatToliqligi ? D.hujjatToliqligi(y) : null;
     if (toliq && toliq.yetishmaydi.length && MKB.huquq("aktivlar", "yoz"))
-      variantlar.push({belgi: "hujjat", rang: "pushti", nom: N(String(toliq.yetishmaydi.length)) + " " + T("ta majburiy hujjat yetishmaydi"),
+      variantlar.push({belgi: "hujjat", rang: "pushti", nom: T(toliq.yetishmaydi.length + " ta majburiy hujjat yetishmaydi"),
         izoh: toliq.yetishmaydi.slice(0, 2).map(k => T(k.tur)).join(", ") + (toliq.yetishmaydi.length > 2 ? " " + T("va boshqalar") : ""),
         havola: "obyekt-hujjatlar.html?id=" + q, tugma: "Hujjatlarni yuklash", sahifa: "obyekt-hujjatlar.html"});
     const kor = (D.KORIKLAR || []).filter(k => k.obyektId === y.id && (k.holat === "rejada" || k.holat === "kechikkan"))
@@ -522,7 +522,7 @@ MKB.sahifaYukla({joylar: {keyingi: ["qator", 1], kpi: ["karta", 3], yol: ["qator
     return '<div class="indeks-band"><b>' + esc(t.nom) + '</b><span class="chip chip-kichik ' + r[1] + '">' + r[2] + "</span>" +
       '<span class="ib-iz" aria-hidden="true"><i style="width:' + Math.round(t.ulush * 100) + "%;background:" + r[0] + '"></i></span>' +
       '<span class="ib-izoh"><span>' + esc(t.qiymat) + "</span> · <span>me'yor</span>: <span>" + esc(t.meyor) + "</span>" +
-      (t.izoh ? ". <span>" + esc(t.izoh) + "</span>" : "") + "</span></div>";
+      (t.izoh ? " · <span>" + esc(t.izoh) + "</span>" : "") + "</span></div>";
   }).join("");
   tarjimaQil(document.querySelector("main"));
 }});

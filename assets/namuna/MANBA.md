@@ -7,6 +7,9 @@ sedan surati qo'yilmaydi. Modeli ro'yxatda yo'q aktiv suratsiz qoladi.
 
 Mahalliy (haqiqiy) reyestrda bu suratlar umuman ishlatilmaydi.
 
+`dokon-2` … `dokon-5` papkada qoladi, lekin ekranga chiqmaydi: ularda odamlar yoki reklama
+yozuvi ko'rinadi.
+
 Har surat ochiq litsenziyali, Wikimedia Commons dan olingan. Fayl uzun tomoni 1280 px gacha
 (tik surat 1080 px gacha) kichraytirilgan va WebP sifat 72 bilan saqlangan. Fayl 200 KB dan
 oshib ketsa, uzun tomoni 1024 yoki 900 px ga tushiriladi va sifat kerakligicha pasaytiriladi —

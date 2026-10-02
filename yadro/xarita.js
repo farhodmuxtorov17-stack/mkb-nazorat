@@ -238,13 +238,23 @@
         const bolak = Array.from(ildiz.childNodes).map(n => toza(n.textContent)).filter(Boolean);
         return (bolak.length ? bolak.join(". ") : toza(ildiz.textContent)).replace(/\.\s*\./g, ".");
       };
+      /* Faqat xarita oynasiga tushgan hudud Tab bilan tanlanadi: yaqinlashtirilgan kichik xaritada
+         ko'rinmaydigan viloyatlar fokussiz, ko'zga ko'rinmas to'xtash joyiga aylanmaydi */
+      const koringanmi = qatlam => {
+        try { return xarita.getBounds().intersects(qatlam.getBounds()); } catch (_) { return true; }
+      };
+      const tabTartibi = () => Object.keys(natija.shakl).forEach(k => {
+        const el = natija.shakl[k].getElement && natija.shakl[k].getElement();
+        if (el && el.__mkbKlav && el !== document.activeElement) el.setAttribute("tabindex", koringanmi(natija.shakl[k]) ? "0" : "-1");
+      });
+      xarita.on("moveend zoomend resize", tabTartibi);
       function shaklKlaviatura(qatlam, kod) {
         const el = qatlam.getElement && qatlam.getElement();
         if (!el) return;
         if (o.nom) el.setAttribute("aria-label", shaklMatn(o.nom(kod)));
         if (el.__mkbKlav) return;
         el.__mkbKlav = true;
-        el.setAttribute("tabindex", "0");
+        el.setAttribute("tabindex", koringanmi(qatlam) ? "0" : "-1");
         el.setAttribute("role", o.bosildi ? "button" : "img");
         el.addEventListener("keydown", ev => {
           if (ev.key !== "Enter" && ev.key !== " " && ev.key !== "Spacebar") return;
@@ -724,14 +734,18 @@
           }
           return false;
         };
-        /* Uch daraja: o'z hududi ichi -> bo'sh maydon -> nima bo'lsa ham karta ichi */
+        /* Uch daraja: o'z hududi ichi -> bo'sh maydon -> nima bo'lsa ham karta ichi.
+           Hududdan tashqaridagi joylardan tayanchga eng yaqini olinadi: ro'yxat tartibida birinchisi
+           olinganda tik siljishlar yon tomondan oldin kelib, Farg'ona nomi vodiy yonida emas,
+           ~100px pastda uzun chiziq bilan turib qolar edi. */
         let tanlangan = null, zaxira = null, zaxira2 = null;
+        const uzoq = j => Math.hypot(j[0], j[1]);
         for (const j of SILJISH) {
           const q = tortburchak(j);
           if (!kartada(q) || !bosh(q)) continue;
           if (hududIchida(j)) { tanlangan = {j: j, q: q}; break; }
-          if (!zaxira && !boshqada(j)) zaxira = {j: j, q: q};
-          if (!zaxira2) zaxira2 = {j: j, q: q};
+          if ((!zaxira || uzoq(j) < uzoq(zaxira.j)) && !boshqada(j)) zaxira = {j: j, q: q};
+          if (!zaxira2 || uzoq(j) < uzoq(zaxira2.j)) zaxira2 = {j: j, q: q};
         }
         zaxira = zaxira || zaxira2;
         if (tanlangan) { qoy(tanlangan.j); band.push(tanlangan.q); return; }

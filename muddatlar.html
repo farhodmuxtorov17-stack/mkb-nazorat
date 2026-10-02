@@ -133,9 +133,12 @@ MKB.sahifaYukla({
   const summa = r => r.reduce((s, x) => s + (x.qiymat || 0), 0);
 
   let qatorlar = [], jadval = null;
-  const holat = {oyna: null, kor: "jadval"};
+  /* oyna — 30/60/90 kunlik muddat oynasi, yil — «1 yildan ortiq balansda» kartasi. Ikkalasi
+     jadvalni toraytiradi va bir-birini almashtiradi: bir vaqtda faqat bittasi yoqiladi. */
+  const holat = {oyna: null, yil: false, kor: "jadval"};
   const url = new URLSearchParams(location.search);
   if (["30", "60", "90"].includes(url.get("oyna"))) holat.oyna = +url.get("oyna");
+  else if (url.get("yil") === "1") holat.yil = true;
   if (url.get("kor") === "kalendar") holat.kor = "kalendar";
 
   function yasa(){
@@ -176,6 +179,7 @@ MKB.sahifaYukla({
     el.querySelectorAll("[data-oyna]").forEach(b => b.addEventListener("click", () => {
       const n = +b.dataset.oyna;
       holat.oyna = holat.oyna === n ? null : n;
+      holat.yil = false;
       holat.kor = "jadval";
       hammasi();
       document.getElementById("royxat-sar").scrollIntoView({behavior: "smooth", block: "start"});
@@ -189,14 +193,23 @@ MKB.sahifaYukla({
     const imtiyoz = qatorlar.filter(x => x.muddat === "imtiyozda");
     const yildan = qatorlar.filter(x => x.turgan != null && x.turgan >= 365);
     const m = (href, yorliq, r, izoh) =>
-      '<a class="metrika" href="' + href + '"><span class="m-yorliq">' + yorliq + '</span>' +
+      '<a class="metrika" href="' + href + '"' + (href.indexOf("?yil=1") >= 0 ? " data-yil" : "") + '><span class="m-yorliq">' + yorliq + '</span>' +
       '<span class="m-qiymat" data-tarjimasiz>' + MKB.fmt(r.length) + "</span>" +
       '<span class="m-izoh"><span data-tarjimasiz>' + esc(MKB.pul(summa(r))) + "</span>" + (izoh ? " · " + (izoh.startsWith("<") ? izoh : "<span>" + izoh + "</span>") : "") + "</span></a>";
     document.getElementById("metrikalar").innerHTML =
       m("obyektlar.html?muddat=umidsiz", "Me'yoriy muddat o'tgan", umidsiz, "") +
       m("obyektlar.html?muddat=3-yildan-oshgan", "3 yildan oshgan", uchYil) +
       m("obyektlar.html?muddat=imtiyozda", "Soliq imtiyozi davrida", imtiyoz, "6 oy") +
-      m("#royxat-sar", "1 yildan ortiq balansda", yildan);
+      m("muddatlar.html?yil=1#royxat-sar", "1 yildan ortiq balansda", yildan);
+    /* Karta shu sahifaning jadvalini aynan shu aktivlar bilan toraytiradi: ilgari u faqat
+       jadvalga aylantirar, jadval esa barcha aktivlarni ko'rsatib, kartadagi songa mos kelmasdi */
+    const yilK = document.querySelector("#metrikalar [data-yil]");
+    yilK.addEventListener("click", e => {
+      e.preventDefault();
+      holat.yil = true; holat.oyna = null; holat.kor = "jadval";
+      hammasi();
+      document.getElementById("royxat-sar").scrollIntoView({behavior: "smooth", block: "start"});
+    });
     const kiritilmagan = qatorlar.filter(x => x.turgan == null).length;
     document.getElementById("hs-meta").innerHTML = '<span>hisob sanasi</span> <b data-tarjimasiz>' + D.sanaYoz(MKB.bugun()) + "</b>" +
       (kiritilmagan ? ' · <a href="obyektlar.html?muddat=kiritilmagan"><span>balans sanasi yo&#39;q</span> <b data-tarjimasiz>' + kiritilmagan + "</b></a>" : "");
@@ -205,6 +218,7 @@ MKB.sahifaYukla({
   function tanlangan(){
     let r = qatorlar.filter(x => x.turgan != null);
     if (holat.oyna) r = r.filter(x => x.qolgan > 0 && x.qolgan <= holat.oyna);
+    else if (holat.yil) r = r.filter(x => x.turgan >= 365);
     return r;
   }
 
@@ -228,12 +242,14 @@ MKB.sahifaYukla({
   function jadvalChiz(){
     const r = tanlangan();
     const ff = document.getElementById("faol-filtr");
-    ff.hidden = !holat.oyna;
-    if (holat.oyna){
-      ff.innerHTML = '<span class="chip chip-sariq"><span>Muddat tugashiga</span>&nbsp;<b data-tarjimasiz>' + holat.oyna + "</b>&nbsp;<span>kundan kam</span></span>" +
+    ff.hidden = !(holat.oyna || holat.yil);
+    if (holat.oyna || holat.yil){
+      ff.innerHTML = (holat.oyna
+        ? '<span class="chip chip-sariq"><span>Muddat tugashiga</span>&nbsp;<b data-tarjimasiz>' + holat.oyna + "</b>&nbsp;<span>kundan kam</span></span>"
+        : '<span class="chip chip-sariq"><span>1 yildan ortiq balansda</span></span>') +
         '<span data-tarjimasiz>' + r.length + "</span><span>ta aktiv</span>" +
         '<button type="button" class="tugma tugma-oq tugma-kichik" id="oyna-tozala"><svg class="ic"><use href="#ik-yopish"/></svg>Filtrni olib tashlash</button>';
-      ff.querySelector("#oyna-tozala").addEventListener("click", () => { holat.oyna = null; hammasi(); });
+      ff.querySelector("#oyna-tozala").addEventListener("click", () => { holat.oyna = null; holat.yil = false; hammasi(); });
       tarjimaQil(ff);
     }
     const variantlar = Object.keys(MH).filter(k => k !== "chiqarilgan" && k !== "kiritilmagan").map(k => MH[k].nom);
@@ -317,10 +333,13 @@ MKB.sahifaYukla({
       const f = b.dataset.kor === holat.kor;
       b.classList.toggle("faol", f); b.setAttribute("aria-pressed", f);
     });
-    if (holat.kor === "kalendar") document.getElementById("faol-filtr").hidden = true;
+    /* Chip jadval bilan birga qaytadi: kalendardan jadvalga o'tilganda jadval hali toraytirilgan,
+       ilgari esa chip va uni olib tashlash tugmasi yo'qolib qolar edi */
+    document.getElementById("faol-filtr").hidden = holat.kor !== "jadval" || !(holat.oyna || holat.yil);
     const p = new URLSearchParams(location.search);
-    ["oyna", "kor"].forEach(k => p.delete(k));
+    ["oyna", "yil", "kor"].forEach(k => p.delete(k));
     if (holat.oyna) p.set("oyna", holat.oyna);
+    else if (holat.yil) p.set("yil", "1");
     if (holat.kor === "kalendar") p.set("kor", "kalendar");
     const s = p.toString();
     history.replaceState(null, "", location.pathname + (s ? "?" + s : ""));

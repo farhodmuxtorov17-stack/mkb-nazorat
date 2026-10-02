@@ -599,7 +599,9 @@
     const s = MKBapi.sessiya() || {};
     MKB.tasdiqla({
       sarlavha: "ABS bilan solishtirishni belgilash",
-      matn: "Belgi " + D.sanaYoz(h.sana) + " holatidagi MB hisobotiga yoziladi. Hisobot shu belgidan keyin topshiriladi.",
+      matn: h.mb.holat === "topshirilgan"
+        ? "Belgi " + D.sanaYoz(h.sana) + " holatidagi topshirilgan MB hisobotiga qo'shimcha sifatida yoziladi."
+        : "Belgi " + D.sanaYoz(h.sana) + " holatidagi MB hisobotiga yoziladi. Hisobot shu belgidan keyin topshiriladi.",
       tafsilot: [["Oy yakuni", {matn: D.sanaYoz(h.sana), tarjimasiz: true}], ["Reyestr", {matn: mln(h.rJami), tarjimasiz: true}],
         ["ABS, 16701", {matn: mln(absH.abs), tarjimasiz: true}], ["Farq", {matn: mlnF(h.farq), tarjimasiz: true}],
         ["Manba", absH.kochirma ? "Qo'lda, ko'chirma bilan" : "Qo'lda"]].concat(nomuvofiq != null ? [["Mos kelmagan qatorlar", {matn: String(nomuvofiq), tarjimasiz: true}]] : []),

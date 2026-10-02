@@ -6,6 +6,7 @@
 <title>MKB — Baholash</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
+.metrika-qator .metrika.tanlangan{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
 .nisbat-bosh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:14px}
 .nisbat-bosh > b{font:500 34px/1 var(--shrift-displey);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
 .nisbat-bosh > span{font-size:13px;color:var(--matn-3)}
@@ -158,6 +159,11 @@
           ? '<a class="tugma tugma-kichik tugma-oq" href="baholash-buyurtma.html?obyekt=' + encodeURIComponent(x.id) + '">Buyurtma</a>' : ""},
       ],
       bosilganda: x => { location.href = x.hisobotId ? "baholash-hisobot.html?id=" + encodeURIComponent(x.hisobotId) : "obyekt-moliya.html?id=" + encodeURIComponent(x.id); },
+      /* Jadval qaysi holat bo'yicha filtrlangani plitkada ko'rinadi (jadvalning o'z filtri o'zgarganda ham) */
+      chizilganda: () => document.querySelectorAll(".metrika[data-filtr]").forEach(a => {
+        const t = !!jadval && jadval.holat.filtrlar.holat === a.dataset.filtr;
+        a.classList.toggle("tanlangan", t); a.setAttribute("aria-pressed", String(t));
+      }),
     };
     if (jadval) jadval.yangila(qatorlar); else jadval = MKB.jadval("bh-jadval", cfg);
 
@@ -210,9 +216,10 @@
   function ulash(){
   if (ulash.bor) return; ulash.bor = true;
   /* KPI bosilganda reyestr shu holat bo'yicha filtrlanadi */
+  /* Tanlangan plitka qayta bosilsa filtr olib tashlanadi */
   document.querySelectorAll(".metrika[data-filtr]").forEach(a => a.addEventListener("click", () => {
     if (!jadval) return;
-    jadval.holat.filtrlar.holat = a.dataset.filtr; jadval.holat.sahifa = 1; jadval.yangila();
+    jadval.holat.filtrlar.holat = a.classList.contains("tanlangan") ? "" : a.dataset.filtr; jadval.holat.sahifa = 1; jadval.yangila();
   }));
   const f = new URLSearchParams(location.search).get("filtr");
   if (f && jadval && ["Dolzarb", "30 kunda tugaydi", "Eskirgan"].indexOf(f) >= 0){ jadval.holat.filtrlar.holat = f; jadval.yangila(); }

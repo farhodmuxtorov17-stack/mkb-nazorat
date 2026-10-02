@@ -123,7 +123,7 @@
   const FILTR = {
     "": ["Jami qurilmalar", () => true, "Barcha obyektlarda"],
     onlayn: ["Aloqadagi qurilmalar", x => x.holat === "Qayd bo'yicha aloqada", "Oxirgi holat qaydi bo'yicha"],
-    oflayn24: ["Oxirgi qaydda 24 soatdan ortiq jim", x => x.holat === "24 soatdan ortiq jim" || x.holat === "Nosoz", "Nosozlari bilan birga"],
+    oflayn24: ["24 soatdan ortiq jim", x => x.holat === "24 soatdan ortiq jim" || x.holat === "Nosoz", "Nosozlari bilan birga"],
     batareya: ["Batareyasi 20% dan past", x => x.batPast, "Almashtirish kerak"],
   };
   const obSet = () => [...new Set(qatorlar.map(x => x.obyektId))].map(id => [id, MKB.kn.obyektYorligi(id)]).sort((a, b) => String(a[1]).localeCompare(String(b[1])));
@@ -189,8 +189,18 @@
     obyekt = e.target.value; yangila();
   });
   let jadval = null;
+  /* Plitka va obyekt tanlovi qatorlarni jadvalga berishdan oldin saralaydi. Natija bo'sh bo'lsa,
+     "hali kiritilmagan" emas, filtrga mos qurilma yo'qligi va tozalash tugmasi ko'rsatiladi */
+  const BOSH = cfg.bosh;
+  const BOSH_FILTR = {sarlavha: "Filtrga mos qurilma yo'q", izoh: "Plitka yoki obyekt tanlovini olib tashlang",
+    amal: '<button type="button" class="tugma tugma-oq tugma-kichik" data-tozala>Filtrni tozalash</button>'};
+  $("qr-jadval").addEventListener("click", e => {
+    if (!e.target.closest("[data-tozala]")) return;
+    filtr = ""; obyekt = ""; yangila();
+  });
   function yangila(){
     cfg.amallar = obTanlovHTML();
+    cfg.bosh = qatorlar.length && !tanlangan().length ? BOSH_FILTR : BOSH;
     if (jadval) jadval.yangila(tanlangan()); else { cfg.qatorlar = tanlangan(); jadval = MKB.jadval("qr-jadval", cfg); }
     metrikaChiz();
     $("hs-meta").innerHTML = obyekt ? '<span>' + esc(MKB.kn.obyektNomi(obyekt)) + "</span>" :

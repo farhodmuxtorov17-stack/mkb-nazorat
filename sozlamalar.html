@@ -9,6 +9,8 @@
 .sz-menyu{display:flex;gap:4px;padding:5px;background:var(--oq);border-radius:var(--r-pilyula);box-shadow:var(--soya-past);width:max-content;max-width:100%;
   overflow-x:auto;scrollbar-width:none;margin-bottom:22px}
 .sz-menyu::-webkit-scrollbar{display:none}
+/* Telefonda bo'limlar yashirin aylantirishda qolib ketmaydi: hammasi bir qarashda ko'rinadi */
+@media (max-width:720px){.sz-menyu{flex-wrap:wrap;width:auto;overflow-x:visible;border-radius:24px}}
 .sz-menyu button{display:flex;align-items:center;gap:9px;flex:none;min-height:42px;padding:0 16px;border-radius:var(--r-pilyula);
   font-size:14px;color:var(--matn-2);transition:background var(--tez),color var(--tez);white-space:nowrap}
 .sz-menyu button .ic{width:17px;height:17px;flex:none;color:var(--matn-3)}
@@ -456,7 +458,9 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
     $("xk-matn").innerHTML = k.map(([nom, x]) => "<span>" + esc(nom) + "</span>: <span>" + esc(x.nom) + "</span>").join(". ") + ". " +
       (ulangan === k.length ? "<span>Xulosa havolasi har hafta shu kanallar orqali ketadi.</span>"
         : "<span>Ulash uchun AT departamenti pochta serveri manzili, jo&#39;natuvchi quti va Telegram bot tokenini beradi. Hozircha havola haftalik xulosa sahifasidan nusxalanadi.</span>");
-    if (typeof sahifaRuxsatlimi === "function" && !sahifaRuxsatlimi("integratsiyalar.html")) $("xk-havola").hidden = true;
+    /* Ruxsat yo'q bo'lsa yadro havolani DOM dan olib tashlagan bo'ladi */
+    const xh = $("xk-havola");
+    if (xh && typeof sahifaRuxsatlimi === "function" && !sahifaRuxsatlimi("integratsiyalar.html")) xh.hidden = true;
     tarjimaQil($("xk-qator"));
   }
   kanalChiz();
@@ -702,7 +706,11 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
     $("pm-soni").innerHTML = '<b data-tarjimasiz>' + r.length + "</b> <span>ta,</span> <b data-tarjimasiz>" + t + "</b> <span>tasi taxminiy</span>";
     tarjimaQil($("pm-soni"));
   };
-  $("pm-kim").textContent = PARAM_YOZADI ? "O'zgartirish uchun qatorni bosing." : "Qiymatni administrator yoki buxgalteriya o'zgartiradi.";
+  $("pm-kim").textContent = ADMIN ? "O'zgartirish uchun qatorni bosing."
+    : PARAM_YOZADI ? "O'zgartirish uchun qatorni bosing. Zaxira va soliq stavkalari Rahbariyat tasdig'iga yuboriladi."
+    : "Qiymatni administrator yoki buxgalteriya o'zgartiradi.";
+  /* Zaxira stavkasi va soliq bazasi to'rt ko'z bilan o'zgaradi (UX 7.1, server tasdiqParammi bilan bir xil) */
+  const tasdiqParam = p => ["zaxira", "soliq"].includes(p.guruh) || p.id === "soliqImtiyozOy";
   const shaxsiyParam = p => p.guruh === "shaxsiy" || p.id === "eksportNiqob" || BQ.SAQLASH.some(x => x.param === p.id);
   const pmJadval = MKB.jadval("pm-jadval", {
     qatorlar: pmQatorlar(),
@@ -716,7 +724,9 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
     ],
     bosh: {sarlavha: "Parametrlar topilmadi", izoh: "Filtrni o'zgartiring."},
     ustunlar: [
-      {kalit: "nom", nom: "Parametr", chiz: p => '<span class="qoida-nom"><b>' + esc(p.nom) + "</b></span>"},
+      {kalit: "nom", nom: "Parametr", chiz: p => '<span class="qoida-nom"><b>' + esc(p.nom) + "</b></span>" +
+        /* O'qish rolida qator bosilmaydi: shaxsiy parametrlarga alohida havola */
+        (!PARAM_YOZADI && shaxsiyParam(p) ? ' <a class="pm-shaxsiy" href="#shaxsiy">Shaxsiy ma&#39;lumotlar qismida</a>' : "")},
       {kalit: "guruhNomi", nom: "Guruh"},
       {kalit: "qiymat", nom: "Qiymat", son: true, chiz: qiymatMatn, csv: p => p.qiymat == null ? "" : p.qiymat},
       {kalit: "holatNomi", nom: "Holat", chiz: p => p.taxminiy
@@ -724,11 +734,13 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
         : '<span class="chip chip-kichik chip-yashil">Tasdiqlangan</span>'},
       {kalit: "manba", nom: "Manba", chiz: p => '<span class="pm-manba">' + esc(p.manba || "—") + "</span>"},
     ],
-    bosilganda: p => {
+    /* O'zgartira olmaydigan rolda qatorlar bosiladigan bo'lib ko'rinmaydi */
+    bosilganda: PARAM_YOZADI ? p => {
       /* Shaxsiy ma'lumot muddatlari va niqob «Shaxsiy ma'lumotlar» qismida o'zgaradi */
       if (shaxsiyParam(p)){ och("shaxsiy", true); return; }
-      if (PARAM_YOZADI) paramTahrir(PARAMLAR.find(x => x.id === p.id));
-    },
+      const x = PARAMLAR.find(y => y.id === p.id);
+      if (!ADMIN && x && tasdiqParam(x)) stavkaTaklif(x); else paramTahrir(x);
+    } : null,
   });
   pmSoni();
   async function paramlarYangila(){
@@ -738,6 +750,33 @@ details.qoshimcha[open] summary .ic{transform:rotate(180deg)}
   }
   const BOSH_QOLISHI_MUMKIN = ["kapital1DarajaMlrd", "yillikRejaMlrd"];
   const paramQiymatMatn = (p, q) => q == null ? "kiritilmagan" : MKB.fmt(q) + (p.birlik ? " " + p.birlik : "");
+  /* Buxgalteriya zaxira va soliq qiymatini o'zi yozmaydi: qaror so'rovi Rahbariyatga ketadi */
+  function stavkaTaklif(p){
+    const tana =
+      '<form class="forma-tor" id="pf" novalidate>' +
+        '<div class="maydon keng"><span class="maydon-yorliq">Parametr</span><b class="pf-nom">' + esc(p.nom) + "</b></div>" +
+        '<div class="maydon keng"><label class="maydon-yorliq" for="pf-q">Qiymat' + (p.birlik ? ", " + esc(p.birlik) : "") + " <b>*</b></label>" +
+          '<div class="kirish"><input id="pf-q" name="qiymat" type="text" data-format="kasr" data-kasr="4" min="0" required data-xato="Qiymatni kiriting"' +
+            ' value="' + (p.qiymat == null ? "" : String(p.qiymat).replace(".", ",")) + '"></div>' +
+          '<span class="maydon-izoh">Joriy qiymat: <span data-tarjimasiz>' + esc(paramQiymatMatn(p, p.qiymat)) + "</span>. " +
+            "<span>Yangi qiymat boshqa xodim (Rahbariyat) tasdiqlagach hisobga kiradi.</span></span></div>" +
+      "</form>";
+    MKB.modal("Stavkani tasdiqqa yuborish", tana, {okMatn: "Tasdiqqa yuborish", async ok(parda){
+      const f = parda.querySelector("#pf");
+      const r = MKB.formaTekshir(f);
+      if (!r) return false;
+      const q = r.qiymatlar.qiymat;
+      if (q === p.qiymat && !p.taxminiy){ MKB.formaXato(f, "Qiymat o'zgarmagan"); return false; }
+      let t;
+      try{
+        t = await MKB.tasdiq.sorov({tur: "zaxira", manbaKol: "PARAMETRLAR", manbaId: p.id,
+          sarlavha: "Stavkani tasdiqlash: " + p.nom,
+          tavsif: p.nom + ": " + paramQiymatMatn(p, p.qiymat) + " → " + paramQiymatMatn(p, q) + ".",
+          masulRol: "Rahbariyat", javobIshKuni: 5, asos: {parametrlar: [{id: p.id, qiymat: q}]}});
+      }catch(e){ MKB.formaXato(f, e && e.message ? e.message : "So'rov yuborilmadi"); return false; }
+      MKB.toast("Qaror so'rovi yuborildi: " + t.id);
+    }});
+  }
   function paramTahrir(p){
     if (!p) return;
     const tana =

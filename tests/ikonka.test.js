@@ -115,7 +115,7 @@ tekshir("orqaga tugmasi saqlanmagan formani so'raydi", () => {
 tekshir("rolga xos bo'lim markazida orqaga chizilmaydi", () => {
   const p = app.indexOf("function orqagaChiz");
   const tan = app.slice(p, p + 900);
-  talab(tan.includes("bolimHavolasi(joriyBolim()"),
+  talab(/bolimHavolasi\((navBolim\()?joriyBolim\(\)/.test(tan),
     "orqagaChiz rolga xos bo'lim markazini (BOLIM_BOSH_ROL) hisobga olmaydi");
 });
 tekshir("kirish, sessiya va xato sahifalariga qaytarilmaydi", () => {

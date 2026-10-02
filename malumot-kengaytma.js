@@ -58,7 +58,9 @@
     ferma: [["ferma-1", "Лобачев Владимир, CC BY-SA 3.0"], ["ferma-2", "NVO, CC BY-SA 3.0"], ["ferma-3", "Dor Shabashewitz, CC BY-SA 4.0"], ["ferma-4", "Екатерина Борисова, CC BY-SA 4.0"], ["ferma-5", "Alandislands, CC BY-SA 4.0"], ["ferma-6", "VOLOT, CC BY-SA 4.0"]],
     issiqxona: [["issiqxona-1", "USDAgov, Public domain"], ["issiqxona-2", "Schlaghecken Josef, CC BY-SA 4.0"], ["issiqxona-3", "MHM55, CC BY-SA 4.0"]],
     ombor: [["ombor-1", "Aneem faris, CC BY-SA 4.0"], ["ombor-2", "Анатолий Таранцов, CC BY 3.0"], ["ombor-3", "Natalia Senatorova, CC BY-SA 4.0"], ["ombor-4", "Oxfam East Africa, CC BY 2.0"], ["ombor-5", "Natalia Senatorova, CC BY-SA 4.0"]],
-    dokon: [["dokon-1", "Jean Housen, CC BY-SA 4.0"], ["dokon-2", "Jean Housen, CC BY-SA 4.0"], ["dokon-4", "Peretz Partensky, CC BY-SA 2.0"], ["dokon-5", "Thomas Taylor Hammond, CC BY-SA 4.0"], ["dokon-6", "Jean Housen, CC BY-SA 4.0"]],
+    /* dokon-2..5 ro'yxatda yo'q: ularda odamlar yoki reklama yozuvi ko'rinadi, bank ekranida
+       obyekt surati sifatida chalg'itadi. Fayllar papkada qoladi (MANBA.md). */
+    dokon: [["dokon-1", "Jean Housen, CC BY-SA 4.0"], ["dokon-6", "Jean Housen, CC BY-SA 4.0"]],
     kopqavat: [["kopqavat-1", "Uralsk Review, CC BY 3.0"], ["kopqavat-2", "Olimidono, CC0"], ["kopqavat-3", "Sigismund von Dobschütz, CC BY-SA 3.0"], ["kopqavat-4", "Uralsk Review, CC BY 3.0"]],
     uy: [["uy-1", "Nikolai Bulykin, CC BY-SA 4.0"], ["uy-2", "Shuhrataxmedov, CC BY-SA 3.0"], ["uy-3", "upyernoz, CC BY 2.0"], ["uy-4", "Nikolai Bulykin, CC BY-SA 4.0"], ["uy-5", "upyernoz, CC BY 2.0"], ["uy-6", "Adam Jones, CC BY-SA 2.0"]],
     uskuna: [["uskuna-1", "Unknown photographer, CC BY 3.0"], ["uskuna-2", "Kent Madsen, CC BY-SA 4.0"], ["uskuna-3", "Surya Prakash.S.A., CC BY-SA 3.0"], ["uskuna-4", "NearEMPTiness, CC BY-SA 4.0"], ["uskuna-5", "Carol Carlos, CC BY-SA 4.0"], ["uskuna-6", "Tell Rifaat Information Office, CC BY 3.0"]],
@@ -806,7 +808,7 @@
     const sex = YOZ.find(y => y.rasmTuri === "sex" && y.holat === "Sotuvga tayyorlanmoqda");
     if (sex) {
       const uskuna = YOZ.filter(y => y.turKalit === "uskuna" && y.hudud === sex.hudud && y.holat === "Sotuvga tayyorlanmoqda").slice(0, 2);
-      PAKETLAR.push({id: "PK-" + BUGUN.getFullYear() + "/01", nom: sex.qisqa + " va uskunalar", tarkib: [sex.id].concat(uskuna.map(u => u.id)),
+      PAKETLAR.push({id: "PK-" + BUGUN.getFullYear() + "/01", nom: sex.qisqa, tarkib: [sex.id].concat(uskuna.map(u => u.id)),
         investKompaniya: null, holat: "shakllantirilmoqda"});
     }
 

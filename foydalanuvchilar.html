@@ -42,7 +42,9 @@
 .korik-amallar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
 .korik-amallar .izoh{margin-right:auto;font-size:13px;color:var(--matn-3)}
 .aktiv-royxat{list-style:none;display:flex;flex-direction:column}
-.aktiv-royxat li{display:flex;gap:10px;align-items:baseline;padding:9px 0;font-size:13.5px}
+/* Butun qator havola: 390px da ham bosiladigan joy kamida 40px */
+.aktiv-royxat a{display:flex;gap:10px;align-items:baseline;min-height:40px;padding:9px 4px;font-size:13.5px;border-radius:10px}
+.aktiv-royxat a:hover{background:var(--plitka)}
 .aktiv-royxat li + li{border-top:1px solid var(--chiziq-2)}
 .aktiv-royxat .kod-mono{flex:none;font-size:12.5px}
 .aktiv-royxat span{min-width:0;overflow-wrap:anywhere}
@@ -293,7 +295,7 @@
   function aktivPanel(f){
     const a = B.masulAktivlar(D, f.nom);
     const tana = (a.length ? '<ul class="aktiv-royxat">' + a.slice(0, 200).map(y =>
-      '<li><a class="kod-mono" href="obyekt.html?id=' + encodeURIComponent(y.id) + '" data-tarjimasiz>' + esc(y.id) + '</a><span data-tarjimasiz>' + esc(y.qisqa || y.nom) + "</span></li>").join("") + "</ul>"
+      '<li><a href="obyekt.html?id=' + encodeURIComponent(y.id) + '"><span class="kod-mono" data-tarjimasiz>' + esc(y.id) + '</span><span data-tarjimasiz>' + esc(y.qisqa || y.nom) + "</span></a></li>").join("") + "</ul>"
       : MKB.boshHolat("aktivlar", "Mas'ul aktivlar yo'q", "")) +
       (ADMIN && a.length ? '<div style="margin-top:16px"><button type="button" class="tugma tugma-asosiy" data-panel-otkaz data-yozadi>' + ik("foydalar") + "Aktivlarni o&#39;tkazish</button></div>" : "");
     const p = MKB.yonPanel(f.nom, tana, {yorliq: "Mas'ul aktivlar: " + a.length});

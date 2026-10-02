@@ -124,10 +124,10 @@
     "</section>" +
     '<form id="ko-forma" class="ustun" novalidate>' +
       '<section class="karta" data-sayohat="chek-list"><div class="karta-bosh"><span class="ko-qadam" data-tarjimasiz>1</span><h2>Nazorat bandlari</h2><span class="soni" id="ko-band-soni" data-tarjimasiz></span>' +
-        '<button type="button" class="tugma tugma-kichik tugma-oq" id="ko-hammasi">Barchasi joyida</button></div>' +
+        '<button type="button" class="tugma tugma-kichik tugma-oq" id="ko-hammasi">Barchasi me&#39;yorda</button></div>' +
         '<div id="ko-bandlar">' + bandlar.map((t, i) =>
           '<div class="ko-band" data-band="' + i + '"><span class="ko-nom">' + esc(t) + "</span>" +
-          segment("b" + i, [["joyida", "Joyida"], ["kamchilik", "Kamchilik"], ["tekshirilmadi", "Tekshirilmadi"]]) +
+          segment("b" + i, [["joyida", "Me'yorda"], ["kamchilik", "Kamchilik"], ["tekshirilmadi", "Tekshirilmadi"]]) +
           '<div class="ko-izoh" hidden><textarea class="kirish-matn" name="bi' + i + '" style="min-height:64px" placeholder="Kamchilikni qisqa yozing" aria-label="Kamchilik izohi"></textarea></div></div>').join("") +
         "</div></section>" +
       '<section class="karta"><div class="karta-bosh"><span class="ko-qadam" data-tarjimasiz>2</span><h2>' + (D.binolimi(y) ? "Hisoblagichlar" : "Ko'rsatkich") + "</h2></div>" +
@@ -178,11 +178,17 @@
     return Math.max(turMeyori, kamchilikBandlar().length, ball && ball <= 2 ? 1 : 0, turi === "Sotuv oldi" ? 1 : 0);
   };
   function fotoHolat(){
-    const kerak = kerakSurat();
+    const kerak = kerakSurat(), kamSoni = kamchilikBandlar().length, ball = +tanlangan("ball") || 0;
     document.getElementById("ko-foto-soni").textContent = kerak ? fotoSoni + " / " + kerak : fotoSoni + " ta";
     const q = document.getElementById("ko-foto-qoida");
+    /* Surat soni qayerdan kelgani yoziladi: obyekt turi me'yori, kamchiliklar soni, past baho yoki sotuv */
+    const sabab = [];
+    if (turMeyori && kerak === turMeyori) sabab.push(D.binolimi(y) ? "bino uchun me'yor" : "transport vositasi uchun me'yor");
+    if (kamSoni && kerak === kamSoni) sabab.push("har bir kamchilikka bittadan");
+    if (!sabab.length && ball && ball <= 2) sabab.push("nuqsonli holatni tasdiqlash uchun");
+    if (turi === "Sotuv oldi") sabab.push("sotuv e'loni uchun fotojadval");
     q.innerHTML = kerak
-      ? "<span>Kamida</span> <b data-tarjimasiz>" + kerak + "</b> <span>ta surat kerak: har bir kamchilikka bittadan" + (turi === "Sotuv oldi" ? ", sotuv e'loni uchun fotojadval" : "") + ".</span>"
+      ? "<span>Kamida</span> <b data-tarjimasiz>" + kerak + "</b> <span>ta surat kerak:</span> " + sabab.map(m => "<span>" + m + "</span>").join(", ") + "."
       : "<span>Surat ixtiyoriy. Kamchilik belgilansa, har biriga surat kerak bo'ladi.</span>";
     tarjimaQil(q);
     if (fotoSoni >= kerak) MKB.maydonXato(document.getElementById("ko-foto"), null);
@@ -207,7 +213,7 @@
     if (m || e.target.name === "ball") hisob();
   });
 
-  /* Barchasi joyida: belgilanmagan bandlar "Joyida" bo'ladi; oldingi holatga qaytarish mumkin */
+  /* Barchasi me'yorda: belgilanmagan bandlar "Me'yorda" bo'ladi; oldingi holatga qaytarish mumkin */
   document.getElementById("ko-hammasi").addEventListener("click", () => {
     const oldin = bandlar.map((_, i) => tanlangan("b" + i));
     const ozgardi = oldin.map((v, i) => v ? null : i).filter(i => i != null);
@@ -217,10 +223,25 @@
       const s = forma.querySelector('[data-band="' + i + '"] .segment'); s.classList.remove("xato"); MKB.maydonXato(s, null);
     };
     ozgardi.forEach(i => qoy(i, "joyida"));
+    /* Kamchilik yo'q bo'lsa baho va xulosa ham to'ldiriladi: 5 · A'lo va tahrirlanadigan tayyor matn */
+    const xl = document.getElementById("ko-xulosa");
+    const ballQoy = !kamchilikBandlar().length && !tanlangan("ball");
+    const xulosaQoy = !kamchilikBandlar().length && !xl.value.trim();
+    const ballBelgila = v => {
+      forma.querySelectorAll('input[name="ball"]').forEach(r => { r.checked = r.value === v; });
+      const s = forma.querySelector('[data-segment="ball"]'); if (s){ s.classList.remove("xato"); MKB.maydonXato(s, null); }
+    };
+    if (ballQoy) ballBelgila("5");
+    if (xulosaQoy){ xl.value = "Kamchilik aniqlanmadi"; MKB.maydonXato(xl, null); }
     forma.dispatchEvent(new Event("change", {bubbles: true}));
     hisob();
     MKB.qaytarish(ozgardi.length + " ta band «Joyida» deb belgilandi", {
-      bekor: () => { ozgardi.forEach(i => qoy(i, null)); forma.dispatchEvent(new Event("change", {bubbles: true})); hisob(); },
+      bekor: () => {
+        ozgardi.forEach(i => qoy(i, null));
+        if (ballQoy) ballBelgila(null);
+        if (xulosaQoy && xl.value === "Kamchilik aniqlanmadi") xl.value = "";
+        forma.dispatchEvent(new Event("change", {bubbles: true})); hisob();
+      },
     });
   });
 
@@ -478,7 +499,8 @@
     if (!natija) return;
     qoriq.toza();
     try{ localStorage.removeItem(muhrKalit); }catch(_){ }
-    location.href = "korik-akti.html?id=" + encodeURIComponent(k.id) + "&yakunlandi=1" + (hodisa ? "&hodisa=" + encodeURIComponent(hodisa.id) : "");
+    /* Yakunlangan forma tarixda qolmaydi: aktdagi "Orqaga" to'g'ridan-to'g'ri rejaga qaytaradi */
+    location.replace("korik-akti.html?id=" + encodeURIComponent(k.id) + "&yakunlandi=1" + (hodisa ? "&hodisa=" + encodeURIComponent(hodisa.id) : ""));
   });
   }
 })();

@@ -42,7 +42,8 @@
 #mm-jadval.karta-rejim .jadval-orash,#mm-jadval.karta-rejim .jadval-past{display:none}
 #mm-jadval.karta-rejim .jadval-korpus{padding-bottom:6px}
 .mm-sahifa{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:13.5px;color:var(--matn-3);padding:14px 2px 0}
-.mm-tanlov select{max-width:230px}
+.mm-tanlov select{max-width:230px;padding-right:27px;margin-right:-25px}
+.mm-tanlov .ic.strelka{pointer-events:none;flex:none}
 .smeta-izoh{font-size:12.5px;color:var(--matn-3);margin-top:14px;line-height:1.6}
 /* Diqqat talab qiladi: KPI ostidagi bir qatorlik tasma. Qatorlar tugma bosilganda ochiladi,
    birinchi ekranda kameralar turadi */
@@ -230,6 +231,8 @@
         /* soat — oxirgi signaldan hozirgacha o'tgan vaqt: qayd paytidagi emas, sahifa ochilgan paytdagi */
         holat, jim, soat: kam ? kmh.signalSoat : null, signal: kam ? (kam.oxirgiSignal || "") : "",
         qayd: kam ? (kmh.qayd || kam.oxirgiSignal || "") : "",
+        /* Qayd yoshi: hozirgacha o'tgan soat (qayd bo'lmasa oxirgi signaldan) */
+        qaydSoat: kam ? (kmh.qayd ? kmh.qaydSoat : kmh.signalSoat) : null,
         batareya: batMin, batPast: batMin >= 0 && batMin < 20, kamBat, kamBatPast: kamBat >= 0 && kamBat < 20,
         surat: !!(kam && !jim && (y.rasm || y.rasmKichik)), ochiq, qulf, qurilmaSoni: qs.length, turlari, daraja,
         izlash: [y.id, y.nom, y.qisqa, y.hudud, y.manzil, kam ? kam.id : "", kam ? kam.model : ""].filter(Boolean).join(" ").toLowerCase()};
@@ -259,8 +262,12 @@
     const aloqasiz = kamOb.filter(x => x.holat === H_ALOQASIZ).length;
     const kamerasiz = asos.filter(x => !x.kam).length;
     const kamSoni = kamOb.reduce((a, x) => a + x.kamSoni, 0);
-    const oxirgiQayd = kamOb.map(x => x.qayd).filter(Boolean)
-      .sort((a, b) => signalKalit(b).localeCompare(signalKalit(a)))[0] || null;
+    const oxirgiQ = kamOb.filter(x => x.qayd)
+      .sort((a, b) => signalKalit(b.qayd).localeCompare(signalKalit(a.qayd)))[0] || null;
+    const oxirgiQayd = oxirgiQ ? oxirgiQ.qayd : null;
+    /* Plitka jonli holatni emas, oxirgi qaydni ko'rsatadi: qayd yoshi yonida yoziladi */
+    const qaydYoshi = oxirgiQ && oxirgiQ.qaydSoat != null
+      ? ' · <span data-tarjimasiz>' + kunSoat(oxirgiQ.qaydSoat)[0] + "</span> <span>" + kunSoat(oxirgiQ.qaydSoat)[1] + " oldin</span>" : "";
     $("hs-meta").innerHTML = '<b data-tarjimasiz>' + kamSoni + "</b> <span>ta kamera</span> · " +
       '<b data-tarjimasiz>' + kamOb.length + "</b> <span>ta obyektda</span>";
     const joriy = jadval ? (jadval.holat.filtrlar.holat || "") : "";
@@ -271,8 +278,8 @@
       '<span class="m-izoh">' + izoh + "</span></button>";
     /* Uchala plitka ham obyekt sanaydi: sarlavhadagi kamera soni bilan aralashmaydi */
     $("hm-metrika").innerHTML =
-      plitka(H_ALOQADA, "Kamerasi aloqada obyektlar", '<span data-tarjimasiz>' + aloqada + "</span><small data-tarjimasiz>/ " + kamOb.length + "</small>",
-        oxirgiQayd ? "<span>Qayd bo'yicha. Oxirgi qayd:</span> <span data-tarjimasiz>" + esc(qisqaVaqt(oxirgiQayd)) + "</span>" : "<span>Holat qayd etilmagan</span>") +
+      plitka(H_ALOQADA, "Oxirgi qaydda aloqada", '<span data-tarjimasiz>' + aloqada + "</span><small data-tarjimasiz>/ " + kamOb.length + "</small>",
+        oxirgiQayd ? "<span>Oxirgi qayd:</span> <span data-tarjimasiz>" + esc(qisqaVaqt(oxirgiQayd)) + "</span>" + qaydYoshi : "<span>Holat qayd etilmagan</span>") +
       plitka(H_ALOQASIZ, "Kamerasi jim obyektlar", '<span data-tarjimasiz>' + aloqasiz + "</span>",
         "Kamera jim yoki nosoz", aloqasiz > 0) +
       plitka(H_KAMERASIZ, "Kamerasiz obyektlar", '<span data-tarjimasiz>' + kamerasiz + "</span>",
@@ -344,7 +351,7 @@
   const tanlangan = () => qatorlar.filter(x => !qurilmaTuri || x.turlari.indexOf(qurilmaTuri) >= 0);
   const amallarHTML = () => '<label class="tanlov mm-tanlov" data-tur="himoya-qurilma-filtr"><span class="t-old">Qurilma:</span>' +
       '<select data-qtur aria-label="Qurilma turi bo&#39;yicha"><option value="">Barchasi</option>' +
-      turVariantlari().map(t => '<option value="' + esc(t) + '"' + (t === qurilmaTuri ? " selected" : "") + ">" + esc(t) + "</option>").join("") + "</select></label>" +
+      turVariantlari().map(t => '<option value="' + esc(t) + '"' + (t === qurilmaTuri ? " selected" : "") + ">" + esc(t) + "</option>").join("") + "</select>" + ik("past", "strelka") + "</label>" +
     '<div class="almashtirgich" role="group" aria-label="Ko\'rinish turi" data-tur="himoya-korinish">' +
       '<button type="button" data-kor="karta" aria-pressed="' + (kor === "karta") + '"' + (kor === "karta" ? ' class="faol"' : "") + ">" + ik("galereya") + "<span>Kameralar</span></button>" +
       '<button type="button" data-kor="jadval" aria-pressed="' + (kor === "jadval") + '"' + (kor === "jadval" ? ' class="faol"' : "") + ">" + ik("hujjat") + "<span>Ro'yxat</span></button></div>";
@@ -622,7 +629,7 @@
           '<span class="matn"><b><button type="button" class="qator-och" data-yigma="' + g.k + '" aria-expanded="' + ochiq + '" aria-controls="' + id + '">' + y.nom + "</button></b>" +
           /* Aloqa guruhi sarlavhasida qurilma soni panel bilan bir manbadan (oflayn24 filtri), hodisa yozuvlari soni emas */
           (g.k === "aloqa"
-            ? '<span><b data-tarjimasiz>' + H.uzoq.length + "</b> <span>ta qurilma oxirgi qaydda 24 soatdan ortiq jim</span> · <b data-tarjimasiz>" + g.q.length + "</b> <span>ta signal</span></span></span>"
+            ? '<span><b data-tarjimasiz>' + H.uzoq.length + "</b> <span>ta qurilma 24 soatdan ortiq jim</span> · <b data-tarjimasiz>" + g.q.length + "</b> <span>ta signal</span></span></span>"
             : '<span><b data-tarjimasiz>' + g.q.length + "</b> <span>ta qurilma signali</span></span></span>") +
           '<span class="ong"><svg class="ic"><use href="#ik-' + (ochiq ? "yuqori" : "past") + '"/></svg></span></div>' +
           '<div class="lenta-ichki" id="' + id + '"' + (ochiq ? "" : " hidden") + ">" + g.q.slice(0, 5).map(qatorHTML).join("") +

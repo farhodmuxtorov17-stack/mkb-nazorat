@@ -6,6 +6,7 @@
 <title>MKB — E-auksion lotlari</title>
 <link rel="stylesheet" href="yadro/app.css?v=26092200">
 <style>
+.metrika-qator .metrika.tanlangan{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
 .rz-hisob{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--matn-2);padding:12px 16px;border-radius:var(--r-kichik);background:var(--plitka)}
 .rz-hisob b{font-weight:500;color:var(--siyoh)}
 .rz-muddat{font-size:12.5px;color:var(--matn-3)}
@@ -87,7 +88,7 @@
     {kalit: "usulNom", nom: "Usul", variantlar: variantlar("usulNom", (D.SOTISH_USULLARI || []).map(u => u.nom))},
   ].filter(f => f.variantlar.length > 1 || (jadval && jadval.holat.filtrlar[f.kalit]));
   /* Bironta qatorga mos kelmaydigan tayyor ko'rinish ro'yxatda ko'rsatilmaydi */
-  const mosKorinishlar = a => a.filter(v => joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
+  const mosKorinishlar = a => a.filter(v => v.nom === q.get("korinish") || joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
 
   function muddat(l){
     const b = bugun();
@@ -136,13 +137,23 @@
       m("sotildi", "Sotildi", sotildi.length, "<span>" + pul(yaxlit(sotildi.reduce((a, x) => a + x, 0))) + "</span> <span>shartnoma summasi</span>");
     document.getElementById("kpi").querySelectorAll("[data-filtr]").forEach(a => a.addEventListener("click", e => {
       e.preventDefault();
-      const k = a.dataset.filtr;
+      /* Tanlangan plitka qayta bosilsa filtr olib tashlanadi */
+      const k = a.classList.contains("tanlangan") ? "" : a.dataset.filtr;
       jadval.holat.filtrlar.holatNom = k ? MKB.holatNomi(k) : "";
       jadval.holat.sahifa = 1;
       jadval.yangila();
       history.replaceState(null, "", "lotlar.html" + (k ? "?holat=" + k : ""));
     }));
+    kpiBelgila();
     tarjimaQil(document.getElementById("kpi"));
+  }
+  /* Jadval qaysi holat bo'yicha filtrlangani plitkada ko'rinadi (jadvalning o'z filtri o'zgarganda ham) */
+  function kpiBelgila(){
+    const hn = (jadval && jadval.holat.filtrlar.holatNom) || "";
+    document.getElementById("kpi").querySelectorAll("[data-filtr]").forEach(a => {
+      const t = !!hn && MKB.holatNomi(a.dataset.filtr) === hn;
+      a.classList.toggle("tanlangan", t); a.setAttribute("aria-pressed", String(t));
+    });
   }
 
   function chiz(){
@@ -176,12 +187,14 @@
         {kalit: "muddatMatn", nom: "Keyingi qadam", oral: true, saralash: false, chiz: l => { const m = muddat(l); return '<span class="rz-muddat' + (m.xavf ? " xavf" : "") + '">' + esc(m.matn || "—") + "</span>"; }},
       ],
       bosilganda: l => { location.href = "lot.html?id=" + encodeURIComponent(l.id); },
+      chizilganda: kpiBelgila,
     };
     Object.defineProperty(cfg, "filtrlar", {get: filtrlar, enumerable: true});
     jadval = MKB.jadval("jadval-joy", cfg);
-    /* Havoladagi holat faqat mos qator bo'lsa qo'llanadi: aks holda ro'yxat sababsiz bo'sh ko'rinardi */
+    /* Havoladagi taniladigan holat doim qo'llanadi (mos qator bo'lmasa jadval bo'sh holatini ko'rsatadi); tanilmagani xabar bilan tashlanadi */
     const h = q.get("holat");
-    if (h && r.some(x => x.holat === h)){ jadval.holat.filtrlar.holatNom = MKB.holatNomi(h); jadval.yangila(); }
+    if (h && (D.LOT_HOLATLARI || []).some(x => x.kalit === h)){ jadval.holat.filtrlar.holatNom = MKB.holatNomi(h); jadval.yangila(); }
+    else if (h) MKB.toast("Havoladagi holat tanilmadi, ro'yxat to'liq ko'rsatildi", "info");
   }
 
   /* ---------- Lot yaratish ---------- */

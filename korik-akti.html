@@ -58,7 +58,7 @@
   const y = D.topish(k.obyektId) || D.OBYEKT_INDEKS[k.obyektId] || {id: k.obyektId};
   const bugun = (() => { const b = D.bugun(); return new Date(b.getFullYear(), b.getMonth(), b.getDate()); })();
   const BAHO = {5: "A'lo", 4: "Yaxshi", 3: "Qoniqarli", 2: "Nuqsonli", 1: "Avariya holati"};
-  const NATIJA = {joyida: ["Joyida", "yashil"], kamchilik: ["Kamchilik", "xavf"], tekshirilmadi: ["Tekshirilmadi", "kul"],
+  const NATIJA = {joyida: ["Me'yorda", "yashil"], kamchilik: ["Kamchilik", "xavf"], tekshirilmadi: ["Tekshirilmadi", "kul"],
     "qayd etildi": ["Qayd etildi", "yashil"], kiritilmadi: ["Kiritilmadi", "kul"]};
   const natijaBelgi = n => { const v = NATIJA[n] || [n || "—", "kul"]; return {html: '<span class="dn-belgi ' + v[1] + '">' + esc(v[0]) + "</span>"}; };
   const otkazildi = k.holat === "otkazildi";
@@ -126,10 +126,10 @@
         ["Inspektor", k.inspektor || null], ["Obyekt uchun mas'ul", y.masul || null],
         ["Joylashuv", gps && gps.lat != null ? joyMatn(gps) : {t: "Qayd etilmagan"}, {keng: true}],
       ]},
-      {sarlavha: "Nazorat bandlari", jadval: {ustunlar: ["№", "Band", "Natija", "Izoh"], kenglik: ["7%", "", "17%", "34%"],
+      {sarlavha: "Nazorat bandlari", jadval: {ustunlar: ["№", "Nazorat bandi", "Natija", "Izoh"], kenglik: ["7%", "", "17%", "34%"],
         qatorlar: bandlar.map((c, i) => Object.assign([String(i + 1), {t: c.band}, natijaBelgi(c.natija), c.izoh ? {t: c.izoh} : ""], {sinf: c.natija === "kamchilik" ? "kam" : ""})),
         bosh: "Bandlar qayd etilmagan"}},
-      hisob.length ? {sarlavha: "Hisoblagich va ko'rsatkichlar", jadval: {ustunlar: ["Hisoblagich", "Oldingi", "Joriy", "Plomba"], son: [1, 2],
+      hisob.length ? {sarlavha: "Hisoblagich va ko'rsatkichlar", jadval: {ustunlar: ["Hisoblagich", "Oldingi ko'rsatkich", "Joriy ko'rsatkich", "Plomba"], son: [1, 2],
         qatorlar: hisob.map(c => [{t: c.band}, c.avvalgi != null ? MKB.fmt(c.avvalgi) : "—", c.korsatkich != null ? MKB.fmt(c.korsatkich) : (c.qiymat || "—"),
           c.plomba === false ? {html: '<span class="dn-belgi xavf">Buzilgan</span>'} : c.plomba ? {t: "Butun"} : "—"])}} : null,
       {sarlavha: "Baho va keyingi qadam", kv: [

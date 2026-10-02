@@ -36,6 +36,13 @@ window.MKBchizma = (function(){
   }
   const qFormat = (cfg, v) => cfg.tooltipFormat ? cfg.tooltipFormat(v) : v;
   const yorliq = (y, i) => (y && y[i] != null ? y[i] : String(i + 1));
+  /* X yorliqlari qadami: yorliq kengligi (10.5px shriftda ~6px/belgi) oraliqqa sig'masa siyraklashtiriladi.
+     9 tadan ko'p yorliqda eng kamida har ikkinchisi (oldingi xatti-harakat) */
+  const yorliqQadami = (y, joy) => {
+    if (!y || !y.length) return 1;
+    const eng = Math.max(...y.map(s => String(s == null ? "" : s).length)) * 6 + 6;
+    return Math.max(y.length > 9 ? 2 : 1, Math.ceil(eng / Math.max(joy, 1)));
+  };
 
   /* Catmull-Rom -> silliq kubik Bezier yo'li */
   function silliqYol(n){
@@ -126,8 +133,9 @@ window.MKBchizma = (function(){
       svg.appendChild(el("circle", {cx: ox[0], cy: ox[1], r: 3.5, fill: asosiy,
         stroke: rang("--varaq"), "stroke-width": 2}));
       /* x yorliqlar */
+      const xQadam = yorliqQadami(y, q.length > 1 ? X(1) - X(0) : W);
       (y || []).forEach((t, i) => {
-        if (y.length > 9 && i % 2) return;
+        if (i % xQadam) return;
         /* Oxirgi yorliq o'ng chetga tegib turadi: kesilmasligi uchun o'ngdan tekislanadi */
         svg.appendChild(el("text", {x: X(i), y: H - 8, "text-anchor": i === y.length - 1 && y.length > 1 ? "end" : "middle",
           "font-size": 10.5, fill: rang("--iz")}, t));
@@ -192,6 +200,7 @@ window.MKBchizma = (function(){
       }
       orin.style.position = "relative";
       const tt = tooltipYarat(orin);
+      const xQadam = yorliqQadami(y, joy);
       q.forEach((v, i) => {
         const h = Math.max(4, (H - P.t - P.b) * v / maks);
         const x = P.l + joy * i + (joy - en) / 2;
@@ -210,7 +219,7 @@ window.MKBchizma = (function(){
         });
         r.addEventListener("pointerleave", () => { r.setAttribute("opacity", faol ? 1 : .82); tt.setAttribute("hidden", ""); });
         svg.appendChild(r);
-        if (y && y[i] != null && !(y.length > 9 && i % 2))
+        if (y && y[i] != null && !(i % xQadam))
           svg.appendChild(el("text", {x: P.l + joy * i + joy / 2, y: H - 8,
             "text-anchor": "middle", "font-size": 10.5, fill: rang("--iz")}, y[i]));
       });

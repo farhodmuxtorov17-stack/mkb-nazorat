@@ -371,7 +371,10 @@
     const hozir = new Date(Math.max(Date.now(), HOZIR.getTime()));
     const signalSoat = s ? Math.max(0, Math.floor((hozir - s) / 3600e3)) : null;
     const qaydSoat = qayd ? Math.max(0, Math.floor((hozir - qayd) / 3600e3)) : null;
-    return {holat, oflaynSoat: soat, batareyaPast: q.batareya != null && q.batareya < 20, uzoqOflayn: soat != null && soat >= 24,
+    /* Jim qurilma qayddan keyin ham jim: jimlik hozirgacha sanaladi (himoya sahifasidagi "Kamera jim" bilan bir xil),
+       shunda "24 soatdan ortiq jim" yorlig'i, filtr va plitkalar bitta sondan chiqadi */
+    const jimSoat = soat != null && (holat === "oflayn" || holat === "nosoz") ? Math.max(soat, signalSoat || 0) : soat;
+    return {holat, oflaynSoat: jimSoat, batareyaPast: q.batareya != null && q.batareya < 20, uzoqOflayn: jimSoat != null && jimSoat >= 24,
       qayd: q.holatQayd || null, signalSoat, qaydSoat, eskirgan: qaydSoat == null || qaydSoat >= 24,
       aloqada: holat === "onlayn" && signalSoat != null && signalSoat < 24};
   }
@@ -401,7 +404,7 @@
         qurilmasizNuqta: KN.filter(k => !(k.qurilmalar || []).length).length,
         qurilma: QS.length,
         onlaynQurilma: QS.filter(q => q.holat === "onlayn").length,
-        oflayn24: QS.filter(q => (q.oflaynSoat || 0) >= 24).length,
+        oflayn24: QS.filter(q => (qurilmaHolati(q) || {}).uzoqOflayn).length,
         nosoz: QS.filter(q => q.holat === "nosoz").length,
         batareyaPast: QS.filter(q => q.batareya != null && q.batareya < 20).length,
         quyosh: QS.filter(q => q.quvvat === "quyosh+akkumulyator").length,

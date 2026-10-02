@@ -102,6 +102,14 @@
   let tahrir = url.get("id") ? (D.KORIKLAR || []).find(k => k.id === url.get("id")) : null;
   if (tahrir && !ochiqmi(tahrir)){ location.replace("korik-akti.html?id=" + encodeURIComponent(tahrir.id)); return; }
   if (tahrir && !MKB.doira([tahrir]).length) tahrir = null;
+  /* ?id= berilgan, lekin ko'rik topilmadi yoki doiradan tashqarida: yangi forma ochilmaydi */
+  if (url.get("id") && !tahrir){
+    const joy = document.querySelector(".tor-2");
+    joy.outerHTML = '<section class="karta">' + MKB.boshHolat("korik", "Ko'rik topilmadi", "Ko'rikni rejadan tanlang",
+      '<a class="tugma tugma-asosiy" href="korik-rejasi.html" style="margin-top:12px">Ko&#39;rik rejasi</a>') + "</section>";
+    tarjimaQil(document.querySelector("main.kontent"));
+    return;
+  }
 
   function tanlanganObyekt(){
     const v = el("kt-obyekt").value.trim();
@@ -228,12 +236,14 @@
         MKB.toast(xabar);
         forma.hidden = true;
         const n = el("kt-natija");
+        const otkazsa = MKB.huquq("korik", "yoz"), bugunmi = +D.sanaOqi(q.sana) <= +bugun();
         n.hidden = false;
         n.innerHTML = '<div class="bosh-holat">' + ik("tasdiq") + "<b>" + (mavjud ? "Ko'rik yangilandi" : "Ko'rik tayinlandi") + "</b>" +
           '<span><span class="kod-mono" data-tarjimasiz>' + esc(id) + "</span> · <span>" + esc(y.qisqa || y.nom) + "</span> · <span data-tarjimasiz>" + sana + "</span> · <span>" + esc(q.inspektor) + "</span></span>" +
           '<span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px">' +
+            (otkazsa ? '<a class="tugma ' + (bugunmi ? "tugma-asosiy" : "tugma-oq") + '" href="korik-otkazish.html?id=' + encodeURIComponent(id) + '">Ko&#39;rikni o&#39;tkazish</a>' : "") +
             '<a class="tugma tugma-oq" href="korik-rejasi.html">Rejaga o&#39;tish</a>' +
-            '<a class="tugma tugma-asosiy" href="korik-tayinlash.html">Yana tayinlash</a></span></div>';
+            '<a class="tugma ' + (otkazsa && bugunmi ? "tugma-oq" : "tugma-asosiy") + '" href="korik-tayinlash.html">Yana tayinlash</a></span></div>';
         tarjimaQil(n);
         bandlik();
       });

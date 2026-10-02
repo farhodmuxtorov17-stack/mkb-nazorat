@@ -438,12 +438,14 @@ async function boshla(){
   function kapitalKirit(){
     const joriy = D.param("kapital1DarajaMlrd");
     const ochiq = (D.MB_HISOBOTLAR || []).filter(m => m.holat !== "topshirilgan");
+    /* Joriy davr hisobotda hali yozuv sifatida yo'q, lekin reyestrdan shu qiymat bilan hisoblanadi, shuning uchun u ham sanaladi */
+    const qaytaSon = ochiq.length + (royxat().some(x => x.dastlabki) ? 1 : 0);
     const kf = v => v == null ? "—" : MKB.fmt(v).replace(".", ",") + " mlrd so'm";
     const p = MKB.modal(joriy != null ? "1-darajali kapitalni o'zgartirish" : "1-darajali kapitalni kiritish",
       '<form novalidate><div class="maydon"><label class="maydon-yorliq" for="mb-kap">Bankning 1-darajali kapitali, mlrd so\'m <b>*</b></label>' +
         '<div class="kirish"><input id="mb-kap" name="kapital" type="text" data-format="kasr" required min="0.1" data-xato="Kapital qiymatini kiriting" value="' + (joriy != null ? String(joriy).replace(".", ",") : "") + '" placeholder="Masalan, 1 250"></div>' +
         '<span class="maydon-izoh" id="mb-kap-farq" data-tarjimasiz></span>' +
-        '<span class="maydon-izoh"><span>Buxgalteriya ma\'lumoti.</span> <span data-tarjimasiz>' + ochiq.length + "</span> <span>ta topshirilmagan hisobot shu qiymat bilan qayta hisoblanadi.</span></span></div></form>",
+        '<span class="maydon-izoh"><span>Buxgalteriya ma\'lumoti.</span> <span data-tarjimasiz>' + qaytaSon + "</span> <span>ta topshirilmagan hisobot shu qiymat bilan qayta hisoblanadi.</span></span></div></form>",
       {okMatn: "Saqlash", async ok(pr){
         const forma = pr.querySelector("form");
         const r = MKB.formaTekshir(forma);
@@ -505,6 +507,8 @@ async function boshla(){
 
   document.addEventListener("mkb:qoidalar", chizish);
   chizish();
+  /* hisobot-mb.html#kapital (zaxira sahifasidagi havola): kapital oynasi darhol ochiladi */
+  if (location.hash === "#kapital" && kapitalniKiritaOladi()){ history.replaceState(null, "", location.pathname + location.search); kapitalKirit(); }
 }
 })();
 </script>

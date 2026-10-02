@@ -92,6 +92,8 @@ async function boshla(){
     "Q-PASAYTIR": ["pasayish", "lavanda"], "Q-DAVAKTIV": ["arxiv", "lavanda"], "Q-KONSERV": ["korik", "mint"]};
   const belgi = b => BELGI[b.qoidaId] || (/^HODISA\|/.test(b.id) ? ["xavf", "pushti"] : ["qongiroq", ""]);
   const qoida = id => (D.QOIDALAR || []).find(q => q.id === id) || null;
+  /* Manba kaliti: qoida ID si yoki hodisa bildirishnomalari uchun "HODISA". Manbalar kartasi va ro'yxat filtri bir xil kalitdan foydalanadi */
+  const manbaKalit = b => b.qoidaId || (/^HODISA\|/.test(b.id) ? "HODISA" : "");
 
   /* Qo'ng'iroq bilan bir xil doira (yadro/amal.js MKB_BILDIRISH_DOIRA): xodim o'z roliga yozilganini ko'radi,
      rahbariyat obyekt eslatmasini faqat muddatidan 3 kundan ko'p o'tib yopilmaganda oladi */
@@ -168,7 +170,7 @@ async function boshla(){
     manbalar(r);
 
     const q = h.qidiruv.trim().toLowerCase();
-    const k = r.filter(b => (h.filtr === "hammasi" || !oqilgan(b)) && (!h.qoida || (b.qoidaId || "") === h.qoida) &&
+    const k = r.filter(b => (h.filtr === "hammasi" || !oqilgan(b)) && (!h.qoida || manbaKalit(b) === h.qoida) &&
       (!q || [b.sarlavha, b.matn, b.obyektId].join(" ").toLowerCase().indexOf(q) >= 0))
       .sort((a, b) => (D.sanaOqi(b.sana) || 0) - (D.sanaOqi(a.sana) || 0) || (oqilgan(a) ? 1 : 0) - (oqilgan(b) ? 1 : 0));
     const joy = $("bl-royxat");
@@ -188,7 +190,8 @@ async function boshla(){
       tarjimaQil(joy); return;
     }
     const chegara = 40 + h.koproq * 40, korinadi = k.slice(0, chegara);
-    const tanlanganQoida = h.qoida ? qoida(h.qoida) : null;
+    /* Hodisa bildirishnomalari qoidadan emas, ichki tartibdan keladi: yorlig'i manbalar kartasidagi bilan bir xil */
+    const tanlanganQoida = h.qoida === "HODISA" ? {nom: "Jiddiy hodisa qayd etildi"} : h.qoida ? qoida(h.qoida) : null;
     /* Kartadagi son faqat qidiruv yoki qoida ro'yxatni toraytirganda chiqadi, aks holda u filtr tugmasidagi son bilan bir xil */
     let html = '<div class="karta-bosh"><h2 data-ikonka="qongiroq">' + (h.filtr === "oqilmagan" ? "O'qilmagan" : "Barcha bildirishnomalar") + "</h2>" +
       (q || h.qoida ? '<span class="soni" data-tarjimasiz>' + k.length + "</span>" : "") +
@@ -218,7 +221,7 @@ async function boshla(){
   function manbalar(r){
     const joy = $("bl-manbalar");
     const son = {};
-    r.forEach(b => { const k = b.qoidaId || (/^HODISA\|/.test(b.id) ? "HODISA" : ""); if (!k) return; const x = son[k] || (son[k] = {jami: 0, yangi: 0}); x.jami++; if (!oqilgan(b)) x.yangi++; });
+    r.forEach(b => { const k = manbaKalit(b); if (!k) return; const x = son[k] || (son[k] = {jami: 0, yangi: 0}); x.jami++; if (!oqilgan(b)) x.yangi++; });
     const qatorlar = (D.QOIDALAR || []).filter(q => son[q.id]).map(q => ({id: q.id, nom: q.nom, manba: q.manba, faol: q.faol !== false, son: son[q.id] || {jami: 0, yangi: 0}}));
     if (son.HODISA) qatorlar.push({id: "HODISA", nom: "Jiddiy hodisa qayd etildi", manba: "Ichki tartib", faol: true, son: son.HODISA});
     qatorlar.sort((a, b) => b.son.yangi - a.son.yangi || b.son.jami - a.son.jami);
@@ -226,7 +229,6 @@ async function boshla(){
     joy.innerHTML = '<div class="karta-bosh"><h2 data-ikonka="bogliq">Manbalar</h2><span class="soni">nazorat qoidalari</span></div>' +
       qatorlar.map(q => {
         const [ikon, rang] = BELGI[q.id] || (q.id === "HODISA" ? ["xavf", "pushti"] : ["qongiroq", ""]);
-        const qid = q.id === "HODISA" ? "" : q.id;
         return '<div class="qator bl-manba" role="button" tabindex="0" data-qoida="' + esc(q.id) + '" aria-pressed="' + (h.qoida === q.id) + '">' +
           '<span class="belgi ' + rang + '">' + ik(ikon) + "</span>" +
           '<span class="matn"><b>' + esc(q.nom) + '</b><span>' + esc(q.manba || "") + "</span></span>" +
@@ -235,7 +237,7 @@ async function boshla(){
       }).join("");
     xulosaIzoh(joy);
     joy.querySelectorAll("[data-qoida]").forEach(el => {
-      const bos = () => { const k = el.dataset.qoida === "HODISA" ? "" : el.dataset.qoida; h.qoida = h.qoida === k ? "" : k; h.filtr = "hammasi"; h.koproq = 0; chiz(); };
+      const bos = () => { const k = el.dataset.qoida; h.qoida = h.qoida === k ? "" : k; h.filtr = "hammasi"; h.koproq = 0; chiz(); };
       el.addEventListener("click", bos);
       el.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target === el){ e.preventDefault(); bos(); } });
     });

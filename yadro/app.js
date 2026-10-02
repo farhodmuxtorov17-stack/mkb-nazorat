@@ -35,6 +35,14 @@ const BOLIM_BOSH_ROL = {
   sotuv:  {buxgalteriya: "shartnomalar.html"},
   ishlar: {rahbariyat: "tasdiqlar.html", admin: "tasdiqlar.html"},
 };
+/* Rolning yon panelida yo'q bo'lim shu rol uchun boshqa bandga bog'lanadi: rahbariyat menyusida
+   "Qiymat va moliya" yo'q, shuning uchun zaxira, baholash, soliq va sug'urta sahifalarida "Hisobotlar"
+   bandi faol bo'ladi va yo'lakcha shu bandni ko'rsatadi. Faqat menyu va yo'lakcha: huquq o'zgarmaydi. */
+const BOLIM_TAXALLUS_ROL = {rahbariyat: {qiymat: "hisobot"}};
+function navBolim(kalit, rol){
+  const k = BOLIM_TAXALLUS[kalit] || kalit || null;
+  return (BOLIM_TAXALLUS_ROL[rol] && BOLIM_TAXALLUS_ROL[rol][k]) || k;
+}
 /* Yon panel bandining rolga bog'liq yorlig'i */
 const BOLIM_YORLIQ_ROL = {ishlar: {rahbariyat: "Qarorlar", admin: "Qarorlar"}};
 
@@ -154,6 +162,13 @@ function bolimRuxsatlimi(kalit, rol){ return huquqBor(rol, kalit, "o"); }
 function faylNomi(href){
   const f = (href || location.pathname).split("/").pop().split("?")[0].split("#")[0];
   return f || "panel.html";
+}
+/* Tor ekranda bo'lim tasmasi yonga suriladi: joriy band o'rtaga keltiriladi (sahifa o'zi siljimaydi) */
+function faolTabniKorsat(nav){
+  const f = nav && nav.querySelector(".faol");
+  if (!f || nav.scrollWidth <= nav.clientWidth + 1) return;
+  const n = nav.getBoundingClientRect(), r = f.getBoundingClientRect();
+  nav.scrollLeft += (r.left + r.width / 2) - (n.left + n.width / 2);
 }
 /* Fayl -> bo'lim kaliti: avval navigatsiya daraxti, keyin bo'limlar reyestri */
 const FAYL_BOLIM = (function(){
@@ -651,7 +666,7 @@ function yonChiz(){
   const el = document.getElementById("yon");
   if (!el) return;
   const rol = joriyRolKalit();
-  const bolim = joriyBolim();
+  const bolim = navBolim(joriyBolim(), rol);
   const joriyFayl = faylNomi();
   const daraxt = window.MKB_DARAXT || {};
 
@@ -667,13 +682,15 @@ function yonChiz(){
   /* Pastki blok (Sozlamalar) bugungidek ochiladigan guruh bo'lib qoladi */
   const guruhHTML = (kalit, yorliq, ikonka) => {
     const sahifalar = (daraxt[kalit] || []).filter(s => sahifaRuxsatlimi(s.f));
-    const ochiq = kalit === bolim;
+    /* Administratorning asosiy ishi (hisoblar, rollar, tarix) shu guruhda: unda guruh doim ochiq turadi */
+    const faol = kalit === bolim;
+    const ochiq = faol || (kalit === "sozlama" && rol === "admin");
     const havola = sahifalar.length ? sahifalar[0].f : (BOLIMLAR.find(b => b.kalit === kalit) || {}).href;
     if (sahifalar.length <= 1)
-      return '<a class="yon-band' + (ochiq ? " faol" : "") + '" href="' + havola + '"' +
-        (ochiq ? ' aria-current="page"' : "") + ">" + ik(ikonka) + "<span>" + yorliq + "</span></a>";
+      return '<a class="yon-band' + (faol ? " faol" : "") + '" href="' + havola + '"' +
+        (faol ? ' aria-current="page"' : "") + ">" + ik(ikonka) + "<span>" + yorliq + "</span></a>";
     return '<div class="yon-guruh">' +
-      '<button type="button" class="yon-band' + (ochiq ? " faol" : "") + '" data-guruh="' + kalit +
+      '<button type="button" class="yon-band' + (faol ? " faol" : "") + '" data-guruh="' + kalit +
       '" aria-expanded="' + ochiq + '">' + ik(ikonka) + "<span>" + yorliq + "</span>" +
       ik("past", "strelka") + "</button>" +
       '<div class="yon-ichki' + (ochiq ? " ochiq" : "") + '" data-ichki="' + kalit + '">' +
@@ -685,7 +702,7 @@ function yonChiz(){
   el.innerHTML =
     '<a class="yon-logo" href="' + rolBoshSahifasi(rol) + '">' +
       '<span class="belgi">' + LOGO_SVG + "</span>" +
-      "<span class=\"yon-nom\"><b>Mikrokreditbank</b><span>Balans aktivlarini boshqarish tizimi</span></span></a>" +
+      "<span class=\"yon-nom\"><b>Mikrokreditbank</b><span>Balans aktivlari nazorati</span></span></a>" +
     '<div class="yon-bandlar">' + yonBandlar(rol).map(bandHTML).join("") + "</div>" +
     '<div class="yon-past">' +
       guruhHTML("sozlama", "Sozlamalar", "sozlama") +
@@ -799,7 +816,7 @@ function shapkaChiz(){
   const namoyishHisob = !!(hisob && hisob.namoyish);
   const til = joriyTil();
   const rol = joriyRolKalit();
-  const bolim = joriyBolim();
+  const bolim = navBolim(joriyBolim(), rol);
   /* Shapkadagi tezkor pillalar yon panelning o'zidan olinadi: shu rolning birinchi uchta bandi.
      Shunda shapka va yon panel bitta manbadan keladi — buxgalteriya shapkada "Moliya" ni ko'radi,
      o'zida umuman yo'q "Nazorat" ni emas. Pillalar faqat yon panel yig'ilgan kenglikda (721–1024 px) ko'rinadi (app.css). */
@@ -1337,8 +1354,16 @@ const MKB = {
       finally{ ok.disabled = false; }
     });
     parda.addEventListener("keydown", esc2);
-    const birinchi = parda.querySelector(".modal-tana input, .modal-tana select, .modal-tana textarea") || ok;
-    setTimeout(() => birinchi.focus(), 30);
+    /* Birinchi maydon taymerda qidiriladi: tanasini keyin chizadigan oynalar (masalan, fayldan import) ham qamraladi.
+       Fokus haqiqatan tushmasa (tugma yashirin bo'lsa) yopish tugmasiga, u ham bo'lmasa oynaning o'ziga o'tadi */
+    setTimeout(() => {
+      if (!parda.isConnected) return;
+      const maydon = parda.querySelector(".modal-tana input:not([type=hidden]):not([disabled]), .modal-tana select:not([disabled]), .modal-tana textarea:not([disabled])");
+      const nomzod = [maydon, ok, parda.querySelector(".modal-yop")].filter(Boolean);
+      for (const e of nomzod){ e.focus(); if (document.activeElement === e) return; }
+      const oyna = parda.querySelector(".modal");
+      if (oyna){ oyna.setAttribute("tabindex", "-1"); oyna.focus(); }
+    }, 30);
     return parda;
   },
 
@@ -1548,6 +1573,7 @@ const MKB = {
       const n = urlKorinish;
       const v = tayyorlar.concat(ozlar()).find(x => x.nom === n);
       if (v) korinishQolla(v);
+      else MKB.toast("Havoladagi ko'rinish topilmadi, ro'yxat to'liq ko'rsatildi", "info");
     }
 
     /* ---------- Tanlash (bir nechta qatorga amal) ---------- */
@@ -2042,7 +2068,9 @@ const MKB = {
       const t = o.querySelector(".jadval");
       const oxirgi = t && t.querySelector("tbody tr:not(.bosh-qator) td:last-child");
       const toshdi = o.scrollWidth > o.clientWidth + 1;
-      const keng = toshdi && !!oxirgi && oxirgi.offsetWidth <= o.clientWidth * 0.4;
+      /* Faqat amal ustuni (tugma yoki havola) qotadi: holat yorlig'i qotsa, tor ekranda qo'shni ustunlarni yashiradi */
+      const amalli = !!oxirgi && !!oxirgi.querySelector("button, a[href], input, select");
+      const keng = toshdi && amalli && oxirgi.offsetWidth <= o.clientWidth * 0.4;
       o.classList.toggle("keng", keng);
       o.classList.toggle("oxirida", keng && o.scrollLeft + o.clientWidth >= o.scrollWidth - 1);
       if (qaytaOlch !== false) o.classList.toggle("sigdi", !toshdi);
@@ -2262,6 +2290,14 @@ const MKB = {
   bugun(){ const D = D_(); return D.bugun ? D.bugun() : new Date(); },
 
   /* ---------- Holat nomi va chipi ---------- */
+  /* Obyekt havolasi: balansdagi aktiv obyekt kartasiga, balansdan chiqarilgani arxiv yozuviga olib boradi; ikkalasida ham yo'q bo'lsa null */
+  obyektHavola(id){
+    if (!id) return null;
+    const D = D_();
+    if (D.topish && D.topish(id)) return "obyekt.html?id=" + encodeURIComponent(id);
+    const a = (D.ARXIV || []).find(x => x && (x.id === id || x.obyektId === id));
+    return a ? "arxiv-obyekt.html?id=" + encodeURIComponent(a.id) : null;
+  },
   holatNomi(k){
     if (k == null || k === "") return "—";
     const r = holatTop(k);
@@ -2475,7 +2511,7 @@ const MKB = {
       "</nav>";
     const el = (typeof joy === "string" ? document.querySelector(joy) : joy) ||
       (joy === undefined ? document.querySelector("[data-obyekt-tablar], .obyekt-tablar") : null);
-    if (el){ el.outerHTML = html; const yangi = document.querySelector(".obyekt-tablar"); if (yangi) tarjimaQil(yangi); }
+    if (el){ el.outerHTML = html; const yangi = document.querySelector(".obyekt-tablar"); if (yangi){ tarjimaQil(yangi); faolTabniKorsat(yangi); } }
     return html;
   },
 
@@ -2921,8 +2957,17 @@ MKB.orqaga = async function(){
   const ota = otaSahifa();
   if (ota && ota.href){ location.href = ota.href; return; }
   const rol = joriyRolKalit();
-  location.href = bolimHavolasi(joriyBolim(), rol) || rolBoshSahifasi(rol);
+  location.href = bolimHavolasi(navBolim(joriyBolim(), rol), rol) || rolBoshSahifasi(rol);
 };
+function tasmaQardoshimi(markaz){
+  const fayl = faylNomi();
+  const ota = yolakchaOtasi();
+  const boshlar = [markaz, ota && ota.href].filter(Boolean).map(h => faylNomi(h));
+  return Array.from(document.querySelectorAll("nav.bolim-tablar:not(.obyekt-tablar):not([data-obyekt-tablar])")).some(nav => {
+    const f = Array.from(nav.querySelectorAll("a[href]")).map(a => faylNomi(a.getAttribute("href")));
+    return f.indexOf(fayl) >= 0 && boshlar.some(b => f.indexOf(b) >= 0);
+  });
+}
 function orqagaChiz(){
   const shapka = document.querySelector(".hujjat-shapka");
   if (!shapka || shapka.querySelector(".orqaga-tugma")) return;
@@ -2933,8 +2978,12 @@ function orqagaChiz(){
   if (faylNomi() === faylNomi(rolBoshSahifasi(rol))) return;
   /* Bo'lim markazi ham bosh sahifa. Markaz rolga qarab boshqacha bo'ladi (BOLIM_BOSH_ROL):
      rahbariyatda "Ishlar" markazi tasdiqlar.html, boshqa rollarda vazifalar.html */
-  const markaz = bolimHavolasi(joriyBolim(), rol);
+  const markaz = bolimHavolasi(navBolim(joriyBolim(), rol), rol);
   if (markaz && faylNomi() === faylNomi(markaz)) return;
+  /* Bo'lim tasmasidagi sahifalar bir pog'onada turadi: sahifa o'zi tasmada bo'lsa va o'sha tasmada
+     bo'lim markazi yoki yo'lakchadagi ota ham bo'lsa, u ham bosh sahifa. Aks holda tab almashtirilganda
+     bitta tabda tugma paydo bo'lib, sarlavha yon tomonga sakraydi */
+  if (tasmaQardoshimi(markaz)) return;
   /* Yo'lakchada ota havolasi bo'lmasa ham bo'lim markaziga qaytariladi */
   if (!otaSahifa() && !markaz) return;
   const b = document.createElement("button");
@@ -2950,9 +2999,21 @@ function orqagaChiz(){
 function yolakchaBelgisi(){
   const y = document.querySelector(".hujjat-shapka .hs-yorliq");
   if (!y || y.querySelector(".yolak-ic")) return;
-  const bir = y.firstElementChild;
+  let bir = y.firstElementChild;
   if (!bir || bir.classList.contains("ajratgich")) return;
-  const kalit = bir.tagName === "A" ? bolimTopish(faylNomi(bir.getAttribute("href"))) : joriyBolim();
+  let kalit = bir.tagName === "A" ? bolimTopish(faylNomi(bir.getAttribute("href"))) : joriyBolim();
+  /* Rol menyusida yo'q bo'lim (BOLIM_TAXALLUS_ROL): yo'lakcha yon paneldagi faol bandni ko'rsatadi */
+  const rol = joriyRolKalit();
+  const nav = navBolim(kalit, rol);
+  if (nav && nav !== bolimKanon(kalit)){
+    const a = document.createElement("a");
+    a.href = bolimHavolasi(nav, rol) || rolBoshSahifasi(rol);
+    a.textContent = bolimYorligi(nav, rol);
+    bir.replaceWith(a);
+    bir = a;
+    kalit = nav;
+    tarjimaQil(y);
+  }
   const ikonka = bolimKanon(kalit) === "sozlama" ? "sozlama"
     : (BOLIMLAR.find(x => x.kalit === bolimKanon(kalit)) || {}).ikonka;
   if (!ikonka) return;
@@ -3059,6 +3120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     qisqargan.forEach(t => { if (t && !t.children.length) t.remove(); });
   }
+  document.querySelectorAll(".bolim-tablar").forEach(faolTabniKorsat);
 
   /* Jadval filtrlari: tashqariga bosish va Escape yopadi, Enter/bo'sh joy ochadi */
   const filtrYop = () => document.querySelectorAll(".tanlov .menyu-popover.ochiq, .tanlov-joy .menyu-popover.ochiq").forEach(p => {

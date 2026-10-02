@@ -176,9 +176,15 @@
         else if (e.key === "ArrowDown"){ e.preventDefault(); b[(i + 1) % b.length].focus(); }
         else if (e.key === "ArrowUp"){ e.preventDefault(); b[(i - 1 + b.length) % b.length].focus(); }
       });
-      document.addEventListener("click", e => { if (!e.target.closest(".menyu-joy")) yop(false); });
     }
   }
+  /* Tashqariga bosilganda menyu yopiladi. Tinglovchi bir marta qo'yiladi: shapka() har chizilganda
+     yangi tugma va menyu yasaladi, shuning uchun elementlar har safar id bo'yicha olinadi */
+  document.addEventListener("click", e => {
+    const pop = $("qr-menyu"), t = $("qr-menyu-t");
+    if (!pop || e.target.closest(".menyu-joy")) return;
+    pop.classList.remove("ochiq"); if (t) t.setAttribute("aria-expanded", "false");
+  });
 
   function plitkalar(){
     const h = D.qurilmaHolati(q) || {};
@@ -391,7 +397,8 @@
           if (yangiN && eskiN !== yangiN){ const n = D.kirishNuqtasi(yangiN); if (n) await MKBapi.yangilash("KIRISH_NUQTALARI", n.id, {qurilmalar: (n.qurilmalar || []).filter(x => x !== q.id).concat([q.id])}); }
         }, "Qurilma " + q.id + " ko'chirildi: " + MKB.kn.obyektNomi(v.obyektId));
         if (!ok) return false;
-        shapka(); pasport(); tarix();
+        /* Obyekt o'zgardi: masofadan ochish kamerasi, plitkalar va ob-havo ham yangi obyekt bo'yicha chiziladi */
+        hammasi();
       }});
     const nuqtalar = () => {
       const s = pd.querySelector("#f-n"), o = pd.querySelector("#f-o").value;

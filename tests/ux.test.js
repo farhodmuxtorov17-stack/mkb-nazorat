@@ -441,6 +441,12 @@ function malumot(){
       const r2 = await so(bux, "tasdiqlar/" + encodeURIComponent(ts.id), "PATCH", {muallifLogin: "a.rahmonov"});
       teng(r2.status, 403, "muallifni almashtirish");
     });
+    await tekshirA("Buxgalteriya zaxira va soliq stavkasini to'g'ridan-to'g'ri yoza olmaydi (403)", async () => {
+      const r = await so(bux, "parametrlar/zaxiraOraliq1Foiz", "PATCH", {qiymat: 3, taxminiy: false});
+      teng(r.status, 403, "zaxira");
+      const s = await so(bux, "parametrlar/soliqImtiyozOy", "PATCH", {qiymat: 1});
+      teng(s.status, 403, "soliq imtiyozi");
+    });
     await tekshirA("Rahbariyat kutilayotgan zaxira so'rovidagi qiymatni yozadi, boshqa qiymatni yoza olmaydi", async () => {
       const yomon = await so(rah, "parametrlar/zaxiraOraliq1Foiz", "PATCH", {qiymat: 15, taxminiy: false});
       teng(yomon.status, 403, "so'rovda yo'q qiymat");

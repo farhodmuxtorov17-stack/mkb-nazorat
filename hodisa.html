@@ -108,6 +108,7 @@
 
   const USTUNLAR = [["yangi", "Yangi"], ["tekshiruvda", "Tekshiruvda"], ["bartaraf", "Bartaraf etilmoqda"], ["hal", "Hal qilindi"], ["yopildi", "Yopildi"]];
   const NOM = Object.fromEntries(USTUNLAR);
+  const OCHIQ = ["yangi", "tekshiruvda", "bartaraf"];
   const CHIP = {yangi: "chip-xavf", tekshiruvda: "chip-sariq", bartaraf: "chip-info", hal: "chip-yashil", yopildi: "chip-kul"};
   const XH_MOS = {ochiq: "yangi", tekshiruvda: "tekshiruvda", bartaraf: "bartaraf", hal: "hal", yopildi: "yopildi"};
   const GH_MOS = {yangi: "yangi", tekshirilmoqda: "tekshiruvda", tekshiruvda: "tekshiruvda", bartaraf: "bartaraf", hal: "hal", yopildi: "yopildi"};
@@ -123,22 +124,8 @@
   /* Chora yozuvlari qo'shiladi, o'chirilmaydi: har bir qator kim va qachon yozganini saqlaydi */
   const choraQosh = matn => [String(h[xulosaMaydon] || "").trim(), vaqtBelgi() + ": " + matn].filter(Boolean).join("\n");
 
-  /* Yopilish vaqti yozuvning o'zida saqlanadi: haftalik xulosa va kengash hisoboti yopilgan hodisani shu vaqt bo'yicha
-     haftaga qo'yadi (hisobot-davr.js). Qayta ochilganda o'chiriladi, keyingi yopilishda yangisi yoziladi.
-     Ma'lumot modeli bu maydonni hali qabul qilmasa, u yuborilmaydi: aks holda hodisani yopib bo'lmay qoladi */
-  const yopilishYoziladi = () => {
-    const q = ((D.QOSHIMCHA_MAYDONLAR || {})[kol]) || {};
-    return "yopilganVaqt" in q || (D[kol] || []).some(x => x && "yopilganVaqt" in x);
-  };
-  function holatPatch(kalit){
-    const p = kol === "XAVFSIZLIK_HODISALARI" ? {holat: kalit === "yangi" ? "ochiq" : kalit}
-      : {ustun: kalit === "tekshiruvda" ? "tekshirilmoqda" : kalit, holat: NOM[kalit]};
-    if (yopilishYoziladi()){
-      if (kalit === "yopildi") p.yopilganVaqt = D.sanaYoz(D.bugun()) + " " + MKB.soat();
-      else if (h.yopilganVaqt) p.yopilganVaqt = null;
-    }
-    return p;
-  }
+  /* Holat maydonlari va yopilish vaqti doska bilan bir xil yoziladi (MKB.hodisa.holatPatch) */
+  const holatPatch = kalit => MKB.hodisa.holatPatch(h, kol, kalit);
 
   function shapka(){
     joriy();
@@ -152,9 +139,12 @@
     const KEYINGI = {yangi: ["tekshiruvda", "Qabul qilish", "tasdiq"], tekshiruvda: ["bartaraf", "Bartaraf etishga o'tkazish", "ong"],
       bartaraf: ["hal", "Hal qilindi deb belgilash", "tasdiq"], hal: ["yopildi", "Hodisani yopish", "tasdiq"], yopildi: ["tekshiruvda", "Qayta ochish", "yangilash"]};
     const kb = KEYINGI[k];
+    /* Ochiq hodisada asosiy amal — bitta oynada hal qilish va yopish; bosqichma-bosqich o'tish ikkinchi darajali */
+    const tez = OCHIQ.includes(k);
     $("hd-amallar").innerHTML = yozadi
       ? (i > 0 && k !== "yopildi" ? '<button type="button" class="tugma tugma-oq" data-qayt="' + USTUNLAR[i - 1][0] + '" data-yozadi data-tur="hodisa-orqaga">' + ik("chap") + "<span>Orqaga qaytarish</span></button>" : "") +
-        '<button type="button" class="tugma ' + (k === "yopildi" ? "tugma-oq" : "tugma-asosiy") + '" data-otish="' + kb[0] + '" data-yozadi data-tur="hodisa-keyingi">' + ik(kb[2]) + "<span>" + kb[1] + "</span></button>"
+        '<button type="button" class="tugma ' + (k === "yopildi" || tez ? "tugma-oq" : "tugma-asosiy") + '" data-otish="' + kb[0] + '" data-yozadi data-tur="hodisa-keyingi">' + ik(kb[2]) + "<span>" + kb[1] + "</span></button>" +
+        (tez ? '<button type="button" class="tugma tugma-asosiy" data-tez data-yozadi data-tur="hodisa-yopish">' + ik("tasdiq") + "<span>Hal qilish va yopish</span></button>" : "")
       : "";
     document.title = "MKB — Hodisa";
     if (MKB.dalolatnoma) MKB.dalolatnoma.tugma($("hd-amallar"), "hodisa", {id: h.id});
@@ -415,7 +405,37 @@
     hammasi();
     qaytarishBilan(eski, kalit, eskiMasul, eski === "yangi" ? "Hodisa qabul qilindi" : "Hodisa bosqichi: " + NOM[kalit]);
   }
+  /* Hal qilish va yopish: bitta oynada ko'rilgan chora so'raladi. O'tkazib yuborilgan oraliq bosqichlar
+     ketma-ket yoziladi, shuning uchun amallar tarixida har biri alohida qator bo'lib qoladi */
+  async function tezYopish(){
+    joriy();
+    const eski = holati();
+    if (!OCHIQ.includes(eski)) return;
+    const bor = String(h[xulosaMaydon] || "").trim();
+    const yol = USTUNLAR.map(u => u[0]).slice(USTUNLAR.findIndex(u => u[0] === eski) + 1);
+    const r = await MKB.tasdiqla({
+      sarlavha: "Hodisani hal qilish va yopish",
+      matn: "Hodisa yopiladi va ochiq hodisalar ro'yxatidan chiqadi. Oraliq bosqichlar tarixga avtomatik yoziladi, ko'rilgan chora ismingiz bilan saqlanadi.",
+      tafsilot: [["Hodisa", {matn: h.id, tarjimasiz: true}], ["Obyekt", MKB.kn.obyektNomi(h.obyektId)], ["Mas'ul", h.masul || "—"]]
+        .concat(bor ? [["Oldingi chora", bor.split("\n").pop()]] : []),
+      sabab: {majburiy: true, min: 5, maks: 600, yorliq: "Ko'rilgan chora",
+        izoh: "Sabab, ko'rilgan chora va natija", namuna: "Masalan: eshik qulfi almashtirildi, IIBga xabar berildi"},
+      okMatn: "Hal qilish va yopish", bekorMatn: "Orqaga",
+      bajar: async ({sabab}) => {
+        for (const kalit of yol){
+          const p = holatPatch(kalit);
+          if (kalit === "tekshiruvda" && (!h.masul || h.masul === "—")) p.masul = MKB.kim();
+          if (kalit === "hal") p[xulosaMaydon] = choraQosh(sabab);
+          await MKBapi.yangilash(kol, h.id, p);
+        }
+      },
+    });
+    if (!r) return;
+    MKB.toast("Hodisa " + h.id + " yopildi");
+    hammasi();
+  }
   $("hd-amallar").addEventListener("click", e => {
+    if (e.target.closest("[data-tez]")){ tezYopish(); return; }
     const b = e.target.closest("[data-otish],[data-qayt]"); if (!b) return;
     otish(b.dataset.otish || b.dataset.qayt, b);
   });

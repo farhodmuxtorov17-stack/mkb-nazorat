@@ -88,7 +88,7 @@
     {kalit: "taqiqNom", nom: "Taqiq", variantlar: variantlar("taqiqNom", ["Taqiq qo'yilgan", "Taqiq yechilgan"])},
   ].filter(f => f.variantlar.length > 1 || (jadval && jadval.holat.filtrlar[f.kalit]));
   /* Bironta qatorga mos kelmaydigan tayyor ko'rinish ro'yxatda ko'rsatilmaydi */
-  const mosKorinishlar = a => a.filter(v => joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
+  const mosKorinishlar = a => a.filter(v => v.nom === q.get("korinish") || joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
   /* Shartnoma tuzilishi kutilayotgan takliflar: rahbariyat tasdiqlagan, ammo shartnomasi yo'q */
   const shartnomasizTakliflar = () => MKB.doira(D.TAKLIFLAR || [])
     .filter(t => t.holat === "tasdiqlangan" && !(D.SHARTNOMALAR || []).some(sh => sh.taklifId === t.id && sh.holat !== "bekor"));
@@ -184,8 +184,9 @@
     Object.defineProperty(cfg, "filtrlar", {get: filtrlar, enumerable: true});
     jadval = MKB.jadval("jadval-joy", cfg);
     const h = q.get("holat"), u = q.get("usul"), tl = q.get("tolov");
-    /* Havoladagi qiymat faqat mos qator bo'lsa qo'llanadi: aks holda ro'yxat sababsiz bo'sh ko'rinardi */
-    if (h && r.some(x => x.holatNom === nomi(h))) jadval.holat.filtrlar.holatNom = nomi(h);
+    /* Havoladagi taniladigan holat doim qo'llanadi (mos qator bo'lmasa jadval bo'sh holatini ko'rsatadi); tanilmagani xabar bilan tashlanadi */
+    if (h && ["faol", "kechikkan", "toliq tolangan", "yakunlangan", "bekor"].some(k => nomi(k) === nomi(h))) jadval.holat.filtrlar.holatNom = nomi(h);
+    else if (h) MKB.toast("Havoladagi holat tanilmadi, ro'yxat to'liq ko'rsatildi", "info");
     /* Eski havolalar (?usul=bolib) to'lov sharti filtriga o'tadi */
     const bolibFiltr = tl === "bolib" || u === "bolib";
     if (u && u !== "bolib" && r.some(x => x.usulNom === usulNomi(u))) jadval.holat.filtrlar.usulNom = usulNomi(u);

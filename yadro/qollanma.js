@@ -128,7 +128,7 @@ window.MKB_QOLLANMA = {
        havola: "qabul-boshlash.html", havolaNomi: X("Balansga qabul", "Приём на баланс"), rasm: "assets/yordam/obyekt-qabul.webp"},
       {nom: X("Huquqni bank nomiga rasmiylashtiring va kartochkani yuriting", "Оформите право на банк и ведите карточку"),
        izoh: X("Ko'chmas mulk kadastrda, transport YHXXda 10 kun ichida qayta qayd etiladi. Kartochkada hujjat, surat, xarajat, kommunal va qo'riqlash tablari bor; «Keyingi qadam» bloki eng muhim ishni aytadi.",
-               "Недвижимость регистрируется в кадастре, транспорт — в ГУБДД в течение 10 дней. В карточке есть вкладки документов, фото, расходов, коммунальных услуг и охраны; блок «Keyingi qadam» называет самое важное дело."),
+               "Недвижимость регистрируется в кадастре, транспорт — в СБДД в течение 10 дней. В карточке есть вкладки документов, фото, расходов, коммунальных услуг и охраны; блок «Keyingi qadam» называет самое важное дело."),
        havola: "obyektlar.html", havolaNomi: X("Reyestr", "Реестр"), rasm: "assets/yordam/obyekt-kartochka.webp"},
       {nom: X("Baholash buyurtmasini bering va hisobotni kiriting", "Закажите оценку и внесите отчёт"),
        izoh: X("Buyurtmada obyekt, baholovchi tashkilot, narx va hisobot muddati ko'rsatiladi. Kelgan hisobotda bozor va tugatish qiymatini kiritasiz; yangi baho tasdiqdan keyin aktivga o'tadi va 12 oy amal qiladi.",
@@ -147,7 +147,7 @@ window.MKB_QOLLANMA = {
     ],
     meyor: [
       X("Balansga qabuldan keyin birlamchi ko'rik 72 soat ichida o'tkaziladi", "Первичный осмотр проводится в течение 72 часов после приёма на баланс"),
-      X("Transport YHXXda 10 kun ichida qayta qayd etiladi (VM 683)", "Транспорт перерегистрируется в ГУБДД в течение 10 дней (ПКМ 683)"),
+      X("Transport YHXXda 10 kun ichida qayta qayd etiladi (VM 683)", "Транспорт перерегистрируется в СБДД в течение 10 дней (ПКМ 683)"),
       X("Baho 12 oy amal qiladi; baholanmagan aktiv auksionga chiqarilmaydi", "Оценка действует 12 месяцев; неоценённый актив не выставляется на аукцион"),
       X("E'londan savdogacha kamida 30 kun, bo'lib to'lashda avans kamida 15% (VM 18)", "От объявления до торгов не меньше 30 дней, при рассрочке аванс не меньше 15% (ПКМ 18)"),
       X("Mol-mulk solig'i bo'yicha imtiyoz balansga olingandan 6 oy amal qiladi", "Льгота по налогу на имущество действует 6 месяцев после принятия на баланс"),
@@ -683,15 +683,15 @@ window.MKB_YORDAM = {
   "rasmiylashtirish.html": {
     sarlavha: X("Huquqni rasmiylashtirish", "Оформление права"),
     nimaUchun: X("Balansga olingan aktiv bank nomiga qayd etilishi kerak: ko'chmas mulk kadastrda, transport YHXXda. Bu sahifa navbat va kechikishlarni ko'rsatadi.",
-                 "Принятый на баланс актив нужно зарегистрировать на банк: недвижимость — в кадастре, транспорт — в ГУБДД. Страница показывает очередь и просрочки."),
+                 "Принятый на баланс актив нужно зарегистрировать на банк: недвижимость — в кадастре, транспорт — в СБДД. Страница показывает очередь и просрочки."),
     bloklar: [
-      B("Ko'rsatkichlar", "Показатели", "Rasmiylashtirilmagan obyektlar, YHXX muddati o'tgan transport, 10 kun ichida qayd etilganlar va taqiqi yechilmaganlar.", "Неоформленные объекты, транспорт с просроченным сроком ГУБДД, зарегистрированные в течение 10 дней и объекты с неснятым запретом."),
+      B("Ko'rsatkichlar", "Показатели", "Rasmiylashtirilmagan obyektlar, YHXX muddati o'tgan transport, 10 kun ichida qayd etilganlar va taqiqi yechilmaganlar.", "Неоформленные объекты, транспорт с просроченным сроком СБДД, зарегистрированные в течение 10 дней и объекты с неснятым запретом."),
       B("Navbat", "Очередь", "Kechikkan kun soni bo'yicha tartiblangan. Filtrlar: tur, muddat va taqiq.", "Отсортирована по дням просрочки. Фильтры: тип, срок и запрет."),
-      B("Qonuniy talablar", "Требования закона", "Kadastr va YHXX muddatlari qisqacha.", "Кратко о сроках кадастра и ГУБДД."),
+      B("Qonuniy talablar", "Требования закона", "Kadastr va YHXX muddatlari qisqacha.", "Кратко о сроках кадастра и СБДД."),
     ],
     amallar: [B("Rasmiylashtirish", "Оформить", "Oynada qayd sanasi va reyestr ko'chirmasi so'raladi. Tasdiqlagach obyekt navbatdan chiqadi, holati «Balansda» bo'ladi va tarixga yoziladi.", "В окне запрашиваются дата регистрации и выписка из реестра. После подтверждения объект уходит из очереди, получает статус «Balansda», запись попадает в историю.")],
-    xatolar: [X("YHXX qayd sanasini balansga qabul sanasidan oldin kiritish. Qayd sanasi qabuldan keyin bo'ladi", "Вносить дату регистрации в ГУБДД раньше даты приёма на баланс. Регистрация бывает после приёма")],
-    qoidalar: [X("Transport YHXXda 10 kun ichida qayta qayd etiladi (VM 683)", "Транспорт перерегистрируется в ГУБДД в течение 10 дней (ПКМ 683)")],
+    xatolar: [X("YHXX qayd sanasini balansga qabul sanasidan oldin kiritish. Qayd sanasi qabuldan keyin bo'ladi", "Вносить дату регистрации в СБДД раньше даты приёма на баланс. Регистрация бывает после приёма")],
+    qoidalar: [X("Transport YHXXda 10 kun ichida qayta qayd etiladi (VM 683)", "Транспорт перерегистрируется в СБДД в течение 10 дней (ПКМ 683)")],
     bogliq: ["obyekt-hujjatlar.html", "integratsiyalar.html"],
   },
 
@@ -821,7 +821,7 @@ window.MKB_YORDAM = {
                  "Все осмотры актива и чек-лист последнего осмотра. Здесь же дата следующего осмотра."),
     bloklar: [
       B("Ko'riklar tarixi", "История осмотров", "Rejadagi, o'tkazilgan va kechikkan ko'riklar, har birining xulosasi.", "Плановые, проведённые и просроченные осмотры с выводами."),
-      B("Oxirgi ko'rik chek-listi", "Чек-лист последнего осмотра", "Har band: joyida yoki kamchilik.", "Каждый пункт: на месте или недостаток."),
+      B("Oxirgi ko'rik chek-listi", "Чек-лист последнего осмотра", "Har band: me'yorda yoki kamchilik.", "Каждый пункт: в норме или недостаток."),
     ],
     amallar: [B("Ko'rik tayinlash", "Назначить осмотр", "Tayinlash formasi shu obyekt bilan ochiladi.", "Открывается форма назначения с этим объектом.")],
     xatolar: [],
@@ -1318,7 +1318,7 @@ window.MKB_YORDAM = {
     nimaUchun: X("Joyida to'ldiriladigan ko'rik dalolatnomasi: nazorat bandlari, hisoblagichlar, suratlar va joylashuv, xulosa. Forma qoralama bo'lib saqlanadi, aloqa uzilsa ham yo'qolmaydi.",
                  "Акт осмотра, заполняемый на месте: контрольные пункты, счётчики, фото и местоположение, вывод. Форма сохраняется как черновик и не пропадёт при обрыве связи."),
     bloklar: [
-      B("Nazorat bandlari", "Контрольные пункты", "Har band: Joyida, Kamchilik yoki Tekshirilmadi. «Barchasi joyida» hamma bandni birdan belgilaydi.", "Каждый пункт: на месте, недостаток или не проверен. «Barchasi joyida» отмечает все пункты сразу."),
+      B("Nazorat bandlari", "Контрольные пункты", "Har band: Me'yorda, Kamchilik yoki Tekshirilmadi. «Barchasi me'yorda» hamma bandni birdan belgilaydi.", "Каждый пункт: в норме, недостаток или не проверен. «Всё в норме» отмечает все пункты сразу."),
       B("Hisoblagichlar", "Счётчики", "Binoli obyektda elektr, gaz va suv ko'rsatkichi va plomba holati.", "Для объекта со зданием — показания электричества, газа и воды и состояние пломбы."),
       B("Suratlar va joylashuv", "Фото и местоположение", "Kamchilik belgilansa, har biriga surat kerak. «Aniqlash» joylashuvni yozadi va ko'rik obyektda o'tkazilganini tasdiqlaydi.", "Если отмечен недостаток, к каждому нужно фото. «Aniqlash» записывает местоположение и подтверждает, что осмотр был на объекте."),
       B("Xulosa", "Вывод", "Umumiy holat bahosi 5 dan 1 gacha, xulosa matni va keyingi ko'rik sanasi.", "Общая оценка состояния от 5 до 1, текст вывода и дата следующего осмотра."),
@@ -1456,7 +1456,7 @@ window.MKB_YORDAM = {
                  "Резерв по активам на балансе: категории, ставки, динамика резервной нагрузки и миграция категорий. Промежуточные ставки предлагает Бухгалтерия и риски, утверждает Руководство."),
     bloklar: [
       B("Ko'rsatkichlar", "Показатели", "Zaxira yuki (Taxminiy belgisi bilan, agar stavka tasdiqlanmagan bo'lsa), me'yoriy muddati o'tganlar, 90 kunda tugaydiganlar va kapitalga nisbat.", "Резервная нагрузка (с отметкой «Taxminiy», если ставка не утверждена), с истёкшим нормативным сроком, истекающие через 90 дней и отношение к капиталу."),
-      B("Zaxira stavkalari", "Ставки резерва", "Standartdan past, Qoniqarsiz, Shubhali va To'liq zaxira. Me'yoriy hujjatdagi nomlari qavs ichida. Tasdiqlanmagan stavka «Taxminiy» chipi bilan.", "Ниже стандартной, неудовлетворительная, сомнительная и полный резерв. Нормативные наименования — в скобках. Неутверждённая ставка — с чипом «Taxminiy»."),
+      B("Zaxira stavkalari", "Ставки резерва", "Substandart, Qoniqarsiz, Shubhali va Umidsiz (MB 2696 atamalari). Umidsiz toifada to'liq zaxira (100%). Tasdiqlanmagan stavka «Taxminiy» chipi bilan.", "Субстандартная, неудовлетворительная, сомнительная и безнадёжная (термины ЦБ 2696). В безнадёжной категории — полный резерв (100%). Неутверждённая ставка — с чипом «Taxminiy»."),
       B("Toifalar migratsiyasi", "Миграция категорий", "Tanlangan oy va bugungi holat solishtiriladi: qancha aktiv og'irlashgan.", "Сравнение выбранного месяца с сегодняшним состоянием: сколько активов ухудшилось."),
     ],
     amallar: [
@@ -2098,7 +2098,7 @@ window.MKB_YORDAM = {
   },
 
   "qollanma.html": {
-    sarlavha: X("Yordam markazi", "Центр помощи"),
+    sarlavha: X("Qo'llanma", "Руководство"),
     nimaUchun: X("Tizim bo'yicha hamma yo'riqnoma: rollar, sahifalar, jarayonlar, atamalar, savollar va sayohatlar.",
                  "Все инструкции по системе: роли, страницы, процессы, термины, вопросы и туры."),
     bloklar: [],

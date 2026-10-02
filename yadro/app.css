@@ -70,7 +70,7 @@
   --shrift-displey:"Outfit","Manrope",system-ui,sans-serif;
   --shrift-mono:"Manrope","Outfit",ui-monospace,monospace;
   /* Sahifa sarlavhalari: bitta ramka — qobiq ichida ham, ochiq sahifalarda ham shu qiymatlar */
-  --matn-h1:34px; --matn-h1-ochiq:28px; --matn-h2:21px; --matn-h3:17px;
+  --matn-h1:34px; --matn-h1-ochiq:28px; --matn-h2:19px; --matn-h3:17px;
   /* O'lchamlar */
   --yon-eni:296px; --shapka-boyi:72px;
   /* Sahna: kontent, shapka va sahifa ustidagi lentalar bitta kenglik va chekinishda turadi */
@@ -299,7 +299,7 @@ p,li,dd{text-wrap:pretty}
   display:grid;place-items:center;font:500 13px var(--shrift);flex:none;overflow:hidden;
   box-shadow:0 0 0 2px var(--oq),0 0 0 3px var(--chiziq-2)}
 .profil .yuz img{width:100%;height:100%;object-fit:cover;display:block}
-.profil .kim{line-height:1.2;max-width:140px;min-width:0}
+.profil .kim{line-height:1.2;max-width:150px;min-width:0}
 .profil .kim b{display:block;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .profil .kim span{display:block;font-size:11.5px;color:var(--matn-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .menyu-sarlavha{display:none;padding:10px 13px 8px;flex-direction:column;gap:2px;border-bottom:1px solid var(--chiziq-2);margin-bottom:6px}
@@ -326,7 +326,8 @@ p,li,dd{text-wrap:pretty}
 .hs-qator h1{font:500 var(--matn-h1)/1.1 var(--shrift-displey);letter-spacing:-.035em;min-width:0;overflow-wrap:anywhere}
 .hs-meta{font-size:14px;color:var(--matn-3)}
 .hs-amallar{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.hs-yorliq .yangilangan{margin-left:auto}
+/* 40px li yangilash tugmasi yo'lakcha qatorini (28px) kattalashtirmaydi: sarlavha hamma sahifada bir joyda turadi */
+.hs-yorliq .yangilangan{margin-left:auto;margin-block:-6px}
 /* Yo'lakchaning birinchi bandidagi bo'lim belgisi: yon paneldagi belgining o'zi */
 .hs-yorliq .yolak-ic{width:15px;height:15px;margin-right:7px;color:var(--matn-4);flex:none}
 /* Sarlavha yonidagi "Orqaga": kelib chiqilgan sahifaga qaytaradi (yadro/app.js, MKB.orqaga).
@@ -395,7 +396,7 @@ p,li,dd{text-wrap:pretty}
 .karta-bosh{display:flex;align-items:center;gap:10px 13px;margin-bottom:18px;flex-wrap:nowrap;min-width:0}
 .karta-bosh > *{min-width:0}
 .karta-bosh > div{flex-wrap:wrap}
-.karta-bosh h2{font:500 19px/1.2 var(--shrift-displey);letter-spacing:-.025em;min-width:0;flex:0 1 auto;overflow-wrap:break-word}
+.karta-bosh h2{font:500 var(--matn-h2)/1.2 var(--shrift-displey);letter-spacing:-.025em;min-width:0;flex:0 1 auto;overflow-wrap:break-word}
 .karta-bosh .soni{white-space:nowrap;flex:none}
 .karta-bosh > .karta-havola,.karta-bosh > .tugma,.karta-bosh > button,.karta-bosh > .chip{flex:none}
 /* Bo'lim sarlavhasi (panel sahifalari) */
@@ -612,7 +613,11 @@ button.tanlov:focus-visible{outline:none;box-shadow:0 0 0 2px var(--siyoh),var(-
 .jadval-orash.zich .jadval .o-ral{min-width:120px}
 /* Zich jadvalda holat va muddat chiplari ham qatorga o'raladi: uzun holat nomi ustunni kengaytirib, oxirgi (yopishqoq)
    ustun ostiga qo'shni qiymatlarni yashirmaydi. Mobil ro'yxatdagi (.qator > .ong > .chip) o'ralish bilan bir xil */
-.jadval-orash.zich .jadval td .chip{white-space:normal;height:auto;min-height:28px;padding:4px 9px;line-height:1.25;text-align:left}
+.jadval-orash.zich .jadval td .chip{white-space:normal;height:auto;min-height:28px;padding:4px 9px;line-height:1.25;text-align:left;border-radius:var(--r-mitti)}
+/* Qotmagan oxirgi ustundagi holat yorlig'i bir qatorda qoladi: jadval baribir yonga suriladi, hech narsani yashirmaydi */
+.jadval-orash.zich:not(.keng) .jadval td:last-child .chip{white-space:nowrap}
+/* Hujjat raqami (LT-2026/0190) chiziqcha joyidan bo'linmaydi: ustun raqam eniga kengayadi, qo'shni nom o'raladi */
+.jadval td .kod-mono,.jadval td .nom[data-tarjimasiz]{white-space:nowrap}
 .jadval th.son{text-align:right}
 .jadval th.son .th-yon{justify-content:flex-end}
 .jadval th.saralanadi:focus-visible{outline-offset:-2px}
@@ -662,7 +667,11 @@ button.tanlov:focus-visible{outline:none;box-shadow:0 0 0 2px var(--siyoh),var(-
 /* Bandlari ko'p tasma bitta qatorda qoladi, sig'masa yonga suriladi */
 .bolim-tablar[data-bir-qator]{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:4px;margin:-4px;max-width:calc(100% + 8px)}
 .bolim-tablar[data-bir-qator] a{padding:0 16px;flex:none}
-@media (max-width:720px){.bolim-tablar[data-bir-qator]{flex-wrap:wrap;overflow-x:visible;max-width:100%}}
+/* Telefonda tasma bitta qatorda qoladi va yonga suriladi: birinchi ekran navigatsiyaga ketmaydi.
+   Joriy band yuklanganda ko'rinadigan joyga suriladi (app.js: faolTabniKorsat) */
+@media (max-width:720px){.bolim-tablar,.bolim-tablar[data-bir-qator]{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:4px;margin:-4px;max-width:calc(100% + 8px)}
+  .bolim-tablar::-webkit-scrollbar{display:none}
+  .bolim-tablar a,.bolim-tablar button{flex:none}}
 
 /* ---------- Video paneli (kamera oqimi o'rni) ---------- */
 .video-panel{background:var(--qora-yuza);border-radius:var(--r-orta);min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:22px;color:var(--qora-matn-2);font-size:12.5px;line-height:1.5}
@@ -928,6 +937,8 @@ button.tanlov:focus-visible{outline:none;box-shadow:0 0 0 2px var(--siyoh),var(-
 .qator .matn{flex:1 1 200px;min-width:0}
 .qator .matn > b{display:block;font-size:14px;font-weight:500;line-height:1.35;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* "Bugun" brifingida sarlavha ichida qatorning asosiy soni turadi: kesilmaydi, o'raladi (panel.html, panel-moliya.html) */
+.brifing-tor .qator .matn > b{white-space:normal;overflow-wrap:anywhere}
 /* izoh qatori ikki qatorgacha o'raladi, undan uzuni kesiladi */
 .qator .matn > span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;
   font-size:12.5px;color:var(--matn-3);white-space:normal;overflow:hidden;overflow-wrap:anywhere}
@@ -1187,8 +1198,8 @@ a.qator:active{background:var(--band)}
   .menyu-tugma{display:grid}
   .pill-nav{display:flex}
 }
-/* 721–960: uchta pilla va qidiruv maydoni bir qatorga sig'maydi — qidiruv tugmaga aylanadi (Ctrl+K palitrasini ochadi) */
-@media (max-width:960px){
+/* 721–1024: uchta pilla va qidiruv maydoni bir qatorga sig'maydi — qidiruv tugmaga aylanadi (Ctrl+K palitrasini ochadi) */
+@media (max-width:1024px){
   .shapka .izlash{display:none}
   .shapka .izlash-tugma{display:grid}
   .shapka.izlash-ochiq .izlash{display:flex;position:absolute;left:24px;right:24px;top:calc(100% + 4px);max-width:none;min-width:0;z-index:95}
@@ -1198,6 +1209,8 @@ a.qator:active{background:var(--band)}
   .yon-parda.ochiq{display:block}
   .izlash{max-width:none}
 }
+/* 721–820: uchinchi pilla qatorga sig'maydi va kesilib qolardi — ikkitasi qoladi, hammasi menyu tugmasida */
+@media (max-width:820px){ .pill-nav .pill:nth-child(n+3){display:none} }
 @media (max-width:720px){
   :root{--sahna-chekinish:16px}
   .hs-qator h1{font-size:26px}
@@ -1586,7 +1599,9 @@ main[data-chop="albom"]{page:albom}
 .xarita .x-asbob{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
 .xarita .x-asbob .izlash{max-width:320px;min-width:180px;height:44px}
 .xarita .x-asbob .x-ong{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.xarita .x-yon #x-olchov-tanlov,.xarita .x-yon #x-belgi-tanlov{margin-top:8px;box-shadow:none;background:var(--plitka);width:100%}
+.xarita .x-yon #x-belgi-tanlov{margin-top:8px;box-shadow:none;background:var(--plitka);width:100%}
+.xarita .x-yon .x-olchov{margin-top:10px}
+.xarita .x-yon .x-olchov .tanlov select{flex:1 1 auto;max-width:none}
 .xarita .x-yon .almashtirgich button{height:34px;padding:0 12px;font-size:12.5px}
 .xarita .x-filtrlar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .xarita .x-yon .maydon{gap:5px;min-width:0}
@@ -1601,9 +1616,11 @@ main[data-chop="albom"]{page:albom}
    past, shuning uchun juda baland kartada kontur o'rtada kichrayib qoladi. */
 /* Chap ustun yopishib turadi: ro'yxat aylantirilganda xarita ko'zdan ketmaydi */
 .xarita .x-chap{position:sticky;top:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
-/* Xarita oyna bilan birga o'sadi: butun sahifasi xaritaga bag'ishlangan ekranda u eng katta obyekt */
+/* Xarita oyna bilan birga o'sadi: butun sahifasi xaritaga bag'ishlangan ekranda u eng katta obyekt.
+   Sarlavha, bo'lim tablari va qidiruv qatori ~340px oladi: karta birinchi ekranda to'liq ko'rinadi,
+   aks holda pastki qismi ekrandan chiqib, kontur kartaning pastiga surilgandek ko'rinardi */
 .xarita .x-karta{position:relative;background:var(--oq);border-radius:var(--r-karta);overflow:hidden;box-shadow:var(--soya);
-  height:clamp(480px,calc(100vh - 208px),820px)}
+  height:clamp(480px,calc(100vh - 360px),820px)}
 .xarita .x-karta:fullscreen{position:relative;top:0;height:100vh;border-radius:0}
 .xarita .x-joy{position:absolute;inset:0;z-index:1}
 .xarita .x-ustki{position:absolute;left:14px;top:14px;z-index:500;display:flex;flex-direction:column;gap:8px;align-items:flex-start;
@@ -1668,6 +1685,14 @@ main[data-chop="albom"]{page:albom}
   font-size:10.5px;line-height:1.45;color:var(--matn-3);background:rgba(255,255,255,.9)}
 .xarita .leaflet-control-attribution a{color:var(--matn-2)}
 .xarita .leaflet-control-zoom a{width:40px!important;height:40px!important;line-height:40px!important;font-size:20px!important}
+/* Leaflet masshtab tugmalari (panel va obyekt xaritalari) xarita.html asboblar ustunidagi tugmalar bilan bir xil:
+   alohida oq tugmalar, yumshoq soya, tizim shrifti. Tanlovchi leaflet.css dagi qoidalardan kuchliroq, chunki u keyin yuklanadi */
+.leaflet-container .leaflet-control-container .leaflet-control-zoom.leaflet-bar{border:0;border-radius:0;background:none;box-shadow:none;
+  display:flex;flex-direction:column;gap:6px}
+.leaflet-container .leaflet-control-container .leaflet-control-zoom.leaflet-bar a{width:44px;height:44px;border:0;border-radius:14px;
+  background:var(--oq);box-shadow:var(--soya-past);color:var(--matn-2);font:500 22px/44px var(--shrift);text-indent:0}
+.leaflet-container .leaflet-control-container .leaflet-control-zoom.leaflet-bar a:hover{color:var(--siyoh);background:var(--oq);box-shadow:var(--soya)}
+.leaflet-container .leaflet-control-container .leaflet-control-zoom.leaflet-bar a.leaflet-disabled{color:var(--matn-3);background:var(--oq);opacity:.55;box-shadow:none}
 .xp{display:flex;flex-direction:column;gap:7px;font-size:13px}
 .xp .xp-surat{width:100%;height:104px;border-radius:13px;overflow:hidden;background:var(--plitka)}
 .xp .xp-surat img,.xp .xp-surat .surat-yoq{width:100%;height:100%;object-fit:cover}
@@ -1694,12 +1719,15 @@ main[data-chop="albom"]{page:albom}
   .xarita .x-asos-tanlov button > span{position:absolute;left:-9999px}
   .xarita .x-asos-tanlov button{padding:0 11px}
   .xarita .x-holat{font-size:12px;padding:0 2px}
-  /* Pastda manba qatori turadi: tugmalar uning ustiga chiqmasin */
-  .xarita .x-asboblar{bottom:46px}
+  /* Asboblar telefonda yuqorida bir qator bo'lib turadi: tik ustun tor kartaning o'ng chetini
+     egallab, Farg'ona vodiysini yopar va sharqiy hududlar nomini siqib chiqarar edi */
+  .xarita .x-asboblar{bottom:auto;top:14px;right:10px;flex-direction:row;gap:4px}
   .xarita .leaflet-control-attribution{font-size:9.5px;line-height:1.35}
   .xarita .x-asbob .x-ong{margin-left:0;width:100%}
   .xarita .x-asbob .izlash{max-width:none;flex:1 1 100%}
-  .xarita .x-karta{height:clamp(420px,62vh,640px)}
+  /* Telefonda karta tik, mamlakat esa yotiq: balandlik ekran bo'yidan emas, enidan olinadi.
+     62vh bo'lganda kontur o'rtada kichrayib, tepasida bo'sh tasma qolar edi */
+  .xarita .x-karta{height:clamp(360px,105vw,480px)}
   /* Manba qatori telefonda ikki qatorga bo'linadi: tugma uning tepasida turadi */
   .xarita .x-varaq-tugma{display:inline-flex;position:absolute;left:50%;bottom:48px;transform:translateX(-50%);z-index:500}
   .xarita .x-yon{position:fixed;left:0;right:0;bottom:0;z-index:900;max-height:78vh;overflow-y:auto;gap:12px;

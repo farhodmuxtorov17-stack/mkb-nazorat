@@ -115,8 +115,9 @@
       holat: GH_MOS[h.ustun] || "yangi", vaqt: h.vaqt || "", masul: h.masul || "", manba: h.manba === "qurilma" ? "qurilma" : "obyekt", qurilma: ""
     }))).map(b => Object.assign(b, {d: D.sanaOqi(b.vaqt)})).sort((a, b) => (b.d || 0) - (a.d || 0));
   }
-  const holatPatch = (kol, kalit) => kol === "XAVFSIZLIK_HODISALARI" ? {holat: kalit === "yangi" ? "ochiq" : kalit}
-    : {ustun: kalit === "tekshiruvda" ? "tekshirilmoqda" : kalit, holat: NOM[kalit]};
+  /* Holat maydonlari va yopilish vaqti hodisa.html bilan bir xil yoziladi: qayta ochilganda eski
+     yopilganVaqt o'chiriladi, aks holda haftalik xulosa hodisani eski yopilish haftasiga qo'yadi */
+  const holatPatch = (kol, kalit, yozuv) => MKB.hodisa.holatPatch(yozuv, kol, kalit);
 
   /* Obyekt tanlovi */
   const obIdlar = [...new Set(bandlar().map(b => b.obyektId))].map(id => [id, MKB.kn.obyektYorligi(id)]).sort((a, b) => String(a[1]).localeCompare(String(b[1])));
@@ -181,9 +182,24 @@
     const xato = MKB.hodisa.otishXatosi(Object.assign({}, yozuv, {[maydon]: "x"}), b.kol, b.holat, kalit);
     if (xato){ MKB.toast("Hodisa bosqichlari ketma-ket o'tkaziladi", "xavf"); return; }
     const eski = b.holat;
+    const bor = String(yozuv[maydon] || "").trim();
+    const choraQosh = matn => [bor, D.sanaYoz(D.bugun()) + " " + MKB.soat() + " · " + MKB.kim() + ": " + matn].filter(Boolean).join("\n");
+    /* Yopilgan hodisani qayta ochish sabab bilan tasdiqlanadi (hodisa.html bilan bir xil qoida) */
+    if (eski === "yopildi"){
+      const r = await MKB.tasdiqla({
+        sarlavha: "Hodisani qayta ochish",
+        matn: "Hodisa \"Tekshiruvda\" bosqichiga qaytadi va ochiq hodisalar ro'yxatiga tushadi.",
+        tafsilot: [["Hodisa", {matn: b.id, tarjimasiz: true}], ["Nomi", b.nom], ["Obyekt", MKB.kn.obyektNomi(b.obyektId)], ["Mas'ul", b.masul || "—"]],
+        sabab: {majburiy: true, min: 5, maks: 400, yorliq: "Qayta ochish sababi", namuna: "Masalan: obyektda yana buzilish aniqlandi"},
+        okMatn: "Qayta ochish", bekorMatn: "Orqaga",
+        bajar: ({sabab}) => MKBapi.yangilash(b.kol, b.id, Object.assign(holatPatch(b.kol, kalit, yozuv), {[maydon]: choraQosh("Qayta ochildi: " + sabab)})),
+      });
+      if (!r) return;
+      MKB.toast("Hodisa " + b.id + " qayta ochildi");
+      chiz(); return;
+    }
     if (kalit === "hal" || kalit === "yopildi"){
       const halmi = kalit === "hal";
-      const bor = String(yozuv[maydon] || "").trim();
       const r = await MKB.tasdiqla({
         sarlavha: halmi ? "Hodisani hal qilindi deb belgilash" : "Hodisani yopish",
         matn: halmi ? "Hodisa \"Hal qilindi\" bosqichiga o'tadi. Ko'rilgan chora hodisa tarixiga ismingiz bilan yoziladi." : "Hodisa yopiladi va ochiq hodisalar ro'yxatidan chiqadi. Kerak bo'lsa, keyin qayta ochish mumkin.",
@@ -192,8 +208,8 @@
         sabab: {majburiy: halmi || !bor, min: halmi || !bor ? 5 : 0, maks: 600, yorliq: halmi || !bor ? "Ko'rilgan chora" : "Yopish izohi",
           izoh: "Sabab, ko'rilgan chora va natija", namuna: "Masalan: eshik qulfi almashtirildi, IIBga xabar berildi"},
         okMatn: halmi ? "Hal qilindi deb belgilash" : "Hodisani yopish", bekorMatn: "Orqaga",
-        bajar: ({sabab}) => MKBapi.yangilash(b.kol, b.id, Object.assign(holatPatch(b.kol, kalit),
-          sabab ? {[maydon]: [bor, D.sanaYoz(D.bugun()) + " " + MKB.soat() + " · " + MKB.kim() + ": " + sabab].filter(Boolean).join("\n")} : {})),
+        bajar: ({sabab}) => MKBapi.yangilash(b.kol, b.id, Object.assign(holatPatch(b.kol, kalit, yozuv),
+          sabab ? {[maydon]: choraQosh(sabab)} : {})),
       });
       if (!r) return;
       MKB.toast(halmi ? "Hodisa " + b.id + " hal qilindi" : "Hodisa " + b.id + " yopildi");
@@ -201,12 +217,12 @@
     }
     const masulBer = eski === "yangi" && kalit === "tekshiruvda" && (!yozuv.masul || yozuv.masul === "—");
     const eskiMasul = yozuv.masul || "";
-    const ish = () => MKB.saqla(() => MKBapi.yangilash(b.kol, b.id, Object.assign(holatPatch(b.kol, kalit), masulBer ? {masul: MKB.kim()} : {})));
+    const ish = () => MKB.saqla(() => MKBapi.yangilash(b.kol, b.id, Object.assign(holatPatch(b.kol, kalit, yozuv), masulBer ? {masul: MKB.kim()} : {})));
     const ok = tugma ? await MKB.band(tugma, ish) : await ish();
     if (!ok) return;
     chiz();
     MKB.qaytarish(eski === "yangi" && kalit === "tekshiruvda" ? "Hodisa " + b.id + " qabul qilindi" : "Hodisa " + b.id + ": " + NOM[kalit], {
-      bekor: () => MKBapi.yangilash(b.kol, b.id, Object.assign(holatPatch(b.kol, eski), masulBer ? {masul: eskiMasul} : {})),
+      bekor: () => MKBapi.yangilash(b.kol, b.id, Object.assign(holatPatch(b.kol, eski, yozuv), masulBer ? {masul: eskiMasul} : {})),
       keyin: () => chiz(),
     });
   }

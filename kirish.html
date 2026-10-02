@@ -342,9 +342,11 @@ function bugungiSana(){
 
   /* Rozilikni hisob yozuviga (FOYDLAR.rozilik) yozish — asosiy qayd shu, amallar tarixiga ham tushadi.
      Qaytaradi: "ok" — yozuvda joriy tahrir bor; "sora" — rozilik hali olinmagan; "xato" — yozib bo'lmadi. */
+  let oxirgiYozuv = null;
   const rozilikniYoz = async s => {
     if (!s || !s.id) return "ok";
     const f = await MKBapi.bitta("FOYDLAR", s.id).catch(() => null);
+    oxirgiYozuv = f;
     if (rozilikJoriymi(f)){ rozilikYoz(s.login, f.rozilik.sana || bugungiSana()); return "ok"; }
     if (!rozilik.checked){ rozilikOchir(s.login); return "sora"; }
     const sana = bugungiSana();
@@ -361,7 +363,7 @@ function bugungiSana(){
   };
 
   /* Ochiq sessiyada hujjat tahriri yangilangan bo'lsa: panelga o'tishdan oldin rozilik so'raladi */
-  function davomRejimi(s){
+  function davomRejimi(s, f){
     davom = s || null;
     if (!davom) return;
     forma.querySelectorAll(".maydon").forEach(m => { m.hidden = true; });
@@ -369,7 +371,11 @@ function bugungiSana(){
     oxirgiLogin = null;
     document.getElementById("namoyish").hidden = true;
     document.querySelector(".k-karta h1").textContent = "Hujjatlarni qabul qilish";
-    document.getElementById("kirish-izoh").textContent = "Hujjatlar yangilandi. Ishni davom ettirish uchun ularni qabul qiling.";
+    /* "Yangilandi" faqat hisob ilgari boshqa tahrirni qabul qilgan bo'lsa */
+    const avvalQabul = !!(f && f.rozilik && f.rozilik.tahrir && f.rozilik.tahrir !== HUJJAT_TAHRIR);
+    document.getElementById("kirish-izoh").textContent = avvalQabul
+      ? "Hujjatlar yangilandi. Ishni davom ettirish uchun ularni qabul qiling."
+      : "Ishni boshlashdan oldin hujjatlar bilan tanishing va qabul qiling.";
     rozilikXato.querySelector("span").textContent = "Davom etish uchun hujjatlarni qabul qiling";
     tugmaMatn.textContent = "Davom etish";
     document.getElementById("k-past-izoh").hidden = true;
@@ -389,7 +395,7 @@ function bugungiSana(){
     /* Yozuvni o'qib bo'lmasa ish to'xtatilmaydi: rozilik keyingi kirishda so'raladi */
     if (!oqildi || !ochiqSessiya.id || rozilikJoriymi(f0)){ location.replace(manzil(MKB.rol())); return; }
     rozilikOchir(ochiqSessiya.login);
-    davomRejimi(ochiqSessiya);
+    davomRejimi(ochiqSessiya, f0);
   }
 
   /* Namoyish rejimi: hisoblar FOYDLAR dan, faqat faol hisoblar (rozilik so'ralayotganda ko'rsatilmaydi) */
@@ -449,7 +455,7 @@ function bugungiSana(){
     const holat = await rozilikniYoz(s || MKBapi.sessiya() || {});
     if (holat === "sora"){
       /* Hisob yozuvida joriy tahrirga rozilik yo'q: brauzerdagi belgi to'siq bo'la olmaydi */
-      davomRejimi(MKBapi.sessiya() || s);
+      davomRejimi(MKBapi.sessiya() || s, oxirgiYozuv);
       rozilikXatoKorsat();
       return;
     }

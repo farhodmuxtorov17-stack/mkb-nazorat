@@ -279,10 +279,10 @@ const MUDDAT_HOLATLARI = {
 /* Zaxira toifalari (MB 2696, 36-band). Oraliq kun chegaralari va stavkalari PARAMETRLAR da,
    ular buxgalteriya tasdig'ini kutadi (taxminiy). Tasdiqlangan qoida bitta: chegaradan keyin 100%. */
 const ZAXIRA_TOIFALARI = [
-  {kalit: "substandart", nom: "Standartdan past", chip: "chip-kok", rang: "var(--moviy)", meyoriy: "substandart"},
+  {kalit: "substandart", nom: "Substandart", chip: "chip-kok", rang: "var(--moviy)", meyoriy: "substandart"},
   {kalit: "qoniqarsiz",  nom: "Qoniqarsiz",  chip: "chip-sariq",  rang: "var(--sariq-matn)"},
   {kalit: "shubhali",    nom: "Shubhali",    chip: "chip-tarvuz", rang: "var(--apelsin)"},
-  {kalit: "umidsiz",     nom: "To'liq zaxira", chip: "chip-qizil", rang: "var(--xavf-matn-yorqin)", meyoriy: "umidsiz"}
+  {kalit: "umidsiz",     nom: "Umidsiz", chip: "chip-qizil", rang: "var(--xavf-matn-yorqin)", meyoriy: "umidsiz"}
 ];
 
 /* Hisob-kitob parametrlari. taxminiy:true — qonun bilan tasdiqlanmagan yoki bankning ichki
@@ -300,12 +300,12 @@ const PARAMETRLAR = [
   /* Ko'rikda kamida shuncha surat: bino — to'rt tomon, kirish, ichki xonalar; transport — to'rt tomon, spidometr, VIN */
   {id: "korikSuratBino",       guruh: "korik",    nom: "Bino ko'rigida kamida surat", qiymat: 6, birlik: "ta", taxminiy: true, manba: "Ichki me'yor"},
   {id: "korikSuratTransport",  guruh: "korik",    nom: "Transport va uskuna ko'rigida kamida surat", qiymat: 6, birlik: "ta", taxminiy: true, manba: "Ichki me'yor"},
-  {id: "zaxiraOraliq1Kun",     guruh: "zaxira",   nom: "Standartdan past toifa chegarasi", qiymat: 90, birlik: "kun", taxminiy: true, manba: "Buxgalteriya tasdig'ida"},
-  {id: "zaxiraOraliq1Foiz",    guruh: "zaxira",   nom: "Standartdan past toifa stavkasi", qiymat: 10, birlik: "%", taxminiy: true, manba: "MB 2696, 36-band; buxgalteriya tasdig'ida"},
+  {id: "zaxiraOraliq1Kun",     guruh: "zaxira",   nom: "Substandart toifa chegarasi", qiymat: 90, birlik: "kun", taxminiy: true, manba: "Buxgalteriya tasdig'ida"},
+  {id: "zaxiraOraliq1Foiz",    guruh: "zaxira",   nom: "Substandart toifa stavkasi", qiymat: 10, birlik: "%", taxminiy: true, manba: "MB 2696, 36-band; buxgalteriya tasdig'ida"},
   {id: "zaxiraOraliq2Kun",     guruh: "zaxira",   nom: "Qoniqarsiz toifa chegarasi", qiymat: 180, birlik: "kun", taxminiy: true, manba: "Buxgalteriya tasdig'ida"},
   {id: "zaxiraOraliq2Foiz",    guruh: "zaxira",   nom: "Qoniqarsiz toifa stavkasi", qiymat: 25, birlik: "%", taxminiy: true, manba: "MB 2696, 36-band; buxgalteriya tasdig'ida"},
   {id: "zaxiraOraliq3Foiz",    guruh: "zaxira",   nom: "Shubhali toifa stavkasi (chegaragacha)", qiymat: 50, birlik: "%", taxminiy: true, manba: "MB 2696, 36-band; buxgalteriya tasdig'ida"},
-  {id: "zaxiraUmidsizFoiz",    guruh: "zaxira",   nom: "To'liq zaxira stavkasi", qiymat: 100, birlik: "%", taxminiy: false, manba: "MB 2696, 20 va 36-bandlar"},
+  {id: "zaxiraUmidsizFoiz",    guruh: "zaxira",   nom: "Umidsiz toifa stavkasi (to'liq zaxira)", qiymat: 100, birlik: "%", taxminiy: false, manba: "MB 2696, 20 va 36-bandlar"},
   {id: "hisobvaraqAktiv",      guruh: "zaxira",   nom: "Balans hisobvarag'i", qiymat: "16701", birlik: "", taxminiy: true, manba: "Hisobvaraqlar rejasi, buxgalteriya tasdig'ida"},
   {id: "hisobvaraqZaxira",     guruh: "zaxira",   nom: "Zaxira hisobvarag'i", qiymat: "16799", birlik: "", taxminiy: true, manba: "Hisobvaraqlar rejasi, buxgalteriya tasdig'ida"},
   {id: "kapital1DarajaMlrd",   guruh: "kapital",  nom: "Birinchi darajali regulyativ kapital", qiymat: null, birlik: "mlrd so'm", taxminiy: false, manba: "Bank hisoboti, qo'lda kiritiladi"},

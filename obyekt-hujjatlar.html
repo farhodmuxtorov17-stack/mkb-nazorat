@@ -256,6 +256,14 @@ MKB.sahifaYukla({joylar: {jadval: ["jadval", 5], majburiy: ["qator", 4]}, xato: 
   const yt = document.getElementById("yukla-tugma");
   if (yoz) yt.addEventListener("click", () => yuklaOyna()); else yt.remove();
   chiz();
+  /* Paneldan ?yukla=<tur> bilan kelinsa: shu yetishmayotgan hujjat uchun yuklash oynasi darhol ochiladi */
+  const urlQ = new URLSearchParams(location.search), yuklaTur = urlQ.get("yukla");
+  if (yuklaTur){
+    urlQ.delete("yukla");
+    history.replaceState(null, "", location.pathname + "?" + urlQ.toString() + location.hash);
+    const yk = yoz ? D.hujjatToliqligi(y).yetishmaydi.find(k => k.tur === yuklaTur) : null;
+    if (yk) yuklaOyna(yk.tur, yk.bosqich);
+  }
 }});
 </script>
 </body>

@@ -158,6 +158,9 @@
       const tk = (D.TAKLIFLAR || []).find(x => x.lotId === l.id && x.holat === "tasdiqlangan");
       if (tk && yoza()) a += '<a class="tugma tugma-asosiy" href="takliflar.html?id=' + encodeURIComponent(tk.id) + '&shartnoma=1" data-sayohat="shartnoma">' + ik("hujjat") + "<span>Shartnoma tuzish</span></a>";
     }
+    /* Tuzilgan shartnoma bo'lsa lot -> shartnoma -> to'lov yo'li shu tugmadan davom etadi */
+    const sh = ["golib", "sotildi"].indexOf(l.holat) >= 0 ? (D.SHARTNOMALAR || []).find(s => s.lotId === l.id && s.holat !== "bekor") : null;
+    if (sh) a += '<a class="tugma tugma-asosiy" href="shartnoma.html?id=' + encodeURIComponent(sh.id) + '">' + ik("hujjat") + "<span>Shartnomani ochish</span></a>";
     if (boshqa.length) a = '<span class="rz-boshqa"><button type="button" class="tugma tugma-oq" data-boshqa aria-haspopup="true" aria-expanded="false">' + ik("menyu") + "<span>Boshqa amallar</span></button>" +
       '<div class="menyu-popover" role="menu">' + boshqa.map(b => '<button type="button" role="menuitem" data-amal="' + b[0] + '" data-yozadi' + (b[3] ? ' class="' + b[3] + '"' : "") +
         (b[0] === "pasaytir" ? ' data-sayohat="pasaytirish"' : "") + ">" + ik(b[2]) + "<span>" + b[1] + "</span></button>").join("") + "</div></span>" + a;
@@ -223,7 +226,7 @@
 
     /* Taymerlar */
     const b = bugun();
-    const taymer = (nom, sana, izoh, holat) => {
+    const taymer = (nom, sana, izoh, holat, qosh) => {
       const d = oqi(sana);
       const k = d ? D.kunFarqi(b, d) : null;
       const belgi = holat === "ok" ? "mint" : holat === "xavf" ? "pushti" : holat === "kul" ? "kul" : "lavanda";
@@ -232,7 +235,7 @@
         : '<span class="vaqt" data-tarjimasiz>' + esc(sana) + "</span>" + (k >= 0 ? '<span class="chip chip-kichik ' + (k <= 3 ? "chip-sariq" : "chip-info") + '"><span><b data-tarjimasiz style="font-weight:500">' + k + "</b> <span>kun qoldi</span></span></span>"
           : '<span class="chip chip-kichik chip-xavf"><span><b data-tarjimasiz style="font-weight:500">' + (-k) + "</b> <span>kun o'tdi</span></span></span>");
       return '<div class="qator"><span class="belgi ' + belgi + '"><svg class="ic"><use href="#ik-' + (holat === "ok" ? "tasdiq" : "soat") + '"/></svg></span>' +
-        '<span class="matn"><b>' + nom + "</b><span>" + izoh + '</span></span><span class="ong">' + ong + "</span></div>";
+        '<span class="matn"><b>' + nom + "</b><span>" + izoh + "</span>" + (qosh || "") + '</span><span class="ong">' + ong + "</span></div>";
     };
     const minKun = param("elonMinKun", 30);
     let tm = "";
@@ -244,7 +247,8 @@
     if (l.bayonnomaSana || l.tolovMuddati){
       const tolandi = l.holat === "sotildi";
       tm += taymer("G'olib to'lovi", l.tolovMuddati, "Bayonnomadan " + param("golibTolovIshKuni", 5) + " ish kuni", tolandi ? "ok" : "");
-      tm += taymer("Shartnoma imzolash", l.shartnomaMuddati, "Bayonnomadan " + param("shartnomaIshKuni", 10) + " ish kuni", tolandi ? "ok" : "");
+      tm += taymer("Shartnoma imzolash", l.shartnomaMuddati, "Bayonnomadan " + param("shartnomaIshKuni", 10) + " ish kuni", tolandi ? "ok" : "",
+        sh ? '<a href="shartnoma.html?id=' + encodeURIComponent(sh.id) + '" class="kod-mono" data-tarjimasiz>' + esc(sh.id) + "</a>" : "");
     }
     if (l.holat === "otkazilmagan" || l.takroriySavdoSana)
       tm += taymer("Takroriy savdo", l.takroriySavdoSana, "Birinchi savdodan kamida " + param("takroriySavdoMinKun", 10) + " kun keyin", l.holat === "otkazilmagan" || l.holat === "elon" ? "" : "kul");

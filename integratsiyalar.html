@@ -22,6 +22,9 @@
 .int-nav a b{font-weight:500;color:var(--siyoh)}
 .int-royxat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
 .int{scroll-margin-top:calc(var(--shapka-boyi, 64px) + 16px)}
+.int-royxat > .int-keng{grid-column:1/-1}
+.int-sinovlar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+@media (max-width:1100px){.int-sinovlar{grid-template-columns:minmax(0,1fr)}}
 .int-beradi{font-size:14px;line-height:1.55;color:var(--siyoh)}
 .int-xavf{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:13.5px;line-height:1.55;color:var(--matn-2)}
 .int-xavf .ic{width:17px;height:17px;flex:none;margin-top:2px;color:var(--matn-3)}
@@ -307,7 +310,7 @@
       '<a href="#g-' + esc(g.kalit) + '"><span>' + esc(g.nom) + '</span><b data-tarjimasiz>' + r.length + "</b></a>").join("");
     $("guruhlar").innerHTML = toplam.map(({g, r}) =>
       '<section class="int-guruh"><h2 id="g-' + esc(g.kalit) + '"><span>' + esc(g.nom) + '</span><span class="soni" data-tarjimasiz>' + r.length + '</span></h2><div class="int-royxat">' +
-        r.map(t => karta(t, hammasiOchiq || ochiqlar.has("t-" + t.id))).join("") + "</div></section>").join("");
+        r.map(t => karta(t, hammasiOchiq || ochiqlar.has("t-" + t.id), kengmi(t, r))).join("") + "</div></section>").join("");
     $("guruhlar").querySelectorAll("[data-holat]").forEach(b => b.addEventListener("click", () => holatOzgartir(TIZIMLAR.find(t => t.id === b.dataset.holat))));
     const sinov = $("mqtt-tugma");
     if (sinov) sinov.addEventListener("click", mqttBoshla);
@@ -321,12 +324,19 @@
 
   /* Karta yig'ilgan holda chiqadi: nom, holat, bankka nima berishi va hozirgi qo'lda tartib. 30 soniyada butun ro'yxat
      ko'zdan kechiriladi. Oqim, protokol, bank tayyorlaydigan narsalar va xavfsizlik izohi bir bosishda ochiladi. */
-  function karta(t, ochiqmi){
+  /* Sinov bloklari bor karta qatorni to'liq egallaydi. Shu guruhda juftsiz qolgan oddiy karta ham to'liq
+     kenglikka o'tadi, aks holda uning yonida bo'sh katak qoladi */
+  function kengmi(t, r){
+    if (t.sinov) return true;
+    const oddiy = r.filter(x => !x.sinov);
+    return oddiy.length < r.length && oddiy.length % 2 === 1 && oddiy[oddiy.length - 1] === t;
+  }
+  function karta(t, ochiqmi, keng){
     const h = holat(t);
     const y = h.yozuv || {};
     const ochiq = sahifaRuxsatlimi(t.havola);
     const qator = (dt, dd) => dd ? "<dt>" + dt + "</dt><dd>" + esc(dd) + "</dd>" : "";
-    return '<section class="karta int" id="t-' + esc(t.id) + '">' +
+    return '<section class="karta int' + (keng ? " int-keng" : "") + '" id="t-' + esc(t.id) + '">' +
       '<div class="int-sar"><span class="belgi">' + ik(t.ikonka) + '</span><span class="nom"><b>' + esc(t.nom) + "</b><span>" + esc(t.javobgar) + "</span></span>" +
         '<span class="chip chip-kichik ' + h.chip + '">' + esc(h.nom) + "</span></div>" +
       (t.beradi ? '<p class="int-beradi">' + esc(t.beradi) + "</p>" : "") +
@@ -336,7 +346,7 @@
       '<div class="int-kerak"><b>Ulash uchun kerak</b><ul>' + t.kerak.map(k => "<li>" + esc(k) + "</li>").join("") + "</ul></div>" +
       (t.xavfsizlik ? '<div class="int-xavf">' + ik("qalqon") + "<span><b>Xavfsizlik</b><span>" + esc(t.xavfsizlik) + "</span></span></div>" : "") +
       "</details>" +
-      (t.sinov === "mqtt" ? sinovBlok() + kadrBlok() : "") +
+      (t.sinov === "mqtt" ? '<div class="int-sinovlar">' + sinovBlok() + kadrBlok() + "</div>" : "") +
       (y.masul || y.izoh ? '<div class="int-admin"><span class="m">' +
         (y.masul ? "<span>Mas&#39;ul:</span> <span data-tarjimasiz>" + esc(y.masul) + "</span>" : "") +
         (y.izoh ? (y.masul ? " · " : "") + '<span data-tarjimasiz>' + esc(y.izoh) + "</span>" : "") + "</span></div>" : "") +
@@ -362,7 +372,7 @@
         '<div class="maydon keng"><label class="maydon-yorliq" for="ih-masul">Mas&#39;ul xodim</label>' +
           '<div class="kirish"><input id="ih-masul" name="masul" maxlength="80" value="' + esc(y.masul || "") + '" placeholder="Familiya va ism"></div></div>' +
         '<div class="maydon keng"><label class="maydon-yorliq" for="ih-izoh">Izoh</label>' +
-          '<div class="kirish"><textarea id="ih-izoh" name="izoh" rows="3" maxlength="300" placeholder="Masalan, kelishuv loyihasi AX xizmatida">' + esc(y.izoh || "") + "</textarea></div></div>" +
+          '<textarea class="kirish-matn" id="ih-izoh" name="izoh" rows="3" maxlength="300" placeholder="Masalan, kelishuv loyihasi AX xizmatida">' + esc(y.izoh || "") + "</textarea></div>" +
       "</form>";
     MKB.modal("Integratsiya holati: " + t.nom, tana, {okMatn: "Saqlash", async ok(p){
       const f = p.querySelector("#ih");

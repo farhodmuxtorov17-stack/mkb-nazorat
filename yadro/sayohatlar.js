@@ -45,7 +45,7 @@ window.MKB_SAYOHATLAR = {
   "rahbariyat-tanishuv": {
     rol: ["rahbariyat"], birinchi: true, rejim: "sayohat",
     sarlavha: T("Rahbariyat paneli bilan tanishuv", "Знакомство с панелью руководства"),
-    tavsif: T("Bugungi qarorlar, muddatlar va kengashga hisobot. 2 daqiqa", "Решения на сегодня, сроки и отчёт для наблюдательного совета. 2 минуты"),
+    tavsif: T("Bugungi qarorlar, muddatlar va kengashga hisobot", "Решения на сегодня, сроки и отчёт для наблюдательного совета"),
     qadamlar: [
       Q("panel.html", S("bugun"), "Bugun", "Сегодня", "Kunni shu blokdan boshlang. To'rt qatorda qaroringizni kutayotgan so'rovlar, kechadan beri muddati o'tgan ishlar, qiymati pasaygan obyektlar va eng katta xavflar turadi. Qatorni bossangiz, ro'yxat ochiladi.",
         "Начинайте день с этого блока. В четырёх строках — запросы, ждущие вашего решения, дела, просроченные со вчера, объекты с упавшей стоимостью и крупнейшие риски. Нажмите на строку, чтобы открыть список."),
@@ -69,7 +69,7 @@ window.MKB_SAYOHATLAR = {
   "obyekt-tanishuv": {
     rol: ["obyekt"], birinchi: true, rejim: "sayohat",
     sarlavha: T("Obyekt menejeri paneli bilan tanishuv", "Знакомство с панелью менеджера по объектам"),
-    tavsif: T("Navbatingiz, balansga qabul, baholash, sotuv va obyekt kartochkasi. 2 daqiqa", "Ваша очередь, приём на баланс, оценка, продажа и карточка объекта. 2 минуты"),
+    tavsif: T("Navbatingiz, balansga qabul, baholash, sotuv va obyekt kartochkasi", "Ваша очередь, приём на баланс, оценка, продажа и карточка объекта"),
     qadamlar: [
       Q("panel-obyekt.html", S("navbat"), "Mening navbatim", "Моя очередь", "Bugun qilinadigan ishlar muddat tartibida. Belgini bossangiz vazifa bajariladi, «Qoldirish» uni tanlangan sanagacha olib turadi.",
         "Дела на сегодня по срокам. Нажмите отметку — задача выполнена; «Qoldirish» убирает её до выбранной даты."),
@@ -93,7 +93,7 @@ window.MKB_SAYOHATLAR = {
   "nazorat-tanishuv": {
     rol: ["nazorat"], birinchi: true, rejim: "sayohat",
     sarlavha: T("Ko'rik va xavfsizlik paneli bilan tanishuv", "Знакомство с панелью осмотров и безопасности"),
-    tavsif: T("Ko'rik navbati, hodisalar, qurilmalar va inventarizatsiya. 2 daqiqa", "Очередь осмотров, происшествия, устройства и инвентаризация. 2 минуты"),
+    tavsif: T("Ko'rik navbati, hodisalar, qurilmalar va inventarizatsiya", "Очередь осмотров, происшествия, устройства и инвентаризация"),
     qadamlar: [
       Q("panel-nazorat.html", S("doira"), "Ko'riklar doirasi", "Охват осмотров", "«Mening ko'riklarim» sizga tayinlanganlarini, «Barcha ko'riklar» filialdagi hammasini ko'rsatadi. Tanlov raqamlarga ham ta'sir qiladi va eslab qolinadi.",
         "«Mening ko'riklarim» показывает назначенные вам осмотры, «Barcha ko'riklar» — все по филиалу. Выбор влияет и на цифры, и запоминается."),
@@ -117,7 +117,7 @@ window.MKB_SAYOHATLAR = {
   "buxgalteriya-tanishuv": {
     rol: ["buxgalteriya"], birinchi: true, rejim: "sayohat",
     sarlavha: T("Moliya paneli bilan tanishuv", "Знакомство с финансовой панелью"),
-    tavsif: T("Zaxira, soliq, MB hisoboti va to'lovlar. 2 daqiqa", "Резерв, налог, отчёт ЦБ и платежи. 2 минуты"),
+    tavsif: T("Zaxira, soliq, MB hisoboti va to'lovlar", "Резерв, налог, отчёт ЦБ и платежи"),
     qadamlar: [
       Q("panel-moliya.html", S("bugun"), "Bugun", "Сегодня", "Kunni shu blokdan boshlang: MB hisoboti muddati, tasdiq kutayotgan stavka, to'lanmagan soliq va kechikkan to'lov. Qatorni bossangiz, tegishli ro'yxat ochiladi.",
         "Начинайте день с этого блока: срок отчёта ЦБ, ставка на утверждении, неуплаченный налог и просроченный платёж. Нажмите на строку — откроется нужный список."),
@@ -139,7 +139,7 @@ window.MKB_SAYOHATLAR = {
   "admin-tanishuv": {
     rol: ["admin"], birinchi: true, rejim: "sayohat",
     sarlavha: T("Administrator ish joyi bilan tanishuv", "Знакомство с рабочим местом администратора"),
-    tavsif: T("Hisoblar, rollar, qoidalar va amallar tarixi. 2 daqiqa", "Учётные записи, роли, правила и журнал действий. 2 минуты"),
+    tavsif: T("Hisoblar, rollar, qoidalar va amallar tarixi", "Учётные записи, роли, правила и журнал действий"),
     qadamlar: [
       Q("panel.html", S("bugun"), "Bugun", "Сегодня", "Siz hamma bo'limni ko'rasiz. Bu blok bankning bugungi holatini ko'rsatadi, lekin sizning asosiy ishingiz Sozlamalar bo'limida.",
         "Вы видите все разделы. Этот блок показывает состояние банка на сегодня, но ваша основная работа — в разделе Настройки."),
@@ -174,7 +174,7 @@ window.MKB_SAYOHATLAR = {
       Q("obyektlar.html", S("jadval"), "Reyestrdan kartochkaga", "Из реестра в карточку", "Qatorni bossangiz obyekt kartochkasi ochiladi. Moliya, Hujjatlar, Ko'riklar, Kommunal, Himoya va Sotuv sahifalari shu kartochkaning tablarida.",
         "Нажмите на строку — откроется карточка объекта. Страницы «Финансы», «Документы», «Осмотры», «Коммунальные», «Охрана» и «Продажа» — во вкладках этой карточки."),
       Q("obyektlar.html", "#yordam-tugma", "Yordam tugmasi", "Кнопка помощи", "Har sahifada «?» tugmasi shu sahifa bo'yicha maqola va sayohatni ochadi. To'liq qo'llanma esa Sozlamalar bo'limidagi «Qo'llanma» sahifasida.",
-        "На каждой странице кнопка «?» открывает статью и тур по этой странице. Полное руководство — на странице «Qo'llanma» в разделе Настройки."),
+        "На каждой странице кнопка «?» открывает статью и тур по этой странице. Полная справка — на странице «Qo'llanma» в разделе Настройки."),
     ],
   },
 
@@ -193,7 +193,7 @@ window.MKB_SAYOHATLAR = {
       Q("qabul-boshlash.html", S("davom"), "Davom etish", "Продолжить", "Tugma maydonlarni tekshiradi. Keyin hujjat va komissiya, oxirida «Balansga qabul qilish» tasdiqlash oynasi bilan. Qabuldan keyin 72 soatlik ko'rik vazifasi ochiladi.",
         "Кнопка проверяет поля. Затем документы и комиссия, в конце — «Balansga qabul qilish» с окном подтверждения. После приёма открывается задача осмотра за 72 часа."),
       Q("rasmiylashtirish.html", S("kpi"), "Keyin: huquqni rasmiylashtirish", "Далее: оформление права", "Qabul qilingan obyekt shu navbatga tushadi. Transport 10 kun ichida YHXXda qayta qayd etiladi.",
-        "Принятый объект попадает в эту очередь. Транспорт перерегистрируется в ГУБДД в течение 10 дней."),
+        "Принятый объект попадает в эту очередь. Транспорт перерегистрируется в СБДД в течение 10 дней."),
     ],
   },
 
@@ -223,8 +223,8 @@ window.MKB_SAYOHATLAR = {
     qadamlar: [
       Q("panel-nazorat.html", S("bugun-koriklar"), "Ko'rik navbati", "Очередь осмотров", "Kechikkan va bugungi ko'riklar tepada. «Ko'rikni boshlash» eng shoshilinchini ochadi.", "Просроченные и сегодняшние осмотры сверху. «Ko'rikni boshlash» открывает самый срочный."),
       Q("korik-rejasi.html", S("jadval"), "Rejadan tanlash", "Выбор из плана", "Ko'rikni rejadan tanlab «O'tkazish»ni bosing.", "Выберите осмотр в плане и нажмите «O'tkazish»."),
-      Q(REJADAGI_KORIK, S("chek-list"), "Nazorat bandlari", "Контрольные пункты", "Har bandni belgilang: Joyida, Kamchilik yoki Tekshirilmadi. Hammasi joyida bo'lsa, «Barchasi joyida» bir bosishda belgilaydi.",
-        "Отметьте каждый пункт: на месте, недостаток или не проверен. Если всё в порядке, «Barchasi joyida» отметит всё одним нажатием."),
+      Q(REJADAGI_KORIK, S("chek-list"), "Nazorat bandlari", "Контрольные пункты", "Har bandni belgilang: Me'yorda, Kamchilik yoki Tekshirilmadi. Hammasi me'yorda bo'lsa, «Barchasi me'yorda» bir bosishda belgilaydi.",
+        "Отметьте каждый пункт: в норме, недостаток или не проверен. Если всё в порядке, «Всё в норме» отметит всё одним нажатием."),
       Q(REJADAGI_KORIK, S("surat"), "Suratlar va joylashuv", "Фото и местоположение", "Kamchilik belgilansa, har biriga surat kerak. «Aniqlash» ko'rik obyektda o'tkazilganini tasdiqlaydi.",
         "Если отмечен недостаток, к каждому нужно фото. «Aniqlash» подтверждает, что осмотр прошёл на объекте."),
       Q(REJADAGI_KORIK, S("yakunlash"), "Dalolatnomani yakunlash", "Завершить акт", "Tizim suratlarni tekshiradi va tasdiqlash oynasini ochadi. Baho 2 yoki 1 bo'lsa, hodisa o'zi ochiladi. Aloqa uzilsa ham qoralama shu qurilmada qoladi.",

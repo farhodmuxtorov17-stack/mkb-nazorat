@@ -36,6 +36,7 @@
 .hisob-jadval th{font-size:12.5px;font-weight:400;color:var(--matn-3);text-align:left;padding:0 8px 8px}
 .hisob-jadval td{padding:6px 8px;vertical-align:middle}
 .hisob-jadval td:first-child{font-weight:500;width:90px}
+.h-amal{margin-top:12px;display:flex}
 .hisob-jadval .kirish{height:44px;padding:0 12px}
 .jihoz-royxat{display:flex;flex-direction:column;gap:8px}
 .jihoz{display:grid;grid-template-columns:minmax(0,2fr) 90px minmax(0,1.4fr) 44px;gap:8px;align-items:center}
@@ -91,6 +92,7 @@
       <div class="karta-bosh"><h2 id="h-sar" data-ikonka="elektr">Hisoblagichlar</h2><span class="soni">Ko'rsatkich 0 bo'lsa ham kiritiladi</span></div>
       <table class="hisob-jadval"><thead><tr><th>Xizmat</th><th>Holati</th><th>Hisoblagich raqami</th><th>Ko'rsatkich</th><th>Plomba</th></tr></thead>
         <tbody id="hisoblagichlar"></tbody></table>
+      <div class="h-amal"><button type="button" class="tugma tugma-oq tugma-kichik" id="h-hammasi-yoq">Hammasi mavjud emas</button></div>
       <p class="xato-matn" id="h-xato" hidden></p>
     </section>
 
@@ -320,6 +322,14 @@
     hisobChiz();
   });
   hisobChiz();
+  /* Kommunal ulanmagan obyekt (yer, garaj, tashlandiq bino) ko'p uchraydi: har bir xizmat uchun
+     alohida tanlash o'rniga bitta bosish. Keyin istalgan qatorni qo'lda o'zgartirish mumkin. */
+  document.getElementById("h-hammasi-yoq").addEventListener("click", () => {
+    q.hisoblagichlar.forEach(h => { h.holat = "mavjud emas"; });
+    document.getElementById("h-xato").hidden = true;
+    saqla();
+    hisobChiz();
+  });
 
   /* ---------- Kalitlar va jihozlar ---------- */
   const kalit = document.getElementById("kalitlar");

@@ -100,7 +100,7 @@
     if (!ish){ location.replace("xato-404.html"); return false; }
     if (!MKB.doira([ish]).length){ location.replace("xato-403.html"); return false; }
     const [m, l, r, ts] = await Promise.all([MKBapi.royxat("SUD_MAJLISLAR"), MKBapi.royxat("MULOQOTLAR"),
-      MKBapi.royxat("RESTRUKTURIZATSIYA"), MKBapi.royxat("TASDIQLAR")]);
+      MKBapi.royxat("RESTRUKTURIZATSIYA"), MKBapi.royxat("TASDIQLAR"), MKB.kolYukla(["ARXIV"])]);
     majlislar = m.filter(x => x.ishId === ish.id);
     muloqot = l.filter(x => x.ishId === ish.id);
     restruktur = r.filter(x => x.ishId === ish.id);
@@ -191,9 +191,10 @@
     const yoz = yozadi();
     if (ish.holat !== "faol"){
       if (ish.aktivId){
-        const a = D.topish ? D.topish(ish.aktivId) : null;
+        /* Balansdan chiqarilgan aktiv arxiv yozuviga olib boradi */
+        const hv = MKB.obyektHavola(ish.aktivId);
         matn = "<p><span>Garov bank balansiga qabul qilingan.</span> <span>Yopilgan sana:</span> <b data-tarjimasiz>" + esc(ish.yopilganSana || "—") + "</b></p>";
-        amal = a ? '<a class="tugma tugma-asosiy" href="obyekt.html?id=' + encodeURIComponent(a.id) + '">' + ik("aktivlar") + "Aktiv kartochkasi</a>"
+        amal = hv ? '<a class="tugma tugma-asosiy" href="' + hv + '">' + ik("aktivlar") + "Aktiv kartochkasi</a>"
                  : '<span class="chip chip-kul" data-tarjimasiz>' + esc(ish.aktivId) + "</span>";
       } else {
         const oxirgi = (ish.tarix || [])[(ish.tarix || []).length - 1];

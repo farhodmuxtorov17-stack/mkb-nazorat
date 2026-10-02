@@ -63,12 +63,7 @@
   const tp = v => ({matn: MKB.pul(v)});
   const tz = v => ({matn: String(v == null || v === "" ? "—" : v), tarjimasiz: true});
   /* Obyekt havolasi: balansdagi aktiv obyekt kartasiga, balansdan chiqarilgani arxiv yozuviga olib boradi; ikkalasida ham yo'q bo'lsa havola berilmaydi */
-  const obyektHref = id => {
-    if (!id) return null;
-    if (D.topish(id)) return "obyekt.html?id=" + encodeURIComponent(id);
-    const a = (D.ARXIV || []).find(x => x.id === id || x.obyektId === id);
-    return a ? "arxiv-obyekt.html?id=" + encodeURIComponent(a.id) : null;
-  };
+  const obyektHref = id => MKB.obyektHavola(id);
   const oqi = x => D.sanaOqi(x);
   const bugun = () => { const b = D.bugun(); return new Date(b.getFullYear(), b.getMonth(), b.getDate()); };
   const yaxlit = n => Math.round(n * 10) / 10;
@@ -107,7 +102,7 @@
     {kalit: "xaridorTuri", nom: "Xaridor", variantlar: variantlar("xaridorTuri", ["Yuridik shaxs", "Jismoniy shaxs"])},
   ].filter(f => f.variantlar.length > 1 || (jadval && jadval.holat.filtrlar[f.kalit]));
   /* Bironta qatorga mos kelmaydigan tayyor ko'rinish ro'yxatda ko'rsatilmaydi */
-  const mosKorinishlar = a => a.filter(v => joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
+  const mosKorinishlar = a => a.filter(v => v.nom === q.get("korinish") || joriy.some(x => Object.keys(v.filtrlar).every(k => x[k] === v.filtrlar[k])));
 
   const shartnomasi = t => (D.SHARTNOMALAR || []).find(s => s.taklifId === t.id && s.holat !== "bekor") || null;
   const qarori = t => (D.TASDIQLAR || []).filter(x => x.tur === "taklif" && x.manbaId === t.id).sort((a, b) => (oqi(b.sana) || 0) - (oqi(a.sana) || 0))[0] || null;
@@ -188,9 +183,10 @@
     };
     Object.defineProperty(cfg, "filtrlar", {get: filtrlar, enumerable: true});
     jadval = MKB.jadval("jadval-joy", cfg);
-    /* Havoladagi holat faqat mos qator bo'lsa qo'llanadi: aks holda ro'yxat sababsiz bo'sh ko'rinardi */
+    /* Havoladagi taniladigan holat doim qo'llanadi (mos qator bo'lmasa jadval bo'sh holatini ko'rsatadi); tanilmagani xabar bilan tashlanadi */
     const hn = q.get("holat") ? MKB.holatNomi(q.get("holat")) : "";
-    if (hn && r.some(x => x.holatNom === hn)){ jadval.holat.filtrlar.holatNom = hn; jadval.yangila(); }
+    if (hn && HOLATLAR.some(k => MKB.holatNomi(k) === hn)){ jadval.holat.filtrlar.holatNom = hn; jadval.yangila(); }
+    else if (hn) MKB.toast("Havoladagi holat tanilmadi, ro'yxat to'liq ko'rsatildi", "info");
   }
 
   /* ---------- Tafsilot paneli: har doim bitta asosiy (keyingi) amal ---------- */

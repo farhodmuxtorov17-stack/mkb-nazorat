@@ -66,7 +66,7 @@
       <div class="manba-blok" id="blok-ish" hidden style="margin-top:16px">
         <div class="maydon"><label class="maydon-yorliq" for="ish">Undiruv ishi <b>*</b></label>
           <div class="kirish"><select id="ish" name="ish" required data-xato="Undiruv ishini tanlang"></select></div>
-          <span class="maydon-izoh">Ijro bosqichidagi, hali balansga olinmagan ishlar. Obyekt va sud qarori ma'lumotlari ishdan to'ldiriladi.</span></div>
+          <span class="maydon-izoh">Rahbariyat qabulni tasdiqlagan, hali balansga olinmagan ishlar. Obyekt va sud qarori ma'lumotlari ishdan to'ldiriladi.</span></div>
       </div>
       <div class="manba-blok" id="blok-mavjud" hidden style="margin-top:16px">
         <div class="maydon"><label class="maydon-yorliq" for="mavjud-izlash">Reyestrdagi obyekt <b>*</b></label>
@@ -175,15 +175,24 @@
   const dalolatnomaliIdlar = new Set((D.HUJJATLAR || []).filter(h => h.tur === actTur).map(h => h.obyektId));
   /* Sud qarorida undiruv garovga qaratilmagan ish balansga qabul manbai bo'la olmaydi */
   const garovsiz = i => !!i.qaror && i.qaror.garovgaQaratildi === false;
-  const ishlar = MKB.doira((D.UNDIRUV_ISHLAR || []).filter(i => !i.aktivId && i.holat !== "yopilgan" && ["ijro", "qabul"].includes(i.bosqich) && !garovsiz(i)));
+  /* Undiruv ishidan qabul faqat Rahbariyatning tasdiqlangan qarori bilan (ish.html dagi qoida bilan bir xil) */
+  const ishlar = MKB.doira((D.UNDIRUV_ISHLAR || []).filter(i => !i.aktivId && i.holat !== "yopilgan" && ["ijro", "qabul"].includes(i.bosqich) && !garovsiz(i) && MKB.ishQabulgaTayyor(i)));
   const mavjudlar = MKB.doira((D.YOZUVLAR || []).filter(y => y.holat !== "Chiqarildi" && !dalolatnomaliIdlar.has(y.id)));
   const urlIsh = url.get("ish") ? (D.UNDIRUV_ISHLAR || []).find(i => i.id === url.get("ish")) : null;
-  if (urlIsh && !ishlar.includes(urlIsh) && !urlIsh.aktivId && !garovsiz(urlIsh)) ishlar.unshift(urlIsh);
+  if (urlIsh && !ishlar.includes(urlIsh) && !urlIsh.aktivId && !garovsiz(urlIsh) && MKB.ishQabulgaTayyor(urlIsh)) ishlar.unshift(urlIsh);
+  /* Qarorsiz ish bilan ochilsa: forma to'ldirilmaydi, ish sahifasiga qaytish yo'li beriladi */
+  const qarorYoq = i => {
+    MKB.toast("Rahbariyat qabul qarori hali tasdiqlanmagan: " + i.id, "xavf");
+    f.insertAdjacentHTML("beforebegin", '<section class="karta" role="status" style="margin-bottom:16px">' +
+      '<p style="margin:0 0 12px">Undiruv ishidan balansga qabul Rahbariyatning tasdiqlangan qarori bilan boshlanadi. Qaror ish sahifasida so\'raladi.</p>' +
+      (MKB.ruxsat("ish.html") ? '<a class="tugma tugma-oq" href="ish.html?id=' + encodeURIComponent(i.id) + '">' + ik("yuridik") + "Undiruv ishiga qaytish</a>" : "") + "</section>");
+  };
   let qk = "qabul:yangi";
   if (url.get("ish")){
     if (!urlIsh) MKB.toast("Undiruv ishi topilmadi: " + url.get("ish"), "xavf");
     else if (urlIsh.aktivId) MKB.toast("Bu ish bo'yicha obyekt allaqachon balansga olingan: " + urlIsh.aktivId, "xavf");
     else if (garovsiz(urlIsh)) MKB.toast("Sud qarorida undiruv garovga qaratilmagan: " + urlIsh.id, "xavf");
+    else if (!MKB.ishQabulgaTayyor(urlIsh)) qarorYoq(urlIsh);
     else { qk = "qabul:" + urlIsh.id; if (q.ishId !== urlIsh.id) q = {manba: "ish", ishId: urlIsh.id}; }
   }
   if (url.get("obyekt") && mavjudlar.some(y => y.id === url.get("obyekt")) && q.obyektId !== url.get("obyekt")) q = {manba: "mavjud", obyektId: url.get("obyekt")};
@@ -191,7 +200,7 @@
 
   const MANBALAR = [
     {kalit: "yangi", nom: "Yangi obyekt", izoh: "Reyestrda yo'q obyektni kiritish", ik: "qoshish", soni: null},
-    {kalit: "ish", nom: "Undiruv ishidan", izoh: "Sud qarori ijrosi tugagan ish bo'yicha", ik: "yuridik", soni: ishlar.length},
+    {kalit: "ish", nom: "Undiruv ishidan", izoh: "Rahbariyat qabulni tasdiqlagan ish bo'yicha", ik: "yuridik", soni: ishlar.length},
     {kalit: "mavjud", nom: "Reyestrdagi obyekt", izoh: "Dalolatnomasi rasmiylashtirilmagan obyekt", ik: "aktivlar", soni: mavjudlar.length},
   ];
   document.getElementById("manbalar").innerHTML = MANBALAR.map(m =>
@@ -372,6 +381,20 @@
       location.href = "qabul-hujjatlar.html";
     });
   });
+
+  /* Undiruv ishidan ochilganda 1-qadam ish va sud qaroridan to'liq to'ladi: xodim uni faqat
+     "Davom etish" bilan o'tkazib yuborardi. Shunday holda darhol 2-qadamga o'tiladi, 1-qadam
+     2-qadam tepasidagi xulosada "O'zgartirish" bilan qoladi. Bu ish bo'yicha 1-qadam avval
+     o'tilgan bo'lsa (xodim o'zgartirish uchun qaytgan) yoki qurilmada qoralama bo'lsa, forma
+     odatdagidek ko'rsatiladi. */
+  const tolaMi = () => {
+    const sana = D.sanaOqi(f.elements.asosSana.value);
+    if (!sana || sana > MKB.bugun()) return false;
+    return Array.from(f.querySelectorAll("input[name], select[name]"))
+      .filter(el => !el.disabled && el.type !== "hidden" && (el.type === "radio" || el.getClientRects().length))
+      .every(el => el.type === "radio" ? !el.required || !!f.querySelector('[name="' + el.name + '"]:checked') : el.checkValidity());
+  };
+  if (qk !== "qabul:yangi" && q.manba === "ish" && !q.tanlov && !qoriq.qoralama() && tolaMi()) f.requestSubmit();
 })();
 </script>
 </body>

@@ -406,11 +406,16 @@
       const d = new Date(blokSana);
       qosh(d >= bosh ? d : null, admin, "FOYDLAR", f.id, "yangilash", {faol: {eski: true, yangi: false}});
     });
-    /* Tizimga kirishlar: faol xodimlar ish kunlari, har biri haftasiga 1–3 marta */
+    /* Tizimga kirishlar: faol xodimlar ish kunlari, har biri haftasiga 1–3 marta.
+       Hisob ochilgan kundan oldin kirish yozilmaydi; bugun ochilgan hisobga umuman yozilmaydi */
+    const bugunBoshi = new Date(bugun.getFullYear(), bugun.getMonth(), bugun.getDate());
     F.filter(f => f.faol !== false).forEach(f => {
+      const och = sanaOl(f.sana);
+      if (och && och >= bugunBoshi) return;
       for (let i = 0; i < B.BOSH_KUN; i++) {
         const d = new Date(bosh.getFullYear(), bosh.getMonth(), bosh.getDate() + i);
         if (d.getDay() === 0 || d.getDay() === 6) continue;
+        if (och && d < och) continue;
         const u = urug(f.login + i);
         if (u % 5 > 1) continue;
         d.setHours(8, 35 + (u >>> 3) % 50);

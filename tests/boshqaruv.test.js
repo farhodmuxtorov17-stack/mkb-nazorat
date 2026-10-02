@@ -237,6 +237,18 @@ await tekshir("ommaviy sinov manbasi va litsenziyasi yozilgan, bank qurilmasi em
   talab(/Ommaviy namuna, bank qurilmasi emas/.test(i) && /test\.mosquitto\.org/.test(i), "MQTT sinovi belgisi");
   talab(/Open-Meteo\.com, ma&#39;lumot litsenziyasi CC BY 4\.0/.test(t) && /bank ma&#39;lumoti emas/.test(t), "Open-Meteo belgisi");
 });
+await tekshir("namoyish jurnalida hisob ochilishidan oldingi kirish yo'q, bugun ochilgan hisob 'Kirmagan'", () => {
+  const kun = new Date(2026, 8, 30);
+  const Dx = {MANBA: "shartli", bugun: () => kun, FOYDLAR: [
+    {id: "T1", login: "t.yangi", nom: "Sinov Yangi", rol: "Obyekt menejeri", faol: true, sana: "30.09.2026"},
+    {id: "T2", login: "t.orta", nom: "Sinov Orta", rol: "Obyekt menejeri", faol: true, sana: "22.09.2026"},
+    {id: "T3", login: "t.eski", nom: "Sinov Eski", rol: "Obyekt menejeri", faol: true, sana: "01.01.2025"}]};
+  const j = B.jurnal(Dx, []);
+  talab(B.oxirgiKirish(Dx.FOYDLAR[0], j) === null, "bugun ochilgan hisobga kirish yozilgan");
+  const och = sana(22, 9, 2026);
+  talab(j.filter(a => a.turi === "kirish" && a.kim === "Sinov Orta").every(a => B.sanaOl(a.vaqt) >= och), "ochilishdan oldingi kirish bor");
+  talab(B.oxirgiKirish(Dx.FOYDLAR[2], j), "eski hisobda kirishlar yo'qolgan");
+});
 await tekshir("yangi fayllarda taqiqlangan so'zlar yo'q", () => {
   const b = (...q) => q.join("");
   const re = [new RegExp("\\b" + b("A", "I") + "\\b"), new RegExp("\\b" + b("ag", "ent") + "(?:lar|ning|iga|i|lari|s)?\\b|\\b" + b("аг", "ент"), "i"), new RegExp("\\b" + b("au", "dit"), "i"),

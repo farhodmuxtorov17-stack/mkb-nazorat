@@ -91,7 +91,7 @@
     <a class="metrika" href="#v-qabul" data-ikonka="qoshish">
       <span class="m-yorliq">Balansga qabul navbati</span>
       <span class="m-qiymat"><span data-tarjimasiz id="k-qabul">—</span><small>ta</small></span>
-      <span class="m-izoh"><span>ijro bosqichidagi ishlar</span></span>
+      <span class="m-izoh"><span>qarori tasdiqlangan</span> <b data-tarjimasiz id="k-qabul-tayyor">—</b></span>
     </a>
     <a class="metrika" href="rasmiylashtirish.html" data-ikonka="muhr">
       <span class="m-yorliq">Rasmiylashtirilmagan</span>
@@ -247,10 +247,16 @@
     $("hs-sana").textContent = D.sanaYoz(bugun()) + " holatiga";
     $("doira-izoh").innerHTML = '<b data-tarjimasiz>' + MKB.fmt(faol.length) + "</b> <span>ta obyekt</span>";
 
-    /* ---------- Balansga qabul navbati: ijro bosqichidagi undiruv ishlari ---------- */
-    const ishlar = MKB.doira(D.UNDIRUV_ISHLAR || []).filter(i => i.holat !== "yopilgan" && i.bosqich === "ijro")
-      .sort((a, b) => (((b.garov || {}).bahoMln) || 0) - (((a.garov || {}).bahoMln) || 0));
+    /* ---------- Balansga qabul navbati: ijro bosqichidagi undiruv ishlari ----------
+       Qabul faqat Rahbariyatning tasdiqlangan qarori bilan: qarori yo'q ish qatori ish sahifasiga (qaror so'rash) olib boradi */
+    const qHolat = new Map();
+    const ishlar = MKB.doira(D.UNDIRUV_ISHLAR || []).filter(i => i.holat !== "yopilgan" && i.bosqich === "ijro" && !i.aktivId)
+      .map(i => (qHolat.set(i.id, MKB.ishQabulHolati(i)), i))
+      .sort((a, b) => (qHolat.get(b.id) === "tasdiqlangan") - (qHolat.get(a.id) === "tasdiqlangan") ||
+        (((b.garov || {}).bahoMln) || 0) - (((a.garov || {}).bahoMln) || 0));
     $("k-qabul").textContent = MKB.fmt(ishlar.length);
+    $("k-qabul-tayyor").textContent = MKB.fmt(ishlar.filter(i => qHolat.get(i.id) === "tasdiqlangan").length);
+    const ishKora = MKB.ruxsat("ish.html");
     $("qabul-soni").innerHTML = ishlar.length ? '<b data-tarjimasiz>' + ishlar.length + "</b> <span>ta ish</span>" : "";
     const qabulYoza = MKB.huquq("aktivlar", "yoz");
     $("qabul").innerHTML = ishlar.length ? ishlar.slice(0, 5).map(i => {
@@ -261,7 +267,10 @@
           "<span>" + (g.bahoMln ? '<b class="pul" data-tarjimasiz>' + e(MKB.pul(g.bahoMln)) + "</b> · " : "") + e(g.hudud || g.tur || "") +
           ' · <span data-tarjimasiz>' + e(i.id) + "</span></span></span>" +
         '<span class="ong">' +
-          (qabulYoza ? '<a class="tugma tugma-oq tugma-kichik" href="qabul-boshlash.html?ish=' + encodeURIComponent(i.id) + '">Qabul qilish</a>' : "") +
+          (qHolat.get(i.id) === "tasdiqlangan"
+            ? (qabulYoza ? '<a class="tugma tugma-oq tugma-kichik" href="qabul-boshlash.html?ish=' + encodeURIComponent(i.id) + '">Qabul qilish</a>' : "")
+            : ishKora ? '<a class="tugma tugma-oq tugma-kichik" href="ish.html?id=' + encodeURIComponent(i.id) + '">' +
+                (qHolat.get(i.id) === "kutilmoqda" ? "Qaror kutilmoqda" : "Qaror so'rash") + "</a>" : "") +
         "</span></div>";
     }).join("") + (ishlar.length > 5 ? '<p class="karta-izoh"><span>Yana</span> <b data-tarjimasiz>' + (ishlar.length - 5) + "</b> <span>ta ish navbatda</span></p>" : "")
       : MKB.boshHolat("aktivlar", "Qabul kutayotgan ish yo'q",
@@ -273,7 +282,9 @@
     $("k-rasmiy").textContent = MKB.fmt(rasmiy.length);
     $("rasmiy").innerHTML = rasmiy.length ? rasmiy.slice(0, 5).map(({y, t}) => {
       const f = Math.round(t.foiz || 0);
-      return '<a class="qator" href="' + obHref("obyekt-hujjatlar.html", y.id) + '">' +
+      /* Yetishmayotgan birinchi hujjat uchun yuklash oynasi hujjatlar sahifasida darhol ochiladi */
+      const yukla = qabulYoza && t.yetishmaydi.length ? "&yukla=" + encodeURIComponent(t.yetishmaydi[0].tur) : "";
+      return '<a class="qator" href="' + obHref("obyekt-hujjatlar.html", y.id) + yukla + '">' +
         MKB.obyektSurati(y, {kichik: true, sinf: "media"}) +
         '<span class="matn"><b>' + e(y.qisqa || y.nom) + "</b><span>" +
           (t.yetishmaydi.length ? '<span>Yetishmaydi:</span> <b data-tarjimasiz>' + t.yetishmaydi.length + "</b> <span>ta hujjat</span>" : "<span>Hujjatlar to'liq</span>") +
@@ -520,11 +531,29 @@
       const tb = $("panel-tablar"); if (tb && tb.querySelectorAll("a").length < 2) tb.hidden = true;
       doiraSozla();
       chiz();
-      if (!belgi) belgi = MKB.yangilanganBelgi("hs-meta", {avto: 60, yangila: async () => { await MKB.kolYukla(KOLLAR); chiz(); }});
+      if (!belgi) belgi = MKB.yangilanganBelgi("hs-meta", {avto: 60, yangila: async () => { await MKB.kolYukla(KOLLAR); menyuSaqlabChiz(); }});
       else belgi.belgila();
     },
   });
-  document.addEventListener("mkb:qoidalar", () => { try{ chiz(); }catch(_){ } });
+  /* Fon yangilanishi ochiq "Qoldirish" menyusini yopmasin: qayta chizishdan keyin menyu va fokus tiklanadi */
+  function menyuSaqlabChiz(){
+    const ochiq = $("vazifalar").querySelector(".qoldir-joy .menyu-popover.ochiq");
+    const qid = ochiq ? ochiq.parentNode.querySelector("[data-qoldir]").dataset.qoldir : null;
+    const fokusIchida = !!ochiq && ochiq.contains(document.activeElement);
+    chiz();
+    if (!qid) return;
+    const ql = [...$("vazifalar").querySelectorAll("[data-qoldir]")].find(b => b.dataset.qoldir === qid);
+    const m = ql && ql.parentNode.querySelector(".menyu-popover");
+    if (!m) return;
+    m.classList.add("ochiq"); ql.setAttribute("aria-expanded", "true");
+    if (fokusIchida) m.querySelector("button").focus();
+  }
+  /* Qoidalar mexanizmi faqat yangi vazifa yoki bildirishnoma yaratsa panel qayta chiziladi */
+  document.addEventListener("mkb:qoidalar", ev => {
+    const h = ev.detail || {};
+    if (!h.vazifa && !h.bildirish) return;
+    try{ menyuSaqlabChiz(); }catch(_){ }
+  });
 })();
 </script>
 </body>

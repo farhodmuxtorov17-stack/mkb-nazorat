@@ -9,6 +9,8 @@
 /* Zich jadvalda ham obyekt nomi 2 qatorga sig'adi: nom ustuni boshqalar hisobiga torayib ketmaydi */
 #jadval-joy .obyekt-katak > span:last-child:lang(uz){min-width:160px}
 @media (max-width:1440px){#jadval-joy .obyekt-katak > span:last-child:lang(uz){min-width:130px}}
+/* Muddat va holat chiplari zich jadvalda ham bir qatorda: cho'zilgan ko'p qatorli «tabletka» bo'lmaydi */
+#jadval-joy .jadval td .chip.bir-qator{white-space:nowrap;height:28px;min-height:0;padding:0 12px}
 /* Kartalar rejimi: jadval asboblar qatori (ko'rinish, qidiruv, filtrlar) qoladi, jadvalning o'zi yashiriladi */
 #jadval-joy.karta-rejim .jadval-orash,#jadval-joy.karta-rejim .jadval-past,#jadval-joy.karta-rejim [data-sayohat="ustunlar"]{display:none}
 #jadval-joy.karta-rejim .jadval-korpus{padding-bottom:6px}
@@ -408,14 +410,17 @@ a.metrika.faol{box-shadow:0 0 0 2px var(--siyoh),var(--soya)}
     {kalit: "qolganKun", nom: "Muddat tugashiga, kun", son: true, csv: x => x.qolganKun == null ? "" : x.qolganKun, chiz: x => {
       if (x.qolganKun == null) return "—";
       const c = (D.MUDDAT_HOLATLARI[x.muddat] || {}).chip || "";
-      return x.qolganKun > 0 ? (x.muddat === "xavf-90" ? '<span class="chip chip-sariq chip-kichik" data-tarjimasiz>' + x.qolganKun + "</span>" : MKB.fmt(x.qolganKun))
-        : '<span class="chip ' + c + ' chip-kichik">' + esc(x.muddatNom) + "</span>";
+      if (x.qolganKun > 0) return x.muddat === "xavf-90" ? '<span class="chip chip-sariq chip-kichik" data-tarjimasiz>' + x.qolganKun + "</span>" : MKB.fmt(x.qolganKun);
+      /* Muddati o'tgan: ustun sarlavhasi «kun», shuning uchun katakda ham son (o'tgan kunlar, minus bilan); holat nomi sichqoncha ostida */
+      if (x.muddat === "umidsiz" || x.muddat === "3-yildan-oshgan")
+        return '<span class="chip ' + c + ' chip-kichik bir-qator" title="' + esc(x.muddatNom) + '"><b data-tarjimasiz>−' + MKB.fmt(-x.qolganKun) + "</b></span>";
+      return '<span class="chip ' + c + ' chip-kichik bir-qator">' + esc(x.muddatNom) + "</span>";
     }},
     {kalit: "balans", nom: "Balans qiymati", son: true, csv: x => son(x.balans), chiz: x => '<span class="pul" data-tarjimasiz>' + esc(MKB.pul(x.balans)) + "</span>"},
     {kalit: "bozor", nom: "Bozor qiymati", son: true, csv: x => son(x.bozor), chiz: x => x.bozor == null ? '<span class="chip chip-kul chip-kichik">Baholanmagan</span>' : '<span class="pul" data-tarjimasiz>' + esc(MKB.pul(x.bozor)) + "</span>"},
     {kalit: "korik", nom: "Keyingi ko'rik", tur: "sana", csv: x => x.korik ? x.korik + (x.korikInspektor ? ", " + x.korikInspektor : "") : "",
       chiz: x => x.korik ? '<span' + (x.korikKech ? ' class="chip chip-xavf chip-kichik"' : "") + ' title="' + esc((x.korikKech ? "Kechikkan. " : "") + (x.korikInspektor || "")) + '" data-tarjimasiz>' + esc(x.korik) + "</span>" : '<span class="chip chip-kul chip-kichik">Rejada yo&#39;q</span>'},
-    {kalit: "holat", nom: "Holat", chiz: x => MKB.holatChip(x.holat, true)},
+    {kalit: "holat", nom: "Holat", chiz: x => MKB.holatChip(x.holat, true).replace('class="chip', 'class="chip bir-qator')},
   ];
   const variantlar = (maydon, tartib) => {
     const r = [...new Set(qatorlar.map(x => x[maydon]).filter(Boolean))];

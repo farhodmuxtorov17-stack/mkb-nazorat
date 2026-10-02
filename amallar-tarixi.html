@@ -161,6 +161,20 @@
     return s.length > 120 ? s.slice(0, 118) + "…" : s;
   }
 
+  /* Ekranda qiymatning o'zi o'giriladigan qism: holat, ha/yo'q va yozuvlar soni ruscha interfeysda
+     ruschaga o'tadi; nom, raqam va id [data-tarjimasiz] ichida qoladi */
+  const HOLAT_MAYDON = ["holat", "qaror", "natija", "bosqich"];
+  const RO_YXAT_MAYDON = ["jiddiylik", "ustuvorlik", "muhimlik", "daraja", "toifa", "tur", "turi", "korikTuri", "sotishUsuli", "rol"];
+  function qiymatHtml(v, maydon){
+    const o = x => "<span>" + esc(x) + "</span>";
+    if (typeof v === "boolean") return o(v ? "Ha" : "Yo'q");
+    if (Array.isArray(v) && v.length && !v.every(x => x == null || typeof x !== "object"))
+      return "<span data-tarjimasiz>" + v.length + "</span> " + o("ta yozuv");
+    if (typeof v === "string" && v.trim() && HOLAT_MAYDON.includes(maydon)) return o(MKB.holatNomi(v));
+    if (typeof v === "string" && v.trim() && RO_YXAT_MAYDON.includes(maydon) && v.length <= 40) return o(v);
+    return "<span data-tarjimasiz>" + esc(qiymatMatn(v, maydon)) + "</span>";
+  }
+
   const HAQIQIY = (await MKBapi.royxat("amallar")) || [];
   /* Namoyishda jurnal bo'sh boshlanmasin: qaror, ko'rik, hodisa va aktiv tarixidan tiklangan boshlang'ich yozuvlar qo'shiladi */
   let R = B.jurnal(D, HAQIQIY);
@@ -225,7 +239,7 @@
     const o = a.ozgarish ? Object.entries(a.ozgarish) : [];
     if (!o.length) return '<span class="at-bosh">' + esc(a.kolleksiya === "SESSIYA" ? "" : a.tafsilot || "") + "</span>";
     return '<span class="at-ozg">' + o.slice(0, 2).map(([k, v]) =>
-      '<span class="q"><b>' + esc(maydonNomi(k)) + '</b><b data-tarjimasiz>:</b> <s data-tarjimasiz>' + esc(qiymatMatn(v && v.eski, k)) + '</s> → <span data-tarjimasiz>' + esc(qiymatMatn(v && v.yangi, k)) + "</span></span>").join("") +
+      '<span class="q"><b>' + esc(maydonNomi(k)) + '</b><b data-tarjimasiz>:</b> <s>' + qiymatHtml(v && v.eski, k) + '</s> → ' + qiymatHtml(v && v.yangi, k) + "</span>").join("") +
       (o.length > 2 ? '<span class="yana"><span>yana</span> <b data-tarjimasiz>' + (o.length - 2) + "</b> <span>ta maydon</span></span>" : "") + "</span>";
   };
   /* Parametr, qoida va foydalanuvchi uchun id o'rniga nomi ko'rsatiladi */
@@ -449,8 +463,8 @@
       "</dl>" +
       (o.length ? '<h4 style="margin:20px 0 6px;font-weight:500">O&#39;zgargan maydonlar</h4>' +
         '<table class="ozg-jadval"><thead><tr><th>Maydon</th><th>Eski qiymat</th><th>Yangi qiymat</th></tr></thead><tbody>' +
-        o.map(([k, v]) => "<tr><td>" + esc(maydonNomi(k)) + '</td><td class="eski" data-tarjimasiz>' + esc(qiymatMatn(v && v.eski, k)) +
-          '</td><td data-tarjimasiz>' + esc(qiymatMatn(v && v.yangi, k)) + "</td></tr>").join("") + "</tbody></table>"
+        o.map(([k, v]) => "<tr><td>" + esc(maydonNomi(k)) + '</td><td class="eski">' + qiymatHtml(v && v.eski, k) +
+          "</td><td>" + qiymatHtml(v && v.yangi, k) + "</td></tr>").join("") + "</tbody></table>"
         : '<p style="margin-top:16px;color:var(--matn-3);font-size:13.5px">Maydon o&#39;zgarishi qayd etilmagan.</p>');
     const royxat = a.soni ? '<h4 style="margin:20px 0 8px;font-weight:500">Yozuvlar ro&#39;yxati</h4><p class="kod-mono" data-tarjimasiz style="font-size:12.5px;line-height:1.7;color:var(--matn-2);overflow-wrap:anywhere">' +
       a.guruh.slice(0, 200).map(x => esc(x || "—")).join(", ") + (a.guruh.length > 200 ? " …" : "") + "</p>" : "";

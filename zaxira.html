@@ -59,9 +59,9 @@
 
   <section class="metrika-qator tort" aria-label="Asosiy ko'rsatkichlar" data-sayohat="kpi">
     <a class="metrika" data-ikonka="tarozi" href="#zx-toifalar"><span class="m-yorliq">Zaxira yuki <span class="chip chip-kichik chip-sariq" id="zx-taxminiy" data-sayohat="taxminiy" hidden>Taxminiy</span></span><span class="m-qiymat" id="zx-jami">—</span><span class="m-izoh" id="zx-jami-izoh">—</span></a>
-    <a class="metrika" data-ikonka="xavf" href="#zx-obyektlar" data-filtr="To'liq zaxira"><span class="m-yorliq">To'liq zaxira toifasi</span><span class="m-qiymat" id="zx-umidsiz">—</span><span class="m-izoh" id="zx-umidsiz-izoh">—</span></a>
+    <a class="metrika" data-ikonka="xavf" href="#zx-obyektlar" data-filtr="Umidsiz"><span class="m-yorliq">Umidsiz toifa</span><span class="m-qiymat" id="zx-umidsiz">—</span><span class="m-izoh" id="zx-umidsiz-izoh">—</span></a>
     <a class="metrika" data-ikonka="muddat" href="muddatlar.html"><span class="m-yorliq">90 kunda muddati tugaydi</span><span class="m-qiymat" id="zx-90">—</span><span class="m-izoh" id="zx-90-izoh">—</span></a>
-    <div class="metrika" data-ikonka="foiz"><span class="m-yorliq">Kapitalga nisbat</span><span class="m-qiymat" id="zx-kapital">—</span><span class="m-izoh" id="zx-kapital-izoh">—</span></div>
+    <div class="metrika" data-ikonka="foiz"><span class="m-yorliq"><span id="zx-kapital-yorliq">Kapitalga nisbat</span></span><span class="m-qiymat" id="zx-kapital">—</span><span class="m-izoh" id="zx-kapital-izoh">—</span></div>
   </section>
 
   <div class="tor-2">
@@ -127,9 +127,8 @@
 
   /* To'rt ko'z: stavkani Buxgalteriya va risk taklif qiladi (TASDIQLAR, tur "zaxira"), boshqa xodim (Rahbariyat) tasdiqlaydi */
   const taklifQiladi = ["admin", "buxgalteriya"].indexOf(MKB.rol()) >= 0;
-  /* Me'yoriy hujjatdagi toifa nomi tushunarli nom yonida saqlanadi (MB 2696, 36-band) */
-  const MEYORIY_IZOH = {substandart: "Me'yoriy hujjatda: «substandart» toifa (MB 2696, 36-band)",
-                        umidsiz: "Me'yoriy hujjatda: «umidsiz» toifa (MB 2696, 20 va 36-bandlar)"};
+  /* Toifa nomlari MB 2696 atamalari; chip ustida me'yoriy band ko'rsatiladi */
+  const MEYORIY_IZOH = {substandart: "MB 2696, 36-band", umidsiz: "MB 2696, 20 va 36-bandlar"};
   const STAVKALAR = [["zaxiraOraliq1Kun", "zaxiraOraliq1Foiz"], ["zaxiraOraliq2Kun", "zaxiraOraliq2Foiz"], [null, "zaxiraOraliq3Foiz"], [null, "zaxiraUmidsizFoiz"]];
   const param = id => (D.PARAMETRLAR || []).find(p => p.id === id);
   const stavkaTaxminiy = x => !!((x.foiz && x.foiz.taxminiy) || (x.kun && x.kun.taxminiy));
@@ -168,14 +167,36 @@
     el("zx-umidsiz-izoh").innerHTML = jamiZaxira ? "<span>Zaxira yukining</span> <b data-tarjimasiz>" + foizMatn(umidsizSumma / jamiZaxira * 100) + "%</b>" : "<span>Zaxira hisoblanmagan</span>";
     el("zx-90").textContent = MKB.fmt(xavf90.length);
     el("zx-90-izoh").innerHTML = xavf90.length ? "<span>Qo'shimcha zaxira:</span> <span data-tarjimasiz>" + esc(MKB.pul(xavf90.reduce((a, x) => a + ((x.balans || 0) - (x.summa || 0)), 0))) + "</span>" : "<span>Yaqin 90 kunda o'tish yo'q</span>";
+    /* Oylik suratlar: KPI dagi oylik o'zgarish va dinamika grafigi uchun */
+    const davrlar = [...new Set((D.ZAXIRA_TARIX || []).map(z => z.davr))].sort();
+    const doiraId = new Set(aktivlar.map(y => y.id).concat(MKB.doira(D.ARXIV || []).map(a => a.id)));
+    const filialmi = MKB.filialXodimi();
+    const surat = d => (D.ZAXIRA_TARIX || []).filter(z => z.davr === d && (!filialmi || doiraId.has(z.obyektId) || MKB.doira([{obyektId: z.obyektId}]).length));
+    const oxirgi12 = davrlar.filter(d => d !== joriyDavr).slice(-11);
+
+    /* 4-plitka: kapital kiritilgan bo'lsa nisbat. Kiritilmagan bo'lsa buxgalteriya va admin kiritish yo'lini ko'radi,
+       qolgan rollar esa zaxira yukining o'tgan oyga nisbatan o'zgarishini ko'radi */
     const kapital = D.param("kapital1DarajaMlrd"), koeff = D.param("kapitalLimitKoeff") || 1;
+    const otganDavr = (() => { const d = new Date(b.getFullYear(), b.getMonth() - 1, 1); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); })();
+    const otganZaxira = oxirgi12.indexOf(otganDavr) >= 0 ? surat(otganDavr).reduce((a, z) => a + (z.summa || 0), 0) : 0;
     if (kapital){
       const n = jamiBalans / 1000 / kapital;
+      el("zx-kapital-yorliq").textContent = "Kapitalga nisbat";
       el("zx-kapital").innerHTML = foizMatn(n * 100) + "<small>%</small>";
       el("zx-kapital-izoh").innerHTML = "<span>Balans aktivlari / 1-darajali kapital, limit</span> <span data-tarjimasiz>" + foizMatn(koeff * 100) + "%</span>";
-    } else {
+    } else if (taklifQiladi){
+      el("zx-kapital-yorliq").textContent = "Kapitalga nisbat";
       el("zx-kapital").innerHTML = '<span style="font-size:22px">kiritilmagan</span>';
-      el("zx-kapital-izoh").innerHTML = "<span>1-darajali kapital sozlamalarda kiritiladi</span>";
+      el("zx-kapital-izoh").innerHTML = '<a href="hisobot-mb.html#kapital">Kapitalni kiritish</a>';
+    } else if (otganZaxira){
+      const o = (jamiZaxira - otganZaxira) / otganZaxira * 100;
+      el("zx-kapital-yorliq").textContent = "O'tgan oyga nisbatan";
+      el("zx-kapital").innerHTML = '<span data-tarjimasiz>' + (o > 0 ? "+" : o < 0 ? "−" : "") + foizMatn(Math.abs(o)) + "</span><small>%</small>";
+      el("zx-kapital-izoh").innerHTML = "<span>O'tgan oy</span> <span data-tarjimasiz>" + esc(MKB.pul(Math.round(otganZaxira * 10) / 10)) + "</span>";
+    } else {
+      el("zx-kapital-yorliq").textContent = "Balans qiymati";
+      el("zx-kapital").innerHTML = kpiPul(jamiBalans);
+      el("zx-kapital-izoh").innerHTML = "<span data-tarjimasiz>" + MKB.fmt(hisoblangan.length) + "</span> <span>ta aktiv</span>";
     }
 
     /* Toifalar jadvali */
@@ -235,11 +256,6 @@
     el("zx-stavkalar").querySelectorAll("[data-rad]").forEach(btn => btn.addEventListener("click", () => sorovRad(btn.dataset.rad)));
 
     /* Dinamika: oylik suratlar + joriy hisob */
-    const davrlar = [...new Set((D.ZAXIRA_TARIX || []).map(z => z.davr))].sort();
-    const doiraId = new Set(aktivlar.map(y => y.id).concat(MKB.doira(D.ARXIV || []).map(a => a.id)));
-    const filialmi = MKB.filialXodimi();
-    const surat = d => (D.ZAXIRA_TARIX || []).filter(z => z.davr === d && (!filialmi || doiraId.has(z.obyektId) || MKB.doira([{obyektId: z.obyektId}]).length));
-    const oxirgi12 = davrlar.filter(d => d !== joriyDavr).slice(-11);
     const dj = el("zx-dinamika");
     if (oxirgi12.length){
       /* ikki kasr: jadval va tooltip KPI dagi MKB.pul bilan bir xil sonni ko'rsatadi */

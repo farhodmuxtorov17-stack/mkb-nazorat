@@ -298,6 +298,14 @@ window.MKB_BILDIRISH_DOIRA = (function(){
 
   async function keyingi(kol, old, uz){ return MKB.keyingiId(kol, old, uz); }
 
+  /* Undiruv ishi bo'yicha balansga qabul qarori holati: "tasdiqlangan" | "kutilmoqda" | "rad etilgan" | "".
+     Qabul faqat tasdiqlangan qaror bilan boshlanadi: panel navbati va qabul ustasi shu predikatdan foydalanadi. */
+  MKB.ishQabulHolati = i => {
+    const r = i ? (D().TASDIQLAR || []).filter(t => t.tur === "qabul" && t.manbaId === i.id) : [];
+    return ["tasdiqlangan", "kutilmoqda", "rad etilgan"].find(h => r.some(t => t.holat === h)) || "";
+  };
+  MKB.ishQabulgaTayyor = i => MKB.ishQabulHolati(i) === "tasdiqlangan";
+
   MKB.tasdiq = {
     /* Tasdiqlay oladimi: sahifa tugmani shu orqali ko'rsatadi. O'z so'rovi uchun har doim false */
     mumkinmi: tasdiqlayOladimi,
@@ -589,7 +597,22 @@ window.MKB_BILDIRISH_DOIRA = (function(){
   /* Saqlanadigan rang ekrandagi shkala bilan bir xil (yadro/app.css --jid-*, MKB.jiddiylik) */
   const JIDDIYLIK_RANG = {"yuqori": "var(--jid-yuqori)", "o'rta": "var(--jid-orta)", "past": "var(--jid-past)"};
   const HODISA_BOSQICH = ["yangi", "tekshiruvda", "bartaraf", "hal", "yopildi"];
+  const HODISA_NOM = {yangi: "Yangi", tekshiruvda: "Tekshiruvda", bartaraf: "Bartaraf etilmoqda", hal: "Hal qilindi", yopildi: "Yopildi"};
   MKB.hodisa = {
+    /* Bosqich o'tishi uchun yoziladigan maydonlar (hodisa.html va doska uchun yagona).
+       Yopilganda yopilganVaqt yoziladi, qayta ochilganda o'chiriladi: haftalik xulosa yopilgan hodisani
+       shu vaqt bo'yicha haftaga qo'yadi (hisobot-davr.js). Ma'lumot modeli bu maydonni hali qabul
+       qilmasa, u yuborilmaydi: aks holda hodisani yopib bo'lmay qoladi */
+    holatPatch(yozuv, kol, kalit){
+      const p = kol === "XAVFSIZLIK_HODISALARI" ? {holat: kalit === "yangi" ? "ochiq" : kalit}
+        : {ustun: kalit === "tekshiruvda" ? "tekshirilmoqda" : kalit, holat: HODISA_NOM[kalit]};
+      const q = ((D().QOSHIMCHA_MAYDONLAR || {})[kol]) || {};
+      if ("yopilganVaqt" in q || (D()[kol] || []).some(x => x && "yopilganVaqt" in x)){
+        if (kalit === "yopildi") p.yopilganVaqt = vaqtMatn();
+        else if (yozuv && yozuv.yopilganVaqt) p.yopilganVaqt = null;
+      }
+      return p;
+    },
     /* Holat o'tishi qoidasi (hodisa.html va hodisalar.html doskasi uchun yagona):
        faqat qo'shni bosqichga (oldinga yoki orqaga) yoki yopilgandan qayta ochish (tekshiruvda);
        "hal" va "yopildi" uchun ko'rilgan chora (chora/izoh) yozilgan bo'lishi shart.

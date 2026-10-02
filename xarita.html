@@ -27,7 +27,7 @@
     <div class="x-ong">
       <label class="izlash">
         <svg class="ic" aria-hidden="true"><use href="#ik-izlash"/></svg>
-        <input type="search" id="x-qidiruv" placeholder="Reyestr raqami, nomi yoki manzili" aria-label="Xaritadan qidirish">
+        <input type="search" id="x-qidiruv" placeholder="Raqam, nom yoki manzil" aria-label="Xaritadan qidirish">
       </label>
       <button type="button" class="tugma tugma-oq tugma-kichik" id="x-ulash"><svg class="ic"><use href="#ik-ulashish"/></svg>Havolani nusxalash</button>
       <button type="button" class="tugma tugma-oq tugma-kichik" id="x-csv"><svg class="ic"><use href="#ik-csv"/></svg>CSV</button>
@@ -58,7 +58,7 @@
         <button type="button" id="x-olchagich" aria-pressed="false" title="Masofa o'lchash" aria-label="Masofa o'lchash"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 16.5 16.5 3 21 7.5 7.5 21z" stroke-linejoin="round"/><path d="m7 12.5 2 2m1-5 2 2m1-5 2 2" stroke-linecap="round"/></svg></button>
         <button type="button" id="x-toliq" aria-pressed="false" title="To'liq ekran" aria-label="To'liq ekran"><svg class="ic"><use href="#ik-skaner"/></svg></button>
       </div>
-      <button type="button" class="tugma tugma-asosiy tugma-kichik x-varaq-tugma" id="x-varaq-tugma" aria-controls="x-yon" aria-expanded="false"><svg class="ic"><use href="#ik-filtr"/></svg>Filtr va ro'yxat</button>
+      <button type="button" class="tugma tugma-asosiy tugma-kichik x-varaq-tugma" id="x-varaq-tugma" aria-controls="x-yon" aria-expanded="false" data-xarita-tosiq><svg class="ic"><use href="#ik-filtr"/></svg>Filtr va ro'yxat</button>
     </div>
     <p class="x-holat" id="x-holat" role="status" aria-live="polite"></p>
     </div>
@@ -70,8 +70,11 @@
         <button type="button" class="tugma tugma-oq tugma-kichik x-tozala" id="x-tozala" hidden><svg class="ic"><use href="#ik-rad"/></svg>Filtrni tozalash</button>
       </section>
       <section class="karta" data-sayohat="legenda">
-        <h3>Hududlar bo'yalishi<span class="son" id="x-olchov-nom"></span></h3>
-        <div class="almashtirgich" id="x-olchov-tanlov" role="group" aria-label="Hududlar bo'yalishi" data-sayohat="qatlam"></div>
+        <h3>Hududlar bo'yalishi</h3>
+        <!-- Besh variant tugma qatoriga sig'maydi: Filtr kartasidagi kabi ro'yxatdan tanlanadi -->
+        <div class="maydon x-olchov" data-sayohat="qatlam">
+          <span class="tanlov"><select id="x-olchov-tanlov" aria-label="Hududlar bo'yalishi"></select><svg class="ic strelka"><use href="#ik-past"/></svg></span>
+        </div>
         <p class="x-izoh" id="x-legenda-izoh"></p>
         <ul class="x-legenda" id="x-legenda"></ul>
       </section>
@@ -335,18 +338,18 @@ MKB.sahifaYukla({
   let korinadigan = [];
 
   const FILTRLAR = [
-    {kalit: "hudud", nom: "Hudud", bosh: "Barcha hududlar",
+    {kalit: "hudud", nom: "Hudud", bosh: "Barchasi",
       variant: () => Object.keys(HK).filter(k => obyektlar.some(y => hududKod(y) === k)).map(k => [k, HK[k].toliq])},
-    {kalit: "tur", nom: "Aktiv turi", bosh: "Barcha turlar",
+    {kalit: "tur", nom: "Aktiv turi", bosh: "Barchasi",
       variant: () => (D.ASOSIY_TURLAR || []).filter(t => obyektlar.some(y => y.turKalit === t.kalit)).map(t => [t.kalit, t.nom])},
-    {kalit: "holat", nom: "Holati", bosh: "Barcha holatlar",
+    {kalit: "holat", nom: "Holati", bosh: "Barchasi",
       variant: () => (D.HOLATLAR || []).filter(h => obyektlar.some(y => y.holat === h.nom)).map(h => [h.nom, h.nom])},
-    {kalit: "himoya", nom: "Qo'riqlash", bosh: "Farqi yo'q",
+    {kalit: "himoya", nom: "Qo'riqlash", bosh: "Barchasi",
       variant: () => [["bor", "Qo'riqlanadi"]].concat((D.QORIQLASH_TURLARI || []).map(t => [t.kalit, t.nom])).concat([["yoq", "Qo'riqlanmaydi"]])},
-    {kalit: "muddat", nom: "Muddat holati", bosh: "Barcha muddatlar",
+    {kalit: "muddat", nom: "Muddat holati", bosh: "Barchasi",
       variant: () => Object.keys(D.MUDDAT_HOLATLARI).filter(k => k !== "chiqarilgan" && obyektlar.some(y => D.muddatHisobi(y).holat === k))
         .map(k => [k, D.MUDDAT_HOLATLARI[k].nom])},
-    {kalit: "filial", nom: "Filial", bosh: "Barcha filiallar",
+    {kalit: "filial", nom: "Filial", bosh: "Barchasi",
       variant: () => (D.FILIALLAR || []).filter(f => obyektlar.some(y => y.filialKod === (f.id || f.kod))).map(f => [f.id || f.kod, f.nom])}
   ];
   function filtrChiz() {
@@ -588,8 +591,6 @@ MKB.sahifaYukla({
      ============================================================ */
   function legendaChiz() {
     const O = OLCHOVLAR[holat.olchov];
-    $("x-olchov-nom").innerHTML = "<span>" + esc(O.nom) + "</span>";
-    tarjimaQil($("x-olchov-nom"));
     $("x-legenda-izoh").textContent = O.izoh;
     tarjimaQil($("x-legenda-izoh"));
     const el = $("x-legenda");
@@ -627,7 +628,8 @@ MKB.sahifaYukla({
     const dan = v => O.birlik === "ta" ? v + 1 : v;
     el.innerHTML = oraliqlar.map((x, i) => {
       /* Uch ko'rinish: eng past pog'ona "... va undan kam", o'rtasi "a – b", eng yuqorisi
-         "... va undan ko'p". Sonlar tarjimadan chetda, izoh so'zi lug'atdan o'tadi. */
+         "... va undan ko'p". Sonlar tarjimadan chetda, izoh so'zi lug'atdan o'tadi. Son va izoh bitta
+         o'rovchida turadi: tugma flex, alohida bolalar orasiga gap ham, bo'shliq ham tushar edi. */
       const matn = x.past == null
         ? '<span data-tarjimasiz>' + birlikli(x.yuqori) + "</span> <span>va undan kam</span>"
         : x.yuqori == null
@@ -635,7 +637,7 @@ MKB.sahifaYukla({
           : '<span data-tarjimasiz>' + esc((dan(x.past) >= x.yuqori ? "" : O.matn(dan(x.past)) + " – ") + O.matn(x.yuqori)) + "</span>" +
             (O.birlik ? " <span>" + O.birlik + "</span>" : "");
       return '<li><button type="button" data-bosqich="' + i + '">' +
-        '<i style="background:' + x.rang + '"></i>' + matn +
+        '<i style="background:' + x.rang + '"></i><span class="lg-matn">' + matn + "</span>" +
         '<b data-tarjimasiz>' + x.son + "</b></button></li>";
     }).join("") +
       (bosh ? '<li class="matn"><i class="yoq"></i><span>Filtrga mos aktiv yo\'q</span><b data-tarjimasiz>' + bosh + "</b></li>" : "");
@@ -954,8 +956,26 @@ MKB.sahifaYukla({
   }
   function qaytaKor(darhol) {
     const q = asos.hududQatlam && asos.hududQatlam.getBounds();
-    if (q && q.isValid()) kameraKochir(darhol, q, null, null, {padding: [24, 24]});
+    if (q && q.isValid()) kameraKochir(darhol, q, null, null, konturChetlari());
     else kameraKochir(darhol, null, [41.4, 63.9], 6, null);
+  }
+  /* Xarita ustidagi boshqaruvlar maydonning bir qismini egallaydi: chap yuqorida asos qatlami
+     tugmasi, asboblar kompyuterda o'ngda ustun, telefonda yuqorida qator, telefonda pastda
+     "Filtr va ro'yxat" tugmasi. Teng chekka berilganda asboblar Farg'ona vodiysini yopar, sharqiy
+     hududlar nomi esa joy topmay yashirinardi. Chekka shu boshqaruvlarning haqiqiy o'lchamidan olinadi. */
+  function konturChetlari() {
+    const telefon = window.matchMedia("(max-width:760px)").matches;
+    const eng = telefon ? 12 : 24;
+    const k = $("x-karta").getBoundingClientRect();
+    const olcham = s => { const e = document.querySelector(s); const r = e && e.getBoundingClientRect(); return r && r.height ? r : null; };
+    const asb = olcham(".xarita .x-asboblar"), ust = olcham(".xarita .x-ustki"), tug = olcham("#x-varaq-tugma");
+    const chet = v => Math.max(eng, Math.round(v));
+    const tepa = Math.max(ust ? ust.bottom : 0, telefon && asb ? asb.bottom : 0);
+    return {
+      paddingTopLeft: [eng, tepa ? chet(tepa - k.top + 6) : eng],
+      paddingBottomRight: [!telefon && asb ? chet(k.right - asb.left + 8) : eng,
+        tug ? chet(k.bottom - tug.top + 8) : eng]
+    };
   }
 
   /* ============================================================
@@ -963,14 +983,12 @@ MKB.sahifaYukla({
      ============================================================ */
   function olchovTugmalari() {
     $("x-olchov-tanlov").innerHTML = Object.keys(OLCHOVLAR).map(k =>
-      '<button type="button" data-olchov="' + k + '" aria-pressed="' + (holat.olchov === k) + '">' + esc(OLCHOVLAR[k].nom) + "</button>").join("");
+      '<option value="' + k + '"' + (holat.olchov === k ? " selected" : "") + ">" + esc(OLCHOVLAR[k].nom) + "</option>").join("");
     tarjimaQil($("x-olchov-tanlov"));
   }
-  $("x-olchov-tanlov").addEventListener("click", e => {
-    const b = e.target.closest("[data-olchov]");
-    if (!b) return;
-    holat.olchov = b.dataset.olchov;
-    olchovTugmalari();
+  $("x-olchov-tanlov").addEventListener("change", e => {
+    if (!OLCHOVLAR[e.target.value]) return;
+    holat.olchov = e.target.value;
     yangila();
   });
 
