@@ -859,7 +859,16 @@ button.qator{width:calc(100% + 32px);font:inherit;color:inherit;text-align:left;
     const oraliqMatn = D.sanaYoz(O.dan) === D.sanaYoz(O.gacha) ? D.sanaYoz(O.dan) : D.sanaYoz(O.dan) + "–" + D.sanaYoz(O.gacha);
     const muddatIzoh = '<span data-tarjimasiz>' + e(oraliqMatn) + "</span> · <span>vazifa, ko'rik, qaror, to'lov va polis muddatlari</span>";
     $("bugun-izoh").innerHTML = MKB.filialDoirasi() ? "<span>Filial doirasida</span>" : "";
-    $("bugun").innerHTML = '<div class="brifing-tor">' +
+    /* Mahalliy reyestrda faqat aktivlar bor: ko'rik, qaror, baholash va sotuv tarixi
+       yuritilmaydi. To'rtta bo'sh qator o'rniga sababi bir marta aytiladi. */
+    const mahalliyBosh = D.MANBA === "mahalliy" &&
+      !qRoyxat.length && !otgan.length && !pasaygan.length && !xavfli.length;
+    $("bugun").innerHTML = mahalliyBosh
+      ? '<div class="brifing-tor">' + qator({anker: "bugun-qarorlar", ikonka: "bino", jim: true,
+          sarlavha: "<span>Mahalliy reyestrda kundalik oqim yuritilmaydi</span>",
+          izoh: "<span>Ko'rik, qaror, baholash va sotuv tarixi hali kiritilmagan</span>"}) +
+        "</div>"
+      : '<div class="brifing-tor">' +
       (qRoyxat.length
         ? qator({anker: "bugun-qarorlar", ikonka: "tasdiq", diqqat: qOtgan > 0, href: "tasdiqlar.html?filtr=" + (menga.length ? "mening" : "kutilmoqda"),
             sarlavha: "<span>" + (menga.length ? "Qaroringizni kutmoqda" : "Qaror kutilmoqda") + "</span> " + son(qRoyxat.length),

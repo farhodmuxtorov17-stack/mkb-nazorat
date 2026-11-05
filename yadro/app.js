@@ -89,7 +89,11 @@ const ROL_RUXSAT = {
    Har bir rolda ko'pi bilan 6 band: qolgan sahifalar bo'lim markazida, obyekt kartochkasida,
    Ctrl+K qidiruvida va to'g'ridan-to'g'ri havolada ochiq turadi. */
 const ROL_YON = {
-  admin:        ["panel", "ishlar", "hisobot"],
+  /* Administrator butun tizimni kuzatadi, shuning uchun menyusi boshqa rollar bilan teng —
+     oltita band. "Qiymat va moliya" tushirilgan: u buxgalteriya va obyekt menejerining
+     kundalik bo'limi, administrator unga bo'lim markazi, Ctrl+K va havola orqali kiradi
+     (huquq ROL_RUXSAT da o'zgarmaydi: admin — null, ya'ni hammasi ochiq) */
+  admin:        ["panel", "aktivlar", "nazorat", "sotuv", "ishlar", "hisobot"],
   rahbariyat:   ["panel", "ishlar", "aktivlar", "nazorat", "sotuv", "hisobot"],
   obyekt:       ["panel", "aktivlar", "qiymat", "sotuv", "ishlar", "hisobot"],
   nazorat:      ["panel", "nazorat", "aktivlar", "ishlar", "hisobot"],
